@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Forca - Filmes Atuais</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fff8f0;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #444;
+    }
+
+    #palavra {
+      font-size: 2.5rem;
+      letter-spacing: 15px;
+      margin: 20px 0;
+    }
+
+    #letras {
+      margin-top: 20px;
+    }
+
+    button.letra {
+      margin: 5px;
+      padding: 10px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    #mensagem {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #erros {
+      color: red;
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+
+    #reiniciar {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<p><a href="../jogos.html">Retornar a Jogos</a></p>
+  <h1>🎬 Jogo da Forca – Nome de Filmes Atuais</h1>
+
+  <div id="palavra">_ _ _ _ _</div>
+
+  <div id="letras"></div>
+
+  <div id="erros"></div>
+
+  <div id="mensagem"></div>
+
+  <button id="reiniciar">🔁 Reiniciar</button>
+
+  <script>
+    const filmes = [
+      "DUNA", "BARBIE", "OPPENHEIMER", "WONKA", "MADAME TEIA",
+      "GUARDIOES", "ELEMENTOS", "THE MARVELS", "JOGOS VORAZES", "POBRES CRIATURAS", "SUPERMAN", "THUNDERBOLTS"
+    ];
+
+    let palavraEscolhida = "";
+    let palavraExibida = [];
+    let letrasErradas = [];
+    let tentativasRestantes = 6;
+
+    const palavraDiv = document.getElementById("palavra");
+    const letrasDiv = document.getElementById("letras");
+    const errosDiv = document.getElementById("erros");
+    const mensagemDiv = document.getElementById("mensagem");
+    const reiniciarBtn = document.getElementById("reiniciar");
+
+    function iniciarJogo() {
+      const filme = filmes[Math.floor(Math.random() * filmes.length)];
+      palavraEscolhida = filme.toUpperCase();
+      palavraExibida = Array.from(palavraEscolhida).map(letra => letra === " " ? " " : "_");
+      letrasErradas = [];
+      tentativasRestantes = 6;
+      atualizarTela();
+      criarBotoes();
+    }
+
+    function criarBotoes() {
+      letrasDiv.innerHTML = "";
+      for (let i = 65; i <= 90; i++) {
+        const letra = String.fromCharCode(i);
+        const btn = document.createElement("button");
+        btn.textContent = letra;
+        btn.className = "letra";
+        btn.onclick = () => jogar(letra, btn);
+        letrasDiv.appendChild(btn);
+      }
+    }
+
+    function jogar(letra, botao) {
+      botao.disabled = true;
+      if (palavraEscolhida.includes(letra)) {
+        for (let i = 0; i < palavraEscolhida.length; i++) {
+          if (palavraEscolhida[i] === letra) {
+            palavraExibida[i] = letra;
+          }
+        }
+      } else {
+        letrasErradas.push(letra);
+        tentativasRestantes--;
+      }
+      atualizarTela();
+      verificarFim();
+    }
+
+    function atualizarTela() {
+      palavraDiv.textContent = palavraExibida.join(" ");
+      errosDiv.textContent = `Erros: ${letrasErradas.join(", ")} (${tentativasRestantes} tentativas restantes)`;
+    }
+
+    function verificarFim() {
+      if (!palavraExibida.includes("_")) {
+        mensagemDiv.textContent = "🎉 Você venceu!";
+        desativarBotoes();
+      } else if (tentativasRestantes === 0) {
+        mensagemDiv.textContent = `💀 Você perdeu! A palavra era: ${palavraEscolhida}`;
+        desativarBotoes();
+      }
+    }
+
+    function desativarBotoes() {
+      const botoes = document.querySelectorAll(".letra");
+      botoes.forEach(btn => btn.disabled = true);
+    }
+
+    reiniciarBtn.onclick = () => {
+      mensagemDiv.textContent = "";
+      iniciarJogo();
+    };
+
+    iniciarJogo();
+  </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Damas com Placar</title>
+  <style>
+    body {
+      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      padding: 40px;
+      gap: 50px;
+    }
+
+    .jogo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      border: 4px solid #333;
+    }
+
+    .casa {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preta {
+      background-color: #444;
+    }
+
+    .branca {
+      background-color: #eee;
+    }
+
+    .peca {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .vermelha {
+      background-color: crimson;
+    }
+
+    .pretaPeca {
+      background-color: black;
+    }
+
+    .selecionada {
+      border: 3px solid yellow;
+    }
+
+    .painel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .contador {
+      background-color: #fff;
+      padding: 15px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #333;
+      color: white;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="jogo">
+    <h1>Jogo de Damas</h1>
+    <p><a href="../jogos.html">Retornar a Jogos</a></p>
+    <div class="tabuleiro" id="tabuleiro"></div>
+  </div>
+
+  <div class="painel">
+    <div class="contador">
+      <strong>Vitórias:</strong><br>
+      🔴 Vermelho: <span id="placarVermelho">0</span><br>
+      ⚫ Preto: <span id="placarPreto">0</span>
+    </div>
+    <button onclick="novoJogo()">🔁 Novo Jogo</button>
+  </div>
+
+  <script>
+    const tabuleiro = document.getElementById("tabuleiro");
+    let selecionada = null;
+
+    let placarVermelho = 0;
+    let placarPreto = 0;
+
+    function criarPeca(classeCor) {
+      const peca = document.createElement("div");
+      peca.classList.add("peca", classeCor);
+      return peca;
+    }
+
+    function getCasa(linha, coluna) {
+      return document.querySelector(`.casa[data-linha="${linha}"][data-coluna="${coluna}"]`);
+    }
+
+    function montarTabuleiro() {
+      tabuleiro.innerHTML = "";
+      for (let linha = 0; linha < 8; linha++) {
+        for (let coluna = 0; coluna < 8; coluna++) {
+          const casa = document.createElement("div");
+          casa.classList.add("casa");
+          const cor = (linha + coluna) % 2 === 0 ? "branca" : "preta";
+          casa.classList.add(cor);
+          casa.dataset.linha = linha;
+          casa.dataset.coluna = coluna;
+
+          // Peças iniciais
+          if (cor === "preta" && linha < 3) {
+            const peca = criarPeca("pretaPeca");
+            casa.appendChild(peca);
+          } else if (cor === "preta" && linha > 4) {
+            const peca = criarPeca("vermelha");
+            casa.appendChild(peca);
+          }
+
+          casa.addEventListener("click", () => clicarCasa(casa));
+          tabuleiro.appendChild(casa);
+        }
+      }
+    }
+
+    function clicarCasa(casa) {
+      const peca = casa.querySelector(".peca");
+
+      // Selecionar
+      if (peca) {
+        if (selecionada) selecionada.classList.remove("selecionada");
+        selecionada = peca;
+        peca.classList.add("selecionada");
+        return;
+      }
+
+      if (selecionada && casa.classList.contains("preta") && !casa.querySelector(".peca")) {
+        const origem = selecionada.parentElement;
+        const linhaOrigem = parseInt(origem.dataset.linha);
+        const colunaOrigem = parseInt(origem.dataset.coluna);
+        const linhaDestino = parseInt(casa.dataset.linha);
+        const colunaDestino = parseInt(casa.dataset.coluna);
+
+        const dx = colunaDestino - colunaOrigem;
+        const dy = linhaDestino - linhaOrigem;
+
+        const cor = selecionada.classList.contains("vermelha") ? "vermelha" : "pretaPeca";
+        const direcao = cor === "vermelha" ? -1 : 1;
+
+        // Movimento simples
+        if (Math.abs(dx) === 1 && dy === direcao) {
+          mover(casa);
+          checarVitoria();
+          return;
+        }
+
+        // Captura
+        if (Math.abs(dx) === 2 && Math.abs(dy) === 2) {
+          const meioLinha = linhaOrigem + dy / 2;
+          const meioColuna = colunaOrigem + dx / 2;
+          const casaMeio = getCasa(meioLinha, meioColuna);
+          const pecaMeio = casaMeio?.querySelector(".peca");
+
+          if (
+            pecaMeio &&
+            pecaMeio !== selecionada &&
+            pecaMeio.classList.contains("peca") &&
+            !pecaMeio.classList.contains(cor)
+          ) {
+            casaMeio.removeChild(pecaMeio);
+            mover(casa);
+            checarVitoria();
+          }
+        }
+      }
+    }
+
+    function mover(destino) {
+      destino.appendChild(selecionada);
+      selecionada.classList.remove("selecionada");
+      selecionada = null;
+    }
+
+    function checarVitoria() {
+      const pecasVermelhas = document.querySelectorAll(".vermelha").length;
+      const pecasPretas = document.querySelectorAll(".pretaPeca").length;
+
+      if (pecasVermelhas === 0) {
+        placarPreto++;
+        atualizarPlacar();
+        setTimeout(() => alert("⚫ Preto venceu!"), 200);
+      } else if (pecasPretas === 0) {
+        placarVermelho++;
+        atualizarPlacar();
+        setTimeout(() => alert("🔴 Vermelho venceu!"), 200);
+      }
+    }
+
+    function atualizarPlacar() {
+      document.getElementById("placarVermelho").textContent = placarVermelho;
+      document.getElementById("placarPreto").textContent = placarPreto;
+    }
+
+    function novoJogo() {
+      selecionada = null;
+      montarTabuleiro();
+    }
+
+    // Inicializa
+    montarTabuleiro();
+  </script>
+
+</body>
+</html>

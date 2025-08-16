@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo de Xadrez</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+      gap: 40px;
+    }
+    #chessboard {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      border: 2px solid #333;
+    }
+    .square {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      cursor: pointer;
+    }
+    .light {
+      background-color: #f0d9b5;
+    }
+    .dark {
+      background-color: #b58863;
+    }
+    .selected {
+      outline: 3px solid yellow;
+    }
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .sidebar h2 {
+      margin: 0 0 10px;
+    }
+    .sidebar p {
+      margin: 5px 0;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 40px;">
+    <div id="chessboard"></div>
+
+    <div class="sidebar">
+      <h2>Placar</h2>
+      <p>Vitórias Brancas: <span id="whiteWins">0</span></p>
+      <p>Vitórias Pretas: <span id="blackWins">0</span></p>
+      <button onclick="resetGame()">🔁 Novo Jogo</button>
+      <button>
+        <p><a href="../jogos.html">Retornar a Jogos</a></p>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const board = document.getElementById('chessboard');
+    const initialBoard = [
+      ['♜','♞','♝','♛','♚','♝','♞','♜'],
+      ['♟','♟','♟','♟','♟','♟','♟','♟'],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['♙','♙','♙','♙','♙','♙','♙','♙'],
+      ['♖','♘','♗','♕','♔','♗','♘','♖']
+    ];
+
+    let initialSetup = JSON.parse(JSON.stringify(initialBoard));
+    let selected = null;
+    let currentPlayer = 'white';
+    let whiteWins = 0;
+    let blackWins = 0;
+
+    function createBoard() {
+      board.innerHTML = '';
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          const square = document.createElement('div');
+          square.className = 'square ' + ((i + j) % 2 === 0 ? 'light' : 'dark');
+          square.dataset.row = i;
+          square.dataset.col = j;
+          square.textContent = initialSetup[i][j];
+          square.addEventListener('click', () => handleClick(square));
+          board.appendChild(square);
+        }
+      }
+    }
+
+    function handleClick(square) {
+      const row = parseInt(square.dataset.row);
+      const col = parseInt(square.dataset.col);
+      const piece = initialSetup[row][col];
+
+      if (selected) {
+        const [fromRow, fromCol] = selected;
+        if (isValidMove(fromRow, fromCol, row, col)) {
+          const target = initialSetup[row][col];
+          if (target === '♚') {
+            whiteWins++;
+            updateScore();
+            alert("Vitória das peças brancas!");
+            resetGame();
+            return;
+          } else if (target === '♔') {
+            blackWins++;
+            updateScore();
+            alert("Vitória das peças pretas!");
+            resetGame();
+            return;
+          }
+          initialSetup[row][col] = initialSetup[fromRow][fromCol];
+          initialSetup[fromRow][fromCol] = '';
+          currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+        }
+        selected = null;
+        createBoard();
+      } else if (piece && isPlayerPiece(piece)) {
+        selected = [row, col];
+        square.classList.add('selected');
+      }
+    }
+
+    function isPlayerPiece(piece) {
+      return (currentPlayer === 'white' && piece.charCodeAt(0) <= 9817) ||
+             (currentPlayer === 'black' && piece.charCodeAt(0) >= 9818);
+    }
+
+    function isValidMove(fromRow, fromCol, toRow, toCol) {
+      const piece = initialSetup[fromRow][fromCol];
+      const target = initialSetup[toRow][toCol];
+      return !target || isPlayerPiece(target) === false;
+    }
+
+    function updateScore() {
+      document.getElementById('whiteWins').textContent = whiteWins;
+      document.getElementById('blackWins').textContent = blackWins;
+    }
+
+    function resetGame() {
+      initialSetup = JSON.parse(JSON.stringify(initialBoard));
+      selected = null;
+      currentPlayer = 'white';
+      createBoard();
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>

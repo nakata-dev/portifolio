@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo Mahjong</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background-color: #f0f0f0;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      gap: 40px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(6, 70px);
+      grid-gap: 10px;
+    }
+    .tile {
+      width: 70px;
+      height: 90px;
+      background-color: white;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+    .tile.selected {
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0,123,255,0.4);
+    }
+    .sidebar {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar h2 {
+      margin: 0;
+    }
+    .sidebar p {
+      margin: 0;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <p><a href="../jogos.html">Retornar a Jogos</a></p>
+  <div class="board" id="mahjongBoard"></div>
+
+  <div class="sidebar">
+    <h2>Vitórias</h2>
+    <p>Partidas Concluídas: <span id="victoryCount">0</span></p>
+    <button onclick="resetGame()">🔁 Novo Jogo</button>
+  </div>
+
+  <script>
+    const board = document.getElementById('mahjongBoard');
+    const victoryDisplay = document.getElementById('victoryCount');
+    let tiles = [];
+    let selected = [];
+    let victoryCount = 0;
+
+    const tileSymbols = ['🌸', '🌹', '🌺', '🌻', '🌼', '🌷'];
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function generateTiles() {
+      tiles = [];
+      const temp = [...tileSymbols, ...tileSymbols, ...tileSymbols, ...tileSymbols];
+      shuffleArray(temp);
+      tiles = temp.map(symbol => ({ symbol, matched: false }));
+    }
+
+    function drawBoard() {
+      board.innerHTML = '';
+      tiles.forEach((tile, index) => {
+        const div = document.createElement('div');
+        div.className = 'tile';
+        if (selected.includes(index) || tile.matched) {
+          div.textContent = tile.symbol;
+        } else {
+          div.textContent = '';
+        }
+        if (selected.includes(index)) div.classList.add('selected');
+        div.addEventListener('click', () => handleClick(index));
+        board.appendChild(div);
+      });
+    }
+
+    function handleClick(index) {
+      if (tiles[index].matched || selected.includes(index)) return;
+
+      selected.push(index);
+      drawBoard();
+
+      if (selected.length === 2) {
+        const [i1, i2] = selected;
+        if (tiles[i1].symbol === tiles[i2].symbol) {
+          tiles[i1].matched = true;
+          tiles[i2].matched = true;
+        }
+        setTimeout(() => {
+          selected = [];
+          drawBoard();
+          checkVictory();
+        }, 500);
+      }
+    }
+
+    function checkVictory() {
+      if (tiles.every(t => t.matched)) {
+        victoryCount++;
+        victoryDisplay.textContent = victoryCount;
+        alert('Você venceu!');
+      }
+    }
+
+    function resetGame() {
+      selected = [];
+      generateTiles();
+      drawBoard();
+    }
+
+    generateTiles();
+    drawBoard();
+  </script>
+  
+</body>
+</html>

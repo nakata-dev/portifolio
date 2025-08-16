@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Caça-Palavras - Cozinha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    td {
+      border: 1px solid #ccc;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+    td.found {
+      background-color: #b2f7b2;
+      color: green;
+    }
+    #palavras {
+      margin-top: 20px;
+    }
+    .palavra {
+      margin: 5px;
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #f0e68c;
+      border-radius: 4px;
+    }
+    .palavra.encontrada {
+      text-decoration: line-through;
+      background-color: #c0ffc0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Caça-Palavras - Objetos da Cozinha</h1>
+  <p>Encontre as palavras escondidas:</p>
+  <p><a href="../jogos.html">Retornar a Jogos</a></p>
+
+  <div id="palavras"></div>
+  <table id="tabela"></table>
+
+  <script>
+    const palavras = [
+      "GARFO", "FACA", "COLHER", "PRATO", "PANELA",
+      "XICARA", "COPO", "FORNO", "GRELHA", "TALHER"
+    ];
+
+    const tamanho = 15;
+    const matriz = Array.from({ length: tamanho }, () => Array(tamanho).fill(''));
+
+    const direcoes = [
+      { dx: 1, dy: 0 },   // ➡ horizontal
+      { dx: 0, dy: 1 },   // ⬇ vertical
+      { dx: 0, dy: -1 },  // ⬆ vertical invertida
+      { dx: 1, dy: 1 },   // ↘ diagonal
+      { dx: -1, dy: -1 }  // ↖ diagonal invertida
+    ];
+
+    function podeInserir(palavra, x, y, dx, dy) {
+      for (let i = 0; i < palavra.length; i++) {
+        const nx = x + dx * i;
+        const ny = y + dy * i;
+        if (nx < 0 || ny < 0 || nx >= tamanho || ny >= tamanho) return false;
+        const letraAtual = matriz[ny][nx];
+        if (letraAtual !== '' && letraAtual !== palavra[i]) return false;
+      }
+      return true;
+    }
+
+    function inserirPalavra(palavra) {
+      let tentativas = 100;
+      while (tentativas-- > 0) {
+        const dir = direcoes[Math.floor(Math.random() * direcoes.length)];
+        const x = Math.floor(Math.random() * tamanho);
+        const y = Math.floor(Math.random() * tamanho);
+        if (podeInserir(palavra, x, y, dir.dx, dir.dy)) {
+          for (let i = 0; i < palavra.length; i++) {
+            const nx = x + dir.dx * i;
+            const ny = y + dir.dy * i;
+            matriz[ny][nx] = palavra[i];
+          }
+          return true;
+        }
+      }
+      return false;
+    }
+
+    palavras.forEach(palavra => {
+      inserirPalavra(palavra);
+    });
+
+    // Preencher espaços vazios com letras aleatórias
+    for (let y = 0; y < tamanho; y++) {
+      for (let x = 0; x < tamanho; x++) {
+        if (matriz[y][x] === '') {
+          matriz[y][x] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        }
+      }
+    }
+
+    // Renderizar tabela
+    const tabela = document.getElementById("tabela");
+    for (let y = 0; y < tamanho; y++) {
+      const row = tabela.insertRow();
+      for (let x = 0; x < tamanho; x++) {
+        const cell = row.insertCell();
+        cell.textContent = matriz[y][x];
+        cell.dataset.letra = matriz[y][x];
+        cell.onclick = () => {
+          cell.classList.toggle("found");
+          verificarPalavras();
+        };
+      }
+    }
+
+    // Lista de palavras
+    const divPalavras = document.getElementById("palavras");
+    palavras.forEach(p => {
+      const span = document.createElement("span");
+      span.className = "palavra";
+      span.textContent = p;
+      span.dataset.palavra = p;
+      divPalavras.appendChild(span);
+    });
+
+    // Verificar palavras
+    function verificarPalavras() {
+      const letrasSelecionadas = [];
+      const cells = document.querySelectorAll("td.found");
+      cells.forEach(cell => letrasSelecionadas.push(cell.textContent));
+
+      palavras.forEach(palavra => {
+        const palavraSpan = document.querySelector(`[data-palavra='${palavra}']`);
+        const regex = new RegExp(palavra.split('').join('.*'), 'i');
+        const encontrada = regex.test(letrasSelecionadas.join(''));
+        if (encontrada) {
+          palavraSpan.classList.add("encontrada");
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

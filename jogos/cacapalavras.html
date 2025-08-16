@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Caça-Palavras - Cozinha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    td {
+      border: 1px solid #ccc;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+    td.found {
+      background-color: #b2f7b2;
+      color: green;
+    }
+    #palavras {
+      margin-top: 20px;
+    }
+    .palavra {
+      margin: 5px;
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #f0e68c;
+      border-radius: 4px;
+    }
+    .palavra.encontrada {
+      text-decoration: line-through;
+      background-color: #c0ffc0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Caça-Palavras - Objetos da Cozinha</h1>
+  <p>Encontre as palavras escondidas:</p>
+  <p><a href="../jogos.html">Retornar a Jogos</a></p>
+
+  <div id="palavras"></div>
+  <table id="tabela"></table>
+
+  <script>
+    const palavras = [
+      "GARFO", "FACA", "COLHER", "PRATO", "PANELA",
+      "XICARA", "COPO", "FORNO", "GRELHA", "TALHER"
+    ];
+
+    const tamanho = 15;
+    const matriz = [];
+
+    // Inicializa matriz com espaços vazios
+    for (let i = 0; i < tamanho; i++) {
+      matriz[i] = Array(tamanho).fill('');
+    }
+
+    // Posiciona as palavras horizontalmente, uma por linha
+    palavras.forEach((palavra, index) => {
+      let linha = index; // cada palavra em uma linha diferente
+      let col = Math.floor(Math.random() * (tamanho - palavra.length));
+      for (let i = 0; i < palavra.length; i++) {
+        matriz[linha][col + i] = palavra[i];
+      }
+    });
+
+    // Preenche espaços vazios com letras aleatórias
+    for (let i = 0; i < tamanho; i++) {
+      for (let j = 0; j < tamanho; j++) {
+        if (matriz[i][j] === '') {
+          matriz[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        }
+      }
+    }
+
+    // Renderiza tabela
+    const tabela = document.getElementById("tabela");
+
+    for (let i = 0; i < tamanho; i++) {
+      const row = tabela.insertRow();
+      for (let j = 0; j < tamanho; j++) {
+        const cell = row.insertCell();
+        cell.textContent = matriz[i][j];
+        cell.dataset.letra = matriz[i][j];
+        cell.onclick = () => {
+          cell.classList.toggle("found");
+          verificarPalavras();
+        };
+      }
+    }
+
+    // Lista de palavras
+    const divPalavras = document.getElementById("palavras");
+    palavras.forEach(p => {
+      const span = document.createElement("span");
+      span.className = "palavra";
+      span.textContent = p;
+      span.dataset.palavra = p;
+      divPalavras.appendChild(span);
+    });
+
+    // Verifica palavras encontradas
+    function verificarPalavras() {
+      const letrasSelecionadas = [];
+      const cells = document.querySelectorAll("td.found");
+      cells.forEach(cell => letrasSelecionadas.push(cell.textContent));
+
+      palavras.forEach(palavra => {
+        const palavraSpan = document.querySelector(`[data-palavra='${palavra}']`);
+        const regex = new RegExp(palavra.split('').join('.*'), 'i');
+        const encontrada = regex.test(letrasSelecionadas.join(''));
+        if (encontrada) {
+          palavraSpan.classList.add("encontrada");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+

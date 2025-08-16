@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Mario Bros</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: skyblue;
+    }
+
+    canvas {
+      display: block;
+      background: #87CEEB;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const chaoAltura = 50;
+
+    const jogador = {
+      x: 50,
+      y: canvas.height - chaoAltura - 40,
+      largura: 30,
+      altura: 40,
+      cor: "red",
+      dy: 0,
+      pulo: -10,
+      gravidade: 0.5,
+      noChao: true
+    };
+
+    const obstaculos = [
+      { x: 300, y: canvas.height - chaoAltura - 30, largura: 30, altura: 30 },
+      { x: 500, y: canvas.height - chaoAltura - 60, largura: 30, altura: 60 },
+    ];
+
+    let esquerda = false;
+    let direita = false;
+
+    document.addEventListener("keydown", e => {
+      if (e.code === "ArrowLeft") esquerda = true;
+      if (e.code === "ArrowRight") direita = true;
+      if (e.code === "Space" || e.code === "ArrowUp") {
+        if (jogador.noChao) {
+          jogador.dy = jogador.pulo;
+          jogador.noChao = false;
+        }
+      }
+    });
+
+    document.addEventListener("keyup", e => {
+      if (e.code === "ArrowLeft") esquerda = false;
+      if (e.code === "ArrowRight") direita = false;
+    });
+
+    function desenharChao() {
+      ctx.fillStyle = "#654321";
+      ctx.fillRect(0, canvas.height - chaoAltura, canvas.width, chaoAltura);
+    }
+
+    function desenharJogador() {
+      ctx.fillStyle = jogador.cor;
+      ctx.fillRect(jogador.x, jogador.y, jogador.largura, jogador.altura);
+    }
+
+    function desenharObstaculos() {
+      ctx.fillStyle = "green";
+      for (let obs of obstaculos) {
+        ctx.fillRect(obs.x, obs.y, obs.largura, obs.altura);
+      }
+    }
+
+    function atualizar() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Movimento lateral
+      if (esquerda) jogador.x -= 3;
+      if (direita) jogador.x += 3;
+
+      // Gravidade
+      jogador.y += jogador.dy;
+      jogador.dy += jogador.gravidade;
+
+      // Colisão com o chão
+      if (jogador.y + jogador.altura >= canvas.height - chaoAltura) {
+        jogador.y = canvas.height - chaoAltura - jogador.altura;
+        jogador.dy = 0;
+        jogador.noChao = true;
+      }
+
+      // Colisão com obstáculos
+      for (let obs of obstaculos) {
+        if (
+          jogador.x < obs.x + obs.largura &&
+          jogador.x + jogador.largura > obs.x &&
+          jogador.y + jogador.altura > obs.y &&
+          jogador.y < obs.y + obs.altura
+        ) {
+          jogador.cor = "gray"; // Colidiu
+          return;
+        }
+      }
+
+      desenharChao();
+      desenharObstaculos();
+      desenharJogador();
+
+      requestAnimationFrame(atualizar);
+    }
+
+    atualizar();
+  </script>
+</body>
+</html>

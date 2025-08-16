@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Adivinhação</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #282c34;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .container {
+      background: #444;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 60px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #61dafb;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #mensagem {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Adivinhe o número!</h1>
+    
+    <p>Escolha um número entre 1 e 100:</p>
+    <input type="number" id="entrada" min="1" max="100">
+    <button onclick="verificar()">Tentar</button>
+    <div id="mensagem"></div>
+  </div>
+      <p><a href="../jogos.html">Retornar a Jogos</a></p>
+  <script>
+    const numeroSecreto = Math.floor(Math.random() * 100) + 1;
+    let tentativas = 0;
+
+    function verificar() {
+      const entrada = document.getElementById("entrada").value;
+      const palpite = parseInt(entrada);
+      tentativas++;
+
+      let mensagem = "";
+
+      if (isNaN(palpite) || palpite < 1 || palpite > 100) {
+        mensagem = "Digite um número entre 1 e 100.";
+      } else if (palpite === numeroSecreto) {
+        mensagem = `🎉 Parabéns! Você acertou em ${tentativas} tentativa(s)!`;
+      } else if (palpite < numeroSecreto) {
+        mensagem = "🔻 Muito baixo!";
+      } else {
+        mensagem = "🔺 Muito alto!";
+      }
+
+      document.getElementById("mensagem").innerText = mensagem;
+    }
+  </script>
+
+</body>
+</html>
+</body>
+</html>

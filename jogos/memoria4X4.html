@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Memória</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .carta {
+      width: 80px;
+      height: 80px;
+      background: #444;
+      border-radius: 8px;
+      font-size: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      user-select: none;
+    }
+
+    .carta.virada {
+      background: #fff;
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Jogo da Memória</h1>
+  <p><a href="../jogos.html">Retornar a Jogos</a></p>
+  <div class="tabuleiro" id="tabuleiro"></div>
+  <button onclick="iniciarJogo()">🔄 Reiniciar</button>
+
+  <script>
+    const emojis = ['🍎', '🍌', '🍇', '🍓', '🍉', '🍍', '🍑', '🥝'];
+    let cartas = [];
+    let primeiraCarta = null;
+    let bloqueado = false;
+
+    function embaralhar(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function criarCarta(emoji) {
+      const div = document.createElement('div');
+      div.className = 'carta';
+      div.dataset.emoji = emoji;
+      div.textContent = '❓';
+      div.onclick = () => virarCarta(div);
+      return div;
+    }
+
+    function virarCarta(carta) {
+      if (bloqueado || carta.classList.contains('virada')) return;
+
+      carta.classList.add('virada');
+      carta.textContent = carta.dataset.emoji;
+
+      if (!primeiraCarta) {
+        primeiraCarta = carta;
+      } else {
+        bloqueado = true;
+        if (carta.dataset.emoji === primeiraCarta.dataset.emoji) {
+          primeiraCarta = null;
+          bloqueado = false;
+          verificarFim();
+        } else {
+          setTimeout(() => {
+            carta.classList.remove('virada');
+            carta.textContent = '❓';
+            primeiraCarta.classList.remove('virada');
+            primeiraCarta.textContent = '❓';
+            primeiraCarta = null;
+            bloqueado = false;
+          }, 1000);
+        }
+      }
+    }
+
+    function verificarFim() {
+      const viradas = document.querySelectorAll('.carta.virada');
+      if (viradas.length === cartas.length) {
+        setTimeout(() => {
+          alert("🎉 Você venceu!");
+        }, 300);
+      }
+    }
+
+    function iniciarJogo() {
+      const tabuleiro = document.getElementById('tabuleiro');
+      tabuleiro.innerHTML = '';
+      primeiraCarta = null;
+      bloqueado = false;
+
+      cartas = embaralhar([...emojis, ...emojis]);
+      cartas.forEach(emoji => {
+        tabuleiro.appendChild(criarCarta(emoji));
+      });
+    }
+
+    iniciarJogo();
+  </script>
+
+</body>
+</html>
+</body>
+</html>
