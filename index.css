@@ -3,6 +3,15 @@ body {
     background-color: rgb(0, 0, 0);
     font-family: Arial, Helvetica, sans-serif;
 }
+header{
+    background-image: linear-gradient(to bottom, rgb(34, 211, 34),green );
+
+}
+header h2{
+    background-color: rgb(3, 126, 3);
+    text-align: center; 
+    padding: 10px;
+}
 ul {
     display: flex;
     justify-content: space-between;

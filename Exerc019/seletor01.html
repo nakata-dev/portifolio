@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Seletor ID</title>
+</head>
+<body>
+    <h1 id="principal">Aprendendo HTML</h1>
+    <h2>HTML básico</h2>
+    <p>Ao se criar uma 'id' dentro do HTML você deve ficar atento a construção do parâmetro.</p>
+    <p>Vou dar aqui um parâmetro de como ficaria o uso de um 'id':identidade dentro de um arquivo HTML: <br>
+        &lt p id="principal"&gt <br>
+        &lt p id="texto01"&gt <br>
+        &lt h1 id="primeiro_h1"&gt <br>
+    </p>
+    
+    <h2>Parâmetro Opcional</h2>
+    <p>Este parâmetro usado dentro da folha de estilo é opicional "@charset "utf-8"; "Usado quando você vai usar palavras com caracteres especiais dentro das CSS, algo que dificilmente ocorre. </p>
+    <p>Outro detalhe importante a se lembrar aqui é que: 'Tudo que em HTMl é id, em CSS vai ser #(cerquilha)</p>
+    
+    <h1 class="destaque">Aprendendo CSS</h1>
+    <h2>CSS básico</h2>
+    <p>Obrserve aqui como fica a configuração na folha de STYLE/ESTILO: 
+        <pre>
+            body{
+            background-color: rgb(205,255,203);
+            font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            h1{
+                color: rgb(4, 109, 0);
+            }
+            /* em HTML é id e em CSS vai ser # 
+             tudo que é class em HTML vai ser . em CSS*/
+            #principal{
+                text-align: center;
+                background-color:rgb(4, 109, 0);
+                color: white;
+            }
+            
+            h2{
+                color: rgb(73, 109, 71);
+            }
+            p{
+                text-align: justify;
+                text-indent: 30px;
+            }
+        </pre>
+    <h2>Diferença entre "id" e "class"</h2>
+    <p>O id por mais funcional que pareça, ele é um parâmetro usado somente para um tipo de tag, como por exemplo: &lt p id="titulo"&gt, e não pode ser usado em outras tags como: <br>
+        <br>
+        &lt h2 id="titulo"&gt
+        <br>
+    <p>Agora, como o parâmetro class, é diferente, poderemos emprega-lo em várias tags diferentes como por exemplo:</p>
+    <br>
+        &lt h1 class="principal"&gt <br>
+        &lt h2 class="principal"&gt <br>
+        &lt h3 class="principal"&gt <br>
+    <br>
+    <p>E assim por diante...rsss...tome cuidado para não confundir!</p>
+    <hr>
+    <h1 class="avancado destaque">Como acompanhar o uso de 'class' na prática?</h1>
+    <br>
+    <h2 class="basico">Curso de HTML básico</h2>
+    <p>Aqui temos uma <span class="intermediario">parte do texto, configurada com </span> a classe intemediaria, deixando a cor destacada com a mesma cor do título do próximo texto.</p>
+    <h2 class="intermediario">Curso de HTML Intermediário</h2>
+    <p>Já, aqui temos uma parte do texto com a<span class="basico">cor do titulo do texto acima,</span> isso indica o bom uso das classe dentro das tags.</p>
+    <h2 class="avancado destaque">Curso de HTML avançado</h2>
+    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas necessitatibus vitae nesciunt est quo, ducimus nisi eos similique consequatur voluptatem cumque commodi ratione voluptate amet dolor! Aliquam nostrum ad a.</p>
+    <br>
+    <h1>Curso de CSS</h1>
+    <h2 class="basico">Curso de CSS básico</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, commodi ipsam voluptate harum minima veritatis porro nisi necessitatibus expedita repellat rem ex illum dolor dolorum ut officiis officia non. At.</p>
+    <h2 class="intermediario">Curso de CSS Intermediário</h2>
+    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem saepe quae aut explicabo facilis voluptatibus culpa, consequatur dolore, omnis excepturi, architecto illo magnam odit quod neque nulla autem placeat veniam!</p>
+    <h2 class="avancado destaque">Curso de CSS Avançado</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio consequuntur culpa maiores modi, velit laborum atque accusamus vel vitae placeat laudantium. Laborum vitae voluptatibus, nobis dignissimos voluptate dolor ab quis!</p>
+    </p>
+</body>
+</html>

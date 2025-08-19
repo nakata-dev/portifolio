@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fontes Externas</title>
+    <style>
+        @font-face {
+            font-family:'love';
+            src: url('fonts/love\ larry.ttf') format(truetype), url('/fonts/ready\ love.otf') format(opentype);
+            font-weight: normal;
+            font-style: normal;
+            /*
+            tipos de format()
+            - opentype(otf)
+            - truetype(ttf)
+            - embedded-opentype
+            -truetype-aat(aple advanced typography)
+            */
+        }
+        body{
+            font-family: 'Courier New', Courier, monospace;
+        }
+        h1 {
+            font-family: 'love', Times, serif;
+            font-size: 2em;
+            font-weight: normal;
+        }
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1em;
+            font-weight: normal;
+            
+        }
+        h2 {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 2em;
+            font-weight:normal
+        }
+    </style>
+</head>
+<body>
+    <h1>Trabalhando com fontes externas</h1>
+    <p>Para se trabalhar com fontes fornecidade pelo client ou baixadas da internet, é importante levar em <br> consideração o seu tipo ou extensão. Para isso você deve usar fontes do tipo (otf) e (ttf) que podem ser <br> obtidas em sites de fontes como por exemplo o : Dafonte; Google fonts; Netfontes etc. </p>
+    
+        
+    <h2>tipos de formatos possíveis()</h2>
+    <p>
+            - opentype (otf) <br>
+            - truetype (ttf) <br>
+            - embedded-opentype <br>
+            - truetype- (aat) <br>
+            
+            
+    </p>
+    <h2>Como usar fontes de seu PC?</h2>
+    <p>1º - Em style crie @font-face  e adicione o seguinte parâmetro</p>
+    <p> font-family:'love';(Aqui você pode dar qualquer nome) <br>
+    src: url('fonts/love\ larry.ttf') format(truetype), url('/fonts/ready\ love.otf') <br>
+    format(opentype); <br>
+    font-weight: normal;<br>
+    font-style: normal;</p>
+    
+</body>
+</html>

@@ -1,0 +1,21 @@
+body {
+background-color: azure;
+font-family: arial;
+font-size: 20px;
+}
+
+h1 {
+color: cadetblue;
+font-family: helvetica;
+}
+
+h2 {
+color:maroon;
+background-color:rgb(224, 224, 37) ;
+}
+
+p {
+color: rgb(133, 60, 8);
+text-align: justify;
+}
+  
