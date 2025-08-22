@@ -45,7 +45,7 @@ header{
 header > h1{
     color: white;
     font-family:var(--fonte_destaque);
-    font-size: 3em; 
+    font-size: 2.5em; 
     font-weight:normal;   
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.336);
    
@@ -53,15 +53,15 @@ header > h1{
 
 header > p{
     font-family: var(--fonte_padrao);
-    font-size: 1em;
+    font-size: 0.9em;
     color: white;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     
 }
 
 nav{
     background-color: var(--cor05);
-    padding: 10px;
+    padding: 5px;
     text-align: left;
 }
 
@@ -89,6 +89,17 @@ header img{
     height: 150px;
     border-radius: 50%;
     border: 0px solid rgb(255, 255, 255);
+}
+
+main p{
+    margin: 15px 15px 15px 15px;
+    text-align: justify;
+    text-indent: 30px;
+    line-height: 1.7em;
+}
+
+main h3{
+    margin: 20px 15px 5px 15px;
 }
 .center{
     text-align: center;
