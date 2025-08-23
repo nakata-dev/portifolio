@@ -26,29 +26,27 @@
         padding: 0px;
     }
 
-    body > p{
-        display: flex;
-        justify-content: center; /* Centraliza na horizontal */
-        align-items: center;  /* Centraliza na vertical */
-        height:98vh;   /* Ocupa a altura total da tela */
-        margin: 0px; /* Remove margens padrão */
-        background-color: white;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 1em;
-    }
+    body { 
+    color: rgb(0, 0, 0);
+    background-color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+    
     header{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));
         color: white;
         min-height: 100px;
         text-align: center;
-        padding-top: 15px;
+        padding-top: 10px;
     }
     nav{
         background-color: var(--cor05);
-        padding: 5px;
-        padding-left: 50px;
+        padding: 10px;
+        padding-left: 15px;
         text-align: left;
-        padding-bottom: 15px;
+        padding-bottom: 10px;
+        font-size: 1em;
     }
     nav > a{
     color: white;
@@ -76,9 +74,9 @@
     }
 
     header > p{
-        padding-top: 0px;
-        padding-bottom: 10px;
-        font-size: 1.5em;
+        font-family: var(--fonte_padrao);
+        font-size: 0.9em;
+        color: white;
     }
     main{
         position: relative;
@@ -107,19 +105,19 @@
     }
     footer{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));  
-        font-family: var(--fonte_padrao02);
+        font-family: var(--fonte_padrao);
         padding-bottom: 10px;
         padding-top: 10px;
         text-align: center;
         color: white;
-        font-size: 1em;
+        font-size: 0.8em;
     }
 
     ol{
         list-style: inside;
         padding: 5px;
         columns: 2;
-        text-align: justify;
+        text-align: left;
         
     }
    
