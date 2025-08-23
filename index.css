@@ -2,6 +2,8 @@
 @charset "UTF-8";
 /* Font importada de google fonts */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 /*fonte importada do computador */
 @font-face {
     font-family: 'Android';
@@ -17,6 +19,7 @@
     --cor05:#2B2C33;
 
     --fonte_padrao:Arial, Verdana, Helvetica, Sans-serif;
+    --fonte_padrao02:"Libre Baskerville", serif;
     --fonte_destaque:"Bebas Neue", Sans-serif;
     --fonte_android:'Android',sans-serif;
 
@@ -48,8 +51,14 @@ header > h1{
     font-size: 2.5em; 
     font-weight:normal;   
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.336);
-   
 }  
+
+header img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 0px solid rgb(255, 255, 255);
+}
 
 header > p{
     font-family: var(--fonte_padrao);
@@ -62,6 +71,7 @@ nav{
     background-color: var(--cor05);
     padding: 5px;
     text-align: left;
+    padding-bottom: 15px;
 }
 
 nav > a{
@@ -74,30 +84,31 @@ nav > a{
     
 }
 nav a:hover{
-    background-color: #233dcf71;
-    text-decoration: underline;
-    padding: 5px;
+    background-color: var(--cor01);
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bolder;
+    border-radius:5px;
+    transition-duration: 0.5s;
 }
 a {
     color:aliceblue;
     text-decoration: none;
     padding: 10px;
 }
-header img{
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 0px solid rgb(255, 255, 255);
-}
+
 main{ /*RESPONSIVE*/
     min-width: 350px;
     max-width: 800px;
     margin: auto;
     background-color: white;
     padding: 20px; /*distância das bordas ao conteúdo do meio*/
-    
-
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.486);
+    margin: 30px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
+
 main p{
     margin: 15px 15px 15px 15px;
     text-align: justify;
