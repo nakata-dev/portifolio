@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de responsividade</title>
+    <style>
+        body{
+            background-color: gray;
+        }
+        main{
+            background-color: white;
+            padding: 20px; /*Borda interna da caixa até o texto*/
+            border-radius: 10px; /*Arredondamento da borda da caixa interna*/
+
+            min-width: 280px; /*Largura miníma até ativa a imagem menor*/
+            max-width: 800px; /*Largura máxima da responsividade*/
+            margin: auto; /*Centraliza o conteúdo*/
+        }
+        img{
+            width: 100%;
+        }
+        p{
+            text-align: justify;
+            text-indent: 20px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        
+        <h1>Testando Responsividade</h1>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem corporis nobis alias mollitia dicta soluta pariatur voluptatum. Eum explicabo aliquid optio, aperiam soluta adipisci expedita eveniet iure! Minima, labore similique?</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos quaerat, rem soluta non blanditiis voluptas, doloremque beatae vitae expedita libero dolorum quibusdam doloribus delectus minus eum quae. Illum, temporibus placeat.</p>
+        <picture>
+            <source media="(max-width:600px)" srcset="imagens/irina-blok-pq.jpg">
+            <img src="imagens/irina-blok.jpg" alt="Irina_Blok">
+        </picture>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum quia eos impedit, molestias velit placeat blanditiis exercitationem perspiciatis laudantium laborum eligendi sed tempore itaque architecto odio enim, iure voluptate repellat?</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta tempora, obcaecati et officia adipisci explicabo ipsam quidem ducimus aspernatur consectetur, maxime fugiat mollitia voluptas qui labore nam ea reiciendis dolorem!</p>
+    </main>
+</body>
+</html>
