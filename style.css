@@ -70,15 +70,15 @@
 
     header > h1{
         font-family: var(--fonte_destaque);
-        font-size: 4em;
+        font-size: 3em;
         padding-bottom: 0px;
         
-
     }
 
     header > p{
         padding-top: 0px;
         padding-bottom: 10px;
+        font-size: 1.5em;
     }
     main{
         position: relative;
@@ -95,7 +95,7 @@
         border-top-right-radius: 10px;
         border-top-left-radius: 10px;
         padding-bottom: 0px;
-        margin-bottom: ;
+        
     }
     img{
         display: block;
@@ -113,6 +113,14 @@
         text-align: center;
         color: white;
         font-size: 1em;
+    }
+
+    ol{
+        list-style: inside;
+        padding: 5px;
+        columns: 2;
+        text-align: justify;
+        
     }
    
     
