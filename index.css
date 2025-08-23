@@ -49,8 +49,8 @@ header{
 header > h1{
     color: white;
     font-family:var(--fonte_destaque);
-    font-size: 3em; 
-    font-weight:normal;   
+    font-size: 2em; 
+    font-weight:lighter;   
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.336);
 }  
 
@@ -63,13 +63,13 @@ header img{
 
 header > p{
     font-family: var(--fonte_padrao);
-    font-size: 0.9em;
+    font-size: 0.67em;
     color: white;
     
 }
 
 nav{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--fonte_padrao);
     background-color: var(--cor05);
     padding-left: 15px;
     padding-bottom: 10px;

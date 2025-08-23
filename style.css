@@ -36,7 +36,7 @@
     header{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));
         color: white;
-        min-height: 100px;
+        min-height: 80px;
         text-align: center;
         padding-top: 10px;
     }
@@ -69,16 +69,15 @@
 
     header > h1{
         font-family: var(--fonte_destaque);
-        font-size: 3em;
-        padding: 0px;
-        
+        font-weight:normal;
+        font-size: 2em;   
     }
 
     header > p{
         font-family: var(--fonte_padrao);
-        font-size: 1em;
+        font-size: 0.67em;
         color: white;
-        padding: 0px;
+        
 
     }
     main{
@@ -105,8 +104,8 @@
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
-        max-width: 290px;
-        height: 90vh;
+        max-width: 299px;
+        height: 80%;
     }
     footer{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));  
