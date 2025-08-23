@@ -41,9 +41,10 @@
         padding-top: 10px;
     }
     nav{
+        font-family: Arial, Helvetica, sans-serif;
         background-color: var(--cor05);
         padding: 10px;
-        padding-left: 15px;
+        
         text-align: left;
         padding-bottom: 10px;
         font-size: 1em;
@@ -53,7 +54,7 @@
     padding: 10px;
     text-decoration: none;
     font-weight: lighter;
-    border-radius: 2.5px;
+    border-radius: 2px;
     transition-duration: 0.3s;
     
 }
@@ -69,14 +70,16 @@
     header > h1{
         font-family: var(--fonte_destaque);
         font-size: 3em;
-        padding-bottom: 0px;
+        padding: 0px;
         
     }
 
     header > p{
         font-family: var(--fonte_padrao);
-        font-size: 0.9em;
+        font-size: 1em;
         color: white;
+        padding: 0px;
+
     }
     main{
         position: relative;
@@ -98,10 +101,12 @@
     img{
         display: block;
         margin: 10px auto;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
-        max-width: 500px;
-        height: 90vh;
+        max-width: 300px;
+        height: 92vh;
     }
     footer{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));  
