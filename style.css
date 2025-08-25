@@ -34,7 +34,7 @@
 }
     
     header{
-        background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));
+        background-image: linear-gradient(to bottom, var(--cor00), var(--cor04));
         color: white;
         min-height: 80px;
         text-align: center;
@@ -42,7 +42,7 @@
     }
     nav{
         font-family: Arial, Helvetica, sans-serif;
-        background-color: var(--cor05);
+        background-color: var(--cor04);
         padding: 10px;
         
         text-align: left;
@@ -59,6 +59,7 @@
     
 }
     nav a:hover{
+    
     background-color: var(--cor01);
     padding: 10px;
     text-decoration: none;
@@ -97,15 +98,11 @@
         padding-bottom: 0px;
         
     }
-    img{
-        display: block;
-        margin: 10px auto;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
-        max-width: 299px;
-        height: 80%;
+    main > img{
+        width: 300px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
     }
     footer{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));  
@@ -125,4 +122,26 @@
         
     }
    
+    .galeria {
+    display: flex;
+    flex-direction: column; /* coloca uma embaixo da outra */
+    align-items: center;    /* centraliza horizontalmente */
+    gap: 20px;              /* espaço entre as imagens */
+    padding: 20px;
+    }
+
+    .galeria img {
+    width:300px;
+    max-width: 90%;  /* responsivo, nunca passa da largura da tela */
+    
+    height: auto;    /* mantém proporção */
+    border-radius: 12px; /* opcional: cantos arredondados */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* opcional: sombra */
+    }
+
+    .galeria img:hover{
+        transform: scale(1.9); /*Aumenta 90% no hover*/
+    }
+
+    
     
