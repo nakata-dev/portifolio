@@ -98,7 +98,9 @@
         padding-bottom: 0px;
         
     }
-   
+   h2,h3,h4,h4,h6{
+    padding: 10px;
+   }
     footer{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));  
         font-family: var(--fonte_padrao);
@@ -109,7 +111,7 @@
         font-size: 0.8em;
     }
 
-    ol{
+    ul{
         list-style: inside;
         padding: 5px;
         columns: 2;
