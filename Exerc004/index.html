@@ -3,28 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Exerc004</title>
+    <style>
+        *{
+            text-align: center;
+        }
+        #pequeno img {
+        display: block;
+        margin: 0 auto;
+        max-width: 150px;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+        }
+        #pequeno a:hover{
+            transform:scale(1.1);
+        }
+
+        #medio img {
+        display: block;
+        margin: 0 auto;
+        min-width: 300px;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+        }
+        #medio>img a:hover{
+            transform: scale(1.4);
+            
+        }
+
+        #original img {
+        display: block;
+        margin: 0 auto;
+        min-width: 400px;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+        }
+
+        #original a:hover{
+            transform: scale(1.9);
+        }
+    </style>
 </head>
 <body>
-    <div style="text-align: center;">
-        <h1>Alterando tamanho das imagens com GIMP</h1>
-        <h2>
-           Imagem alterada com GIMP - 650px <img src="paisagem-650.jpeg" alt="paisagem-650">
-        </h2>
-        <h2>
-            Imagem alterada com GIMP - 1200px
-            <img src="paisagem-1200.jpeg" alt="paisagem-1200" width="1200" height="auto">
-        </h2>
+    <header>
+        <h1>Exercício 004: Tamanho de Imagens</h1>
+        <p>por: Ailton A.  Nakata</p>
+    </header>
+    <main>
+        <div id="pequeno">
+            <h1>GIMP</h1>
+            <br>
+            <hr>
+            <br>
+            <h2>
+                650px <img src="paisagem-650.jpeg" alt="paisagem-650">
+            </h2>
+        </div>
+        <br>
         <hr>
-        <h2>
-            Imagem tamanho original
-            <img src="paisagem-full.jpeg" alt="paisagem-650px">
-        </h2>
-        <p>
-            <a href="../estudos.html">Retornar para Estudos
-            </a>
-        </p>
-    </div>
+        <br>
+        <div id="medio">
+            <h2>
+                1200px
+                <img src="paisagem-1200.jpeg" alt="paisagem-1200" width="1200" height="auto">
+            </h2>
+        </div>
+        <br>
+        <br>
+            <hr>
+            <br>
+            <div id="original">
+                <h2>
+                    Original
+                    <img src="paisagem-full.jpeg" alt="paisagem-650px">
+                </h2>
+            </div>
+            <br>
+            <br>
+        <div id="voltar">
+            <a href="../estudos.html" >Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
     
 </body>
 </html>

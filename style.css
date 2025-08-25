@@ -83,12 +83,12 @@
     }
     main{
         position: relative;
-        height: 98vh;
+        height: auto;
         min-width: 350px;
         max-width: 800px;
         margin: auto;
         background-color: white;
-        padding: 10px;
+        padding: 25px;
         
         box-shadow:0px 0px 10px black;
         border-bottom-right-radius: 10px;
@@ -98,12 +98,7 @@
         padding-bottom: 0px;
         
     }
-    main > img{
-        width: 300px;
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
+   
     footer{
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));  
         font-family: var(--fonte_padrao);
@@ -122,26 +117,46 @@
         
     }
    
-    .galeria {
-    display: flex;
-    flex-direction: column; /* coloca uma embaixo da outra */
-    align-items: center;    /* centraliza horizontalmente */
-    gap: 20px;              /* espaço entre as imagens */
-    padding: 20px;
-    }
-
-    .galeria img {
-    width:300px;
-    max-width: 90%;  /* responsivo, nunca passa da largura da tela */
-    
+    img{
+    display: block;   /* transforma em bloco */
+    margin: 30px auto;   /* margens automáticas centralizam */
+    max-width: 300px;  /* responsivo, nunca passa da largura da tela */  
     height: auto;    /* mantém proporção */
     border-radius: 12px; /* opcional: cantos arredondados */
     box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* opcional: sombra */
     }
 
-    .galeria img:hover{
-        transform: scale(1.9); /*Aumenta 90% no hover*/
+    img:hover{
+        transform:scale(1.5);
     }
+    div.galeria{
+        padding: 15px;
+    }
+
+    div#txt_exercicios{
+        line-height: 1.8;
+    }
+
+    div#txt_exercicios a:hover{
+        background-color: rgba(173, 216, 230, 0.445);
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    div#voltar{
+        text-align: center;    
+    }
+    div#voltar a:hover{
+        padding: 10px;
+         background-color: rgba(125, 208, 235, 0.637);
+         font-weight: bolder;
+         transition-duration: 0.5s;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         border-radius: 5px;
+         border: none;
+    }
+    
+   
 
     
     

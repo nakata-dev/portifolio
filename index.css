@@ -65,6 +65,7 @@ header > p{
     font-family: var(--fonte_padrao);
     font-size: 0.67em;
     color: white;
+    padding-bottom: 10px;
     
 }
 
@@ -148,4 +149,8 @@ footer p{
 .listas {
     display: flex;
     gap: 30px;
+}
+
+.galeria{
+
 }
