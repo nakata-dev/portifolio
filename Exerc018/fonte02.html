@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Importando Fontes</title>
+    <link rel="stylesheet" href="../style.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
 
@@ -16,7 +17,7 @@
             font-weight: <weight>;
             font-style: normal;
         }
-        h1{
+        h1#destaque{
             font-family: 'kaushan script', sans-serif;
             font-size: 3em;
             font-style: normal;
@@ -30,13 +31,22 @@
     </style>
 </head>
 <body>
-    <h1>Título</h1>
+    <header>
+        <h1 id="destaque">Título</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    
+    <main>
     <h2>Subtitulo</h2>
 
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores asperiores ea aspernatur doloremque quaerat a animi impedit repellendus. Neque deserunt ea fugiat amet quo. Eligendi asperiores odio doloremque corrupti maiores.</p>
-
-    <h2>Subtitulo</h2>
-
-    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque reprehenderit veniam ratione error. Magni accusantium blanditiis placeat ipsam! Cumque dignissimos ut alias vero, quas incidunt odit tenetur excepturi magni odio!</p>
+        <p style="text-align: justify; text-indent: 30px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores asperiores ea aspernatur doloremque quaerat a animi impedit repellendus. Neque deserunt ea fugiat amet quo. Eligendi asperiores odio doloremque corrupti maiores.</p>
+        <h2>Subtitulo</h2>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque reprehenderit veniam ratione error. Magni accusantium blanditiis placeat ipsam! Cumque dignissimos ut alias vero, quas incidunt odit tenetur excepturi magni odio!</p>
+        <br><br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </main>
 </body>
 </html>
