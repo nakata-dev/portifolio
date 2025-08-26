@@ -3,6 +3,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 /*fonte importada do computador */
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Passion+One:wght@400;700;900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 @font-face {
     font-family: 'Android';
     src: url(fontes/idroid.otf) format('opentype');
@@ -20,6 +21,7 @@
     --fonte_padrao02:"Libre Baskerville", serif;
     --fonte_destaque:"Bebas Neue", Sans-serif;
     --fonte_android:'Android',sans-serif;
+    --fonte_caligrafica:"Passion One", sans-serif;
     }
     *{
         margin: 0px;
@@ -116,6 +118,7 @@
         padding: 5px;
         columns: 2;
         text-align: left;
+        list-style-type: square;
         
     }
    
