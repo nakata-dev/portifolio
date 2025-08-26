@@ -3,23 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
     <title>Grouping Tags</title>
     <style>
+       
         body{
             font-family: Arial, Helvetica, sans-serif;
-            background-color: dimgray;
+            background-color: rgb(255, 255, 255);
             margin: 10px;
         }
         header{
             background-color: aliceblue;
-            padding: 10px;
-            margin: 10px;
+            padding: 5px;
+            margin: 5px;
+            min-width: 300px;
+            max-width: 800px;
         }
         main{
             background-color: white;
-            padding: 10px;
-            margin: 10px;
+            padding: 5px;
+            margin: 5px;
             border-radius: 20px 0px; /* Deixa a borda arredondada*/
+            min-width:300px;
+            max-width:800px;
+            height: auto;
+
         }
         article{
             background-color: lightgray;
@@ -33,6 +41,7 @@
             background-color: rgb(117, 115, 115);
             padding: 3px;
             box-shadow: 2px 4px 8px black;
+            padding: 5px;
         }
         nav > a{
             text-decoration: none;
@@ -40,12 +49,26 @@
             font-weight: bold;
             margin-right: 30px;
         }
+
+        div#voltar{
+        text-align: center;    
+    }
+    div#voltar a:hover{
+        padding: 10px;
+         background-color: rgba(125, 208, 235, 0.637);
+         font-weight: bolder;
+         transition-duration: 0.5s;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         border-radius: 5px;
+         border: none;
+    }
         footer{
-            background-color: black;
+            background-color:rgb(117, 115, 115);
             color: white;
             text-align: center;
             padding: 4px;
             margin: 0px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.527);
         }
         footer > p{
             margin: 0px;
@@ -55,7 +78,8 @@
             width: 100px;
             margin: 10px;
             background-color: white;
-            border-radius: 50%;            
+            border-radius: 50%;        
+            margin: auto;    
         }
     </style>
 </head>
@@ -67,9 +91,7 @@
             <a href="#">Link</a>
             <a href="#">Link</a>
             <a href="#">Link</a>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
+            
         </nav>
     </header>
     <main>      <!--Conteúdo principal-->
@@ -87,9 +109,18 @@
             </aside>
         </article>
     </main>
+    <br>
+    <br>
+    <div id="bola"></div>
+    <br>
+    <br>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+    <br>
+    <br>
     <footer>    <!--Rodapé-->
         <p>Desenvolvido pelo Cursoemvideo</p>
     </footer>
-    <div id="bola"></div>
 </body>
 </html>

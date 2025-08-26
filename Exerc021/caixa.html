@@ -3,51 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Modelo de caixas</title>
     <style>
-        h1{ /* box level */
+        h2{ /* box level */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-color: lightgray;
             height: 300px;
             width: 300px;
             border-width: 10px;
             border-style: solid;
             border-color: darkslategray;
-
+            
             padding-top: 10px;
             padding-right: 10px;
             padding-bottom: 10px;
             padding-left: 10px;
+            margin: auto;
         }
         a{ /* inline */
-         /* border-width: 4px;
+            /* border-width: 4px;
             border-style: solid;   
             border-color: darkslategray;*/
             /* Shorthand */
             borde: 4px solid darkslategray;
-        
-          /*padding-top: 10px;
+            
+            /*padding-top: 10px;
             padding-right: 10px;
             padding-bottom: 10px;
             padding-left: 10px; */
             /* Shorthand */
             padding: 10px 10px 10px 10px; 
-
+            
             margin-top: 10px;  /* Se quiser cetralizar a caixa no meior use margin: auto; */
-          /*margin-left: 10px;
+            /*margin-left: 10px;
             margin-bottom: 10px;
             margin-left: 10px;*/
             margin: 10px auto 10px auto;
-
+            
             outline-width: 10px;
             outline-style: dashed;
             outline-color: salmon;
-            outline: 10px dashed salmon;
+            outline: 5px dashed salmon;
         }
+        
+        </style>
+    </head>
 
-    </style>
-</head>
 <body>
-    <h1>Exemplo de modelo Box-Level</h1>
-    <p>Parágrafos são exemplo de box level, mas, os <a href="#">links são exemplos de caixas inline</a>. Vamos ver como tudo isso funciona.</p>
+    <header>
+        <h1>Exercício 021: Box-Level</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <h2>Exemplo de Box-level</h2>
+        <p>Parágrafos são exemplo de box level, mas, os <a href="#">links são exemplos de caixas inline</a>. Vamos ver como tudo isso funciona.</p>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+            <br>
+            <br>
+        </div>
+        <h3>CSS:</h3>
+    <pre>
+        <p>
+            h2{ /* box level */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: lightgray;
+            height: 300px;
+            width: 300px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: darkslategray;
+            
+            padding-top: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            margin: auto;
+        }
+        a{ /* inline */
+            /* border-width: 4px;
+            border-style: solid;   
+            border-color: darkslategray;*/
+            /* Shorthand */
+            borde: 4px solid darkslategray;
+            
+            /*padding-top: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px; */
+            /* Shorthand */
+            padding: 10px 10px 10px 10px; 
+            
+            margin-top: 10px;  /* Se quiser <br>            cetralizar a caixa <br>            no meior use margin: auto; */
+            /*margin-left: 10px;
+            margin-bottom: 10px;
+            margin-left: 10px;*/
+            margin: 10px auto 10px auto;
+            
+            outline-width: 10px;
+            outline-style: dashed;
+            outline-color: salmon;
+            outline: 5px dashed salmon;
+        }
+        </p>
+    </pre>
+    <br>
+    <br>
+    <div id="voltar">
+    <a href="../estudos.html">Voltar</a>
+    <br>
+    <br>
+    </main>
 </body>
 </html>

@@ -3,25 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Pseudoclasses</title>
     <style>
         div {
-            display: inline-block; /* Tudo na mesma linha */
+            display: inline-flex; /* Ativa a caixa flexbox */
+            justify-content: center; /* Centralizar horizontal*/
+            align-items: center; /*Centralizar vertical*/
             background-color: lightgray;
             border: 1px solid black;
             text-align:center;
             height: 200px;
             width: 200px;
+            font-size: 1.4em;
         }
         div:hover{
             background-color: yellow; /* altera a cor do fundo quando passa o mouse por cima */
         }
+        pre>p{
+            text-align: justify;
+        }
+       
     </style>
 </head>
 <body>
-    <h1>Pseudo-classes</h1>
-    <div id="01">01</div>
-    <div id="02">02</div>
-    <div id="03">03</div>
+    <header>
+        <h1>Exercício 020: Pseudo-classes</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <h2>Como usar: Pseudo-classes</h2>
+        <div id="01">01</div>
+        <div id="02">02</div>
+        <div id="03">03</div>
+        
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+        <h1>Orientação: CSS</h1>
+        <pre>
+            <p>
+        div {
+            display: inline-flex; /* Ativa a caixa flexbox */
+            justify-content: center; /* Centralizar horizontal*/
+            align-items: center; /*Centralizar vertical*/
+            background-color: lightgray;
+            border: 1px solid black;
+            text-align:center;
+            height: 200px;
+            width: 200px;
+            font-size: 1.4em;
+        }
+        div:hover{
+            background-color: yellow; /* altera a cor do fundo <br>            quando passa o mouse por cima */
+        }
+            </p>
+        </pre>
+    </main>
 </body>
 </html>

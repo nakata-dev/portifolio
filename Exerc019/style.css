@@ -1,26 +1,48 @@
 @charset "utf-8"; /*Opicional colocar caso não reconheça os caracteres especiais no HTML */ 
-body{
-background-color: #42af49;
-font-family: Arial, Helvetica, sans-serif;
+*{
+    margin: 0px;
+    padding: 0px;
 }
 
-h1{
-    color: rgb(2, 61, 0);
+body{
+    background-color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+main{
+    position: relative;
+    min-width: 300px;
+    max-width: 800px;
+    padding: 25px;
+    margin: auto;
+    box-shadow: 0px 0px 10px black;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+}
+
+header h1{
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.26);
+    padding: 30px;
+    
 }
 /* em HTML é id e em CSS vai ser # só pode um elemento
  tudo que é class em HTML vai ser . em CSS. Pode vários elementos*/
 #principal{
     text-align: center;
-    background-color:rgb(4, 109, 0);
+    background-image: linear-gradient(to bottom, #233CCF, #2B2C33);
     color: #fefffd;
 }
 
 h2{
     color: #2D332E;
+    padding: 10px;
 }
 p{
     text-align: justify;
     text-indent: 30px;
+    line-height: 1.5;
 }
 .basico{
     color: #005a06;
@@ -34,3 +56,16 @@ p{
 .destaque{
     background-color: rgba(255, 255, 0, 0.582);
 }
+
+div#voltar{
+        text-align: center;    
+    }
+    div#voltar a:hover{
+        padding: 10px;
+         background-color: rgba(125, 208, 235, 0.637);
+         font-weight: bolder;
+         transition-duration: 0.5s;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         border-radius: 5px;
+         border: none;
+    }
