@@ -3,107 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <title>Tabela_Completa</title>
     <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;          
-            
-        }
+ 
         caption{
-            font-size: 1.3em;
+            font-size: 2em;
             font-weight: bold;
-            padding: 10px;
+            padding: 15px;
+            margin: auto;
         }
         table{
+            display: block;
             border-collapse: collapse;
             width: 600px;
             text-align: center;
+            margin: auto;
         }
         th,td{
             border: 1px solid black;
             padding: 10px;
-
+            
+            
         }
         pre > p{
             padding-left: 80px;
         }
+
     </style>
-    <title>Tabela_Completa</title>
 </head>
 <body>
-    <h1>Tabelas Completas</h1>
-        <table>
-            <caption>
-                Filmes Favoritos
-            </caption>
-             <thead>
-                <th scope="col">Grupos</th>
-                <th scope="col">Nomes</th>
-                <th colspan="3" scope="colgroup">Filmes</th>
-             </thead>
-             <tbody>
-                <tr>
-                    <th rowspan="3" scope="rowgroup">Mulheres</th>
-                    <td>Ana Maria Santos</td>
-                    <td>Alien</td>
-                    <td>Rambo</td>
-                    <td>Vingadores</td>
-                </tr>
-                <tr>
-                    <td>Beatriz Souza</td>
-                    <td>Hulk</td>
-                    <td>Inseption</td>
-                    <td>Batman</td>
-                </tr>
-                <tr>
-                    <td>Claudia Melo</td>
-                    <td>Oblivio</td>
-                    <td>Matrix</td>
-                    <td>Big Hero</td>
-                </tr>
-                <tr>
-                    <th rowspan="3" scope="rowgroup">Homens</th>
-                    <td>Bruno Mendonça</td>
-                    <td>Intocáveis</td>
-                    <td>Amnésia</td>
-                    <td>Gladiador</td>
-                </tr>
-                <tr>
-                    <td>Daniel Lourenço</td>
-                    <td>Wall-E</td>
-                    <td>Oldboy</td>
-                    <td>Dangal</td>
-                </tr>
-                <tr>
-                    <td>Fabiano Motta</td>
-                    <td>Star Wars V</td>
-                    <td>Taxi Driver</td>
-                    <td>Toy Story</td>
-                </tr>
-             </tbody>
-             <tfoot>
-                <tr>
-                    <th colspan="4" scope="row">Total</th>
-                    <td>1000</td>
-                </tr>
-             </tfoot>
-        </table>
-        <h1>Orientação de uso do SCOPE</h1>
-        <pre>
-            <p>
-                <br>O atributo scope em HTML é usado <br>dentro de tabelas (&lt;table&gt;) <br>para indicar a que células de <br>dados (&lt;td&gt;) um cabeçalho (&lt;th&gt;) <br>está associado.
-
-                <br>👉 Ele melhora a acessibilidade, <br>ajudando leitores de tela a <br>entenderem a estrutura da tabela.
-
-                <br>Valores principais:
-
-                <br>scope="col" → o &lt;th&gt; vale <br>para toda a coluna.
-
-                <br>scope="row" → o &lt;th&gt; vale <br>para toda a linha.
-
-                <br>scope="colgroup" → o &lt;th&gt; <br>vale para um grupo de colunas.
-
-                <br>scope="rowgroup" → o &lt;th&gt; <br>vale para um grupo de linhas.
-            </p>
-        </pre>
+    <header>
+        <h1>Exercício 023: Tabela V</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+        <main>
+            <table>
+                <caption>
+                    Filmes Favoritos
+                </caption>
+                 <thead>
+                    <th scope="col">Grupos</th>
+                    <th scope="col">Nomes</th>
+                    <th colspan="3" scope="colgroup">Filmes</th>
+                 </thead>
+                 <tbody>
+                    <tr>
+                        <th rowspan="3" scope="rowgroup">Mulheres</th>
+                        <td>Ana Maria Santos</td>
+                        <td>Alien</td>
+                        <td>Rambo</td>
+                        <td>Vingadores</td>
+                    </tr>
+                    <tr>
+                        <td>Beatriz Souza</td>
+                        <td>Hulk</td>
+                        <td>Inseption</td>
+                        <td>Batman</td>
+                    </tr>
+                    <tr>
+                        <td>Claudia Melo</td>
+                        <td>Oblivio</td>
+                        <td>Matrix</td>
+                        <td>Big Hero</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3" scope="rowgroup">Homens</th>
+                        <td>Bruno Mendonça</td>
+                        <td>Intocáveis</td>
+                        <td>Amnésia</td>
+                        <td>Gladiador</td>
+                    </tr>
+                    <tr>
+                        <td>Daniel Lourenço</td>
+                        <td>Wall-E</td>
+                        <td>Oldboy</td>
+                        <td>Dangal</td>
+                    </tr>
+                    <tr>
+                        <td>Fabiano Motta</td>
+                        <td>Star Wars V</td>
+                        <td>Taxi Driver</td>
+                        <td>Toy Story</td>
+                    </tr>
+                 </tbody>
+                 <tfoot>
+                    <tr>
+                        <th colspan="4" scope="row">Total</th>
+                        <td>1000</td>
+                    </tr>
+                 </tfoot>
+            </table>
+            <h1>Orientação de uso do SCOPE</h1>
+            <pre>
+                <p>
+                    <br>O atributo scope em HTML é usado <br>dentro de tabelas (&lt;table&gt;) <br>para indicar a que células de <br>dados (&lt;td&gt;) um cabeçalho (&lt;th&gt;) <br>está associado.
+                    <br>👉 Ele melhora a acessibilidade, <br>ajudando leitores de tela a <br>entenderem a estrutura da tabela.
+                    <br>Valores principais:
+                    <br>scope="col" → o &lt;th&gt; vale <br>para toda a coluna.
+                    <br>scope="row" → o &lt;th&gt; vale <br>para toda a linha.
+                    <br>scope="colgroup" → o &lt;th&gt; <br>vale para um grupo de colunas.
+                    <br>scope="rowgroup" → o &lt;th&gt; <br>vale para um grupo de linhas.
+                </p>
+            </pre>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+        </main>
 </body>
 </html>

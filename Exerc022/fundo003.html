@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Posição dos fundos</title>
     <style>
         div.bloco{
@@ -25,25 +26,61 @@
             background-position: center center;
         }
         div#q5{
-
+            background-position: bottom left;
         }
     </style>
 </head>
 <body>
-    <div class="bloco" id="q1">
+    <header>
+        <h1>Exercício 022: Posicionamento de Img.</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <div class="bloco" id="q1">
+        </div>
+        <div class="bloco" id="q2">
+        </div>
+        <div class="bloco" id="q3">
+        </div>
+        <div class="bloco" id="q4">
+        </div>
+        <div class="bloco" id="q5">
+        </div>
+        <br><br>
+        <h2>CSS:</h2>
+            <pre>
+            <p>
+        div.bloco{
+        background-image: url('imagens/wallpaper003.jpg');
+        height: 200px; /*Altura*/
+        border: 1px solid black;
+        margin: 10px;
+        border-radius: 15px;
+        }
+        div#q1{
+            background-position: left top;
+        }
+        div#q2{
+            background-position: left center;
+        }
+        div#q3{
+            background-position: right bottom;
+        }
+        div#q4{
+            background-position: center center;
+        }
+        div#q5{
+            background-position: bottom left;
+        }
+            </p>
+        </pre>
 
-    </div>
-    <div class="bloco" id="q2">
+            <br><br>
+        <div id="voltar">
+            <a href="../estudos.html">voltar</a>
+        </div>
+            <br><br>
+    </main>
 
-    </div>
-    <div class="bloco" id="q3">
-
-    </div>
-    <div class="bloco" id="q4">
-
-    </div>
-    <div class="bloco" id="q5">
-
-    </div>
 </body>
 </html>
