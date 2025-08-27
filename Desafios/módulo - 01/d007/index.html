@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagem_Responsiva</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        p{
+            text-align: justify;
+            text-indent: 25px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<header>
+    <h1>Desafio 07: Imagens Responsivas</h1>
+</header>
+<main>
+    <h2>O que é uma tag: Picture?</h2>
+    <p>
+        É um container flexível para exibir imagens adaptáveis em diferentes situações.
+
+Permite definir várias fontes de imagem e deixar o navegador escolher a mais adequada. </p>
+<br>
+<p>
+    Usado para:
+    
+    Responsividade (diferentes tamanhos para diferentes telas).
+    
+    Formatos diferentes (ex: webp, avif, jpg).
+    
+    Direções artísticas (mostrar outra imagem em telas menores, não só redimensionar).
+</p>
+    
+<picture>
+    <!--Para telas até 500px-->
+    <source media="(max-width:500px)" srcset="imagens/paisagem-p.png">
+    <!--Para telas até 768px-->
+    <source media="(max-width:768px)" srcset="imagens/paisagem-m.png">
+    <!--Fallback(se nenhuma das condições for atendidas)-->
+    <img src="imagens/paisagem-g.png">
+</picture>
+<br>
+<br>
+<div id="voltar">
+    <a href="../../../desafios.html">Voltar</a>
+</div>
+<br>
+<br>
+</main>
+<body>
+    
+</body>
+</html>

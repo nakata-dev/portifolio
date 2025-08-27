@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tumb_vídeos</title>
+    
+    
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+/*fonte importada do computador */
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Passion+One:wght@400;700;900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+@font-face {
+    font-family: 'Android';
+    src: url(fontes/idroid.otf) format('opentype');
+}
+    :root{
+    --cor00:#233CCF;
+    --cor01:#3747A5;
+    --cor02:#0025FA;
+    --cor03:#3D467A;
+    --cor04:#353950;
+    --cor05:#2B2C33;
+
+    --fonte_padrao:Arial, Verdana, Helvetica, Sans-serif;
+    --fonte_padrao02:"Libre Baskerville", serif;
+    --fonte_destaque:"Bebas Neue", Sans-serif;
+    --fonte_android:'Android',sans-serif;
+    --fonte_caligrafica:"Passion One", sans-serif;
+}
+    header{
+    background-image: linear-gradient(to bottom, var(--cor00), var(--cor04));
+    color: white;
+    min-height: 80px;
+    text-align: center;
+    padding-top: 10px;
+    font-family: var(--fonte_destaque);
+    }
+   
+   main{
+        position: relative;
+        height: auto;
+        min-width: 350px;
+        max-width: 800px;
+        margin: auto;
+        background-color: white;
+        padding: 25px;
+        
+        box-shadow:0px 0px 10px black;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        padding-bottom: 0px;
+        
+    }
+    .galeria{
+    display: grid;
+    grid-template-columns: repeat(2, auto); /*duas colunas iguais em um frame*/
+    gap: 0px 0px;
+    justify-content: center;
+    margin: 0px;
+    padding: 0px;           
+    }
+
+    img:hover{
+        animation-duration: 0.2s;
+        transform:scale(1.1)
+    }
+    a:hover{
+        background-color: rgba(173, 216, 230, 0.445);
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    div#voltar{
+        text-align: center;    
+    }
+    div#voltar a:hover{
+        padding: 10px;
+         background-color: rgba(125, 208, 235, 0.637);
+         font-weight: bolder;
+         transition-duration: 0.5s;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         border-radius: 5px;
+         border: none;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Adicionando Thumbnail</h1>
+        por: Ailton A. Nakata
+    </header>
+    <main>
+        <div class="galeria">
+            <a href="https://www.youtube.com/watch?v=zpK_MqEMgu4" target="_blank">
+                <img src="imagens/thumb-hardware.png" alt="thumb-hardware"></a>
+
+            <a href="https://www.youtube.com/watch?v=F74GKCLXUWM&t=411s" target="_blank"><img src="imagens/thumb-html.png" alt="thumb-html"></a>
+            
+            <a href="https://www.youtube.com/watch?v=Ptbk2af68e8" target="_blank"><img src="imagens/thumb-js.png" alt="thumb-js"></a>
+
+            <a href="https://www.youtube.com/watch?v=S9uPNppGsGo" target="_blank"><img src="imagens/thumb-python.png" alt="thumb-python"></a>
+        </div>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../../../desafios.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
+    
+</body>
+</html>

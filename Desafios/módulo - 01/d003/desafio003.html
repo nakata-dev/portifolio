@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="../../../style.css">
     <title>Desafio - 003</title>
     <style>
-        #mapa_mundi img{
+        .mapa_mundi img{
             display: inline-block;
-            margin: 2px 2px 2px 2px;
-            margin: auto;
+            grid-template-columns: repeat(3, auto);
+            justify-content: center;
+            margin: 0px;
             border-radius: 0px;
         }
      
@@ -24,8 +25,8 @@
     <main>
         
             <br>
-            <div id="mapa_mundi">
-                <h2>Imagens Justapostas (p)(br)</h2>
+            <div class="mapa_mundi">
+                <h2>Imagens Justapostas (grid)</h2>
                 <p><img src="imagens/mapa03.png" alt="imagem 001">
                 <img src="imagens/mapa07.png" alt="imagem 002">
                 <img src="imagens/mapa05.png" alt="imagem 003"><br>

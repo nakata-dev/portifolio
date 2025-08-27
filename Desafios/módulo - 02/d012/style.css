@@ -103,4 +103,17 @@ footer{
     text-align: center;
     padding: 10px;
 }
+#voltar{
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+#voltar a:hover{
+    background-color: rgb(117, 180, 252);
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bolder;
+    animation-duration: 0.5;
+    transform: scale(1.8);
+}
 
