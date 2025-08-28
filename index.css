@@ -130,8 +130,15 @@ main h3{
 
 footer img{
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.37);
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
+}
+footer img:hover{
+    background-color: var(--cor00);
+    padding: 3px;
+    transition-duration: 0.5s;
+    border-radius: 10px;
+    
 }
 footer{
     background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));

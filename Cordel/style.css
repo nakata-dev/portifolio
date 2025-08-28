@@ -1,0 +1,119 @@
+@charset "UTF=8";
+
+@import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@400;700;900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap');
+
+
+:root{
+    --fonte01: Verdana, Geneva, Tahoma, sans-serif;
+    --fonte02:"Passion One", cursive;
+    --fonte03:"Edu NSW ACT Cursive", cursive;
+}
+
+*{
+    margin: 0px;
+    padding: 0px;
+    font-size: 1em;
+}
+
+html, body{
+    min-height: 100vh;
+    background-color: gainsboro;
+    font-family: var(--fonte01);
+}
+
+header{
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+header > h1{
+    padding-top: 50px;
+    font-variant: small-caps;
+    font-family: var(--fonte02);
+    font-size: 7vw;
+}
+
+header > p{
+    padding-bottom: 50px;
+}
+
+header a, footer a{
+    color: white;
+    text-decoration: none;
+    font-weight: bolder;
+
+}
+
+header a:hover, footer a:hover{
+    text-decoration: underline;
+}
+
+section{
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    line-height:2em;
+    padding-left: 40px;
+    font-family: var(--fonte03);
+    font-size: 3.5vw; /*aumenta o tamanho conforme altera o tamanho da tela*/
+
+}
+
+section.normal{
+    background-color: white;
+    color: rgb(0, 0, 0);
+}
+
+section.imagem > p{
+    display: inline-block; /*coloca o texto dentro de uma caixa*/
+    background-color: rgba(0, 0, 0, 0.377);
+    padding: 7px;
+    text-shadow: 1px 1px 0px black;
+}
+
+section.imagem{
+    background-color: gray;
+    color: white;
+    box-shadow: inset 6px 6px 13px 0px rgba(0, 0, 0, 0.473);
+    background: cover;
+    background-attachment:fixed; /*fixa a imagem na posição que foi configurada na id*/
+}
+
+section > p{
+    padding-bottom: 2em;
+}
+
+section#img01{
+    background-image: url('imagens/background001.jpg');
+    background-position: right center;
+    
+}
+
+section#img02{
+    background-image: url('imagens/background002.jpg');
+    background-position: right center;
+    
+}
+
+footer{
+    background-color:black;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+#voltar{
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+#voltar a:hover{
+    background-color: rgb(117, 180, 252);
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bolder;
+    animation-duration: 0.5;
+    transform: scale(1.8);
+}
+

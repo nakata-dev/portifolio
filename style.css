@@ -60,8 +60,7 @@
     transition-duration: 0.3s;
     
 }
-    nav a:hover{
-    
+    nav a:hover{   
     background-color: var(--cor01);
     padding: 10px;
     text-decoration: none;

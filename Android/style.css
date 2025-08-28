@@ -1,0 +1,206 @@
+@charset "UTF-8";
+/* Font importada de google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
+/*fonte importada do computador */
+@font-face{
+    font-family: 'Android';
+    src: url('../d010/fontes/idroid.otf') format('opentype');
+    font-weight: normal;
+}
+
+/*
+    #c5ebd6
+    #83e1ad
+    #3ddc84
+    #2fa866
+    #1a5c37
+    #063d1e
+*/
+:root{              /*Raiz de toda a CSS, é aqui neste seletor que você adiciona todos as suas variáveis(VAR) */
+    --cor0: #c5ebd6;
+    --cor1: #83e1ad;
+    --cor2: #3ddc84;
+    --cor3: #2fa866;
+    --cor4: #1a5c37;
+    --cor5: #063d1e;
+
+    --fonte-padrao: Arial, Verdana, Helvetica, Sans-serif;
+    --fonte-destaque:"Bebas Neue", Sans-serif;
+    --fonte-android: 'Android', Sans-serif;
+}
+*{    /* Seletor global serve para todos os elementos presentes na minha página */
+    margin: 0px;
+    padding: 0px;
+
+}
+
+body{
+    background-color: var(--cor0);
+    font-family: var(--fonte-padrao);
+}
+/*Refere-se ao cabeçalho da estrutura*/
+header{
+    background-image: linear-gradient(to bottom, var(--cor3), var(--cor5));
+    min-height: 150px;
+    text-align: center;
+    padding-top: 30px;
+    
+}
+header > h1{
+    color: white;
+    font-family:var(--fonte-destaque);
+    font-size: 3em; 
+    font-weight:normal;   
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.452);
+}  
+
+header > p{
+    color: white;
+    font-size: 1.2em;
+    max-width: 700px;
+    margin: auto;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.459);
+}
+nav{
+    background-color: var(--cor5);
+    padding: 10px;
+    box-shadow: 0px 7px 7px rgba(0, 0, 0, 0.432);
+}
+nav > a{
+    color: var(--cor1);
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bolder;
+    border-radius: 5px;
+    transition-duration: 0.5s;
+}
+nav > a:hover{  /*para criar uma seleção ao passar o cursor por cima*/
+    background-color: var(--cor3);
+    color:var(--cor4);
+}
+main{
+    min-width: 600px;
+    max-width: 1000px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.486);
+    margin-bottom: 30px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+main img{
+    width: 100%;
+}
+main h1{
+    color:var(--cor5);
+    font-family: var(--fonte-android);
+    font-weight: normal;
+    font-size: 1.8em;
+}
+main h2{
+    font-family: var(--fonte-android);
+    color:var(--cor4);
+    font-size: 1.8em;
+    background-image: linear-gradient(to right, var(--cor1),transparent);
+    text-indent: 15px;
+    font-weight: normal;
+}
+main p{
+    margin: 15px 0px 15px 0px;
+    text-align: justify;
+    text-indent: 30px;
+    line-height: 2em;
+}
+
+main strong{
+    color:var(--cor4);
+    font-weight:bolder;
+}
+
+main a{
+    background-color: var(--cor1);
+    padding: 2px 6px;
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--cor5);
+}
+
+main a:hover{
+    text-decoration: underline;
+    color: var(--cor4);
+}
+div.video{
+    background-color: var(--cor5);
+    padding:20px;
+    margin: 0px -20px 30px -20px;
+    position: relative;
+    padding-bottom: 58%; 
+}
+
+div.video>iframe{
+    position: absolute;
+    top: 5%;  /*graças a essa configuração dentro do iframe que o vídeo vai se adaptar*/
+    left: 5%;
+    width: 90%;
+    height: 90%;
+}
+
+aside{
+    background-color: var(--cor1);
+    border-radius: 10px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.233);
+}
+
+aside > ul{
+    list-style-position:inside; /*Coloca a lista dentro da caixa do aside*/
+    columns: 2; /*divide a lista em duas colunas*/
+    list-style-type:'\1F5F8\00A0\00A0';
+    text-indent: 20px;
+
+}
+
+aside > h3{
+    background-color: var(--cor4);
+    color: white;
+    padding: 10px;
+    margin: -10px -10px 0px -10x;
+    border-radius: 10px 10px 0px 0px;
+}
+
+aside > p{
+      padding: 10px;
+      text-indent: 30px;
+      margin-left: 20px;
+      margin-right: 20px;
+}
+
+footer{
+    background-color: var(--cor5);
+    color: white;
+    text-align: center;
+    font-size: 0.8em;
+    padding:5px;
+}
+
+footer a{
+    color: white;
+    font-weight: bolder;
+    text-decoration: none;
+}
+
+footer a:hover{
+    text-decoration: underline;
+    color:var(--cor1);
+}
+
+.pequeno{
+    max-width: 350px;
+    display: block; 
+    margin:auto;   
+}
+
+a.externo::after{
+    content:'\00A0\1F517'; /*insere o icone após o conteúdo*/
+}
