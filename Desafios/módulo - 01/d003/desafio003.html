@@ -7,15 +7,29 @@
     <link rel="stylesheet" href="style.css">
     <title>Desafio - 003</title>
     <style>
-        .mapa_mundi img{
+        #container{
+            position: relative;
+            height: auto;
+            padding: 10px;
+            
+
+        }
+
+
+        #mapa_mundi img{
+            position: relative;
             display: inline-block;
             grid-template-columns: repeat(3, auto);
             gap: 5px;
-            width: auto;
+            width: 100px;
             height: auto;
-               
+           
+              
         }
-       
+       #mapa_mundi img:hover{
+            transform: scale(1.2);
+            animation-duration: 0.5s;
+       }
      
     </style>
 </head>
@@ -26,19 +40,21 @@
     </header>
     <main>
         
+        <h2>Alinhamento</h2>
             <br>
-            <div class="mapa_mundi">
-                <h2>Imagens Justapostas (grid)</h2>
-                <p><img src="imagens/mapa03.png" alt="imagem 001">
-                <img src="imagens/mapa07.png" alt="imagem 002">
-                <img src="imagens/mapa05.png" alt="imagem 003"><br>
-                <img src="imagens/mapa09.png" alt="imagem 004">
-                <img src="imagens/mapa01.png" alt="imagem 005">
-                <img src="imagens/mapa08.png" alt="imagem 006"> <br>
-                <img src="imagens/mapa06.png" alt="imagem 007">
-                <img src="imagens/mapa02.png" alt="imagem 008">
-                <img src="imagens/mapa04.png" alt="imagem 009"></p>
-            </div>
+            <section id="container">
+                <div id="mapa_mundi">
+                    <p><img src="imagens/mapa03.png" alt="imagem 001">
+                    <img src="imagens/mapa07.png" alt="imagem 002">
+                    <img src="imagens/mapa05.png" alt="imagem 003"><br>
+                    <img src="imagens/mapa09.png" alt="imagem 004">
+                    <img src="imagens/mapa01.png" alt="imagem 005">
+                    <img src="imagens/mapa08.png" alt="imagem 006"> <br>
+                    <img src="imagens/mapa06.png" alt="imagem 007">
+                    <img src="imagens/mapa02.png" alt="imagem 008">
+                    <img src="imagens/mapa04.png" alt="imagem 009"></p>
+                </div>
+            </section>
             
         <br>
         <br>

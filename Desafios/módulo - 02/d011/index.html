@@ -4,48 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-
+    
     <style>
-        *{
-            margin: 0px;
-            padding: 0px;
-        }
-        h2{
-            text-align: center;
-        }
-        main{
-            
-            max-width: 800px;
-            min-width: 300px;
+        #container{
+            position: relative;
+            background-image: url('imagens/espaco.jpg');
+            background-size: 100% auto;
+            height: 96vh;
+            padding: 10px;
             
             
         }
-        .container{
-        position: relative;
-        padding: 15px;
         
-    }
-    img#espaco{
-        max-width: 800px;
-        min-width: 400px;
-        width: 600px;
-        justify-content: center;
-        
-        }
+        #conteudo{
+            position: absolute;
+            background-image: url('imagens/astronauta.png');
+            background-size: 100% auto;     
+            width: 200px;
+            height: 200px;
+            
+            left: 50%;
+            top: 50%;
+            
+            transform: translate(-50%, -50%);
 
-        .overlay{
-        position: absolute;
-        width: 288px;
-        left: 20%;
-        top: 20%;
-        transform:translate(-30% -30%);          
-        }
-        img#espaco:hover{
-            transform: scale(1.1);
+            
         }
     </style>
-
-
+    
+    
     <title>Astronauta</title>
 </head>
 <body>
@@ -54,30 +41,20 @@
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="container">
-        <img id="espaco" src="imagens/espaco.jpg" alt="Espaço">        
-        <img src="imagens/astronauta.png" alt="Astronauta" class="overlay">
-    </div>
-            
-            
-            <br>
-            <br>
-        </div>
-        <br>
-        <br>
-        <br>
-        <br>
+        
+        <section id="container">
+            <article id="conteudo">
+                
+            </article>
+        </section>
+        
+        
+        
         <br>
         <div id="voltar">
             <a href="../../../desafios.html">Voltar</a>
-        <br>
-        <br>
-        <br>
-        <br>
-    </main>
-</body>
-</html>
+            <br>
+            <br>
+        </main>
+    </body>
+    </html>
