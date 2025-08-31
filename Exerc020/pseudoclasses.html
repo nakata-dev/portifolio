@@ -20,7 +20,8 @@
         div:hover{
             background-color: yellow; /* altera a cor do fundo quando passa o mouse por cima */
         }
-        pre>p{
+        .justificado{
+            white-space: pre-wrap;
             text-align: justify;
         }
        
@@ -45,23 +46,22 @@
         <br>
         <br>
         <h1>Orientação: CSS</h1>
-        <pre>
-            <p>
-        div {
-            display: inline-flex; /* Ativa a caixa flexbox */
-            justify-content: center; /* Centralizar horizontal*/
-            align-items: center; /*Centralizar vertical*/
-            background-color: lightgray;
-            border: 1px solid black;
-            text-align:center;
-            height: 200px;
-            width: 200px;
-            font-size: 1.4em;
-        }
-        div:hover{
-            background-color: yellow; /* altera a cor do fundo <br>            quando passa o mouse por cima */
-        }
-            </p>
+        <pre class="justificado">
+    div {
+        display: inline-flex; > caixa flexbox 
+        justify-content: center; > Centralizar horizontal
+        align-items: center; > Centralizar vertical
+        background-color: lightgray;
+        border: 1px solid black;
+        text-align:center;
+        height: 200px;
+        width: 200px;
+        font-size: 1.4em;
+    }
+    div:hover{
+        background-color: yellow; > altera a cor do fundo
+    }
+            
         </pre>
     </main>
 </body>
