@@ -6,6 +6,24 @@
     <title>Exerc009</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../style.css">
+    <style>
+        ul{
+            list-style: inside;
+            padding: 5px;
+            line-height: 1.3;
+        }
+        ol{
+            display: grid;
+            padding-left: 30px;
+            text-align: left;
+        }
+        #colunas{
+            display: grid;
+            grid-template-columns: repeat(2,auto);
+            justify-content: center;
+            gap: 10px 30px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,7 +31,7 @@
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>Listas Ordenadas-Numéricas</h2>
+        <h2>Listas Ordenadas-Numéricas (ol)</h2>
         <ol type="1">
             <li>Acordar</li>
             <li>Tomar Café</li>
@@ -128,33 +146,27 @@
         <hr>
         <br>
         <h2>Meus Consoles/Jogos Favoritos</h2>
+        <br>
         <ol>
-            <li>NES</li>
-            <ul type="square">
-                <li>Mario Bros</li>
-                <ul type="circle">
-                    <li>Mario Bros 3</li>
-                    <li>Mario: Lost Levels</li>
-                    <li>Mario and Wario</li>
-                </ul>
+            <li>NES</li><br>
+            <ul id="colunas">
+                <li>Mario Bros 3</li>
+                <li>Mario: Lost Levels</li>
+                <li>Mario and Wario</li>
                 <li>Nija Gaiden</li>
             </ul>
-            <li>SNES</li>
-            <ul type="square">
-                <li>Mario</li>
-                <ul type="circle">
-                    <li>Super Mario Bros</li>
-                    <li>Mario&Luiggi</li>
-                </ul>
-                <li>Donkey Kong</li>
-                <ul type="circle">
-                    <li>Donkey Kong I</li>
-                    <li>Donkey Kong II</li>
-                    <li>Donkey Kong III</li>
-                </ul>
+            <br>
+            <li>SNES</li><br>
+            <ul id="colunas">
+                <li>Super Mario Bros</li>
+                <li>Mario&Luiggi</li>
+                <li>Donkey Kong I</li>
+                <li>Donkey Kong II</li>
+                <li>Donkey Kong III</li>
             </ul>
-            <li>PlayStation</li>
-            <ul type="square">
+            <br>
+            <li>PlayStation</li><br>
+            <ul id="colunas">
                 <li>Final Fantasy</li>
                 <li>Castelvania</li>
             </ul>
@@ -164,11 +176,14 @@
         <br>
         <h2>Lista de Definições (DL)>(DT)>(DD)</h2>
         <dl>
-            <dt>HTML</dt>
+            <br>
+            <dt>HTML</dt><br>
             <dd>Linguagem de Marcação para a criação do conteúdo de um site.</dd>
-            <dt>CSS</dt>
+            <br>
+            <dt>CSS</dt><br>
             <dd>Linguagem de Marcação para a criação do Design de um Site.</dd>
-            <dt>JavaScript</dt>
+            <br>
+            <dt>JavaScript</dt><br>
             <dd>Linguagem de programação para a criação de interatividade de um site.</dd>
         </dl>
 
