@@ -43,7 +43,7 @@ body {
 
 header{
     background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));
-    min-height: 150px;
+    min-width: 300px;
     text-align: center;
     padding-top: 30px;
     padding-bottom: 10px;
