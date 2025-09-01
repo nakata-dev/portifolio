@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        header>p{
+            text-align: center;
+        }
+        main{
+            max-width: 800px;
+            min-width: 300px;   
+        }
+        .justificado{
+        white-space: pre-wrap;
+        text-align: justify;
+        line-height: 1.8;
+        font-size: 1em;
+        padding: 10px;
+        }
+
+        iframe{
+        display: block;
+        margin: auto;
+        width:400px;
+        heitght:auto;
+        border: 1px dashed black;
+        }
+        #tela{  
+        display: block;
+        margin: auto;
+        width:500px;
+        height: 340px;
+        border: 1px solid black;
+        }
+        p{
+            text-align: justify;
+            text-indent: 30px;
+        }
+    </style>
+    <title>Iframe</title>
+</head>
+<body>
+    <header>
+    
+        <h1>Exercício de Iframe</h1>
+        <p>por: Ailton A. Nakata</p>
+        
+    </header> 
+    <main>
+        
+        <h2>O uso do Iframe</h2>
+        <p>
+            Abaixo temos um exemplo claro de como inserir um Iframe dentro de um padrão básico de configuração dentro da CSS. Neste caso, você vê um site de link externo. 
+        </p>
+<br>
+
+        <iframe src="iframe.html" frameborder="0">
+            <a href="http://nakata-dev.github.io/portifolio/">Portifolio de Ailton</a>
+        </iframe>
+<br>
+<br>
+        <p>
+            Esta seria uma situação nova, onde você vê um site de um link local. Onde você busca o caminho do link diretamente dentro da mesma pasta em que criou uma página principal de aprensentação de conteúdos.
+        </p>
+        <br>
+        <br>
+        <iframe src="teste.html" frameborder="0"><a href="teste.html" target="_blank">Link de teste</a></iframe>
+<br>
+<br>
+        <p>
+            Já nesta ultima situação, contemplamos o uso de uma tabela responsiva. Muito útil para aquele cliente que deseja mostrar uma determinada informação de venda sem poupando tempo de seu cliente no ato de ficar abrindo inumeras abas.
+        </p>
+        <br>
+        <br>
+        <iframe src="tabela_responsiva.html" frameborder="0">
+            <a href="tabela_responsiva.html" target="_black">Link tabela</a>
+        </iframe>
+<br><br>
+        <h2>Teste com Iframe:</h2>
+        <pre class="justificado">     
+<strong>Situação 01:</strong>
+
+É totalmente possível se inserir um site local para ser mostrado dentro de seu site principal, poupando tempo ao usuário de ficar abrindo novas abas.
+
+<strong>Situação 02:</strong>
+
+Também é possível você abrir tabelas para poder navegar de forma responsiva dentro de um espaço totalmente limitado por suas configurações da folha de estilos.
+
+<h2>Como navegar através de um Iframe?</h2>
+
+<p>Para se naver por um iframe, você precisa criar uma lista na qual você pode visualizar uma ou mais páginas dentro de um Iframe já estabelecido.</p>
+
+<p>Neste caso, vamos criar primeir uma lista ao qual vamos poder abrir os iframes acima dentro de um espaço maior de 300px de largura e altura:auto.</p>
+</pre>
+<br><br>
+<h2>Escolha uma opção:</h2>
+<br>
+<ul>
+    <li><a href="iframe.html" target="frame">Testando o uso do Iframe</a></li>
+    <li><a href="iframe2.html" target="frame">Página de Teste</a></li>
+    <li><a href="tabela_responsiva.html" target="frame">Tabela Responsiva</a></li>
+</ul>
+<br><br>
+<iframe id="tela" name="frame" src="">
+    <p>Infelizmente sua página não é compatível com isso.</p>
+</iframe>
+<br><br>
+<h2>Como usar o iframe:</h2>
+<pre class="justificado">
+
+    Anote como fica a estrutura do código acima: 
+
+    &lt;h2&gt;Escolha uma opção:&lt;/h2&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href=""&gt;Testando o uso do Iframe&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=""&gt;Página de Teste&lt;/a&gt;&lt;li&gt;
+        &lt;li&gt;&lt;a href=""&gt;Tabela Responsiva&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+</pre>
+<br><br>
+<h2>Configurando o iframe em si:</h2>
+<pre class="justificado">
+    
+        &lt;iframe id="tela" name="frame" src=""&gt;
+        &lt;p&gt;Infelizmente sua página não é compatível com isso.&lt;/p&gt;
+        &lt;/iframe&gt;
+    
+    Atenção: O <strong>name</strong> deve ser o mesmo que vai no <strong>target</strong>, caso contrário não vai funcionar o iframe. 
+</pre>
+
+
+        <br>
+        <br>
+        <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+
+
+    </main>
+    
+</body>
+</html>

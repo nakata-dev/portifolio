@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        .justificado{
+        white-space: pre-wrap;
+        text-align: justify;
+        line-height: 1.8;
+        font-size: 1em;
+        padding: 10px;
+        }
+
+        iframe{
+        display: block;
+        margin: auto;
+        width:400px;
+        heitght:auto;
+        border: 1px dashed black;
+        }
+    </style>
+    <title>Iframe</title>
+</head>
+<body>
+    <header>
+    
+        <h1>Testando o uso do Iframe</h1>
+        <p>por: Ailton A. Nakata</p>
+        
+    </header> 
+    <main>
+        
+        <p>Acessando o site do 
+        <iframe src="http://nakata-dev.github.io/portifolio" frameborder="0">Portifolio</iframe>
+        
+        para aprender a programar.</p>
+    <br>
+    <br>    
+    <h2>Como usar o Iframe?</h2>
+        <pre class="justificado">
+Iframe: É um frame inserido em uma linha, para que você consiga acessar um site dentro deste pequeno retângulo sem sair do site em questão.
+
+Veja aqui a estrutura do iframe para maior compreensão e fixação do conteúdo em si:
+
+<strong>
+&lt;iframe src="http://nakata-dev.github.io/portifolio"frameborder="0"&gt;
+Mensagem Opicional / link Opicional
+&lt;/iframe&gt;
+</strong>
+
+O tamanho padrão de um iframe é de: <strong>300x150 pixels</strong>
+
+<strong>Situação 2</strong>: Na parte de edição de uma 'Mensagem Opicional' é possível se colocar um link de acesso.
+
+por Exemplo:
+
+&lt;iframe src="http://nakata-dev.github.io/portifolio"frameborder="0"&gt;
+<strong>&lt;a href="http://nakata-dev.github.io/portifolio"frameborder="0" target="_blank"&gt;</strong>
+&lt;/iframe&gt;
+
+<strong>Situação 3</strong>:
+
+Na CSS você pode configurar o iframe para que ele altere a altura, largura, borda etc.
+
+<strong>por exemplo:</strong>
+
+    iframe{
+        width:400px;
+        heitght:auto;
+        border: 1px dashed black;
+    }
+            
+        </pre>
+        <br>
+        <br>
+        <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
+    
+</body>
+</html>
