@@ -15,8 +15,8 @@
         }
         iframe{
             display: block;
-            width: 500px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
             margin: auto;
         }
     </style>
@@ -59,9 +59,31 @@
     terceira situação:
     
     &lt;iframe src="formulario.html" <strong>sandbox="allow-same-origin allow-forms allow-script</strong>" referrerpolicy="no-referrer"&gt;Seu navegador não é compativel com isso!&lt;/iframe&gt;  
+    </pre>
+
+    <h2>Usando JavaScript:</h2>
+        <br>
+        <br>
+        <p>
+        Aqui também foram usados os mesmos comando acima citados. O iframe buscar o arquivo iframe5.html e em seguida, configurei os comandos que tornam o script de outros sites mais seguros.
+        </p>
+        <br>
+        <iframe src="iframe5.html" sandbox="allow-scripts" referrerpolicy="no-referrer">Seu navegador não é compativel com isso!</iframe>
+        <br>
+        <p>Analise a linha de comando e pratique o uso da mesma, é importante tornar o seu site um pouco mais seguro.
+            <br>
+            linha de comando: 
+            <br><br>
+            &lt;iframe src="formulario.html" <strong>sandbox="allow-script</strong>" referrerpolicy="no-referrer"&gt;
+            <br><br>
+            <strong>allow-script</strong>: Serve para permitir script.
+            <br><br>
+            <strong>referrerpolicy</strong>="no-referrer": Serve para não capturar dados de ninguém.
+
+        </p>
+        <br>
             
             
-        </pre>
 
 
         <br>

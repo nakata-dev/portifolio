@@ -72,7 +72,8 @@
     header > h1{
         font-family: var(--fonte_destaque);
         font-weight:normal;
-        font-size: 2em;   
+        font-size: 2em;
+        
     }
 
     header > p{
@@ -85,7 +86,7 @@
     main{
         position: relative;
         height: auto;
-        min-width: 350px;
+        min-width: 300px;
         max-width: 800px;
         margin: auto;
         background-color: white;

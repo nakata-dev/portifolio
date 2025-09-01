@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScrip</title>
+    <title>JavaScript</title>
 </head>
 <body>
-    <a href="#" onclick="Clicou()">Click em mim!</a>
+    <a href="#" onclick="clicou()">Click em mim!</a>
     <div id="saida"></div>
 
     <script>
         function clicou() {
-        s = windows.document.getElementById("saida")
-        s.innerHTML += '<p>Você clicou!</p>'
+            let s = window.document.getElementById("saida");
+            s.innerHTML += '<p>Você clicou!</p>';
         }
     </script>
-    
 </body>
 </html>
