@@ -39,6 +39,14 @@
             text-align: justify;
             text-indent: 30px;
         }
+        ul{
+            columns: 1;
+            padding: 10px; 
+        }
+        li{
+             
+             padding: 5px;
+        }
     </style>
     <title>Iframe</title>
 </head>
@@ -99,9 +107,9 @@ Também é possível você abrir tabelas para poder navegar de forma responsiva 
 <h2>Escolha uma opção:</h2>
 <br>
 <ul>
-    <li><a href="iframe.html" target="frame">Testando o uso do Iframe</a></li>
-    <li><a href="iframe2.html" target="frame">Página de Teste</a></li>
-    <li><a href="tabela_responsiva.html" target="frame">Tabela Responsiva</a></li>
+    <li><a href="iframe.html" target="frame">Iframe</a></li>
+    <li><a href="teste.html" target="frame">Teste</a></li>
+    <li><a href="tabela_responsiva.html" target="frame">Responsivo</a></li>
 </ul>
 <br><br>
 <iframe id="tela" name="frame" src="">
@@ -131,15 +139,34 @@ Também é possível você abrir tabelas para poder navegar de forma responsiva 
     Atenção: O <strong>name</strong> deve ser o mesmo que vai no <strong>target</strong>, caso contrário não vai funcionar o iframe. 
 </pre>
 
+    <br>
+<ul>
+    <li><a href="iframe.html" target="frame">Iframe</a></li>
+    <li><a href="teste.html" target="frame">Teste</a></li>
+    <li><a href="tabela_responsiva.html" target="frame">Responsivo</a></li>
+</ul>
+<br><br>
+<iframe id="tela" name="frame" srcdoc="<h1>Escolha uma das opções acima</h1><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum at, veniam tenetur maxime sint temporibus odio quis esse hic delectus unde magni tempora aspernatur, error porro voluptatum sequi dicta nihil?</p><img src='img/html.png'>">
+    <p>Infelizmente sua página não é compatível com isso.</p>
+</iframe>
+<br><br>
+<p>
+    Também é possível se carregar um conteúdo sempre que for carregado sua página pela primeira vez.
+</p>
+<br>
+<h2>por exemplo:</h2>
+<pre class="justificado">
 
-        <br>
-        <br>
-        <div id="voltar">
-        <a href="../estudos.html">Voltar</a>
-        </div>
-        <br>
-        <br>
+    &lt;iframe id="tela" name="frame" <strong>srcdoc="</strong>&lt;h1&gt;Escolha uma das opções acima&lt;/h1&gt;&lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum at, veniam tenetur maxime sint temporibus odio quis esse hic delectus unde magni tempora aspernatur, error porro voluptatum sequi dicta nihil?&lt;/p&gt;&lt;img src='img/html.png'&gt;"&lt;&gt;/iframe&gt;
 
+</pre>
+<br>
+    <br>
+    <div id="voltar">
+    <a href="../estudos.html">Voltar</a>
+    </div>
+    <br>
+    <br>
 
     </main>
     

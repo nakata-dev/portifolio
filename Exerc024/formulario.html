@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        .justificado{
+        white-space: pre-wrap;
+        text-align: justify;
+        line-height: 1.8;
+        font-size: 1em;
+        padding: 10px;
+        }
+    </style>
+    <title>Formulário</title>
+</head>
+<body>
+    <main>
+        <br>
+        <h3>Cadastre-se Aqui:</h3>
+        <form action="cadastro.php" method="get">
+        <input type="text" name="nome" id="nome">
+        <input type="submit" value="Cadastrar">
+        </form>
+        
+        <pre class="justificado">
+
+    primeira situação:
+
+    &lt;iframe src="formulario.html" <strong>sandbox="sandbox</strong>"&gt;Seu navegador não é compativel com isso!&lt;/iframe&gt; 
+    
+    segunda situação:
+    
+    &lt;iframe src="formulario.html" sandbox="sandbox" <strong>referrerpolicy="no-referrer"</strong>"&gt;Seu navegador não é compativel com isso!&lt;/iframe&gt;
+    
+     terceira situação:
+    
+    &lt;iframe src="formulario.html" <strong>sandbox="allow-same-origin allow-forms allow-script</strong>" referrerpolicy="no-referrer"&gt;Seu navegador não é compativel com isso!&lt;/iframe&gt;  
+            </pre>
+
+
+        <br>
+        <br>
+        <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+
+
+    </main>
+    
+</body>
+</html>
