@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
 
     <style>
         header{
-            max-width: 800px;
+            text-align: center;
         }
         header>p{
             text-align: center;
@@ -24,32 +23,18 @@
         padding: 10px;
         }
 
-        iframe{
+        iframe#tela{  
         display: block;
         margin: auto;
-        width:300px;
-        height: 300px;
-        border: 1px dashed black;
-        }
-        #tela{  
-        display: block;
-        margin: auto;
-        width:300px;
-        height:auto;
-        border: 1px solid black;
+        width:90vh;
+        height:400px;
+        border: 2px solid black;
         }
         p{
             text-align: justify;
             text-indent: 30px;
         }
-        ul{
-            columns: 1;
-            padding: 10px; 
-        }
-        li{
-             
-             padding: 5px;
-        }
+    
     </style>
     <title>Iframe</title>
 </head>
@@ -69,7 +54,7 @@
 <br>
 
         <iframe src="iframe.html">
-            <a href="http://nakata-dev.github.io/portifolio/">Portifolio de Ailton</a>
+            <a href="../index.html">Portifolio de Ailton</a>
         </iframe>
 <br>
 <br>
@@ -142,14 +127,16 @@ Também é possível você abrir tabelas para poder navegar de forma responsiva 
     Atenção: O <strong>name</strong> deve ser o mesmo que vai no <strong>target</strong>, caso contrário não vai funcionar o iframe. 
 </pre>
 
-    <br>
-<ul>
-    <li><a href="iframe.html" target="frame">Iframe</a></li>
-    <li><a href="teste.html" target="frame">Teste</a></li>
-    <li><a href="tabela_responsiva.html" target="frame">Responsivo</a></li>
-</ul>
+<br>
+
+    <ul>    
+<li><a href="iframe.html" target="frame2">Primeira página</a></li>
+<li><a href="iframe2.html" target="frame2">Segunda página</a></li>
+<li><a href="iframe4.html" target="frame2">Terceira página</a></li>
+    </ul>
+
 <br><br>
-<iframe id="tela" name="frame" srcdoc="<h1>Escolha uma das opções acima</h1><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum at, veniam tenetur maxime sint temporibus odio quis esse hic delectus unde magni tempora aspernatur, error porro voluptatum sequi dicta nihil?</p><img src='img/html.png'>">
+<iframe id="tela" name="frame2" srcdoc="<h1>Escolha uma das opções acima</h1><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum at, veniam tenetur maxime sint temporibus odio quis esse hic delectus unde magni tempora aspernatur, error porro voluptatum sequi dicta nihil?</p><img src='img/html.png'>">
     <p>Infelizmente sua página não é compatível com isso.</p>
 </iframe>
 <br><br>
