@@ -18,31 +18,34 @@
     <title>Formulário</title>
 </head>
 <body>
-    <h1>Teste de Formulário</h1>
-    <form action="cadastro.php" method="get" autocomplete="on">
-        <p><label for="inome">nome</label>
-            <input type="text" name="nome" id="nome" required maxlength="30" placeholder="nome completo" autocomplete="name" required>
-        </p>
-        <p>
-            <label for="imedia">Média</label>
-            <input type="number" name="media" id="imedia" min="0" max="10" placeholder="0 a 10" step="0.5" required value="5">
-        </p>
-        <p>
-            <label for="idia">Dia</label>
-            <input type="date" name="dia" id="idia">
-        </p>
-        <p>
-            <label for="imes">Mês</label>
-            <input type="month" name="mes" id="imes" value="2025-10">
-        </p>
-        <p>
-            <label for="ihora">Horário</label>
-            <input type="time" name="Horário" id="ihora">
-        </p>
-        <p>
-            <input type="submit" value="Enviar">
-            <input type="reset" value="Limpar">
-        </p>
+    <fieldset>
+        <legend>Formulário</legend>
+        <h1>Teste de Formulário</h1>
+        <form action="cadastro.php" method="get" autocomplete="on">
+            <p><label for="inome">nome</label>
+                <input type="text" name="nome" id="nome" required maxlength="30" placeholder="nome completo" autocomplete="name" required>
+            </p>
+            <p>
+                <label for="imedia">Média</label>
+                <input type="number" name="media" id="imedia" min="0" max="10" placeholder="0 a 10" step="0.5" required value="5">
+            </p>
+            <p>
+                <label for="idia">Dia</label>
+                <input type="date" name="dia" id="idia">
+            </p>
+            <p>
+                <label for="imes">Mês</label>
+                <input type="month" name="mes" id="imes" value="2025-10">
+            </p>
+            <p>
+                <label for="ihora">Horário</label>
+                <input type="time" name="Horário" id="ihora">
+            </p>
+            <p>
+                <input type="submit" value="Enviar">
+                <input type="reset" value="Limpar">
+            </p>
+    </fieldset>
     </form>
         <br><br>
         <div id="voltar" style="text-align: center;">

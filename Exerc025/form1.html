@@ -22,13 +22,15 @@
     <!--O method pode variar entre post e get-->
     <form action="cadastro.php" method="post" autocomplete="off">
         <!--Label serve para tornar a área de seleção do campo maior. Neste caso, você o nome também faz parte da seleção do campo.-->
-        <p><label for="inome">nome:</label> 
-        
-            <input type="text" name="nome" id="inome" ></p>
-        <p><label for="isobrenome">sobrenome:</label> 
-        
-            <input type="text" name="sobrenome" id="isobrenome"></p>
-        <p><input type="submit" value="Enviar"></p>
+        <fieldset>
+            <legend>Nome</legend>
+            <p><label for="inome">nome:</label>
+            
+                <input type="text" name="nome" id="inome" ></p>
+            <p><label for="isobrenome">sobrenome:</label>            
+                <input type="text" name="sobrenome" id="isobrenome"></p>
+            <p><input type="submit" value="Enviar"></p>
+        </fieldset>
     </form>
         <br><br>
         <div id="voltar" style="text-align: center;">
