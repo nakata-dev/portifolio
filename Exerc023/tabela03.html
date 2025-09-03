@@ -57,7 +57,12 @@
             padding-left: 40px;
         }
         
-        
+        .justificado{
+            white-space: pre-wrap;
+            text-align: justify;
+            text-indent: 30px;
+            padding: 30px;
+        }
 
     </style>
 </head>
@@ -74,25 +79,31 @@
     </div>
     <br>
     <br>
-            <pre>
-                <p>
-                    Anatomia para tabelas grandes:
-                       1º CAPITION - (DADO)
-                       2º TABLE - (TABELA)
-                       3º THEAD - (CABEÇA)
-                            tr, td e th
-                       4º TBODY - (CORPO)
-                            tr, td e th
-                       5º TFOOT - (RODAPÉ)
-                            tr, td e th
-                </p>
+            <pre class="justificado">
+                
+                Anatomia de tabelas:
+
+                1º CAPITION - (DADO)
+
+                2º TABLE - (TABELA)
+                
+                3º THEAD - (CABEÇA)
+                    tr, td e th
+
+                4º TBODY - (CORPO)
+                    tr, td e th
+
+                5º TFOOT - (RODAPÉ)
+                    tr, td e th
+                
             </pre>
             <h2 style="text-align: center;">O uso de scope - para que serve?</h2>
-            <pre>
-                <p class="paragrafo">
-                    <br>Em tabelas HTML, as células de <br>cabeçalho (th>) são usadas para <br>rotular colunas e linhas.
-            
-                <br>Em resumo: scope="col" é uma ferramenta <br>importante para tornar as tabelas HTML <br>mais acessíveis, garantindo que o <br>conteúdo seja compreensível mesmo para <br>usuários que não podem visualizar a <br>tabela de forma visual. </p>
+            <pre class="justificado">
+                
+    Em tabelas HTML, as células de cabeçalho (th>) são usadas para rotular colunas e linhas.
+
+    <br>
+    Em resumo: scope="col" é uma ferramenta importante para tornar as tabelas HTML mais acessíveis, garantindo que o conteúdo seja compreensível mesmo para usuários que não podem visualizar a tabela de forma visual.
             </pre>
                 <table>
             <caption>
@@ -220,39 +231,41 @@
                 </table>
                 <br>
                 <h2 style="text-align: center;">Efeito Zebrado</h2>
-                <pre>
+                <pre class="justificado">
             <p>
-                Este recurso em CSS ajuda a configurar um
-                efeito de preenchimento
-                tbody > tr:nth-child(2n){
-                background-color: lightgray; //pares
-                }
-                tbody > tr:nth-child(odd){  //impares
-                background-color: lightgray;
-                }
+    Este recurso em CSS ajuda a configurar um efeito de preenchimento
+    tbody > tr:nth-child(2n){
+
+    background-color: lightgray; 
+    }
+
+    tbody > tr:nth-child(odd){  
+        
+    background-color: lightgray;
+    }
             </p>
                 </pre>
                 <h2>Título da Tabela Fixo</h2>
-                <pre>
-            <p>
-            Elemento sticky - É um elemento que se comporta como 'position relative'. Mas, quando o usuário rola a página e o elemento atinge um limite definido pelo top, left, right ou bottom, ele passa a se comportar como fixed, "grudando" nessa posição.
-            </p>
+                <pre class="justificado">
+            
+    Elemento sticky - É um elemento que se comporta como 'position relative'. Mas, quando o usuário rola a página e o elemento atinge um limite definido pelo top, left, right ou bottom, ele passa a se comportar como fixed, "grudando" nessa posição.
+            
                 </pre>
                 <h2>O que foi acrescentado para ser criar o Efeito?</h2>
-                <pre>
+                <pre class="justificado">
             <p>
-            table{
-                position: relative; --adicionado--
-                border-collapse: collapse;
-                height: 20px;
-                width: 300px;
-                margin: auto;
-            }
-            thead > tr > th{      --adicionado--
-                position: sticky; --adicionado--
-                top: -1px;        --adicionado--
-                background-color: rgb(119, 119, 119) ; --adicionado--
-            }
+    table{
+        position: relative; 
+        border-collapse: collapse;
+        height: 20px;
+        width: 300px;
+        margin: auto;
+    }
+    thead > tr > th{      
+        position: sticky; 
+        top: -1px;        
+        background-color: rgb(119, 119, 119); 
+    }
             </p>
                 </pre>
     <br>

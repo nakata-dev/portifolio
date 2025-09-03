@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <link rel="stylesheet" href="../style.css">
 
     <style>
         .justificado{
@@ -22,13 +22,19 @@
     <title>Formulário</title>
 </head>
 <body>
-    <main>
-        
+    <header>
         <h1>Primeiro Exemplo</h1>
-        <h3>Cadastre-se Aqui:</h3>
-        <form action="cadastro.php" method="get">
-        <input type="text" name="nome" id="nome">
-        <input type="submit" value="Cadastrar">
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>        
+        <form action="cadastro.php" method="get" autocomplete="off">
+        <fieldset>
+            <legend>Cadastro</legend>
+            <label for="cadastro.php">Nome</label>
+            <input type="text" name="nome" id="nome">
+            <input type="submit" value="Cadastrar">
+            
+        </fieldset>
         </form>
         <h2>Três Situações</h2>
         <pre class="justificado">        

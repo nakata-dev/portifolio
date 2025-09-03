@@ -14,15 +14,17 @@
             margin: auto;
         }
         table{
-            display: block;
+            
             border-collapse: collapse;
-            width: 600px;
+            max-width: 800px;
+            min-width: 300px;
             text-align: center;
             margin: auto;
         }
         th,td{
             border: 1px solid black;
-            padding: 10px;
+            padding: 5px;
+            margin: none;
             
             
         }
@@ -94,17 +96,18 @@
                     </tr>
                  </tfoot>
             </table>
-            <h1>Orientação de uso do SCOPE</h1>
+            <br><br>
+            <h1>SCOPE</h1>
             <pre>
-                <p>
-                    <br>O atributo scope em HTML é usado <br>dentro de tabelas (&lt;table&gt;) <br>para indicar a que células de <br>dados (&lt;td&gt;) um cabeçalho (&lt;th&gt;) <br>está associado.
-                    <br>👉 Ele melhora a acessibilidade, <br>ajudando leitores de tela a <br>entenderem a estrutura da tabela.
-                    <br>Valores principais:
-                    <br>scope="col" → o &lt;th&gt; vale <br>para toda a coluna.
-                    <br>scope="row" → o &lt;th&gt; vale <br>para toda a linha.
-                    <br>scope="colgroup" → o &lt;th&gt; <br>vale para um grupo de colunas.
-                    <br>scope="rowgroup" → o &lt;th&gt; <br>vale para um grupo de linhas.
-                </p>
+                
+                <br>O atributo scope em HTML é usado <br>dentro de tabelas (&lt;table&gt;) <br>para indicar a que células de <br>dados (&lt;td&gt;) um cabeçalho (&lt;th&gt;) <br>está associado.
+                <br>👉 Ele melhora a acessibilidade, <br>ajudando leitores de tela a <br>entenderem a estrutura da tabela.
+                <br>Valores principais:
+                <br>scope="col" → o &lt;th&gt; vale <br>para toda a coluna.
+                <br>scope="row" → o &lt;th&gt; vale <br>para toda a linha.
+                <br>scope="colgroup" → o &lt;th&gt; <br>vale para um grupo de colunas.
+                <br>scope="rowgroup" → o &lt;th&gt; <br>vale para um grupo de linhas.
+                
             </pre>
         <br>
         <br>
