@@ -7,22 +7,16 @@
 </head>
 <body>
     <h1>Teste - Form01</h1>
-    <form action="">
-        <p>nome: <input type="nome"></p>
-        <p>sobrenome: <input type="sobrenome"></p>
+    <!--O method pode variar entre post e get-->
+    <form action="cadastro.php" method="post" autocomplete="off">
+        <!--Label serve para tornar a área de seleção do campo maior. Neste caso, você o nome também faz parte da seleção do campo.-->
+        <p><label for="inome">nome:</label> 
+        
+            <input type="text" name="nome" id="inome" ></p>
+        <p><label for="isobrenome">sobrenome:</label> 
+        
+            <input type="text" name="sobrenome" id="isobrenome"></p>
         <p><input type="submit" value="Enviar"></p>
     </form>
-    <h1>Teste - Form02</h1>
-    <form action="form1.html">
-        <input type="text"> Nome
-        <input type="text"> Sobrenome
-        <input type="submit" value="Enviar">
-    </form>
-    <h1>Teste - Form03</h1>
-    <p>Endereço: <input type="text" name="Endereço" id="Endereço"></p>
-    <p>Cidade : <input type="text" name="Cidade" id="Cidade"></p>
-    <p>Estado : <input type="text" name="Estado" id="Estado"></p>
-    <p><input type="submit" value="Enviar"></p>
-
 </body>
 </html>
