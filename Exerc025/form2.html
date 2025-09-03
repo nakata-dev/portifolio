@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário 2</title>
     <style>
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        h1,h2,h3{
+            text-align: center;
+        }
+
+        p{
+            text-align: justify;
+            text-indent: 30px;
+            font-family: Arial, Helvetica, sans-serif;
+            
+        }
+        pre{
+            white-space: pre-wrap;
+            text-align: justify;
+            text-indent: 30px;
+            padding: 10px;
+        }
+        div.center>p{
+            text-align: center;
+        }
+
         #voltar{
             a:hover{
              background-color: rgba(99, 108, 243, 0.747);
@@ -36,10 +59,53 @@
             </p>
     </fieldset>
     </form>
+
+        <div class="center">
+        <p>
+        &lt;fieldset&gt; - Retângulo
+        <br>
+        <br>
+        &lt;legend&gt; - Legenda
+        <br>
+        <br>
+        &lt;input&gt; - é usada para criar campos interativos
+        </p>
+        </div>
+        <h3>Exemplo de inputs</h3>
+        <div>
+            <pre>
+   &lt;input type="text" placeholder="Digite seu nome"&gt;
+
+         &lt;input type="email" placeholder="Digite seu e-mail"&gt;
+
+         &lt;input type="password" placeholder="Digite sua senha"&gt;
+   
+         &lt;input type="checkbox"&gt; Aceito os termos 
+            </pre>
+        </div>
+
+
         <br><br>
         <div id="voltar" style="text-align: center;">
         <a href="../estudos.html">Voltar</a>
         </div>
         <br><br>
+        <div class="center">
+            <p>
+            &lt;label&gt;: serve para associar um texto descritivo a um campo de formulário
+            </p>
+        </div>
+        <h3>Exemplo de Label</h3>
+        <div>
+        <pre>
+        &lt;label for="nome"&gt;Nome:&lt;/label&gt;
+
+            &lt;input type="text" id="nome" name="nome"&gt;
+
+            <strong>Aqui, o atributo for do &lt;label&gt; aponta para o id do &lt;input&gt;.</strong>
+
+           Assim, se você clicar no texto “Nome:”, o cursor vai direto para o campo de texto.
+        </pre>
+        </div>
 </body>
 </html>

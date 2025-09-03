@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário</title>
     <style>
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        h1,h2,h3{
+            text-align: center;
+        }
+
+        p{
+            text-align: justify;
+            text-indent: 30px;
+            font-family: Arial, Helvetica, sans-serif;
+            
+        }
+        div.center>p{
+            text-align: center;
+        }
         #voltar{
             a:hover{
              background-color: rgba(99, 108, 243, 0.747);
@@ -32,6 +48,17 @@
             <p><input type="submit" value="Enviar"></p>
         </fieldset>
     </form>
+    <h2>Estrutura de um form</h2>
+
+    <div class="center">
+        <p>
+        &lt;form="cadastro.php" method="post" autocomplete="off"&gt;
+        <br>
+        <br>
+        &lt;/form&gt;
+        </p>
+    </div>
+
         <br><br>
         <div id="voltar" style="text-align: center;">
         <a href="../estudos.html">Voltar</a>
