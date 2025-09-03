@@ -152,7 +152,7 @@
         text-align: center;    
     }
     div#voltar a:hover{
-        padding: 10px;
+         padding: 10px;
          background-color: rgba(125, 208, 235, 0.637);
          font-weight: bolder;
          transition-duration: 0.5s;
