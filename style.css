@@ -83,8 +83,9 @@
 
     }
     main{
-        position: relative;
-        height: auto;
+
+        margin: auto;
+        height: 100vh;
         min-width: 300px;
         max-width: 800px;
         
