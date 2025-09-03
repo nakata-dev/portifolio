@@ -1,0 +1,169 @@
+/* Font importada de google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+/*fonte importada do computador */
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Passion+One:wght@400;700;900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+@font-face {
+    font-family: 'Android';
+    src: url(fontes/idroid.otf) format('opentype');
+}
+
+:root{
+    --cor00:#233CCF;
+    --cor01:#3747A5;
+    --cor02:#0025FA;
+    --cor03:#3D467A;
+    --cor04:#353950;
+    --cor05:#2B2C33;
+
+    --fonte_padrao:Arial, Verdana, Helvetica, Sans-serif;
+    --fonte_padrao02:"Libre Baskerville", serif;
+    --fonte_destaque:"Bebas Neue", Sans-serif;
+    --fonte_android:'Android',sans-serif;
+    --fonte_caligrafica:"Passion One", sans-serif;
+    }
+    *{
+        margin: 0px;
+        padding: 0px;
+    }
+
+    body { 
+    color: rgb(0, 0, 0);
+    background-color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+    
+    header{
+        background-image: linear-gradient(to bottom, var(--cor00), var(--cor04));
+        color: white;
+        min-height: 80px;
+        text-align: center;
+        padding-top: 10px;
+    }
+    nav{
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: var(--cor04);
+        padding: 10px;
+        
+        text-align: left;
+        padding-bottom: 10px;
+        font-size: 1em;
+    }
+    nav > a{
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: lighter;
+    border-radius: 2px;
+    transition-duration: 0.3s;
+    
+}
+    nav a:hover{   
+    background-color: var(--cor01);
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bolder;
+    border-radius:5px;
+    transition-duration: 0.5s;
+}
+    header > h1{
+        font-family: var(--fonte_destaque);
+        font-weight:normal;
+        font-size: 2em;
+        
+    }
+
+    header > p{
+        font-family: var(--fonte_padrao);
+        font-size: 0.67em;
+        color: white;
+        
+
+    }
+    main{
+
+        margin: auto;
+        height: auto;
+        min-width: 300px;
+        max-width: 800px;
+        
+        background-color: white;
+        padding: 25px;
+        
+        box-shadow:0px 0px 10px black;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        padding-bottom: 0px;
+        
+    }
+   h2,h3,h4,h4,h6{
+    padding: 10px;
+   }
+    footer{
+        background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));  
+        font-family: var(--fonte_padrao);
+        padding-bottom: 10px;
+        padding-top: 10px;
+        text-align: center;
+        color: white;
+        font-size: 0.8em;
+    }
+
+    ul{
+        list-style: inside;
+        padding: 5px;
+        columns: 2;
+        text-align: left;
+        list-style-type: none;
+        
+    }
+   
+    img{
+    display: block;   /* transforma em bloco */
+    margin: 30px auto;   /* margens automáticas centralizam */
+    max-width: 300px;  /* responsivo, nunca passa da largura da tela */  
+    height: auto;    /* mantém proporção */
+    border-radius: 12px; /* opcional: cantos arredondados */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* opcional: sombra */
+    }
+
+    img:hover{
+        transform:scale(1.5);
+    }
+    div.galeria{
+        padding: 15px;
+    }
+
+    div#txt_exercicios{
+        line-height: 1.8;
+    }
+
+    div#txt_exercicios a:hover{
+        background-color: rgba(173, 216, 230, 0.445);
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    div#voltar{
+        text-align: center;    
+    }
+    div#voltar a:hover{
+         padding: 10px;
+         background-color: rgba(125, 208, 235, 0.637);
+         font-weight: bolder;
+         transition-duration: 0.5s;
+         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+         border-radius: 5px;
+         border: none;
+    }
+
+
+    
+   
+
+    
+    
