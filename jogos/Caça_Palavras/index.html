@@ -1,802 +1,166 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Caça-Palavras — Aventura & Mistério</title>
-
-<!--
-README / Instruções rápidas (coloque isso no topo do index.html)
----------------------------------------------------------------
-Como usar:
-1. Salve este arquivo como index.html e abra no navegador (local).
-2. Escolha Nível (Fácil/Médio/Difícil) e clique "Novo Jogo".
-3. Toque/click na primeira letra da palavra e depois na última letra para validar.
-   - Também funciona por teclado: use as setas para mover foco, Enter/Space para marcar início/fim.
-4. Painel de Configurações: editar lista de palavras (JSON ou linhas), ativar som, export/import.
-5. Progresso salvo automaticamente no localStorage (palavras encontradas, nível e lista).
-
-Onde mudar lista de palavras:
-- Painel "Configurações" -> editar lista. Você também pode abrir o arquivo e ajustar a variável initialWords em app.js se modularizar.
-
-Arquivos:
-- Este projeto está entregue em arquivo único (index.html). Se desejar, separo em styles.css e app.js.
-
-Notas:
-- O jogo busca balancear acessibilidade (ARIA) e desempenho — renderiza células minimalistas.
-- Compatível com haptics (Vibration API) quando disponível.
--->
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caça-Palavras</title>
 <style>
-  :root{
-    /* paleta dark acessível (WCAG AA mínimo) */
-    --bg: #0F1724;         /* fundo */
-    --panel: #122033;      /* painéis */
-    --text: #E6EEF6;       /* texto */
-    --muted: #9FB3C8;      /* texto secundário */
-    --accent: #FFB86B;     /* destaque suave */
-    --success: #54E1A7;    /* palavra encontrada */
-    --error: #FF6B6B;      /* erro */
-    --cell-size-sm: 44px;
-    --cell-size-md: 48px;
-    --cell-size-lg: 56px;
-    --radius: 12px;
-    --glass: rgba(255,255,255,0.03);
-    --shadow: 0 6px 18px rgba(2,6,23,0.6);
-    --base-font: 18px; /* base para mobile */
-  }
+    /* Reset básico */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
-  /* reset e tipografia */
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background:linear-gradient(180deg,var(--bg),#071018 60%);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    font-size:var(--base-font);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-  }
+    body {
+        background: url('https://picsum.photos/800/1200?blur=3') no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        color: #fff;
+    }
 
-  /* container */
-  .app {
-    width:100%;
-    max-width:1100px;
-    background:linear-gradient(180deg,var(--panel), rgba(255,255,255,0.01));
-    padding:18px;
-    border-radius:14px;
-    box-shadow:var(--shadow);
-    display:grid;
-    grid-template-columns: 1fr 340px;
-    gap:18px;
-  }
+    header {
+        text-align: center;
+        margin: 15px 0;
+    }
 
-  header {
-    grid-column:1/-1;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
+    header h1 {
+        font-size: 1.4rem;
+    }
 
-  .title {
-    display:flex;
-    gap:12px;
-    align-items:center;
-  }
-  .logo {
-    width:42px;height:42px;border-radius:10px;
-    display:grid;place-items:center;
-    background:linear-gradient(135deg,var(--accent),#FF8A8A);
-    color:#081014;font-weight:700;font-size:18px;
-    box-shadow:0 6px 12px rgba(0,0,0,0.35);
-  }
-  h1{font-size:1.15rem;margin:0}
-  p.lead{margin:0;color:var(--muted);font-size:0.95rem}
+    header .nivel {
+        font-size: 1rem;
+        margin-top: 5px;
+        background: #22c55e;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+    }
 
-  /* controls topo */
-  .controls { display:flex; gap:8px; align-items:center; }
-  select, button, input[type="checkbox"]{
-    font-size:0.95rem;
-    padding:8px 10px;border-radius:10px;border:0;
-    background:var(--glass); color:var(--text);
-  }
-  button {
-    cursor:pointer;
-    box-shadow: none;
-    transition: transform .14s ease, box-shadow .14s;
-  }
-  button:active{ transform:translateY(1px) }
-  .btn-primary {
-    background:linear-gradient(90deg,var(--accent),#FF8A8A);
-    color:#081014;font-weight:700;
-  }
-  .btn-ghost {
-    background:transparent;border:1px solid rgba(255,255,255,0.05);
-  }
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        width: 100%;
+        max-width: 500px;
+        padding: 10px;
+    }
 
-  main{
-    padding:10px;
-    background:transparent;
-    border-radius:8px;
-  }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 4px;
+        background: rgba(15, 23, 36, 0.9);
+        padding: 10px;
+        border-radius: 12px;
+    }
 
-  /* grade do caça-palavras */
-  .board-wrap{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:16px;
-    flex-direction:column;
-  }
+    .cell {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        background: #0f1724;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        user-select: none;
+    }
 
-  .board {
-    display:grid;
-    gap:6px;
-    background:transparent;
-    padding:10px;
-    border-radius:12px;
-    -webkit-user-select:none; user-select:none;
-  }
+    .cell:hover {
+        background: #1e293b;
+        transform: scale(1.1);
+    }
 
-  /* células */
-  .cell {
-    display:grid;
-    place-items:center;
-    font-weight:700;
-    text-transform:uppercase;
-    border-radius:8px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.04);
-    transition: transform .12s ease, background .18s ease, box-shadow .18s;
-    cursor:pointer;
-    user-select:none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .cell:focus { outline: 3px solid rgba(255,200,120,0.12); transform: translateY(-2px); }
+    .cell.selected {
+        background: #f59e0b;
+        color: #000;
+    }
 
-  .cell.selected { background: linear-gradient(90deg, rgba(255,184,107,0.12), rgba(84,225,167,0.06)); }
-  .cell.found { background: linear-gradient(90deg, rgba(84,225,167,0.14), rgba(84,225,167,0.04)); transform: scale(1.02); box-shadow: 0 6px 18px rgba(0,0,0,0.45); color:var(--text); }
-  .cell.error { animation: shake .32s; background: rgba(255,107,107,0.08); }
-  @keyframes shake { 0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)} }
+    .palavras {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 15px;
+        gap: 8px;
+    }
 
-  /* painel lateral */
-  aside {
-    padding:10px;
-    background: rgba(255,255,255,0.02);
-    border-radius:10px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .words-list { list-style:none; padding:6px; margin:0; display:flex; flex-direction:column; gap:6px; max-height:48vh; overflow:auto; }
-  .words-list li { padding:8px 10px; border-radius:8px; background:rgba(255,255,255,0.01); display:flex; justify-content:space-between; align-items:center; gap:8px; font-weight:600; color:var(--muted); }
-  .words-list li.found { text-decoration: line-through; color:var(--success); background:linear-gradient(90deg, rgba(84,225,167,0.06), rgba(84,225,167,0.02)); }
+    .palavras span {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: default;
+        transition: all 0.3s ease;
+    }
 
-  .stats { display:flex; gap:10px; align-items:center; color:var(--muted); font-weight:600 }
-  .tiny { font-size:0.86rem; color:var(--muted) }
+    .palavras span.encontrada {
+        background: #22c55e;
+        text-decoration: line-through;
+        color: #fff;
+    }
 
-  /* configurações */
-  .settings { display:flex; flex-direction:column; gap:8px; }
-  textarea#wordEditor{ width:100%; min-height:100px; border-radius:8px; padding:10px; background:rgba(255,255,255,0.02); color:var(--text); border:1px solid rgba(255,255,255,0.03); resize:vertical; font-family:inherit; font-size:0.95rem }
-
-  /* instruções / aria-live */
-  .help { font-size:0.95rem; color:var(--muted); margin-top:6px; }
-
-  /* responsivo */
-  @media (max-width:980px){
-    .app { grid-template-columns:1fr; padding:14px; }
-    aside { order:2; }
-    main { order:1; }
-  }
-
-  /* ajustes de tamanho de célula por nível */
-  .size-10 .cell{ width:var(--cell-size-sm); height:var(--cell-size-sm); font-size:1.05rem; }
-  .size-12 .cell{ width:var(--cell-size-md); height:var(--cell-size-md); font-size:1.05rem; }
-  .size-15 .cell{ width:var(--cell-size-lg); height:var(--cell-size-lg); font-size:1.15rem; }
-
-  /* animação ao riscar palavra */
-  .strike {
-    display:inline-block;
-    position:relative;
-  }
-  .strike::after {
-    content:"";
-    position:absolute;
-    left:0; right:0; top:50%;
-    height:2px;
-    background:linear-gradient(90deg,var(--success),#C8FFD8);
-    transform-origin:left center;
-    transform:scaleX(0);
-    transition:transform .5s ease;
-    border-radius:2px;
-  }
-  li.found .strike::after{ transform:scaleX(1) }
-
-  footer.small { grid-column:1/-1; font-size:0.85rem; color:var(--muted); text-align:center; padding-top:6px;}
+    @media (max-width: 600px) {
+        .grid {
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+        }
+        .cell {
+            width: 28px;
+            height: 28px;
+            font-size: 1rem;
+        }
+    }
 </style>
 </head>
 <body>
-  <div class="app" id="app">
     <header>
-      <div class="title">
-        <div class="logo" aria-hidden="true">AM</div>
-        <div>
-          <h1>Caça-Palavras — Aventura & Mistério</h1>
-          <p class="lead">Tema aventureiro, seleção por <strong>primeira + última letra</strong> — testado para toque e teclado.</p>
-        </div>
-      </div>
-
-      <div class="controls" role="toolbar" aria-label="Controles do jogo">
-        <label for="level" class="tiny" style="display:none">Nível</label>
-        <select id="level" aria-label="Selecionar nível">
-          <option value="10">Fácil — 10x10</option>
-          <option value="12">Médio — 12x12</option>
-          <option value="15">Difícil — 15x15</option>
-        </select>
-        <button id="newGame" class="btn-primary">Novo Jogo</button>
-        <button id="resetProgress" class="btn-ghost" title="Limpar progresso salvo">Limpar Progresso</button>
-        <button id="toggleSettings" class="btn-ghost" aria-expanded="false">Configurações</button>
-      </div>
+        <h1>NÍVEL 1</h1>
+        <div class="nivel">AVENTURA</div>
     </header>
 
     <main>
-      <div class="board-wrap">
-        <div class="stats" aria-hidden="true">
-          <div><strong id="remainingCount">0</strong> palavras restantes</div>
-          <div class="tiny" id="foundCount">Encontradas: 0</div>
-        </div>
-
-        <!-- board -->
-        <div id="board" class="board size-10" role="grid" aria-label="Grade do caça-palavras" tabindex="0"></div>
-
-        <div class="help" id="instructions" aria-live="polite">
-          Toque na primeira letra e depois na última letra da palavra. Use o teclado: setas para navegar, Enter/Space para marcar.
-        </div>
-      </div>
+        <div class="grid" id="grid"></div>
+        <div class="palavras" id="lista-palavras"></div>
     </main>
 
-    <aside>
-      <div>
-        <strong>Lista: </strong>
-        <span class="tiny">Tema: Aventura & Mistério</span>
-      </div>
-
-      <ul id="words" class="words-list" aria-live="polite" aria-atomic="true"></ul>
-
-      <div class="settings" id="settingsPanel" hidden>
-        <label for="wordEditor"><strong>Editar lista (uma palavra por linha ou JSON array)</strong></label>
-        <textarea id="wordEditor" aria-label="Editor de lista de palavras"></textarea>
-        <div style="display:flex; gap:8px;">
-          <button id="applyWords" class="btn-primary">Aplicar lista</button>
-          <button id="exportList" class="btn-ghost">Exportar JSON</button>
-          <button id="importList" class="btn-ghost" id="importBtn">Importar JSON</button>
-        </div>
-
-        <label style="display:flex;align-items:center;gap:6px;">
-          <input type="checkbox" id="soundToggle" /> Som (efeitos curtos)
-        </label>
-
-        <div class="tiny">Dica: escreva palavras sem acentos para melhor posicionamento.</div>
-      </div>
-
-      <div class="tiny" style="margin-top:auto;">Progresso salvo automaticamente no navegador.</div>
-    </aside>
-
-    <footer class="small">Feito com ❤️ — toque nas letras para jogar. Haptics e som opcionais.</footer>
-  </div>
-
 <script>
-/* ===============================
-   Caça-Palavras — app.js (vanilla)
-   Comentários em português para aprendizado
-   =============================== */
+    // Lista de palavras
+    const palavras = ["TESOURO", "MAPA", "CAVERNA", "HERÓI", "VILÃO", "SIGILO", "PISTA", "CÓDIGO", "PORTAL", "ORBE"];
 
-(() => {
-  // ---------- Configurações iniciais ----------
-  const STORAGE_KEY = "caçaPalavras_avm_v1";
-  const initialWords = ["TESOURO","MAPA","CAVERNA","HEROI","VILAO","SIGILO","PISTA","CODIGO","PORTAL","ORBE","CLA","RUINA","INDICE","RELIQUIA","TRILHA"];
-  // Observação: mantenha sem acentos para facilitar; se quiser, você pode adaptar para aceitar acentos.
+    // Cria grid vazio
+    const gridSize = 10;
+    const gridElement = document.getElementById("grid");
+    const listaElement = document.getElementById("lista-palavras");
 
-  // Estado do jogo
-  let state = {
-    size: 10,                 // 10x10 por padrão
-    grid: [],                 // matriz de chars
-    placedWords: [],          // lista de {word, coords: [{r,c}...], found}
-    found: new Set(),
-    words: [...initialWords],
-    selecting: null,          // {start: {r,c}, elementStart}
-    sound: false
-  };
-
-  // Referências DOM
-  const boardEl = document.getElementById("board");
-  const wordsEl = document.getElementById("words");
-  const levelSel = document.getElementById("level");
-  const newGameBtn = document.getElementById("newGame");
-  const settingsToggle = document.getElementById("toggleSettings");
-  const settingsPanel = document.getElementById("settingsPanel");
-  const wordEditor = document.getElementById("wordEditor");
-  const applyWordsBtn = document.getElementById("applyWords");
-  const exportListBtn = document.getElementById("exportList");
-  const soundToggle = document.getElementById("soundToggle");
-  const remainingCount = document.getElementById("remainingCount");
-  const foundCount = document.getElementById("foundCount");
-  const resetProgress = document.getElementById("resetProgress");
-  const instructions = document.getElementById("instructions");
-
-  // WebAudio simple beep
-  let audioCtx;
-  function playBeep(freq=600, dur=0.08) {
-    if (!state.sound) return;
-    try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = "sine";
-      o.frequency.value = freq;
-      o.connect(g); g.connect(audioCtx.destination);
-      g.gain.value = 0.0001;
-      o.start();
-      const now = audioCtx.currentTime;
-      g.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
-      o.stop(now + dur + 0.02);
-    } catch(e){ /* som pode falhar em alguns ambientes */ }
-  }
-
-  // ---------- Utilitários ----------
-  const dirs = [
-    {dr:0,dc:1}, {dr:0,dc:-1}, {dr:1,dc:0}, {dr:-1,dc:0},
-    {dr:1,dc:1}, {dr:1,dc:-1}, {dr:-1,dc:1}, {dr:-1,dc:-1}
-  ];
-
-  function shuffle(a){
-    for(let i=a.length-1;i>0;i--){
-      const j=Math.floor(Math.random()*(i+1));
-      [a[i],a[j]]=[a[j],a[i]];
-    }
-  }
-
-  function saveProgress(){
-    try{
-      const payload = {
-        size: state.size,
-        words: state.words,
-        placed: state.placedWords.map(p => ({word:p.word, found:p.found})),
-        found: Array.from(state.found),
-        sound: state.sound
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    }catch(e){ console.warn("Salvar falhou",e) }
-  }
-
-  function loadProgress(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return false;
-      const p = JSON.parse(raw);
-      state.size = p.size || state.size;
-      state.words = p.words && p.words.length? p.words : state.words;
-      state.sound = !!p.sound;
-      // We'll regenerate placement but mark found words from payload.found
-      state.found = new Set(p.found || []);
-      return true;
-    }catch(e){ console.warn("Load falhou",e); return false; }
-  }
-
-  // ---------- Geração da grade e posicionamento ----------
-  function createEmptyGrid(n){
-    const g = new Array(n);
-    for(let r=0;r<n;r++){
-      g[r] = new Array(n).fill("");
-    }
-    return g;
-  }
-
-  // Tentar colocar palavra em grid, respeitando colisões (mesmo char ok)
-  function tryPlaceWord(grid, word){
-    const n = grid.length;
-    // tentativas aleatórias
-    const tries = 200;
-    const dirsLocal = [...dirs];
-    for(let t=0;t<tries;t++){
-      const dir = dirsLocal[Math.floor(Math.random()*dirsLocal.length)];
-      const r = Math.floor(Math.random()*n);
-      const c = Math.floor(Math.random()*n);
-      let fits = true;
-      const coords = [];
-      for(let i=0;i<word.length;i++){
-        const rr = r + dir.dr*i;
-        const cc = c + dir.dc*i;
-        if(rr<0||cc<0||rr>=n||cc>=n){ fits=false; break; }
-        const cur = grid[rr][cc];
-        if(cur!=="" && cur!==word[i]){ fits=false; break; }
-        coords.push({r:rr,c:cc});
-      }
-      if(!fits) continue;
-      // coloca
-      coords.forEach((p,i)=> grid[p.r][p.c] = word[i]);
-      return coords;
-    }
-    return null;
-  }
-
-  function placeWordsAndFill(n, words){
-    // words: array de strings (uppercase)
-    // retorna {grid, placedWords}
-    const grid = createEmptyGrid(n);
-    const placed = [];
-    // ordenar por maior primeiro para facilidade
-    const byLen = [...words].sort((a,b)=>b.length - a.length);
-    shuffle(byLen);
-    for(const w of byLen){
-      const coords = tryPlaceWord(grid, w);
-      if(coords){
-        placed.push({word:w, coords, found: state.found.has(w)});
-      } else {
-        // se não coube, tentar em versão reversa
-        const rev = w.split("").reverse().join("");
-        const coords2 = tryPlaceWord(grid, rev);
-        if(coords2){
-          placed.push({word:w, coords:coords2, found: state.found.has(w)});
-        } else {
-          // se não conseguiu posicionar, pule (ou seria possível recriar grade maior - omitido pra simplicidade)
-          console.warn("Não foi possível colocar:", w);
+    function criarGrid() {
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.textContent = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+            gridElement.appendChild(cell);
         }
-      }
     }
-    // preencher vazios com letras aleatórias A-Z
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    for(let r=0;r<n;r++){
-      for(let c=0;c<n;c++){
-        if(!grid[r][c] || grid[r][c]===""){
-          grid[r][c] = letters[Math.floor(Math.random()*letters.length)];
-        }
-      }
+
+    function mostrarPalavras() {
+        palavras.forEach(p => {
+            const span = document.createElement("span");
+            span.textContent = p;
+            listaElement.appendChild(span);
+        });
     }
-    return {grid, placed};
-  }
 
-  // ---------- Renderização ----------
-  function renderBoard(){
-    const n = state.size;
-    // ajustar classe de tamanho
-    boardEl.classList.remove("size-10","size-12","size-15");
-    boardEl.classList.add(`size-${n}`);
-    // CSS grid: n colunas
-    boardEl.style.gridTemplateColumns = `repeat(${n}, auto)`;
-    boardEl.innerHTML = "";
-
-    for(let r=0;r<n;r++){
-      for(let c=0;c<n;c++){
-        const ch = state.grid[r][c];
-        const cell = document.createElement("button"); // usar button para acessibilidade e foco
-        cell.className = "cell";
-        if(isCellFound(r,c)) cell.classList.add("found");
-        cell.setAttribute("role","gridcell");
-        cell.setAttribute("aria-label", `Linha ${r+1} Coluna ${c+1} ${ch}`);
-        cell.setAttribute("data-r", r);
-        cell.setAttribute("data-c", c);
-        cell.tabIndex = 0;
-        cell.innerText = ch;
-        // evento de toque/click
-        cell.addEventListener("click", onCellClick);
-        // teclado: setas para mover foco, Enter/Space tratar como seleção
-        cell.addEventListener("keydown", onCellKeyDown);
-        boardEl.appendChild(cell);
-      }
-    }
-    updateWordsList();
-    updateCounts();
-  }
-
-  function isCellFound(r,c){
-    // se alguma placedWord contém coords que match e foi marcada found
-    return state.placedWords.some(p => p.found && p.coords.some(cc => cc.r===r && cc.c===c));
-  }
-
-  function updateWordsList(){
-    wordsEl.innerHTML = "";
-    for(const p of state.placedWords){
-      const li = document.createElement("li");
-      li.className = p.found ? "found" : "";
-      const span = document.createElement("span");
-      span.className = "strike";
-      span.innerText = p.word;
-      li.appendChild(span);
-      li.setAttribute("aria-label", p.found ? `${p.word} encontrada` : `${p.word} não encontrada`);
-      wordsEl.appendChild(li);
-    }
-  }
-
-  function updateCounts(){
-    const remaining = state.placedWords.filter(p => !p.found).length;
-    remainingCount.innerText = remaining;
-    foundCount.innerText = `Encontradas: ${state.placedWords.filter(p=>p.found).length}`;
-  }
-
-  // ---------- Interação: marcação por primeiro + última letra ----------
-  function onCellClick(e){
-    const btn = e.currentTarget;
-    const r = Number(btn.dataset.r), c = Number(btn.dataset.c);
-
-    // se já houver seleção de start
-    if(!state.selecting){
-      // iniciar seleção
-      state.selecting = {start:{r,c}, elementStart:btn};
-      // marcar visualmente
-      clearCellTempMarks();
-      btn.classList.add("selected");
-      announce(`Início marcado em ${btn.innerText}`);
-      playBeep(700,0.06);
-    } else {
-      // já tem start — validar seleção entre start e end
-      const start = state.selecting.start;
-      const end = {r,c};
-      validateSelection(start, end);
-      // limpar seleção
-      clearCellTempMarks();
-      state.selecting = null;
-    }
-  }
-
-  function onCellKeyDown(e){
-    const el = e.currentTarget;
-    const r = Number(el.dataset.r), c = Number(el.dataset.c);
-    const n = state.size;
-    // Navegação de foco
-    switch(e.key){
-      case "ArrowUp": case "Up":
-        e.preventDefault();
-        focusCell(Math.max(r-1,0), c);
-        break;
-      case "ArrowDown": case "Down":
-        e.preventDefault();
-        focusCell(Math.min(r+1,n-1), c);
-        break;
-      case "ArrowLeft": case "Left":
-        e.preventDefault();
-        focusCell(r, Math.max(c-1,0));
-        break;
-      case "ArrowRight": case "Right":
-        e.preventDefault();
-        focusCell(r, Math.min(c+1,n-1));
-        break;
-      case "Enter":
-      case " ":
-        e.preventDefault();
-        // simula click para seleção
-        el.click();
-        break;
-      default:
-        break;
-    }
-  }
-
-  function focusCell(r,c){
-    const selector = `.cell[data-r="${r}"][data-c="${c}"]`;
-    const el = boardEl.querySelector(selector);
-    if(el) el.focus();
-  }
-
-  function clearCellTempMarks(){
-    boardEl.querySelectorAll(".cell.selected").forEach(el => el.classList.remove("selected","error"));
-  }
-
-  function validateSelection(start,end){
-    // obter path entre start e end se alinhados em uma das 8 direções
-    const path = getPathBetween(start,end);
-    if(!path){
-      // erro: não estão em linha reta aceitável
-      feedbackInvalid("Seleção inválida");
-      return;
-    }
-    // montar palavra a partir do path
-    const formed = path.map(p => state.grid[p.r][p.c]).join("");
-    const formedReverse = path.map(p => state.grid[p.r][p.c]).reverse().join("");
-    // checar se corresponde a alguma palavra ainda não encontrada
-    const foundEntry = state.placedWords.find(p => !p.found && (p.word === formed || p.word === formedReverse));
-    if(foundEntry){
-      // marcar encontrada
-      foundEntry.found = true;
-      state.found.add(foundEntry.word);
-      // animação: destacar cells
-      path.forEach(p => {
-        const el = boardEl.querySelector(`.cell[data-r="${p.r}"][data-c="${p.c}"]`);
-        if(el){
-          el.classList.add("found");
-          // pequeno delay para efeito
-          el.animate([{transform:"scale(0.98)"},{transform:"scale(1.02)"}],{duration:320,fill:"forwards"});
-        }
-      });
-      announce(`Palavra encontrada: ${foundEntry.word}`);
-      playBeep(900,0.08);
-      updateWordsList();
-      updateCounts();
-      saveProgress();
-      // verificar vitória
-      if(state.placedWords.every(p=>p.found)){
-        setTimeout(()=> announce("Parabéns! Você encontrou todas as palavras."),200);
-      }
-    } else {
-      // seleção não corresponde
-      feedbackInvalid("Não corresponde a palavra");
-    }
-  }
-
-  function feedbackInvalid(message){
-    // efeito visual e vibração curta
-    const sel = state.selecting && state.selecting.elementStart;
-    if(sel) sel.classList.add("error");
-    // aplicar erro nas duas células se possível
-    navigator.vibrate && navigator.vibrate(80);
-    playBeep(300,0.09);
-    announce(message);
-  }
-
-  // retorna array de coords entre start e end se alinhados corretamente, senão null
-  function getPathBetween(a,b){
-    const dr = b.r - a.r, dc = b.c - a.c;
-    const stepR = dr === 0 ? 0 : dr / Math.abs(dr);
-    const stepC = dc === 0 ? 0 : dc / Math.abs(dc);
-    // validar que estão alinhados em 8 direções (ou seja, dr==0 || dc==0 || abs(dr)==abs(dc))
-    if(!(dr===0 || dc===0 || Math.abs(dr) === Math.abs(dc))) return null;
-    const len = Math.max(Math.abs(dr), Math.abs(dc)) + 1;
-    const path = [];
-    for(let i=0;i<len;i++){
-      const rr = a.r + stepR*i;
-      const cc = a.c + stepC*i;
-      path.push({r:rr,c:cc});
-    }
-    return path;
-  }
-
-  // ---------- Função principal: criar novo jogo ----------
-  function newGame(size=10, wordsList=[]){
-    state.size = size;
-    // limpar found se palavra mudou
-    state.words = wordsList && wordsList.length ? wordsList.map(w=>w.toUpperCase().replace(/\s+/g,"")) : state.words;
-    // gerar placements
-    const {grid, placed} = placeWordsAndFill(size, state.words);
-    state.grid = grid;
-    // manter found se já estava marcada
-    state.placedWords = placed.map(p => ({...p, found: state.found.has(p.word)}));
-    // atualizar DOM
-    renderBoard();
-    // atualizar editor de palavras
-    wordEditor.value = state.words.join("\n");
-    saveProgress();
-  }
-
-  // ---------- UI eventos ----------
-  newGameBtn.addEventListener("click", ()=> {
-    state.found.clear();
-    // mudar tamanho conforme select
-    const size = Number(levelSel.value);
-    newGame(size, state.words);
-  });
-
-  settingsToggle.addEventListener("click", ()=>{
-    const show = settingsPanel.hidden;
-    settingsPanel.hidden = !show;
-    settingsToggle.setAttribute("aria-expanded", String(show));
-  });
-
-  applyWordsBtn.addEventListener("click", ()=>{
-    const raw = wordEditor.value.trim();
-    if(!raw) return alert("Escreva pelo menos uma palavra.");
-    let arr = [];
-    // tentar parse JSON se começar com [
-    if(raw.startsWith("[")){
-      try{
-        arr = JSON.parse(raw);
-        if(!Array.isArray(arr)) throw new Error("Não é array");
-        arr = arr.map(s=>String(s).toUpperCase().replace(/\s+/g,""));
-      }catch(e){
-        alert("JSON inválido. Digite uma lista separada por linhas ou um JSON válido.");
-        return;
-      }
-    } else {
-      arr = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).map(s => s.toUpperCase().replace(/\s+/g,""));
-    }
-    // aplicar
-    state.words = arr;
-    state.found.clear();
-    newGame(state.size, state.words);
-  });
-
-  exportListBtn.addEventListener("click", ()=>{
-    const data = JSON.stringify(state.words, null, 2);
-    const blob = new Blob([data], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "palavras.json"; document.body.appendChild(a); a.click();
-    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },500);
-  });
-
-  soundToggle.addEventListener("change",(e)=>{
-    state.sound = !!e.target.checked;
-    saveProgress();
-  });
-
-  resetProgress.addEventListener("click", ()=>{
-    if(confirm("Limpar progresso salvo e voltar para lista padrão?")){
-      localStorage.removeItem(STORAGE_KEY);
-      state.words = [...initialWords];
-      state.found.clear();
-      state.sound = false;
-      soundToggle.checked = false;
-      levelSel.value = 10;
-      newGame(10, state.words);
-    }
-  });
-
-  // ---------- A11Y: aria-live announcements ----------
-  // cria um elemento aria-live dinâmico
-  const live = document.createElement("div");
-  live.setAttribute("aria-live","polite");
-  live.style.position="absolute"; live.style.left="-9999px";
-  document.body.appendChild(live);
-  function announce(msg){
-    live.textContent = ""; // reset para disparar
-    setTimeout(()=> live.textContent = msg, 50);
-  }
-
-  // ---------- Inicialização: carregar progresso se houver ----------
-  function init(){
-    const loaded = loadProgress();
-    // aplicar controles iniciais
-    levelSel.value = state.size;
-    soundToggle.checked = state.sound;
-    wordEditor.value = state.words.join("\n");
-    if(loaded){
-      // manter size e words do storage
-      newGame(state.size, state.words);
-    } else {
-      newGame(10, state.words);
-    }
-    // detectar toque: instrução mais clara
-    if('ontouchstart' in window) {
-      instructions.innerText = "Toque na primeira letra e depois na última letra da palavra. Use o teclado: setas para navegar, Enter/Space para marcar.";
-    }
-  }
-
-  // ---------- Import (simples via paste) ----------
-  // forçar suporte de import via prompt (simples)
-  document.getElementById("importList").addEventListener("click", ()=>{
-    const json = prompt("Cole o JSON (array) das palavras para importar:");
-    if(!json) return;
-    try{
-      const arr = JSON.parse(json);
-      if(!Array.isArray(arr)) throw new Error("Array esperado");
-      state.words = arr.map(s=>String(s).toUpperCase().replace(/\s+/g,""));
-      state.found.clear();
-      wordEditor.value = state.words.join("\n");
-      newGame(state.size, state.words);
-      saveProgress();
-    }catch(e){
-      alert("JSON inválido: " + e.message);
-    }
-  });
-
-  // ---------- Salvamento automático periódico ----------
-  setInterval(saveProgress, 2000);
-
-  // ---------- iniciar app ----------
-  init();
-
-  // Expor alguns helpers no window para debug (opcional)
-  window.CP = {
-    newGame: (s) => newGame(s || state.size, state.words),
-    getState: () => state
-  };
-
-})();
+    criarGrid();
+    mostrarPalavras();
 </script>
 </body>
 </html>
