@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.8;
+        }
+        #voltar {
+            text-align: center;
+        }
+        #voltar a:hover {
+            background-color: rgba(99, 108, 243, 0.747);
+            padding: 10px;
+            font-weight: bolder;
+            border-radius: 10px;
+            transform: scale(1.1);
+            transition-duration: 0.5s;
+        }
+    </style>
+    <title>Formulário</title>
+</head>
+<body>
+    <h1>Usando if e else</h1>
+    <p>
+        <label for="iano">Em que ano você nasceu?</label>
+        <input type="number" name="ano" id="iano" min="1900" max="2025" value="1980" oninput="calcIdade()">
+    </p>
+
+    <p>
+        <label for="iidade">Sua idade é: </label>
+        <output id="iidade">0</output>
+    </p>
+    <p>
+        <input type="submit" value="Enviar">
+        <input type="reset" value="Limpar">
+    </p>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+
+    <script>
+    function calcIdade() {
+        // Pega o ano atual do sistema (exemplo: 2025)
+        let atual = new Date().getFullYear();
+
+        // Pega o valor digitado no campo de entrada (ano de nascimento)
+        let ano = document.getElementById("iano").value;
+
+        // Seleciona o elemento <output> onde vamos mostrar a idade
+        let saida = document.getElementById("iidade");
+
+        // Verifica se o ano digitado está dentro do intervalo válido
+        if (ano >= 1900 && ano <= atual) {
+            // Calcula a idade e mostra no <output>
+            saida.innerHTML = atual - ano;
+        } else {
+            // Se o ano for inválido (ex.: futuro ou menor que 1900), mostra aviso
+            saida.innerHTML = "Ano inválido";
+        }
+    }
+</script>
+
+</body>
+</html>

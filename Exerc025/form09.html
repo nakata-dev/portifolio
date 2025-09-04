@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.8;
+        }
+        #voltar{
+            text-align: center;
+        }
+        #voltar{
+            a:hover{
+             background-color: rgba(99, 108, 243, 0.747);
+             padding: 10px;
+             font-weight: bolder;
+             border-radius: 10px;
+             transform: scale(1.1);
+             transition-duration: 0.5s;
+             
+            }
+        }
+        </style>
+    <title>Formulário</title>
+</head>
+<body>
+    <h1>Output - parte II</h1>
+    <p>
+        <label for="inum">Número</label>
+        <input type="range" name="num" id="inum" min="0" max="100" value="50" oninput="ival.innerHTML = Number(inum.value)">
+        <output id="ival">50</output>
+    </p>
+
+    <p>
+        <input type="submit" value="Enviar">
+        <input type="reset" value="Enviar">
+    </p>
+    <h2>comando que ativa o valor</h2>
+    <p>
+        oninput="ival.innerHTML = Number(inum.value)"
+    </p>
+    <h2>Saída de Valor</h2>
+    <p>
+        &lt;output id="ival"&gt;50&lt;/output&gt;
+    </p>
+    <h2>Estrutura</h2>
+    <p>
+        &lt;label for="inum"&gt;Número&lt;/label&gt;
+        <br>
+        &lt;input type="range" name="num" id="inum" min="0" max="100" value="50" <strong>oninput="ival.innerHTML = Number(inum.value)"</strong>&gt;
+        <br>
+        &lt;output id="ival">50</output&gt;
+    </p>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+</body>
+</html>
