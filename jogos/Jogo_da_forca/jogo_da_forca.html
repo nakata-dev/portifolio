@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Forca - Filmes Atuais</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Essencial para celular -->
+  <style>
+    a {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fff8f0;
+      text-align: center;
+      padding: 20px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 5vw, 2.5rem); /* Ajusta tamanho conforme tela */
+      color: #444;
+    }
+
+    #palavra {
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+      letter-spacing: 0.5em;
+      margin: 20px 0;
+      word-wrap: break-word;
+    }
+
+    #letras {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap; /* Faz quebrar linha */
+      justify-content: center;
+      gap: 5px;
+    }
+
+    button.letra {
+      font-weight: bold;
+      flex: 1 1 30%; /* Ocupa até 30% da largura cada */
+      min-width: 40px;
+      padding: 10px;
+      font-size: clamp(0.9rem, 3vw, 1.3rem);
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f0f0f0;
+      transition: background 0.2s;
+    }
+
+    button.letra:hover {
+      background: #d0d0d0;
+    }
+
+    #mensagem {
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    #erros {
+      color: red;
+      margin-top: 10px;
+      font-size: clamp(1rem, 3.5vw, 1.2rem);
+    }
+
+    #reiniciar {
+      margin: 15px 0;
+      padding: 10px 15px;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background: #28a745;
+      color: white;
+    }
+    #reiniciar:hover {
+      background: #218838;
+    }
+
+    /* Melhor ajuste em telas menores */
+    @media screen and (max-width: 500px) {
+      #palavra {
+        letter-spacing: 0.3em;
+      }
+      button.letra {
+        flex: 1 1 18%; /* letras ocupam mais largura */
+      }
+    }
+
+    @media screen and (max-width: 300px) {
+      button.letra {
+        flex: 1 1 2em; /* letras ocupam quase toda a largura */
+        padding: 12px;
+         .grid {
+    display: grid;
+    grid-template-columns: repeat(10, 60px); /* aumenta o tamanho das células */
+    gap: 4px; /* espaço entre as células */
+    justify-content: center;
+    margin: 20px auto;
+            }
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html">Voltar</a>
+  <button id="reiniciar">🔁 Reiniciar</button>
+  <h1>Adivinhe o Nome</h1>
+
+  <div id="palavra">_ _ _ _ _</div>
+
+  <div id="letras"></div>
+
+  <div id="erros"></div>
+
+  <div id="mensagem"></div>
+
+  <script>
+    const filmes = [
+      "MAIA", "ALICE", "XUXA", "VAMOS PESCAR", "FRANKENSTEIN", "JESUS CRISTO", "GUSTAVO", "LAICA", "PEDRO", "MARIA", "JOAO", "LUCAS", "MATEUS", "MARCOS", "LARA", "ANA", "CARLA", "BRUNA", "FELIPE", "RAFAEL", "GABRIEL", "LUIZA", "SOPHIA", "ISABELA", "JULIA", "MARIANA", "VICTORIA", "LARISSA", "BEATRIZ", "CAMILA", "LETICIA", "NATHALIA", "THAIS", "RENATA", "ALINE", "THAMIRES", "SANDRA", "PAULA", "DANIELA", "MARCELA", "TATIANA", "VANESSA", "JULIANA", "MIRELLA", "GIOVANNA", "RAQUEL", "ALESSANDRA", "MAYARA", "KARINA", "JESSICA", "MELISSA", "FABIANA", "NATALIA", "PRISCILA", "SILVIA", "ADRIANA", "ELIANA", "CINTIA", "MARTA", "LILIAN", "REGINA", "CLAUDIA", "SUSANA", "VERA", "DANIEL", "RODRIGO", "BRUNO", "LEANDRO", "GUSTAVO", "FELIPE", "MARCOS", "RAFAEL", "LUCAS", "GABRIEL", "DIEGO", "VINICIUS", "LEONARDO", "ALEXANDRE", "WILLIAN", "FABIENNE", "JULIETTE", "SABRINA", "LUNA", "ESTRELA", "SOL", "CEUS", "MARTE", "JUPITER", "SATURNO", "URANO", "NETUNO", "PLUTAO", "GALAXIA", "UNIVERSO", "CONSTELACAO", "ASTEROIDE", "COMETA", "METEORO", "ORION", "ANDROMEDA", "CASSIOPEIA", "LEAO", "TOURO", "GEMEOS", "CANCER", "VIRGEM", "LIBRA", "ESCORPIAO", "SAGITARIO", "CAPRICORNIO", "AQUARIO", "PEIXES", "HOMEM ARANHA", "BATMAN", "MULHER MARAVILHA", "CAPITAO AMERICA", "IRON","MAYSA"
+    ];
+
+    let palavraEscolhida = "";
+    let palavraExibida = [];
+    let letrasErradas = [];
+    let tentativasRestantes = 6;
+
+    const palavraDiv = document.getElementById("palavra");
+    const letrasDiv = document.getElementById("letras");
+    const errosDiv = document.getElementById("erros");
+    const mensagemDiv = document.getElementById("mensagem");
+    const reiniciarBtn = document.getElementById("reiniciar");
+
+    function iniciarJogo() {
+      const filme = filmes[Math.floor(Math.random() * filmes.length)];
+      palavraEscolhida = filme.toUpperCase();
+      palavraExibida = Array.from(palavraEscolhida).map(letra => letra === " " ? " " : "_");
+      letrasErradas = [];
+      tentativasRestantes = 6;
+      atualizarTela();
+      criarBotoes();
+    }
+
+    function criarBotoes() {
+      letrasDiv.innerHTML = "";
+      for (let i = 65; i <= 90; i++) {
+        const letra = String.fromCharCode(i);
+        const btn = document.createElement("button");
+        btn.textContent = letra;
+        btn.className = "letra";
+        btn.onclick = () => jogar(letra, btn);
+        letrasDiv.appendChild(btn);
+      }
+    }
+
+    function jogar(letra, botao) {
+      botao.disabled = true;
+      if (palavraEscolhida.includes(letra)) {
+        for (let i = 0; i < palavraEscolhida.length; i++) {
+          if (palavraEscolhida[i] === letra) {
+            palavraExibida[i] = letra;
+          }
+        }
+      } else {
+        letrasErradas.push(letra);
+        tentativasRestantes--;
+      }
+      atualizarTela();
+      verificarFim();
+    }
+
+    function atualizarTela() {
+      palavraDiv.textContent = palavraExibida.join(" ");
+      errosDiv.textContent = `Erros: ${letrasErradas.join(", ")} (${tentativasRestantes} tentativas restantes)`;
+    }
+
+    function verificarFim() {
+      if (!palavraExibida.includes("_")) {
+        mensagemDiv.textContent = "🎉 Você venceu!";
+        desativarBotoes();
+      } else if (tentativasRestantes === 0) {
+        mensagemDiv.textContent = `💀 Você perdeu! A palavra era: ${palavraEscolhida}`;
+        desativarBotoes();
+      }
+    }
+
+    function desativarBotoes() {
+      const botoes = document.querySelectorAll(".letra");
+      botoes.forEach(btn => btn.disabled = true);
+    }
+
+    reiniciarBtn.onclick = () => {
+      mensagemDiv.textContent = "";
+      iniciarJogo();
+    };
+
+    iniciarJogo();
+  </script>
+</body>
+</html>

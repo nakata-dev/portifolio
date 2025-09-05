@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Jogo da Velha</title>
+  <a href="../index.html">Retornar a Jogos</a>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 20px; /* Reduzir o padding geral para telas menores */
+      margin: 0; /* Remover margem padrão do body */
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2rem; /* Ajustar tamanho do título para telas menores */
+    }
+
+    /* Estilo para o link de retorno */
+    a {
+      display: inline-block; /* Para poder aplicar padding e margin */
+      margin-bottom: 20px;
+      padding: 10px 10px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+
+    #tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(3, 90px); /* Tamanho menor das células para celular */
+      grid-gap: 5px; /* Espaçamento menor */
+      justify-content: center;
+      align-items: center;
+      margin: 15px auto; /* Margem ajustada */
+      max-width: 300px; /* Garante que o tabuleiro não fique muito grande */
+    }
+
+    .celula {
+      width: 120px; /* Tamanho menor */
+      height: 120px; /* Tamanho menor */
+      font-size: 2rem; /* Fonte um pouco menor */
+      background-color: #fff;
+      border: 2px solid #444;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box; /* Garante que padding e border sejam incluídos no width/height */
+    }
+
+    .celula:hover {
+      background-color: #e0e0e0;
+    }
+
+    #mensagem {
+      font-size: 2rem; /* Fonte um pouco menor */
+      margin-top: 15px;
+    }
+
+    #reiniciar {
+      margin-top: 15px;
+      padding: 8px 15px; /* Padding ajustado */
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #reiniciar:hover {
+      background-color: #218838;
+    }
+
+    /* --- Media Query para telas menores (smartphones) --- */
+    @media (max-width: 600px) { /* Geralmente, 600px é um bom breakpoint para mobile */
+      body {
+        padding: 10px; /* Reduzir ainda mais o padding em telas muito pequenas */
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      #tabuleiro {
+        grid-template-columns: repeat(3, 80px); /* Células um pouco menores */
+        grid-gap: 3px;
+        max-width: 270px; /* Ajuste para não quebrar em telas bem pequenas */
+      }
+
+      .celula {
+        width: 80px;
+        height: 80px;
+        font-size: 3rem;
+      }
+
+      #mensagem {
+        font-size: 1.1rem;
+      }
+
+      #reiniciar {
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Media Query para telas ainda menores, como iPhones SE ou Galaxy S8 */
+    @media (max-width: 380px) {
+        #tabuleiro {
+            grid-template-columns: repeat(3, 70px);
+            max-width: 240px;
+        }
+        .celula {
+            width: 80px;
+            height: 80px;
+            font-size: 1.6rem;
+        }
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Jogo da Velha</h1>
+
+  <div id="tabuleiro">
+    </div>
+
+  <div id="mensagem"></div>
+
+  <button id="reiniciar">Reiniciar</button>
+
+  <script>
+    const tabuleiro = document.getElementById("tabuleiro");
+    const mensagem = document.getElementById("mensagem");
+    const reiniciar = document.getElementById("reiniciar");
+
+    let jogadorAtual = "X";
+    let fimDeJogo = false;
+    const celulas = [];
+
+    // Cria as 9 células
+    for (let i = 0; i < 9; i++) {
+      const celula = document.createElement("div");
+      celula.classList.add("celula");
+      celula.dataset.index = i;
+      celula.addEventListener("click", () => jogar(i));
+      tabuleiro.appendChild(celula);
+      celulas.push(celula);
+    }
+
+    function jogar(index) {
+      if (fimDeJogo || celulas[index].textContent !== "") return;
+
+      celulas[index].textContent = jogadorAtual;
+      if (verificarVitoria()) {
+        mensagem.textContent = `Jogador ${jogadorAtual} venceu!`;
+        fimDeJogo = true;
+      } else if (celulas.every(c => c.textContent !== "")) {
+        mensagem.textContent = "Empate!";
+        fimDeJogo = true;
+      } else {
+        jogadorAtual = jogadorAtual === "X" ? "O" : "X";
+        mensagem.textContent = `Vez do jogador ${jogadorAtual}`;
+      }
+    }
+
+    function verificarVitoria() {
+      const combinacoes = [
+        [0,1,2], [3,4,5], [6,7,8], // linhas
+        [0,3,6], [1,4,7], [2,5,8], // colunas
+        [0,4,8], [2,4,6]           // diagonais
+      ];
+
+      return combinacoes.some(comb => {
+        const [a, b, c] = comb;
+        return celulas[a].textContent === jogadorAtual &&
+               celulas[b].textContent === jogadorAtual &&
+               celulas[c].textContent === jogadorAtual;
+      });
+    }
+
+    reiniciar.addEventListener("click", () => {
+      celulas.forEach(c => c.textContent = "");
+      jogadorAtual = "X";
+      fimDeJogo = false;
+      mensagem.textContent = "";
+    });
+  </script>
+
+</body>
+</html>

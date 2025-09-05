@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caça-Palavras</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: url('https://picsum.photos/800/1200?blur=3') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        header {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+        }
+
+        header .nivel {
+            font-size: 1rem;
+            margin-top: 5px;
+            background: #22c55e;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(var(--grid-cols), 1fr);
+            gap: 2px;
+            background: rgba(15, 23, 36, 0.9);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .cell {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background: #0f1724;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            user-select: none;
+        }
+
+        .cell:hover {
+            background: #1e293b;
+            transform: scale(1.2);
+        }
+
+        .cell.selected {
+            background: #f59e0b;
+            color: #000;
+        }
+        
+        .cell.encontrada {
+            background: #22c55e;
+            color: #fff;
+        }
+
+        .palavras {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 8px;
+        }
+
+        .palavras span {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: default;
+            transition: all 0.3s ease;
+        }
+
+        .palavras span.encontrada {
+            background: #22c55e;
+            text-decoration: line-through;
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                gap: 2px;
+            }
+            .cell {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="titulo-nivel"></h1>
+        <div class="nivel">AVENTURA</div>
+    </header>
+
+    <main>
+        <div class="grid" id="grid"></div>
+        <div class="palavras" id="lista-palavras"></div>
+    </main>
+
+<script>
+    let nivelAtual = 1;
+    let palavrasDoNivel = [];
+    let gridRows = 0;
+    let gridCols = 0;
+    let tituloNivel = "";
+    
+    let grid = [];
+    let selectedCells = [];
+    let palavrasEncontradas = 0;
+    let isSelecting = false;
+
+    const gridElement = document.getElementById("grid");
+    const listaElement = document.getElementById("lista-palavras");
+
+    const niveis = {
+        1: { titulo: "NÍVEL 1: BÁSICO", rows: 10, cols: 10, palavras: ["CHULICA", "LAICA", "MAIA", "XUXA", "PITUCHA", "DAMIA", "MIA"] },
+        2: { titulo: "NÍVEL 2: FÁCIL", rows: 12, cols: 11, palavras: ["AILTON", "CARLOS", "ALICE", "PLATÃO", "CRISTO", "JESUS", "PEDRO", "SILVIA"] },
+        3: { titulo: "NÍVEL 3: INTERMEDIÁRIO", rows: 15, cols: 12, palavras: ["SIGMUND", "EINSTEIN", "BOLSONARO", "DAVINCI", "DALAILAMA", "ELI", "MIAGI", "APOLO", "BIANCA", "GERTHRUDE"] },
+        4: { titulo: "NÍVEL 4: DIFÍCIL", rows: 16, cols: 13, palavras: ["CRIATIVIDADE", "INSPIRAÇÃO", "IMAGINAÇÃO", "CONHECIMENTO", "DESCOBERTA", "SABEDORIA", "FUTURO", "PROGRESSO", "CIÊNCIA", "HISTÓRIA", "FILOSOFIA"] },
+        5: { titulo: "NÍVEL 5: ESPECIALISTA", rows: 18, cols: 14, palavras: ["CONSTITUIÇÃO", "GOVERNO", "DEMOCRACIA", "CIDADANIA", "LIBERDADE", "JUSTIÇA", "LEGISLAÇÃO", "ELEGIBILIDADE", "SOCIEDADE", "POLÍTICA", "ECONOMIA", "DIREITO"] }
+    };
+
+    function setupGame(nivel) {
+        if (!niveis[nivel]) {
+            console.error("Nível de dificuldade não encontrado.");
+            alert("Parabéns! Você completou todos os níveis!");
+            return;
+        }
+
+        const dadosNivel = niveis[nivel];
+        tituloNivel = dadosNivel.titulo;
+        gridRows = dadosNivel.rows;
+        gridCols = dadosNivel.cols;
+        palavrasDoNivel = dadosNivel.palavras;
+        
+        document.getElementById('titulo-nivel').textContent = tituloNivel;
+        document.documentElement.style.setProperty('--grid-cols', gridCols);
+        
+        grid = Array.from({ length: gridRows }, () => Array(gridCols).fill(''));
+        selectedCells = [];
+        palavrasEncontradas = 0;
+
+        colocarPalavrasNoGrid();
+        preencherGridComLetrasAleatorias();
+        criarCelulasNoHTML();
+        mostrarPalavras();
+    }
+
+    function colocarPalavrasNoGrid() {
+        palavrasDoNivel.sort((a, b) => b.length - a.length);
+
+        palavrasDoNivel.forEach(palavra => {
+            let palavraColocada = false;
+            let tentativas = 0;
+            const maxTentativas = 5000;
+
+            while (!palavraColocada && tentativas < maxTentativas) {
+                tentativas++;
+
+                const direcoes = [
+                    { dr: 0, dc: 1 },
+                    { dr: 0, dc: -1 },
+                    { dr: 1, dc: 0 },
+                    { dr: -1, dc: 0 },
+                    { dr: 1, dc: 1 },
+                    { dr: 1, dc: -1 },
+                    { dr: -1, dc: 1 },
+                    { dr: -1, dc: -1 }
+                ];
+                const direcao = direcoes[Math.floor(Math.random() * direcoes.length)];
+
+                const linhaInicial = Math.floor(Math.random() * gridRows);
+                const colunaInicial = Math.floor(Math.random() * gridCols);
+
+                let podeColocar = true;
+                for (let i = 0; i < palavra.length; i++) {
+                    const linhaAtual = linhaInicial + i * direcao.dr;
+                    const colunaAtual = colunaInicial + i * direcao.dc;
+
+                    if (linhaAtual < 0 || linhaAtual >= gridRows || colunaAtual < 0 || colunaAtual >= gridCols) {
+                        podeColocar = false;
+                        break;
+                    }
+
+                    if (grid[linhaAtual][colunaAtual] !== '' && grid[linhaAtual][colunaAtual] !== palavra[i]) {
+                        podeColocar = false;
+                        break;
+                    }
+                }
+
+                if (podeColocar) {
+                    for (let i = 0; i < palavra.length; i++) {
+                        const linhaAtual = linhaInicial + i * direcao.dr;
+                        const colunaAtual = colunaInicial + i * direcao.dc;
+                        grid[linhaAtual][colunaAtual] = palavra[i];
+                    }
+                    palavraColocada = true;
+                }
+            }
+            if (!palavraColocada) {
+                console.warn(`Aviso: A palavra '${palavra}' não pôde ser colocada na grade após ${maxTentativas} tentativas.`);
+            }
+        });
+    }
+
+    function preencherGridComLetrasAleatorias() {
+        for (let i = 0; i < gridRows; i++) {
+            for (let j = 0; j < gridCols; j++) {
+                if (grid[i][j] === '') {
+                    grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                }
+            }
+        }
+    }
+
+    function criarCelulasNoHTML() {
+        gridElement.innerHTML = '';
+        for (let i = 0; i < gridRows; i++) {
+            for (let j = 0; j < gridCols; j++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.textContent = grid[i][j];
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                
+                cell.addEventListener('mousedown', (e) => iniciarSelecao(cell, e));
+                cell.addEventListener('mouseenter', (e) => handleMouseOver(cell, e));
+                
+                cell.addEventListener('touchstart', (e) => iniciarSelecao(cell, e));
+                cell.addEventListener('touchmove', (e) => handleTouchMove(e));
+
+                gridElement.appendChild(cell);
+            }
+        }
+        document.body.addEventListener('mouseup', finalizarSelecao);
+        document.body.addEventListener('touchend', finalizarSelecao);
+    }
+
+    function iniciarSelecao(cell, event) {
+    // Impede a seleção se a célula já estiver encontrada
+    if (cell.classList.contains('encontrada')) return;
+    
+    // Previne o comportamento padrão (scroll) em dispositivos móveis
+    if (event.type === 'touchstart') {
+        event.preventDefault(); 
+    }
+    
+    isSelecting = true;
+    deselecionarCelulas(); // Limpa qualquer seleção anterior
+    cell.classList.add('selected');
+    selectedCells.push(cell);
+}
+
+    function handleTouchMove(event) {
+    if (!isSelecting) return;
+    event.preventDefault(); 
+    const touch = event.touches[0];
+    const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    if (targetElement && targetElement.classList.contains('cell')) {
+        // Passa apenas o elemento, sem o evento
+        handleMouseOver(targetElement);
+    }
+}
+
+   function handleMouseOver(cell) {
+    if (!isSelecting) return;
+
+    const firstCell = selectedCells[0];
+    const currentRow = parseInt(cell.dataset.row);
+    const currentCol = parseInt(cell.dataset.col);
+    const firstRow = parseInt(firstCell.dataset.row);
+    const firstCol = parseInt(firstCell.dataset.col);
+
+    const dr = currentRow - firstRow;
+    const dc = currentCol - firstCol;
+
+    const isHorizontal = dr === 0;
+    const isVertical = dc === 0;
+    const isDiagonal = Math.abs(dr) === Math.abs(dc);
+
+    if (isHorizontal || isVertical || isDiagonal) {
+        const cellsInPath = getCellsInPath(firstRow, firstCol, currentRow, currentCol);
+        
+        // Remove a classe de seleção de todas as células antes de redesenhar o caminho
+        document.querySelectorAll('.cell.selected').forEach(c => c.classList.remove('selected'));
+        
+        cellsInPath.forEach(c => c.classList.add('selected'));
+        selectedCells = cellsInPath;
+    } else {
+        deselecionarCelulas();
+    }
+}
+
+    function getCellsInPath(r1, c1, r2, c2) {
+    const cells = [];
+    const dr = Math.sign(r2 - r1);
+    const dc = Math.sign(c2 - c1);
+    
+    let r = r1;
+    let c = c1;
+    
+    while (r !== r2 + dr || c !== c2 + dc) {
+        const cell = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+        if (cell) {
+            cells.push(cell);
+        }
+        // Move para a próxima célula na direção correta
+        r += dr;
+        c += dc;
+    }
+    return cells;
+}
+    
+    function finalizarSelecao() {
+    if (isSelecting) {
+        isSelecting = false;
+        if (selectedCells.length > 1) {
+            verificarSelecao();
+        } else {
+            deselecionarCelulas();
+        }
+    }
+}
+
+    function verificarSelecao() {
+    const palavraSelecionada = selectedCells.map(c => c.textContent).join('');
+    const palavraReversa = palavraSelecionada.split('').reverse().join('');
+    
+    const palavraNaLista = palavrasDoNivel.find(p => p === palavraSelecionada || p === palavraReversa);
+    
+    if (palavraNaLista) {
+        marcarComoEncontrada(palavraNaLista);
+        palavrasEncontradas++;
+        if (palavrasEncontradas === palavrasDoNivel.length) {
+            setTimeout(() => {
+                alert("Parabéns! Você encontrou todas as palavras!");
+                carregarProximoNivel();
+            }, 500);
+        }
+    } else {
+        deselecionarCelulas();
+    }
+}
+
+    function marcarComoEncontrada(palavra) {
+        selectedCells.forEach(c => {
+            c.classList.add('encontrada');
+            c.classList.remove('selected');
+        });
+
+        const spanPalavra = document.querySelector(`.palavras span[data-palavra="${palavra}"]`);
+        if (spanPalavra) {
+            spanPalavra.classList.add('encontrada');
+        }
+
+        selectedCells = [];
+    }
+
+    function deselecionarCelulas() {
+        selectedCells.forEach(c => c.classList.remove('selected'));
+        selectedCells = [];
+    }
+    
+    function mostrarPalavras() {
+        listaElement.innerHTML = '';
+        palavrasDoNivel.forEach(p => {
+            const span = document.createElement("span");
+            span.textContent = p;
+            span.dataset.palavra = p;
+            listaElement.appendChild(span);
+        });
+    }
+
+    function carregarProximoNivel() {
+        nivelAtual++;
+        setupGame(nivelAtual);
+    }
+
+    // Inicia o jogo no nível 1
+    setupGame(nivelAtual);
+</script>
+</body>
+</html>
