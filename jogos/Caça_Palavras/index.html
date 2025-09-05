@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caça-Palavras</title>
@@ -128,6 +129,132 @@
 <body>
     <header>
         <h1 id="titulo-nivel"></h1>
+=======
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caça-Palavras</title>
+<style>
+    /* Reset básico */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        background: url('https://picsum.photos/800/1200?blur=3') no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        color: #fff;
+    }
+
+    header {
+        text-align: center;
+        margin: 15px 0;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    header .nivel {
+        font-size: 1rem;
+        margin-top: 5px;
+        background: #22c55e;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        width: 100%;
+        max-width: 500px;
+        padding: 10px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 4px;
+        background: rgba(15, 23, 36, 0.9);
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .cell {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        background: #0f1724;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        user-select: none;
+    }
+
+    .cell:hover {
+        background: #1e293b;
+        transform: scale(1.1);
+    }
+
+    .cell.selected {
+        background: #f59e0b;
+        color: #000;
+    }
+
+    .palavras {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 15px;
+        gap: 8px;
+    }
+
+    .palavras span {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: default;
+        transition: all 0.3s ease;
+    }
+
+    .palavras span.encontrada {
+        background: #22c55e;
+        text-decoration: line-through;
+        color: #fff;
+    }
+
+    @media (max-width: 600px) {
+        .grid {
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+        }
+        .cell {
+            width: 28px;
+            height: 28px;
+            font-size: 1rem;
+        }
+    }
+</style>
+</head>
+<body>
+    <header>
+        <h1>NÍVEL 1</h1>
+>>>>>>> db78d252b575569658cde62e22dcfa4f4d25efea
         <div class="nivel">AVENTURA</div>
     </header>
 
@@ -137,6 +264,7 @@
     </main>
 
 <script>
+<<<<<<< HEAD
     let nivelAtual = 1;
     let palavrasDoNivel = [];
     let gridRows = 0;
@@ -407,10 +535,34 @@
             const span = document.createElement("span");
             span.textContent = p;
             span.dataset.palavra = p;
+=======
+    // Lista de palavras
+    const palavras = ["TESOURO", "MAPA", "CAVERNA", "HERÓI", "VILÃO", "SIGILO", "PISTA", "CÓDIGO", "PORTAL", "ORBE"];
+
+    // Cria grid vazio
+    const gridSize = 10;
+    const gridElement = document.getElementById("grid");
+    const listaElement = document.getElementById("lista-palavras");
+
+    function criarGrid() {
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.textContent = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+            gridElement.appendChild(cell);
+        }
+    }
+
+    function mostrarPalavras() {
+        palavras.forEach(p => {
+            const span = document.createElement("span");
+            span.textContent = p;
+>>>>>>> db78d252b575569658cde62e22dcfa4f4d25efea
             listaElement.appendChild(span);
         });
     }
 
+<<<<<<< HEAD
     function carregarProximoNivel() {
         nivelAtual++;
         setupGame(nivelAtual);
@@ -421,3 +573,10 @@
 </script>
 </body>
 </html>
+=======
+    criarGrid();
+    mostrarPalavras();
+</script>
+</body>
+</html>
+>>>>>>> db78d252b575569658cde62e22dcfa4f4d25efea

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Media Queries</title>
+    <style>
+
+        #voltar {
+            text-align: center;
+        }
+        #voltar a:hover {
+            background-color: rgba(99, 108, 243, 0.747);
+            padding: 10px;
+            font-weight: bolder;
+            border-radius: 10px;
+            transform: scale(1.1);
+            transition-duration: 0.5s;
+        }
+        /* Estilos Padrão para telas grandes (Desktop) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.5s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* ------------------------------------------- */
+        /* Media Query para Telas de Tablets */
+        /* Quando a largura da tela for entre 601px e 900px */
+        @media screen and (min-width: 601px) and (max-width: 900px) {
+            body {
+                background-color: #d1d8e0;
+            }
+            .container {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .info-box {
+                background-color: #e67e22; /* Laranja */
+            }
+        }
+
+        /* ------------------------------------------- */
+        /* Media Query para Telas de Celulares */
+        /* Quando a largura da tela for até 600px */
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+                background-color: #a4b0be;
+            }
+            .container {
+                padding: 15px;
+                border-radius: 0;
+            }
+            h1 {
+                font-size: 1.5em;
+                text-align: center;
+            }
+            .info-box {
+                background-color: #c0392b; /* Vermelho */
+                font-size: 0.9em;
+            }
+        }
+
+        /* ------------------------------------------- */
+        /* Media Query para Impressão */
+        /* O navegador aplica essas regras apenas ao imprimir a página */
+        @media print {
+            /* Altera a cor de fundo e do texto para otimizar para impressão */
+            body {
+                background-color: white;
+                color: black;
+            }
+
+            /* Esconde os elementos que não são importantes para a versão impressa */
+            .info-box, .tamanho-tela {
+                display: none;
+            }
+            
+            /* Remove a sombra para economizar tinta da impressora */
+            .container {
+                box-shadow: none;
+            }
+            
+            /* Garante que o texto seja legível, mesmo que a cor da fonte padrão mude */
+            p, h1 {
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 id="titulo">Layout Responsivo com Media Queries</h1>
+        <p>
+            Este é um exemplo de como usar **Media Queries** para adaptar o design de um site a diferentes tamanhos de tela.
+            Tente redimensionar a janela do navegador para ver as mudanças acontecerem em tempo real.
+        </p>
+        <div class="info-box">
+            A cor de fundo e o estilo deste bloco vão mudar!
+        </div>
+        <p>
+            Quando a tela for:
+            <ul>
+                <li>**Grande:** A cor de fundo será cinza claro.</li>
+                <li>**De Tablet (601px a 900px):** A cor de fundo mudará para um cinza médio e o bloco de informação ficará laranja.</li>
+                <li>**De Celular (até 600px):** A cor de fundo ficará mais escura e o bloco de informação se tornará vermelho.</li>
+            </ul>
+        </p>
+        <p>Você pode usar Media Queries para controlar não apenas cores, mas também layouts, tamanhos de fonte, e até mesmo a visibilidade de elementos.</p>
+    </div>
+    <br>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+
+    <div class="info-box tamanho-tela">
+        Largura da tela: <span id="largura-tela"></span> px
+    </div>
+
+    <script>
+        // Este script apenas mostra a largura da tela em tempo real
+        const larguraTelaSpan = document.getElementById('largura-tela');
+        function atualizarLargura() {
+            larguraTelaSpan.textContent = window.innerWidth;
+        }
+        window.addEventListener('resize', atualizarLargura);
+        atualizarLargura();
+    </script>
+</body>
+</html>
