@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Queries</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="../estilos/style.css">
+</head>
+<body>
+    <header>
+         <!--Ativando Icone - Menu-->
+         <h1>Meu Site</h1>
+         <i id="burguer" class="material-symbols-outlined" onclick="clickMenu()">menu</i>
+        <menu id="itens_menu">
+            <ul>
+                
+                <li><a href="#">Opção 1</a></li>
+                <li><a href="#">Opção 2</a></li>
+                <li><a href="#">Opção 3</a></li>
+                <li><a href="#">Opção 4</a></li>
+                <li><a href="#">Opção 5</a></li>
+            </ul>
+        </menu>
+    </header>
+    <br>
+    <main>
+        <article>
+            <h1>Testando Media Queries</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, voluptate. Fuga, quaerat tempore neque deleniti repellendus quis unde magni veniam odit repudiandae reiciendis consectetur cum fugit nulla necessitatibus numquam voluptatem?</p>   
+            
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut, quam! Non aut cum voluptatibus ipsum eligendi neque eos minus suscipit natus dolorem quod fugit molestiae minima rem, fuga impedit ad!</p>
+
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi modi tempore nisi tempora. Voluptatibus, sint rerum. Fugit corporis earum dolore accusantium ducimus quibusdam unde explicabo inventore itaque impedit. Quisquam, dicta?</p>
+
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel ipsam vero quo? Doloribus veniam deleniti voluptatem illo facere molestias voluptate nemo aliquam odit rem, repudiandae ratione, quasi quae eligendi quidem!</p>
+
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta esse ipsum at nesciunt mollitia voluptas doloribus. Sit deserunt autem tempore a! Unde necessitatibus molestiae temporibus architecto quisquam sapiente cumque atque!</p>
+        </article>
+        <br><br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
+
+    <script>
+        function clickMenu(){           
+            if(itens_menu.style.display == 'block'){
+                itens_menu.style.display = 'none'
+            } else {
+                itens_menu.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
