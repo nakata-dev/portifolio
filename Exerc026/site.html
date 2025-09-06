@@ -6,8 +6,9 @@
     <title>Media Queries</title>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../estilos/style.css">
+    <link rel="stylesheet" href="../estilos/media-queries.css">
 </head>
-<body>
+<body onresize="mudouTamanho()">
     <header>
          <!--Ativando Icone - Menu-->
          <h1>Meu Site</h1>
@@ -51,6 +52,13 @@
                 itens_menu.style.display = 'none'
             } else {
                 itens_menu.style.display = 'block';
+            }
+        }
+        function mudouTamanho(){
+            if(window.innerWidth >= 768) {
+               itens_menu.style.display = 'block';
+            else {
+                itens_menu.style.display = 'none';
             }
         }
     </script>

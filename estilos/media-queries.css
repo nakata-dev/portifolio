@@ -1,0 +1,21 @@
+@charset "UTF-8";
+/* Todas as demais Medias*/
+
+/*Tamanhos diferentes de telas
+-------------------------------------*/
+@media screen and (min-width: 768px){
+    i#burguer{
+        display: none;
+
+    } 
+    menu{
+        display: block;
+    }
+    menu > ul > li{
+        display: inline-block;
+        
+    }
+    main{
+        width: 768px; /* Aqui definimos a largura fixa para telas maiores*/
+    }
+}
