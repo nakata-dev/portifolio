@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pomodoro Mobile — Vibrante e Responsivo</title>
+  <style>
+    :root{
+      --bg:#0f172a; /* deep navy */
+      --card:#0b1220;
+      --accent1: #ff6b6b; /* coral */
+      --accent2: #ffd166; /* warm yellow */
+      --accent3: #4ade80; /* green */
+      --glass: rgba(255,255,255,0.06);
+      --muted: rgba(255,255,255,0.7);
+      --radius: 18px;
+      --shadow: 0 8px 30px rgba(2,6,23,0.7);
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    [data-theme='light']{
+      --bg: linear-gradient(180deg,#f6f8ff 0%, #eef4ff 60%);
+      --card: #ffffff;
+      --accent1:#ff6b6b;
+      --accent2:#ffd166;
+      --accent3:#4ade80;
+      --glass: rgba(2,6,23,0.04);
+      color: #061025;
+      --muted: rgba(6,16,37,0.6);
+      --shadow: 0 8px 24px rgba(6,16,37,0.06);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: var(--bg);
+      color:inherit;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;align-items:center;justify-content:center;padding:24px;
+      font-size:16px;
+      transition:background .25s ease,color .25s ease;
+    }
+
+    .wrap{
+      width:100%;max-width:720px;background:linear-gradient(180deg, var(--card), #f0f6ff00);
+      border-radius:calc(var(--radius) + 6px);padding:18px;box-shadow:var(--shadow);
+      display:grid;grid-template-columns:1fr;gap:16px;
+    }
+
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      display:grid;place-items:center;font-weight:700;font-size:22px;color:#061025;box-shadow:0 6px 18px rgba(255,107,107,0.12) inset;
+    }
+    h1{font-size:18px;margin:0}
+    p.lead{margin:0;font-size:13px;color:var(--muted)}
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.00), rgba(255,255,255,0.00));
+      border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 6px 24px rgba(2,6,23,0.06)
+    }
+
+    .timer-ring{
+      width:62vw; max-width:340px; aspect-ratio:1/1; border-radius:50%;
+      display:grid;place-items:center;position:relative;overflow:visible;
+    }
+
+    .ring-canvas{width:100%;height:100%}
+    .time-display{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .time-display .minutes{font-size:36px;font-weight:700;letter-spacing:1px}
+    .time-display .label{font-size:12px;color:var(--muted)}
+
+    .controls{display:flex;gap:10px;margin-top:6px}
+    .btn{
+      -webkit-tap-highlight-color:transparent;
+      border:0;padding:12px 16px;border-radius:12px;font-weight:600;font-size:15px;cursor:pointer;min-width:64px;
+      box-shadow:0 6px 18px rgba(2,6,23,0.08);
+    }
+    .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#061025}
+    .btn-ghost{background:var(--glass);color:var(--muted)}
+    .btn-danger{background:linear-gradient(90deg,#ff6b6b,#ff3b3b);color:white}
+
+    .settings{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;width:100%
+    }
+    .setting-item{display:flex;flex-direction:column;align-items:center;padding:10px;background:rgba(255,255,255,0.02);border-radius:12px;min-width:120px}
+    .setting-item label{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .setting-item input{width:84px;padding:8px;border-radius:8px;border:0;background:rgba(255,255,255,0.03);color:inherit;text-align:center}
+
+    footer{display:flex;gap:8px;align-items:center;justify-content:space-between;padding-top:6px}
+    .small{font-size:12px;color:var(--muted)}
+
+    /* responsive tweaks */
+    @media(min-width:900px){
+      body{padding:40px}
+      .wrap{padding:28px}
+      .logo{width:68px;height:68px;font-size:26px}
+      .time-display .minutes{font-size:44px}
+    }
+
+    /* subtle pulsing for active state */
+    .pulse{animation:pulse 1.8s infinite}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+    /* accessibility focus */
+    .btn:focus{outline:3px solid rgba(255,209,102,0.18)}
+
+    /* small toggles */
+    .toggles{display:flex;gap:8px;align-items:center}
+    .toggle{display:inline-flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:12px}
+    .chip{font-size:13px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.025)}
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="wrap" role="application" aria-label="Pomodoro Mobile">
+    <header>
+      <div class="brand">
+        <div class="logo">P</div>
+        <div>
+          <h1>Pomodoro — Foco e Energia</h1>
+          <p class="lead">Design vibrante, responsivo e pensado para celular</p>
+        </div>
+      </div>
+      <div class="small">v1.1</div>
+    </header>
+
+    <main class="card" id="mainCard">
+      <div class="timer-ring" id="ringWrap" aria-hidden="false">
+        <canvas id="ring" class="ring-canvas" width="400" height="400" aria-hidden="true"></canvas>
+        <div class="time-display" id="timeDisplay">
+          <div class="minutes" id="timeText">25:00</div>
+          <div class="label" id="modeLabel">TRABALHO</div>
+        </div>
+      </div>
+
+      <div class="controls" role="group" aria-label="Controles do Pomodoro">
+        <button class="btn btn-primary" id="startBtn" aria-pressed="false">Iniciar</button>
+        <button class="btn btn-ghost" id="pauseBtn" disabled>Pausar</button>
+        <button class="btn btn-danger" id="resetBtn">Resetar</button>
+      </div>
+
+      <div class="settings" aria-hidden="false">
+        <div class="setting-item">
+          <label for="workMin">Trabalho (min)</label>
+          <input id="workMin" type="number" min="1" max="120" value="25">
+        </div>
+        <div class="setting-item">
+          <label for="shortMin">Descanso curto (min)</label>
+          <input id="shortMin" type="number" min="1" max="30" value="5">
+        </div>
+        <div class="setting-item">
+          <label for="longMin">Descanso longo (min)</label>
+          <input id="longMin" type="number" min="2" max="60" value="15">
+        </div>
+        <div class="setting-item">
+          <label for="cycles">Ciclos até longo</label>
+          <input id="cycles" type="number" min="1" max="10" value="4">
+        </div>
+      </div>
+
+      <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:6px;flex-wrap:wrap;gap:8px">
+        <div class="toggles">
+          <div class="toggle">
+            <button class="btn btn-ghost" id="themeToggle">Tema</button>
+            <div class="chip" id="themeLabel">Escuro</div>
+          </div>
+          <div class="toggle">
+            <button class="btn btn-ghost" id="muteToggle">Som</button>
+            <div class="chip" id="muteLabel">Ativado</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" id="downloadBtn">Baixar .html</button>
+          <button class="btn btn-ghost" id="saveBtn">Salvar</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="small">Dica: permita vibração e notificações para receber alertas confiáveis.</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-ghost" id="resetSettings">Padrões</button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // --- elementos ---
+    const dom = {
+      ring: document.getElementById('ring'),
+      timeText: document.getElementById('timeText'),
+      modeLabel: document.getElementById('modeLabel'),
+      startBtn: document.getElementById('startBtn'),
+      pauseBtn: document.getElementById('pauseBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      workMin: document.getElementById('workMin'),
+      shortMin: document.getElementById('shortMin'),
+      longMin: document.getElementById('longMin'),
+      cycles: document.getElementById('cycles'),
+      saveBtn: document.getElementById('saveBtn'),
+      resetSettings: document.getElementById('resetSettings'),
+      mainCard: document.getElementById('mainCard'),
+      themeToggle: document.getElementById('themeToggle'),
+      themeLabel: document.getElementById('themeLabel'),
+      muteToggle: document.getElementById('muteToggle'),
+      muteLabel: document.getElementById('muteLabel'),
+      downloadBtn: document.getElementById('downloadBtn')
+    };
+
+    const ctx = dom.ring.getContext('2d');
+    let state = {
+      mode: 'work', // work, short, long
+      running: false,
+      remaining: 25*60,
+      work: 25*60,
+      short: 5*60,
+      long: 15*60,
+      cycleGoal: 4,
+      cyclesDone: 0,
+      timerId: null,
+      startTs: null,
+      isMuted: false
+    };
+
+    // --- STORAGE ---
+    function loadSettings(){
+      try{
+        const s = JSON.parse(localStorage.getItem('pomodoro_settings')||'null');
+        if(s){
+          dom.workMin.value = s.workMin; dom.shortMin.value = s.shortMin; dom.longMin.value = s.longMin; dom.cycles.value = s.cycles;
+          if(s.theme) setTheme(s.theme);
+          state.isMuted = !!s.muted; updateMuteLabel();
+        }
+      }catch(e){console.warn(e)}
+      applySettings();
+    }
+    function saveSettings(){
+      const s = {workMin:dom.workMin.value, shortMin:dom.shortMin.value, longMin:dom.longMin.value, cycles:dom.cycles.value, theme: document.body.getAttribute('data-theme'), muted: state.isMuted};
+      localStorage.setItem('pomodoro_settings', JSON.stringify(s));
+      toast('Configurações salvas')
+    }
+    function resetToDefaults(){
+      dom.workMin.value = 25; dom.shortMin.value = 5; dom.longMin.value = 15; dom.cycles.value = 4; setTheme('dark'); state.isMuted = false; updateMuteLabel(); applySettings(); toast('Padrões restaurados')
+    }
+
+    function applySettings(){
+      state.work = parseInt(dom.workMin.value||25)*60;
+      state.short = parseInt(dom.shortMin.value||5)*60;
+      state.long = parseInt(dom.longMin.value||15)*60;
+      state.cycleGoal = parseInt(dom.cycles.value||4);
+      if(!state.running){
+        state.mode = 'work';
+        state.remaining = state.work;
+      }
+      renderTime();
+      renderRing();
+    }
+
+    // ---- drawing ring ----
+    function drawRing(percentage){
+      const w = dom.ring.width = dom.ring.clientWidth * devicePixelRatio;
+      const h = dom.ring.height = dom.ring.clientHeight * devicePixelRatio;
+      const cx = w/2, cy = h/2, r = Math.min(w,h)/2 - 18*devicePixelRatio;
+      ctx.clearRect(0,0,w,h);
+
+      // background track
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--track') || 'rgba(0,0,0,0.06)'; ctx.lineWidth = 14*devicePixelRatio; ctx.stroke();
+
+      // active arc
+      const start = -Math.PI/2;
+      const end = start + Math.PI*2*percentage;
+
+      // gradient for arc
+      const grad = ctx.createLinearGradient(0,0,w,h);
+      if(state.mode==='work'){
+        grad.addColorStop(0,'#ff6b6b'); grad.addColorStop(1,'#ffd166');
+      }else if(state.mode==='short'){
+        grad.addColorStop(0,'#ffd166'); grad.addColorStop(1,'#4ade80');
+      }else{
+        grad.addColorStop(0,'#4ade80'); grad.addColorStop(1,'#60a5fa');
+      }
+
+      ctx.beginPath(); ctx.arc(cx,cy,r,start,end);
+      ctx.strokeStyle = grad; ctx.lineWidth = 14*devicePixelRatio; ctx.lineCap = 'round'; ctx.stroke();
+
+      // center glow
+      ctx.beginPath(); ctx.arc(cx,cy,r - 26*devicePixelRatio,0,Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.02)'; ctx.fill();
+    }
+
+    function renderRing(){
+      const total = (state.mode==='work'?state.work: state.mode==='short'?state.short:state.long);
+      const perc = 1 - (state.remaining/total);
+      drawRing(perc);
+    }
+
+    function renderTime(){
+      const m = Math.floor(state.remaining/60); const s = state.remaining % 60;
+      dom.timeText.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      dom.modeLabel.textContent = state.mode==='work' ? 'TRABALHO' : state.mode==='short' ? 'DESCANSO CURTO' : 'DESCANSO LONGO';
+      renderRing();
+    }
+
+    // ---- timer control ----
+    function tick(){
+      const now = Date.now();
+      const elapsed = Math.floor((now - state.startTs)/1000);
+      const newRemaining = Math.max(0, state.remainingAtStart - elapsed);
+      state.remaining = newRemaining;
+      renderTime();
+      if(newRemaining <= 0){
+        onPeriodEnd();
+      }
+    }
+
+    async function startTimer(){
+      if(state.running) return;
+      state.running = true;
+      dom.startBtn.disabled = true; dom.pauseBtn.disabled = false; dom.startBtn.setAttribute('aria-pressed','true');
+      dom.mainCard.classList.add('pulse');
+      state.startTs = Date.now();
+      state.remainingAtStart = state.remaining;
+      state.timerId = setInterval(tick, 250);
+      if(!state.isMuted) playBeep();
+      await requestWakeLock();
+    }
+
+    function pauseTimer(){
+      if(!state.running) return;
+      state.running = false; clearInterval(state.timerId); state.timerId = null; dom.startBtn.disabled = false; dom.pauseBtn.disabled = true; dom.startBtn.setAttribute('aria-pressed','false'); dom.mainCard.classList.remove('pulse');
+      releaseWakeLock();
+    }
+
+    function resetTimer(){
+      pauseTimer(); state.cyclesDone = 0; state.mode = 'work'; state.remaining = state.work; renderTime();
+    }
+
+    function onPeriodEnd(){
+      pauseTimer();
+      if(navigator.vibrate) navigator.vibrate([180,60,180]);
+      if(!state.isMuted) playBeepLong();
+      notifyUser(`${state.mode==='work' ? 'Período de trabalho finalizado' : 'Período de descanso finalizado'}`);
+
+      // transition
+      if(state.mode==='work'){
+        state.cyclesDone += 1;
+        if(state.cyclesDone % state.cycleGoal === 0){ state.mode='long'; state.remaining = state.long; }
+        else { state.mode='short'; state.remaining = state.short }
+      }else{
+        state.mode='work'; state.remaining = state.work;
+      }
+      // auto-start next period after small delay
+      setTimeout(()=>{
+        renderTime(); startTimer();
+      }, 900);
+    }
+
+    // --- sound ---
+    function playBeep(){
+      try{
+        if(state.isMuted) return;
+        const o = new (window.AudioContext||window.webkitAudioContext)();
+        const g = o.createGain(); const osc = o.createOscillator(); osc.type='sine'; osc.frequency.value = 880; osc.connect(g); g.connect(o.destination); g.gain.value = 0.05; osc.start(); setTimeout(()=>{osc.stop(); o.close();},200);
+      }catch(e){/* audio not available */}
+    }
+    function playBeepLong(){
+      try{
+        if(state.isMuted) return;
+        const o = new (window.AudioContext||window.webkitAudioContext)();
+        const g = o.createGain(); const osc = o.createOscillator(); osc.type='sine'; osc.frequency.value = 660; osc.connect(g); g.connect(o.destination); g.gain.value = 0.06; osc.start(); setTimeout(()=>{osc.stop(); o.close();},600);
+      }catch(e){}
+    }
+
+    // --- notifications ---
+    async function notifyUser(text){
+      try{
+        if('Notification' in window && Notification.permission === 'granted'){
+          new Notification('Pomodoro', {body: text});
+        }
+      }catch(e){}
+    }
+    async function requestNotificationPermission(){
+      try{ if('Notification' in window && Notification.permission !== 'granted') await Notification.requestPermission(); }catch(e){}
+    }
+
+    // --- wake lock ---
+    let wakeLock = null;
+    async function requestWakeLock(){ try{ if('wakeLock' in navigator){ wakeLock = await navigator.wakeLock.request('screen'); } }catch(e){}
+    }
+    function releaseWakeLock(){ try{ if(wakeLock){ wakeLock.release(); wakeLock = null; } }catch(e){}
+    }
+
+    // --- small toast ---
+    function toast(msg){
+      const t = document.createElement('div'); t.textContent = msg; t.style.position='fixed'; t.style.left='50%'; t.style.bottom='6%'; t.style.transform='translateX(-50%)'; t.style.background='rgba(0,0,0,0.6)'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.fontSize='13px'; t.style.zIndex=9999; document.body.appendChild(t);
+      setTimeout(()=>{t.style.transition='transform .35s,opacity .35s'; t.style.opacity='0'; t.style.transform=t.style.transform+' translateY(18px)';},1200);
+      setTimeout(()=>t.remove(),1600);
+    }
+
+    // --- handlers ---
+    dom.startBtn.addEventListener('click', ()=>{ applySettings(); startTimer(); });
+    dom.pauseBtn.addEventListener('click', ()=>{ pauseTimer(); });
+    dom.resetBtn.addEventListener('click', ()=>{ resetTimer(); });
+    dom.saveBtn.addEventListener('click', ()=>{ saveSettings(); });
+    dom.resetSettings.addEventListener('click', ()=>{ resetToDefaults(); });
+
+    [dom.workMin, dom.shortMin, dom.longMin, dom.cycles].forEach(el=>el.addEventListener('change', ()=>{ applySettings(); }));
+
+    // theme toggle
+    function setTheme(t){ document.body.setAttribute('data-theme', t); dom.themeLabel.textContent = (t==='light' ? 'Claro' : 'Escuro'); localStorage.setItem('pomodoro_theme', t); }
+    function toggleTheme(){ const cur = document.body.getAttribute('data-theme'); const next = cur==='light' ? 'dark' : 'light'; setTheme(next); }
+    dom.themeToggle.addEventListener('click', ()=>{ toggleTheme(); toast('Tema alterado'); });
+
+    // mute toggle
+    function updateMuteLabel(){ dom.muteLabel.textContent = state.isMuted ? 'Silenciado' : 'Ativado'; }
+    dom.muteToggle.addEventListener('click', ()=>{ state.isMuted = !state.isMuted; updateMuteLabel(); toast(state.isMuted ? 'Som desativado' : 'Som ativado'); });
+
+    // download current html
+    dom.downloadBtn.addEventListener('click', ()=>{
+      const html = `<!doctype html>
+` + document.documentElement.outerHTML;
+      const blob = new Blob([html], {type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'pomodoro.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // accessibility: keyboard shortcuts
+    window.addEventListener('keydown', (e)=>{
+      if(e.key===' '){ e.preventDefault(); if(state.running) pauseTimer(); else startTimer(); }
+      if(e.key==='r') resetTimer();
+      if(e.key==='m') { state.isMuted = !state.isMuted; updateMuteLabel(); }
+      if(e.key==='t') { toggleTheme(); }
+    });
+
+    // notifications prompt
+    window.addEventListener('load', ()=>{ try{ requestNotificationPermission(); }catch(e){} });
+
+    // init
+    function initTheme(){ const saved = localStorage.getItem('pomodoro_theme')||'dark'; setTheme(saved); }
+    initTheme(); loadSettings(); updateMuteLabel();
+
+    // redraw on resize
+    let resizeTO=null; window.addEventListener('resize', ()=>{ clearTimeout(resizeTO); resizeTO=setTimeout(()=>{ renderRing(); },120) });
+
+    // initial render
+    renderTime();
+  </script>
+</body>
+</html>
