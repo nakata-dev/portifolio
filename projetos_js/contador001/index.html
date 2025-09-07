@@ -31,9 +31,11 @@
       border-radius: 8px;
       text-align: center;
     }
-
-    button {
+    #definirMetaBtn {
       padding: 12px 20px;
+    }
+    button {
+      padding: 24px 40px;
       margin: 10px;
       font-size: 1.2rem;
       border: none;
@@ -52,7 +54,7 @@
     }
 
     #contador {
-      font-size: 3rem;
+      font-size: 8rem;
       font-weight: bold;
       margin: 20px 0;
       color: #222;
@@ -70,7 +72,7 @@
   <div class="meta-container">
     <label for="meta">Quantas frases quer ler hoje:</label><br>
     <input type="number" id="meta" value="100" min="15" step="15">
-    <button onclick="definirMeta()">Definir Meta</button>
+    <button id="definirMetaBtn" onclick="definirMeta()">Definir Meta</button>
   </div>
 
   <p class="info" id="metaInfo">Meta de hoje: 100 frases</p>
