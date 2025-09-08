@@ -126,7 +126,7 @@
     img{
     display: block;   /* transforma em bloco */
     margin: 30px auto;   /* margens automáticas centralizam */
-    width: 95%;  /* responsivo, oculpa 90% horizontal */  
+    width: 65%;  /* responsivo, oculpa 90% horizontal */  
     height: auto;    /* mantém proporção */
     border-radius: 10px; /* opcional: cantos arredondados */
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.432); /* opcional: sombra */
