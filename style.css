@@ -125,14 +125,14 @@
     img{
     display: block;   /* transforma em bloco */
     margin: 30px auto;   /* margens automáticas centralizam */
-    max-width: 300px;  /* responsivo, nunca passa da largura da tela */  
+    max-width: 700px;  /* responsivo, nunca passa da largura da tela */  
     height: auto;    /* mantém proporção */
     border-radius: 12px; /* opcional: cantos arredondados */
     box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* opcional: sombra */
     }
 
     img:hover{
-        transform:scale(1.5);
+        transform:scale(1.1);
     }
     div.galeria{
         padding: 15px;
