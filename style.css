@@ -62,7 +62,7 @@
 }
     nav a:hover{   
     background-color: var(--cor01);
-    padding: 10px;
+    padding: 5px;
     text-decoration: none;
     font-weight: bolder;
     border-radius:5px;

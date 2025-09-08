@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Media Queries</title>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <link rel="stylesheet" href="../estilos/style.css">
-    <link rel="stylesheet" href="../estilos/media-queries.css">
+    
 </head>
 <body onresize="mudouTamanho()">
     <header>
          <!--Ativando Icone - Menu-->
          <h1>Meu Site</h1>
-         <i id="burguer" class="material-symbols-outlined" onclick="clickMenu()">menu</i>
-        <menu id="itens_menu">
-            <ul>
-                
+         <i id="burguer" class="material-icons"onclick="clickMenu()">menu</i>
+        <menu id="itens">
+            <ul>                
                 <li><a href="#">Opção 1</a></li>
                 <li><a href="#">Opção 2</a></li>
                 <li><a href="#">Opção 3</a></li>
@@ -47,20 +47,23 @@
     </main>
 
     <script>
-        function clickMenu(){           
-            if(itens_menu.style.display == 'block'){
-                itens_menu.style.display = 'none'
-            } else {
-                itens_menu.style.display = 'block';
-            }
-        }
-        function mudouTamanho(){
-            if(window.innerWidth >= 768) {
-               itens_menu.style.display = 'block';
-            else {
-                itens_menu.style.display = 'none';
-            }
-        }
+        function clickMenu() {
+    if (itens.style.display == 'block') {
+        itens.style.display = 'none';
+    } else {
+        itens.style.display = 'block';
+    }
+}
+        function mudouTamanho() {
+    // Se a tela for maior que 768px, exibe o menu e esconde o ícone
+    if (window.innerWidth >= 768) {
+        itens.style.display = 'block';
+    } else {
+        // Se for menor, esconde o menu
+        itens.style.display = 'none';
+    }
+}  
+
     </script>
 </body>
 </html>
