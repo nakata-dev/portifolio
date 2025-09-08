@@ -36,6 +36,7 @@
 }
     
     header{
+        width: 100vw;
         background-image: linear-gradient(to bottom, var(--cor00), var(--cor04));
         color: white;
         min-height: 80px;
