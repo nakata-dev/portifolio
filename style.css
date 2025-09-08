@@ -171,6 +171,16 @@
          border: none;
     }
 
+    pre{
+        white-space: pre-wrap;
+        .justificado{
+        text-align: justify;
+        line-height: 1.8;
+        font-size: 1em;
+        padding: 20px;
+        }
+    }
+
     
    
 
