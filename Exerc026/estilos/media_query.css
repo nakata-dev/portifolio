@@ -12,14 +12,16 @@ grande telas: acima de 1200px
 -------------------------------------*/
 
     main{
-        width: 90vw;
-        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.466);
+        width: 85vw;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.438);
         margin: auto;
         padding: 15px;
-        border-radius: 10px;
+        border-radius: 30px;
+        background-color: rgba(1, 250, 76, 0.233);
     }
     h1{
-        text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.466);
+        color: rgb(255, 255, 255);
+        text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.685);
     }
     img#phone{
         display: block;
