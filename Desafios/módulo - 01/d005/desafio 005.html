@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="style.css">
         <style>
+            header>img{
+                border-radius: 100%;
+                padding: 0;
+                display: block;
+                margin: auto;
+                width: 80px;
+            }
+            header{
+                height: 150px;
+            }
             header p{
                 text-align: center;
+                margin: 0;
+                padding: 0;
                 
             }
             h1 {
                 text-align: center;
                 color: rgb(252, 249, 249);
+            }
+            main>p{
+                text-align: justify;
+                line-height: 1.5;
+                text-indent: 30px;
             }
             h2 {
                 font-family: Arial, Helvetica, sans-serif;
@@ -30,36 +47,31 @@
                 justify-content: space-between;
                 padding: 25px;
             }
-            a:hover{
-                background-color: rgba(1, 1, 255, 0.459);
+            img:hover{
+                background-color: rgba(127, 255, 212, 0.486);
                 padding: 5px;
                 border-radius: 8px 8px 8px 8px;
                 animation-duration: 0.5s;
                 font-weight: bolder;
                 
             }
-            a{
-                color: white;
-            }
+           
             #voltar>a{
-                color:black
-            }
-            footer{
-                color: aliceblue;
-                padding-top: 0px;
-                padding-bottom: 0px;
+                font-family: Arial, Helvetica, sans-serif;
+                color:rgb(16, 0, 34)
             }
         </style>
-    <title>Desafio 005</title>
+    <title>Rede Social</title>
 </head>
 <body style="color: rgb(83, 1, 1);">
     <header>
+        <img src="imagens/foto-perfil-ailton.jpg" alt="foto_perfil">
         <h1>Minhas redes sociais</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
+        <br>
         <h2>Quem sou eu?</h2>
-        <img src="imagens/foto-perfil-ailton.jpg" alt="foto_perfil" width="200" height="auto"><br>
         <p>
             Meu nome é <strong>Ailton A. Nakata</strong>, sou aspirante de Tecnologia desde <strong>Junho/2024</strong> e hoje busco me especializar na área de programação, desenvolvendo sites/aplicações. 
         </p>
@@ -72,18 +84,23 @@
 
         <br>
         <br>
-    </main>
-    <footer>
-        <div class="social">
+        <footer>
+            
             <ul>
-        <li><a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="external"><img src="imagens/icone-linkedin.png" alt="icone-linkedin">Linken</a></li>
-        <li><a href="https://github.com/Akio369" target="_blank" rel="external"><img src="imagens/icone-github.png" alt="icone-github">GitHub</a></li>
-        <li><a href="https://www.youtube.com/@Akioartes" target="_blank" rel="external"><img src="imagens/icone-youtube.png" alt="icone-youtube">YouTube</a></li>
-        <li><a href="https://www.instagram.com/akio.artes/" target="_blank" rel="external"><img src="imagens/icone-instagram.png" alt="icone-instagram" rel="external">Instagram</a></li>
-        <li><a href="https://www.facebook.com/ailton.nakata/?locale=pt_BR" target="_blank" rel="external"><img src="imagens/icone-facebook.png" alt="icone-facebook">facebook</a></li>
-        <li><a href="../../../desafios.html"><img src="imagens/voltar.png" alt="voltar_desafios" width="20px" height="auto"> Voltar</a></li>
+                <li><a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noreferrer"><img src="imagens/icone-linkedin.png" alt="icone-linkedin">Linken</a></li>
+
+                <li><a href="https://github.com/Akio369" target="_blank" rel="noreferrer"><img src="imagens/icone-github.png" alt="icone-github">GitHub</a></li>
+
+                <li><a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noreferrer"><img src="imagens/icone-youtube.png" alt="icone-youtube">YouTube</a></li>
+
+                <li><a href="https://www.instagram.com/akio.artes/" target="_blank" rel="noreferrer"><img src="imagens/icone-instagram.png" alt="icone-instagram" rel="external">Instagram</a></li>
+
+                <li><a href="https://www.facebook.com/ailton.nakata/?locale=pt_BR" target="_blank" rel="norreferrer"><img src="imagens/icone-facebook.png" alt="icone-facebook">facebook</a></li>
+
+                <li><a href="../../../desafios.html"><img src="imagens/voltar.png" alt="voltar_desafios" width="20px" height="auto"> Voltar</a></li>
+                
             </ul>
-        </div>
-    </footer>
+        </footer>
+    </main>
 </body>
 </html>
