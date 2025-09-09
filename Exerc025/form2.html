@@ -16,7 +16,8 @@
             text-align: justify;
             text-indent: 30px;
             font-family: Arial, Helvetica, sans-serif;
-            
+            line-height: 1.8;
+            padding: 20px;
         }
         pre{
             white-space: pre-wrap;
@@ -25,7 +26,7 @@
             padding: 10px;
         }
         div.center>p{
-            text-align: center;
+            text-align: justify;
         }
 
         #voltar{
@@ -60,52 +61,44 @@
     </fieldset>
     </form>
 
-        <div class="center">
-        <p>
-        &lt;fieldset&gt; - Retângulo
-        <br>
-        <br>
-        &lt;legend&gt; - Legenda
-        <br>
-        <br>
-        &lt;input&gt; - é usada para criar campos interativos
-        </p>
-        </div>
-        <h3>Exemplo de inputs</h3>
-        <div>
-            <pre>
-   &lt;input type="text" placeholder="Digite seu nome"&gt;
+<p>
+&lt;fieldset&gt; - Retângulo
+<br>
+&lt;legend&gt; - Legenda
+<br>
+&lt;input&gt; - é usada para criar campos interativos
+</p>
 
-         &lt;input type="email" placeholder="Digite seu e-mail"&gt;
-
-         &lt;input type="password" placeholder="Digite sua senha"&gt;
-   
-         &lt;input type="checkbox"&gt; Aceito os termos 
-            </pre>
-        </div>
-
-
-        <br><br>
-        <div id="voltar" style="text-align: center;">
-        <a href="../estudos.html">Voltar</a>
-        </div>
-        <br><br>
-        <div class="center">
-            <p>
-            &lt;label&gt;: serve para associar um texto descritivo a um campo de formulário
-            </p>
-        </div>
-        <h3>Exemplo de Label</h3>
-        <div>
-        <pre>
-        &lt;label for="nome"&gt;Nome:&lt;/label&gt;
-
-            &lt;input type="text" id="nome" name="nome"&gt;
-
-            <strong>Aqui, o atributo for do &lt;label&gt; aponta para o id do &lt;input&gt;.</strong>
-
-           Assim, se você clicar no texto “Nome:”, o cursor vai direto para o campo de texto.
-        </pre>
-        </div>
+<h3>Exemplo de inputs</h3>
+<pre>
+    
+    &lt;input type="text" placeholder="Digite seu nome"&gt;
+    <br><br>
+    &lt;input type="email" placeholder="Digite seu e-mail"&gt;
+    <br><br>
+    &lt;input type="password" placeholder="Digite sua senha"&gt;
+    <br><br>
+    &lt;input type="checkbox"&gt; <strong>Aceito os termos</strong>
+    <br><br>
+    &lt;label&gt;: serve para associar um texto descritivo a um campo de formulário
+    
+    
+    <h3>Exemplo de Label</h3>
+    
+    &lt;label for="nome"&gt;Nome:
+    <br><br>
+    &lt;/label&gt;
+    <br><br>
+    &lt;input type="text" id="nome" name="nome"&gt;
+    <br><br>
+    <strong>Se o atributo for do &lt;label&gt; aponta para o id do &lt;input&gt;.</strong>
+    
+    Assim, se você clicar no texto “Nome:”, o cursor vai direto para o campo de texto.
+</pre>
+            <br><br>
+            <div id="voltar" style="text-align: center;">
+            <a href="../estudos.html">Voltar</a>
+            </div>
+            <br><br>
 </body>
 </html>
