@@ -21,18 +21,21 @@
         line-height: 1.8;
         font-size: 1em;
         padding: 20px;
+        font-weight: bolder;
         }
 
-        iframe#tela{  
+        iframe{  
         display: block;
         margin: auto;
-        width:95%;
+        width:90%;
         height:200px;
         border: 2px solid black;
         }
         p{
             text-align: justify;
             text-indent: 30px;
+            padding: 20px;
+            line-height: 1.8;
         }
           #voltar>a:hover{
              background-color: rgba(99, 108, 243, 0.747);
@@ -44,6 +47,9 @@
         }
         #voltar{
             text-align: center;
+        }
+        h2{
+            padding-left: 20px;
         }
     </style>
     <title>Iframe</title>
@@ -130,10 +136,11 @@ Também é possível você abrir tabelas para poder navegar de forma responsiva 
 <h2>Configurando o iframe em si:</h2>
 <pre class="justificado">
     
-        &lt;iframe id="tela" name="frame" src=""&gt;
-        &lt;p&gt;Infelizmente sua página não é compatível com isso.&lt;/p&gt;
-        &lt;/iframe&gt;
-    
+    &lt;iframe id="tela" name="frame" src=""&gt;
+    &lt;p&gt;Infelizmente sua página não é compatível com isso.
+    &lt;/p&gt;
+    &lt;/iframe&gt;
+
     Atenção: O <strong>name</strong> deve ser o mesmo que vai no <strong>target</strong>, caso contrário não vai funcionar o iframe. 
 </pre>
 

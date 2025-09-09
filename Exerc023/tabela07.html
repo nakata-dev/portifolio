@@ -5,14 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <style>
+        header>p{
+            text-align: center;
+        }
+        header>h1{
+            text-align: center;
+        }
         body{
             font-family: Arial, Helvetica, sans-serif;
         }
         p{
             text-align: justify;
-            line-height:1.5;
+            line-height:1.8;
             text-indent: 30px;
             padding: 5px;
+            padding: 15px;
         }
         table{
             border-collapse:collapse;
@@ -31,8 +38,9 @@
         tr:nth-child(even){
             background-color: lightgray;
         }
+        /* Aqui vemos a mágica acontecer!*/
         div#container{
-            overflow-x: auto;
+            overflow-x: auto; 
             max-width: 800px;
             min-width: 300px;
             width: auto;
@@ -42,19 +50,19 @@
 </head>
 <body>
     <header>
-        <h1>Exercício 023: Tabela(Overflow)</h1>
+        <h1>Tab. Responsiva</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
     <p>
-        Ao envelopar uma tabela com uma Div, você pode criar uma ID de nome container. Isso vai te proporcionar o uso do seletor (overflor):
+        Ao envelopar uma tabela com uma Div, você pode criar uma ID de nome container. Isso vai te proporcionar o uso do seletor <strong>(overflor)</strong>:
     </p>
             <p>
-                ➡️ Ele controla o que acontece quando o conteúdo ultrapassa a largura do elemento (no eixo horizontal, ou seja, no “x”).
-                overflow-x → cuida do transbordamento na horizontal.
-                auto → faz com que apareça uma barra de rolagem horizontal somente se for necessário.
-                📌 Em resumo:
-                Se o conteúdo for maior que a largura do container, o navegador mostra uma scrollbar horizontal automaticamente.
+                ➡️ Ele controla o que acontece quando o conteúdo ultrapassa a largura do elemento (no eixo horizontal, ou seja, no “x”). <br><br>
+                <strong>overflow-x</strong> → cuida do transbordamento na horizontal.
+                <strong>auto</strong> → faz com que apareça uma barra de rolagem horizontal somente se for necessário. <br>
+                <br>📌 Em resumo:
+                <strong>Se o conteúdo for maior</strong> que a largura do container, o navegador mostra uma scrollbar horizontal automaticamente.
             </p>
             <br>
         <caption>Tabelas responsivas</caption>
@@ -203,14 +211,15 @@
                 </div>
         
         
-        
-        <h1>Usando uma pseudoclass:</h1>
-            <p>
-                👉 Ele é um pseudoclass selector do CSS, usado para aplicar estilos a elementos com base em sua posição entre os irmãos no DOM.
+        <br><br>
+        <h1>Pseudoclasse:</h1>
+            <br><p>
+                👉 Ele é um pseudoclass selector do CSS, usado para aplicar estilos a elementos com base em sua posição entre os irmãos no DOM. <br><br>
                 tr → seleciona todas as linhas da tabela.
-                :nth-child(even) → seleciona apenas os filhos pares (even = par).
-                Ou seja:
-                Esse comando aplica o estilo somente às linhas pares de uma tabela.
+                <strong>:nth-child(even)</strong>
+                <br><br> → seleciona apenas os filhos pares <strong>(even = par)</strong>.
+                <br><br>Ou seja:
+                Esse comando aplica o estilo somente às linhas pares de uma tabela. <br><br>
                 📌 Exemplo prático (efeito "zebrado" em tabelas):
             </p>
         <br>
