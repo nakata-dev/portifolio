@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login e Senha</title>
+    <link rel="stylesheet" href="estilos/style.css">
+    <link rel="stylesheet" href="estilos/media_query.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+<body>
+    <main>
+        <section id="login">
+            <div id="imagem">
+                <!--Aqui vai a imagem em CSS-->
+            </div>
+            <div id="formulario">
+                <h1>Login</h1>
+                <p>Seja bem vindo(a). Faça login para acessar sua conta e poder fazer as cofigurações no seu ambiente.</p>
+
+                <form action="login.php" method="post" autocomplete="on">
+                    <div class="campo">
+                        <i class="material-icons">person</i>
+                        <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required maxlength="30" autocomplete="email">
+                        <label for="email">E-mail</label>
+
+                    </div>
+                    <div class="campo">
+                        <i class="material-icons">vpn_key</i>
+                        <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required minlength="8" maxlength="30" autocomplete="current-password">
+                        <label for="senha">Senha</label>
+                    </div>
+                    <input type="submit" value="Entrar">
+                    <a href="#" class="botao">Esqueci a senha<i class="material-icons">mail</i></a>
+                </form>
+            </div>
+        </section>
+    </main>
+
+
+    
+</body>
+</html>
