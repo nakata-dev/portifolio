@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        .container{
+            display: flex; /*pai da adaptação*/
+
+            background-color: lightsalmon;
+
+        }
+
+        .item{
+            flex: auto; /*aqui o flex auto ajuda a adaptar as pequenas caixas ao display container*/
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+
+            border: 1px solid black;
+        }
+
+        #voltar>a{
+             color: white;
+        }
+        #voltar{
+            font-family: Arial, Helvetica, sans-serif;
+            
+            background-color: lightsalmon;
+            padding: 10px;
+            text-align: center;
+        }
+        a:hover{
+            background-color: rgb(211, 166, 149);;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bolder;
+            transform: rotate(30deg);
+            animation-duration: 0.5s;
+        }
+    </style>
+    <title>Flex_box1</title>
+</head>
+<body>
+    <h1>Aula 01 – Introdução ao Flexbox</h1>
+    <hr>
+    <div class="container">
+        <div class="item">A</div>
+        <div class="item">B</div>
+        <div class="item">C</div>
+        <div class="item">D</div>
+        <div class="item">E</div>
+        <div class="item">F</div>
+        <div class="item">G</div>
+    </div>
+    <hr>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+</body>
+</html>

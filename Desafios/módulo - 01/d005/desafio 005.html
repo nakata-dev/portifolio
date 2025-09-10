@@ -1,106 +1,207 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-        <style>
-            header>img{
-                border-radius: 100%;
-                padding: 0;
-                display: block;
-                margin: auto;
-                width: 80px;
-            }
-            header{
-                height: 150px;
-            }
-            header p{
-                text-align: center;
-                margin: 0;
-                padding: 0;
-                
-            }
-            h1 {
-                text-align: center;
-                color: rgb(252, 249, 249);
-            }
-            main>p{
-                text-align: justify;
-                line-height: 1.5;
-                text-indent: 30px;
-            }
-            h2 {
-                font-family: Arial, Helvetica, sans-serif;
-                text-align: center;
-                color: rgb(36, 0, 0);
-            }
-            p{
-                color: rgb(48, 1, 1);
-                text-align: justify;
-                text-indent: 30px;
-            }
-            .social>ul{
-                
-                list-style: none;
-                display: flex;
-                justify-content: space-between;
-                padding: 25px;
-            }
-            img:hover{
-                background-color: rgba(127, 255, 212, 0.486);
-                padding: 5px;
-                border-radius: 8px 8px 8px 8px;
-                animation-duration: 0.5s;
-                font-weight: bolder;
-                
-            }
-           
-            #voltar>a{
-                font-family: Arial, Helvetica, sans-serif;
-                color:rgb(16, 0, 34)
-            }
-        </style>
+    
+    <style>
+        /* Font importada de google fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
+
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+        /*fonte importada do computador */
+        @import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Passion+One:wght@400;700;900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+        @font-face {
+            font-family: 'Android';
+            src: url(fonte/idroid.otf) format('opentype');
+        }
+
+        :root {
+            --cor00: #233CCF;
+            --cor01: #3747A5;
+            --cor02: #0025FA;
+            --cor03: #3D467A;
+            --cor04: #353950;
+            --cor05: #2B2C33;
+
+            --fonte_padrao: Arial, Verdana, Helvetica, Sans-serif;
+            --fonte_padrao02: "Libre Baskerville", serif;
+            --fonte_destaque: "Bebas Neue", Sans-serif;
+            --fonte_android: 'Android', sans-serif;
+            --fonte_caligrafica: "Passion One", sans-serif;
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            color: rgb(0, 0, 0);
+            background-color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+
+        }
+
+        header {
+            width: 100vw;
+            background-image: linear-gradient(to bottom, var(--cor00), var(--cor04));
+            color: white;
+            min-height: 80px;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+
+        header>h1 {
+            font-family: var(--fonte_android);
+            font-weight: normal;
+            font-size: 1.5em;
+            text-align: center;
+            padding: 10px;
+
+        }
+
+        main {
+
+            margin: auto;
+            width: 90vw;
+            height: auto;
+            min-width: 300px;
+            max-width: 800px;
+
+            background-color: white;
+            padding: 25px;
+
+            box-shadow: 0px 0px 10px black;
+            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+            padding-bottom: 0px;
+
+        }
+
+        /* Ajustando o Footer*/
+        .container {
+            display: flex;
+            /* ativa flexbox */
+            width: 100%;
+            gap: 20px 0;
+            max-width: 800px;
+            min-width: 300px;
+            padding: 7px;
+            height: 20px;
+
+            background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));
+            list-style-type: none;
+            text-align: center;
+
+        }
+
+        .item {
+            flex: auto;
+            list-style: none;
+            justify-content: space-between;
+
+        }
+
+        img:hover {
+            background-color: rgba(89, 230, 248, 0.486);
+            padding: 5px;
+            border-radius: 8px 8px 8px 8px;
+            animation-duration: 0.5s;
+            font-weight: bolder;
+
+        }
+        header>img {
+            border-radius: 100%;
+            padding: 5px;
+            display: block;
+            margin: auto;
+            width: 80px;
+        }
+
+        header {
+            height: 150px;
+        }
+
+        header p {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(252, 249, 249);
+        }
+
+        main>p {
+            text-align: justify;
+            line-height: 1.5;
+            text-indent: 30px;
+        }
+
+        h2 {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            color: rgb(36, 0, 0);
+        }
+
+        p {
+            color: rgb(48, 1, 1);
+            text-align: justify;
+            text-indent: 30px;
+        }
+
+    </style>
     <title>Rede Social</title>
 </head>
+
 <body style="color: rgb(83, 1, 1);">
     <header>
         <img src="imagens/foto-perfil-ailton.jpg" alt="foto_perfil">
-        <h1>Minhas redes sociais</h1>
-        <p>por: Ailton A. Nakata</p>
+        <h1>Rede Social</h1>
+
     </header>
     <main>
         <br>
         <h2>Quem sou eu?</h2>
         <p>
-            Meu nome é <strong>Ailton A. Nakata</strong>, sou aspirante de Tecnologia desde <strong>Junho/2024</strong> e hoje busco me especializar na área de programação, desenvolvendo sites/aplicações. 
+            Meu nome é <strong>Ailton A. Nakata</strong>, sou aspirante de Tecnologia desde <strong>Junho/2024</strong>
+            e hoje busco me especializar na área de programação, desenvolvendo sites/aplicações.
         </p>
-            <p>Atualmente estou em busca de <strong>oportunidade</strong> para poder me desenvolver cada vez mais nessa área. Caso você ou tua empresa esteja precisando de algum tipo de serviço, vamos conversar.</p>
-            <br>
-            <br>
-            <div id="voltar">
-                <a href="../../../contato.html">WhatsApp</a>
-            </div>
-
+        <p>Atualmente estou em busca de <strong>oportunidade</strong> para poder me desenvolver cada vez mais nessa
+            área. Caso você ou tua empresa esteja precisando de algum tipo de serviço, vamos conversar.</p>
         <br>
         <br>
-        <footer>
-            
-            <ul>
-                <li><a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noreferrer"><img src="imagens/icone-linkedin.png" alt="icone-linkedin">Linken</a></li>
-
-                <li><a href="https://github.com/Akio369" target="_blank" rel="noreferrer"><img src="imagens/icone-github.png" alt="icone-github">GitHub</a></li>
-
-                <li><a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noreferrer"><img src="imagens/icone-youtube.png" alt="icone-youtube">YouTube</a></li>
-
-                <li><a href="https://www.instagram.com/akio.artes/" target="_blank" rel="noreferrer"><img src="imagens/icone-instagram.png" alt="icone-instagram" rel="external">Instagram</a></li>
-
-                <li><a href="https://www.facebook.com/ailton.nakata/?locale=pt_BR" target="_blank" rel="norreferrer"><img src="imagens/icone-facebook.png" alt="icone-facebook">facebook</a></li>
-
-                <li><a href="../../../desafios.html"><img src="imagens/voltar.png" alt="voltar_desafios" width="20px" height="auto"> Voltar</a></li>
-                
-            </ul>
-        </footer>
+        <div id="voltar">
+            <a href="../../../desafios.html">Voltar</a>
+        </div>
+        <br>
+        <br>
     </main>
+    <div div class="container">
+        <div class="item"><a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank"
+                rel="noreferrer"><img src="imagens/icone-linkedin.png" alt="icone-linkedin"></a></div>
+
+        <div class="item"><a href="https://github.com/Akio369" target="_blank" rel="noreferrer"><img
+                    src="imagens/icone-github.png" alt="icone-github"></a></div>
+
+        <div class="item"><a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noreferrer"><img
+                    src="imagens/icone-youtube.png" alt="icone-youtube"></a></div>
+
+        <div class="item"><a href="https://www.instagram.com/akio.artes/" target="_blank" rel="noreferrer"><img
+                    src="imagens/icone-instagram.png" alt="icone-instagram" rel="external"></a></div>
+
+        <div class="item"><a href="https://www.facebook.com/ailton.nakata/?locale=pt_BR" target="_blank"
+                rel="norreferrer"><img src="imagens/icone-facebook.png" alt="icone-facebook"></a></div>
+    </div>
+    </div>
 </body>
+
 </html>
