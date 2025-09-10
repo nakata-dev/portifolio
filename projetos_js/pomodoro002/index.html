@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodoro Mobile</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff4d6d, #ff914d);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    #timer {
+      font-size: 4rem;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    #startPause {
+      background-color: #28a745;
+      color: white;
+    }
+
+    #reset {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      #timer {
+        font-size: 3rem;
+      }
+
+      button {
+        padding: 12px 18px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>⏳ Pomodoro</h1>
+  <div id="timer">25:00</div>
+  <div class="controls">
+    <button id="startPause">Iniciar</button>
+    <button id="reset">Resetar</button>
+  </div>
+
+  <script>
+    let timerDisplay = document.getElementById("timer");
+    let startPauseBtn = document.getElementById("startPause");
+    let resetBtn = document.getElementById("reset");
+
+    let workTime = 25 * 60; // 25 minutos
+    let timeLeft = workTime;
+    let timer;
+    let isRunning = false;
+
+    function updateDisplay() {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      timerDisplay.textContent =
+        `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    }
+
+    function startPause() {
+      if (!isRunning) {
+        isRunning = true;
+        startPauseBtn.textContent = "Pausar";
+        timer = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            updateDisplay();
+          } else {
+            clearInterval(timer);
+            alert("Tempo acabou! Hora do descanso!");
+            isRunning = false;
+            startPauseBtn.textContent = "Iniciar";
+          }
+        }, 1000);
+      } else {
+        clearInterval(timer);
+        isRunning = false;
+        startPauseBtn.textContent = "Iniciar";
+      }
+    }
+
+    function reset() {
+      clearInterval(timer);
+      isRunning = false;
+      timeLeft = workTime;
+      updateDisplay();
+      startPauseBtn.textContent = "Iniciar";
+    }
+
+    startPauseBtn.addEventListener("click", startPause);
+    resetBtn.addEventListener("click", reset);
+
+    updateDisplay();
+  </script>
+</body>
+</html>

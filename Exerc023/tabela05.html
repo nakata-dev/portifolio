@@ -28,15 +28,22 @@
             
             
         }
-        pre > p{
-            padding-left: 80px;
+        pre{
+            font-weight: bold;
+            white-space: pre-wrap;
+            text-align: justify;
+            text-indent: 15px;
+            line-height: 1.8;
+            font-size: 1.2em;
+            padding: 10px;
+
         }
 
     </style>
 </head>
 <body>
     <header>
-        <h1>Exercício 023: Tabela V</h1>
+        <h1>Scope (col) e (row)</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
         <main>
@@ -100,13 +107,17 @@
             <h1>SCOPE</h1>
             <pre>
                 
-                <br>O atributo scope em HTML é usado <br>dentro de tabelas (&lt;table&gt;) <br>para indicar a que células de <br>dados (&lt;td&gt;) um cabeçalho (&lt;th&gt;) <br>está associado.
-                <br>👉 Ele melhora a acessibilidade, <br>ajudando leitores de tela a <br>entenderem a estrutura da tabela.
-                <br>Valores principais:
-                <br>scope="col" → o &lt;th&gt; vale <br>para toda a coluna.
-                <br>scope="row" → o &lt;th&gt; vale <br>para toda a linha.
-                <br>scope="colgroup" → o &lt;th&gt; <br>vale para um grupo de colunas.
-                <br>scope="rowgroup" → o &lt;th&gt; <br>vale para um grupo de linhas.
+O atributo scope em HTML é usado dentro de tabelas (&lt;table&gt;) para indicar a que células de dados (&lt;td&gt;) um cabeçalho (&lt;th&gt;) está associado.
+
+👉 Ele melhora a acessibilidade, ajudando leitores de tela a entenderem a estrutura da tabela.
+
+Valores principais:
+
+scope="col" → o &lt;th&gt; vale para toda a coluna.
+scope="row" → o &lt;th&gt; vale para toda a linha.
+scope="colgroup" → o &lt;th&gt; vale para um grupo de colunas.
+
+scope="rowgroup" → o &lt;th&gt; vale para um grupo de linhas.
                 
             </pre>
         <br>

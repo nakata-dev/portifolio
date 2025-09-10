@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        #voltar>a{
+             color: white;
+        }
+        #voltar{
+            font-family: Arial, Helvetica, sans-serif;
+            
+            background-color: lightsalmon;
+            padding: 10px;
+            text-align: center;
+        }
+        a:hover{
+            background-color: rgb(211, 166, 149);;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bolder;
+            transform: rotate(30deg);
+            animation-duration: 0.5s;
+        }
+
+/*--------------------------------*/
+
+        .container{
+            display: flex; 
+
+            background-color: lightsalmon;
+            
+            height: 400px;
+            align-items: flex-start;
+            flex-flow: row wrap;
+
+        }
+
+        .item{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 40px;
+
+            border: 1px solid black;
+        }
+/*--------------------------------*/
+
+        .container1{
+            display: flex; 
+
+            background-color: lightsalmon;
+            
+            height: 400px;
+            flex-flow: row wrap;
+            align-content: stretch;
+            
+
+        }
+
+        .item1{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 40px;
+
+            border: 1px solid black;
+        }
+/*--------------------------------*/
+
+        .container2{
+            display: flex; 
+
+            background-color: lightsalmon;
+            
+            height: 400px;
+            flex-flow: row wrap;
+            align-content: space-between;
+            
+
+        }
+
+        .item2{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 40px;
+
+            border: 1px solid black;
+        }
+/*--------------------------------*/
+
+        .container3{
+            display: flex; 
+
+            background-color: lightsalmon;
+            
+            height: 400px;
+            flex-flow: row wrap;
+            align-content: space-around;
+            
+
+        }
+
+        .item3{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 40px;
+
+            border: 1px solid black;
+        }
+/*--------------------------------*/
+
+        .container4{
+            display: flex; 
+
+            background-color: lightsalmon;
+            
+            height: 400px;
+            flex-flow: row wrap;
+            align-content: space-around;
+            
+
+        }
+
+        .item4{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 40px;
+
+            border: 1px solid black;
+        }
+
+        
+    </style>
+    <title>Flex_box1</title>
+</head>
+<body>
+    <hr>
+    <h1>Aula 6 – Alinhamento empacotado</h1>
+    <hr>
+    <div id="voltar"><a href="../estudos.html">Voltar</a></div>
+    <h2>align-items: flex-start;</h2>
+    <div class="container">
+        <div class="item">A</div>
+        <div class="item">B</div>
+        <div class="item">C</div>
+        <div class="item">D</div>
+        <div class="item">E</div>
+        <div class="item">F</div>
+        <div class="item">G</div>
+        <div class="item">H</div>
+        <div class="item">I</div>
+        <div class="item">J</div>
+        <div class="item">L</div>
+    </div>
+    <hr>
+    <h2>align-content: stretch;</h2>
+    <div class="container1">
+        <div class="item1">A</div>
+        <div class="item1">B</div>
+        <div class="item1">C</div>
+        <div class="item1">D</div>
+        <div class="item1">E</div>
+        <div class="item1">F</div>
+        <div class="item1">G</div>
+        <div class="item1">H</div>
+        <div class="item1">I</div>
+        <div class="item1">J</div>
+        <div class="item1">L</div>
+    </div>
+    <hr>
+    <hr>
+    <h2>align-content: space-between;</h2>
+    <div class="container2">
+        <div class="item2">A</div>
+        <div class="item2">B</div>
+        <div class="item2">C</div>
+        <div class="item2">D</div>
+        <div class="item2">E</div>
+        <div class="item2">F</div>
+        <div class="item2">G</div>
+        <div class="item2">H</div>
+        <div class="item2">I</div>
+        <div class="item2">J</div>
+        <div class="item2">L</div>
+    </div>
+    <hr>
+    <hr>
+    <h2>align-content: space-around;</h2>
+    <div class="container3">
+        <div class="item3">A</div>
+        <div class="item3">B</div>
+        <div class="item3">C</div>
+        <div class="item3">D</div>
+        <div class="item3">E</div>
+        <div class="item3">F</div>
+        <div class="item3">G</div>
+        <div class="item3">H</div>
+        <div class="item3">I</div>
+        <div class="item3">J</div>
+        <div class="item3">L</div>
+    </div>
+    <hr>
+    <hr>
+    <h2>align-content: space-evenly;</h2>
+    <div class="container4">
+        <div class="item4">A</div>
+        <div class="item4">B</div>
+        <div class="item4">C</div>
+        <div class="item4">D</div>
+        <div class="item4">E</div>
+        <div class="item4">F</div>
+        <div class="item4">G</div>
+        <div class="item4">H</div>
+        <div class="item4">I</div>
+        <div class="item4">J</div>
+        <div class="item4">L</div>
+    </div>
+    <hr>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+</body>
+</html>

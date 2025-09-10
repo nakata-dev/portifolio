@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+            #voltar>a{
+             color: white;
+        }
+        #voltar{
+            font-family: Arial, Helvetica, sans-serif;
+            
+            background-color: lightsalmon;
+            padding: 10px;
+            text-align: center;
+        }
+        a:hover{
+            background-color: rgb(211, 166, 149);;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bolder;
+            transform: rotate(30deg);
+            animation-duration: 0.5s;
+        }
+            .container{
+                display: flex; 
+                flex-direction: row;
+                
+                background-color: lightsalmon;
+                
+            }
+            
+            .item{
+                
+                background-color: lightblue;
+                text-align: center;
+                padding: 5px;
+                
+                border: 1px solid black;
+            }
+            .container1{
+                display: flex; 
+                flex-direction: row-reverse;
+                
+                background-color: lightsalmon;
+                
+            }
+            
+            .item1{
+                
+                background-color: lightblue;
+                text-align: center;
+                padding: 5px;
+                
+                border: 1px solid black;
+            }
+            .container2{
+                display: flex; 
+                flex-direction: column;
+                
+                background-color: lightsalmon;
+                
+            }
+            
+            .item2{
+                
+                background-color: lightblue;
+                text-align: center;
+                padding: 5px;
+                
+                border: 1px solid black;
+            }
+            .container3{
+                display: flex; 
+                flex-direction: column-reverse;
+                
+                background-color: lightsalmon;
+                
+            }
+            
+            .item3{
+                
+                background-color: lightblue;
+                text-align: center;
+                padding: 5px;
+                
+                border: 1px solid black;
+            }
+            </style>
+    <title>Flex_box1</title>
+</head>
+<body>
+    <h1>Aula 02 - Direções e eixos</h1>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+    <h1>
+    <div class="container">
+        <div class="item">A</div>
+        <div class="item">B</div>
+        <div class="item">C</div>
+        <div class="item">D</div>
+        <div class="item">E</div>
+        <div class="item">F</div>
+        <div class="item">G</div>
+    </div>
+    <hr>
+    <h1>Direção reversa horizontal:</h1>
+    <h1>
+        <p>flex-direction: row-reverse</p>
+    <div class="container1">
+        <div class="item1">A</div>
+        <div class="item1">B</div>
+        <div class="item1">C</div>
+        <div class="item1">D</div>
+        <div class="item1">E</div>
+        <div class="item1">F</div>
+        <div class="item1">G</div>
+    </div>
+    <hr>
+    <hr>
+    <h1>Direção em coluna:</h1>
+    <h1>
+        <p>flex-direction: row-reverse</p>
+    <div class="container2">
+        <div class="item2">A</div>
+        <div class="item2">B</div>
+        <div class="item2">C</div>
+        <div class="item2">D</div>
+        <div class="item2">E</div>
+        <div class="item2">F</div>
+        <div class="item2">G</div>
+    </div>
+    <hr>
+    <hr>
+    <h1>Direção reversa horizontal:</h1>
+    <h1>
+        <p>flex-direction: column</p>
+    <div class="container1">
+        <div class="item1">A</div>
+        <div class="item1">B</div>
+        <div class="item1">C</div>
+        <div class="item1">D</div>
+        <div class="item1">E</div>
+        <div class="item1">F</div>
+        <div class="item1">G</div>
+    </div>
+    <hr>
+    <hr>
+    <h1>Direção em coluna reversa:</h1>
+    <h1>
+        <p>flex-direction: column-reverse</p>
+    <div class="container3">
+        <div class="item3">A</div>
+        <div class="item3">B</div>
+        <div class="item3">C</div>
+        <div class="item3">D</div>
+        <div class="item3">E</div>
+        <div class="item3">F</div>
+        <div class="item3">G</div>
+    </div>
+    <hr>
+</body>
+</html>
+    

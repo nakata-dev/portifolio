@@ -6,9 +6,17 @@
     <title>Exemplo de Hover</title>
     <link rel="stylesheet" href="../style.css">
     <style>
+        header{
+            height: 80px;
+            padding-bottom: 0px;
+        }
+        header>p{
+            padding-top: 0px;
+        }
         body{
             font-family: Arial, Helvetica, sans-serif;
             line-height: 1.5;
+            text-align: center;
         }
         div > p{    /* parágrafos que estão dentro de div não quero mexer */
             display: none;
@@ -16,8 +24,10 @@
         div > p{
             text-align: center;
             display: block;
+            margin: auto;
             color: white;
             background-color: rgb(47, 34, 168);
+            padding: 10px;
             width: 200px;
             border-bottom-left-radius: 7px;
             border-top-right-radius: 7px;
@@ -25,43 +35,23 @@
         div :hover {
             color: rgb(47, 34, 168);
         }
-        .justificado{
-            white-space: pre-wrap;
-            justify-content: justify;
-        }
+        
     </style>
 </head>
 <body>
     <header>
-        <h1>Exercício 020: Exemplo de a:hover</h1>
+        <h1>Efeito Hover</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <p>Passe o mouse por cima</p>
+        
+        Passe o mouse aqui
+        <br>
+        <br>
         <div>
-              Passe o mouse aqui
-            <p>TEXTO ESCONDIDO</p>
+        <p>Esconder Texto</p>
         </div>
-        <pre class="justificado">
-            
-    body{
-        font-family: Arial, Helvetica, sans-serif;
-        line-height: 1.5;
-    }
-    div > p{    /* parágrafos que estão dentro de div não quero mexer */
-        display: none;
-    }
-    div > p{
-        display: block;
-        color: white;
-        background-color: red;
-        width: 200px;
-    }
-    div :hover {
-        color: red;
-    }
-            
-        </pre>
+        
         <br>
         <br>
         <div id="voltar">

@@ -67,7 +67,7 @@ header img{
 
 header > p{
     font-family: var(--fonte_padrao);
-    font-size: 0.67em;
+    font-size: 0.70em;
     color: white;
     padding-bottom: 10px;
     
@@ -135,7 +135,7 @@ footer img{
 }
 footer img:hover{
     background-color: var(--cor00);
-    padding: 3px;
+    padding: 1px;
     transition-duration: 0.5s;
     border-radius: 10px;
     

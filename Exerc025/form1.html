@@ -13,13 +13,14 @@
         }
 
         p{
-            text-align: justify;
+            
             text-indent: 30px;
             font-family: Arial, Helvetica, sans-serif;
             
         }
-        div.center>p{
-            text-align: center;
+        p{
+            padding: 2px;
+            text-align: justify;
         }
         #voltar{
             a:hover{
@@ -34,7 +35,7 @@
     </style>
 </head>
 <body>
-    <h1>Teste - Form01</h1>
+    <h1>Form - Básico</h1>
     <!--O method pode variar entre post e get-->
     <form action="cadastro.php" method="post" autocomplete="off">
         <!--Label serve para tornar a área de seleção do campo maior. Neste caso, você o nome também faz parte da seleção do campo.-->
@@ -50,14 +51,13 @@
     </form>
     <h2>Estrutura de um form</h2>
 
-    <div class="center">
-        <p>
-        &lt;form="cadastro.php" method="post" autocomplete="off"&gt;
-        <br>
-        <br>
+    
+    <p>
+    &lt;form="cadastro.php"method="post"autocomplete="off"&gt;</p>
+    <p>
         &lt;/form&gt;
-        </p>
-    </div>
+    </p>
+    
 
         <br><br>
         <div id="voltar" style="text-align: center;">
