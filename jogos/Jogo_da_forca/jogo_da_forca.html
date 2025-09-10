@@ -22,22 +22,24 @@
 
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #fff8f0;
+      background-color: #000000;
       text-align: center;
       padding: 20px;
       font-weight: bold;
     }
 
     h1 {
-      font-size: clamp(1.5rem, 5vw, 2.5rem); /* Ajusta tamanho conforme tela */
-      color: #444;
+      font-size: clamp(2rem, 5vw, 2.5rem); /* Ajusta tamanho conforme tela */
+      color: #e0e0e0;
     }
 
     #palavra {
-      font-size: clamp(1.8rem, 6vw, 2.5rem);
-      letter-spacing: 0.5em;
+      font-weight: bold;
+      font-size: clamp(2.8rem, 6vw, 2rem);
+      letter-spacing: 0.2em;
       margin: 20px 0;
       word-wrap: break-word;
+      color: antiquewhite;
     }
 
     #letras {
@@ -53,10 +55,10 @@
       flex: 1 1 30%; /* Ocupa até 30% da largura cada */
       min-width: 40px;
       padding: 10px;
-      font-size: clamp(0.9rem, 3vw, 1.3rem);
+      font-size: clamp(1.5rem, 3vw, 2rem);
       cursor: pointer;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 100px;
       background: #f0f0f0;
       transition: background 0.2s;
     }
@@ -66,21 +68,22 @@
     }
 
     #mensagem {
-      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      font-size: clamp(1.5rem, 3vw, 1.5rem);
       margin-top: 15px;
       font-weight: bold;
+      color: #017afa;
     }
 
     #erros {
-      color: red;
+      color: rgb(247, 119, 119);
       margin-top: 10px;
-      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      font-size: clamp(1.8rem, 3.5vw, 1.2rem);
     }
 
     #reiniciar {
       margin: 15px 0;
       padding: 10px 15px;
-      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      font-size: clamp(1rem, 4vw, 1.2.2rem);
       cursor: pointer;
       border: none;
       border-radius: 8px;
@@ -88,16 +91,19 @@
       color: white;
     }
     #reiniciar:hover {
-      background: #218838;
+      background: #057a1e;
     }
 
     /* Melhor ajuste em telas menores */
     @media screen and (max-width: 500px) {
       #palavra {
         letter-spacing: 0.3em;
+        font-size: clamp(1.5rem, 5vw, 2rem);
       }
       button.letra {
         flex: 1 1 18%; /* letras ocupam mais largura */
+        font-weight: bolder;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
     }
 
@@ -110,6 +116,7 @@
     grid-template-columns: repeat(10, 60px); /* aumenta o tamanho das células */
     gap: 4px; /* espaço entre as células */
     justify-content: center;
+    font-weight: bolder;
     margin: 20px auto;
             }
       }
@@ -119,7 +126,7 @@
 <body>
   <a href="../index.html">Voltar</a>
   <button id="reiniciar">🔁 Reiniciar</button>
-  <h1>Adivinhe o Nome</h1>
+  <h1>JOGO DA ADIVINHAÇÃO</h1>
 
   <div id="palavra">_ _ _ _ _</div>
 
@@ -131,7 +138,7 @@
 
   <script>
     const filmes = [
-      "MAIA", "ALICE", "XUXA", "VAMOS PESCAR", "FRANKENSTEIN", "JESUS CRISTO", "GUSTAVO", "LAICA", "PEDRO", "MARIA", "JOAO", "LUCAS", "MATEUS", "MARCOS", "LARA", "ANA", "CARLA", "BRUNA", "FELIPE", "RAFAEL", "GABRIEL", "LUIZA", "SOPHIA", "ISABELA", "JULIA", "MARIANA", "VICTORIA", "LARISSA", "BEATRIZ", "CAMILA", "LETICIA", "NATHALIA", "THAIS", "RENATA", "ALINE", "THAMIRES", "SANDRA", "PAULA", "DANIELA", "MARCELA", "TATIANA", "VANESSA", "JULIANA", "MIRELLA", "GIOVANNA", "RAQUEL", "ALESSANDRA", "MAYARA", "KARINA", "JESSICA", "MELISSA", "FABIANA", "NATALIA", "PRISCILA", "SILVIA", "ADRIANA", "ELIANA", "CINTIA", "MARTA", "LILIAN", "REGINA", "CLAUDIA", "SUSANA", "VERA", "DANIEL", "RODRIGO", "BRUNO", "LEANDRO", "GUSTAVO", "FELIPE", "MARCOS", "RAFAEL", "LUCAS", "GABRIEL", "DIEGO", "VINICIUS", "LEONARDO", "ALEXANDRE", "WILLIAN", "FABIENNE", "JULIETTE", "SABRINA", "LUNA", "ESTRELA", "SOL", "CEUS", "MARTE", "JUPITER", "SATURNO", "URANO", "NETUNO", "PLUTAO", "GALAXIA", "UNIVERSO", "CONSTELACAO", "ASTEROIDE", "COMETA", "METEORO", "ORION", "ANDROMEDA", "CASSIOPEIA", "LEAO", "TOURO", "GEMEOS", "CANCER", "VIRGEM", "LIBRA", "ESCORPIAO", "SAGITARIO", "CAPRICORNIO", "AQUARIO", "PEIXES", "HOMEM ARANHA", "BATMAN", "MULHER MARAVILHA", "CAPITAO AMERICA", "IRON","MAYSA"
+      "OVO","MAIA", "ALICE", "XUXA", "AKIO", "EMILIAM", "JESUS", "CRISTO", "GUSTAVO", "LAICA", "PEDRO", "MARIA", "JOAO", "LUCAS", "MATEUS", "MARCOS", "LARA", "ANA", "CARLA", "BRUNA", "FELIPE", "AKIKO","RAFAEL", "GABRIEL", "LUIZA", "SOPHIA", "ISABELA", "JULIA", "MARIANA", "VICTORIA", "LARISSA", "BEATRIZ", "CAMILA", "LETICIA", "NATALIA", "TAIS", "RENATA", "ALINE", "TAMIRES", "SANDRA", "PAULA", "DANIELA", "MARCELA", "TATIANA", "VANESSA", "JULIANA", "MIRELLA", "GIOVANNA", "RAQUEL", "ALESSANDRA", "MAYARA", "KARINA", "JESSICA", "MELISSA", "FABIANA", "NATALIA", "PRISCILA", "SILVIA", "ADRIANA", "ELIANA", "CINTIA", "MARTA", "LILIANA", "REGINA","TANO", "CLAUDIA", "SUSANA", "VERA", "DANIEL", "RODRIGO", "BRUNO", "LEANDRO", "GUSTAVO", "FELIPE", "MARCOS", "RAFAEL", "LUCAS", "GABRIEL", "DIEGO", "VINICIUS", "LEONARDO", "ALEXANDRE", "WILLIAN", "FUKUDOME","FABIENNE", "JULIETTE", "SABRINA", "LUNA", "ESTRELA", "SOL", "CEUS", "MARTE", "JUPITER", "SATURNO", "URANO", "NETUNO", "PLUTAO", "GALAXIA", "UNIVERSO", "CONSTELACAO", "LEAO", "TOURO", "GEMEOS", "CANCER", "VIRGEM", "LIBRA", "ESCORPIAO", "SAGITARIO", "CAPRICORNIO", "AQUARIO", "PEIXES", "ARANHA", "BATMAN", "MULHER MARAVILHA", "BOLSONARO","MAYSA","MIDORI","GEOVANA"
     ];
 
     let palavraEscolhida = "";
@@ -190,10 +197,10 @@
 
     function verificarFim() {
       if (!palavraExibida.includes("_")) {
-        mensagemDiv.textContent = "🎉 Você venceu!";
+        mensagemDiv.textContent = "🎉 🤓 Você venceu!🥇🖖";
         desativarBotoes();
       } else if (tentativasRestantes === 0) {
-        mensagemDiv.textContent = `💀 Você perdeu! A palavra era: ${palavraEscolhida}`;
+        mensagemDiv.textContent = `🙈Você🙉perdeu🙊! A palavra era😭: ${palavraEscolhida}`;
         desativarBotoes();
       }
     }
