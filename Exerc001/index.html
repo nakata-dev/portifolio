@@ -5,33 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../style.css">
+    
     <style>
-        *{
+        h1, :past {
             text-align: center;
         }
+        pre{
+            white-space: pre-wrap;
+            font-weight: bold;
+            font-size: 1.2em;
+            padding: 10px;
+            line-height: 1.3;
+        }
     </style>
-    <title>Exerc001</title>
+    <title>Olá Mundo!</title>
 </head>
 <body>
     <header>
-        <h1>Exercício 001 - Olá Mundo!</h1>
+        <h1>Olá Mundo!</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
         <h1>Olá Mundo!</h1>
         <br>
-
         <hr>
-
         <p>Este é o meu primeiro HTML! Estou muito feliz.</p>
-
         <hr>
+        <br>
+        <h2>Como foi pensado o HTML?</h2>
+        <h4>Insira o código abaixo dentro de &lt;Body&gt;:</h4>
+        <hr>
+        <div class="Bloco_codiogo">
+            <pre>
+                <code id="codigoParaCopiar">
+&lt;h1&gt;Olá Mundo!&lt;/h1&gt;
+&lt;br&gt;
+&lt;hr&gt;
+&lt;p&gt;Este é o meu primeiro HTML!&lt;/p&gt;
+&lt;hr&gt;
+&lt;br&gt;
+&lt;br&gt;
+                </code>
+            </pre>
+            <hr>
+            <br>
+            <button onclick="copiarCodigo()">Copiar</button>
+        </div>
         <br>
         <br>
         <div id="voltar">
-                <a href="../estudos.html" >Voltar</a>
+            <a href="../estudos.html">Voltar</a>
         </div>
-        <br><br>
+        <br>
+        <br>
     </main>
+    
+    <script>
+        function copiarCodigo() {
+            const codigo = document.getElementById('codigoParaCopiar').textContent;
+            
+            navigator.clipboard.writeText(codigo)
+                .then(() => {
+                    alert('Código copiado com sucesso!');
+                })
+                .catch(err => {
+                    console.error('Falha ao copiar o código: ', err);
+                    alert('Houve um erro ao copiar o código.');
+                });
+        }
+    </script>
 </body>
 </html>
