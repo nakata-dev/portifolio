@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css" media="screen and (max-width:580px)">
     <title>Menu Flexbox</title>
 </head>
 <body>
@@ -20,10 +21,110 @@
     </header>
     
     <main>
-        <h2>Teste de Flexbox</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut quam non totam cumque velit at tenetur ipsa fugiat. Hic aliquam facere ab quaerat placeat? Odio ratione nisi praesentium reprehenderit accusantium?
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, inventore saepe. Odit eligendi tempora officia illo molestias praesentium quo quisquam, culpa nihil voluptatem quibusdam omnis non id ad, eveniet doloremque?Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, architecto sapiente. Illum explicabo officia ipsam doloribus dolores porro unde, alias dolorum quas reprehenderit distinctio qui eaque aperiam iure, numquam fugit.</p>
-        
+        <h2>Em Mobile.css:</h2>
+        <p><strong>header, header > nav:</strong> Isso significa : selecione o elemento <mark>"header"</mark> e, separadamente, selecione o elemento <mark>"nav"</mark> que é um filho direto do <mark>"header"</mark>. É como se você estivesse apontando para duas coisas: o cabeçalho inteiro e a barra de navegação que está dentro dele.</p>
+        <br>
+        <strong>flex-flow:</strong> Essa é uma propriedade abreviada que combina duas outras: flex-direction e flex-wrap.
+        <br><br>
+
+        <strong>
+            <mark>column</mark>
+        </strong>: Esta parte do comando (<strong>flex-direction: column</strong>) diz que os elementos dentro do contêiner flexível devem ser organizados em uma coluna, de cima para baixo. Em vez de ficarem lado a lado (<mark>que é o padrão do flex-direction: row</mark>), eles vão se empilhar.
+        <br>
+        <br>
+        <b>nowrap</b>: Esta parte (<mark>flex-wrap: nowrap</mark>) diz que os elementos não devem quebrar para a próxima linha. <i><b>Se eles excederem o espaço disponível, eles simplesmente vão "transbordar"</b></i> ou ficar comprimidos, mas não passarão para uma nova linha.
+        </p>
+        <br>
+        <h2>Em style.css:</h2>
+        <br>
+        <pre>
+@charset "UTF-8";
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    background-color: lightgray;
+    width: 100vw;
+    height: 100vh;
+}
+header{ /*Flexbox - PAI*/
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: gray;
+    color: white;
+    padding: 10px;
+}
+
+header > h1{
+    /*border: 1px dotted black;*/
+    margin: 10px;
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.507);
+    flex: 0 0 200px; /*flex fixo em 200px*/
+}
+header > nav > a{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    font-size: 1em;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+header > nav > a:hover{
+    background-color: white;
+    color: black;
+    transition: background-color 1s;
+}
+
+header > nav{
+    /*border: 1px dotted black;*/
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-end; 
+}
+
+main{
+    border-radius: 10px;
+    background-color: white;
+    margin: 10px;
+    text-align: justify;
+    text-indent: 30px;
+    line-height: 1.8;
+    padding: 20px;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.548);
+}
+
+
+        </pre>
+        <br>
+        <h2>Em mobile.css:</h2>
+        <br>
+        <pre>
+            @charset "UTF-8";
+
+header, header > nav{
+    flex-flow: column nowrap;
+}
+
+header > h1{
+    flex-basis:auto;
+}
+
+header > nav > a{
+    width:90vw
+}
+        </pre>
     </main>
 </body>
 </html>

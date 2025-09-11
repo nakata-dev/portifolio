@@ -23,9 +23,9 @@ header{ /*Flexbox - PAI*/
 }
 
 header > h1{
-    border: 1px dotted black;
+    /*border: 1px dotted black;*/
     margin: 10px;
-
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.507);
     flex: 0 0 200px; /*flex fixo em 200px*/
 }
 header > nav > a{
@@ -47,7 +47,7 @@ header > nav > a:hover{
 }
 
 header > nav{
-    border: 1px dotted black;
+    /*border: 1px dotted black;*/
 
     display: flex;
     flex-flow: row wrap;
@@ -64,3 +64,11 @@ main{
     padding: 20px;
     box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.548);
 }
+
+pre{
+    white-space: pre-wrap;
+    line-height: 2;
+    font-weight: bolder;
+    padding: 10px;
+}
+
