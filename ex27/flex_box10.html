@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+        #voltar>a{
+             color: white;
+        }
+        #voltar{
+            font-family: Arial, Helvetica, sans-serif;
+            
+            background-color: lightsalmon;
+            padding: 10px;
+            text-align: center;
+        }
+        a:hover{
+            background-color: rgb(211, 166, 149);;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bolder;
+            transform: rotate(30deg);
+            animation-duration: 0.5s;
+        }
+        .container{
+            display: flex;
+            flex-flow: row nowrap;
+            background-color: lightsalmon;
+
+        }
+
+        .item{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+            flex-basis: 100px;
+            border: 1px solid black;
+        }
+        /*flex-shrink serve para menores que 100px*/
+        /*flex-grow serve para maiores que 100px*/
+        #cxa{
+            flex-shrink: 0;
+            flex-grow: 0;
+        }
+        #cxb{
+            flex-shrink: 0;
+            flex-grow: 0;
+        }
+        #cxc{
+            flex-shrink: 0;
+            flex-grow: 0;
+        }
+        .container1{
+            display: flex;
+            flex-flow: row nowrap;
+            background-color: lightsalmon;
+
+        }
+
+        .item1{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+            flex-basis: 100px;
+            border: 1px solid black;
+        }
+        #cxa1{
+            flex-shrink: 1;
+            flex-grow: 0;
+        }
+        #cxb1{
+            flex-shrink: 1;
+            flex-grow: 3;
+        }
+        #cxc1{
+            flex-shrink: 1;
+            flex-grow: 9;
+        }
+    </style>
+    <title>Flex_box</title>
+</head>
+<body>
+    <h1>Aula 09 - Pode crescer ou diminuir</h1>
+    <h3>Para valores menores: flex-shrink</h3>
+    <h3>Para valores maiores flex-grow</h3>
+    <hr>
+    <h2>Configuração Padrão</h2>
+    <div class="container">
+        <div class="item" id="cxa">A</div>
+        <div class="item" id="cxb">B</div>
+        <div class="item" id="cxc">C</div>       
+    </div>
+    <hr>
+    <h2>Alterando proporção: flex-grow: 9;</h2>
+    <div class="container1">
+        <div class="item1" id="cxa1">A</div>
+        <div class="item1" id="cxb1">B</div>
+        <div class="item1" id="cxc1">C</div>       
+    </div>
+    <hr>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+</body>
+</html>

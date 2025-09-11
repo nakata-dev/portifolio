@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+        #voltar>a{
+             color: white;
+        }
+        #voltar{
+            font-family: Arial, Helvetica, sans-serif;
+            
+            background-color: lightsalmon;
+            padding: 10px;
+            text-align: center;
+        }
+        a:hover{
+            background-color: rgb(211, 166, 149);;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bolder;
+            transform: rotate(30deg);
+            animation-duration: 0.5s;
+        }
+        .container{
+            display: flex;
+            flex-flow: row nowrap;
+            background-color: lightsalmon;
+
+        }
+
+        .item{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+           
+            border: 1px solid black;
+        }
+        /*flex-shrink serve para menores que 100px*/
+        /*flex-grow serve para maiores que 100px*/
+        
+        #cxa{
+            /*flex-grow: 0;
+            flex-shrink: 1;
+            flex-basis: 100px;*/
+            flex: 0 1 100px;
+        }
+        #cxb{
+            /*flex-grow: 3;
+            flex-shrink: 1;
+            flex-basis: 100px;*/
+            flex: 3 1 100px;
+        }
+        #cxc{
+            /*flex-grow: 9;
+            flex-shrink: 1;
+            flex-basis: 100px;*/
+            flex: 9 1 100px;
+        }
+        .container2{
+            display: flex;
+            flex-flow: row nowrap;
+            background-color: lightsalmon;
+
+        }
+
+        .item2{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+           
+            border: 1px solid black;
+        }
+      
+        
+        #cxa2{
+            
+            flex: 0 1 auto;
+        }
+        #cxb2{
+         
+            flex: 0 1 auto;
+        }
+        #cxc2{
+            
+            flex: 0 1 auto;
+        }
+        .container3{
+            display: flex;
+            flex-flow: row nowrap;
+            background-color: lightsalmon;
+
+        }
+
+        .item3{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+           
+            border: 1px solid black;
+        }
+      
+        
+        #cxa3{
+            
+            flex: 0 0 auto;
+        }
+        #cxb3{
+         
+            flex: 0 0 auto;
+        }
+        #cxc3{
+            
+            flex: 0 0 auto;
+        }
+        .container4{
+            display: flex;
+            flex-flow: row nowrap;
+            background-color: lightsalmon;
+
+        }
+
+        .item4{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+           
+            border: 1px solid black;
+        }
+      
+        
+        #cxa4{
+            
+            flex: 1 1 auto;
+        }
+        #cxb4{
+         
+            flex: 1 1 auto;
+        }
+        #cxc4{
+            
+            flex: 1 1 auto;
+        }
+        .container5{
+            display: flex;
+            flex-flow: row nowrap;
+            background-color: lightsalmon;
+
+        }
+
+        .item5{
+            flex: auto; 
+            background-color: lightblue;
+            text-align: center;
+            padding: 5px;
+           
+            border: 1px solid black;
+        }
+      
+        
+        #cxa5{
+            
+            flex: 3 1 auto;
+        }
+        #cxb5{
+         
+            flex: 3 1 auto;
+        }
+        #cxc5{
+            
+            flex: 3 1 auto;
+        }
+    </style>
+    <title>Flex</title>
+</head>
+<body>
+    <h1>Aula 10 – Simplificando com Flex</h1>
+    <h3>Ordem = Flex-grow + Flex-shrink + Flex-basis</h3>
+    <h3>Flex: 9 1 100px;</h3>
+    <hr>
+    <h2>Configurado para alterar</h2>
+    <div class="container">
+        <div class="item" id="cxa">A</div>
+        <div class="item" id="cxb">B</div>
+        <div class="item" id="cxc">C</div>       
+    </div>
+    <hr>
+    <h2>Configuração Padrão</h2>
+    <h3>flex: 0 1 auto;</h3>
+    <h3>flex: 0 1 initial;</h3>
+    <div class="container2">
+        <div class="item2" id="cxa2">A</div>
+        <div class="item2" id="cxb2">B</div>
+        <div class="item2" id="cxc2">C</div>       
+    </div>
+    <hr>
+    <h2>Sem Flexibilidade</h2>
+    <h3>flex: 0 0 auto;</h3>
+    <h3>flex: none;</h3>
+    <div class="container3">
+        <div class="item3" id="cxa3">A</div>
+        <div class="item3" id="cxb3">B</div>
+        <div class="item3" id="cxc3">C</div>       
+    </div>
+    <hr>
+    <h2>Máximo de Flexibilidade</h2>
+    <h3>flex: 1 1 auto;</h3>
+    <h3>flex: auto;</h3>
+    <div class="container4">
+        <div class="item4" id="cxa4">A</div>
+        <div class="item4" id="cxb4">B</div>
+        <div class="item4" id="cxc4">C</div>       
+    </div>
+    <hr>
+    <h2>Flex: um número;</h2>
+    <h3>flex: 3;</h3>
+    <h3>flex: 3 1 animation-duration;</h3>
+    <div class="container5">
+        <div class="item5" id="cxa5">A</div>
+        <div class="item5" id="cxb5">B</div>
+        <div class="item5" id="cxc5">C</div>       
+    </div>
+    <hr>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+</body>
+</html>
