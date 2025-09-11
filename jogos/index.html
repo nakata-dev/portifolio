@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
     <link rel="stylesheet" href="index.css">
-    <title>Batia</title>
+    <!--Site que pucha icones direto do Google-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <title>Jogos Geniais</title>
     <style>
         .paragrafo{
             text-align: justify;
@@ -15,23 +18,45 @@
 </head>
 <body>
      <header>
-        <div><img src="img/Batian.jpg"></div>           
+        <div><img src="img/Eintein.png"></div>           
                
-            <h1>Jogos da Batian</h1>
+            <h1>Jogos Geniais</h1>
             <p>por: Ailton A. Nakata</p>     
         
     </header>
-    <nav>
-<a href="Caça_Palavras/index.html">Caça-Palavras</a>
+    
 
-    </nav>
- 
+    <i id="burguer" class="material-icons"onclick="clickMenu()">menu</i>
+        <menu id="itens">
+            <ul>                
+                <li><a href="Jogo_da_forca/jogo_da_forca.html">Jogo da Adivinhação</a></li>
+                <li><a href="Jogo_da_velha/jogodavelha.html">Jogo da Velha</a></li>
+                <li><a href="Jogo_da_Memoria/memoria4X4.html">Jogo da Memória 4x4</a></li>
+                <li><a href="Jogo_da_Memoria/jogodamemoria.html">Jogo da Memória 6x6</a></li>
+            </ul>
+        </menu>
+
         <main>
             <section>
-                <h3>Por que jogar?</h3>
+                <h3>Mantenha Sua Mente Jovem e Vibrante</h3>
                 <br>
                 <p class="paragrafo">
-                    O site foi desenvolvido especialmente para o público da terceira idade, com o objetivo de proporcionar lazer, interação social e estímulo mental através de jogos clássicos e divertidos. Entre as opções disponíveis estão os jogos de tabuleiro, como Dominó, Scrabble e Ludo, que incentivam a memória, a concentração e a convivência em grupo; os jogos de cartas, como Canastra e Bingo, que fortalecem o raciocínio rápido e promovem momentos de descontração; e os jogos de lógica, como Sudoku e Palavras Cruzadas, que são excelentes para exercitar a mente e prevenir o declínio cognitivo. Dessa forma, o site oferece não apenas entretenimento, mas também benefícios para a saúde mental e emocional dos idosos, tornando-se um espaço de diversão inteligente e saudável.
+                    <strong>A mente é o nosso bem mais precioso</strong>, e assim como o corpo, ela precisa de exercícios regulares para se manter forte e saudável. Em um mundo cada vez mais agitado, onde o cansaço mental e o "esquecimento" parecem ser normais, a prática de jogos que desafiam o cérebro surge como uma ferramenta poderosa e divertida para manter a mente ativa e vibrante. <br><br>
+
+Os jogos de raciocínio, como caça-palavras, jogo da forca, jogo da velha, xadrez, dama e jogo da memória, vão muito além de um simples passatempo. Eles são verdadeiros aliados no combate ao cansaço mental e à perda de memória, e a razão é simples: eles estimulam as nossas habilidades cognitivas mais importantes. <br><br>
+
+Eles <strong>exercitam o raciocínio lógico</strong>: Jogos como xadrez e dama exigem que você pense à frente, analise cenários e tome decisões estratégicas. <br><br>
+
+Melhoram a memória e a concentração: O jogo da memória, por exemplo, força o cérebro a reter informações de curto prazo. O caça-palavras e o jogo da forca aprimoram a concentração e o foco, enquanto você busca por padrões e soluções. <br><br>
+
+Aumentam a velocidade de processamento: Ao resolver quebra-cabeças e desafios rapidamente, você treina a mente a processar informações de forma mais ágil, melhorando a sua agilidade mental.
+<br><br>
+
+Promovem a <strong>neuroplasticidade</strong>: Ou seja, a capacidade do cérebro de se adaptar e criar novas conexões. Ao aprender um novo jogo ou dominar uma nova estratégia, você está literalmente <strong>construindo novas vias neurais</strong>.
+<br><br>
+Combatem o estresse: O ato de se envolver em um jogo divertido e desafiador pode ser uma excelente forma de relaxamento, ajudando a desviar o foco de preocupações e reduzindo os níveis de estresse.
+<br><br>
+Estimular a mente com esses jogos <strong>é um ato de autocuidado</strong>. É um investimento no seu bem-estar e na sua felicidade. Eles nos lembram que a aprendizagem e o desenvolvimento não têm idade para acabar, e que a <strong>alegria de resolver um bom desafio</strong> é uma das melhores sensações que existem.
                 </p>
             </section>
             <br>
@@ -40,10 +65,28 @@
 
         <footer>
             <p>
-                Jogos da Vovó
+                Todos os direitos reservados à Ailton A. Nakata
             </p>
         </footer>
     </div>
-    
+    <script>
+        function clickMenu() {
+    if (itens.style.display == 'block') {
+        itens.style.display = 'none';
+    } else {
+        itens.style.display = 'block';
+    }
+}
+        function mudouTamanho() {
+    // Se a tela for maior que 768px, exibe o menu e esconde o ícone
+    if (window.innerWidth >= 768) {
+        itens.style.display = 'block';
+    } else {
+        // Se for menor, esconde o menu
+        itens.style.display = 'none';
+    }
+}  
+
+    </script>
 </body>
 </html>
