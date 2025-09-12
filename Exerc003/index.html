@@ -1,51 +1,134 @@
 <!DOCTYPE html>
-<html lang="pr-br">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        h1 {
-            text-align: center;
-        }
-        body {
-            background-color: burlywood;
-        }
-        .imagens{
-            text-align: center;
-        }
-        .imagens>img{
-            width: 65%;
-        }
-        h2 {
-            text-align: center;
-        }
-    </style>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <title>Exerc003</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exerc003 - Teste de Imagens</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #ff7f50, #ff4500);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff4500;
+      margin-top: 40px;
+    }
+
+    .imagens {     
+      text-align: center;
+    }
+
+    .imagens img {
+      width: 60%;
+      max-width: 400px;
+      border-radius: 12px;
+      margin: 20px 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .imagens img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    /* Caixas de explicação */
+    .caixa {
+      background: #fff8f0;
+      border-left: 6px solid #ff7f50;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    /* Botão voltar */
+    #voltar {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    #voltar a {
+      background: #ff4500;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    #voltar a:hover {
+      background: #cc3700;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Exercício 003: Teste de Imagens</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        
-            <div class="imagens">
-                <h1>Testando o uso de Imagens</h1>
-                <h2>Abaixo você vai ver uma imagem que esta na mesma pasta</h2>
-                <img src="html-5-200.png" alt="logo html-5">
-                <h2>Também podemos carregar imagens de subpastas</h2>
-                <img src="imagem/css3-200.png" alt="logo css">
-                <h2>Também conseguimos carregar imagens de links externos</h2>
-            </div>
-                <div style="text-align: center;"><img src="https://static.vecteezy.com/system/resources/previews/027/127/560/non_2x/javascript-logo-javascript-icon-transparent-free-png.png" style="width: 330px; height: auto;" alt="java script"> <!--URL-->
-        <br><br>
-        <div id="voltar">
-            <a href="../estudos.html" >Voltar</a>
-        </div>
-        <br><br>
-    </main>
-            
+  <header>
+    <h1>🖼️ Teste de Imagens</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>
+    <div class="imagens">
+      <h2>📍 Imagem na mesma pasta</h2>
+      <img src="html-5-200.png" alt="Logo HTML5">
+      <div class="caixa">
+        ✅ Quando a imagem está na <strong>mesma pasta</strong> do arquivo HTML, basta colocar o nome do arquivo:  
+        <code>&lt;img src="html-5-200.png"&gt;</code>
+      </div>
+
+      <h2>📍 Imagem em subpasta</h2>
+      <img src="imagem/css3-200.png" alt="Logo CSS3">
+      <div class="caixa">
+        ✅ Para acessar uma imagem em uma <strong>subpasta</strong>, coloque o nome da pasta seguido do arquivo:  
+        <code>&lt;img src="imagem/css3-200.png"&gt;</code>
+      </div>
+
+      <h2>📍 Imagem de link externo</h2>
+      <img src="https://static.vecteezy.com/system/resources/previews/027/127/560/non_2x/javascript-logo-javascript-icon-transparent-free-png.png" alt="Logo JavaScript">
+      <div class="caixa">
+        ✅ Para carregar imagens de <strong>links externos</strong>, basta colocar a URL completa:  
+        <code>&lt;img src="https://...link-da-imagem.png"&gt;</code>
+      </div>
+    </div>
+
+    <div id="voltar">
+      <a href="../estudos.html">⬅ Voltar ao Índice</a>
+    </div>
+  </main>
 </body>
 </html>

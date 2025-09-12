@@ -1,92 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Exerc004</title>
-    <style>
-        *{
-            text-align: center;
-        }
-        #pequeno img {
-        display: block;
-        margin: 0 auto;
-        width: 150px;
-        transition: transform 0.3s ease;
-        cursor: pointer;
-        }
-        #pequeno a:hover{
-            transform:scale(1.1);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exerc004 - Tamanho de Imagens</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+      color: #333;
+      line-height: 1.6;
+    }
 
-        #medio img {
-        display: block;
-        margin: 0 auto;
-        width: 225px;
-        transition: transform 0.3s ease;
-        cursor: pointer;
-        }
-        #medio>img a:hover{
-            transform: scale(1.4);
-            
-        }
+    header {
+      background: linear-gradient(135deg, #228B22, #32CD32);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
 
-        #original img {
-        display: block;
-        margin: 0 auto;
-        min-width: 300px;
-        transition: transform 0.3s ease;
-        cursor: pointer;
-        }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
 
-        #original a:hover{
-            transform: scale(1.9);
-        }
-    </style>
+    header p {
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #228B22;
+      margin-top: 30px;
+    }
+
+    .caixa {
+      background: #f0fff0;
+      border-left: 6px solid #228B22;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .imagem-bloco {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .imagem-bloco img {
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .imagem-bloco img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    /* Botão voltar */
+    #voltar {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    #voltar a {
+      background: #228B22;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    #voltar a:hover {
+      background: #145214;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Exercício 004: Tamanho de Imagens</h1>
-        <p>por: Ailton A.  Nakata</p>
-    </header>
-    <main>
-        <div id="pequeno">
-            <h1>GIMP</h1>
-            <br>
-            <hr>
-            <br>
-            <h2>
-                650px <img src="paisagem-650.jpeg" alt="paisagem-650">
-            </h2>
-        </div>
-        <br>
-        <hr>
-        <br>
-        <div id="medio">
-            <h2>
-                1200px
-                <img src="paisagem-1200.jpeg" alt="paisagem-1200" width="1200" height="auto">
-            </h2>
-        </div>
-        <br>
-        <br>
-            <hr>
-            <br>
-            <div id="original">
-                <h2>
-                    Original
-                    <img src="paisagem-full.jpeg" alt="paisagem-650px">
-                </h2>
-            </div>
-            <br>
-            <br>
-        <div id="voltar">
-            <a href="../estudos.html" >Voltar</a>
-        </div>
-        <br>
-        <br>
-    </main>
-    
+  <header>
+    <h1>🌄 Tamanho de Imagens</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>
+    <div class="imagem-bloco">
+      <h2>📍 Imagem Reduzida (650px)</h2>
+      <img src="paisagem-650.jpeg" alt="Paisagem 650px" width="150">
+      <div class="caixa">
+        ✅ Esta imagem foi redimensionada para <strong>650px</strong> de largura no programa de edição.  
+        Usada em sites quando queremos carregar imagens mais leves.  
+        <br><code>&lt;img src="paisagem-650.jpeg"&gt;</code>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="imagem-bloco">
+      <h2>📍 Imagem Média (1200px)</h2>
+      <img src="paisagem-1200.jpeg" alt="Paisagem 1200px" width="225">
+      <div class="caixa">
+        ✅ Esta versão foi salva com <strong>1200px</strong> de largura.  
+        Útil quando precisamos de imagens um pouco maiores, mas ainda sem pesar muito no site.  
+        <br><code>&lt;img src="paisagem-1200.jpeg" width="1200"&gt;</code>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="imagem-bloco">
+      <h2>📍 Imagem Original (Full)</h2>
+      <img src="paisagem-full.jpeg" alt="Paisagem Original" width="300">
+      <div class="caixa">
+        ✅ Aqui está a imagem no tamanho <strong>original</strong>, sem redimensionamento.  
+        Geralmente usada para impressões ou quando é necessário muito detalhe.  
+        <br><code>&lt;img src="paisagem-full.jpeg"&gt;</code>
+      </div>
+    </div>
+
+    <div id="voltar">
+      <a href="../estudos.html">⬅ Voltar ao Índice</a>
+    </div>
+  </main>
 </body>
 </html>

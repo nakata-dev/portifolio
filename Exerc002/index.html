@@ -1,82 +1,181 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        p#paragrafo{
-            text-align: justify;
-            text-indent: 30px;
-            padding: 10px;
-        }
-        ul{
-            display: flex;
-            gap:50px;
-            margin: auto;
-            
-        }
-        li{
-            list-style-type: square;
-        }
-        a:hover{
-            border-radius: 10px;
-            padding: 10px;
-            background-color: rgba(127, 255, 212, 0.637);
-            
-        }
-        
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudos HTML & CSS</title>
+  <link rel="shortcut icon" href="favicon (1).ico" type="image/x-icon">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Estilo global */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+      color: #333;
+      line-height: 1.6;
+    }
 
-    </style>
-    <link rel="shortcut icon" href="favicon (1).ico" type="image/x-icon">
-    <link rel="stylesheet" href="../style.css">
-    <title>Exerc002</title>
+    header {
+      background: linear-gradient(135deg, #1e90ff, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    h2, h3 {
+      margin-top: 40px;
+      color: #1e90ff;
+      border-left: 6px solid #1e90ff;
+      padding-left: 10px;
+    }
+
+    p#paragrafo {
+      text-align: justify;
+      text-indent: 30px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    .exemplo {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-family: "Courier New", monospace;
+    }
+
+    hr {
+      margin: 25px 0;
+      border: none;
+      border-top: 2px dashed #aaa;
+    }
+
+    ul {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 0;
+    }
+
+    li {
+      list-style-type: square;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1e90ff;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      border-radius: 10px;
+      padding: 6px 10px;
+      background-color: rgba(30, 144, 255, 0.15);
+    }
+
+    /* Caixas de lembrete */
+    .caixa {
+      background: #eaf6ff;
+      border-left: 6px solid #1e90ff;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    #voltar {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    #voltar a {
+      background: #1e90ff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+    }
+
+    #voltar a:hover {
+      background: #104e8b;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Quebra de Linhas</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Quebra de linhas (br)</h2>
-        <p id="paragrafo">teste quebrar uma linha usando a tag: <strong>&lt;br&gt;</strong> <!--Less Then (menor que) e Greater Then (maior que)-->
-        </p>
-        <h3>Inserindo linha com (hr)</h3>
-        <hr>
-        <p>Entre qualquer linha, insira a tag:<strong>&lt;hr&gt;</strong></p>
-        <br>
-        <p>Simbolos:
-            &reg;
-            &copy;
-            &trade;
-            &euro;
-            &pound;
-            &yen;
-            &cent;
-            &Delta;
-        </p>
-        <hr>
-        <p>Vamos adicionar Emojis: <!-- use o site emoji pedia.org e busque pelo emoji desejado. Em seguida clique em "informações técnicas" e copie o código do emoji após o sinal de (+)-->
-            &#x1F596 <!--Para se inserir emojis, use a tag &#x.....e cole seu código de emoji aqui--> <br>
-            &#x1FAC1 :(&)+#x1FAC1<br>
-            &#x1F444 :(&)+#x1F444<br>
-            &#x1F418 :(&)+#x1F418<br>
-            &#x1F96A :(&)+#x1F96A<br>
-            &#x1F947 :(&)+#x1F947<br>
-            &#x1F6F8 :(&)+#x1F6F8<br>
-        </p>
-        <h3>Onde Baixar?</h3>
-        <ul>
-            <li><a href="https://emojipedia.org/pt" target="_blank">Emoji</a></li>
-            <li><a href="favicon.io" target="_blank">Favicon</a></li>
-        </ul>
-        <br>
-        <hr>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../estudos.html" >Voltar</a>
-        </div>
-        <br><br>
-    </main>
+  <header>
+    <h1>📘 Meus Estudos de HTML & CSS</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>
+    <h2>📍 Quebra de Linhas (<code>&lt;br&gt;</code>)</h2>
+    <div class="exemplo">
+      <p id="paragrafo">Exemplo de quebra de linha usando a tag: <strong>&lt;br&gt;</strong></p>
+    </div>
+
+    <h3>📍 Linha Horizontal (<code>&lt;hr&gt;</code>)</h3>
+    <div class="exemplo">
+      <p>Entre qualquer linha, insira a tag: <strong>&lt;hr&gt;</strong></p>
+      <hr>
+    </div>
+
+    <h3>📍 Símbolos Especiais</h3>
+    <div class="exemplo">
+      <p>
+        &reg; &copy; &trade; &euro; &pound; &yen; &cent; &Delta;
+      </p>
+    </div>
+
+    <h3>📍 Emojis</h3>
+    <div class="exemplo">
+      <p>
+        &#x1F596; <br>
+        &#x1FAC1; <br>
+        &#x1F444; <br>
+        &#x1F418; <br>
+        &#x1F96A; <br>
+        &#x1F947; <br>
+        &#x1F6F8;
+      </p>
+    </div>
+
+    <div class="caixa">
+      💡 <strong>Dica:</strong> Para inserir emojis use a sintaxe <code>&amp;#xCODE;</code>, onde <code>CODE</code> é o código do emoji no formato hexadecimal.
+    </div>
+
+    <h3>📍 Onde Baixar?</h3>
+    <ul>
+      <li><a href="https://emojipedia.org/pt" target="_blank">Emojipedia</a></li>
+      <li><a href="https://favicon.io" target="_blank">Favicon.io</a></li>
+    </ul>
+
+    <div id="voltar">
+      <a href="../estudos.html">⬅ Voltar ao Índice</a>
+    </div>
+  </main>
 </body>
 </html>

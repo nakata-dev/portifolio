@@ -1,47 +1,121 @@
-<html>
-    <head>
-        <title>Exerc007</title>
-<link rel="stylesheet" href="../style.css">
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <title>Tags Obsoletas</title>
     <style>
-        #meio p{
-            padding: 20px;
-            text-align: justify;
-            text-indent: 20px;
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
             line-height: 1.8em;
         }
-        h1,h2,h3, h4{
+
+        /* HEADER parecido com o da página anterior */
+        header {
+            background-color: #336ea1; /* nova cor */
+            color: white;
+            padding: 25px;
             text-align: center;
-            padding: 10px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
         }
-        header{
-            height: 80px;
+        header h1 {
+            margin: 0;
         }
-        a{
+        header p {
+            text-align: center;
+            margin: 5px 0 0;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h2, h3, h4 {
+            text-align: center;
+            margin: 20px 0 10px;
+        }
+        p {
+            text-align: justify;
+            text-indent: 20px;
+        }
+
+        /* Links */
+        a {
             text-decoration: none;
+            color: #0066cc;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Bloco marquee */
+        .marquee-box {
+            border: 2px dashed #666;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            text-align: center;
+            max-width: 600px;
+        }
+        marquee {
+            font-weight: bold;
+            color: #cc0000;
+            font-size: 1.1em;
+        }
+
+        /* Botão voltar */
+        #voltar {
+            text-align: center;
+            margin: 30px 0;
+        }
+        #voltar a {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        #voltar a:hover {
+            background: #555;
         }
     </style>
-    </head>
-    <body>
-        <header>
-            <h1>Tags Obsoletas</h1> <!--Quando o parâmetro fica vermelho isso indica que não se usa mais, ou seja, já está em obsoleto(desuso)-->
-            <p>por:Ailton A. Nakata</p>
-        </header>
-<main id="meio">
-            <br>
-    <div id="voltar">
-        <a href="../estudos.html">Voltar</a>
-    </div>
-            <br>
+</head>
+<body>
+    <header>
+        <h1>Tags Obsoletas</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
 
-    <h2>Confira em <a href="https://www.w3.org/TR/2014/REC-html5-20141028/obsolete.html">w3.org</a> - Tagas Obsoletas</h2>
-    
-    <h4>Exemplo de marquee:</h4>
-    <marquee behavior="" direction="right">Marquee serve para ficar passando esse letreiro na tela.</marquee><!--Mesmo que o parâmetro usado não estiver ficando vermelho, pode ser que já não se use mais hoje em dia-->
-    <br><br>
-            <div id="voltar">
-                <a href="../estudos.html">Voltar</a>
-            </div>
-    <br><br>
-</main>
+    <main>
+        <h2>Confira na documentação oficial:</h2>
+        <p>
+            Você pode ver a lista completa de elementos e atributos <strong>obsoletos</strong> 
+            diretamente no site da 
+            <a href="https://www.w3.org/TR/2014/REC-html5-20141028/obsolete.html" target="_blank">W3C</a>.
+        </p>
+
+        <h4>Exemplo da tag <code>&lt;marquee&gt;</code>:</h4>
+        <div class="marquee-box">
+            <marquee behavior="" direction="right">
+                Marquee serve para fazer este letreiro se movimentar na tela.
+            </marquee>
+        </div>
+        <p>
+            Apesar de funcionar em alguns navegadores, o uso do <code>&lt;marquee&gt;</code> 
+            não é recomendado atualmente, pois é considerado um recurso obsoleto 
+            e prejudica a acessibilidade.
+        </p>
+
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+    </main>
 </body>
 </html>
