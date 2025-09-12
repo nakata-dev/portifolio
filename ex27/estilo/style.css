@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+*{
+    margin:0px;
+    padding: 0px;
+    box-sizing: border-box;
+
+    
+}
+
+header,section.normal{
+    padding: 10px;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    line-height: 1.5;
+    text-align: justify;
+   
+}
+
+p,h1,h2{
+    margin-bottom: 10px;
+    text-align: justify;
+    text-indent: 20px;
+}
+
+img{
+    width: 400px;
+    height: auto;
+}
+
+section.flex-content{
+    background-color: gray;
+    padding: 20px;
+
+}
