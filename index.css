@@ -41,22 +41,42 @@ body {
     
 }
 
-header{
+header {
+      background: linear-gradient(135deg, #1e90ff, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+/*header{
     background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));
     min-width: 300px;
     text-align: center;
     padding-top: 30px;
     padding-bottom: 10px;
     
-
-}
-header > h1{
+    
+}*/
+/*header > h1{
     color: white;
     font-family:var(--fonte_destaque);
     font-size: 2em; 
     font-weight:lighter;   
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.336);
-}  
+}  */
 
 header img{
     width: 150px;
@@ -65,19 +85,19 @@ header img{
     border: 0px solid rgb(255, 255, 255);
 }
 
-header > p{
+/*header > p{
     font-family: var(--fonte_padrao);
     font-size: 0.70em;
     color: white;
     padding-bottom: 10px;
     
-}
+}*/
 
 nav{
     font-family: var(--fonte_padrao);
-    background-color: var(--cor05);
+    background: linear-gradient(to bottom, #1e90ff, #00bfff);
     padding-left: 15px;
-    padding-bottom: 10px;
+    padding: 10px;
     
 }
 
@@ -134,14 +154,14 @@ footer img{
     height: 30px;
 }
 footer img:hover{
-    background-color: var(--cor00);
+    background: linear-gradient(to bottom, #1e90ff, #00bfff);
     padding: 1px;
     transition-duration: 0.5s;
     border-radius: 10px;
     
 }
 footer{
-    background-image: linear-gradient(to bottom, var(--cor00), var(--cor05));
+    background: linear-gradient(to bottom, #1e90ff, #00bfff);
     display: flex;
     justify-content: center;
     text-align: center;
