@@ -62,7 +62,7 @@
             text-align: justify;
             padding: 10px;
             font-size: 1.2em;
-            font-weight: bold;
+            
         }
 
     </style>
@@ -78,30 +78,32 @@
     </div>
     <pre class="justificado">
                 
-        Anatomia de tabelas:
+    Anatomia de tabelas:
 
-        1º CAPITION - (DADO)
+    1º CAPITION - (DADO)
 
-        2º TABLE - (TABELA)
+    2º TABLE - (TABELA)
 
-        3º THEAD - (CABEÇA)
-        tr, td e th
+    3º THEAD - (CABEÇA)
+    tr, td e th
 
-        4º TBODY - (CORPO)
-        tr, td e th
+    4º TBODY - (CORPO)
+    tr, td e th
 
-        5º TFOOT - (RODAPÉ)
-        tr, td e th
+    5º TFOOT - (RODAPÉ)
+    tr, td e th
                 
     </pre>
-            <h2 style="text-align: center;">O uso de scope - para que serve?</h2>
-            <pre class="justificado">
-                
-    Em tabelas HTML, as células de cabeçalho (th>) são usadas para rotular colunas e linhas.
+            
+
+    <h2 style="text-align: center;">O uso de scope - para que serve?</h2>
+            
+    <p>Em tabelas HTML, as células de cabeçalho (th) são usadas para rotular colunas e linhas.</p>
 
     <br>
-    Em resumo: scope="col" é uma ferramenta importante para tornar as tabelas HTML mais acessíveis, garantindo que o conteúdo seja compreensível mesmo para usuários que não podem visualizar a tabela de forma visual.
-            </pre>
+    <p>Em resumo: scope="col" é uma ferramenta importante para tornar as tabelas HTML mais acessíveis, garantindo que o conteúdo seja compreensível mesmo para usuários que não podem visualizar a tabela de forma visual.</p>
+    <br>
+            
                 <table>
             <caption>
                 População das Unidade Federativas
@@ -227,41 +229,50 @@
                 
                 </table>
                 <br>
-                <h2 style="text-align: center;">Efeito Zebrado</h2>
-                <pre class="justificado">
-            <p>
-    Este recurso em CSS ajuda a configurar um efeito de preenchimento
-    tbody > tr:nth-child(2n){
+    <h2 style="text-align: center;">Efeito Zebrado</h2>
+                
+    <p>
+        Este recurso em CSS ajuda a configurar um efeito de preenchimento
+        tbody > tr:nth-child(2n){
+    </p>
+    <pre class="justificado">
 
-    background-color: lightgray; 
+    background-color: lightgray;
+
     }
 
     tbody > tr:nth-child(odd){  
         
     background-color: lightgray;
+    
     }
-            </p>
-                </pre>
-                <h2>Título da Tabela Fixo</h2>
-                <pre class="justificado">
-            
-    Elemento sticky - É um elemento que se comporta como 'position relative'. Mas, quando o usuário rola a página e o elemento atinge um limite definido pelo top, left, right ou bottom, ele passa a se comportar como fixed, "grudando" nessa posição.
             
                 </pre>
+                
+    <h2>Título da Tabela Fixo</h2>               
+            
+    <p>Elemento sticky - É um elemento que se comporta como 'position relative'. Mas, quando o usuário rola a página e o elemento atinge um limite definido pelo top, left, right ou bottom, ele passa a se comportar como fixed, "grudando" nessa posição.</p>
+            
+                
                 <h2>O que foi acrescentado para ser criar o Efeito?</h2>
                 <pre class="justificado">
             <p>
     table{
+
         position: relative; 
         border-collapse: collapse;
         height: 20px;
         width: 300px;
         margin: auto;
+
     }
-    thead > tr > th{      
+
+    thead > tr > th{  
+
         position: sticky; 
         top: -1px;        
-        background-color: rgb(119, 119, 119); 
+        background-color: rgb(119, 119, 119);
+
     }
             </p>
                 </pre>
