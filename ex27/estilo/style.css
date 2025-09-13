@@ -8,31 +8,87 @@
     
 }
 
-header,section.normal{
-    padding: 10px;
-}
-
 body{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1em;
     line-height: 1.5;
-    text-align: justify;
+    
    
 }
+header,section.normal{
+    padding: 20px;
+}
 
-p,h1,h2{
+p{
     margin-bottom: 10px;
     text-align: justify;
-    text-indent: 20px;
+}
+
+h1,h2{
+    margin-bottom: 10px;
+    line-height: 1.2em;
+    text-align: left;
 }
 
 img{
-    width: 400px;
+    width: 500px;
     height: auto;
+    padding: 10px;
+    border-radius: 25px; /*borda da imagem*/
+    
 }
 
+iframe{
+    border-radius: 25px; /*borda do vídeo*/
+}
+
+/* configuração da flex-box*/
+
 section.flex-content{
+    display: flex;
+    flex-flow: column nowrap;
+
     background-color: gray;
     padding: 20px;
 
 }
+
+article.text-media{
+    display: flex;
+    flex-flow: row wrap; /*Esse comando indica que o vídeo vai vir antes do texto*/
+    justify-content: space-between;
+
+}
+
+
+article.media-text{
+    display: flex;
+    flex-flow: row wrap-reverse; /* Eses comando indica que o imagem vai vir antes do texto*/
+    justify-content: space-between;
+}
+/* configuração da flex-box*/
+
+article > div.text{ /*ativando o texto para se adaptar*/
+    flex: 1 1 500px;
+    
+    
+}
+
+article > div.media{
+    flex: 1 0 500px; /*ativando o texto para se adaptar */
+
+}
+
+div.media > img{
+    display: block;
+    margin: auto;
+  
+    
+}
+
+div.media > iframe{
+    display: block;
+    margin: auto;
+    width: 90%;
+}
+
