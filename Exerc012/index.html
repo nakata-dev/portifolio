@@ -1,53 +1,93 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <style>
-        main{
+        main, h2 {
             margin: auto;
+            text-align: center;
         }
-        .video{
-            margin: auto;
+        header{
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+
+        /* No seu arquivo style.css */
+
+        .video {
+            /* Define a largura máxima para o contêiner do vídeo */
+            max-width: 300px;
+            /* Centraliza o contêiner na página */
+            margin: 0 auto;
+        }
+
+        /* Garante que os vídeos preencham o contêiner e mantenham a proporção */
+        .video video,.video iframe {
+            display: block;
+            /* Garante o comportamento de bloco */
+            width: 100%;
+            /* Faz com que o vídeo preencha toda a largura do contêiner */
+            height: auto;
+            /* Mantém a proporção do vídeo */
+        }
+
+        /* Opcional: Adiciona espaçamento entre os vídeos */
+        .video {
+            margin-bottom: 20px;
         }
     </style>
-    <title>vídeos com html5</title>
+    <title>Inserindo Vídeos</title>
 </head>
+
 <body>
     <header>
-        <h1>Exercício 012: Inserindo Vídeos</h1>
+        <h1>Inserindo Vídeos</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
         <h2>Servidor próprio:</h2>
-        <video width="300px" controls>
-            <source src="midias/Esquilo-mp4.mp4" type="video/mp4">
-            <source src="midias/Esquilo-webm.webm" type="video/webm">
-            <source src="midias/Esquilo-mkv.mkv" type="video/mkv">
-            <source src="midias/esquilo-ogv.ogv" type="video/ogv">
-            <p>seu navegador não é compatível com o navegador!</p>
-        </video>
-        <h2>Inserindo vídeos do YouTube</h2>
         <div class="video">
-           <iframe width="300" height="auto" src="https://www.youtube.com/embed/XUaTdMVMDFo?si=-T5MyzfdDalDqq9C" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <video width="80%" controls>
+                <source src="midias/Esquilo-mp4.mp4" type="video/mp4">
+                <source src="midias/Esquilo-webm.webm" type="video/webm">
+                <source src="midias/Esquilo-mkv.mkv" type="video/mkv">
+                <source src="midias/esquilo-ogv.ogv" type="video/ogv">
+                <p>seu navegador não é compatível com o navegador!</p>
+            </video>
+        </div>
+        <h2>Vídeo do YouTube</h2>
+        <div class="video">
+            <iframe width="300" height="auto" src="https://www.youtube.com/embed/XUaTdMVMDFo?si=-T5MyzfdDalDqq9C"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
 
-        <h2>Inserindo vídeos do Vimeo</h2>
-        <div style="padding:56.25% 0 0 0;position:relative;">
-            <iframe src="https://player.vimeo.com/video/172578124?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width: 300px;height:auto;" title="Barlavento Reel 2016" >
-
-            </iframe>
+        <h2>Vídeo do Vimeo</h2>
+        <div class="video">
+            <div style="padding:56.25% 0 0 0;position:relative;">
+                <iframe
+                    src="https://player.vimeo.com/video/172578124?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                    style="position:absolute;top:0;left:0;width: 300px;height:auto;" title="Barlavento Reel 2016">
+                </iframe>
+            </div>
         </div>
-        
+
+
         <script src="https://player.vimeo.com/api/player.js"></script>
         <br>
         <br>
         <div id="voltar">
-        <a href="../estudos.html">Voltar</a>
+            <a href="../estudos.html">Voltar</a>
         </div>
         <br>
         <br>
     </main>
 </body>
+
 </html>
