@@ -1,62 +1,271 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 03 – Propriedades Container</title>
-    <style>
-        *{
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
-        div.container{
-            border: 2px solid blue;
-            display: grid;
-            height: 300px;
-            grid-template-columns: auto auto auto   ;
-            grid-template-rows: auto auto auto;
-            gap: 5px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alinhamento no Grid</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #fffaf5;
+    }
 
-            align-items:center;
-            justify-items: space-between;
-            align-content: center;
-            justify-content: space-between;
-        }
-        
-        div.item{
-            border: 2px solid red;
-            padding: 5px;
-        }
-        h2{
-            text-align: center;
-        }
-        p{
-            text-align: justify;
-            text-indent: 25px;
-            padding: 20px;
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
 
-        }
-    </style>
-    
+    p {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      grid-template-rows: repeat(2, 80px);
+      gap: 10px;
+      background-color: lightsalmon;
+      margin: 20px 0;
+      padding: 10px;
+      min-height: 200px;
+    }
+
+    .item {
+      background-color: lightblue;
+      border: 1px solid black;
+      text-align: center;
+      padding: 5px;
+    }
+
+    /* justify-items */
+    .justify-items-start { justify-items: start; }
+    .justify-items-center { justify-items: center; }
+    .justify-items-end { justify-items: end; }
+    .justify-items-stretch { justify-items: stretch; }
+
+    /* align-items */
+    .align-items-start { align-items: start; }
+    .align-items-center { align-items: center; }
+    .align-items-end { align-items: end; }
+    .align-items-stretch { align-items: stretch; }
+
+    /* justify-content */
+    .justify-content-start { justify-content: start; }
+    .justify-content-center { justify-content: center; }
+    .justify-content-end { justify-content: end; }
+    .justify-content-space-between { justify-content: space-between; }
+    .justify-content-space-around { justify-content: space-around; }
+    .justify-content-space-evenly { justify-content: space-evenly; }
+
+    /* align-content */
+    .align-content-start { align-content: start; height: 300px; }
+    .align-content-center { align-content: center; height: 300px; }
+    .align-content-end { align-content: end; height: 300px; }
+    .align-content-space-between { align-content: space-between; height: 300px; }
+    .align-content-space-around { align-content: space-around; height: 300px; }
+    .align-content-space-evenly { align-content: space-evenly; height: 300px; }
+
+    /* Voltar */
+    #voltar > a {
+      color: white;
+      text-decoration: none;
+    }
+    #voltar {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: lightsalmon;
+      padding: 10px;
+      text-align: center;
+      margin-top: 40px;
+    }
+    a:hover {
+      background-color: rgb(211, 166, 149);
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bolder;
+      transform: rotate(5deg);
+      transition: 0.3s;
+    }
+  </style>
 </head>
 <body>
-    <h1>Grid Layout na Prática</h1>
-    <br>
-    <div class="container">
-        
-            <div class="item">A</div>
-            <div class="item">B</div>
-            <div class="item">C</div>
-            <div class="item">D</div>
-            <div class="item">E</div>
-            <div class="item">F</div>
-            <div class="item">G</div>
-            <div class="item">H</div>
-            
-    </div>
-    
-    
-    
+  <h1>Exemplos de Alinhamento no Grid</h1>
+  <hr>
+
+  <!-- JUSTIFY-ITEMS -->
+  <h2>justify-items</h2>
+  <p>Cada item dentro da célula no eixo horizontal.</p>
+  <h3>justify-items: start</h3>
+  <div class="container justify-items-start">
+    <div class="item">A</div><div class="item">B</div><div class="item">C</div>
+    <div class="item">D</div><div class="item">E</div><div class="item">F</div>
+  </div>
+
+  <h3>justify-items: center</h3>
+  <div class="container justify-items-center">
+    <div class="item">A</div><div class="item">B</div><div class="item">C</div>
+    <div class="item">D</div><div class="item">E</div><div class="item">F</div>
+  </div>
+
+  <h3>justify-items: end</h3>
+  <div class="container justify-items-end">
+    <div class="item">A</div><div class="item">B</div><div class="item">C</div>
+    <div class="item">D</div><div class="item">E</div><div class="item">F</div>
+  </div>
+
+  <h3>justify-items: stretch</h3>
+  <div class="container justify-items-stretch">
+    <div class="item">A</div><div class="item">B</div><div class="item">C</div>
+    <div class="item">D</div><div class="item">E</div><div class="item">F</div>
+  </div>
+
+  <!-- ALIGN-ITEMS -->
+  <h2>align-items</h2>
+  <p>Cada item dentro da célula no eixo vertical.</p>
+  <h3>align-items: start</h3>
+  <div class="container align-items-start">
+    <div class="item">1</div><div class="item">2</div><div class="item">3</div>
+    <div class="item">4</div><div class="item">5</div><div class="item">6</div>
+  </div>
+
+  <h3>align-items: center</h3>
+  <div class="container align-items-center">
+    <div class="item">1</div><div class="item">2</div><div class="item">3</div>
+    <div class="item">4</div><div class="item">5</div><div class="item">6</div>
+  </div>
+
+  <h3>align-items: end</h3>
+  <div class="container align-items-end">
+    <div class="item">1</div><div class="item">2</div><div class="item">3</div>
+    <div class="item">4</div><div class="item">5</div><div class="item">6</div>
+  </div>
+
+  <h3>align-items: stretch</h3>
+  <div class="container align-items-stretch">
+    <div class="item">1</div><div class="item">2</div><div class="item">3</div>
+    <div class="item">4</div><div class="item">5</div><div class="item">6</div>
+  </div>
+
+  <!-- JUSTIFY-CONTENT -->
+  <h2>justify-content</h2>
+  <p>Conjunto inteiro do grid no eixo horizontal.</p>
+  <h3>justify-content: start</h3>
+  <div class="container justify-content-start">
+    <div class="item">X</div><div class="item">Y</div><div class="item">Z</div>
+  </div>
+
+  <h3>justify-content: center</h3>
+  <div class="container justify-content-center">
+    <div class="item">X</div><div class="item">Y</div><div class="item">Z</div>
+  </div>
+
+  <h3>justify-content: end</h3>
+  <div class="container justify-content-end">
+    <div class="item">X</div><div class="item">Y</div><div class="item">Z</div>
+  </div>
+
+  <h3>justify-content: space-between</h3>
+  <div class="container justify-content-space-between">
+    <div class="item">X</div><div class="item">Y</div><div class="item">Z</div>
+  </div>
+
+  <h3>justify-content: space-around</h3>
+  <div class="container justify-content-space-around">
+    <div class="item">X</div><div class="item">Y</div><div class="item">Z</div>
+  </div>
+
+  <h3>justify-content: space-evenly</h3>
+  <div class="container justify-content-space-evenly">
+    <div class="item">X</div><div class="item">Y</div><div class="item">Z</div>
+  </div>
+
+  <!-- ALIGN-CONTENT -->
+  <h2>align-content</h2>
+  <p>Conjunto inteiro do grid no eixo vertical.</p>
+  <h3>align-content: start</h3>
+  <div class="container align-content-start">
+    <div class="item">Um</div><div class="item">Dois</div><div class="item">Três</div>
+    <div class="item">Quatro</div><div class="item">Cinco</div><div class="item">Seis</div>
+  </div>
+
+  <h3>align-content: center</h3>
+  <div class="container align-content-center">
+    <div class="item">Um</div><div class="item">Dois</div><div class="item">Três</div>
+    <div class="item">Quatro</div><div class="item">Cinco</div><div class="item">Seis</div>
+  </div>
+
+  <h3>align-content: end</h3>
+  <div class="container align-content-end">
+    <div class="item">Um</div><div class="item">Dois</div><div class="item">Três</div>
+    <div class="item">Quatro</div><div class="item">Cinco</div><div class="item">Seis</div>
+  </div>
+
+  <h3>align-content: space-between</h3>
+  <div class="container align-content-space-between">
+    <div class="item">Um</div><div class="item">Dois</div><div class="item">Três</div>
+    <div class="item">Quatro</div><div class="item">Cinco</div><div class="item">Seis</div>
+  </div>
+
+  <h3>align-content: space-around</h3>
+  <div class="container align-content-space-around">
+    <div class="item">Um</div><div class="item">Dois</div><div class="item">Três</div>
+    <div class="item">Quatro</div><div class="item">Cinco</div><div class="item">Seis</div>
+  </div>
+
+  <h3>align-content: space-evenly</h3>
+  <div class="container align-content-space-evenly">
+    <div class="item">Um</div><div class="item">Dois</div><div class="item">Três</div>
+    <div class="item">Quatro</div><div class="item">Cinco</div><div class="item">Seis</div>
+  </div>
+  <hr>
+  <h1>Exemplos Práticos de Layout com Grid</h1>
+
+  <!-- 1. Galeria de imagens centralizada -->
+  <h2>1. Galeria de imagens centralizada</h2>
+  <p>Itens centralizados dentro das células</p>
+  <div class="container justify-items-center align-items-center" style="grid-template-columns: repeat(4, 100px); grid-template-rows: repeat(2, 100px); height: 250px;">
+    <div class="item">Img 1</div>
+    <div class="item">Img 2</div>
+    <div class="item">Img 3</div>
+    <div class="item">Img 4</div>
+    <div class="item">Img 5</div>
+    <div class="item">Img 6</div>
+    <div class="item">Img 7</div>
+    <div class="item">Img 8</div>
+  </div>
+
+  <!-- 2. Cards de produtos com espaçamento -->
+  <h2>2. Cards de produtos</h2>
+  <p>Distribuição de cards com espaço igual entre colunas e linhas</p>
+  <div class="container justify-content-space-around align-content-space-between" style="grid-template-columns: repeat(3, 150px); grid-template-rows: repeat(2, 120px); height: 350px;">
+    <div class="item">Card 1</div>
+    <div class="item">Card 2</div>
+    <div class="item">Card 3</div>
+    <div class="item">Card 4</div>
+    <div class="item">Card 5</div>
+    <div class="item">Card 6</div>
+  </div>
+
+  <!-- 3. Menu horizontal e vertical -->
+  <h2>3. Menu horizontal e vertical</h2>
+  <p>Exemplo de menu com itens alinhados horizontal e verticalmente</p>
+  <div class="container justify-items-start align-items-center justify-content-center align-content-center" style="grid-template-columns: repeat(5, 100px); grid-template-rows: repeat(2, 80px); height: 200px;">
+    <div class="item">Home</div>
+    <div class="item">Sobre</div>
+    <div class="item">Serviços</div>
+    <div class="item">Blog</div>
+    <div class="item">Contato</div>
+    <div class="item">FAQ</div>
+    <div class="item">Suporte</div>
+    <div class="item">Login</div>
+    <div class="item">Cadastro</div>
+    <div class="item">Perfil</div>
+  </div>
+
+  <div id="voltar">
+    <a href="../estudos.html">Voltar</a>
+  </div>
 </body>
 </html>
