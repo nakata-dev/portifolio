@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+        <link rel="stylesheet" href="../style.css">
         <style>
             *{
                 font-family: 'Times New Roman', Times, serif;
@@ -70,42 +70,92 @@
             flex-basis: 100px;
             border: 1px solid black;
         }
-        #cxa1{
+        #cxa{
             flex-shrink: 1;
             flex-grow: 0;
         }
-        #cxb1{
+        #cxb{
             flex-shrink: 1;
             flex-grow: 3;
         }
-        #cxc1{
+        #cxc{
             flex-shrink: 1;
             flex-grow: 9;
+        }
+
+        main > p{
+            text-align: justify;
+            text-indent: 25px;
+            line-height: 1.5;
         }
     </style>
     <title>Flex_box</title>
 </head>
 <body>
-    <h1>Aula 09 - Pode crescer ou diminuir</h1>
-    <h3>Para valores menores: flex-shrink</h3>
-    <h3>Para valores maiores flex-grow</h3>
-    <hr>
-    <h2>Configuração Padrão</h2>
-    <div class="container">
-        <div class="item" id="cxa">A</div>
-        <div class="item" id="cxb">B</div>
-        <div class="item" id="cxc">C</div>       
-    </div>
-    <hr>
-    <h2>Alterando proporção: flex-grow: 9;</h2>
-    <div class="container1">
-        <div class="item1" id="cxa1">A</div>
-        <div class="item1" id="cxb1">B</div>
-        <div class="item1" id="cxc1">C</div>       
-    </div>
-    <hr>
-    <div id="voltar">
-        <a href="../estudos.html">Voltar</a>
-    </div>
+    <header>
+        <h1>flex-Shrink / grow</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+
+    <main>
+        
+        <hr>
+        <h3>Para valores menores: flex-shrink</h3>
+        <p>
+<h4>📌 1. flex-shrink: 1;</h4>
+Significado: diz se o item pode encolher quando faltar espaço no container. <br>
+
+O valor 1 significa que ele pode encolher proporcionalmente. <br>
+
+O valor 0 significa que ele não encolhe nunca, mesmo que estoure o container. <br><br>
+
+✅ Exemplo prático <br><br>
+Imagine 3 caixas dentro de um display: flex; e a largura total delas é maior  que o container:
+<br>
+Se todas têm flex-shrink: 1, elas vão encolher de forma igual.
+<br>
+Se uma tiver flex-shrink: 0, essa caixa não encolhe, e as outras terão que encolher mais para caber.
+</p>
+<br>
+<hr>
+        <h3>Para valores maiores flex-grow</h3>
+<br>
+<p>
+    <h4>📌 2. flex-grow: 0;</h4>
+
+Significado: indica se o item pode crescer para ocupar espaço extra dentro do container. <br>
+
+O valor 0 significa que ele não cresce nunca, mesmo que sobre espaço. <br>
+
+O valor 1 significa que ele cresce proporcionalmente para ocupar o espaço livre. <br><br>
+
+✅ Exemplo prático <br><br>
+Se um container tiver 800px e você colocar duas caixas de 200px cada (total 400px): <br>
+
+Com flex-grow: 0, elas continuam com 200px e o espaço sobrando fica vazio. <br>
+
+Com flex-grow: 1, elas crescem para ocupar igualmente os 400px restantes(ficando com 400px cada). <br>
+</p>
+<hr>
+        <h2>Configuração Padrão</h2>
+        <div class="container">
+            <div class="item" id="cxa">A</div>
+            <div class="item" id="cxb">B</div>
+            <div class="item" id="cxc">C</div>
+        </div>
+        <hr>
+        <h2>Alterando proporção: flex-grow: 9;</h2>
+        <div class="container1">
+            <div class="item1" id="cxa1">A</div>
+            <div class="item1" id="cxb1">B</div>
+            <div class="item1" id="cxc1">C</div>
+        </div>
+        <hr>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+            <br>
+            <br>
+    </main>
 </body>
 </html>
