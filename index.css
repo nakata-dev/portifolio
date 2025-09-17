@@ -134,6 +134,7 @@ main{ /*RESPONSIVE*/
     padding: 15px; /*distância das bordas ao conteúdo do meio*/
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.486);
     margin-top: 0px;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 main p{
@@ -141,10 +142,12 @@ main p{
     text-align: justify;
     text-indent: 30px;
     line-height: 1.7em;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 main h3{
     margin: 20px 15px 5px 15px;
+    font-family: 'Times New Roman', Times, serif;
 }
 .center{
     text-align: center;
