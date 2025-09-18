@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../style.css">
+  <title>Jogo de CSS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    #game {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      max-width: 800px;
+      margin: auto;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #0077ff;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005fcc;
+    }
+    h2 {
+      color: #333;
+    }
+    #message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    div#voltar{
+        text-align: center; 
+        font-family: 'Times New Roman', Times, serif;   
+    }
+    div#voltar a:hover{
+        padding: 10px;
+        background-color: rgba(125, 208, 235, 0.637);
+        font-weight: bolder;
+        transition-duration: 0.5s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        border: none;
+        font-family: 'Times New Roman', Times, serif;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Jogo de CSS</h1>
+  </header>
+  <main>
+    <div id="game">
+      <h2 id="level-title"></h2>
+      <p id="instruction"></p>
+      <textarea id="code" placeholder="Digite seu CSS aqui..."></textarea>
+      <br>
+      <button onclick="checkCode()">Executar</button>
+      <p id="message"></p>
+      <iframe id="preview"></iframe>
+    </div>
+    <br><br>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <script>
+    const levels = [
+      {title: "Nível 1", instruction: "Defina a cor do texto como azul. Exemplo de resposta: '<style>p{color:white;}</style> para a cor branca'", answer: "<style>p{color:blue;}</style>"},
+      {title: "Nível 2", instruction: "Defina a cor de fundo como amarelo.", answer: "<style>p{background:yellow;}</style><p>Teste</p>"},
+      {title: "Nível 3", instruction: "Centralize o texto.", answer: "<style>p{text-align:center;}</style><p>Teste</p>"},
+      {title: "Nível 4", instruction: "Deixe o texto em negrito usando CSS.", answer: "<style>p{font-weight:bold;}</style><p>Teste</p>"},
+      {title: "Nível 5", instruction: "Aplique itálico ao texto.", answer: "<style>p{font-style:italic;}</style><p>Teste</p>"},
+      {title: "Nível 6", instruction: "Defina o tamanho da fonte como 20px.", answer: "<style>p{font-size:20px;}</style><p>Teste</p>"},
+      {title: "Nível 7", instruction: "Aplique uma borda preta de 1px sólida ao parágrafo.", answer: "<style>p{border:1px solid black;}</style><p>Teste</p>"},
+      {title: "Nível 8", instruction: "Defina a largura do parágrafo para 200px.", answer: "<style>p{width:200px;}</style><p>Teste</p>"},
+      {title: "Nível 9", instruction: "Defina a altura do parágrafo para 100px.", answer: "<style>p{height:100px;}</style><p>Teste</p>"},
+      {title: "Nível 10", instruction: "Defina o fundo do parágrafo como verde e o texto branco.", answer: "<style>p{background:green;color:white;}</style><p>Teste</p>"},
+      {title: "Nível 11", instruction: "Aplique padding de 20px no parágrafo.", answer: "<style>p{padding:20px;}</style><p>Teste</p>"},
+      {title: "Nível 12", instruction: "Aplique margin de 30px no parágrafo.", answer: "<style>p{margin:30px;}</style><p>Teste</p>"},
+      {title: "Nível 13", instruction: "Deixe o parágrafo com cantos arredondados (10px).", answer: "<style>p{border:1px solid black;border-radius:10px;}</style><p>Teste</p>"},
+      {title: "Nível 14", instruction: "Defina sombra no texto (2px 2px red).", answer: "<style>p{text-shadow:2px 2px red;}</style><p>Teste</p>"},
+      {title: "Nível 15", instruction: "Defina sombra na caixa (2px 2px 5px gray).", answer: "<style>p{box-shadow:2px 2px 5px gray;}</style><p>Teste</p>"},
+      {title: "Nível 16", instruction: "Transforme o texto em maiúsculo.", answer: "<style>p{text-transform:uppercase;}</style><p>Teste</p>"},
+      {title: "Nível 17", instruction: "Transforme o texto em minúsculo.", answer: "<style>p{text-transform:lowercase;}</style><p>Teste</p>"},
+      {title: "Nível 18", instruction: "Adicione sublinhado ao texto.", answer: "<style>p{text-decoration:underline;}</style><p>Teste</p>"},
+      {title: "Nível 19", instruction: "Defina espaçamento entre letras de 5px.", answer: "<style>p{letter-spacing:5px;}</style><p>Teste</p>"},
+      {title: "Nível 20", instruction: "Defina espaçamento entre linhas de 2em.", answer: "<style>p{line-height:2em;}</style><p>Teste</p>"},
+      {title: "Nível 21", instruction: "Alinhe o parágrafo à direita.", answer: "<style>p{text-align:right;}</style><p>Teste</p>"},
+      {title: "Nível 22", instruction: "Aplique gradiente linear (to right, red, yellow) no fundo.", answer: "<style>p{background:linear-gradient(to right, red, yellow);}</style><p>Teste</p>"},
+      {title: "Nível 23", instruction: "Defina display inline-block para o parágrafo.", answer: "<style>p{display:inline-block;}</style><p>Teste</p>"},
+      {title: "Nível 24", instruction: "Defina display flex para o container.", answer: "<style>div{display:flex;}</style><div><p>Teste</p><p>Teste2</p></div>"},
+      {title: "Nível 25", instruction: "Centralize o conteúdo com flexbox (justify-content: center).", answer: "<style>div{display:flex;justify-content:center;}</style><div><p>Teste</p></div>"},
+      {title: "Nível 26", instruction: "Centralize verticalmente e horizontalmente com flexbox.", answer: "<style>div{display:flex;justify-content:center;align-items:center;height:200px;}</style><div><p>Teste</p></div>"},
+      {title: "Nível 27", instruction: "Crie um grid com 2 colunas.", answer: "<style>div{display:grid;grid-template-columns:1fr 1fr;}</style><div><p>A</p><p>B</p></div>"},
+      {title: "Nível 28", instruction: "Defina gap de 20px no grid.", answer: "<style>div{display:grid;grid-template-columns:1fr 1fr;gap:20px;}</style><div><p>A</p><p>B</p></div>"}
+    ];
+
+    let currentLevel = 0;
+
+    function loadLevel() {
+      document.getElementById("level-title").innerText = levels[currentLevel].title;
+      document.getElementById("instruction").innerText = levels[currentLevel].instruction;
+      document.getElementById("code").value = "";
+      document.getElementById("preview").srcdoc = "";
+      document.getElementById("message").innerText = "";
+    }
+
+    function checkCode() {
+      const userCode = document.getElementById("code").value.trim();
+      const preview = document.getElementById("preview");
+      if (userCode === levels[currentLevel].answer) {
+        document.getElementById("message").innerText = "🎉 Parabéns! Você passou de nível!";
+        preview.srcdoc = userCode;
+        currentLevel++;
+        if (currentLevel < levels.length) {
+          setTimeout(loadLevel, 2000);
+        } else {
+          document.getElementById("message").innerText = "🏆 Parabéns! Você concluiu todos os níveis!";
+        }
+      } else {
+        document.getElementById("message").innerText = "❌ Tente novamente!";
+        preview.srcdoc = userCode;
+      }
+    }
+
+    loadLevel();
+  </script>
+</body>
+</html>

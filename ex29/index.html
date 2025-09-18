@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../style.css">
+  <title>Jogo de HTML e CSS</title>
+  <style>
+    #voltar{
+        text-align: center; 
+        font-family: 'Times New Roman', Times, serif;   
+    }
+    #voltar a:hover{
+        padding: 10px;
+        background-color: rgba(125, 208, 235, 0.637);
+        font-weight: bolder;
+        transition-duration: 0.5s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        border: none;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    *{
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    #game {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      max-width: 800px;
+      margin: auto;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #0077ff;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005fcc;
+    }
+    h2 {
+      color: #333;
+    }
+    #message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <h1>Jogo de HTML e CSS</h1>
+    </header>
+    <main>
+        <div id="game">
+        <h2 id="level-title"></h2>
+        <p id="instruction"></p>
+        <textarea id="code" placeholder="Digite seu código aqui..."></textarea>
+        <br>
+        <button onclick="checkCode()">Executar</button>
+        <p id="message"></p>
+        <iframe id="preview"></iframe>
+          </div>
+      <br>
+      <br>
+          <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+      </div>
+      <br>
+      <br>
+    </main>
+  <script>
+    const levels = [
+      {title: "Nível 1", instruction: "Crie um parágrafo simples com o texto: Olá Mundo!", answer: "<p>Olá Mundo!</p>"},
+      {title: "Nível 2", instruction: "Crie um título principal com o texto: Bem-vindo ao Jogo!", answer: "<h1>Bem-vindo ao Jogo!</h1>"},
+      {title: "Nível 3", instruction: "Crie uma lista não ordenada com 3 itens: HTML, CSS, JavaScript.", answer: "<ul><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>"},
+      {title: "Nível 4", instruction: "Crie um link que leve até https://google.com com o texto: Google.", answer: '<a href="https://google.com">Google</a>'},
+      {title: "Nível 5", instruction: "Crie uma imagem com src='https://via.placeholder.com/150' e alt='Exemplo'.", answer: '<img src="https://via.placeholder.com/150" alt="Exemplo">'},
+
+      // Novos níveis
+      {title: "Nível 6", instruction: "Crie uma tabela com 2 linhas e 2 colunas.", answer: "<table><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></table>"},
+      {title: "Nível 7", instruction: "Crie um botão com o texto: Clique Aqui.", answer: "<button>Clique Aqui</button>"},
+      {title: "Nível 8", instruction: "Crie um formulário com um input de texto e um botão de envio.", answer: '<form><input type="text"><button type="submit">Enviar</button></form>'},
+      {title: "Nível 9", instruction: "Crie um subtítulo (h2) com o texto: Aprendendo HTML.", answer: "<h2>Aprendendo HTML</h2>"},
+      {title: "Nível 10", instruction: "Crie uma lista ordenada com 3 passos: Passo 1, Passo 2, Passo 3.", answer: "<ol><li>Passo 1</li><li>Passo 2</li><li>Passo 3</li></ol>"},
+      {title: "Nível 11", instruction: "Adicione um parágrafo com a palavra <strong>negrito</strong> em destaque.", answer: "<p>Palavra em <strong>negrito</strong></p>"},
+      {title: "Nível 12", instruction: "Adicione um parágrafo com a palavra <em>itálico</em> em destaque.", answer: "<p>Palavra em <em>itálico</em></p>"},
+      {title: "Nível 13", instruction: "Crie uma linha horizontal com a tag apropriada.", answer: "<hr>"},
+      {title: "Nível 14", instruction: "Crie um link que abra em nova aba para https://openai.com", answer: '<a href="https://openai.com" target="_blank">OpenAI</a>'},
+      {title: "Nível 15", instruction: "Crie uma div com a classe 'caixa'.", answer: '<div class="caixa"></div>'},
+      {title: "Nível 16", instruction: "Crie um span com o texto: Destaque.", answer: "<span>Destaque</span>"},
+      {title: "Nível 17", instruction: "Crie um campo de senha em um formulário.", answer: '<form><input type="password"></form>'},
+      {title: "Nível 18", instruction: "Crie um input do tipo checkbox marcado por padrão.", answer: '<input type="checkbox" checked>'},
+      {title: "Nível 19", instruction: "Crie um parágrafo com a cor azul usando CSS inline.", answer: '<p style="color:blue">Texto azul</p>'},
+      {title: "Nível 20", instruction: "Crie um título (h3) centralizado usando CSS inline.", answer: '<h3 style="text-align:center">Título centralizado</h3>'},
+      {title: "Nível 21", instruction: "Crie um parágrafo com fundo amarelo usando CSS inline.", answer: '<p style="background:yellow">Texto destacado</p>'},
+      {title: "Nível 22", instruction: "Crie uma imagem que tenha largura de 100px usando CSS inline.", answer: '<img src="https://via.placeholder.com/300" style="width:100px">'},
+      {title: "Nível 23", instruction: "Crie um botão vermelho com texto branco usando CSS inline.", answer: '<button style="background:red;color:white">Clique</button>'}
+    ];
+
+    let currentLevel = 0;
+
+    function loadLevel() {
+      document.getElementById("level-title").innerText = levels[currentLevel].title;
+      document.getElementById("instruction").innerText = levels[currentLevel].instruction;
+      document.getElementById("code").value = "";
+      document.getElementById("preview").srcdoc = "";
+      document.getElementById("message").innerText = "";
+    }
+
+    function checkCode() {
+      const userCode = document.getElementById("code").value.trim();
+      const preview = document.getElementById("preview");
+      if (userCode === levels[currentLevel].answer) {
+        document.getElementById("message").innerText = "🎉 Parabéns! Você passou de nível!";
+        preview.srcdoc = userCode;
+        currentLevel++;
+        if (currentLevel < levels.length) {
+          setTimeout(loadLevel, 2000);
+        } else {
+          document.getElementById("message").innerText = "🏆 Parabéns! Você concluiu todos os níveis!";
+        }
+      } else {
+        document.getElementById("message").innerText = "❌ Tente novamente!";
+        preview.srcdoc = userCode;
+      }
+    }
+
+    loadLevel();
+  </script>
+  
+</body>
+</html>
