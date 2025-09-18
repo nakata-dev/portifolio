@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jardim HTML & CSS: Aprenda HTML e CSS</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(to bottom, #e6f3fa, #f5faff);
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        #game-container {
+            width: 95%;
+            max-width: 1000px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            text-align: center;
+        }
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e7ff;
+        }
+        #level-indicator {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        #progress-bar {
+            width: 300px;
+            height: 14px;
+            background: #e5e7eb;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+        #progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.4s ease-in-out;
+        }
+        #instructions {
+            font-size: 18px;
+            color: #1f2937;
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            text-align: left;
+        }
+        #instructions strong {
+            color: #1e40af;
+        }
+        #instructions code {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        #construction-board {
+            background: #f8fafc;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            min-height: 150px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: border-color 0.3s ease;
+        }
+        #construction-board > * {
+            animation: appear 0.5s ease;
+        }
+        @keyframes appear {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        #code-editor {
+            width: 90%;
+            height: 180px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 15px;
+            border: 2px solid #93c5fd;
+            border-radius: 8px;
+            resize: none;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease;
+        }
+        #code-editor:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        #controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding: 10px;
+            background: #f0f7ff;
+            border-radius: 12px;
+        }
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        #apply-btn {
+            background: #3b82f6;
+            color: white;
+        }
+        #apply-btn:hover {
+            background: #1e40af;
+        }
+        #reset-btn {
+            background: #ef4444;
+            color: white;
+        }
+        #reset-btn:hover {
+            background: #b91c1c;
+        }
+        #feedback {
+            font-size: 18px;
+            margin-top: 15px;
+            min-height: 28px;
+            font-weight: 500;
+        }
+        .success { color: #1e40af; }
+        .error { color: #b91c1c; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="header">
+            <h1>Jardim HTML & CSS</h1>
+            <div>
+                <div id="level-indicator">Nível 1 / 28</div>
+                <div id="progress-bar"><div id="progress-fill"></div></div>
+            </div>
+        </div>
+        <p id="instructions">
+            <strong>Objetivo:</strong> Adicione um título principal com a tag <code>&lt;h1&gt;</code>.<br>
+            <strong>Exemplo:</strong> <code>&lt;h1&gt;Olá Mundo&lt;/h1&gt;</code>
+        </p>
+        <div id="construction-board"></div>
+        <textarea id="code-editor" placeholder="Digite seu código HTML e CSS aqui... Use &lt;style&gt; para CSS, se necessário."></textarea>
+        <div id="controls">
+            <button id="apply-btn" class="btn">✅ Aplicar Código</button>
+            <button id="reset-btn" class="btn">🔄 Reiniciar Nível</button>
+        </div>
+        <p id="feedback"></p>
+    </div>
+
+    <script>
+        console.log("Jardim HTML & CSS: JavaScript carregado com sucesso!");
+
+        const levels = [
+            // Níveis 1-10: HTML Básico
+            {
+                id: 1,
+                instructions: "<strong>Objetivo:</strong> Adicione um título principal com a tag <code>&lt;h1&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;h1&gt;Olá Mundo&lt;/h1&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('h1') !== null;
+                }
+            },
+            {
+                id: 2,
+                instructions: "<strong>Objetivo:</strong> Adicione um subtítulo com <code>&lt;h2&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;h2&gt;Subtítulo&lt;/h2&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('h2') !== null;
+                }
+            },
+            {
+                id: 3,
+                instructions: "<strong>Objetivo:</strong> Adicione um parágrafo com <code>&lt;p&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;p&gt;Este é um texto.&lt;/p&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('p') !== null;
+                }
+            },
+            {
+                id: 4,
+                instructions: "<strong>Objetivo:</strong> Adicione uma imagem com <code>&lt;img&gt;</code> e src='https://via.placeholder.com/150'.<br><strong>Exemplo:</strong> <code>&lt;img src='https://via.placeholder.com/150'&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    const img = doc.querySelector('img');
+                    return img && img.src.includes('via.placeholder.com/150');
+                }
+            },
+            {
+                id: 5,
+                instructions: "<strong>Objetivo:</strong> Crie um link com <code>&lt;a&gt;</code> para 'https://www.example.com'.<br><strong>Exemplo:</strong> <code>&lt;a href='https://www.example.com'&gt;Link&lt;/a&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    const a = doc.querySelector('a');
+                    return a && a.href.includes('example.com');
+                }
+            },
+            {
+                id: 6,
+                instructions: "<strong>Objetivo:</strong> Crie uma lista não ordenada com <code>&lt;ul&gt;</code> e dois <code>&lt;li&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;ul&gt;&lt;li&gt;Item 1&lt;/li&gt;&lt;li&gt;Item 2&lt;/li&gt;&lt;/ul&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    const ul = doc.querySelector('ul');
+                    const lis = doc.querySelectorAll('li');
+                    return ul && lis.length >= 2;
+                }
+            },
+            {
+                id: 7,
+                instructions: "<strong>Objetivo:</strong> Crie uma lista ordenada com <code>&lt;ol&gt;</code> e dois <code>&lt;li&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;ol&gt;&lt;li&gt;Primeiro&lt;/li&gt;&lt;li&gt;Segundo&lt;/li&gt;&lt;/ol&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    const ol = doc.querySelector('ol');
+                    const lis = doc.querySelectorAll('li');
+                    return ol && lis.length >= 2;
+                }
+            },
+            {
+                id: 8,
+                instructions: "<strong>Objetivo:</strong> Adicione uma divisão com <code>&lt;div&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;div&gt;Conteúdo&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('div') !== null;
+                }
+            },
+            {
+                id: 9,
+                instructions: "<strong>Objetivo:</strong> Adicione um botão com <code>&lt;button&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;button&gt;Clique aqui&lt;/button&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('button') !== null;
+                }
+            },
+            {
+                id: 10,
+                instructions: "<strong>Objetivo:</strong> Crie um campo de texto com <code>&lt;input type='text'&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;input type='text'&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    const input = doc.querySelector('input');
+                    return input && input.type === 'text';
+                }
+            },
+            // Níveis 11-15: HTML Avançado
+            {
+                id: 11,
+                instructions: "<strong>Objetivo:</strong> Crie um formulário com <code>&lt;form&gt;</code> contendo um <code>&lt;input&gt;</code> e um <code>&lt;button&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;form&gt;&lt;input type='text'&gt;&lt;button&gt;Enviar&lt;/button&gt;&lt;/form&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    const form = doc.querySelector('form');
+                    const input = form ? form.querySelector('input[type="text"]') : null;
+                    const button = form ? form.querySelector('button') : null;
+                    return form && input && button;
+                }
+            },
+            {
+                id: 12,
+                instructions: "<strong>Objetivo:</strong> Adicione uma tabela com <code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code>, <code>&lt;th&gt;</code> e <code>&lt;td&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;table&gt;&lt;tr&gt;&lt;th&gt;Cabeçalho&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Dado&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    const table = doc.querySelector('table');
+                    const th = table ? table.querySelector('th') : null;
+                    const td = table ? table.querySelector('td') : null;
+                    return table && th && td;
+                }
+            },
+            {
+                id: 13,
+                instructions: "<strong>Objetivo:</strong> Use <code>&lt;span&gt;</code> para texto inline.<br><strong>Exemplo:</strong> <code>&lt;span&gt;Texto inline&lt;/span&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('span') !== null;
+                }
+            },
+            {
+                id: 14,
+                instructions: "<strong>Objetivo:</strong> Adicione um cabeçalho com <code>&lt;header&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;header&gt;Cabeçalho da página&lt;/header&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('header') !== null;
+                }
+            },
+            {
+                id: 15,
+                instructions: "<strong>Objetivo:</strong> Adicione um rodapé com <code>&lt;footer&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;footer&gt;Rodapé da página&lt;/footer&gt;</code>",
+                check: (code, board) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(code, 'text/html');
+                    return doc.querySelector('footer') !== null;
+                }
+            },
+            // Níveis 16-20: CSS Básico
+            {
+                id: 16,
+                instructions: "<strong>Objetivo:</strong> Mude a cor do texto de um <code>&lt;p&gt;</code> para vermelho.<br><strong>Exemplo:</strong> <code>&lt;style&gt;p { color: red; }&lt;/style&gt;&lt;p&gt;Texto&lt;/p&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const p = board.querySelector('p');
+                    return p && getComputedStyle(p).color === 'rgb(255, 0, 0)';
+                }
+            },
+            {
+                id: 17,
+                instructions: "<strong>Objetivo:</strong> Defina o tamanho da fonte de um <code>&lt;h1&gt;</code> para 36px.<br><strong>Exemplo:</strong> <code>&lt;style&gt;h1 { font-size: 36px; }&lt;/style&gt;&lt;h1&gt;Título&lt;/h1&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const h1 = board.querySelector('h1');
+                    return h1 && getComputedStyle(h1).fontSize === '36px';
+                }
+            },
+            {
+                id: 18,
+                instructions: "<strong>Objetivo:</strong> Adicione margem de 20px a um <code>&lt;div&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { margin: 20px; }&lt;/style&gt;&lt;div&gt;Conteúdo&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).marginTop === '20px';
+                }
+            },
+            {
+                id: 19,
+                instructions: "<strong>Objetivo:</strong> Adicione padding de 10px a um <code>&lt;button&gt;</code>.<br><strong>Exemplo:</strong> <code>&lt;style&gt;button { padding: 10px; }&lt;/style&gt;&lt;button&gt;Botão&lt;/button&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const button = board.querySelector('button');
+                    return button && getComputedStyle(button).paddingTop === '10px';
+                }
+            },
+            {
+                id: 20,
+                instructions: "<strong>Objetivo:</strong> Mude o fundo de um <code>&lt;div&gt;</code> para azul.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { background-color: blue; }&lt;/style&gt;&lt;div&gt;Conteúdo&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).backgroundColor === 'rgb(0, 0, 255)';
+                }
+            },
+            // Níveis 21-25: CSS Flexbox
+            {
+                id: 21,
+                instructions: "<strong>Objetivo:</strong> Use <code>display: flex</code> em um <code>&lt;div&gt;</code> com dois filhos.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: flex; }&lt;/style&gt;&lt;div&gt;&lt;p&gt;1&lt;/p&gt;&lt;p&gt;2&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).display === 'flex';
+                }
+            },
+            {
+                id: 22,
+                instructions: "<strong>Objetivo:</strong> Alinhe itens ao centro com <code>justify-content: center</code> em flex.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: flex; justify-content: center; }&lt;/style&gt;&lt;div&gt;&lt;p&gt;Item&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).justifyContent === 'center';
+                }
+            },
+            {
+                id: 23,
+                instructions: "<strong>Objetivo:</strong> Use <code>align-items: center</code> em flex.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: flex; align-items: center; height: 100px; }&lt;/style&gt;&lt;div&gt;&lt;p&gt;Item&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).alignItems === 'center';
+                }
+            },
+            {
+                id: 24,
+                instructions: "<strong>Objetivo:</strong> Mude a direção para coluna com <code>flex-direction: column</code>.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: flex; flex-direction: column; }&lt;/style&gt;&lt;div&gt;&lt;p&gt;1&lt;/p&gt;&lt;p&gt;2&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).flexDirection === 'column';
+                }
+            },
+            {
+                id: 25,
+                instructions: "<strong>Objetivo:</strong> Use <code>flex-wrap: wrap</code> em um container flex.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: flex; flex-wrap: wrap; }&lt;/style&gt;&lt;div&gt;&lt;p&gt;1&lt;/p&gt;&lt;p&gt;2&lt;/p&gt;&lt;p&gt;3&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).flexWrap === 'wrap';
+                }
+            },
+            // Níveis 26-28: CSS Grid Básico
+            {
+                id: 26,
+                instructions: "<strong>Objetivo:</strong> Use <code>display: grid</code> com <code>grid-template-columns: repeat(2, 1fr)</code>.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: grid; grid-template-columns: repeat(2, 1fr); }&lt;/style&gt;&lt;div&gt;&lt;p&gt;1&lt;/p&gt;&lt;p&gt;2&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    const style = getComputedStyle(div);
+                    return div && style.display === 'grid' && style.gridTemplateColumns.includes('1fr 1fr');
+                }
+            },
+            {
+                id: 27,
+                instructions: "<strong>Objetivo:</strong> Posicione um item com <code>grid-column: 1 / 3</code>.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: grid; grid-template-columns: repeat(2, 1fr); } .item { grid-column: 1 / 3; }&lt;/style&gt;&lt;div&gt;&lt;p class='item'&gt;Item&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const item = board.querySelector('.item');
+                    return item && getComputedStyle(item).gridColumn === '1 / 3';
+                }
+            },
+            {
+                id: 28,
+                instructions: "<strong>Objetivo:</strong> Use <code>gap: 10px</code> em um grid.<br><strong>Exemplo:</strong> <code>&lt;style&gt;div { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); }&lt;/style&gt;&lt;div&gt;&lt;p&gt;1&lt;/p&gt;&lt;p&gt;2&lt;/p&gt;&lt;/div&gt;</code>",
+                check: (code, board) => {
+                    board.innerHTML = code;
+                    const div = board.querySelector('div');
+                    return div && getComputedStyle(div).gap === '10px';
+                }
+            }
+        ];
+
+        let currentLevel = 0;
+        let styleElement = null;
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progress-fill');
+            if (progressFill) {
+                const progress = (currentLevel / levels.length) * 100;
+                progressFill.style.width = `${progress}%`;
+            }
+        }
+
+        function loadLevel(levelIndex) {
+            const level = levels[levelIndex];
+            const levelIndicator = document.getElementById('level-indicator');
+            const instructions = document.getElementById('instructions');
+            const constructionBoard = document.getElementById('construction-board');
+            const codeEditor = document.getElementById('code-editor');
+            const feedback = document.getElementById('feedback');
+            if (levelIndicator && instructions && constructionBoard && codeEditor && feedback) {
+                levelIndicator.textContent = `Nível ${level.id} / ${levels.length}`;
+                instructions.innerHTML = level.instructions;
+                constructionBoard.innerHTML = '';
+                codeEditor.value = '';
+                feedback.textContent = '';
+                feedback.classList.remove('success', 'error');
+                updateProgress();
+            } else {
+                console.error("Elementos do DOM não encontrados!");
+            }
+        }
+
+        function applyCode() {
+            try {
+                if (styleElement) {
+                    document.head.removeChild(styleElement);
+                    styleElement = null;
+                }
+                const code = document.getElementById('code-editor').value;
+                const constructionBoard = document.getElementById('construction-board');
+                const feedback = document.getElementById('feedback');
+                if (!constructionBoard || !feedback) {
+                    console.error("Elementos do DOM não encontrados!");
+                    return;
+                }
+
+                constructionBoard.innerHTML = code;
+                const styles = constructionBoard.querySelectorAll('style');
+                styles.forEach(style => {
+                    styleElement = document.createElement('style');
+                    styleElement.textContent = style.textContent;
+                    document.head.appendChild(styleElement);
+                    style.remove();
+                });
+
+                const level = levels[currentLevel];
+                if (level.check(code, constructionBoard)) {
+                    feedback.textContent = 'Parabéns! Nível concluído! 🎉';
+                    feedback.classList.add('success');
+                    setTimeout(() => {
+                        currentLevel++;
+                        if (currentLevel < levels.length) {
+                            loadLevel(currentLevel);
+                        } else {
+                            feedback.textContent = 'Incrível! Você completou todos os níveis! 🚀';
+                        }
+                    }, 1000);
+                } else {
+                    feedback.textContent = 'Ops, tente novamente! Verifique as tags ou estilos.';
+                    feedback.classList.add('error');
+                    constructionBoard.innerHTML = '';
+                    if (styleElement) {
+                        document.head.removeChild(styleElement);
+                        styleElement = null;
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao aplicar código:", error);
+                document.getElementById('feedback').textContent = 'Erro no código. Verifique a sintaxe!';
+                document.getElementById('feedback').classList.add('error');
+                document.getElementById('construction-board').innerHTML = '';
+                if (styleElement) {
+                    document.head.removeChild(styleElement);
+                    styleElement = null;
+                }
+            }
+        }
+
+        function resetLevel() {
+            const constructionBoard = document.getElementById('construction-board');
+            const codeEditor = document.getElementById('code-editor');
+            const feedback = document.getElementById('feedback');
+            if (constructionBoard && codeEditor && feedback) {
+                constructionBoard.innerHTML = '';
+                codeEditor.value = '';
+                feedback.textContent = '';
+                feedback.classList.remove('success', 'error');
+                if (styleElement) {
+                    document.head.removeChild(styleElement);
+                    styleElement = null;
+                }
+                loadLevel(currentLevel);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const applyBtn = document.getElementById('apply-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            if (applyBtn && resetBtn) {
+                applyBtn.addEventListener('click', applyCode);
+                resetBtn.addEventListener('click', resetLevel);
+                loadLevel(currentLevel);
+            } else {
+                console.error("Botões não encontrados!");
+            }
+        });
+    </script>
+</body>
+</html>
