@@ -1,0 +1,223 @@
+/* 
+  Variáveis para cores:
+  --fundo-principal
+  --texto
+  --texto-inverso
+  --destaque
+  --destaque-inverso
+  --fundo-card
+*/
+
+*{
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+:root{
+  --fundo-principal:#f5f5f5;
+  --texto:#222222;
+  --texto-inverso:#ffffff;
+  --destaque:#0077ff;
+  --destaque-inverso:#66bbff;
+  --fundo-card: #ffffff;
+}
+
+
+body{
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  line-height: 1.5em;
+  background-color:var(--fundo-principal);
+  color: var(--texto);
+}
+
+header{
+  background-color: var(--destaque);
+  color: var(--texto);
+  padding: 10px;
+  display: flex; /*torna o header flexível*/
+  justify-content: flex-end; /*colar menu a direita*/
+  align-content: center; /*centraliza o conteúdo*/
+}
+
+nav#menu ul{
+  list-style-type: none;
+  display: flex;
+  gap: 10px;
+}
+
+nav#menu a{
+  text-decoration: none;
+  color: var(--texto-inverso);
+  font-weight: 600;
+  padding: 12px 15px;
+  border-radius: 5px;
+  transition: background-color .7s, color .7s;
+}
+
+nav#menu a:hover{
+  background-color: var(--texto-inverso);
+  color: var(--destaque);
+}
+
+main{
+  display: grid;
+  grid-template-columns: auto 90vw auto; /*separa em três colunas*/
+  gap: 20px; /*define uma distância de 20px entre as colunas*/
+  margin-top: 20px;
+}
+
+section#ficha {
+  background-color: var(--fundo-card);
+  padding: 20px;
+  border-radius: 8px;
+  grid-column: 2; /*determina onde sua section ficha vai ficar*/
+}
+
+section#ficha img.foto{
+  width: 200px;
+  aspect-ratio: 1/1; /*deixa a imagem quadradinha*/
+  object-fit: cover; /*deixa a imagem adaptada*/
+  overflow: hidden; /*se sobrar algo para fora, ele fica escondido*/
+  border-radius: 50%;
+  border: 5px solid var(--fundo-card); /*borda interna*/
+  outline: 5px solid var(--destaque); /*borda externa*/
+  display: block;
+  margin: auto;
+  margin-bottom: 15px;
+}
+
+h1{
+  color: var(--destaque);
+  margin: 15px 0;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+div#social {
+  display: flex; /*deixa flexivel*/
+  justify-content: center; /*alinhamento horizontal*/
+  align-items: center; /*alinhamento vertical*/
+  font-size: 1.6em;
+  gap: 1em;
+  margin: 15px;
+
+}
+
+div#social a{
+  color: var(--destaque);
+  transition: color 0.5s;
+}
+
+div#social a:hover{
+  color: var(--destaque-inverso);
+}
+
+section#detalhes {
+  grid-column: 2;
+}
+
+article{
+  background-color: var(--fundo-card);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+article h2{
+  color: var(--destaque);
+  margin: 10px;
+}
+
+.video-container{
+  position: relative; /*pois a posição/proporção vão mudar*/
+  width: 100%; /*vai ocupar o tamanho da section 2*/
+  margin: auto; /*centraliza o conteúdo*/
+  aspect-ratio: 16/9; /*é o aspecto do formato do youtube*/
+}
+
+.video-container iframe{
+  position: absolute; /*fixa o vídeo em sua posição*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+
+}
+
+/*configurando Skills*/
+
+#skill-container{
+  display: grid;
+  grid-template-columns: 1fr; /*oculpa a largura toda*/
+  gap: 30px;
+  
+}
+
+/*tudo que for skill-container .info*/
+#skill-container .info{
+  display: flex;
+  justify-content: space-between;
+  justify-items: center;
+}
+
+#skill-container .nome{
+  font-weight: bold;
+  color: var(--texto);
+}
+#skill-container .porcent{
+  font-weight: bold;
+  color: var(--destaque);
+}
+#skill-container .barra{
+  width: 100%;
+  height: 8px;
+  background-color: var(--fundo-principal);
+  border-radius: 5px;
+}
+
+#skill-container .progresso{
+  border-radius: 5px;
+  height: 100%;
+  background-color: var(--destaque-inverso);
+}
+
+/*Formação*/
+#formacao-container{
+   display: flex;
+   flex-direction: column-reverse;
+   gap: 20px;
+}
+#formacao-container .curso{
+  background-color: var(--fundo-principal);
+  border-radius: 5px;
+  border-left: 5px solid var(--destaque-inverso);
+  padding-left: 15px;
+  transition: border-width 0.5s, border-color 0.5s; /*atente-se quanto ao uso de ":"*/
+}
+
+#formacao-container .curso:hover{
+  border-left-width: 15px;
+  border-color: var(--destaque);
+  cursor: pointer; /*muda o ponteiro para mão */
+}
+
+#formacao-container .periodo{
+  font-size: 0.8em;
+  font-weight: bold;
+  color: var(--texto);
+}
+
+#formacao-container .instituicao{
+  color: var(--destaque-inverso);
+  font-size: 1.1em;
+  
+}
+/*separando em duas colunas para melhor visualização*/
+
+@media screen and (min-width:768px) {
+  #skill-container{
+    grid-template-columns:1fr 1fr;
+  }
+}
