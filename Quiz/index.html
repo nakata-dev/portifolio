@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QUIZ - Múltipla Escolha (Tempo real)</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#94a3b8;--text:#e6eef6}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;line-height:1.4;margin:0;background:linear-gradient(180deg,#071426 0%,#071a2a 100%);color:var(--text);padding:24px}
+    .container{max-width:920px;margin:0 auto}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .score{font-weight:700;background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:10px;display:flex;gap:12px;align-items:center}
+    .score .value{font-size:18px;color:var(--accent)}
+    .quiz{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+    .question{padding:14px;border-radius:10px;margin-bottom:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+    .q-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+    .q-num{font-weight:700;color:var(--muted)}
+    .q-text{font-weight:600}
+    .options{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+    label.option{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    input[type="radio"]{width:18px;height:18px}
+    .controls{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:12px}
+    button{background:var(--accent);border:none;padding:10px 14px;border-radius:8px;color:#012;cursor:pointer;font-weight:700}
+    button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)}
+    .result{margin-top:14px;padding:12px;border-radius:8px;background:rgba(6,182,212,0.06);color:var(--accent);font-weight:700}
+    .explanation{margin-top:8px;color:var(--muted);font-size:14px}
+    .explanation[aria-hidden="true"]{display:none}
+    .explanation[aria-hidden="false"]{display:block}
+    @media (max-width:600px){header{flex-direction:column;align-items:flex-start;gap:8px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Prova: Conhecimentos Gerais</h1>
+      <div class="score" aria-live="polite">
+        <div>Nota:</div>
+        <div class="value" id="score">0</div>
+        <div>/</div>
+        <div id="total">0</div>
+      </div>
+    </header>
+
+    <main class="quiz" id="quiz">
+      <!-- Cada .question representa uma questão. -->
+
+      <div class="question" data-points="1" id="q1">
+        <div class="q-head"><div class="q-num">1)</div><div class="q-text">Qual é a capital do Brasil?</div></div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q1" value="0"> a) São Paulo</label>
+          <label class="option"><input type="radio" name="q1" value="1" data-correct> b) Brasília</label>
+          <label class="option"><input type="radio" name="q1" value="0"> c) Rio de Janeiro</label>
+          <label class="option"><input type="radio" name="q1" value="0"> d) Salvador</label>
+        </div>
+        <div class="explanation" aria-hidden="true">(Ex.: Brasília foi inaugurada em 1960 como capital planejada.)</div>
+      </div>
+
+      <div class="question" data-points="2" id="q2">
+        <div class="q-head"><div class="q-num">2)</div><div class="q-text">Em que ano o homem pisou na Lua pela primeira vez?</div></div>
+        <div class="options">
+          <label class="option"><input type="radio" name="q2" value="0"> a) 1959</label>
+          <label class="option"><input type="radio" name="q2" value="0"> b) 1972</label>
+          <label class="option"><input type="radio" name="q2" value="1" data-correct> c) 1969</label>
+          <label class="option"><input type="radio" name="q2" value="0"> d) 1965</label>
+        </div>
+        <div class="explanation" aria-hidden="true">(Ex.: Missão Apollo 11 — Neil Armstrong e Buzz Aldrin em 20 de julho de 1969.)</div>
+      </div>
+
+      <!-- MODELO: Para adicionar mais questões, copie o bloco acima alterando ids e names (q3, q4...) -->
+
+      <div class="controls">
+        <button id="check">Conferir resposta final</button>
+        <button class="secondary" id="reset">Resetar</button>
+      </div>
+
+      <div id="finalResult" class="result" hidden></div>
+
+    </main>
+  </div>
+
+  <script>
+    // --- LÓGICA DO QUIZ: soma em tempo real ---
+    (function(){
+      const quiz = document.getElementById('quiz');
+      const scoreEl = document.getElementById('score');
+      const totalEl = document.getElementById('total');
+      const finalResult = document.getElementById('finalResult');
+
+      // Detecta questões automaticamente
+      const questions = Array.from(quiz.querySelectorAll('.question'));
+
+      // calcula pontuação máxima (soma dos data-points)
+      const maxScore = questions.reduce((acc,q)=> acc + Number(q.dataset.points || 1),0);
+      totalEl.textContent = maxScore;
+
+      // Função que calcula a nota atual com base nas alternativas selecionadas
+      function calcularNota(){
+        let nota = 0;
+        questions.forEach(q=>{
+          const weight = Number(q.dataset.points || 1);
+          // pega a opção marcada do grupo
+          const checked = q.querySelector('input[type=radio]:checked');
+          if(checked){
+            // valores esperados: '1' para correta, '0' para incorreta.
+            // multiplicamos pelo peso da questão
+            nota += Number(checked.value) * weight;
+          }
+        });
+        return nota;
+      }
+
+      // Atualiza UI sempre que um input mudar
+      quiz.addEventListener('change', (e)=>{
+        if(e.target && e.target.matches('input[type=radio]')){
+          const nota = calcularNota();
+          scoreEl.textContent = nota;
+
+          // opcional: mostrar feedback visual por questão
+          const qEl = e.target.closest('.question');
+          if(qEl){
+            // mostrar explicação quando a questão for respondida
+            const exp = qEl.querySelector('.explanation');
+            if(exp) exp.setAttribute('aria-hidden','false');
+          }
+
+          // esconde resultado final se o usuário mudar respostas
+          finalResult.hidden = true;
+        }
+      });
+
+      // botão de conferir final: mostra percentagem e mensagem
+      document.getElementById('check').addEventListener('click', ()=>{
+        const nota = calcularNota();
+        scoreEl.textContent = nota;
+        const pct = Math.round((nota / maxScore) * 100);
+        finalResult.hidden = false;
+        finalResult.textContent = `Sua nota: ${nota} / ${maxScore} — (${pct}%)`;
+
+        // marcar opções corretas/incorretas visualmente
+        questions.forEach(q=>{
+          const inputs = Array.from(q.querySelectorAll('input[type=radio]'));
+          inputs.forEach(inp=>{
+            inp.parentElement.style.opacity = '1';
+            // remove classes anteriores
+            inp.parentElement.style.outline = '';
+            // destaca resposta correta
+            if(inp.dataset.correct !== undefined || inp.hasAttribute('data-correct')){
+              inp.parentElement.style.outline = '2px solid rgba(6,182,212,0.18)';
+            }
+            // destaca incorreta escolhida
+            if(inp.checked && Number(inp.value) === 0){
+              inp.parentElement.style.opacity = '0.65';
+            }
+          });
+        });
+      });
+
+      // reset
+      document.getElementById('reset').addEventListener('click', ()=>{
+        questions.forEach(q=>{
+          q.querySelectorAll('input[type=radio]').forEach(i=> i.checked = false);
+          const exp = q.querySelector('.explanation');
+          if(exp) exp.setAttribute('aria-hidden','true');
+          q.querySelectorAll('.option').forEach(o=>{ o.style.opacity=''; o.style.outline=''; });
+        });
+        scoreEl.textContent = '0';
+        finalResult.hidden = true;
+      });
+
+      // inicializa nota caso queira carregar respostas pré-selecionadas
+      scoreEl.textContent = calcularNota();
+    })();
+  </script>
+</body>
+</html>
