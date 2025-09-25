@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu primeiro JavaScript</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        ul>li {
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Primeiro comando em JavaScript</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+
+
+    <main>
+        <h2>Diálogo com o usuário</h2>
+
+        <ul>
+            <li>window.alert("Mensagem"); → Mostra um alerta.</li>
+
+            <li>window.confirm("Você tem certeza?"); → Retorna true ou false.</li>
+
+            <li>window.prompt("Digite algo:"); → Retorna o texto digitado ou null.</li>
+        </ul>
+
+        <h2>Controle de janelas e navegação</h2>
+
+        <ul>
+            <li>window.open("https://site.com", "_blank"); → Abre nova aba/janela.</li>
+
+            <li>window.close(); → Fecha a janela atual (se tiver sido aberta por script).</li>
+
+            <li>window.print(); → Abre a caixa de impressão.</li>
+
+            <li>
+                window.location → Objeto para manipular URL.
+                Ex.: window.location.href = "https://google.com";
+            </li>
+        </ul>
+
+        <h2>Temporizadores</h2>
+
+        <ul>
+            <li>window.setTimeout(funcao, tempo); → Executa uma vez após X milissegundos.</li>
+
+            <li>window.setInterval(funcao, tempo); → Executa repetidamente a cada X ms.</li>
+
+            <li>window.clearTimeout(id); → Cancela um setTimeout.</li>
+
+            <li>window.clearInterval(id); → Cancela um setInterval.</li>
+        </ul>
+
+        <h2>Dimensões e rolagem</h2>
+
+        <ul>
+            <li>window.innerWidth / window.innerHeight → Largura/altura da área visível.</li>
+
+            <li>window.scrollX / window.scrollY → Distância rolada horizontal/vertical.</li>
+
+            <li>window.scrollTo(x, y); → Rola para posição exata.</li>
+
+            <li>window.scrollBy(x, y); → Rola relativo à posição atual.</li>
+        </ul>
+        <br><br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </main>
+
+    <script>
+        window.alert('Essa interação é em JS')
+        window.confirm('Esta gostando do curso?') //Tela de ok e cancel
+       // window.prompt('Qual é o seu nome?')
+    </script>
+</body>
+
+</html>

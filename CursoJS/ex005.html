@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatando Strings</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+       body{
+        font-family: Arial, Helvetica, sans-serif;
+        
+       }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Formatando Strings</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+        <br><br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    
+    <script>
+        var nome = window.prompt('Qual é o seu nome?')
+        document.writeln(`Olá, ${nome}! Seu nome tem ${nome.length} letras <br/>`)
+        document.writeln(`Seu nome em Maiúsculas é ${nome.toUpperCase()} <br/>`)
+        document.writeln(`Seu nome em Minusculas é ${nome.toLowerCase()}`)
+    </script>
+    </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>template string</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        ol>li {
+            line-height: 1.8;
+            
+        }
+        ol{
+            column-count: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>${nome} - Template String</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+
+
+    <main>
+        <h2>Template String</h2>
+
+        <ol>
+            <li>var n1 = Number(window.prompt('Digite um número:'))</li>
+            <li>var n2 = Number(window.prompt('Digite outro número:'))</li>
+            <li>var s = n1+n2</li>
+            <li>window.alert(´A soma entre ${n1} e ${n2} é igual a ${s}´)</li>
+            <li>nessa última linha foi usado crase e não áspas simples, fique atento a isso!</li>
+            
+        </ol>
+
+       
+        <br><br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </main>
+
+    <script>
+        var n1 = Number.parseFloat(window.prompt('Digite um número:'))
+        var n2 = Number.parseFloat(window.prompt('Digite outro número:'))
+        var s = n1+n2
+        window.alert(´A soma entre ${n1} e ${n2} é igual a ${s}´)
+
+    </script>
+</body>
+
+</html>

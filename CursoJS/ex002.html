@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandos em JS</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        ul>li {
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Dados armazenados</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+
+
+    <main>
+        <h2>Diálogo com o usuário</h2>
+
+        <ul>
+            <li>window.prompt("Digite algo:"); → Retorna o texto digitado ou null.</li>
+            <li>var nome = window.prompt("Digite algo:"); → Retorna o texto digitado ou null.</li>
+            <li>window.alert('É um grande prazer te conhecer, '+ nome + "!")</li>
+        </ul>
+
+       
+        <br><br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </main>
+
+    <script>
+        //window.alert('Essa interação é em JS')
+        //window.confirm('Esta gostando do curso?') //Tela de ok e cancel
+       var nome = window.prompt('Qual é o seu nome?')
+       window.alert('É um grande prazer te conhecer, '+nome+ "!") //concatenação
+    </script>
+</body>
+
+</html>
