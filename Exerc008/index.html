@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exerc008</title>
+    <title>Formatação de texto</title>
     <link rel="stylesheet" href="../style.css">
-    
+    <style>
+        p{
+            line-height: 1.8;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,7 +19,7 @@
     <main>
         <h2>Negrito(B) / Destaque(STRONG)</h2>
         <p>Nessa frase temos um <b>termo em negrito</b> usando a tag B(não semântica).</p>
-        <p>Já nessa frasae temos um <strong>termo em negrito</strong> usando a tag STRONG (semântica).</p><br>
+        <p>Já nesta outra frase aqui, temos um <strong>termo em negrito</strong> usando a tag STRONG (semântica).</p><br>
         <h2>Itálico(I) / Ênfase(EM)</h2>
         <p>Agora, neste outro caso temos um <i>termo em itálico</i> usando a tag I(Não semântica).</p>
         <p>Agora, nesta outra frase temos o <em>termo ênfase</em> usando o termo EM (semântica).</p><br>
@@ -32,12 +36,12 @@
         <br>
         <hr>
         <br>
-        <p>Exemplo: <br>
-            "style"<br>
+        <p>Exemplo: <br><br> 
+            &lt;style&gt;<br>
                 mark {<br>
                 background-color: linegreen;<br>
                     }<br>
-            "/style"<br>
+            &lt;/style&gt;<br>
             <br>
             <em>Assim o texto de todas as marcações ficará <mark style="background-color: rgb(50, 238, 106);">"verde"</mark></em>
         </p>
