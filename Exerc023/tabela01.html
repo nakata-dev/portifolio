@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <style>
-      
+      tr{
+        text-align: center;
+      }
         td{
             border: 1px solid rgb(27, 0, 0);
             padding: 8px;
@@ -22,6 +24,9 @@
         td.col02{
             background-color: rgba(107, 61, 1, 0.534);
         }
+        td.col05{
+            background-color: rgba(244, 248, 8, 0.534);
+        }
 
         pre{
             white-space: pre-wrap;
@@ -31,90 +36,159 @@
             
             padding: 10px;
         }
+        #direcao{
+            display: flex;
+            flex-direction: column-reverse;
+        }
     </style>
     <title>Tabelas</title>
 </head>
 <body>
     
         <header>
-            <h1>Estrutura de Tabela</h1>
+            <h1>Treinamento - Tabelas</h1>
             <p>por: Ailton A. Nakata</p>
         </header>
         <main>
             <h2>
-                Hierarquia de tabelas simples
+                Mão na massa:
             </h2>
-                <h3>Orientação:</h3>
-            <pre>
-            
-    table = tabela
-
-    table row (tr) = linha de tabela
-
-    table header = cabeçalho de tabela
-    
-    table data = dado de tabela
+                <div id="direcao">
+                    <table>
+                        <caption>Tabela 001</caption>
+                                <tr class="linha01"> <!--primeira linha-->
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>C1</td>
+                                </tr>
+                                <tr> <!--segunda linha-->
+                    <td>A2</td>
+                    <td class="col02">B2</td>
+                    <td>C2</td>
+                                </tr>
+                                <tr><!--terceira linha-->
+                    <td>A3</td>
+                    <td class="col02">B3</td>
+                    <td>C3</td>
+                                </tr>
+                                <tr><!--quarta linha-->
+                    <td>A4</td>
+                    <td class="col02">B4</td>
+                    <td>C4</td>
+                                </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <caption>Tabela 002</caption>
+                        <tr class="linha01">
+                            <td>A</td>
+                            <td>B</td>
+                            <td>C</td>
+                            <td>D</td>
+                        </tr>
+                        <tr>
+                            <td>E</td>
+                            <td class="col02">F</td>
+                            <td>G</td>
+                        </tr>
+                        <tr>
+                            <td>H</td>
+                            <td class="col02">I</td>
+                        </tr>
+                        <tr>
+                            <td>J</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <caption>Tabela 003</caption>
+                        <tr class="linha01">
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td class="col02">7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td class="col05">10</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td class="col02">12</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td class="col05">15</td>
+                        </tr>
+                        <tr>
+                            <td>16</td>
+                            <td class="col02">17</td>
+                            <td>18</td>
+                            <td>19</td>
+                            <td class="col05">20</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <caption>Tabela 004</caption>
+                        <tr class="linha01">
+                            <td>A1</td>
+                            <td>B1</td>
+                        </tr>
+                        <tr>
+                            <td>C2</td>
+                            <td class="col02">D2</td>
+                        </tr>
+                        <tr>
+                            <td>E3</td>
+                            <td class="col02">F3</td>
+                        </tr>
+                        <tr>
+                            <td>G3</td>
+                            <td class="col02">H3</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <caption>Tabela 005</caption>
+                        <tr class="linha01">
+                            <td>!</td>
+                            <td>/</td>
+                            <td>*</td>
+                            <td>@</td>
+                            <td>#</td>
+                            <td>$</td>
+                        </tr>
+                        <tr>
+                            <td>%</td>
+                            <td class="col02">¨</td>
+                            <td>&</td>
+                            <td>**</td>
+                            <td>()</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>=</td>
+                            <td class="col02">+</td>
+                            <td>||</td>
+                            <td>&lt;</td>
+                            <td>&gt;</td>
+                            <td>:</td>
+                        </tr>
+                        <tr>
+                            <td>´</td>
+                            <td class="col02">`</td>
+                            <td>{}</td>
+                            <td>[</td>
+                            <td>]</td>
+                            <td>?</td>
+                        </tr>
+                    </table>
+                </div>
                 
-            </pre>
-                <table>
-            <tr class="linha01"> <!--primeira linha-->
-                <td>A1</td>
-                <td>B1</td>
-                <td>C1</td>
-            </tr>
-            <tr> <!--segunda linha-->
-                <td>A2</td>
-                <td class="col02">B2</td>
-                <td>C2</td>
-            </tr>
-            <tr><!--terceira linha-->
-                <td>A3</td>
-                <td class="col02">B3</td>
-                <td>C3</td>
-            </tr>
-            <tr><!--quarta linha-->
-                <td>A4</td>
-                <td class="col02">B4</td>
-                <td>C4</td>
-            </tr>
-                </table>
-                <br>
-                <h2>Analisando o CSS da Tabela acima:</h2>
-                <br>
-                <pre id="justificado">
-
-    body{
-
-    background-color: black;
-    color: white;
-    font-family: Arial, Helvetica, 
-    sans-serif;
-
-    }
-
-    td{
-
-    border: 1px solid whitesmoke;
-    padding: 8px;
-
-    }
-    table{
-
-    width: 400px;
-    border-collapse: collapse;
-
-    }
-    tr.linha01{
-
-    background-color: rgb(0, 68, 255);
-
-    }
-    td.col02{
-
-    background-color: rgb(107, 61, 1);
-
-    }
-                </pre>
                 <br>
                 <br>
             <div id="voltar">
