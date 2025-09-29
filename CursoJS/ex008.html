@@ -1,37 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <title>Árvore Dom</title>
     <style>
-        body{
-            background:rgb(255, 255, 255);
+        body {
+            background: rgb(255, 255, 255);
             font-family: Arial, Helvetica, sans-serif;
-            
+
         }
-        main>p{
+
+        main>p {
             color: rgb(0, 0, 0);
             font-size: 1em;
         }
+
+        td {
+            border: 3px dashed salmon;
+            border-radius: 5px;
+            text-align: center;
+            margin: auto;
+            padding: 10px;
+
+
+        }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Árvore <strong>DOM</strong></h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <p>Aqui vai o resultado</p><br>
-        <div>Click em Mim</div>
-        <p>Explicando a árvore Dom para melhor compreensão:</p>
+        <p>Esta linha refere-se ao 'p' de número 1</p><br>
+        <div>Divisão de nível 0</div><br>
+        <p>Esta linha refere-se ao 'p' de número 2</p>
+        <br><br>
+        <table>
+            <caption>Esquema representativo</caption>
+            <tr>
+                <td>window</td>
+            </tr>
+            <tr>
+                <td>location</td>
+                <td>document</td>
+                <td>history</td>
+            </tr>
+            <tr>
+                <td>HTML</td>
+            </tr>
+            <tr>
+                <td>Head</td>
+            <tr>
+                <td>meta</td>
+                <td>title</td>
+            </tr>
+            <td>Body</td>
+            <tr>
+                <td>h1</td>
+                <td>p</td>
+                <td>p</td>
+                <td>div</td>
+            </tr>
+            <tr>
+                <td>string</td>
+            </tr>
+            </tr>
+        </table>
         <br>
         <br>
         <div id="voltar">
             <a href="../estudos.html">Voltar</a>
         </div>
         <br><br>
+        <script>
+            var corpo = window.document.body
+            var p1 = window.document.getElementsByTagName('p')[1]
+            window.document.write('Está escrito assim: ' + p1.innerText)
+            p1.style.color = 'blue'
+            document.write(p1.innerHTML)
+        </script>
     </main>
 </body>
+
 </html>
