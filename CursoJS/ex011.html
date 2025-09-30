@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <style>
         *{
             line-height: 1.8;
@@ -11,11 +12,22 @@
     <title>Detran</title>
 </head>
 <body>
-    <h1>Sistema de Multas</h1>
-    Velocidade do carro: <input type="number" name="txtvel" id="txtvel"> km/h. <input type="button" value="verificar" onclick="calcular()">
-    <div id="res">
-
-    </div>
+    <header>
+        <h1>Sistema de Multas</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        Velocidade do carro: <input type="number" name="txtvel" id="txtvel"> km/h. <input type="button" value="verificar" onclick="calcular()">
+        <div id="res">
+        </div>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
 
     <script>
         function calcular(){

@@ -1,11 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Bom dia</title>
 </head>
+
 <body>
-    <h1></h1>
+    <header>
+        <h1>Bom dia</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+
+    <main>
+        <h2>Bom dia / Boa tarde / Boa noite:</h2>
+        <!-- Aqui vai o conteúdo principal da página -->
+        <p id="mensagem"> Hoje esta fazendo um lindo dia!</p>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
+
+    <script>
+        console.log('Condições Compostas new Date:')
+        var agora = new Date()
+        var hora = agora.getHours()
+
+        console.log(`Agora são exatamente ${hora} horas.`)
+
+        var mensagem = ''
+        if (hora < 12) {
+            mensagem = 'Bom dia!'
+        } else if (hora <= 18) {
+            mensagem = 'Boa tarde!'
+        } else {
+            mensagem = 'Boa noite!'
+        }
+
+        // Mostrar no console e também na página
+        console.log(mensagem)
+        document.getElementById('mensagem').innerText = mensagem
+        
+    </script>
 </body>
+
 </html>
