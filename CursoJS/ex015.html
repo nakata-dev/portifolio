@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <title>Verificador de Idade</title>
+</head>
+<body>
+    <header>
+        <h1>Verificador de Idade</h1>
+    </header>
+    <section>
+        <div>
+            <p>Ano de Nascimento:
+            <input type="number" name="txtano" id="txtano" min="0"></p>
+            <!--O <label> é uma etiqueta de identificação de um campo de formulário.
+            Ele serve para descrever um input e melhorar a acessibilidade-->
+            <p>sexo: 
+                <input type="radio" name="radsex" id="mas" checked>
+                <label for="mas">Masculino</label>
+                <input type="radio" name="radsex" id="fem">
+                <label for="fem">Feminino</label>
+            </p>
+            <p>
+                <input type="button" value="Verificar" onclick="verificar()">
+            </p>
+        </div>
+        <!--Não esqueça desta linha aqui embaixo-->
+        <div id="res"></div>
+    </section>
+    <footer>
+        &copy;Curso em vídeo
+    </footer>
+    <script src="verificar.js"></script>
+</body>
+</html>
