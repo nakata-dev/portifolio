@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    *{
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+      <h1>Contador</h1>
+      <p>por: Ailton A. Nakata</p>
+  </header>
+  
+  <main>
+      
+          <label for="inicio">Início:</label>
+          <input type="number" id="inicio" value="0"><br>
+      
+          <label for="fim">Fim:</label>
+          <input type="number" id="fim" value="0"><br>
+      
+          <label for="passo">Passo:</label>
+          <input type="number" id="passo" value="1"><br>
+      
+          <input type="button" value="Contar" onclick="contar()">
+          <div id="res">Confira o resultado abaixo:</div>
+          <br>
+          <br>
+          <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+          </div>
+          <br>
+          <br>
+  </main>
+
+  <script>
+    function contar() {
+      let ini = document.getElementById('inicio')
+      let fim = document.getElementById('fim')
+      let passo = document.getElementById('passo')
+      let res = document.getElementById('res')
+
+      if (ini.value.length == 0 || fim.value.length == 0 || passo.value.length == 0) {
+        res.innerHTML = '⚠️ Faltam dados!'
+        return
+      }
+
+      res.innerHTML = 'Contando: <br>'
+      let i = Number(ini.value)
+      let f = Number(fim.value)
+      let p = Number(passo.value)
+
+      if (p <= 0) {
+        alert('Passo inválido! Considerando PASSO 1')
+        p = 1
+      }
+
+      if (i <= f) {
+        // Contagem crescente
+        for (let c = i; c <= f; c += p) {
+          if (c < f) {
+            res.innerHTML += `${c}🫰, `
+          } else {
+            res.innerHTML += `${c}💰`
+          }
+        }
+      } else {
+        // Contagem decrescente
+        for (let c = i; c >= f; c -= p) {
+          if (c > f) {
+            res.innerHTML += `${c}🫰, `
+          } else {
+            res.innerHTML += `${c}💰`
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

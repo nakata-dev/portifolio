@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <style>
+        div#voltar{
+        text-align: center; 
+        font-family: 'Times New Roman', Times, serif;   
+    }
+    div#voltar a:hover{
+        padding: 10px;
+        background-color: rgba(125, 208, 235, 0.637);
+        font-weight: bolder;
+        transition-duration: 0.5s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        border: none;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    </style>
+    <title>Contador</title>
+</head>
+<body>
+    <header>
+        <h1>Contador numérico</h1>
+    </header>
+    <section>
+        <div>
+            <p>Inicio: <input type="number" name="inicio" id="txti"></p>
+            <p>Fim: <input type="number" name="fim" id="txtf"></p>
+            <p>Passo: <input type="number" name="passo" id="txtp"></p>
+            <p>
+                <input type="button" value="Contar" onclick="contar()">
+            </p>
+        </div>
+        <br>
+        <br>
+        <!--Não esqueça desta linha aqui embaixo-->
+        <div id="res"></div>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </section>
+    <footer>
+        &copy;Curso em vídeo
+    </footer>
+    <script src="contar.js"></script>
+</body>
+</html>

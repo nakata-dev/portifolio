@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <style>
+        div#voltar{
+        text-align: center; 
+        font-family: 'Times New Roman', Times, serif;   
+    }
+    div#voltar a:hover{
+        padding: 10px;
+        background-color: rgba(125, 208, 235, 0.637);
+        font-weight: bolder;
+        transition-duration: 0.5s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        border: none;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    </style>
+    <title>Tabuada</title>
+</head>
+<body>
+    <header>
+        <h1>Tabuada</h1>
+    </header>
+    <section>
+        <div>
+            <p>Número: <input type="number" name="num" id="txtn"><input type="button" value="Gerar tabuada" onclick="tabuada()"></p>
+        </div>
+        <div>
+            <select name="tabuada" id="seltab">
+            <option value="">Digite um número acima</option></select>
+        </div>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </section>
+    <footer>
+        &copy;Curso em vídeo
+    </footer>
+    <script src="tabuada.js"></script>
+</body>
+</html>
