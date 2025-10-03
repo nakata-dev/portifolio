@@ -30,3 +30,7 @@ div#res{
     padding: 10px;
     text-align: center;
 }
+
+select#flista{
+    width: 150px;
+}
