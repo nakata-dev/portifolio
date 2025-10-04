@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Rastreador de Hábitos</title>
+    <style>
+        div#voltar{
+        text-align: center; 
+        font-family: 'Times New Roman', Times, serif;   
+    }
+    div#voltar a:hover{
+        padding: 10px;
+        background-color: rgba(125, 208, 235, 0.637);
+        font-weight: bolder;
+        transition-duration: 0.5s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        border: none;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    </style>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>Meu Rastreador de Hábitos</h1>
+
+        <form id="habit-form">
+            <input type="text" id="new-habit-input" placeholder="Adicionar novo hábito (ex: Beber água)" required>
+            <button type="submit">Adicionar</button>
+        </form>
+        
+        <ul id="habit-list">
+        </ul>
+        <div id="voltar">
+            <a href="../projetos.html">voltar</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

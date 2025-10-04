@@ -1,0 +1,6 @@
+Projeto reais
+1) Um organizador de atividades (estilo trello)
+2) Analisador de gastos reais
+3) Sistema de agendamento dinâmico
+4) Controle e Hábitos
+5) Sistema de alerta de Vagas

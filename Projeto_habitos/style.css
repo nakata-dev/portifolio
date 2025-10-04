@@ -1,0 +1,121 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; /* Fundo claro e suave */
+    color: #2c3e50;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinha no topo, não no centro vertical */
+    padding-top: 50px;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    text-align: center;
+    color: #3498db;
+    margin-bottom: 25px;
+}
+
+/* Estilo do Formulário */
+#habit-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#new-habit-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+#habit-form button {
+    padding: 10px 15px;
+    background-color: #2ecc71; /* Botão de ação (verde) */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#habit-form button:hover {
+    background-color: #27ae60;
+}
+
+/* Estilo da Lista de Hábitos */
+#habit-list {
+    list-style: none;
+    padding: 0;
+}
+
+.habit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: #ecf0f1;
+    border-radius: 6px;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.habit-name {
+    flex-grow: 1;
+    font-weight: 600;
+}
+
+/* Estilo do Botão de Check */
+.habit-check {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 2px solid #3498db;
+    background-color: white;
+    text-align: center;
+    line-height: 18px;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Estilo para Hábito Concluído */
+.habit-item.completed {
+    background-color: #d1f3d1; /* Fundo verde claro para concluído */
+}
+
+.habit-item.completed .habit-check {
+    background-color: #2ecc71; /* Ícone verde de concluído */
+    border-color: #27ae60;
+}
+
+/* Estilo do Botão de Remover */
+.remove-habit {
+    background: none;
+    border: none;
+    color: #e74c3c; /* Cor vermelha para indicar perigo */
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 15px; /* Separa do botão de check */
+    transition: color 0.3s;
+    padding: 0 5px;
+    height: 20px;
+    line-height: 1;
+}
+
+.remove-habit:hover {
+    color: #c0392b;
+}
