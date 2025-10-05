@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz HTML, CSS e JavaScript</title>
+  <style>
+    div#voltar{
+        text-align: center; 
+        font-family: 'Times New Roman', Times, serif;   
+    }
+    div#voltar a:hover{
+        padding: 10px;
+        background-color: rgba(125, 208, 235, 0.637);
+        font-weight: bolder;
+        transition-duration: 0.5s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        border: none;
+        font-family: 'Times New Roman', Times, serif;
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz de HTML, CSS e JavaScript</h1>
+
+    <!-- Tela de escolha -->
+    <div id="menu">
+      <h2>Escolha o assunto:</h2>
+      <button onclick="startQuiz('html')">HTML</button>
+      <button onclick="startQuiz('css')">CSS</button>
+      <button onclick="startQuiz('js')">JavaScript</button>
+    </div>
+    <br><br>
+    <div id="voltar">
+        <a href="../projetos.html">Voltar</a>
+    </div>
+
+    <!-- Tela do quiz -->
+    <div id="quiz" style="display:none;">
+      <div id="question-container"></div>
+      <p id="hint" class="hint"></p>
+      <input type="text" id="answer" placeholder="Digite sua resposta aqui">
+      <button onclick="checkAnswer()">Responder</button>
+      <p id="feedback"></p>
+      <div class="progress">
+        <div id="progress-bar"></div>
+      </div>
+      <p id="progress-text">Progresso: 0%</p>
+      <p id="final-score" class="final-score"></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

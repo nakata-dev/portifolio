@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        section{
+            padding: 10px;
+        }
+    </style>
+    <title>Condições - parte I</title>
+</head>
+<body>
+    <header>
+        <h1>Dirija com Cuidado</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        
+        <section>
+            velocidade do carro: <input type="number" name="txtvel" id="txtvel"> km/h <input type="button" value="verificar" onclick="calcular()">
+            <div id="res"></div>
+        </section>
+        <br><br>
+        <div id="voltar">
+            <a href="../../testes/index.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
+    <script>
+        function calcular() {
+            var txtv = window.document.querySelector('input#txtvel');
+            var res=window.document.querySelector('div#res')
+            var vel=Number(txtv.value)
+            
+            console.log(`A velocidade de seu veículo é de ${vel} km/h.`)
+            res.innerHTML=`Sua velocidade atual é de <strong>${vel}</strong> km/h.<br>`
+            res.innerHTML+='Dirija sempre com <strong>cinto de segurança</strong>.'
+            
+                console.log('Cuidade para não ser mutado!!!')
+        }
+    </script>
+</body>
+</html>
