@@ -1,45 +1,113 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="Pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../style.css">
     <style>
-        section{
-            padding: 10px;
+        :root{
+    --cor00:#233CCF;
+    --cor01:#3747A5;
+    --cor02:#0025FA;
+    --cor03:#3D467A;
+    --cor04:#353950;
+    --cor05:#2B2C33;
         }
+
+        *{
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
+        header{
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Alinha Vertical*/
+            align-items: center; /*alinha horizontal*/
+            background-image: linear-gradient(to right, #2626FE, #00bfff);
+            padding: 10px;
+            height: 120px;
+            color: white;
+        }
+        section{
+            display: block;
+            margin: auto;
+            background-color: white;
+            color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 90vw;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.473);
+            max-width: 600px;
+
+        }
+        section>div{
+            text-align: left;
+            padding: 20px;
+        }
+        footer{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.8em;
+            padding: 5px;
+            text-align: center;
+        }
+        div#voltar{
+        text-align: center; 
+        font-family: 'Times New Roman', Times, serif;   
+        
+    }
+    input{
+        width: 80px;
+    }
+    div#voltar a:hover{
+        padding: 10px;
+        background-color: rgba(125, 208, 235, 0.637);
+        font-weight: bolder;
+        transition-duration: 0.5s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        border: none;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    a{
+        text-decoration: none;
+    }
     </style>
-    <title>Condições - parte I</title>
+    <title>Sistema de Multas</title>
 </head>
 <body>
     <header>
-        <h1>Dirija com Cuidado</h1>
+        <h1>Sistema de Multas</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
-    <main>
-        
-        <section>
-            velocidade do carro: <input type="number" name="txtvel" id="txtvel"> km/h <input type="button" value="verificar" onclick="calcular()">
-            <div id="res"></div>
-        </section>
+    <section>
+        <div>
+            <p>Sensor de velocidade:<input type="number" name="txtvel" id="txtvel"> km/h.
+            <input type="button" value="Verificar" onclick="calcular()"></p>
+        </div>
+        <div id="res">
+            <p>resultado...</p>
+        </div>
         <br><br>
         <div id="voltar">
-            <a href="../../testes/index.html">Voltar</a>
+            <a href="../../testes.html">Voltar</a>
         </div>
-        <br>
-        <br>
-    </main>
+    </section>
+    <footer>
+        &copy;Ailton A. Nakata
+    </footer>
+
     <script>
-        function calcular() {
-            var txtv = window.document.querySelector('input#txtvel');
-            var res=window.document.querySelector('div#res')
-            var vel=Number(txtv.value)
-            
-            console.log(`A velocidade de seu veículo é de ${vel} km/h.`)
-            res.innerHTML=`Sua velocidade atual é de <strong>${vel}</strong> km/h.<br>`
-            res.innerHTML+='Dirija sempre com <strong>cinto de segurança</strong>.'
-            
-                console.log('Cuidade para não ser mutado!!!')
+        function calcular(){
+            var txtv = window.document.querySelector('input#txtvel')
+            var res = window.document.querySelector('div#res')
+            var vel = Number(txtv.value)
+            if(vel>60){
+                res.innerHTML = `Sua velocidade é de ${vel} km/h.<br><br> Multado por ultrapassar o limite de 60 km/h permitido nesta via.`
+            } else{
+            res.innerHTML= `Sua velocidade atual é de ${vel} km/h. <br><br>`
+            res.innerHTML += 'Obrigado por respeitar as regras de trânsito, continue assim!'
+            }
         }
     </script>
 </body>
