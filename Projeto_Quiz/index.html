@@ -23,21 +23,22 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="quiz-container">
-    <h1>Quiz de HTML, CSS e JavaScript</h1>
-
-    <!-- Tela de escolha -->
-    <div id="menu">
-      <h2>Escolha o assunto:</h2>
-      <button onclick="startQuiz('html')">HTML</button>
-      <button onclick="startQuiz('css')">CSS</button>
-      <button onclick="startQuiz('js')">JavaScript</button>
-    </div>
-    <br><br>
-    <div id="voltar">
-        <a href="../projetos.html">Voltar</a>
-    </div>
-
+  
+    <div class="quiz-container">
+      <h1>Quiz de HTML, CSS e JavaScript</h1>
+      <!-- Tela de escolha -->
+      <div id="menu">
+        <h2>Escolha o assunto:</h2>
+        <button onclick="startQuiz('html')">HTML</button>
+        <button onclick="startQuiz('css')">CSS</button>
+        <button onclick="startQuiz('js')">JavaScript</button>
+      </div>
+      <br><br>
+      <div id="voltar">
+          <a href="../projetos.html">Voltar</a>
+      </div>
+  
+    
     <!-- Tela do quiz -->
     <div id="quiz" style="display:none;">
       <div id="question-container"></div>
@@ -52,6 +53,7 @@
       <p id="final-score" class="final-score"></p>
     </div>
   </div>
+  
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VendeSeuLivro — Serviços para Escritores Autônomos</title>
+  <!--
+    Arquivo: site-venda-livro-autonomos.html
+    Objetivo: site de uma página (landing) para atrair escritores autônomos que querem vender seus livros.
+    Como usar: salve este arquivo como index.html e abra no navegador (double-click) ou rode em um servidor estático.
+    Explicações: TODO o código está extensivamente comentado em português para facilitar o estudo.
+  -->
+  <style>
+    /* ===== Variáveis de tema (fácil personalização) ===== */
+    :root{
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --primary: #2d6cdf; /* azul primário */
+      --accent: #00bfa6;  /* verde de destaque */
+      --muted: #6b7280;
+      --glass: rgba(255,255,255,0.6);
+      --radius: 12px;
+      --max-width: 1100px;
+      --shadow: 0 6px 24px rgba(15,23,42,0.08);
+      --mono: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* ===== Reset & base ===== */
+    *{box-sizing: border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--mono);
+      background: linear-gradient(180deg, var(--bg), #eef3fb 120px);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      justify-content:center;
+      padding:32px 18px;
+    }
+
+    /* ===== Layout principal (container centralizado) ===== */
+    .container{
+      width:100%;
+      max-width:var(--max-width);
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    /* Marca / logo simples */
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo{
+      width:48px;height:48px;
+      display:grid;place-items:center;
+      background:var(--primary);
+      color:white;border-radius:10px;font-weight:700;
+      box-shadow: var(--shadow);
+    }
+    .brand h1{font-size:1.1rem;margin:0}
+    .brand p{margin:0;font-size:0.85rem;color:var(--muted)}
+
+    nav{display:flex;gap:12px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-size:.95rem}
+
+    /* Botão CTA do cabeçalho */
+    .btn{
+      background:var(--primary);
+      color:white;padding:10px 14px;border-radius:10px;border:0;
+      cursor:pointer;font-weight:600;box-shadow:0 6px 20px rgba(45,108,223,0.18);
+    }
+
+    /* ===== HERO ===== */
+    .hero{
+      display:grid;grid-template-columns: 1fr 380px;gap:24px;align-items:center;
+      margin-bottom:22px;
+    }
+
+    .hero-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.9), var(--card));
+      padding:28px;border-radius:var(--radius);box-shadow:var(--shadow);
+    }
+
+    .hero h2{margin:0 0 12px 0;font-size:1.6rem}
+    .hero p{margin:0 0 18px 0;color:var(--muted)}
+
+    .features{display:flex;gap:10px;flex-wrap:wrap}
+    .feature{background:var(--glass);padding:10px 12px;border-radius:10px;font-size:.95rem}
+
+    /* cartão do livro (mini loja) */
+    .book-card{background:linear-gradient(180deg,#fff,#f8fbff);padding:18px;border-radius:12px;box-shadow:var(--shadow)}
+    .cover{width:100%;height:220px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#e9f0ff,#fff);}
+    .cover svg{width:80%;height:auto}
+    .book-meta{padding-top:12px}
+    .price{font-size:1.4rem;font-weight:700;color:var(--primary)}
+
+    /* ===== Seções ===== */
+    section{margin-bottom:18px}
+
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow)}
+
+    /* Produtos lista */
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .product{padding:14px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfdff);}
+    .product h3{margin:0 0 8px 0}
+
+    .small{font-size:.9rem;color:var(--muted)}
+
+    /* carrinho lateral */
+    .cart-btn{position:relative}
+    .cart-count{position:absolute;right:-6px;top:-6px;background:var(--accent);color:white;width:22px;height:22px;border-radius:99px;display:grid;place-items:center;font-size:.85rem}
+
+    .cart-panel{position:fixed;right:18px;top:80px;width:320px;max-height:70vh;background:var(--card);border-radius:12px;box-shadow:0 20px 60px rgba(7,9,25,0.25);overflow:auto;padding:12px;transform:translateY(-8px);}
+
+    .cart-item{display:flex;gap:12px;align-items:center;border-bottom:1px solid #eee;padding:10px 6px}
+    .cart-item:last-child{border-bottom:0}
+    .cart-item .qty{font-weight:700}
+
+    /* formulário de checkout (modal simples) */
+    .modal{position:fixed;left:0;top:0;right:0;bottom:0;display:none;align-items:center;justify-content:center;background:rgba(8,10,20,0.45);}
+    .modal.open{display:flex}
+    .modal .sheet{background:var(--card);padding:18px;border-radius:12px;width:420px;max-width:94%;}
+    .field{display:flex;flex-direction:column;margin-bottom:10px}
+    .field label{font-size:.85rem;margin-bottom:6px}
+    .field input, .field textarea{padding:10px;border-radius:8px;border:1px solid #ddd}
+
+    /* CTA secundário */
+    .muted{color:var(--muted)}
+
+    footer{margin-top:26px;text-align:center;color:var(--muted);font-size:.95rem}
+
+    /* ===== Responsividade ===== */
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr}
+      header{flex-direction:column;align-items:flex-start;gap:12px}
+      .cart-panel{right:8px;left:8px;width:auto}
+      .grid-3{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ===== CABEÇALHO ===== -->
+    <header>
+      <div class="brand">
+        <div class="logo">VL</div>
+        <div>
+          <h1>VendeSeuLivro</h1>
+          <p>Plataforma para autores independentes</p>
+        </div>
+      </div>
+      <nav>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#precos">Preços</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <button class="btn" id="startSell">Quero vender</button>
+        <button class="btn cart-btn" id="openCart">Carrinho <span class="cart-count" id="cartCount">0</span></button>
+      </nav>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <div class="hero">
+      <div class="hero-card">
+        <h2>Crie sua vitrine, venda seu livro e foque em escrever.</h2>
+        <p class="small">Landing, página de venda e mini-loja para autores que querem transformar suas ideias em renda.</p>
+
+        <div class="features" aria-hidden>
+          <div class="feature">Página de venda pronta</div>
+          <div class="feature">Checkout simulado (fácil integração)</div>
+          <div class="feature">Design minimal para destacar sua capa</div>
+        </div>
+
+        <hr style="margin:14px 0;opacity:.07">
+
+        <p style="margin-bottom:10px">Passos rápidos:</p>
+        <ol style="margin-left:18px;color:var(--muted)">
+          <li>Adicione o livro ao produto</li>
+          <li>Personalize a capa e a descrição</li>
+          <li>Compartilhe no Instagram / LinkedIn</li>
+        </ol>
+
+        <div style="margin-top:16px;display:flex;gap:10px;">
+          <button class="btn" id="ctaAddSample">Adicionar livro de exemplo</button>
+          <button class="btn" id="ctaSellNow">Publicar agora</button>
+        </div>
+      </div>
+
+      <!-- cartão do livro (preview) -->
+      <aside class="book-card">
+        <div class="cover" aria-hidden>
+          <!-- SVG simples de capa que você pode substituir por uma imagem -->
+          <svg viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="108" height="148" rx="6" fill="#eaf2ff" stroke="#cfe0ff"/>
+            <rect x="18" y="28" width="84" height="92" rx="4" fill="#fff"/>
+            <rect x="26" y="36" width="64" height="12" rx="2" fill="#2d6cdf"/>
+            <rect x="26" y="56" width="44" height="8" rx="2" fill="#9fb9ff"/>
+            <rect x="26" y="72" width="72" height="40" rx="2" fill="#eef6ff"/>
+          </svg>
+        </div>
+        <div class="book-meta">
+          <h3 id="sampleTitle">Seu Livro — Edição Independente</h3>
+          <p class="small" id="sampleDesc">Uma página de vendas prática, direta e otimizada para conversão.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+            <div>
+              <div class="price" id="samplePrice">R$ 29,90</div>
+              <div class="small">Entrega: arquivo digital (PDF / EPUB)</div>
+            </div>
+            <div>
+              <button class="btn" data-product-id="sample" id="addSample">Adicionar ao carrinho</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===== COMO FUNCIONA ===== -->
+    <section id="como-funciona">
+      <h3>Como funciona</h3>
+      <div class="grid-3" style="margin-top:10px">
+        <div class="card">
+          <strong>1 — Página de venda</strong>
+          <p class="small">Você tem uma página atraente com capa, sinopse, reviews e botão de compra.</p>
+        </div>
+        <div class="card">
+          <strong>2 — Checkout simples</strong>
+          <p class="small">Simulamos um fluxo de compra para testar layout. Integração com PayPal/Stripe pode ser adicionada.</p>
+        </div>
+        <div class="card">
+          <strong>3 — Entrega automática</strong>
+          <p class="small">Ao finalizar, o comprador recebe o link para download (simulado neste template).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PRODUTOS ===== -->
+    <section>
+      <h3>Produtos</h3>
+      <div class="products" id="productsList" style="margin-top:12px">
+        <!-- Produtos serão renderizados por JavaScript -->
+      </div>
+    </section>
+
+    <!-- ===== DEPOIMENTOS ===== -->
+    <section id="depoimentos">
+      <h3>Depoimentos</h3>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <div class="card" style="flex:1;min-width:200px">
+          <strong>"Vendi meu primeiro ebook em 3 dias"</strong>
+          <p class="small">— Marina, autora independente</p>
+        </div>
+        <div class="card" style="flex:1;min-width:200px">
+          <strong>"Design limpo e direto ao ponto"</strong>
+          <p class="small">— João, crítico literário</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RODAPÉ ===== -->
+    <footer>
+      <p>&copy; 2025 VendeSeuLivro • Feito por Ailton A. Nakata</p>
+    </footer>
+
+    <!-- ===== CARRINHO LATERAL ===== -->
+    <div class="cart-panel" id="cartPanel" aria-hidden="true" style="display:none">
+      <h4>Carrinho</h4>
+      <div id="cartItems" style="margin-top:8px"></div>
+      <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+        <strong>Total: </strong>
+        <div id="cartTotal">R$ 0,00</div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn" id="btnCheckout">Finalizar</button>
+        <button class="btn" id="btnClear" style="background:#f3f4f6;color:#111">Limpar</button>
+      </div>
+    </div>
+
+    <!-- ===== MODAL DE CHECKOUT ===== -->
+    <div class="modal" id="modalCheckout" aria-hidden="true">
+      <div class="sheet">
+        <h4>Checkout</h4>
+        <form id="checkoutForm">
+          <div class="field">
+            <label for="buyerName">Seu nome</label>
+            <input id="buyerName" required />
+          </div>
+          <div class="field">
+            <label for="buyerEmail">E-mail</label>
+            <input id="buyerEmail" type="email" required />
+          </div>
+          <div class="field">
+            <label for="buyerNote">Observações (opcional)</label>
+            <textarea id="buyerNote" rows="3"></textarea>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button type="button" class="btn" id="closeModal">Fechar</button>
+            <button type="submit" class="btn">Pagar (simulado)</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ===== Explicação geral do JavaScript =====
+       - Este script cria a "loja" de exemplo, controla o carrinho e o fluxo de checkout.
+       - Não há integração real de pagamento: o objetivo é demonstrar o fluxo e deixar fácil de integrar
+         gateways reais (Stripe/PayPal) depois.
+       - Comentários explicam cada função para estudo.
+    */
+
+    // Lista de produtos — aqui você adiciona seus livros
+    const PRODUCTS = [
+      { id: 'sample', title: 'Seu Livro — Edição Independente', price: 29.90, desc: 'E-book (PDF/EPUB). Página de venda pronta.'},
+      { id: 'kitpaper', title: 'Livro Impresso (Pré-venda)', price: 59.90, desc:'Capa impressa + frete (simulado).'},
+      { id: 'consult', title: 'Pagina + Consultoria', price: 199.00, desc:'Criação da página de venda e orientação de marketing.'}
+    ];
+
+    // Estado do carrinho — simples array de {productId, qty}
+    let CART = [];
+
+    // Util: formato de preço local BRL
+    function formatBRL(n){
+      return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    }
+
+    // Renderiza a lista de produtos na seção "Products"
+    function renderProducts(){
+      const el = document.getElementById('productsList');
+      el.innerHTML = '';
+      PRODUCTS.forEach(p => {
+        const node = document.createElement('div');
+        node.className = 'product card';
+        node.innerHTML = `\n          <h3>${p.title}</h3>\n          <div class=\"small\">${p.desc}</div>\n          <div style=\"display:flex;align-items:center;justify-content:space-between;margin-top:10px\">\n            <div class=\"price\">${formatBRL(p.price)}</div>\n            <div>\n              <button class=\"btn add\" data-id=\"${p.id}\">Adicionar</button>\n            </div>\n          </div>\n        `;
+        el.appendChild(node);
+      });
+      // adiciona listeners para os botões "Adicionar"
+      document.querySelectorAll('.product .add').forEach(btn => {
+        btn.addEventListener('click', () => addToCart(btn.dataset.id));
+      });
+    }
+
+    // Adiciona produto ao carrinho — se já existe, incrementa quantidade
+    function addToCart(productId){
+      const found = CART.find(i => i.productId === productId);
+      if(found) found.qty += 1; else CART.push({productId, qty:1});
+      renderCart();
+    }
+
+    // Remove produto do carrinho
+    function removeFromCart(productId){
+      CART = CART.filter(i => i.productId !== productId);
+      renderCart();
+    }
+
+    // Calcula total do carrinho
+    function cartTotal(){
+      return CART.reduce((sum, item) => {
+        const p = PRODUCTS.find(x => x.id === item.productId);
+        return sum + (p.price * item.qty);
+      }, 0);
+    }
+
+    // Atualiza contagem de itens no botão do cabeçalho
+    function updateCartCount(){
+      const count = CART.reduce((s,i) => s + i.qty, 0);
+      document.getElementById('cartCount').textContent = count;
+    }
+
+    // Renderiza o painel do carrinho
+    function renderCart(){
+      updateCartCount();
+      const container = document.getElementById('cartItems');
+      container.innerHTML = '';
+      if(CART.length === 0){
+        container.innerHTML = '<div class="small">Seu carrinho está vazio.</div>';
+      } else {
+        CART.forEach(item => {
+          const p = PRODUCTS.find(x => x.id === item.productId);
+          const row = document.createElement('div');
+          row.className = 'cart-item';
+          row.innerHTML = `\n            <div style=\"flex:1\">\n              <div><strong>${p.title}</strong></div>\n              <div class=\"small\">${formatBRL(p.price)} x <span class=\"qty\">${item.qty}</span></div>\n            </div>\n            <div style=\"text-align:right\">\n              <div>${formatBRL(p.price * item.qty)}</div>\n              <div style=\"margin-top:6px\">\n                <button class=\"btn\" data-remove=\"${p.id}\">Remover</button>\n              </div>\n            </div>\n          `;
+          container.appendChild(row);
+        });
+        // add listeners para remover
+        container.querySelectorAll('[data-remove]').forEach(b => {
+          b.addEventListener('click', () => removeFromCart(b.dataset.remove));
+        });
+      }
+      document.getElementById('cartTotal').textContent = formatBRL(cartTotal());
+    }
+
+    // Limpa o carrinho
+    function clearCart(){
+      CART = [];
+      renderCart();
+    }
+
+    // Abre/fecha painel do carrinho
+    function toggleCart(){
+      const panel = document.getElementById('cartPanel');
+      if(panel.style.display === 'none' || panel.style.display === ''){
+        panel.style.display = 'block';
+        panel.setAttribute('aria-hidden','false');
+      } else {
+        panel.style.display = 'none';
+        panel.setAttribute('aria-hidden','true');
+      }
+    }
+
+    // Mostra modal de checkout
+    function openCheckout(){
+      if(CART.length === 0){
+        alert('Seu carrinho está vazio. Adicione um produto antes de finalizar.');
+        return;
+      }
+      document.getElementById('modalCheckout').classList.add('open');
+      document.getElementById('modalCheckout').setAttribute('aria-hidden','false');
+    }
+
+    function closeCheckout(){
+      document.getElementById('modalCheckout').classList.remove('open');
+      document.getElementById('modalCheckout').setAttribute('aria-hidden','true');
+    }
+
+    // Simula processamento de pagamento e 'entrega'
+    function processPayment(formData){
+      // Exemplo simples: em produção você chamaria seu backend / gateway de pagamento
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve({ok:true, orderId: 'PED' + Math.floor(Math.random()*90000+10000)});
+        }, 900);
+      });
+    }
+
+    // Inicia os listeners do DOM
+    function init(){
+      renderProducts();
+      renderCart();
+
+      // botões de header
+      document.getElementById('openCart').addEventListener('click', toggleCart);
+      document.getElementById('btnClear').addEventListener('click', clearCart);
+      document.getElementById('btnCheckout').addEventListener('click', openCheckout);
+
+      // modal
+      document.getElementById('closeModal').addEventListener('click', closeCheckout);
+      document.getElementById('modalCheckout').addEventListener('click', e => {
+        if(e.target === document.getElementById('modalCheckout')) closeCheckout();
+      });
+
+      // Formulário de checkout
+      document.getElementById('checkoutForm').addEventListener('submit', async function(e){
+        e.preventDefault();
+        const name = document.getElementById('buyerName').value.trim();
+        const email = document.getElementById('buyerEmail').value.trim();
+        if(!name || !email){ alert('Preencha nome e e-mail'); return; }
+        const res = await processPayment({name,email});
+        if(res.ok){
+          alert('Pagamento simulado concluído — pedido: ' + res.orderId + '\nVocê receberá um link de download (simulado).');
+          clearCart();
+          closeCheckout();
+        } else {
+          alert('Falha no pagamento. Tente novamente.');
+        }
+      });
+
+      // CTA: adiciona amostra de produto
+      document.getElementById('addSample').addEventListener('click', () => addToCart('sample'));
+      document.getElementById('ctaAddSample').addEventListener('click', () => addToCart('sample'));
+      document.getElementById('ctaSellNow').addEventListener('click', () => alert('Para publicar agora você precisa de integração com servidor. Posso ajudar a configurar.'));
+
+      // Header "startSell" abre uma pequena explicação (exemplo)
+      document.getElementById('startSell').addEventListener('click', () => {
+        alert('Para começar: personalizar título, descrição e adicionar seu arquivo da obra. Precisa de ajuda com imagens ou capa?');
+      });
+
+      // botão "Adicionar livro de exemplo" que atualiza título/descrição/preço (demonstrativo)
+      document.getElementById('ctaAddSample').addEventListener('click', () => {
+        document.getElementById('sampleTitle').textContent = 'Meu Romance — Edição Digital';
+        document.getElementById('sampleDesc').textContent = 'Romance contemporâneo — formato digital (PDF).';
+        document.getElementById('samplePrice').textContent = formatBRL(19.90);
+      });
+
+    }
+
+    // inicializa quando DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', init);
+
+  </script>
+</body>
+</html>
