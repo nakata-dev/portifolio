@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exemplo de Media Queries</title>
+    <link rel="stylesheet" href="../style.css">
     <style>
-
+        *{
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
         #voltar {
             text-align: center;
         }
@@ -36,10 +41,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            color: #2c3e50;
-            font-size: 2.5em;
-        }
+        
 
         p {
             line-height: 1.6;
@@ -90,7 +92,7 @@
                 text-align: center;
             }
             .info-box {
-                background-color: #c0392b; /* Vermelho */
+                background-color: #4568f5; /* Vermelho */
                 font-size: 0.9em;
             }
         }
@@ -123,7 +125,10 @@
     </style>
 </head>
 <body>
-
+<header>
+    <h1>Layout Responsivo II</h1>
+    <p>por: Ailton A. Nakata</p>
+</header>
     <div class="container">
         <h1 id="titulo">Layout Responsivo com Media Queries</h1>
         <p>
@@ -142,10 +147,11 @@
             </ul>
         </p>
         <p>Você pode usar Media Queries para controlar não apenas cores, mas também layouts, tamanhos de fonte, e até mesmo a visibilidade de elementos.</p>
-    </div>
-    <br>
-    <div id="voltar">
-        <a href="../estudos.html">Voltar</a>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
     </div>
 
     <div class="info-box tamanho-tela">

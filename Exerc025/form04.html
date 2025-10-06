@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <title>Formulário</title>
     <style>
         #voltar{
@@ -18,36 +19,44 @@
     </style>
 </head>
 <body>
-    <form action="cadastro.php" method="get" autocomplete="on">
-            <fieldset>
-                <legend>Dados pessoais</legend>
-            <h1>Exemplo de Formulário</h1>
-            <div>
-                <label for="inome">Nome</label>
-                <input type="text" name="nome" id="inome" minlength="5" maxlength="20" required>
-            </div>
+    <header>
+        <h1>Teste de Formulário</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <form action="cadastro.php" method="get" autocomplete="on">
+                <fieldset>
+                    <legend>Dados pessoais</legend>
+                <h1>Exemplo de Formulário</h1>
+                <div>
+                    <label for="inome">Nome</label>
+                    <input type="text" name="nome" id="inome" minlength="5" maxlength="20" required>
+                </div>
+                <br>
+                <div>
+                    <label for="iemail">Email</label>
+                    <input type="email" name="email" id="iemail" required>
+                </div>
+                <br>
+                <!--Estudar sobre RegEx(Expressões Regulares)-->
+                <div>
+                    <label for="itel">Telefone  </label>
+                    <input type="tel" name="tel" id="itel" autocomplete="on"  pattern="^\(\d{2}\)d{4,5}-{4}$" required placeholder="(xx)xxxx-xxxx">
+                </div>
+                <br>
+                <div>
+                    <input type="submit" value="Enviar">
+                    <input type="reset" value="Limpar">
+                </div>
+            </fieldset>
+            </form>
             <br>
-            <div>
-                <label for="iemail">Email</label>
-                <input type="email" name="email" id="iemail" required>
-            </div>
             <br>
-            <!--Estudar sobre RegEx(Expressões Regulares)-->
-            <div>
-                <label for="itel">Telefone  </label>
-                <input type="tel" name="tel" id="itel" autocomplete="on"  pattern="^\(\d{2}\)d{4,5}-{4}$" required placeholder="(xx)xxxx-xxxx">
-            </div>
-            <br>
-            <div>
-                <input type="submit" value="Enviar">
-                <input type="reset" value="Limpar">
-            </div>
-        </fieldset>
-        </form>
-        <br><br>
-        <div id="voltar" style="text-align: center;">
+        <div id="voltar">
         <a href="../estudos.html">Voltar</a>
         </div>
         <br><br>
+    </main>
+        
 </body>
 </html>

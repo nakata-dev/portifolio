@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <style>
         *{
             font-family: Arial, Helvetica, sans-serif;
@@ -17,36 +18,44 @@
              transition-duration: 0.5s;
             }
         }
+        fieldset{
+            padding: 10px;
+            line-height: 1.8;
+        }
     </style>
     <title>Formulário</title>
 </head>
 <body>
-    <h1>Exemplo de Formulário</h1>
-    <fieldset>
-        <legend>Formulário</legend>
-        <form action="cadastro.php" method="post" autocomplete="on">
-            <label for="icor">Cor:</label>
-            <input type="color" name="cor" id="icor">
-            <p>
-            <p>
-                <label for="inivel">Nível de Satisfação</label>
-                <input type="range" name="nivel" id="inivel" min="1" max="5" value="5">
-            </p>
-            <p>
-                <label for="ifoto">Foto do perfil:</label>
-                <input type="file" name="Foto" id="ifoto">
-            </p>
-                <input type="submit" value="Enviar">
-                <input type="reset" value="Limpar">
-            </p>
-    </fieldset>
-
-    </form>
-    <br><br>
-    <div id="voltar" style="text-align: center;">
-        <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+    <header>
+        <h1>Exemplo de Formulário III</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <fieldset>
+            <legend>Formulário</legend>
+            <form action="cadastro.php" method="post" autocomplete="on">
+                
+                <label for="icor">Cor:</label>
+                <input type="color" name="cor" id="icor">
+                <p>
+                    <label for="inivel">Nível de Satisfação</label>
+                    <input type="range" name="nivel" id="inivel" min="1" max="5" value="5">
+                </p>
+                <p>
+                    <label for="ifoto">Foto do perfil:</label>
+                    <input type="file" name="Foto" id="ifoto">
+                </p>
+                    <input type="submit" value="Enviar">
+                    <input type="reset" value="Limpar">
+                </p>
+        </fieldset>
+        </form>
+        <br><br>
+        <div id="voltar" style="text-align: center;">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </main>
 
 
 </body>

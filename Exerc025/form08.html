@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
     <style>
         *{
             font-family: Arial, Helvetica, sans-serif;
@@ -21,32 +22,40 @@
              
             }
         }
+        p{
+            line-height: 1.8;
+        }
     </style>
     <title>Formulário</title>
 </head>
 <body>
-    
-    <p>
-        <label for="in1">número 1</label>
-        <input type="number" name="n1" id="in1" min="0" max="50" required oninput="isoma.innerHTML = Number(in1.value)+Number(in2.value)">
-    </p>
-    <p>
-        <label for="in2">número 2</label>
-        <input type="number" name="n2" id="in2" min="0" max="50" required oninput="isoma.innerHTML = Number(in1.value)+Number(in2.value)">
-    </p>
-
-    <p>
-        <label for="isoma">Soma</label>
-        <output name="soma" id="isoma">0</output>
-    </p>
-
-    <p>
-        <input type="submit" value="Enviar">
-        <input type="reset" value="Limpar">
-    </p>
-
-    <div id="voltar">
-        <a href="../estudos.html">Voltar</a>
-    </div>
+    <header><h1>Teste de Soma I</h1>
+    <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <p>
+            <label for="in1">número 1</label>
+            <input type="number" name="n1" id="in1" min="0" max="50" required oninput="isoma.innerHTML = Number(in1.value)+Number(in2.value)">
+        </p>
+        <p>
+            <label for="in2">número 2</label>
+            <input type="number" name="n2" id="in2" min="0" max="50" required oninput="isoma.innerHTML = Number(in1.value)+Number(in2.value)">
+        </p>
+        <p>
+            <label for="isoma">Soma</label>
+            <output name="soma" id="isoma">0</output>
+        </p>
+        <p>
+            <input type="submit" value="Enviar">
+            <input type="reset" value="Limpar">
+        </p>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
 </body>
 </html>
