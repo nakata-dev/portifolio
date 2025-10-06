@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Caricaturas & Curso — Portfólio para Artistas Independentes</title>
+  <!--
+    Arquivo: site-caricaturas-curso-desenho.html
+    Objetivo: landing page pronta para portfólio profissional que oferece
+              - encomendas de caricaturas
+              - curso online de desenho (venda/inscrição)
+    Uso: Salve como `index.html` e abra no navegador. Tudo front-end; checkout simulado.
+    Observação: Comentários em português explicam cada bloco para seu estudo.
+  -->
+  <style>
+    /* ===== Tema: variáveis para fácil customização ===== */
+    :root{
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --brand: #ff6b6b; /* cor principal — vermelha estilizada */
+      --accent: #4f46e5; /* roxo para CTAs */
+      --muted: #6b7280;
+      --radius: 12px;
+      --maxw: 1100px;
+      --shadow: 0 8px 30px rgba(15,23,42,0.06);
+      --mono: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    /* ===== Reset e base ===== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:var(--mono);background:var(--bg);color:#081124;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+      display:flex;justify-content:center;padding:28px;
+    }
+    .wrap{width:100%;max-width:var(--maxw)}
+
+    /* ===== Cabeçalho ===== */
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .logo{display:flex;gap:12px;align-items:center}
+    .mark{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--brand),#ff936b);display:grid;place-items:center;color:white;font-weight:800}
+    nav{display:flex;gap:12px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none}
+    .cta{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
+
+    /* ===== HERO ===== */
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:center;margin-bottom:20px}
+    .card{background:var(--card);padding:20px;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero h1{margin:0 0 8px;font-size:1.6rem}
+    .hero p{margin:0 0 14px;color:var(--muted)}
+
+    /* destaque de serviços */
+    .services{display:flex;gap:10px;margin-top:12px}
+    .service{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);border:1px solid #f1f5f9}
+
+    /* cartão de encomenda (mini loja) */
+    .order-card{display:flex;flex-direction:column;gap:10px}
+    .cover{height:200px;border-radius:8px;background:linear-gradient(180deg,#fff6f6,#fff);display:grid;place-items:center}
+
+    /* seção de cursos */
+    .course-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .lesson{background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:10px}
+
+    /* galeria de portfólio */
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:12px}
+    .thumb{height:120px;border-radius:8px;background:linear-gradient(180deg,#fff,#f8f8ff);display:grid;place-items:center;border:1px solid #eee}
+
+    /* formulário / rodapé */
+    form .field{display:flex;flex-direction:column;margin-bottom:8px}
+    form input, form textarea{padding:10px;border-radius:8px;border:1px solid #e6e9ef}
+    footer{margin-top:20px;color:var(--muted);text-align:center}
+
+    /* modal */
+    .modal{position:fixed;left:0;top:0;right:0;bottom:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,15,0.45);}
+    .modal.open{display:flex}
+    .modal .sheet{width:420px;background:var(--card);padding:18px;border-radius:12px}
+
+    /* responsividade */
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr}
+      .course-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- CABEÇALHO -->
+    <header>
+      <div class="logo">
+        <div class="mark">CD</div>
+        <div>
+          <div style="font-weight:700">Caricaturas & Curso</div>
+          <div style="font-size:.85rem;color:var(--muted)">Portfólio para artistas independentes</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#servicos">Serviços</a>
+        <a href="#curso">Curso</a>
+        <a href="#portfolio">Portfólio</a>
+        <a href="#contato">Contato</a>
+        <button class="cta" id="openCart">Carrinho</button>
+      </nav>
+    </header>
+
+    <!-- HERO com oferta / chamada -->
+    <div class="hero">
+      <div class="card">
+        <h1>Encomende caricaturas e aprenda a desenhar do zero ao avançado</h1>
+        <p>Ofereça serviços personalizados (caricaturas digitais, caricaturas impressas) e um curso passo a passo para quem quer dominar desenho e estilo próprio.</p>
+
+        <div class="services">
+          <div class="service">
+            <strong>Encomendas Rápidas</strong>
+            <div class="small" style="color:var(--muted);margin-top:6px">Entrega em 3 dias úteis (digital) — revisões inclusas.</div>
+          </div>
+          <div class="service">
+            <strong>Curso Online</strong>
+            <div class="small" style="color:var(--muted);margin-top:6px">Aulas em vídeo + exercícios práticos + feedback.</div>
+          </div>
+        </div>
+
+        <hr style="margin:14px 0;opacity:.06" />
+        <strong>Por que funciona:</strong>
+        <ul style="color:var(--muted)">
+          <li>Design claro para destacar trabalhos artísticos</li>
+          <li>Fluxo de compra simples para clientes</li>
+          <li>Seção de portfólio que gera confiança</li>
+        </ul>
+
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button class="cta" id="btnOrderSample">Encomendar Amostra</button>
+          <button class="cta" id="btnEnroll">Inscrever no Curso</button>
+        </div>
+      </div>
+
+      <!-- MINI-LOJA => cartão de encomenda -->
+      <aside class="card order-card">
+        <div class="cover">
+          <!-- Desenho placeholder — pode substituir por imagem real -->
+          <svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="128" height="128" rx="8" fill="#fff6f6" stroke="#ffdede"/>
+            <circle cx="70" cy="54" r="18" fill="#ffdede"/>
+            <rect x="38" y="84" width="64" height="24" rx="6" fill="#fff"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style="margin:6px 0">Caricatura Digital — Rosto</h3>
+          <div style="color:var(--muted)">Formato: PNG/JPEG | Revisões: 2 | Entrega: 3 dias</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+            <div style="font-weight:700">R$ 79,90</div>
+            <div>
+              <button class="cta" data-id="caric1">Adicionar ao carrinho</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:.95rem">Também disponível: caricaturas de casal, família e pet. Impressão sob consulta.</div>
+      </aside>
+    </div>
+
+    <!-- CURSO: módulos e chamada -->
+    <section id="curso" class="card">
+      <h3>Curso Online de Desenho — Estrutura</h3>
+      <p style="color:var(--muted)">Curso dividido em módulos curtos e objetivos. Ideal para iniciantes e quem quer aprimorar estilo próprio.</p>
+      <div class="course-grid">
+        <div class="lesson">
+          <strong>Módulo 1 — Fundamentos</strong>
+          <div class="small" style="margin-top:6px;color:var(--muted)">Linhas, formas, volume e perspectiva.</div>
+        </div>
+        <div class="lesson">
+          <strong>Módulo 2 — Rosto e Expressões</strong>
+          <div class="small" style="margin-top:6px;color:var(--muted)">Anatomia simplificada, proporções e caricatura facial.</div>
+        </div>
+        <div class="lesson">
+          <strong>Módulo 3 — Sombreamento e Texturas</strong>
+          <div class="small" style="margin-top:6px;color:var(--muted)">Luz, sombra, hachura e técnicas digitais.</div>
+        </div>
+        <div class="lesson">
+          <strong>Módulo 4 — Venda e Portfólio</strong>
+          <div class="small" style="margin-top:6px;color:var(--muted)">Como precificar, promover e vender sua arte.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+        <div style="font-size:1.2rem;font-weight:700">Curso completo — R$ 149,90</div>
+        <div>
+          <button class="cta" data-id="course1">Comprar Curso</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="card" style="margin-top:12px">
+      <h3>Portfólio</h3>
+      <p style="color:var(--muted)">Alguns trabalhos recentes (clique para ampliar — placeholder)</p>
+      <div class="gallery" aria-hidden>
+        <div class="thumb">Trabalho 1</div>
+        <div class="thumb">Trabalho 2</div>
+        <div class="thumb">Trabalho 3</div>
+        <div class="thumb">Trabalho 4</div>
+        <div class="thumb">Trabalho 5</div>
+      </div>
+    </section>
+
+    <!-- CONTATO / CAPTURA DE LEADS -->
+    <section id="contato" class="card" style="margin-top:12px">
+      <h3>Contato / Pedido personalizado</h3>
+      <p style="color:var(--muted)">Preencha o formulário para solicitar orçamento ou tirar dúvidas.</p>
+      <form id="contactForm">
+        <div class="field">
+          <label>Nome</label>
+          <input id="name" required />
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <input id="email" type="email" required />
+        </div>
+        <div class="field">
+          <label>Mensagem (descrição do pedido)</label>
+          <textarea id="message" rows="4"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="cta" type="button" id="sendMessage">Enviar Mensagem</button>
+          <button class="cta" type="button" id="requestQuote">Solicitar Orçamento</button>
+        </div>
+      </form>
+    </section>
+
+    <footer>
+      <div class="small" style="color:var(--muted);margin-top:12px">© 2025 — Seu Nome Artístico • Contato: seu@email.com</div>
+    </footer>
+
+    <!-- CARRINHO SIMPLES (painel) e MODAL -->
+    <div id="cartPanel" class="modal" aria-hidden="true">
+      <div class="sheet">
+        <h4>Carrinho</h4>
+        <div id="cartItems" style="margin-top:10px"></div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+          <strong>Total:</strong>
+          <div id="cartTotal">R$ 0,00</div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+          <button class="cta" id="checkoutBtn">Finalizar</button>
+          <button class="cta" id="clearCart" style="background:#eee;color:#111">Limpar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de compra / inscrição (simulado) -->
+    <div id="modalBuy" class="modal" aria-hidden="true">
+      <div class="sheet">
+        <h4>Finalizar Compra (simulado)</h4>
+        <form id="buyForm">
+          <div class="field"><label>Nome</label><input id="buyerName" required /></div>
+          <div class="field"><label>E-mail</label><input id="buyerEmail" type="email" required /></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end"><button class="cta" type="submit">Pagar (simulado)</button></div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /*
+      JS explicado:
+      - produtos e carrinho simples (front-end)
+      - funções: addToCart, renderCart, clearCart, openModal, processPayment (simulado)
+      - comentários para ajudar no seu estudo
+    */
+
+    const PRODUCTS = [
+      {id:'caric1', title:'Caricatura Digital — Rosto', price:79.90},
+      {id:'caric2', title:'Caricatura Casal (digital)', price:139.90},
+      {id:'course1', title:'Curso Online Completo', price:149.90}
+    ];
+
+    let CART = [];
+
+    function formatBRL(n){ return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+
+    // adiciona item ao array do carrinho
+    function addToCart(id){
+      const found = CART.find(x => x.id === id);
+      if(found) found.qty += 1; else CART.push({id, qty:1});
+      renderCart();
+      openCartPanel();
+    }
+
+    // renderiza itens do carrinho no painel
+    function renderCart(){
+      const container = document.getElementById('cartItems');
+      container.innerHTML = '';
+      if(CART.length === 0){ container.innerHTML = '<div class="small">Carrinho vazio.</div>'; document.getElementById('cartTotal').textContent = formatBRL(0); return; }
+      CART.forEach(item => {
+        const p = PRODUCTS.find(x => x.id === item.id);
+        const row = document.createElement('div');
+        row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.marginBottom = '10px';
+        row.innerHTML = `<div>${p.title} <div style="color:var(--muted);font-size:.95rem">Qtd: ${item.qty}</div></div><div>${formatBRL(p.price * item.qty)}<div style="margin-top:6px"><button class=\"cta\" data-remove=\"${p.id}\">Remover</button></div></div>`;
+        container.appendChild(row);
+      });
+      document.getElementById('cartTotal').textContent = formatBRL(CART.reduce((s,i)=> s + (PRODUCTS.find(p=>p.id===i.id).price * i.qty), 0));
+      container.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', (e)=>{ removeFromCart(e.target.dataset.remove); }));
+    }
+
+    function removeFromCart(id){ CART = CART.filter(x => x.id !== id); renderCart(); }
+    function clearCart(){ CART = []; renderCart(); }
+
+    // abre/fecha painel do carrinho
+    function openCartPanel(){ const m = document.getElementById('cartPanel'); m.classList.add('open'); m.setAttribute('aria-hidden','false'); }
+    function closeCartPanel(){ const m = document.getElementById('cartPanel'); m.classList.remove('open'); m.setAttribute('aria-hidden','true'); }
+
+    // abre modal de compra
+    function openBuyModal(){ document.getElementById('modalBuy').classList.add('open'); document.getElementById('modalBuy').setAttribute('aria-hidden','false'); }
+    function closeBuyModal(){ document.getElementById('modalBuy').classList.remove('open'); document.getElementById('modalBuy').setAttribute('aria-hidden','true'); }
+
+    // função simulada de pagamento (substituir por integração real depois)
+    function processPayment(){
+      return new Promise(resolve => setTimeout(()=> resolve({ok:true, orderId: 'ORD' + Math.floor(Math.random()*90000+10000)}), 700));
+    }
+
+    // listeners iniciais
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // botões de adicionar (cartaço e curso)
+      document.querySelectorAll('[data-id]').forEach(b => {
+        b.addEventListener('click', ()=> addToCart(b.dataset.id));
+      });
+
+      document.getElementById('openCart').addEventListener('click', openCartPanel);
+      document.getElementById('clearCart').addEventListener('click', clearCart);
+      document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+        if(CART.length===0){ alert('Carrinho vazio'); return; }
+        openBuyModal();
+      });
+
+      document.getElementById('btnOrderSample').addEventListener('click', ()=> addToCart('caric1'));
+      document.getElementById('btnEnroll').addEventListener('click', ()=> addToCart('course1'));
+
+      // fechamento de modais ao clicar fora
+      document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', (e)=>{ if(e.target === m) m.classList.remove('open'); }));
+
+      // formulário de contato (simulado envio)
+      document.getElementById('sendMessage').addEventListener('click', ()=>{
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        if(!name || !email){ alert('Preencha nome e e-mail'); return; }
+        alert('Mensagem enviada! Em produção, aqui você enviaria ao servidor.');
+      });
+
+      document.getElementById('requestQuote').addEventListener('click', ()=>{
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const msg = document.getElementById('message').value.trim();
+        if(!name || !email || !msg){ alert('Preencha nome, e-mail e descrição do pedido'); return; }
+        // aqui você poderia gerar um PDF de orçamento ou enviar e-mail automático
+        alert('Pedido recebido! (simulado) Em breve enviaremos orçamento por e-mail.');
+      });
+
+      // formulário de compra (simulado)
+      document.getElementById('buyForm').addEventListener('submit', async function(e){
+        e.preventDefault();
+        const name = document.getElementById('buyerName').value.trim();
+        const email = document.getElementById('buyerEmail').value.trim();
+        if(!name || !email){ alert('Preencha nome e e-mail'); return; }
+        const res = await processPayment();
+        if(res.ok){ alert('Compra simulada concluída — Pedido: ' + res.orderId); clearCart(); closeBuyModal(); closeCartPanel(); }
+        else alert('Erro no pagamento');
+      });
+
+      // liga botões de adicionar do HTML estático
+      document.querySelectorAll('[data-id]').forEach(btn => btn.addEventListener('click', ()=> addToCart(btn.dataset.id)));
+    });
+  </script>
+</body>
+</html>
