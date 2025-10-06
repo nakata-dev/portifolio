@@ -78,10 +78,11 @@ header {
 }  */
 
 header img{
+    padding: 0px;
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 0px solid rgb(255, 255, 255);
+    border: 3px solid rgb(255, 255, 255);
 }
 
 /*header > p{
