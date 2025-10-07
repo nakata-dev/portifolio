@@ -98,8 +98,8 @@ nav{
     background: linear-gradient(to right, #2626FE, #00bfff);
     padding-left: 15px;
     padding: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius:10px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius:15px;
     font-family: 'Times New Roman', Times, serif;
     
 }
@@ -109,7 +109,7 @@ nav > a{
     padding: 10px;
     text-decoration: none;
     font-weight: lighter;
-    border-radius: 2px;
+    border-radius: 15px;
     transition-duration: 0.3s;
     
 }
@@ -124,7 +124,7 @@ nav a:hover{
 a {
     color:aliceblue;
     text-decoration: none;
-    padding: 10px;
+    padding: 5px;
 }
 
 main{ /*RESPONSIVE*/
