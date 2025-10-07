@@ -12,6 +12,20 @@
   <meta charset="UTF-8">
   <title>Jogo da Memória</title>
   <style>
+    a {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
     body {
       font-family: Arial, sans-serif;
       background: #222;
@@ -54,9 +68,9 @@
     }
 
     button {
-      margin-top: 20px;
-      padding: 10px 20px;
+      padding: 8px;
       font-size: 16px;
+      border-radius: 10px;
       cursor: pointer;
     }
     /* Adicione esta seção ao seu <style> existente */
@@ -84,8 +98,11 @@
 <body>
 
   <h1>🧠 Jogo da Memória</h1>
+  <div>
+    <a href="../index.html">Voltar</a>
+    <button onclick="iniciarJogo()">🔄 Reiniciar</button>
+  </div>
   <div class="tabuleiro" id="tabuleiro"></div>
-  <button onclick="iniciarJogo()">🔄 Reiniciar</button>
 
   <script>
     const emojis = ['🍎', '🍌', '🍇', '🍓', '🍉', '🍍', '🍑', '🥝'];

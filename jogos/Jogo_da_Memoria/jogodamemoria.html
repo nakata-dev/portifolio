@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jogo da Memória 6x6</title>
     <style>
+        a {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #111;
@@ -51,12 +67,12 @@
 
         button {
             margin-top: 10px;
-            padding: 10px 10px;
+            padding: 9px;
             font-size: 1em;
             background-color: #444;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
         }
 
@@ -73,10 +89,12 @@
             h1 {
                 font-size: 1.2em;
             }
+
             .tabuleiro {
                 grid-template-columns: repeat(6, 1fr);
                 gap: 2px;
             }
+
             .carta {
                 width: 60px;
                 height: 60px;
@@ -85,16 +103,20 @@
         }
     </style>
 </head>
+
 <body>
 
     <h1>🧠 Jogo da Memória 6x6</h1>
+    <div>
+        <a href="../index.html">Voltar</a>
+        <button onclick="iniciarJogo()">🔁 Reiniciar</button>
+    </div>
     <div class="tabuleiro" id="tabuleiro"></div>
-    <button onclick="iniciarJogo()">🔁 Reiniciar</button>
     <div class="status" id="status"></div>
 
     <script>
         const emojisBase = [
-            '🍓', '🍇', '🍉', '🍊', '🍋', '🍌', 
+            '🍓', '🍇', '🍉', '🍊', '🍋', '🍌',
             '🍍', '🥭', '🍎', '🍏', '🍐', '🍑',
             '🍒', '🥝', '🥥', '🥑', '🍅', '🍆'
         ]; // 18 emojis únicos para 18 pares
@@ -133,7 +155,7 @@
                     primeira = null;
                     bloqueado = false;
                     paresEncontrados++;
-                    status.textContent = `Pares encontrados: ${paresEncontrados}/18`; 
+                    status.textContent = `Pares encontrados: ${paresEncontrados}/18`;
                     if (paresEncontrados === 18) {
                         setTimeout(() => alert("🎉 Parabéns! Você encontrou todos os pares!"), 300);
                     }
@@ -155,7 +177,7 @@
             primeira = null;
             bloqueado = false;
             paresEncontrados = 0;
-            status.textContent = `Pares encontrados: 0/18`; 
+            status.textContent = `Pares encontrados: 0/18`;
 
             let emojis = [...emojisBase];
             emojis = [...emojis, ...emojis];
@@ -170,4 +192,5 @@
     </script>
 
 </body>
+
 </html>
