@@ -54,10 +54,10 @@
 
     button.letra {
       font-weight: bold;
-      flex: 1 1 30%; /* Ocupa até 30% da largura cada */
+      flex: 0 0 auto; /* impede de crescer além do conteúdo */
       min-width: 40px;
-      padding: 10px;
-      font-size: clamp(1.3rem, 3vw, 3rem);
+      padding: 8px;
+      font-size: 1.2rem;
       cursor: pointer;
       border: 1px solid #ccc;
       border-radius: 100px;
@@ -86,7 +86,7 @@
     #reiniciar {
       margin: 15px 0;
       padding: 10px 15px;
-      font-size: clamp(1rem, 4vw, 1.2.2rem);
+      font-size: clamp(1rem, 4vw, 1rem);
       cursor: pointer;
       border: none;
       border-radius: 8px;
@@ -97,9 +97,14 @@
       background: #057a1e;
     }
     main{
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+      max-width: 600px;
+    }
+    main > div{
       display: block;
       margin: auto;
-      max-width: 300px;
     }
 
     /* Melhor ajuste em telas menores */
@@ -133,8 +138,10 @@
 </head>
 <body>
   <main>
-    <a href="../index.html">Voltar</a>
-    <button id="reiniciar">🔁 Reiniciar</button>
+    <div>
+      <a href="../index.html">Voltar</a>
+      <button id="reiniciar">🔁 Reiniciar</button>
+    </div>
     <h1>JOGO DA ADIVINHAÇÃO</h1>
     <div id="palavra">_ _ _ _ _</div>
     <div id="letras"></div>
