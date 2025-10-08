@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Agenda Kanban — Portfólio (Minimal)</title>
+<style>
+  /* ---------- VARIÁVEIS DE TEMA E CORES ---------- */
+  :root{
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --accent: #3759ff;
+    --danger: #ff5b5b;
+    --success: #2ecc71; /* Verde mais vibrante */
+    --radius: 12px;
+    --shadow: 0 8px 24px rgba(12,18,40,0.06);
+    --maxw: 1400px;
+    --gap: 16px;
+    /* Cores de Prioridade */
+    --p-high: var(--danger);
+    --p-mid: #ffaa00; /* Laranja */
+    --p-low: var(--success);
+  }
+  /* ---------- RESET BÁSICO E TIPOGRAFIA ---------- */
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(180deg,var(--bg), #eef2ff 200px);
+    color:#0f172a;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:24px;
+    display:flex;
+    justify-content:center;
+  }
+  .app{
+    width:100%;
+    max-width:var(--maxw);
+  }
+  /* ---------- HEADER E CONTROLES ---------- */
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .logo{
+    width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#00b3ff);
+    color:white;display:grid;place-items:center;font-weight:800;box-shadow:var(--shadow)
+  }
+  h1{font-size:1.4rem;margin:0}
+  p.lead{margin:0;color:var(--muted);font-size:.92rem}
+  .controls{display:flex;gap:8px;align-items:center}
+  .btn{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;box-shadow:0 8px 20px rgba(55,89,255,0.12);transition:transform 0.1s}
+  .btn:active{transform:scale(0.98)}
+  .btn.ghost{background:transparent;color:var(--accent);box-shadow:none;border:1px solid rgba(55,89,255,0.12)}
+  input[type="text"], input[type="date"], select, textarea{padding:10px;border-radius:8px;border:1px solid #e6e9ef;font-size:1rem}
+  .toolbar{display:flex;gap:8px;align-items:center}
+  /* ---------- LAYOUT DAS COLUNAS (KANBAN) ---------- */
+  main{display:flex;gap:var(--gap);align-items:start;overflow-x:auto;padding-bottom:24px;/* Scroll Horizontal em Mobile */}
+  .column{
+    width:320px;
+    min-width:300px; /* Garante que a coluna não diminua muito */
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:12px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    max-height:80vh; /* Aumenta a altura para telas maiores */
+  }
+  .col-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+  .col-title{font-weight:700}
+  .col-actions{display:flex;gap:6px}
+  .tasks{display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding-right:6px}
+  /* ---------- CARTÃO DE TAREFA ---------- */
+  .task{
+    background:linear-gradient(180deg,#fff,#fbfdff);
+    padding:10px;border-radius:10px;border:1px solid #edf2ff;cursor:grab;
+    box-shadow:0 6px 18px rgba(10,14,30,0.04);
+    display:flex;flex-direction:column;gap:6px;
+    transition:box-shadow 0.2s;
+  }
+  .task:active{cursor:grabbing;box-shadow:0 10px 30px rgba(10,14,30,0.1)}
+  .task .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .task .title{font-weight:700;line-height:1.2}
+  .meta{font-size:.8rem;color:var(--muted);display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+  
+  /* Estilo dos Chips */
+  .chip{padding:4px 8px;border-radius:999px;font-size:.7rem;display:inline-block;font-weight:600;}
+  /* Cores dos chips de prioridade (Fundo mais suave) */
+  .chip-priority.high { background: #ffe6e6; color: var(--p-high); }
+  .chip-priority.mid { background: #fff2e0; color: var(--p-mid); }
+  .chip-priority.low { background: #e6ffec; color: var(--p-low); }
+
+  /* Cor da barra lateral do card */
+  .priority-low{border-left:4px solid var(--p-low)}
+  .priority-mid{border-left:4px solid var(--p-mid)}
+  .priority-high{border-left:4px solid var(--p-high)}
+  .task small{color:var(--muted);font-size:0.75rem}
+  .task-actions{display:flex;gap:6px;margin-top:6px}
+  .small-btn{padding:6px 8px;border-radius:8px;border:1px solid #e6e9ef;background:transparent;cursor:pointer;font-size:0.85rem}
+  /* ---------- MODAL (CRUD de tarefa) ---------- */
+  .modal{position:fixed;left:0;top:0;right:0;bottom:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,20,0.45);z-index:999}
+  .modal.open{display:flex}
+  .sheet{width:520px;max-width:94%;background:var(--card);padding:24px;border-radius:12px;box-shadow:var(--shadow)}
+  .field{display:flex;flex-direction:column;margin-bottom:12px}
+  label{font-size:.8rem;margin-bottom:6px;color:var(--muted);font-weight:600}
+  textarea{min-height:90px;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
+  /* ---------- UTILITÁRIOS ---------- */
+  .muted{color:var(--muted)}
+  footer{margin-top:12px;color:var(--muted);font-size:.9rem;padding-bottom:40px;text-align:center;}
+
+  /* ---------- NOTIFICAÇÃO (Toast) ---------- */
+  #notification-area{position:fixed;bottom:20px;right:20px;z-index:1000;display:flex;flex-direction:column-reverse;gap:10px;}
+  .toast{
+    padding:12px 20px;
+    border-radius:var(--radius);
+    color:#fff;
+    font-weight:600;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    opacity:0;
+    transition:opacity 0.3s, transform 0.3s;
+    transform:translateY(20px);
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .toast.success{background:var(--success)}
+  .toast.danger{background:var(--danger)}
+  .toast.info{background:var(--accent)}
+
+  /* ---------- RESPONSIVO (MOBILE-FIRST) ---------- */
+  @media (max-width:1000px){
+    body{padding:16px}
+    main{flex-wrap:nowrap;overflow-x:scroll} /* Scroll horizontal em mobile */
+    .column{min-width:300px;max-height:85vh;}
+    header{flex-direction:column;align-items:flex-start;gap:12px}
+    .toolbar{flex-wrap:wrap;}
+    .controls{width:100%;flex-wrap:wrap;justify-content:space-between;}
+    .toolbar, .controls > div:last-child{width:100%;}
+    /* Ajusta o posicionamento da notificação para mobile */
+    #notification-area{bottom:10px;right:10px;left:10px;width:auto;align-items:center;}
+  }
+  @media (max-width:600px){
+    h1{font-size:1.2rem}
+    .btn{padding:8px 10px}
+    .tasks{padding-right:0}
+    /* Deixa os botões de ação na mesma linha em telas pequenas */
+    .controls > div:last-child{display:flex;gap:8px;margin-left:0;justify-content:space-between}
+    .btn#addTaskBtn, .btn#addColumnBtn{flex:1}
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">AK</div>
+        <div>
+          <h1>Agenda Kanban — Portfólio</h1>
+          <p class="lead">Minimal + Trello-like • arraste tarefas, filtre, salve localmente</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="toolbar">
+          <input id="search" type="text" placeholder="Pesquisar tarefas..." />
+          <select id="filterPriority">
+            <option value="">Todas prioridades</option>
+            <option value="high">Alta</option>
+            <option value="mid">Média</option>
+            <option value="low">Baixa</option>
+          </select>
+          <button class="btn ghost" id="exportBtn" title="Exportar JSON">Exportar</button>
+          <button class="btn ghost" id="importBtn" title="Importar JSON">Importar</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-left:12px">
+          <button class="btn" id="addTaskBtn">+ Nova Tarefa</button>
+          <button class="btn ghost" id="addColumnBtn">+ Coluna</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="board" aria-live="polite">
+      </main>
+
+    <footer>
+      <small>Projeto para portfólio — Demonstração de habilidades em JavaScript, UI/UX e persistência de dados. Base para um sistema maior.</small>
+    </footer>
+  </div>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-modal="true">
+      <h3 id="modalTitle">Nova Tarefa</h3>
+
+      <div class="field">
+        <label for="taskTitle">Título</label>
+        <input id="taskTitle" type="text" required />
+      </div>
+
+      <div class="field">
+        <label for="taskDesc">Descrição</label>
+        <textarea id="taskDesc"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;">
+        <div class="field" style="flex:1">
+          <label for="taskDue">Data (vencimento)</label>
+          <input id="taskDue" type="date" />
+        </div>
+        <div class="field" style="width:130px">
+          <label for="taskPriority">Prioridade</label>
+          <select id="taskPriority">
+            <option value="mid">Média</option>
+            <option value="high">Alta</option>
+            <option value="low">Baixa</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="taskTags">Etiquetas (separadas por vírgula)</label>
+        <input id="taskTags" type="text" placeholder="ex: site, cliente, urgente" />
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+        <button class="btn ghost" id="cancelModal">Cancelar</button>
+        <button class="btn" id="saveTaskBtn">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="notification-area"></div>
+
+<script>
+/* =========================================================
+    Agenda Kanban - JS Aprimorado para Portfólio
+    Foco: Organização, Feedback (Toast) e Funcionalidade
+    ========================================================= */
+
+/* ---------- VARIÁVEIS GLOBAIS E UTILITÁRIOS ---------- */
+const uid = (n=6) => Math.random().toString(36).slice(2,2+n);
+const qs = sel => document.querySelector(sel);
+const STORAGE_KEY = 'kanban-port-v1';
+const boardEl = qs('#board');
+const notificationArea = qs('#notification-area');
+
+/* ---------- ESTADO DA APLICAÇÃO E PERSISTÊNCIA ---------- */
+let state = {
+  columns: [
+    { id: 'col-todo', title: 'To Do', taskIds: [] },
+    { id: 'col-doing', title: 'Doing', taskIds: [] },
+    { id: 'col-done', title: 'Done', taskIds: [] }
+  ],
+  tasks: {}
+};
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function loadState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw) {
+    try { 
+      state = JSON.parse(raw); 
+      state.columns.forEach(col => {
+        col.taskIds = col.taskIds.filter(id => state.tasks[id]);
+      });
+    } catch(e){ 
+      console.error('Erro ao carregar state do localStorage:', e); 
+    }
+  } else {
+    const t1 = createTaskObj('Organizar portfólio','Criar páginas e descrição','mid','', ['portfolio'],'col-todo');
+    const t2 = createTaskObj('Responder cliente','Orçar projeto', 'high', '', ['cliente'],'col-doing');
+    const t3 = createTaskObj('Publicar post','Texto sobre HTML', 'low', '', ['social'],'col-done');
+    state.tasks[t1.id]=t1; state.columns[0].taskIds.push(t1.id);
+    state.tasks[t2.id]=t2; state.columns[1].taskIds.push(t2.id);
+    state.tasks[t3.id]=t3; state.columns[2].taskIds.push(t3.id);
+    saveState();
+  }
+}
+function createTaskObj(title, desc='', priority='mid', due='', tagsArr=[], colId='col-todo'){
+  const id = 't-' + uid(6);
+  return { id, title, desc, priority, due, tags: tagsArr, colId, createdAt: new Date().toISOString() };
+}
+function escapeHtml(s=''){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+/* ---------- FEEDBACK VISUAL (NOTIFICAÇÃO TOAST) ---------- */
+function showNotification(message, type='info', duration=3000){
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  notificationArea.appendChild(toast);
+  setTimeout(() => { toast.classList.add('show'); }, 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.addEventListener('transitionend', () => toast.remove());
+  }, duration);
+}
+
+/* ---------- RENDERIZAÇÃO E FILTROS ---------- */
+function getSearch(){ return qs('#search').value || ''; }
+function getPriorityFilter(){ return qs('#filterPriority').value || ''; }
+
+function renderBoard(filterText='', filterPriority=''){
+  boardEl.innerHTML = '';
+  state.columns.forEach(col => {
+    const colEl = document.createElement('section');
+    colEl.className = 'column';
+    colEl.dataset.colId = col.id;
+    colEl.innerHTML = `
+      <div class="col-head">
+        <div class="col-title">${escapeHtml(col.title)} <small class="muted" data-task-count>(0)</small></div>
+        <div class="col-actions">
+          <button class="small-btn" data-col-rename>Renomear</button>
+          <button class="small-btn" data-col-delete>Excluir</button>
+        </div>
+      </div>
+      <div class="tasks" data-col-body></div>
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <button class="small-btn" data-add-task>+ Tarefa</button>
+      </div>
+    `;
+    const tasksEl = colEl.querySelector('[data-col-body]');
+    let visibleTaskCount = 0;
+    tasksEl.addEventListener('dragover', ev => ev.preventDefault());
+    tasksEl.addEventListener('drop', ev => onDropToColumn(ev, col.id));
+    col.taskIds.forEach(tid => {
+      const t = state.tasks[tid];
+      if(!t) return;
+      if(filterPriority && t.priority !== filterPriority) return;
+      if(filterText){
+        const ft = filterText.trim().toLowerCase();
+        const found = (t.title + ' ' + (t.desc||'') + ' ' + (t.tags||[]).join(' ')).toLowerCase();
+        if(!found.includes(ft)) return;
+      }
+      const taskEl = document.createElement('article');
+      taskEl.className = `task priority-${t.priority}`;
+      taskEl.draggable = true;
+      taskEl.dataset.taskId = t.id;
+      taskEl.innerHTML = `
+        <div class="row">
+          <div>
+            <div class="title">${escapeHtml(t.title)}</div>
+            <div class="meta">
+              <span class="chip chip-priority ${t.priority}">${t.priority.toUpperCase()}</span> 
+              ${t.due ? '<small>Vence: ' + t.due + '</small>' : ''} 
+              ${t.tags?.length ? '<span class="chip">' + t.tags.map(tag => escapeHtml(tag)).join(', ') + '</span>' : ''}
+            </div>
+          </div>
+        </div>
+        <div><small>${escapeHtml(t.desc || '')}</small></div>
+        <div class="task-actions">
+          <button class="small-btn" data-edit>Editar</button>
+          <button class="small-btn" data-dup>Duplicar</button>
+          <button class="small-btn" data-delete>Excluir</button>
+        </div>
+      `;
+      taskEl.addEventListener('dragstart', onDragStart);
+      taskEl.addEventListener('dragend', onDragEnd);
+      taskEl.querySelector('[data-edit]').addEventListener('click', () => openTaskModal(t.id));
+      taskEl.querySelector('[data-delete]').addEventListener('click', () => { 
+        if(confirm(`Excluir tarefa "${t.title}"?`)) deleteTask(t.id); 
+      });
+      taskEl.querySelector('[data-dup]').addEventListener('click', () => duplicateTask(t.id));
+      tasksEl.appendChild(taskEl);
+      visibleTaskCount++;
+    });
+    colEl.querySelector('[data-task-count]').textContent = `(${visibleTaskCount})`;
+    colEl.querySelector('[data-add-task]').addEventListener('click', () => openTaskModal(null, col.id));
+    colEl.querySelector('[data-col-rename]').addEventListener('click', () => {
+      const newTitle = prompt('Novo nome para a coluna:', col.title);
+      if(newTitle) { col.title = newTitle; saveState(); renderBoard(getSearch(), getPriorityFilter()); }
+    });
+    colEl.querySelector('[data-col-delete]').addEventListener('click', () => {
+      if(confirm(`Excluir a coluna "${col.title}" e todas as tarefas?`)) { 
+        deleteColumn(col.id); 
+        showNotification(`Coluna "${col.title}" e tarefas excluídas.`, 'danger');
+      }
+    });
+    boardEl.appendChild(colEl);
+  });
+}
+
+/* ---------- CRUD: criar/editar/excluir/duplicar ---------- */
+function addTaskToState(taskObj){
+  state.tasks[taskObj.id] = taskObj;
+  const col = state.columns.find(c => c.id === taskObj.colId) || state.columns[0];
+  col.taskIds.unshift(taskObj.id); 
+  saveState(); 
+  renderBoard(getSearch(), getPriorityFilter());
+  showNotification('Tarefa criada com sucesso!', 'success');
+}
+function deleteTask(taskId){
+  const t = state.tasks[taskId];
+  if(!t) return;
+  state.columns.forEach(c => { c.taskIds = c.taskIds.filter(x=>x!==taskId); });
+  delete state.tasks[taskId];
+  saveState(); 
+  renderBoard(getSearch(), getPriorityFilter());
+  showNotification('Tarefa excluída.', 'danger');
+}
+function updateTask(taskId, data){
+  const t = state.tasks[taskId];
+  if(!t) return;
+  Object.assign(t, data);
+  saveState(); 
+  renderBoard(getSearch(), getPriorityFilter());
+  showNotification('Tarefa atualizada.', 'success');
+}
+function duplicateTask(taskId){
+  const t=state.tasks[taskId];
+  if(!t) return;
+  const copy = {...t, id:'t-'+uid(6), title: t.title + ' (cópia)', createdAt:new Date().toISOString()};
+  state.tasks[copy.id]=copy;
+  const col = state.columns.find(c=>c.id===t.colId);
+  col.taskIds.unshift(copy.id);
+  saveState(); 
+  renderBoard(getSearch(), getPriorityFilter());
+  showNotification(`Tarefa duplicada: ${copy.title}`, 'info');
+}
+
+/* ---------- COLUNAS: adicionar/excluir ---------- */
+function addColumn(title='Nova Coluna'){
+  const id = 'col-'+uid(4);
+  state.columns.push({id,title,taskIds:[]});
+  saveState(); 
+  renderBoard(getSearch(), getPriorityFilter());
+  showNotification(`Coluna "${title}" adicionada.`, 'success');
+}
+function deleteColumn(colId){
+  const col = state.columns.find(c=>c.id===colId);
+  if(!col) return;
+  col.taskIds.forEach(tid => delete state.tasks[tid]);
+  state.columns = state.columns.filter(c=>c.id!==colId);
+  saveState(); 
+  renderBoard(getSearch(), getPriorityFilter());
+}
+
+/* ---------- DRAG & DROP ---------- */
+let dragTaskId = null;
+function onDragStart(ev){
+  const tid = ev.currentTarget.dataset.taskId;
+  dragTaskId = tid;
+  ev.dataTransfer.setData('text/plain', tid);
+  ev.dataTransfer.effectAllowed = 'move';
+  ev.currentTarget.style.opacity = '0.4';
+}
+function onDragEnd(ev){
+  ev.currentTarget.style.opacity = '';
+  dragTaskId = null;
+}
+function onDropToColumn(ev, targetColId){
+  ev.preventDefault();
+  const tid = ev.dataTransfer.getData('text/plain') || dragTaskId;
+  if(!tid) return;
+  moveTaskToColumn(tid, targetColId);
+}
+function moveTaskToColumn(taskId, colId){
+  state.columns.forEach(c => { c.taskIds = c.taskIds.filter(x=>x!==taskId); });
+  const col = state.columns.find(c=>c.id===colId);
+  col.taskIds.unshift(taskId);
+  state.tasks[taskId].colId = colId;
+  saveState(); 
+  renderBoard(getSearch(), getPriorityFilter());
+  showNotification('Tarefa movida!', 'info');
+}
+
+/* ---------- MODAL: abrir/fechar e salvar ---------- */
+const modal = qs('#modal');
+const modalTitle = qs('#modalTitle');
+const taskTitleInput = qs('#taskTitle');
+const taskDescInput = qs('#taskDesc');
+const taskDueInput = qs('#taskDue');
+const taskPriorityInput = qs('#taskPriority');
+const taskTagsInput = qs('#taskTags');
+let editingTaskId = null;
+let targetColOnOpen = null;
+
+function openTaskModal(taskId=null, colId=null){
+  editingTaskId = taskId;
+  targetColOnOpen = colId;
+  if(taskId){
+    const t = state.tasks[taskId];
+    modalTitle.textContent = 'Editar Tarefa';
+    taskTitleInput.value = t.title || '';
+    taskDescInput.value = t.desc || '';
+    taskDueInput.value = t.due || '';
+    taskPriorityInput.value = t.priority || 'mid';
+    taskTagsInput.value = (t.tags||[]).join(', ');
+  } else {
+    modalTitle.textContent = 'Nova Tarefa';
+    taskTitleInput.value = '';
+    taskDescInput.value = '';
+    taskDueInput.value = '';
+    taskPriorityInput.value = 'mid';
+    taskTagsInput.value = '';
+  }
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+function closeModal(){ 
+  modal.classList.remove('open'); 
+  modal.setAttribute('aria-hidden','true'); 
+  editingTaskId=null; 
+  targetColOnOpen=null; 
+}
+
+/* ---------- LISTENERS DO MODAL E TOOLBAR ---------- */
+function setupListeners() {
+  qs('#saveTaskBtn').addEventListener('click', ()=>{
+    const title = taskTitleInput.value.trim();
+    if(!title){ 
+      showNotification('O Título da tarefa é obrigatório!', 'danger');
+      return; 
+    }
+    const desc = taskDescInput.value.trim();
+    const due = taskDueInput.value || '';
+    const priority = taskPriorityInput.value || 'mid';
+    const tags = taskTagsInput.value.split(',').map(s=>s.trim()).filter(Boolean);
+    if(editingTaskId){
+      updateTask(editingTaskId, { title, desc, due, priority, tags });
+    } else {
+      const colId = targetColOnOpen || (state.columns[0] && state.columns[0].id);
+      const newTask = createTaskObj(title, desc, priority, due, tags, colId);
+      addTaskToState(newTask);
+    }
+    closeModal();
+  });
+  qs('#cancelModal').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+  qs('#search').addEventListener('input', e => renderBoard(getSearch(), getPriorityFilter()));
+  qs('#filterPriority').addEventListener('change', e => renderBoard(getSearch(), getPriorityFilter()));
+  qs('#exportBtn').addEventListener('click', ()=>{
+    const data = JSON.stringify(state, null, 2);
+    const blob = new Blob([data], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'kanban-export.json'; a.click();
+    URL.revokeObjectURL(url);
+    showNotification('Dados exportados para kanban-export.json', 'info');
+  });
+  qs('#importBtn').addEventListener('click', ()=>{
+    const input = document.createElement('input'); input.type='file'; input.accept='application/json';
+    input.onchange = (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev)=>{
+        try{
+          const imported = JSON.parse(ev.target.result);
+          if(imported.columns && imported.tasks){
+            state = imported; 
+            saveState(); 
+            renderBoard(getSearch(), getPriorityFilter());
+            showNotification('Dados importados com sucesso!', 'success');
+          } else showNotification('Arquivo JSON inválido (Faltando colunas ou tasks)', 'danger');
+        } catch(err){ 
+          showNotification('Erro ao ler arquivo: ' + err.message, 'danger'); 
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  });
+  qs('#addColumnBtn').addEventListener('click', ()=>{ 
+    const title = prompt('Nome da nova coluna:','Nova Coluna'); 
+    if(title) addColumn(title); 
+  });
+  qs('#addTaskBtn').addEventListener('click', ()=> openTaskModal(null));
+}
+
+/* ---------- INICIALIZAÇÃO ---------- */
+function init(){
+  loadState();
+  renderBoard();
+  setupListeners(); // Chama a função para adicionar todos os listeners
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
