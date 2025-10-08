@@ -1,58 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contador</title>
   <link rel="stylesheet" href="../style.css">
   <style>
-    *{
-        padding: 0px;
-        margin: 0px;
-        box-sizing: border-box;
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
     }
+
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
     }
+
     input {
       width: 60px;
       margin: 5px;
     }
+
     #res {
       margin-top: 15px;
       font-size: 18px;
       font-weight: bold;
     }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
   </style>
 </head>
+
 <body>
   <header>
-      <h1>Contador</h1>
-      <p>por: Ailton A. Nakata</p>
+    <h1>Contador</h1>
+    <p>por: Ailton A. Nakata</p>
   </header>
-  
+
   <main>
-      
-          <label for="inicio">Início:</label>
-          <input type="number" id="inicio" value="0"><br>
-      
-          <label for="fim">Fim:</label>
-          <input type="number" id="fim" value="0"><br>
-      
-          <label for="passo">Passo:</label>
-          <input type="number" id="passo" value="1"><br>
-      
-          <input type="button" value="Contar" onclick="contar()">
-          <div id="res">Confira o resultado abaixo:</div>
-          <br>
-          <br>
-          <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
-          </div>
-          <br>
-          <br>
+
+    <label for="inicio">Início:</label>
+    <input type="number" id="inicio" value="0"><br>
+
+    <label for="fim">Fim:</label>
+    <input type="number" id="fim" value="0"><br>
+
+    <label for="passo">Passo:</label>
+    <input type="number" id="passo" value="1"><br>
+
+    <input type="button" value="Contar" onclick="contar()">
+    <div id="res">Confira o resultado abaixo:</div>
+    <br>
+    <br>
+    <div id="voltar">
+      <a href="../estudos.html">Voltar</a>
+    </div>
+    <br>
+    <br>
   </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
 
   <script>
     function contar() {
@@ -98,4 +129,5 @@
     }
   </script>
 </body>
+
 </html>

@@ -4,197 +4,212 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 /*fonte importada do computador */
 @import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Passion+One:wght@400;700;900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
 @font-face {
     font-family: 'Android';
     src: url(fontes/idroid.otf) format('opentype');
 }
 
-:root{
-    --cor00:#233CCF;
-    --cor01:#3747A5;
-    --cor02:#0025FA;
-    --cor03:#3D467A;
-    --cor04:#353950;
-    --cor05:#2B2C33;
+:root {
+    --cor00: #233CCF;
+    --cor01: #3747A5;
+    --cor02: #0025FA;
+    --cor03: #3D467A;
+    --cor04: #353950;
+    --cor05: #2B2C33;
 
-    --fonte_padrao:Arial, Verdana, Helvetica, Sans-serif;
-    --fonte_padrao02:"Libre Baskerville", serif;
-    --fonte_destaque:"Bebas Neue", Sans-serif;
-    --fonte_android:'Android',sans-serif;
-    --fonte_caligrafica:"Passion One", sans-serif;
-    }
-    *{
-        margin: 0px;
-        padding: 0px;
-        box-sizing: border-box;
-    }
+    --fonte_padrao: Arial, Verdana, Helvetica, Sans-serif;
+    --fonte_padrao02: "Libre Baskerville", serif;
+    --fonte_destaque: "Bebas Neue", Sans-serif;
+    --fonte_android: 'Android', sans-serif;
+    --fonte_caligrafica: "Passion One", sans-serif;
+}
 
-    body { 
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
     color: rgb(0, 0, 0);
     background-color: #ffffff;
     font-family: Arial, Helvetica, sans-serif;
-    
+
 }
-    
-   
-    nav{
-        font-family: 'Times New Roman', Times, serif;
-        background: linear-gradient(to right, #2626FE, #00bfff);
-        padding: 10px;
-        border-bottom-left-radius: 25px;
-        border-bottom-right-radius: 25px;
-        text-align: left;
-        padding-left: 30px;
-        font-size: 1em;
-    }
-    nav > a{
+
+
+nav {
+    font-family: 'Times New Roman', Times, serif;
+    background: linear-gradient(to right, #2626FE, #00bfff);
+    padding: 10px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    text-align: left;
+    padding-left: 30px;
+    font-size: 1em;
+}
+
+nav>a {
     color: white;
     padding: 10px;
     text-decoration: none;
     font-weight: lighter;
     border-radius: 2px;
     transition-duration: 0.3s;
-    
+
 }
-    nav a:hover{   
+
+nav a:hover {
     background-color: #2d92f1c5;
     padding: 10px;
     text-decoration: none;
     font-weight: bolder;
-    border-radius:5px;
+    border-radius: 5px;
     transition-duration: 1s;
 }
- 
-    header {
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-         
-           
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
 
-    header h1 {
-      text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.527);
-      margin: 0;
-      font-size: 2rem;
-    }
-    
-    header p {
-      text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.658);
-      font-style: italic;
-      margin-top: 5px;
-      font-family: 'Times New Roman', Times, serif;
-    }
-    main{
+header {
+    width: 100%;
+    min-height: 80px;
+    text-align: center;
+    padding-top: 10px;
+    background: linear-gradient(135deg, #2626FE, #00bfff);
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+    font-family: 'Times New Roman', Times, serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-        margin: auto;
-        width:90vw;
-        height: auto;
-        min-width: 300px;
-        max-width: 800px;
-        
-        background-color: white;
-        padding: 25px;
-        font-family: 'Times New Roman', Times, serif;
-        box-shadow:0px 0px 10px black;
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
-        border-top-right-radius: 10px;
-        border-top-left-radius: 10px;
-        padding-bottom: 0px;
-        
-    }
-   h2,h3,h4,h4,h6{
+header h1 {
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.527);
+    margin: 0;
+    font-size: 2rem;
+}
+
+header p {
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.658);
+    font-style: italic;
+    margin-top: 5px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+main {
+
+    margin: auto;
+    width: 90vw;
+    height: auto;
+    min-width: 300px;
+    max-width: 800px;
+
+    background-color: white;
+    padding: 25px;
+    font-family: 'Times New Roman', Times, serif;
+    box-shadow: 0px 0px 10px black;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding-bottom: 0px;
+
+}
+
+h2,
+h3,
+h4,
+h4,
+h6 {
     padding: 10px;
-   }
-   
-   ul{
-       list-style: inside;
-       padding: 5px;
-       columns: 2;
-       text-align: left;
-       list-style-type: none;
-       font-family: 'Times New Roman', Times, serif;
-        
-    }
-    
-    /*Configuração de img de contato*/
-    div#contato{
-        display: block;
-        margin: auto;
-        width: 65%;
-    }
-    /*------------Não Alterar-----------*/
-    
-    img{
-        display: block;   /* transforma em bloco */
-        margin: 30px auto;   /* margens automáticas centralizam */
-        width: 100%;  /* responsivo, oculpa 90% horizontal */  
-        height: auto;    /* mantém proporção */
-        border-radius: 10px; /* opcional: cantos arredondados */
-        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.432); /* opcional: sombra */
-    }
-    
-    img:hover{
-        transform:scale(1.1);
-    }
-    div.galeria{
-        padding: 15px;
-    }
-    
-    div#txt_exercicios{
+}
+
+ul {
+    list-style: inside;
+    padding: 5px;
+    columns: 2;
+    text-align: left;
+    list-style-type: none;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+
+/*Configuração de img de contato*/
+div#contato {
+    display: block;
+    margin: auto;
+    width: 65%;
+}
+
+/*------------Não Alterar-----------*/
+
+img {
+    display: block;
+    /* transforma em bloco */
+    margin: 30px auto;
+    /* margens automáticas centralizam */
+    width: 100%;
+    /* responsivo, oculpa 90% horizontal */
+    height: auto;
+    /* mantém proporção */
+    border-radius: 10px;
+    /* opcional: cantos arredondados */
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.432);
+    /* opcional: sombra */
+}
+
+img:hover {
+    transform: scale(1.1);
+}
+
+div.galeria {
+    padding: 15px;
+}
+
+div#txt_exercicios {
+    line-height: 1.8;
+}
+
+div#txt_exercicios a:hover {
+    background-color: rgba(173, 216, 230, 0.445);
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+div#voltar {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+div#voltar a:hover {
+    padding: 10px;
+    background-color: rgba(125, 208, 235, 0.637);
+    font-weight: bolder;
+    transition-duration: 0.5s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    border: none;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+pre {
+    white-space: pre-wrap;
+
+    .justificado {
+        text-align: justify;
         line-height: 1.8;
+        font-size: 1em;
+        padding: 20px;
     }
-    
-    div#txt_exercicios a:hover{
-        background-color: rgba(173, 216, 230, 0.445);
-        text-decoration: none;
-        padding: 10px;
-        border-radius: 10px;
-    }
-    div#voltar{
-        text-align: center; 
-        font-family: 'Times New Roman', Times, serif;   
-    }
-    div#voltar a:hover{
-        padding: 10px;
-        background-color: rgba(125, 208, 235, 0.637);
-        font-weight: bolder;
-        transition-duration: 0.5s;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        border-radius: 5px;
-        border: none;
-        font-family: 'Times New Roman', Times, serif;
-    }
-    
-    pre{
-        white-space: pre-wrap;
-        .justificado{
-            text-align: justify;
-            line-height: 1.8;
-            font-size: 1em;
-            padding: 20px;
-        }
-    }
-    
-    footer{
-        background-image: linear-gradient(to bottom, #1e90ff, #00bfff);  
-        font-family: var(--fonte_padrao);
-        padding-bottom: 10px;
-        padding-top: 10px;
-        text-align: center;
-        color: white;
-        font-size: 0.8em;
-    }
+}
 
-    
-   
-
-    
-    
+footer {
+    width: 100%;
+    background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+    font-family: var(--fonte_padrao);
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+    color: white;
+    font-size: 0.8em;
+}
