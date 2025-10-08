@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <style>
         /* Font importada de google fonts */
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
@@ -36,6 +35,7 @@
         * {
             margin: 0px;
             padding: 0px;
+            box-sizing: border-box;
         }
 
         body {
@@ -46,8 +46,9 @@
         }
 
         header {
-            width: 100vw;
-            background-image: linear-gradient(to bottom, #1e90ff, #00bfff); ;
+
+            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+            ;
             color: white;
             min-height: 80px;
             text-align: center;
@@ -85,37 +86,38 @@
         }
 
         /* Ajustando o Footer*/
-        .container {
-            display: flex;
-            /* ativa flexbox */
-            width: 100%;
-            gap: 20px 0;
+        footer .container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            /* 5 colunas do mesmo tamanho */
+            gap: 20px;
+            /* espaço entre os ícones */
+            margin: auto;
+            width: 100vw;
+            /* deixa o container ajustar-se ao conteúdo */
+            padding: 10px;
+            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
             max-width: 800px;
             min-width: 300px;
-            padding: 7px;
-            height: 20px;
-
-            background-image: linear-gradient(to bottom, #1e90ff, #00bfff); 
-            list-style-type: none;
-            text-align: center;
-
         }
 
-        .item {
-            flex: auto;
-            list-style: none;
-            justify-content: space-between;
-
+        footer .item img {
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            /* tamanho fixo dos ícones */
+            height: auto;
+            transition: transform 0.2s;
         }
 
-        img:hover {
+        footer .item img:hover {
+            transform: scale(1.1);
+            /* efeito ao passar o mouse */
             background-color: rgba(89, 230, 248, 0.486);
             padding: 5px;
-            border-radius: 8px 8px 8px 8px;
-            animation-duration: 0.5s;
-            font-weight: bolder;
-
+            border-radius: 8px;
         }
+
         header>img {
             border-radius: 100%;
             padding: 5px;
@@ -158,6 +160,21 @@
             text-indent: 30px;
         }
 
+        div#voltar {
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        div#voltar a:hover {
+            padding: 10px;
+            background-color: rgba(125, 208, 235, 0.637);
+            font-weight: bolder;
+            transition-duration: 0.5s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            border: none;
+            font-family: 'Times New Roman', Times, serif;
+        }
     </style>
     <title>Rede Social</title>
 </head>
@@ -185,23 +202,21 @@
         <br>
         <br>
     </main>
-    <div div class="container">
-        <div class="item"><a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank"
-                rel="noreferrer"><img src="imagens/icone-linkedin.png" alt="icone-linkedin"></a></div>
-
-        <div class="item"><a href="https://github.com/Akio369" target="_blank" rel="noreferrer"><img
-                    src="imagens/icone-github.png" alt="icone-github"></a></div>
-
-        <div class="item"><a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noreferrer"><img
-                    src="imagens/icone-youtube.png" alt="icone-youtube"></a></div>
-
-        <div class="item"><a href="https://www.instagram.com/akio.artes/" target="_blank" rel="noreferrer"><img
-                    src="imagens/icone-instagram.png" alt="icone-instagram" rel="external"></a></div>
-
-        <div class="item"><a href="https://www.facebook.com/ailton.nakata/?locale=pt_BR" target="_blank"
-                rel="norreferrer"><img src="imagens/icone-facebook.png" alt="icone-facebook"></a></div>
-    </div>
-    </div>
+    <footer>
+        <div class="container">
+            <div class="item"><a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank"
+                    rel="noreferrer"><img src="imagens/icone-linkedin.png" alt="icone-linkedin"></a></div>
+            <div class="item"><a href="https://github.com/Akio369" target="_blank" rel="noreferrer"><img
+                        src="imagens/icone-github.png" alt="icone-github"></a></div>
+            <div class="item"><a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noreferrer"><img
+                        src="imagens/icone-youtube.png" alt="icone-youtube"></a></div>
+            <div class="item"><a href="https://www.instagram.com/akio.artes/" target="_blank" rel="noreferrer"><img
+                        src="imagens/icone-instagram.png" alt="icone-instagram" rel="external"></a></div>
+            <div class="item"><a href="https://www.facebook.com/ailton.nakata/?locale=pt_BR" target="_blank"
+                    rel="norreferrer"><img src="imagens/icone-facebook.png" alt="icone-facebook"></a></div>
+        </div>
+        </div>
+    </footer>
 </body>
 
 </html>
