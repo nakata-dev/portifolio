@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banco de Dados</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
+
+     pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+        code {
+            font-family: Consolas, monospace;
+            font-size: 0.95em;
+            color: #d6336c;
+        }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Primeiro Banco de Dados</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>
+    <h2>Exemplo:</h2>
+    <h3>Abra > Wampserver > MySQL </h3>
+    <pre>
+        <code>
+            create <strong>table pessoas</strong>(
+            Nome <strong>varchar(30)</strong>,
+            Idade <strong>tinyint</strong>,
+            Sexo <strong>char(1)</strong>,
+            peso <strong>float</strong>,
+            altura <strong>float</strong>,
+            nacionalidade <strong>varchar(20)</strong>
+            );
+
+            describe pessoas;
+        </code>
+    </pre>
+    <img src="img/Tipos Primitivos - MtSQL.png" alt="Tipos_primitivos">
+    
+    <br>
+    <br>
+    <div id="voltar">
+        <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
+
+  
+</body>
+
+</html>
