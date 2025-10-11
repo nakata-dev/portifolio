@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Into</title>
+    <title>ALTER TABLE e DROP TABLE</title>
     <link rel="stylesheet" href="../style.css">
     <style>
         header>p{
@@ -88,77 +88,9 @@
     </header>
 
     <main>
-        <h2>Insert into</h2>
+        <h2>ALTER TABLE e DROP TABLE</h2>
+
         
-        <h2>Situação I: Criando Orientação</h2>
-<pre>
-<code>
-insert into pessoas
-(id, nome, nascimento, sexo, peso, altura, nacionaldiade)
-value
-('1', 'Goldofredo', '1984-01-02', 'M', '78.5', '1.75', 'Brasil');
-
-</code>
-</pre>
-        <h2>Situação II: Mostrar cadastro de pessoas</h2>
-<pre>
-<code>
-insert into pessoas
-(id, nome, nascimento, sexo, peso, altura, nacionaldiade)
-value
-('1', 'Goldofredo', '1984-01-02', 'M', '78.5', '1.75', 'Brasil');
-
-<strong>select*from pessoas;</strong>
-
-</code>
-</pre>
-    <img src="img/Visualizando_pessoas.png" alt="Visualizando_pessoas">
-<h2>Situação III: Usando o DEFAULT</h2>
-<pre>
-<code>
-insert into pessoas
-(id, nome, nascimento, sexo, peso, altura, nacionaldiade)
-value
-(<strong>default</strong>, 'Goldofredo', '1984-01-02', 'M', '78.5', '1.75', <strong>default</strong>);
-
-select*from pessoas;
-
-</code>
-</pre>
-
-<h2>Situação IV: Como a ordem é exatamente a mesma, simplifique!</h2>
-<pre>
-<code>
-<strong>insert into pessoas value</strong>
-(default, 'Bianca', '2003-11-22', 'F', '78.5', '1.75', 'Inglaterra');
-
-select*from pessoas;
-
-</code>
-</pre>
-
-<h2>Situação V: Simplificando</h2>
-<pre>
-<code>
-insert into pessoas <i>(id, nome, nascimento, sexo, peso, altura, nacionalidade)</i>
-values
-
-(default,'Bianca', '2002-09-22', 'F', '56.1', '1.55', 'Inglaterra'),
-
-(default, 'Eliza', '1995-06-19', 'F', '78.5', '1.75', 'Irlanda'),
-
-(default,'Marcos','1932-10-18','M','71.3', '1.68', 'Japão'),
-
-(default, 'Gisele' '1999-11-10','F','60.8', '1.55', 'America');
-
-<b>select * from pessoas;</b>
-
-</code>
-</pre>
-<h2>Exibindo Dados:</h2>
-<img src="img/Exibindo_dados.png" alt="Exibindo_dados_tabela">
-<h2>DDL e DML</h2>
-<img src="img/Outros_Comandos.png" alt="Insert">
         <br>
         <br>
         <div id="voltar">
