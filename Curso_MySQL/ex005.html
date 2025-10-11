@@ -88,13 +88,70 @@
     </header>
 
     <main>
-        <h2>Update:</h2>
+        <h2>Inserindo dados:</h2>
 <pre>
     <code>
+<strong>insert into cursos value</strong>
 
+('1','HTML4','Curso de HTML5', '40','37', '2024'), 
+
+('2','Algoritmos','Lógica de programação','20', '15', '2014'),
+
+('3','Photoshop','Dicas de Photshop CS', '10','8','2014'),
+
+('4','PGP', 'Curso de PHP para iniciantes','40','20','2010'),
+
+('5','Java','Introdução a linguagem JAVA','10','29','2000'),
+
+('6','MySQL','Banco de Dados MySQL','30','15','2016'),
+
+('7','Word','Curso completo de WORD','40','30','2016'),
+
+('8','Sapateado','Dança Ritmicas','40','30','2018'),
+
+('9','Cozinha Árabe','Aprenda a fazer Kibe','40','30','2018'),
+
+('10','YouTuber','Gerar polêmica e ganhar inscritos','5','2','2018');
+
+select*from cursos;
     </code>
 </pre>
-        
+<br>
+<h2>Veja como fica a tabela:</h2>
+<img src="img/Inserindo_Cursos.png" alt="Inserindo_Cursos">
+<br>
+<h2>Modificando o conteúdo da linha:</h2>
+<img src="img/Modificando_conteudo.png" alt="Modificando_conteudo">
+
+<pre>
+    <code>
+update cursos
+set nome = 'HTML5'
+where idcurso = '1';
+
+select&from cursos;
+    </code>
+</pre>
+<p>Onde era HTML4 é alterado para HTML5</p>
+
+<h2>Outra alteração:</h2>
+<pre>
+    <code>
+update cursos
+set nome = 'php', ano = '2015' 
+where idcurso = '4';
+
+select&from cursos;
+    </code>
+</pre>
+<h2>Alterando configurações de workbench:</h2>
+<pre>
+    <code>
+acesse o menu Edit > Preference > SQL editor
+desmarque <b>safe update(Reject update and deletes with no restrictions)</b>
+</code>
+</pre>
+<img src="img/Alterando_Configuração_WorkBench_Preference.png" alt="Preference">
         <br>
         <br>
         <div id="voltar">
