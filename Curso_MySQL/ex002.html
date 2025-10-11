@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Dados</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        header>p{
+            text-align: center;
+        }
+        * {
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        input {
+            width: 60px;
+            margin: 5px;
+        }
+
+        #res {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        header {
+            width: 100%;
+            min-height: 80px;
+            text-align: center;
+            padding-top: 10px;
+            background: linear-gradient(135deg, #2626FE, #00bfff);
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+            font-family: 'Times New Roman', Times, serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            width: 100%;
+            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+            font-family: var(--fonte_padrao);
+            padding-bottom: 10px;
+            padding-top: 10px;
+            text-align: center;
+            color: white;
+            font-size: 0.8em;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+            font-size: 0.95em;
+            color: #d6336c;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            /*Justfica o pre */
+            text-align: justify;
+        }
+        p{
+            padding: 15px;
+            text-indent: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Aprimorando o banco de dados</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+
+    <main>
+        <h2>Apagando banco de dados:</h2>
+        <pre>
+        <code>
+            drop database cadastro;
+        </code>
+    </pre>
+        <br>
+        <h2>Criando banco de dados:</h2>
+        <br>
+        <pre>
+        <code>
+            create database cadastro;
+        </code>
+    </pre>
+        <br>
+        <h2>Constraint:</h2>
+        <p>No contexto de banco de dados, uma constraint (ou restrição) é uma regra de integridade que o próprio banco impõe aos dados de uma tabela, para garantir que as informações armazenadas sejam corretas, coerentes e consistentes.</p>
+        <br>
+        <pre>
+        <code>
+            create database cadastro
+            default character set utf8
+            default collate utf8_general_ci;
+
+            use cadastro;
+
+            create table pessoas(
+            nome varchar(30) not null,
+            nascimento date,
+            sexo enum ('M','F'),
+            peso decimal(5,2),
+            altura decimal(3,2),
+            nacionalidade varchar(20) default 'Brasil'
+            )default chaset = utf8
+            
+        </code>
+    </pre>
+    <p>Acima usamos as constraint: not null(não pode ser nulo) ; date(data) ; enum('M','F') (escolher entre M e F) ; decimal(5,2) (de 5 casas, duas serão após a virgula) ; e varchar(20) default 'Brasil' (váriaveis de caracteres normalizado para 'Brasil').</p>
+    <br>
+    <h2>Para evitar repetição de cadastro:</h2>
+    <img src="img/Evitar_repetições_de_pessoas.png" alt="Usando_o_not_null">
+    <br>
+        <pre>
+        <code>
+            create database cadastro
+            default character set utf8
+            default collate utf8_general_ci;
+
+            use cadastro;
+
+            create table pessoas(
+            <strong>id int not null auto_increment,</strong>
+            nome varchar(30) not null,
+            nascimento date,
+            sexo enum ('M','F'),
+            peso decimal(5,2),
+            altura decimal(3,2),
+            nacionalidade varchar(20) default 'Brasil',
+            <strong>primary key(id)</strong>
+            )default chaset = utf8
+            
+        </code>
+    </pre>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../estudos.html">Voltar</a>
+        </div>
+        <br><br>
+    </main>
+    <footer>
+        &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+    </footer>
+
+
+</body>
+
+</html>
