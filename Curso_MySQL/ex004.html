@@ -83,14 +83,138 @@
 
 <body>
     <header>
-        <h1>Insert Into</h1>
+        <h1>Alter table e Drop table</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
 
     <main>
-        <h2>ALTER TABLE e DROP TABLE</h2>
+        <h2>ALTER TABLE</h2>
+        <pre>
+            <code>
+desc pessoas;
+<strong>alter tablet pessoas</strong>
+add column profisao varchar(10);
 
-        
+select*from pessoas;
+            </code>
+        </pre>
+<p><i>alter table</i> serve para adicionar uma coluna à tabela</p>
+
+<h2>DROP TABLE</h2>
+        <pre>
+            <code>
+desc pessoas;
+<strong>drop tablet pessoas</strong>
+
+
+select*from pessoas;
+            </code>
+        </pre>
+<p><i>alter table</i> serve para retirar uma coluna da tabela</p>
+
+<h2>Escolha nova posição da coluna (profissao)</h2>
+        <pre>
+            <code>
+desc pessoas;
+alter table pessoas
+<strong>add column profissao varchar(10) after nome;</strong>
+
+
+select*from pessoas;
+            </code>
+        </pre>
+<p><i>add column</i> serve para adicionar uma coluna em uma posição especifica.</p>
+
+<h2>Mais uma alteração (codigo)</h2>
+        <pre>
+            <code>
+desc pessoas;
+alter table pessoas
+<strong>add column codigo int firt;</strong>
+
+
+select*from pessoas;
+            </code>
+        </pre>
+<p>Aqui a coluna codigo vai ser inserida no ínicio.</p>
+
+<h2>E quando eu quero alterar alguma característica da coluna?</h2>
+        <pre>
+            <code>
+desc pessoas;
+alter table pessoas
+<strong>Modify column profissao varchar(20) not null default '';</strong>
+
+
+select*from pessoas;
+            </code>
+        </pre>
+<p>Neste caso o campo profissão vai ficar vazio, pois foi alterado para <i>not null</i> ou seja, <strong>não pode ficar nulo</strong>.</p>
+
+<img src="img/Modify_column.png" alt="Modify_column">
+<p>Note como o campo <b>profissão</b> ficou sem nada ao acrescentarmos o comando (default ' ')</p>
+
+<h2>Comando change:</h2>
+        <pre>
+            <code>
+desc pessoas;
+alter table pessoas
+<strong>change column profissao prof varchar(20);</strong>
+
+select*from pessoas;
+            </code>
+        </pre>
+<p>Aqui o comando <b>change</b> <i>modifica o tipo, constraint e nome da coluna</i>.</p>
+
+<h2>Renomeando a tabela inteira:</h2>
+        <pre>
+            <code>
+desc pessoas;
+alter table pessoas
+<strong>rename to gafanhotos;</strong>
+
+select*from pessoas;
+            </code>
+        </pre>
+<p>Aqui o comando <i><strong>rename to</strong></i> foi responsável para alterar o nome da tabela <b>pessoas</b> para <b>gafanhotos</b></i>.</p>
+
+<h2>Criando uma nova tabela:</h2>
+<pre>
+    <code>
+create table if not exists cursos(
+Nome varchar(30) not null unique,
+descricao text,
+carga int unsigned,
+totalaula int unsigned,
+ano year default '2025'    
+) charset = utf8;   
+
+alter table cursos
+<b>add column idcurso int first</b>;
+
+describe cursos;
+    </code>
+</pre>
+      
+<h2>Alterando a chave primaria:</h2>
+<pre>
+    <code>
+create table if not exists cursos(
+Nome varchar(30) not null unique,
+descricao text,
+carga int unsigned,
+totalaula int unsigned,
+ano year default '2025'    
+) charset = utf8;   
+
+alter table cursos
+<b>add primary key(idcurso)</b>;
+
+describe cursos;
+    </code>
+</pre>
+<h2>After e Drop são classificados como DDL:</h2>
+<img src="img/DDL.png" alt="Tipos_DDL_MDL">
         <br>
         <br>
         <div id="voltar">
