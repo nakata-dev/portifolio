@@ -92,10 +92,40 @@
         <p>1º abra o cadastro e selecione o cursos</p>
 <pre>
     <code>
-        use cadastro
-        select*from cursos;
+use cadastro;
+
+select*from cursos;
+select*from gafanhotos;
+describe gafanhotos;
+desc gafanhotos;
+desc cursos;
     </code>
 </pre>
+
+<p>2º Click em menu server</p>
+<p>3º Selecione Data Export</p>
+<p>4º Selecione Cadastro</p>
+<p>5º Selecione tudo o que você quer salvar dentro do Schema Objects</p>
+
+<img src="img/Backup.png" alt="Backup">
+<p>6º Click em Dump Structure and Data</p>
+<img src="img/Dump_Export.png" alt="">
+<p>7º Escolha um local onde deseja salvar o arquivo e pressione <b>Start Export</b></p>
+<img src="img/Caminho_dump.png" alt="Caminho_para_salvar_arquivo_dump">
+<p>Não esqueça de marcar a opção Export to Self-contained file, que vai fazer com que todos os dados sejam salvos em um arquivo único.</p>
+<img src="img/Include_create_schema.png" alt="Include_create_schema">
+
+<h2>Agora para ver se funciona, é hora de apagar o cadastro:</h2>
+<pre>
+    <code>
+drop database cadastro;        
+    </code>
+</pre>
+<h2>Para importar seu banco de dados, basta fazer o caminhor reverso:</h2>
+<p>1º server > Data Import</p>
+<img src="img/Import_database.png" alt="Importando_dados">
+<p>2º pressione em Star Import</p>
+
         <br>
         <br>
         <div id="voltar">
