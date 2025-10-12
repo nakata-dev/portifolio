@@ -91,7 +91,7 @@
         <h2>Inserindo dados:</h2>
 <pre>
     <code>
-<strong>insert into cursos value</strong>
+<strong>insert into cursos values</strong>
 
 ('1','HTML4','Curso de HTML5', '40','37', '2024'), 
 
@@ -152,6 +152,58 @@ desmarque <b>safe update(Reject update and deletes with no restrictions)</b>
 </code>
 </pre>
 <img src="img/Alterando_Configuração_WorkBench_Preference.png" alt="Preference">
+
+<h2>Vamos supor que desejamos alterar agora três linhas de uma só vez:</h2>
+<img src="img/Exemplo_Alterações.png" alt="Alteração_ano">
+<h2>Veja como fica no código:</h2>
+<br>
+<pre>
+    <code>
+up date cursos
+set ano = '2050', carga = '800'
+where ano = '2018';
+
+
+select*from cursos;
+</code>
+</pre>
+<p>where ano = '2018' = Enquanto ano for 2018. Isso vai funcionar caso você já tenha feito a alteração na configuração de seguraça do workbench.</p>
+<img src="img/Alterado_Multiplos_dados.png" alt="Alterado_Multiplos_dados">
+<p>Por recomendação do professor Gustavo Guanabara, é importante sempre deixar ligado o sitema de seguraça do workbench.</p>
+
+<h2>Comando para deletar linhas:</h2>
+<pre>
+    <code>
+delete from cursos
+where idcurso='8';       
+
+select*from cursos;
+    </code>
+</pre>
+<h2>Caso queira apagar dois cursos de uma vez, use o comando (limit):</h2>
+<pre>
+    <code>
+delete from cursos
+where ano='2050'
+
+<strong>limit 2;</strong>
+
+select*from cursos;
+    </code>
+</pre>
+<h2>Apagando todas a linhas de uma tabela com o comando (Truncate):</h2>
+<pre>
+    <code>
+<strong>truncate cursos;</strong>
+
+select*from cursos;
+    </code>
+</pre>
+<br>
+<h2>Classificando Update; Delete; Truncate:</h2>
+<img src="img/após_truncate.png" alt="após_truncate">
+<br>
+<img src="img/Classificando.png" alt="Classificando_update_delete_truncate">
         <br>
         <br>
         <div id="voltar">
