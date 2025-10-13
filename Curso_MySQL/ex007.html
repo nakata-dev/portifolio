@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHPMyAdmin</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 0.95em;
+      color: #d6336c;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>PHPMyAdmin</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>
+    <h2>MySQL Console:</h2>
+<img src="img/MySQL_Console.png" alt="MySQL_Console">    
+    <pre>
+        <code>
+1º Abra o programa Wampserver64 e em seguida clique em seu icone e busque por MySQL > MySQL console
+
+2º Ali você vai conseguir executar todos os comando que usou no MySQL Workbench
+
+Dica: Busque práticar por todas as três formas de alterações de cadastros. 
+
+        </code>
+    </pre>
+    <br>
+    <h2>PHP MyAdmin - parte I</h2>
+<img src="img/Icone_WampServer.png" alt="Wampserver64">
+
+<pre>
+    <code>
+3º Click novamente no icône do Wampserver64 > PHPMyAdmin > PHPMyAdmin 5.2.1        
+    </code>
+</pre>
+
+<img src="img/PHP_myAdmin.png" alt="" sizes="" srcset="">
+
+<pre>
+    <code>
+4º <b>Use login: root</b> e deixe a <b>senha em branco</b> e o site admin vai abrir para que você possa realizar todas as alterações necessárias em teu banco de dados.        
+    </code>
+</pre>
+<h2>PHP MyAdmin - parte II</h2>
+
+<pre>
+    <code>
+1º Abra os três programas para trabalhar o seu banco de dados:
+    - MySQL Workbench
+    - MySQL Console        
+    - PHPMyAdmin
+
+Em console digite: 
+
+    show databases;        
+    </code>
+</pre>
+
+<h2>Criando um banco de dados direto pelo PHPMyAdmin</h2>
+<pre>
+    <code>
+Abra o site PHPMyAdmin e crie um banco de dados novo com o nome de exemplo apra práticar.        
+
+selecione: <strong>utf8mb4_general_ci</strong>
+    </code>
+</pre>
+
+<img src="img/Criando_com_PHPmyAdmin.png" alt="PHPMyAdmin">
+
+<pre>
+    <code>
+Criando um novo Banco de Dados        
+    </code>
+</pre>
+<img src="img/Criando_BD_PHPMyAdmin.png" alt="Criando_BD_PHPMyAdmin">
+<h2>Nome da Tabela e quantidade de Colunas</h2>
+<img src="img/Nome_da_tablea.png" alt="Nome_da_tablea">
+<h2>Criando os campos do Banco de Dados</h2>
+<img src="img/Criando_campos_de_preenchimento.png" alt="Criando_campos_de_preenchimento">
+<h2>Para alterar dados, use esses campos:</h2>
+<img src="img/Alterar_dados_use_estes_camos.png" alt="Alterar_dados_use_estes_campos">
+<h2>Exportando Banco de dados no PHPMyAdmin</h2>
+<pre>
+    <code>
+Atenção: Ao exportar os dados, click primeiro no icone <b>Home</b> que fica do lado esquerdo superior no site. Depois você seleciona o exportar!        
+    </code>
+</pre>
+<img src="img/Exportando_dados_PHPmyAdmin.png" alt="Exportando_dados_PHPmyAdmin">
+    <br>
+    <br>
+    <div id="voltar">
+      <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
+
+
+</body>
+
+</html>
