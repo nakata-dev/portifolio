@@ -69,6 +69,25 @@
     pre {
       white-space: pre-wrap;
     }
+
+    ol{
+      list-style: inside;
+      columns:1;
+      padding: 15px;
+      line-height: 1.8;
+      
+    }
+    a{
+      text-decoration: none;
+    }
+
+    a:hover{ 
+      background-color: rgba(135, 206, 250, 0.631);
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bolder;
+      transition-duration: 0.5s;
+    }
   </style>
 </head>
 
@@ -79,13 +98,29 @@
   </header>
 
   <main>
-    <h2>Instalando MySQL:</h2>
+    <h2>No windows, instale um pacote chamado WampServer:</h2>
+
+    <img src="img/WampServer.png" alt="Wampserver">
+
     <pre>
         <code>
-Instruções:            
+Download dos softwares
         </code>
     </pre>
-    
+    <br>
+    <h2>1º Passo - Baixe e instale os programas nessa ordem:</h2>
+    <ol>
+      <li>
+        <a href="https://www.microsoft.com/pt-br/download/details.aspx?id=17113" target="_blank">Framework</a>
+      </li>
+      <li>
+        <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30679" target="_blank">C++ Visual Studio 2012</a>
+        <li><a href="https://downloads.mysql.com/archives/workbench/" target="_blank">MySQL workbench 6.3.6</a>
+        </li>
+      </li>
+    </ol>
+    <h2>2º Passo - Instale o Wampserver</h2>
+    <a href="https://www.wampserver.com/en/" target="_blank">Wampserver</a>
     <br>
     <br>
     <div id="voltar">
