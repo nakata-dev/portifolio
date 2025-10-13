@@ -1,18 +1,58 @@
 @charset "UTF-8";
 
 *{
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     box-sizing: border-box;
 }
 
+:root{ /* As cores são opcionais */
+    --fundo-principal:#f5f5f5;
+    --texto: #222222;
+    --texto-inverso:#ffffff;
+    --destaque:#0077ff;
+    --destaque-inverso:#66bbff;
+    --fundo-card:#ffffff;
+
+}
+
+header{
+    background-color: var(--destaque);    
+    color: var(--texto);
+    padding: 10px;
+    display: flex;/*Torna a caixa do Header flexível*/
+    justify-content: flex-end;/*Manda o conteúdo para o final da caixa, que no caso seria à direita*/
+    align-content: center;/*Torna o conteúdo centralizado dentro de cada caixa indivídualmente*/
+}
+
+nav#menu ul{
+    list-style: none; /*Tira as bolinhas do indice*/
+    display: flex; /*Torna flexivel para encaixar*/
+    gap: 10px; /*Distância entre um menu e outro*/
+}
+
+nav#menu a{
+    text-decoration: none;/*Retira o sublinhado de cada palavra*/
+    color: var(--texto-inverso);
+    font-weight: 600;/*Deixa a letra mais gordinha*/
+    padding: 12px 15px;/*Deixa com espaço de 12px em cima e embaixo e 15px na esquerda e direita*/
+    border-radius: 5px;/*Cria uma borda redonda de 5 pixels*/
+    transition: background-color 0.5s, color 0.5s;/*Cria-se uma transição de 0.5s para a cor de fundo e da letra gerando um efeito mais suave e profissional*/
+}
+
+nav#menu a:hover{ /*Quando passar o mouse por cima do menu, vai gerar um certo efeito desta configuração:*/
+    background-color: var(--destaque-inverso);
+    color: var(--destaque);
+
+}
+
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    line-height: 1.5em; /*distância entre as linhas*/
+    background-color: var(--fundo-principal);
+    color: var(--texto);
+}
 
 main{
-    display: block;
-    margin: auto;
-    border-radius: 8px;
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.476);
-    padding: 20px;
-    width: 80vw;
-    background-color: lightgray;
+   
 }
