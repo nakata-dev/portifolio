@@ -1,0 +1,2 @@
+//Configurações em JS
+
