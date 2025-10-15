@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select II</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 0.95em;
+      color: #d6336c;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Select II</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>
+    <h2>Operador Like A% :</h2>
+
+<pre>
+    <code>
+select*from cursos
+where nome like a%;
+    </code>
+</pre>
+<img src="img/UsodoLike1.png" alt="Uso_do_like">
+<br>
+    <p><strong>like</strong> : significa parecido e (<strong>%</strong>) significa nenhum ou vários caracteres</p>
+<br>
+
+<h2>Mudando o %A de lugar:</h2>
+
+<pre>
+    <code>
+select*from cursos
+where nome like %a;
+</code>
+</pre>
+<img src="img/UsodoLike.png" alt="Uso_do_like">
+<h2>Like %A%:</h2>
+<pre>
+    <code>    
+select*from cursos
+where nome like %a%;
+    </code>
+</pre>
+<br>
+<p>Vai pegar qualquer coisa que estiver antes do a e depois, e isso inclui o <b>A</b>. Dando preferênci para pegar o <b>A</b> que também se encontra no meio da palavra.</p>
+
+<h2>Like ph%p%:</h2>
+<pre>
+    <code>
+select*from cursos 
+where curso not like 'ph%p%';        
+    </code>
+</pre>
+<h2>Like %silva%:</h2>
+<pre>
+    <code>
+select*from cursos 
+where nome not like '%silva%';        
+    </code>
+</pre>
+<br>
+<p>Quero um nome que tenha a palavra 'silva' em qualquer lugar do nome.</p>
+<br>
+<h2>Distinguindo:</h2>
+<pre>
+    <code>
+select*from cursos;
+
+select distinct curso from carga
+order by carga;
+
+    </code>
+</pre>
+
+<h2>Funções de agregações:</h2>
+<pre>
+    <code>
+select(*)from cursos where carga > 40;        
+    </code>
+</pre>
+
+<h2>Função max(nome)</h2>
+<pre>
+    <code>
+select*from cursos where ano='2020';
+
+quando quiser saber qual é o curso com maior quantidade de aulas de 2016:
+
+select max(aula) from cursos where ano = '2020'
+
+    </code>
+</pre>
+<h2>Função sum ou soma:</h2>
+<pre>
+    <code>
+select*from cursos where ano = '2018';        
+select sum(totaulas) from cursos where ano=2018;       
+    </code>
+</pre>
+
+<h2>Função avg ou média:</h2>
+<pre>
+    <code>
+select*from cursos where ano = '2019';
+select avg(totaulas) from cursos where ano='2019';
+    </code>
+</pre>
+<br>
+<p><i>A média(avg) total de aulas de 2019 será de 28.7500</i></p>
+<br>
+<br>
+    <div id="voltar">
+      <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
+
+
+</body>
+
+</html>
