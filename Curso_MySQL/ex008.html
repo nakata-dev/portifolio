@@ -79,13 +79,164 @@
   </header>
 
   <main>
-    <h2>Select Parte I:</h2>
+    <h2>1º Crie um novo database:</h2>
     <pre>
-        <code>
-Instruções:            
+      <code>
+        create database escola_cursos;
+        use escola_cursos;
+        
+        create table cursos (
+          
+          id int auto_increment primary key,
+          nome_do_curso varchar(100),
+          instrutor varchar(100),
+          carga_horaria int,
+          quantidade_aulas int
+          
+          );
+          
         </code>
-    </pre>
-    
+      </pre>
+      <h2>2º Invente os 50 cadastros diferentes:</h2>
+      <pre>
+        <code>
+INSERT INTO cursos (id, curso, nome, carga, aulas, ano) VALUES
+(1, 'Introdução ao HTML', 'Mariana Silva', 20, 15, 2020),
+(2, 'CSS para Iniciantes', 'João Pedro', 25, 18, 2021),
+(3, 'JavaScript Essencial', 'Carla Menezes', 40, 25, 2021),
+(4, 'Python do Zero', 'Rafael Torres', 50, 30, 2022),
+(5, 'Banco de Dados MySQL', 'Isabela Rocha', 35, 22, 2023),
+(6, 'PHP Moderno', 'Felipe Almeida', 45, 28, 2022),
+(7, 'React Básico', 'Camila Fernandes', 30, 20, 2024),
+(8, 'Node.js Prático', 'Bruno Costa', 40, 24, 2023),
+(9, 'UX e UI Design', 'Ana Paula Souza', 25, 18, 2020),
+(10, 'Figma Completo', 'Lucas Martins', 20, 15, 2021),
+(11, 'C++ Estruturas e Algoritmos', 'Eduardo Lima', 60, 35, 2023),
+(12, 'Java Completo', 'Juliana Ramos', 55, 32, 2021),
+(13, 'Kotlin para Android', 'Tiago Santos', 45, 28, 2022),
+(14, 'Swift para iOS', 'Renata Castro', 50, 30, 2023),
+(15, 'NoSQL com MongoDB', 'Daniel Nunes', 35, 20, 2024),
+(16, 'Machine Learning Básico', 'Gabriel Duarte', 70, 40, 2025),
+(17, 'Data Science com Python', 'Fernanda Gomes', 65, 38, 2024),
+(18, 'Segurança da Informação', 'André Oliveira', 50, 26, 2023),
+(19, 'DevOps com Docker', 'Letícia Carvalho', 55, 30, 2024),
+(20, 'Git e GitHub Completo', 'Paulo Henrique', 20, 14, 2020),
+(21, 'Linux para Desenvolvedores', 'Larissa Faria', 35, 20, 2021),
+(22, 'Redes de Computadores', 'Rodrigo Almeida', 45, 25, 2021),
+(23, 'Automação com Python', 'Beatriz Mendes', 40, 24, 2022),
+(24, 'Power BI e Dashboards', 'Caio Ribeiro', 50, 30, 2023),
+(25, 'Excel Avançado', 'Carolina Prado', 35, 18, 2020),
+(26, 'Introdução ao TypeScript', 'Pedro Lima', 25, 16, 2023),
+(27, 'Análise de Dados com SQL', 'Vinícius Moura', 40, 22, 2024),
+(28, 'Design Gráfico com Canva', 'Sofia Azevedo', 15, 10, 2020),
+(29, 'Modelagem 3D com Blender', 'Arthur Lopes', 60, 35, 2023),
+(30, 'Marketing Digital', 'Helena Duarte', 30, 20, 2021),
+(31, 'Google Ads e SEO', 'Matheus Pires', 25, 16, 2022),
+(32, 'Edição de Vídeo com Premiere', 'Julio Cesar', 40, 25, 2021),
+(33, 'Fotografia Digital', 'Bruna Santos', 25, 15, 2020),
+(34, 'Ilustração Digital', 'Amanda Reis', 35, 22, 2023),
+(35, 'After Effects Básico', 'Leonardo Alves', 30, 18, 2024),
+(36, 'Criação de Jogos 2D', 'Ricardo Monteiro', 45, 27, 2022),
+(37, 'Unity 3D Avançado', 'Tatiane Freitas', 70, 40, 2025),
+(38, 'C# Completo', 'Marcelo Ribeiro', 60, 35, 2023),
+(39, 'Arduino e Robótica', 'Débora Silva', 50, 28, 2024),
+(40, 'Engenharia de Software', 'Renan Lopes', 55, 30, 2022),
+(41, 'Lógica de Programação', 'Cristina Oliveira', 20, 14, 2020),
+(42, 'Design de Interiores', 'Roberta Nogueira', 45, 26, 2023),
+(43, 'Arquitetura 3D', 'Fernando Sousa', 65, 36, 2024),
+(44, 'Desenho Técnico', 'Michele Andrade', 30, 18, 2022),
+(45, 'Modelagem de Personagens', 'Thiago Ferreira', 50, 28, 2023),
+(46, 'Criação de Startups', 'Patrícia Moraes', 35, 20, 2024),
+(47, 'Finanças Pessoais', 'Diego Costa', 25, 14, 2020),
+(48, 'Empreendedorismo Digital', 'Nathalia Cruz', 40, 22, 2021),
+(49, 'Vendas e Persuasão', 'Claudio Martins', 30, 18, 2022),
+(50, 'Comunicação e Oratória', 'Eduarda Campos', 35, 20, 2023);
+
+         
+        </code>
+      </pre>
+<h2>Comandos que auxiliam na visualização do conteúdos de banco de dados grandes:</h2>
+
+<pre>
+  <code>
+SELECT * FROM curso
+
+ORDER BY instrutor DESC;
+
+ou
+
+order by nome_do_curso desc
+  </code>
+</pre>
+
+<h2>Para Selecionar somente alguns campos para consulta:</h2>
+
+<pre>
+  <code>
+select nome, carga from curso;     
+  </code>
+</pre>
+
+<h2>Selecionando com 'where'(enquanto):</h2>
+
+<pre>
+  <code>
+select ano, nome from curso
+where ano = 2020 <!--Enquanto ano for igual a 2020-->    
+order by nome asc; <!--Mostrar em ordem do nome ascendente-->
+order by nome desc; <!--Mostrar em ordem do nome descendente-->
+
+describe nome_do_curso
+  </code>
+</pre>
+
+<h2>Selecionando linhas e colunas:</h2>
+
+<pre>
+  <code>
+select nome, curso, ano from cursos
+where ano &lt;= 2022
+order by nome desc;
+  </code>
+</pre>
+
+<h2>Usando Between para selecionar:</h2>
+<pre>
+  <code>
+select nome, ano from cursos
+where ano between 2020 and 2024 <!--Mostre-me o espaço entre o ano 2020 à 2024 de forma descendente-->
+order by ano desc, nome asc; <!--Na ordem descendente do ano-->    
+  </code>
+</pre>
+
+<h2>Indicando faixa de valores:</h2>
+<pre>
+  <code>
+select nome, curso, ano from curso
+where ano in (2019, 2023, 2025)
+order by ano asc;    
+  </code>
+</pre>
+
+<h2>Selecionando entre um valor e(and) outro:</h2>
+<pre>
+  <code>
+select nome, carga, aulas from cursos
+where carga > 35 <strong>and</strong> aulas < 30;
+
+describe cursos;
+  </code>
+</pre>
+
+<h2>Selecionando entre um valor e(or) outro:</h2>
+<pre>
+  <code>
+select nome, carga, aulas from cursos
+where carga > 35 <strong>or</strong> aulas < 30;
+
+describe cursos;    
+  </code>
+</pre>
     <br>
     <br>
     <div id="voltar">
