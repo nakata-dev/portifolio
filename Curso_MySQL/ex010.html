@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select III</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 0.95em;
+      color: #d6336c;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Select III</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>
+    <h2>DISTINCT e do GROUP BY com HAVING.:</h2>
+    <img src="img/Agrupar.png" alt="Agrupando_pessoas_por_idade">
+<pre>
+    <code>
+select carga from cursos
+group by carga;
+    </code>
+</pre>
+<h2>Resultado:</h2>
+<img src="img/Carga_horaria.png" alt="Carga_horaria" style="width: 15%;">
+<h2>Agregando e Agrupando</h2>
+<pre>
+    <code>
+select aulas, count(*) from cursos
+group by aulas
+order by aulas;
+
+select*from aulas where aulas = 30;
+    </code>
+</pre>
+<h2>Having (quem tem):</h2>
+<pre>
+    <code>
+select ano, count(*) from cursos
+where ano > 30
+group by ano
+<strong>having ano > 2020</strong>
+order by count(*) asc;        
+    </code>
+</pre>
+
+<h2>Revisando AVG (Média):</h2>
+<pre>
+    <code>
+select avg (carga) from cursos;
+    </code>
+</pre>
+<h2>Agrupando por carga e contando(count):</h2>
+<pre>
+    <code>
+select carga, count(*) from cursos
+where ano>2020
+group by carga
+having carga > (select avg(carga) from cursos);        
+    </code>
+</pre>
+<h2>Selecione, Filtrei, Agrupei e Mostrei o resultado somente quem está acima do resultado de outro select.</h2>
+<h2>Exercitando:</h2>
+<h3>"1 - Quero uma lista com as profissões dos gafanhotos e seus respectivos quantitativos"</h3>
+<h3>"2 - Quantos gafanhotos homens e quantas mulheres nasceram após 01/Jan/2005?"</h3>
+<h3>"3 - Uma lista com os gafanhotos que nasceram fora do Brasil, mostrando o país de origem e o total de pessoas nascidas lá.Só nos interessam os países que tiverem mais de 2 gafanhotos com essa nacionaldiade"</h3>
+<h3>"4 - Uma lista agrupada pela altura dos gafanhotos, mostrando quantas pessoas pesam mais de 100 kg e que estão acima da média de altura de todos no cadastro"</h3>
+<br>
+<br>
+    <div id="voltar">
+      <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
+
+
+</body>
+
+</html>

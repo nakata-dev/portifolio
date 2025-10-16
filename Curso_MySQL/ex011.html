@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelo Relacional</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 0.95em;
+      color: #d6336c;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Modelo Relacional</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>    
+<h2>Diagrama, Entidade, Relacionamento ou DER :</h2>
+
+<img src="img/Modelo_Relacional.png" alt="Modelo_Relacional">
+<h2>Diagrama E - R ou DER:</h2>
+<img src="img/Relacionamento.png" alt="Relacionamento_duplo">
+
+<img src="img/DER.png" alt="Modelo_Relacional">
+<h2>Relacionamento de 1 para 1:</h2>
+<img src="img/Relacionamento_um_pra_um.png" alt="Relacionamento_um_pra_um">
+<p>Atenção: O lado dominante sempre recebe a chave estrangeira</p>
+
+<h2>Relacionamento de 1 para muitos:</h2>
+<img src="img/Relacionamento_um_para_muitos.png" alt="Relacionamento_um_para_muitos">
+<p>Atenção: Pega a chave de 1 e envia para o Muitos. Que no caso aqui, um funcionários pode ter muitos dependentes.</p>
+
+<h2>Relacionamento de muitos para muitos:</h2>
+<img src="img/Relacionamento_muitos_para_muitos.png" alt="Relacionamento_muitos_para_muitos">
+<p>Atenção: Aqui neste caso você envia de 1 para n que no caso é a relação entre cliente > compra e produto > compra.</p>
+
+<br>
+<br>
+    <div id="voltar">
+      <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
+
+
+</body>
+
+</html>

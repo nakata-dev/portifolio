@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaves Estrangeiras e JOIN</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 0.95em;
+      color: #d6336c;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>🧠 Modelo Relacional</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>    
+<h2>🧠 ENGINE que suportam chave estrangeiras:</h2>
+<pre>
+    <code>
+Engine compativeis com chave estrangeiras:
+
+- MySAM
+- InnoDB
+- XtraDB
+    </code>
+</pre>
+<h2>🧠 ACID: As quatro principais regras de atomicidade</h2>
+<img src="img/ACID.png" alt="ACID">
+
+<h2>🧠 Modelo de Relacionamento de 1 para n(muitos)</h2>
+<img src="img/Modelo_de_relacionamento.png" alt="Modelo_de_relacionamento">
+<h2>🧠 Adicionando cursopreferido</h2>
+<pre>
+    <code>
+use cadastro;
+describe cadastro;
+
+alter table gafanhotos
+add column cursopreferido int;
+    </code>
+</pre>
+<img src="img/Add_CursoPreferido.png" alt="Add_CursoPreferido">
+
+<h2>🧠 Informando que o campo "cursopreferido" é uma chave estrangeira.</h2>
+<pre>
+    <code>
+alter table gafanhotos
+add foreing key(cursopreferido)
+referece cursos(idcursos);
+    </code>
+</pre>
+<h2>🧠 Inserindo uma chave:</h2>
+<pre>
+    <code>
+alter table gafanhotos
+<strong>
+add foreign key (cursopreferido)
+references cursos(idcurso);
+</strong>
+desc gafanhotos;        
+    </code>
+</pre>
+<img src="img/Relacionando_Chave_Estrangeira.png" alt="Relacionando_Chave_Estrangeira">
+<h2>🧠 Leitura em liguagem natural:</h2>
+<pre>
+    <code>
+update gafanhotos set cursopreferido = 6 where id = 1;        
+    </code>
+</pre>
+<br>
+<p>
+<strong>
+<i>“Atualize a tabela gafanhotos,e dentro dela, mude o valor da coluna cursopreferido para 6, mas somente para o registro onde o campo id é igual a 1.”</i>
+</strong></p>
+<br>
+<pre>
+    <code>
+update gafanhotos set cursopreferido = 6 where id = 1;    
+
+inserir gafanhotos se cursopreferido for igual a 6 enquanto id for 1
+
+É possível fazer manualmente usando a tabela que fica abaixo de sua área de comandos do workbench
+</code>
+</pre>
+<h2>🧠 Integridade referencial:</h2>
+<pre>
+    <code>
+É quando você não consegue deletar um campo que se relaciona outro.
+
+Como por exemplo:
+
+<strong>delete from cursos where idcurso = 6;</strong>
+
+Neste caso o curso de idcurso = 6 não vai ser apagado, pois ele já possui relação com cursofavorito
+    </code>
+</pre>
+<h2>🧠 Mensagem de erro aparece</h2>
+<img src="img/Tentando_Deletar_uma_linha_relacionada.png" alt="Tentando_Deletar_uma_linha_relacionada">
+<h2>Agora se escolhermos um campo que não tem relacionamento:</h2>
+<img src="img/Idcurso_sem_relacionamento_com_cursopreferido.png" alt="Idcurso_sem_relacionamento_com_cursopreferido">
+<h2>
+    🧠 Vamos usar novamente o comando:
+</h2>
+<pre>
+    <code>
+delete from cursos where idcurso = 28;
+select*from cursos;        
+
+neste caso escolhi o 28, pois o 9 já estava preenchido no cursopreferido da tabela gafanhotos
+    </code>
+</pre>
+<h2>🧠 Join e On</h2>
+<pre>
+    <code>
+Select gafanhotos.nome, cursos.nome, cursos.ano
+from gafanhotos <strong>join</strong> cursos
+on cursos.idcurso = gafanhotos.cursopreferido;
+    </code>
+</pre>
+<br>
+<p>O que isso significa: Você vai selecionar a tabela gafanhotos do campo nome, tabela cursos do campo nome, e tabela cursos do campo ano.</p>
+<br>
+<p>(ON) fazer uma relação entre cursos.idcurso com gafanhotos campo cursopreferido.</p>
+
+<h2>🧠 Abreviando e criando relações entre as tabelas com Inner Join:</h2>
+
+<pre>
+    <code>
+select g.nome, c.nome, c.ano
+<strong>from gafanhotos</strong> as g inner join cursos as c
+on c.idcurso = g.cursopreferido
+order by g.nome;        
+
+única parter que não pode ser abreviada é o que fica <strong>depois do from</strong> e as palavras que ficam <strong>após o ponto</strong>.
+    </code>
+</pre>
+<img src="img/Relações_Inner_Join.png" alt="Relações_Inner_Join">
+<h2>🧠 Mostrando a tabela do lado Left (Gafanhotos)</h2>
+<pre>
+    <code>
+        select g.nome, c.nome, c.ano
+        from <strong>gafanhotos as g left outer join</strong> cursos as c
+        on c.idcurso = g.cursopreferido
+        order by g.nome;              
+    </code>
+</pre>
+<img src="img/Filtrando_com_base_na_tabela_da_esquerda.png" alt="Filtrando_com_base_na_tabela_da_esquerda">
+<h2>🧠 Mostrando a tabela do lado Right (Cursos)</h2>
+<pre>
+    <code>
+select g.nome, c.nome, c.ano
+from gafanhotos as g <strong>right outer join cursos</strong> as c
+on c.idcurso = g.cursopreferido
+order by g.nome;          
+    </code>
+</pre>
+<img src="img/Filtrando_com_base_na_tabela_da_direita.png" alt="Filtrando_com_base_na_tabela_da_direita">
+<br>
+<h2>🧠 Exemplo de uso das junções:</h2>
+<img src="img/Exemplo_Left_Right_Join.png" alt="Exemplo_Left_Right_Join">
+<br>
+<br>
+    <div id="voltar">
+      <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
+
+
+</body>
+
+</html>
