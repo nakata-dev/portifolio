@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INNER JOIN</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    input {
+      width: 60px;
+      margin: 5px;
+    }
+
+    #res {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header {
+      width: 100%;
+      min-height: 80px;
+      text-align: center;
+      padding-top: 10px;
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      font-family: 'Times New Roman', Times, serif;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      width: 100%;
+      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
+      font-family: var(--fonte_padrao);
+      padding-bottom: 10px;
+      padding-top: 10px;
+      text-align: center;
+      color: white;
+      font-size: 0.8em;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      font-size: 0.95em;
+      color: #d6336c;
+    }
+
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>🧠 INNER JOIN</h1>
+    <p>por: Ailton A. Nakata</p>
+  </header>
+
+  <main>    
+<h2>🧠 Criando tabela extra:</h2>
+<pre>
+    <code>
+use cadastro;
+
+create table gafanhoto_assite_curso(
+id int not null auto_increment,
+data date,
+idgafanhoto int,
+idcurso int,
+primary key(id),
+<b>
+foreign key(idgafanhoto) references gafanhotos(id),
+foreign key(idcurso) references cusos(idcurso)
+</b>
+) default charset = utf8;
+    </code>
+</pre>
+<h2>🧠 O que significa “foreign key”?</h2>
+<pre>
+    <code>
+Foreign Key (chave estrangeira) é um tipo especial de coluna que liga uma tabela a outra.
+
+Ela serve para garantir integridade entre os dados — ou seja, evita que existam registros “sem conexão” entre as tabelas
+    </code>
+</pre>
+<h2>📘 Tradução em português simples:</h2>
+<pre>
+    <code>
+“A coluna <strong>idgafanhoto</strong> desta tabela está ligada à coluna <strong>id</strong> da tabela <strong>gafanhotos</strong>.”
+
+“A coluna <strong>idcurso</strong> desta tabela está ligada à coluna <strong>idcurso</strong> da tabela <strong>cursos</strong>.”
+    </code>
+</pre>
+<img src="img/Entendendo_Relação.png" alt="Entendendo_Relação">
+
+<h2>Inserindo valores na tabela:</h2>
+<pre>
+    <code>
+insert into gafanhoto_assite_curso values
+(default, '2024-03-01', '1','2');
+    </code>
+</pre>
+<h2>Junções:</h2>
+<img src="img/Jumções_Muitos_para_Muitos.png" alt="Jumções_Muitos_para_Muitos">
+
+<h2>Como fica na prática?</h2>
+<pre>
+    <code>
+SELECT g.nome, c.nome
+FROM gafanhotos g
+JOIN gafanhoto_assiste_curso a
+ON g.id = a.idgafanhoto
+JOIN cursos c
+ON c.idcurso = a.idcurso
+ORDER BY g.nome;        
+    </code>
+</pre>
+<br>
+<h1>Explicação final</h1>
+<h2>🧩 Temos 3 tabelas:</h2>
+<pre>
+    <code>
+gafanhotos → onde estão os alunos
+    👉 contém id e nome
+
+cursos → onde estão os cursos
+    👉 contém idcurso e nome
+
+gafanhoto_assiste_curso → faz a ponte entre os dois
+    👉 contém idgafanhoto e idcurso
+    </code>
+</pre>
+
+<h2>💬 Pensando em linguagem humana:</h2>
+<pre>
+    <code>
+<b>“Quero ver o nome de cada gafanhoto junto com o nome do curso que ele assiste.”</b>
+
+Mas como cada aluno pode estar em vários cursos, e cada curso pode ter vários alunos, precisamos ligar as tabelas de forma organizada.
+    </code>
+</pre>
+
+<h2>🧠 Resultado final (interpretação)</h2>
+<pre>
+    <code>
+gafanhoto	        curso
+
+Ailton	               MySQL
+Ailton	               PHP
+Bruna	               HTML
+Carlos	               Python        
+    </code>
+</pre>
+<br>
+<br>
+    <div id="voltar">
+      <a href="../estudos.html">Voltar</a>
+    </div>
+    <br><br>
+  </main>
+  <footer>
+    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+  </footer>
+
+
+</body>
+
+</html>
