@@ -1,3 +1,4 @@
+/*1º Etapa de construção do Site*/
 @charset "UTF-8";
 
 *{
@@ -52,7 +53,7 @@ body{
     background-color: var(--fundo-principal);
     color: var(--texto);
 }
-
+/*2º Etapa de construção do Site*/
 main{
    display: grid; /*tranforma o main em grades*/
    grid-template-columns: 1fr 90vw 1fr;
@@ -111,3 +112,110 @@ div#social a{
 div#social a:hover{
     color: var(--destaque-inverso);
 }
+
+/*3º Etapa da construção do Site*/
+
+section#detalhes {
+    grid-column: 2;/*Faz com #detalhes ocupe a posição 2, ou seja, abaixo do #ficha*/
+}
+
+article{ /*configuração apra todo article*/
+    background-color: var(--fundo-card);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+/*Para configura a posição e proporção do vídeo*/
+article h2{
+    color: var(--destaque);
+    margin-bottom: 20px;
+}
+
+.video-container{
+    position:relative; /*A posição vai mudar*/
+    width: 90%; /*a largura dever preencher 90% do espaço*/
+    margin: auto; /*a margin dever levar o vídeo para o centro da tela*/
+    aspect-ratio: 16/9; /*O aspecto do vídeo é de 16:9 que é o formato de vídeo do YouTube*/
+}
+/*Para torna o vídeo adaptável ao retângulo do article*/
+.video-container iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+/*4º Etapa da construção do Site*/
+#skill-container{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+
+}
+#skill-container .info{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#skill-container .nome{
+    font-weight: bold;
+    color:var(--texto);
+}
+#skill-container .porcent{
+    font-weight: bold;
+    color: var(--destaque);
+}
+/*Adicionando estrutura da Barra*/
+#skill-container .barra{
+    width: 100%; /*Ocupa 100% da largura*/
+    height: 8px; /*altura da barrinha*/
+    background-color: var(--fundo-principal);
+    border-radius: 4px;
+}
+/*Adicionando Barra de progresso*/
+#skill-container .progresso{
+    height: 100%;
+    background-color: var(--destaque-inverso);
+    border-radius: 4px;
+}
+/*5º Etapa do desenvolvimento do site*/
+#formacao-container{ /*configurando o foramção*/
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 20px;
+}
+#formacao-container .curso{
+    background-color: var(--fundo-principal);
+    padding-left: 30px;
+    border-radius: 8px;
+    border-left: 5px solid var(--destaque-inverso);
+    transition: border-width 0.5s, boder-color 0.5s; /*Cria uma transição animada mais suave e profissional*/
+}
+#formacao-container .curso:hover{ /*Quando passar o mouse por cima*/
+    border-left-width: 15px;
+    cursor: pointer; /*Ponteiro do mouse vira uma mão*/
+    border-color: var(--destaque);
+}
+#formacao-container h3{
+    line-height: 0.3em;
+}
+#formacao-container .periodo{
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--texto);
+}
+#formacao-container .instituicao{
+    color: var(--destaque-inverso);
+    font-size: 1.1em;
+}
+
+
+/*Responsividade da tela com Media Query (Faz parte da 4º Etapa)*/
+@media screen and (min-width: 768px) {
+    #skill-container{ 
+        grid-template-columns: 1fr 1fr; /*Aqui é indicado que as colunas vão se dividir em duas frações se caso a tela for maior que 768px*/
+    }
+}
+
