@@ -24,6 +24,12 @@ header{
     display: flex;/*Torna a caixa do Header flexível*/
     justify-content: flex-end;/*Manda o conteúdo para o final da caixa, que no caso seria à direita*/
     align-content: center;/*Torna o conteúdo centralizado dentro de cada caixa indivídualmente*/
+
+    /*7º Estapa do desenvolvimento do site - fixa o Menu no Topo*/
+    position: sticky; /*O comando position: sticky; no CSS é usado para criar elementos que “grudam” (ficam fixos) em uma posição enquanto o usuário rola a página, mas somente dentro do seu contêiner pai.*/
+    top: 0; /*“Deixe o elemento rolar normalmente até chegar no topo da tela.
+    Quando encostar no topo (top: 0), mantenha ele fixo ali.”*/
+    z-index: 1; /*Coloca header acima da primeira camada do site que seria a camada 0*/
 }
 
 nav#menu ul{
@@ -191,15 +197,28 @@ article h2{
     padding-left: 30px;
     border-radius: 8px;
     border-left: 5px solid var(--destaque-inverso);
+    border-right: 10px solid var(--destaque-inverso);
     transition: border-width 0.5s, boder-color 0.5s; /*Cria uma transição animada mais suave e profissional*/
 }
 #formacao-container .curso:hover{ /*Quando passar o mouse por cima*/
     border-left-width: 15px;
+    border-right-width: 0px;
     cursor: pointer; /*Ponteiro do mouse vira uma mão*/
     border-color: var(--destaque);
+    .periodo{
+        color: var(--destaque);
+    }
+    .titulacao{
+        color: var(--destaque);
+    }
 }
 #formacao-container h3{
     line-height: 0.3em;
+}
+#formacao-container h3:hover{
+    line-height: 0.3em;
+    font-weight: bolder;
+    color: var(--destaque);
 }
 #formacao-container .periodo{
     font-size: 0.8em;
@@ -211,11 +230,76 @@ article h2{
     font-size: 1.1em;
 }
 
+/*6ºEtapa do Desenvolvimento do Site*/
+
+#projeto-container{
+    display: flex;
+    flex-direction: column-reverse; /*Comando que mostra do novo para o mais antigo, pois reverte a direção de apresentação das colunas*/
+    gap: 20px;
+}
+
+#projeto-container .projeto{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: var(--fundo-principal);
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 5px solid var(--destaque-inverso);
+    border-right: 5px solid var(--destaque-inverso);
+    transition: border-width 0.5s, border-color 0.5s; /*Atenção para não escrever errados esses comandos!*/
+}
+
+#projeto-container .projeto:hover{
+    border-left-width: 10px;
+    border-right-width: 0px;
+    border-color: var(--destaque);
+    cursor: pointer;
+}
+#projeto-container .foto{
+    width: 100%;
+    aspect-ratio:16/9;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+footer{
+    background-color: var(--destaque);
+    padding: 15px;
+    text-align: center;
+    color: var(--texto-inverso);
+
+}
+footer a{
+    color: var(--texto-inverso);
+    text-decoration: none;
+    font-weight: bold;
+
+}
+/*7º vá para o Seletor Header, deixando o menu fixo*/
+
+/*8º Etapa : Deixando o site responsivo para telas maiores*/
+
 
 /*Responsividade da tela com Media Query (Faz parte da 4º Etapa)*/
 @media screen and (min-width: 768px) {
     #skill-container{ 
         grid-template-columns: 1fr 1fr; /*Aqui é indicado que as colunas vão se dividir em duas frações se caso a tela for maior que 768px*/
+    }
+    #projeto-container .projeto{
+        flex-direction: row-reverse; /*o vídeo vai ficar ao lado do conteúdo, conforme a tela aumenta de tamanho*/
+        justify-content: space-between;
+
+    }
+    #projeto-container .info{
+        max-width: 80%;
+
+    }
+    #projeto-container .foto{
+        aspect-ratio: 1/1; /*O aspecto da foto vai ser quadrado*/
+        max-width: 20%; /*a largura máxima da foto vai ser 20%*/
+        max-height: 200px; /*A altura máxima da foto vai ser 200px*/
     }
 }
 
