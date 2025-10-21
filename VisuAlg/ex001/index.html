@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pr-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
+    
+    <style>
+    /* Estilo global */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2626FE, #00bfff);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-style: italic;
+      margin-top: 5px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    h2, h3 {
+      margin-top: 40px;
+      color: #1e90ff;
+      border-left: 6px solid #1e90ff;
+      padding-left: 10px;
+    }
+
+    p#paragrafo {
+      text-align: justify;
+      text-indent: 30px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    .exemplo {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-family: "Courier New", monospace;
+    }
+
+    hr {
+      margin: 25px 0;
+      border: none;
+      border-top: 2px dashed #aaa;
+    }
+
+    ul {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 0;
+    }
+
+    li {
+      list-style-type: square;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1e90ff;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      border-radius: 10px;
+      padding: 6px 10px;
+      background-color: rgba(30, 144, 255, 0.15);
+    }
+
+    /* Caixas de lembrete */
+    .caixa {
+      background: #eaf6ff;
+      border-left: 6px solid #1e90ff;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    #voltar {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    #voltar a {
+      background: #1e90ff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+    }
+
+    #voltar a:hover {
+      background: #104e8b;
+    }
+    </style>
+    <title>Olá Mundo!</title>
+</head>
+<body>
+    <header>
+        <h1>Olá Mundo!</h1>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <h2>Como foi pensado o HTML?</h2>
+        
+        <hr>
+        <div class="Bloco_codiogo">
+            <pre>
+                <code id="codigoParaCopiar">
+instruções
+                </code>
+            </pre>
+            <hr>
+            <br>
+            <button onclick="copiarCodigo()">Copiar</button>
+        </div>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="../../visualg.html">Voltar</a>
+        </div>
+        <br>
+        <br>
+    </main>
+    <!--Script do Algoritmo para ser testado no VisuAlg-->
+    <script>
+        function copiarCodigo() {
+            const codigo = document.getElementById('codigoParaCopiar').textContent;
+            
+            navigator.clipboard.writeText(codigo)
+                .then(() => {
+                    alert('Código copiado com sucesso!');
+                })
+                .catch(err => {
+                    console.error('Falha ao copiar o código: ', err);
+                    alert('Houve um erro ao copiar o código.');
+                });
+        }
+    </script>
+</body>
+</html>
