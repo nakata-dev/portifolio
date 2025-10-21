@@ -12,14 +12,13 @@
     font-family: 'Android';
     src: url(fontes/idroid.otf) format('opentype');
 }
-
-:root{
-    --cor00:#233CCF;
-    --cor01:#3747A5;
-    --cor02:#0025FA;
-    --cor03:#3D467A;
-    --cor04:#353950;
-    --cor05:#2B2C33;
+:root{ /* As cores são opcionais */
+    --fundo-principal:#f5f5f5;
+    --texto: #222222;
+    --texto-inverso:#ffffff;
+    --destaque:#0077ff;
+    --destaque-inverso:#66bbff;
+    --fundo-card:#ffffff;
 
     --fonte_padrao:Arial, Verdana, Helvetica, Sans-serif;
     --fonte_padrao02:"Libre Baskerville", serif;
@@ -42,7 +41,7 @@ body {
 }
 
 header {
-      background: linear-gradient(to right, #2626FE, #00bfff);
+      background: linear-gradient(to right, var(--destaque), var(--destaque));
       color: white;
       text-align: center;
       padding: 30px 15px;
@@ -98,6 +97,7 @@ nav{
     background: linear-gradient(to right, #2626FE, #00bfff);
     padding-left: 15px;
     padding: 10px;
+    margin-bottom: 15px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius:15px;
     font-family: 'Times New Roman', Times, serif;
@@ -129,6 +129,10 @@ a {
 }
 
 main{ /*RESPONSIVE*/
+    display: flex;
+    grid-template-columns: 1fr 90vw 1fr;
+    flex-direction: column;
+    border-radius: 15px;
     min-width: 300px;
     max-width: 800px;
     margin: auto;
@@ -137,9 +141,10 @@ main{ /*RESPONSIVE*/
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.486);
     margin-top: 0px;
     font-family: 'Times New Roman', Times, serif;
+    margin-bottom: 15px;
 }
 
-main p{
+section#ficha{
     margin: 15px 15px 15px 15px;
     text-align: justify;
     text-indent: 30px;
