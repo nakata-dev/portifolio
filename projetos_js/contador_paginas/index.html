@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contador com Meta e Tempo</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #1a1a1a, #333);
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .contador {
+        background: #222;
+        padding: 25px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        color: #fff;
+        width: 320px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+    }
+
+    .inputs {
+        margin-bottom: 20px;
+    }
+
+    .inputs label {
+        display: block;
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 5px;
+    }
+
+    .inputs input {
+        width: 100%;
+        font-size: 1.2rem;
+        text-align: center;
+        padding: 8px;
+        border-radius: 8px;
+        border: 2px solid #555;
+        background: #111;
+        color: #fff;
+        margin-bottom: 10px;
+        outline: none;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .numero {
+        font-size: 2.5rem;
+        margin: 10px 0;
+        color: #0cc;
+    }
+
+    .botoes {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+
+    .btn {
+        flex: 1;
+        margin: 0 5px;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        color: #fff;
+        background: #444;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #0cc;
+    }
+
+    .btn:disabled {
+        background: #555;
+        cursor: not-allowed;
+    }
+
+    .status {
+        margin-top: 15px;
+        font-size: 1rem;
+        color: #0cc;
+    }
+
+    .tempo {
+        font-size: 1.2rem;
+        color: #f5a623;
+        margin-top: 5px;
+    }
+    #copyright{
+        font-size: .7em;
+    }
+</style>
+</head>
+<body>
+
+<div class="contador">
+    <h1>Contador de Páginas</h1>
+
+    <div class="inputs">
+        <label>Meta de páginas:</label>
+        <input type="number" id="meta" value="10" min="1" max="1000">
+        <label>Tempo (minutos):</label>
+        <input type="number" id="tempoMeta" value="5" min="1" max="120">
+    </div>
+
+    <div id="pagina" class="numero">1</div>
+
+    <div class="botoes">
+        <button class="btn" id="anterior">Anterior</button>
+        <button class="btn" id="proximo">Próximo</button>
+    </div>
+
+    <div class="botoes" style="margin-top:15px;">
+        <button class="btn" id="iniciar">Iniciar</button>
+        <button class="btn" id="reset">Resetar</button>
+    </div>
+
+    <div class="status" id="statusTexto">Meta: 0 / 0</div>
+    <div class="tempo" id="cronometro">Tempo restante: 00:00</div>
+    <p id="copyright">&copy;Ailton Akio Nakata</p>
+</div>
+
+
+<script>
+    const pagina = document.getElementById('pagina');
+    const btnAnterior = document.getElementById('anterior');
+    const btnProximo = document.getElementById('proximo');
+    const btnIniciar = document.getElementById('iniciar');
+    const btnReset = document.getElementById('reset');
+    const metaInput = document.getElementById('meta');
+    const tempoMetaInput = document.getElementById('tempoMeta');
+    const statusTexto = document.getElementById('statusTexto');
+    const cronometro = document.getElementById('cronometro');
+
+    let paginaAtual = 1;
+    let meta = 0;
+    let tempoRestante = 0;
+    let timer = null;
+    let ativo = false;
+
+    function atualizarStatus() {
+        statusTexto.textContent = `Meta: ${paginaAtual} / ${meta}`;
+    }
+
+    function atualizarCronometro() {
+        let min = Math.floor(tempoRestante / 60);
+        let seg = tempoRestante % 60;
+        cronometro.textContent = `Tempo restante: ${String(min).padStart(2, '0')}:${String(seg).padStart(2, '0')}`;
+    }
+
+    function iniciarContador() {
+        if (ativo) return;
+
+        meta = parseInt(metaInput.value);
+        tempoRestante = parseInt(tempoMetaInput.value) * 60;
+        paginaAtual = 1;
+        pagina.textContent = paginaAtual;
+        ativo = true;
+
+        atualizarStatus();
+        atualizarCronometro();
+
+        timer = setInterval(() => {
+            tempoRestante--;
+            atualizarCronometro();
+
+            if (tempoRestante <= 0) {
+                clearInterval(timer);
+                ativo = false;
+                desativarControles(true);
+                cronometro.textContent = "Tempo esgotado!";
+            }
+        }, 1000);
+
+        desativarControles(false);
+    }
+
+    function desativarControles(fim = false) {
+        btnIniciar.disabled = ativo;
+        btnReset.disabled = !ativo;
+        btnAnterior.disabled = fim;
+        btnProximo.disabled = fim;
+        metaInput.disabled = ativo;
+        tempoMetaInput.disabled = ativo;
+    }
+
+    btnAnterior.addEventListener('click', () => {
+        if (paginaAtual > 1) {
+            paginaAtual--;
+            pagina.textContent = paginaAtual;
+            atualizarStatus();
+        }
+    });
+
+    btnProximo.addEventListener('click', () => {
+        if (paginaAtual < meta) {
+            paginaAtual++;
+            pagina.textContent = paginaAtual;
+            atualizarStatus();
+
+            if (paginaAtual === meta) {
+                clearInterval(timer);
+                ativo = false;
+                desativarControles(true);
+                statusTexto.textContent = "Meta atingida! 🎯";
+            }
+        }
+    });
+
+    btnIniciar.addEventListener('click', iniciarContador);
+
+    btnReset.addEventListener('click', () => {
+        clearInterval(timer);
+        ativo = false;
+        paginaAtual = 1;
+        pagina.textContent = 1;
+        cronometro.textContent = "Tempo restante: 00:00";
+        statusTexto.textContent = "Meta: 0 / 0";
+        desativarControles(true);
+        metaInput.disabled = false;
+        tempoMetaInput.disabled = false;
+    });
+
+    desativarControles(true);
+</script>
+
+</body>
+</html>
