@@ -123,12 +123,16 @@
     #voltar a:hover {
       background: #104e8b;
     }
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Operadores</title>
+    <title>Soma de dois números</title>
 </head>
 <body>
     <header>
-        <h1>Operadores Parte II</h1>
+        <h1>A soma de dois números</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
@@ -138,7 +142,22 @@
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "Soma de dois números"
+// Função :Somar dois números inteiros
+// Autor :Ailton A. Nakata
+// Data : 05/11/2024
+// Seção de Declarações 
+var
+   n1, n2, s : inteiro
+inicio
+// Seção de Comandos 
+   escreva ("Informe um número: ")
+   leia(n1)
+   escreva ("Informe outro número: ")
+   leia(n2)
+   s <- n1 + n2
+   escreva ("O soma entre ", n1, " e", n2, " é igual a ",s)
+fimalgoritmo
                 </code>
             </pre>
             <hr>

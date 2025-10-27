@@ -123,22 +123,39 @@
     #voltar a:hover {
       background: #104e8b;
     }
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Procedimentos</title>
+    <title>Calculo do Imposto</title>
 </head>
 <body>
     <header>
-        <h1>Procedimentos</h1>
+        <h1>Calculo do Imposto</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Procedimentos</h2>
+        <h2>VisuAlg : Imposto sobre importação</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "ImpostoSP"
+// Função :Calcular o Imposto sobre a importação de um produto
+// Autor : Ailton A. Nakata
+// Data : 06/11/2024
+// Seção de Declarações 
+var
+   preco, imposto : real
+inicio
+// Seção de Comandos 
+   escreva ("Qual o valor do produto em US$ : ")
+   leia (preco)
+   imposto <- (preco * 60) / 100
+   escreva ("O valor do imposto em US$ é ", imposto:5:2)
+fimalgoritmo
                 </code>
             </pre>
             <hr>

@@ -123,22 +123,40 @@
     #voltar a:hover {
       background: #104e8b;
     }
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Estrutura de Repetição</title>
+    <title>Conversor de temperatura</title>
 </head>
 <body>
     <header>
-        <h1>Estrutura de Repetição</h1>
+        <h1>Conversor de temperatura</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Estruturas de Repetição III</h2>
+        <h2>VisuAlg : Algoritmo para converter Farenait para Celsius</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "ConversorFC"
+// Função : Conversor de Farenait para Celsius
+// Autor : Ailton A. Nakata
+// Data : 06/11/2024
+// Seção de Declarações 
+var
+   c, f : real
+
+inicio
+// Seção de Comandos 
+   escreva ("Qual a temperatura aqui? ")
+   leia(f)
+   c <- (f - 32) / 1.8
+   escreva ("A temperatura em Celsius do Brasil é ", c:4:1)
+fimalgoritmo
                 </code>
             </pre>
             <hr>

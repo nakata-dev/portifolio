@@ -123,22 +123,43 @@
     #voltar a:hover {
       background: #104e8b;
     }
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Estrutura de Repetição</title>
+    <title>Calculo de Idade</title>
 </head>
 <body>
     <header>
-        <h1>Estrutura de Repetição</h1>
+        <h1>Calculo de Idade</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Estruturas de Repetição I</h2>
+        <h2>VisuAlg : Como calcular idade de forma simples</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "Calculo_Idade"
+// Função : Calcular a idade da pessoa
+// Autor : Ailton A. Nakata
+// Data : 06/11/2024
+// Seção de Declarações 
+var
+    ano_atual, ano_nasc, idade: inteiro
+inicio
+// Seção de Comandos 
+    escreva ("Em que ano nós estamos? ")
+    leia(ano_atual)
+    escreva ("Em que ano eu nasci? ")
+    leia(ano_nasc)
+    idade <- ano_atual - ano_nasc
+    escreva ("Minha idade será ", idade)
+        
+
+fimalgoritmo
                 </code>
             </pre>
             <hr>

@@ -123,22 +123,53 @@
     #voltar a:hover {
       background: #104e8b;
     }
+
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Condicionais</title>
+    <title>Identificador de Triângulos</title>
 </head>
 <body>
     <header>
-        <h1>Estruturas Condicionais</h1>
+        <h1>Identificador de Triângulo</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Estruturas Condicionais II</h2>
+        <h2>VisuAlg : Algoritmo para identificar que tipo de triângulo é: Equilátero, Isóceles ou Escaleno</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "Triangulos"
+// Função : Testar que tipo de triângulo é
+// Autor : Ailton A. Nakata
+// Data : 06/11/2024
+// Seção de Declarações 
+var
+ L1, L2, L3 : Real
+ Eq, Es, Tri : Logico
+
+inicio
+// Seção de Comandos 
+
+Escreval ("Digite o primeiro lado :")
+leia(L1)
+Escreval ("Digite o segundo lado:")
+leia(L2)
+Escreval ("Digite o terceiro lado:")
+leia(L3)
+Tri <- (L1 < L2 + L3) e (L2 < L1 + L3) e (L3 < L1 + L2)
+Eq <- (L1=L2) e (L2=L3)
+Es <- (L1<>L2) e (L2<>L3) e (L1<>L3)
+Escreval ("Pode formar um Triângulo? ", Tri)
+Escreval ("O triângulo é Equilátero? ", Eq)
+Escreval ("O triângulo é Escaleno? ", Es)
+
+
+fimalgoritmo
                 </code>
             </pre>
             <hr>

@@ -123,22 +123,45 @@
     #voltar a:hover {
       background: #104e8b;
     }
+    pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
+    
     </style>
-    <title>Matrizes</title>
+    <title>Empréstimo</title>
 </head>
 <body>
     <header>
-        <h1>Matrizes</h1>
+        <h1>Empréstimo</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Matrizes</h2>
+        <h2>VisuAlg : Calculando 20% sobre o emprestado do banco</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "Empréstimo"
+// Função : Algoritmo para calcular 20% a mais em cada parcela do pagamento do empréstimo
+// Autor :Ailton A. Nakata
+// Data : 06/11/2024
+// Seção de Declarações 
+var
+   emprestimo, valorfinal, porcentagem : real
+   parcelas:real
+   inicio
+// Seção de Comandos 
+   escreva("Qual o valor do empréstimo? ")
+   leia(emprestimo)
+   escreva("Em quantas parcelas quer pagar? ")
+   leia(parcelas)
+   porcentagem <- (emprestimo*20)/100
+   valorfinal <- (porcentagem + emprestimo) / parcelas
+   escreva("O valor de cada parcela é: ", valorfinal:5:2, " R$")
+   
+fimalgoritmo
                 </code>
             </pre>
             <hr>

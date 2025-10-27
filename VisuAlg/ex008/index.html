@@ -123,6 +123,10 @@
     #voltar a:hover {
       background: #104e8b;
     }
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
     <title>Estrutura de Repetição</title>
 </head>
@@ -138,7 +142,30 @@
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "Conversor de Dólar"
+// Função : Converter real para dólar
+// Autor : Ailton A. Nakata
+// Data : 06/11/2024
+// Seção de Declarações 
+var
+   C, Q : INTEIRO
+   reais, dolar : real
+
+inicio
+// Seção de Comandos 
+C <- 1
+ESCREVAL("CONTAÇÃO DO DÓLAR HOJE É DE 6.07 R$")
+ESCREVAL("QUANTAS VEZES VOCÊ QUER CONVERTER? ")
+LEIA(Q)
+ENQUANTO C<= Q FACA
+   escreva ("Quanto reais eu tenho? R$ ")
+   leia (reais)
+   dolar <- reais / 6.07
+   escrevaL ("Posso comprar US$ ", dolar:5:2)
+   C <- C + 1
+FIMENQUANTO
+   
+fimalgoritmo
                 </code>
             </pre>
             <hr>

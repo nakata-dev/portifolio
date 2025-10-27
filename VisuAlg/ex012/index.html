@@ -123,22 +123,48 @@
     #voltar a:hover {
       background: #104e8b;
     }
+
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Vetores</title>
+    <title>Condicional Aninhada</title>
 </head>
 <body>
     <header>
-        <h1>Vetores</h1>
+        <h1>Condicional Aninhada</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Vetores</h2>
+        <h2>VisuAlg : Condicional aninhada SE e SENAO</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "Condicional"
+// Função : Algoritmo para calcular condicional aninhada SE; SENAO
+// Autor : Ailton A. Nakata
+// Data : 11/11/2024
+// Seção de Declarações 
+var
+dinheiro : real
+
+inicio
+// Seção de Comandos 
+escreval("Quanto de Dinheiro eu tenho?: ")
+leia (dinheiro)
+se (dinheiro >= 10000) entao
+   escreva ("PARTIU DISNEY")
+senao
+se (dinheiro >= 5000) e (dinheiro < 10000) entao
+   escreva ("VISITAR FAMILIA")
+senao
+   escreva ("#CHATEADO")
+Fimse
+fimse
+fimalgoritmo
                 </code>
             </pre>
             <hr>

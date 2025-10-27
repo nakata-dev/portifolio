@@ -123,22 +123,78 @@
     #voltar a:hover {
       background: #104e8b;
     }
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Exercícios de Lógica</title>
+    <title>Graus para Radianos</title>
 </head>
 <body>
     <header>
-        <h1>Exercícios</h1>
+        <h1>Conversor</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Exercícios de Algoritmo Resolvidos</h2>
+        <h2>VisuAlg : Algoritmo para converter graus para radianos</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "CONVERSOR"
+// Função :Converter Graus para Radianos
+// Autor : Ailton A. Nakata
+// Data : 05/11/2024
+// Seção de Declarações 
+var
+valorABS: inteiro
+Exponenciacao : real
+ValorInteiro: inteiro
+RaizQuadrada: real
+ValorPi: Real
+Seno: Real
+Cosseno: Real
+Tangente: real
+angulo1, s, angulo2, c, angulo3, t: real
+inicio
+// Seção de Comandos 
+Escreval("Valor Absoluto de (-10) é: ", abs(-10))
+Escreval("")
+Escreval("O Valor Exponente de (3, 2) é: ", exp(3,2))
+Escreval("")
+Escreval("Valor inteiro de (3.9) é: ", int(3.89))
+Escreval("")
+escreval("A raiz quadrada de (25) é: ", raizq(25))
+Escreval("")
+escreval("A valor de PI é: ", pi)
+Escreval("")
+Escreval("O Seno de 0.523 graus é: ", sen(0.523))
+Escreval("")
+Escreval("O Cosseno de 0.523 graus é: ", cos(0.523))
+Escreval("")
+Escreval("A Tangente de 0.523 graus é: ", tan(0.523))
+Escreval("")
+      //Calculo de Seno Cosseno e Tangente
+
+   escreva ("Informe um ângulo: ")
+   leia(angulo1)
+   s <- sen(grauprad(angulo1))
+     escreval("O Seno de ", angulo1, " é igual a ", s)
+     Escreval("")
+     
+     escreva ("Informe um ângulo: ")
+      leia(angulo2)
+      c <- cos(grauprad(angulo2))
+         escreval ("O Cosseno de ", angulo2, " é igual a ", c)
+         Escreval("")
+         
+   escreva ("Informe um ângulo: ")
+   leia(angulo3)
+   t <- tan(grauprad(angulo3))
+        escreval("A Tangente de ", angulo3, " é igual a ", t)
+escreval("")
+fimalgoritmo
                 </code>
             </pre>
             <hr>

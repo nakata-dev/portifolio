@@ -123,22 +123,52 @@
     #voltar a:hover {
       background: #104e8b;
     }
+
+     pre{
+      white-space:pre-wrap;
+      padding: 15px;
+    }
     </style>
-    <title>Funções</title>
+    <title>Média</title>
 </head>
 <body>
     <header>
-        <h1>Funções</h1>
+        <h1>Média</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>VisuAlg : Funções</h2>
+        <h2>VisuAlg : Algoritmo para calcular a média entre duas notas</h2>
         
         <hr>
         <div class="Bloco_codiogo">
             <pre>
                 <code id="codigoParaCopiar">
-instruções
+algoritmo "Média"
+// Função : Algoritmo para calcular a média entre duas notas
+// Autor :Ailton A. Nakata
+// Data : 11/11/2024
+// Seção de Declarações 
+var
+   N1, N2, M : REAL
+inicio
+// Seção de Comandos 
+   ESCREVA ("PRIMEIRA NOTA: ")
+   LEIA(N1)
+   ESCREVA ("SEGUNDA NOTA: ")
+   LEIA(N2)
+   M <- (N1+N2) / 2
+   ESCREVAL ("A MÉDIA DO ALUNO FOI: ", M:4:2)
+   SE (M>=7) ENTAO
+      ESCREVAL ("ALUNO APROVADO!")
+   SENAO
+        SE (M>=5) E (M<=7) ENTAO
+      ESCREVAL ("ALUNO EM RECUPERAÇÃO!")
+        SENAO
+      ESCREVAL ("ALUNO REPROVADO!")
+        FIMSE
+   FIMSE   
+
+fimalgoritmo
                 </code>
             </pre>
             <hr>
