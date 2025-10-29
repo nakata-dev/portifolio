@@ -5,24 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        header p, h1{
+
+        header p,
+        h1 {
             color: white;
             text-align: center;
             padding-bottom: 5px;
         }
-        header{
+
+        header {
             padding: 20px;
             height: 120px;
-            background-image: linear-gradient(to right, blue, rgb(106, 106, 246)) ;
+            background-image: linear-gradient(to right, blue, rgb(106, 106, 246));
             border-bottom-left-radius: 60px;
             margin-bottom: 10px;
         }
-        main{
+
+        main {
             margin-bottom: 10px;
             display: block;
             margin: auto;
@@ -34,18 +38,35 @@
             min-width: 300px;
             border-radius: 8px;
         }
-        #caixa {
+
+        .caixa {
             display: block;
             padding: 10px;
             width: auto;
             border-radius: 8px;
             background-color: lightgray;
-            margin:15px;
+            margin: 15px;
             white-space: pre-wrap;
             line-height: 1.8;
         }
-        h2{
+
+        h2 {
             text-align: center;
+        }
+
+        #voltar{
+            text-align: center;
+        }
+        #voltar{
+            a:hover{
+             background-color: rgba(99, 108, 243, 0.747);
+             padding: 10px;
+             font-weight: bolder;
+             border-radius: 10px;
+             transform: scale(1.1);
+             transition-duration: 0.5s;
+             
+            }
         }
     </style>
     <title>Treino de HTML</title>
@@ -53,12 +74,12 @@
 
 <body>
     <header>
-        <h1>Treinamento - HTML5</h1>
-        <p>&copy;Ailton A. Nakata</p>
+        <h1>HTML5/CSS/JavaScript</h1>
+        <p>Copyright &copy;Ailton A. Nakata</p>
     </header>
     <main>
-        <h2>Exercício 001</h2>
-<pre id="caixa">
+        <h2>Estrutura HTML5</h2>
+        <pre class="caixa">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="pt-br"&gt;
 &lt;head&gt;
@@ -72,13 +93,106 @@
 &lt;/html&gt;
 </pre>
     </main>
-    <br>
-    <main>
-        <h2>Exercício 002</h2>
-        <pre id="caixa">
-   
-        </pre>
 
+    <br>
+
+    <main>
+        <h2>Menu Hamburguer</h2>
+        <h3>&lt;HTML5&gt;</h3>
+        <pre class="caixa">
+&lt;!DOCTYPE html&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;head&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;title&gt;Menu Hamburguer&lt;/title&gt;
+&lt;body&gt;
+&lt;h1&gt;Hamburger Menu&lt;h1&gt;
+   &lt;i id="burguer" class="material-icons" onclick="clickMenu()"&gt;Menu&lt;/i&gt;
+   &lt;menu id="itens"&gt;
+     
+     &lt;ul&gt;
+        &lt;li&gt;
+            &lt;a href="#">Opção 01&lt;/a&gt;
+            &lt;a href="#"&gt;Opção 02&lt;/a&gt;
+            &lt;a href="#"&gt;Opção 03&lt;/a&gt;
+            &lt;a href="#"&gt;Opção 04&lt;/a&gt;
+            &lt;a href="#"&gt;Opção 05&lt;/a&gt;
+            &lt;a href="../estudos.html"&gt;Voltar&lt;/a&gt;
+        &lt;/li&gt;
+    &lt;/html&gt;
+&lt;/body&gt;
+        </pre>
+    </main>
+
+    <br>
+
+    <main>
+        <h3>CSS3{}</h3>
+        <pre class="caixa">
+@charset "UTF-8"
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
+    body{
+    background-color: lightgray;
+    }
+    header{
+        color: rgb(15, 4, 4);
+        background-color: rgb(175, 175, 175);
+        padding: 10px;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.466);    
+    }    
+    header h1{
+            text-align: center;
+            font-weight: bolder;
+            color: black;
+            padding: 10px;
+    }
+    i#burguer{
+        background-color: rgb(56, 56, 56);
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        cursor: pointer;
+    }
+    i#burguer:hover{
+        background-color: rgba(255, 255, 255, 0.411);
+        color: black;
+    }
+        </pre>
+    </main>
+
+    <br>
+
+    <main>
+        <h3>Script{}</h3>
+        <pre class="caixa">   
+&lt;script&gt;
+    function clickMenu(){
+        if(itens.style.display == 'block'){
+            itens.style.display='none';
+        }else{
+            itens.style.display='block';
+             }
+        }
+        function mudouTamanho(){
+            if(window.innerWidth >= 768) {
+                itens.style.display='block';
+            }else{
+                itens.style.display='none';
+            }
+        }
+&lt;/script&gt;
+        </pre>
+        <br>
+        <div id="voltar">
+            <a href="estudos.html">Voltar</a>
+        </div>
+        <br>
     </main>
 </body>
 
