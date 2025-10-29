@@ -49,6 +49,10 @@ nav {
     padding-left: 30px;
     margin-bottom: 15px;
     font-size: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: auto;
 }
 
 nav>a {
@@ -181,15 +185,17 @@ div#txt_exercicios a:hover {
 div#voltar {
     text-align: center;
     font-family: 'Times New Roman', Times, serif;
+    transition: background-color 1s;
 }
 
 div#voltar a:hover {
     padding: 10px;
-    background-color: rgba(125, 208, 235, 0.637);
+    background-image:linear-gradient(135deg, #2626FE, #00bfff ) ;
+    color: white;
     font-weight: bolder;
     transition-duration: 0.5s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.656);
+    border-radius: 50px;
     border: none;
     font-family: 'Times New Roman', Times, serif;
 }
