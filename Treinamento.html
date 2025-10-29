@@ -1,85 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Busque esta informação de indexação de api icons dentro do site do google icons ou google materials-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <title>Treinamento</title>
+
     <style>
-        * {
-            margin: 0;
+        *{
             padding: 0;
+            margin: 0;
             box-sizing: border-box;
         }
-
-        header p,
-        h1 {
+        
+        /* 1. ESTRUTURA E POSICIONAMENTO DO HEADER */
+        header{
+            background-color: blue;
             color: white;
-            text-align: center;
-            padding-bottom: 5px;
+            position: fixed; /* O header deve ficar no topo */
+            width: 100%;
+            z-index: 1000; /*indexa o conteúdo no eixo z ou seja horizontal acima de 1000 coisas que existam no site*/         
         }
 
-        header {
-            padding: 20px;
-            height: 120px;
-            background-image: linear-gradient(to right, blue, rgb(106, 106, 246));
-            border-bottom-left-radius: 60px;
-            margin-bottom: 10px;
+        /* 2. ESTILO DO ÍCONE BURGUER */
+        span#burguer{
+            display: block; /* Garante que o ícone ocupe toda a largura no mobile */
+            cursor: pointer;
+            padding: 10px;
+            font-size: 2em;
+            color: white;
+            background-color: blue;
+            text-align: center; /* Alinha o ícone para a direita no mobile */
+            transition: background-color 0.5s;
+        }
+        span#burguer:hover{
+            background-color: rgba(0, 0, 255, 0.7); /* Efeito hover no ícone */
         }
 
-        main {
-            margin-bottom: 10px;
+        /* 3. ESTILO DO MENU (NAV) */
+        menu#itens{
+            /* No mobile, o JS controla o display */
+            background-color: white;
+            padding: 10px 0;
+            /* Garante que o conteúdo (UL) fique centralizado */
+            text-align: center; 
+            
+        }
+        
+        /* 4. LISTA (UL) - Sem columns para centralizar */
+        ul{
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        /* 5. ITENS DE LISTA (LI) */
+        ul > li{
+            /* Transforma os itens em blocos em linha para que fiquem lado a lado no desktop */
+            display: inline-block; 
+            padding: 0 8px; /* Espaçamento lateral entre os itens */
+            flex-direction: column-reverse;
+        }
+        
+        /* 6. LINKS (A) */
+        li > a {
+            color: gray;
+            text-decoration: none;
+            display: block; /* Permite que o padding e hover peguem toda a área do LI */
+            padding: 5px; 
+            border-radius: 8px;
+        }
+
+        li > a:hover{
+            background-color: rgba(25, 0, 255, 0.507);
+            color: white; /* Muda a cor do texto no hover para melhor contraste */
+        }
+
+        /* 7. ESTILO DO CONTEÚDO PRINCIPAL */
+        main{
             display: block;
             margin: auto;
             padding: 20px;
-            background-color: white;
-            box-shadow: 3px 3px 8px black;
             width: 90vw;
-            max-width: 800px;
-            min-width: 300px;
-            border-radius: 8px;
+            /* ADICIONA ESPAÇO NO TOPO DO MAIN PARA EVITAR QUE O CONTEÚDO FIQUE DEBAIXO DO HEADER */
+            padding-top: 80px; /* Ajuste este valor se o header for maior */
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.397);
         }
 
-        .caixa {
-            display: block;
-            padding: 10px;
-            width: auto;
-            border-radius: 8px;
-            background-color: lightgray;
-            margin: 15px;
-            white-space: pre-wrap;
-            line-height: 1.8;
+        /* CSS para o efeito âncora (já estava funcionando!) */
+        html {
+            scroll-behavior: smooth;
         }
 
-        h2 {
-            text-align: center;
+        main div {
+            /* ESSENCIAL: Garante que, ao clicar no link, o topo do DIV pare abaixo do header */
+            scroll-margin-top: 65px; /* Ajuste este valor para ser um pouco MAIOR que a altura do seu header */
+            padding: 20px;
         }
-
-        #voltar{
-            text-align: center;
-        }
-        #voltar{
-            a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-             
+        
+        /* 8. MEDIA QUERY (Responsividade para Desktop) */
+        @media screen and (min-width: 600px) {
+            span#burguer {
+                /* Esconde o ícone no desktop */
+                display: none;
+                
+            }
+            main{
+                max-width: 800px;
+            }
+            menu#itens {
+                /* Garante que o menu esteja sempre visível no desktop */
+                display: block !important; 
+                background-color: blue;
+                color: aliceblue;
+            }
+            menu a{
+                max-width: 800px;
+                color: white;
+            }
+            menu a:hover{
+                background-color: rgba(128, 128, 128, 0.685);
+                padding: 5px;
+                transition: background-color 1s;
+            }
+            header {
+                /* Centraliza o título do header no desktop, se houver */
+                text-align: center; 
+                
             }
         }
+        footer{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: blue;
+            color: white;
+            font-size: 0.9em;
+            padding: 5px;
+            text-align: center;
+        }
+        #titulos{
+            color: aliceblue;
+            padding: 3px;
+            background-image: linear-gradient(to right, rgb(55, 0, 252),rgb(162, 68, 185), rgba(1, 70, 97, 0.479));
+            border-bottom-right-radius: 8px;
+            border-top-left-radius: 4px;
+            max-width: 400px;
+        }
+        pre{
+            display: block;
+            margin: auto;
+            width: auto;
+            white-space: pre-wrap;
+            line-height: 1.8em;
+            background-color: rgb(174, 189, 204);
+            border-radius: 8px;
+            margin: 5px;
+            padding: 20px;
+        }
     </style>
-    <title>Treino de HTML</title>
 </head>
+<body onresize="mudouTamanho()">
 
-<body>
     <header>
-        <h1>HTML5/CSS/JavaScript</h1>
-        <p>Copyright &copy;Ailton A. Nakata</p>
+        <span id="burguer" class="material-symbols-outlined" onclick="clickMenu()">menu</span>
+        <menu id="itens">
+            <ul>
+                <li><a href="#parte01">HTML5</a></li>
+                <li><a href="#parte02">MENU</a></li>
+                <li><a href="#parte03">CSS</a></li>
+                <li><a href="#parte04">JS</a></li>
+                <li><a href="#parte05">FOOTER</a></li>
+            </ul>
+        </menu>
     </header>
+
     <main>
-        <h2>Estrutura HTML5</h2>
-        <pre class="caixa">
+        <div id="parte01">
+            <h2 id="titulos">| Aula 01 - Estrutura HTML</h2>
+            <br>
+            <pre>
+                <code>
 &lt;!DOCTYPE html&gt;
 &lt;html lang="pt-br"&gt;
 &lt;head&gt;
@@ -91,109 +194,297 @@
 
     &lt;/body&gt;
 &lt;/html&gt;
-</pre>
-    </main>
-
-    <br>
-
-    <main>
-        <h2>Menu Hamburguer</h2>
-        <h3>&lt;HTML5&gt;</h3>
-        <pre class="caixa">
+                </code>
+            </pre>
+            <p style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+        </div>
+        <br>
+        <div id="parte02">
+<h2 id="titulos">| Aula 02 - MENU BURGUER</h2>
+<br>
+<pre>
 &lt;!DOCTYPE html&gt;
-&lt;meta charset="UTF-8"&gt;
+&LT;html lang="UTF-8"
 &lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
 &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;<strong>LINK de referêcia no Google Icons</strong>&gt;
 &lt;title&gt;Menu Hamburguer&lt;/title&gt;
 &lt;body&gt;
 &lt;h1&gt;Hamburger Menu&lt;h1&gt;
-   &lt;i id="burguer" class="material-icons" onclick="clickMenu()"&gt;Menu&lt;/i&gt;
-   &lt;menu id="itens"&gt;
-     
-     &lt;ul&gt;
-        &lt;li&gt;
-            &lt;a href="#">Opção 01&lt;/a&gt;
-            &lt;a href="#"&gt;Opção 02&lt;/a&gt;
-            &lt;a href="#"&gt;Opção 03&lt;/a&gt;
-            &lt;a href="#"&gt;Opção 04&lt;/a&gt;
-            &lt;a href="#"&gt;Opção 05&lt;/a&gt;
-            &lt;a href="../estudos.html"&gt;Voltar&lt;/a&gt;
-        &lt;/li&gt;
-    &lt;/html&gt;
+<strong>&lt;i id="burguer" class="material-icons" onclick="clickMenu()"&gt;Menu&lt;/i&gt;</strong>
+&lt;menu id="itens"&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href="#">Opção 01&lt;/a&gt;
+&lt;a href="#"&gt;Opção 02&lt;/a&gt;
+&lt;a href="#"&gt;Opção 03&lt;/a&gt;
+&lt;a href="#"&gt;Opção 04&lt;/a&gt;
+&lt;a href="#"&gt;Opção 05&lt;/a&gt;
+&lt;/li&gt;
+&lt;/html&gt;
 &lt;/body&gt;
-        </pre>
-    </main>
+</pre>
+<p style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+</div>
+        <div id="parte03">
+            <h2 id="titulos">Aula 03 - CSS{ }</h2>
+            <pre>
+*{
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+}
 
-    <br>
+<strong>/* 1. ESTRUTURA E POSICIONAMENTO DO HEADER */</strong>
+header{
+background-color: blue;
+color: white;
+position: fixed; <strong>/* O header deve ficar no topo */</strong>
+width: 100%;
+z-index: 1000; <strong>/*indexa o conteúdo no eixo z ou seja horizontal acima de 1000 coisas que existam no site*/   </strong>      
+}
 
-    <main>
-        <h3>CSS3{}</h3>
-        <pre class="caixa">
-@charset "UTF-8"
+<strong>/* 2. ESTILO DO ÍCONE BURGUER */</strong>
+span#burguer{
+display: block; <strong>/* Garante que o ícone ocupe toda a largura no mobile */</strong>
+cursor: pointer;
+padding: 10px;
+font-size: 2em;
+color: white;
+background-color: blue;
+text-align: center; <strong>/* Alinha o ícone para a direita no mobile */</strong>
+transition: background-color 0.5s;
+}
+span#burguer:hover{
+background-color: rgba(0, 0, 255, 0.7); /* Efeito hover no ícone */
+}
 
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-    }
-    body{
-    background-color: lightgray;
-    }
-    header{
-        color: rgb(15, 4, 4);
-        background-color: rgb(175, 175, 175);
-        padding: 10px;
-        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.466);    
-    }    
-    header h1{
-            text-align: center;
-            font-weight: bolder;
-            color: black;
-            padding: 10px;
-    }
-    i#burguer{
-        background-color: rgb(56, 56, 56);
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 10px;
-        cursor: pointer;
-    }
-    i#burguer:hover{
-        background-color: rgba(255, 255, 255, 0.411);
-        color: black;
-    }
-        </pre>
-    </main>
+<strong>/* 3. ESTILO DO MENU (NAV) */</strong>
+menu#itens{
+<strong>/* No mobile, o JS controla o display */</strong>
+background-color: white;
+padding: 10px 0;
+<strong>
+    /* Garante que o conteúdo (UL) fique centralizado */
+    text-align: center;
+</strong>
 
-    <br>
+}
 
-    <main>
-        <h3>Script{}</h3>
-        <pre class="caixa">   
+<strong>/* 4. LISTA (UL) - Sem columns para centralizar */</strong>
+ul{
+list-style-type: none;
+padding: 0;
+}
+
+<strong>/* 5. ITENS DE LISTA (LI) */</strong>
+ul > li{
+/* Transforma os itens em blocos em linha para que fiquem lado a lado no desktop */
+display: inline-block; 
+padding: 0 8px; <strong>/* Espaçamento lateral entre os itens */</strong>
+flex-direction: column-reverse;
+}
+
+<strong>/* 6. LINKS (A) */</strong>
+li > a {
+color: gray;
+text-decoration: none;
+display: block; <strong>/* Permite que o padding e hover peguem toda a área do LI */</strong>
+padding: 5px; 
+border-radius: 8px;
+}
+
+li > a:hover{
+background-color: rgba(25, 0, 255, 0.507);
+color: white; /* Muda a cor do texto no hover para melhor contraste */
+}
+
+<strong>/* 7. ESTILO DO CONTEÚDO PRINCIPAL */</strong>
+main{
+display: block;
+margin: auto;
+padding: 20px;
+width: 90vw;
+/* ADICIONA ESPAÇO NO TOPO DO MAIN PARA EVITAR QUE O CONTEÚDO FIQUE DEBAIXO DO HEADER */
+padding-top: 80px; /* Ajuste este valor se o header for maior */
+box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.397);
+}
+
+<strong>/* CSS para o efeito âncora (já estava funcionando!) */</strong>
+html {
+scroll-behavior: smooth;
+}
+
+main div {
+/* ESSENCIAL: Garante que, ao clicar no link, o topo do DIV pare abaixo do header */
+scroll-margin-top: 65px; /* Ajuste este valor para ser um pouco MAIOR que a altura do seu header */
+padding: 20px;
+}
+
+<strong>/* 8. MEDIA QUERY (Responsividade para Desktop) */</strong>
+@media screen and (min-width: 600px) {
+span#burguer {
+/* Esconde o ícone no desktop */
+display: none;
+
+}
+main{
+max-width: 800px;
+}
+menu#itens {
+<strong>/* Garante que o menu esteja sempre visível no desktop */</strong>
+display: block !important; 
+background-color: blue;
+color: aliceblue;
+}
+menu a{
+max-width: 800px;
+color: white;
+}
+menu a:hover{
+background-color: rgba(128, 128, 128, 0.685);
+padding: 5px;
+transition: background-color 1s;
+}
+header {
+<strong>/* Centraliza o título do header no desktop, se houver */</strong>
+text-align: center; 
+
+}
+}
+footer{
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+background-color: blue;
+color: white;
+font-size: 0.9em;
+padding: 5px;
+text-align: center;
+}
+#titulos{
+color: aliceblue;
+padding: 3px;
+background-image: linear-gradient(to right, rgb(55, 0, 252),rgb(162, 68, 185), rgba(1, 70, 97, 0.479));
+border-bottom-right-radius: 8px;
+border-top-left-radius: 4px;
+max-width: 400px;
+}
+pre{
+display: block;
+margin: auto;
+width: auto;
+white-space: pre-wrap;
+line-height: 1.8em;
+background-color: rgb(174, 189, 204);
+border-radius: 8px;
+margin: 5px;
+padding: 10px;
+}
+            </pre>
+            <p style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+        </div>
+        <div id="parte04">
+<h2 id="titulos">| Aula 04 - JavaScript (JS)</h2>
+<br>
+<pre>
 &lt;script&gt;
-    function clickMenu(){
-        if(itens.style.display == 'block'){
-            itens.style.display='none';
-        }else{
-            itens.style.display='block';
-             }
-        }
-        function mudouTamanho(){
-            if(window.innerWidth >= 768) {
-                itens.style.display='block';
-            }else{
-                itens.style.display='none';
+        const itens = document.getElementById('itens');
+
+        function clickMenu() {
+            if (itens.style.display == 'block') {
+                itens.style.display = 'none';
+            } else {
+                itens.style.display = 'block';
             }
         }
-&lt;/script&gt;
-        </pre>
-        <br>
-        <div id="voltar">
-            <a href="estudos.html">Voltar</a>
-        </div>
-        <br>
-    </main>
-</body>
+        
+        // Fecha o menu automaticamente ao clicar em um link
+        const links = document.querySelectorAll('#itens a');
+        links.forEach(link => {
+            link.addEventListener('click', () =&gt; {
+                // Apenas fecha se estiver em tela menor que 768px (Mobile)
+                if (window.innerWidth &lt; 768) { 
+                    itens.style.display = 'none';
+                }
+            });
+        });
 
+        function mudouTamanho() {
+            if (window.innerWidth >= 768) {
+                // Desktop: sempre mostra o menu
+                itens.style.display = 'block';
+            } else {
+<strong>// Mobile: esconde o menu (deixa apenas o botão)</strong>
+                itens.style.display = 'none';
+            }
+        }
+
+<strong>
+// Garante que a função seja chamada na primeira carga para definir o estado inicial
+mudouTamanho();
+</strong>
+    &lt;/script&gt;
+&lt;/body&gt;
+</pre>
+<p style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+</div>
+<div id="parte05">
+    <h2 id="titulos">| Aula 05 - FOOTER (rodapé)</h2>
+            <br>
+            <pre>
+                <code>
+Atenção para se obter o &copy; você deve digitar tudo junto <big><strong>&+copy;</strong></big> sem o sinal de (+).
+    &lt;Footer&gt;
+        &copy; Copyright 2024-2025 Nakata-dev
+    &lt;/Footer&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                </code>
+            </pre>
+            <p style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+        </div>
+    </main>
+    <footer>
+         &copy;Copyright 2024-2025 Nakata-dev
+    </footer>
+    <script>
+        const itens = document.getElementById('itens');
+
+        function clickMenu() {
+            if (itens.style.display == 'block') {
+                itens.style.display = 'none';
+            } else {
+                itens.style.display = 'block';
+            }
+        }
+        
+        // Fecha o menu automaticamente ao clicar em um link
+        const links = document.querySelectorAll('#itens a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                // Apenas fecha se estiver em tela menor que 768px (Mobile)
+                if (window.innerWidth < 768) { 
+                    itens.style.display = 'none';
+                }
+            });
+        });
+
+        function mudouTamanho() {
+            if (window.innerWidth >= 768) {
+                // Desktop: sempre mostra o menu
+                itens.style.display = 'block';
+            } else {
+                // Mobile: esconde o menu (deixa apenas o botão)
+                itens.style.display = 'none';
+            }
+        }
+
+        // Garante que a função seja chamada na primeira carga para definir o estado inicial
+        mudouTamanho(); 
+    </script>
+</body>
 </html>
