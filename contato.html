@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/d322381ebe.js" crossorigin="anonymous"></script>
     <style>
         *{
             margin: 0px;
@@ -17,9 +18,50 @@
             font-family: 'Courier New', Courier, monospace;
             background-color: linear-gradient(to right, #2626FE, #00bfff);
         }
+        img:hover {
+        transform: none;
+        }
         #contato>img{
             width: 100%;
         }
+        img{
+            display: block;
+            margin: auto;
+            width: 50%;
+        }
+        /*CSS do botão*/
+        .btn-whatsapp {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        background-color: #25d366;
+        color: white;
+        font-weight: bold;
+        padding: 10px 18px;
+        border-radius: 30px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp:hover {
+            
+        background-color: #1ebd5a;
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(37, 211, 102, 0.5);
+        }
+
+        .btn-whatsapp i {
+        
+        font-size: 20px;
+        }
+        .container-botao{
+            text-align: center;
+            padding: 20px;
+            margin: 10px;
+        }
+
     </style>
 </head>
 
@@ -31,6 +73,11 @@
     <nav>
         <a href="index.html">HOME</a>
     </nav>
+    <div class="container-botao">
+        <a href="https://wa.me/5544998398116" target="_blank" class="btn-whatsapp">Fale comigo<i class="fa-brands fa-whatsapp" style="font-size: 1.5em;"></i></a>
+    </div>
+
+
     <div id="contato"><img src="img/CodigoQR-WhatsApp.jfif" alt="QR-CODE_WhatsApp"></div>
     <footer>
         <p>Meu lema é: "simplificar o complexo e potencializar resultados."</p>
