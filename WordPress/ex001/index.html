@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,51 +8,121 @@
     <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
     <link rel="stylesheet" href="../../style.css">
     <style>
-        footer{
+        footer {
             font-family: 'Courier New', Courier, monospace
         }
-        a{
+
+        a {
             text-decoration: none;
-            
+
         }
-        li{
+
+        li {
             line-height: 2;
             font-size: 1em;
         }
-        header{
+
+        header {
             margin-bottom: 15px;
         }
-        #caixapre{
+
+        #caixapre {
             padding: 15px;
             background-color: lightgray;
             border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
+            white-space: pre-wrap;
+            /* → mantém as quebras de linha e múltiplos espaços.*/
         }
-        
+
+        main p {
+            font-size: 1.2em;
+            text-align: justify;
+            line-height: 1.5;
+        }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Instalando o WordPress</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h1>Título</h1>
-        <pre id="caixapre">
-            <code>
-informações
-            </code>
-        </pre>
-    <br>               
+        <h1>Instalação WordPress</h1>
+        <br>
+        <p>
+            1º <strong>Abra o XAMPP</strong> (servidor local). Caso <strong>Apache ou MySQL</strong> não abram.
+            Recomenda-se que você feche o software que provavelmente esteja usando a porta de entrada.
+        </p>
+        <hr><img src="../img/XAMPP.png" alt="xampp">
+        <hr>
+        <p>
+            2º <strong>Baixe o WordPress</strong> pelo <a href=" https://br.wordpress.org/download/"
+                target="_blank"><i>Link de Download - WordPress</i></a>.
+            <br>
+            3º <strong>Instale a Aplicação</strong>
+        </p>
+        <hr>
+        <img src="../img/HTDOCS.png" alt="Colando pasta em HTDOCS">
+        <hr>
+        <p>
+            4º <strong>Cole o zip dentro da pasta C:\xampp\htdocs</strong>
+            <br>
+            5º <strong>Estraia e Renomeie</strong> a pasta extraida, e em seguida dê o <strong>Nome do Site</strong>.
+            Exemplo: <strong>cursowp</strong>.
+        </p>
+        <hr>
+        <p>
+            6º <strong>Click em Admin</strong>
+        </p>
+        <img src="../img/ADMIN.png" alt="Tela do ADMIN">
+        <hr>
+        <p>
+            7º http://localhost/<strong>dashboard/</strong> por http://localhost/<strong>cursowp/</strong>
+        </p>
+        <img src="../img/CURSOWP.png" alt="substituindo nomes dashboard por cursowp">
+        <hr>
+        <p>
+            8º Configure o Idioma: <strong>português (Brasil)</strong>
+            <br>
+            <i>Atualize sempre seu software WordPress e todos os Plugins</i>
+            <br>
+            <i>Há um plugin pago que atualiza tudo Automaticamente.</i>
+            <br>
+        </p>
+        <img src="../img/COFIGURACAO_INICIAL_WP.png" alt="COFIGURACAO_INICIAL_WP">
+        <hr>
+        <p>
+            9º Configure o <strong>informaões necessárias</strong>
+            <br>
+            <i>Não marque a opção Visibilidade nos mecanismos de busca</i>
+            <br>
+            10º <strong>Click em Instalar</strong>
+        </p>
+        <img src="../img/CONFIGURANDO_NOME_USURARIO_SENHA.png" alt="CONFIGURANDO_NOME_USURARIO_SENHA">
+        <hr>
+        <p>
+            11º <strong>acesse o Painel de Cotrole do WP</strong>
+            <br>
+            <i>Lembre-se: este é um <strong>servidor local</strong>, para treino do uso e o desenvolvimento do site
+                através do <strong>WordPress</strong></i>
+        </p>
+        <img src="../img/PRIMEIRO_ACESSO_WORDPRESS.png" alt="PRIMEIRO_ACESSO_WORDPRESS">
+        <br>
+        <br>
         <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+            <a href="../../wordpress.html">Voltar</a>
         </div>
-    </div>
-    <br>
-    <br>                    
+        </div>
+        <br>
+        <br>
+        <div id="voltar">
+            <a href="index.html">Voltar</a>
+        </div>
     </main>
     <footer>
         <p>&copy; Ailton Akio Nakata</p>
     </footer>
 </body>
+
 </html>

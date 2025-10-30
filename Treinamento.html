@@ -164,6 +164,23 @@
             text-align: right;
             padding-right: 10px;
         }
+        div#voltar {
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+            transition: background-color 1s;
+        }
+
+        div#voltar a:hover {
+            padding: 10px;
+            background-image: linear-gradient(135deg, #2626FE, #00bfff);
+            color: white;
+            font-weight: bolder;
+            transition-duration: 0.5s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.656);
+            border-radius: 50px;
+            border: none;
+            font-family: 'Times New Roman', Times, serif;
+        }
     </style>
 </head>
 <body onresize="mudouTamanho()">
@@ -392,17 +409,17 @@ padding: 10px;
             <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
         </div>
         <div id="parte04">
-<h2 id="titulos">| Aula 04 - JavaScript (JS)</h2>
-<br>
-<pre>
-&lt;script&gt;
-        const itens = document.getElementById('itens');
-
-        function clickMenu() {
-            if (itens.style.display == 'block') {
-                itens.style.display = 'none';
-            } else {
-                itens.style.display = 'block';
+            <h2 id="titulos">| Aula 04 - JavaScript (JS)</h2>
+            <br>
+            <pre>
+                &lt;script&gt;
+                const itens = document.getElementById('itens');
+                
+                function clickMenu() {
+                    if (itens.style.display == 'block') {
+                        itens.style.display = 'none';
+                    } else {
+                        itens.style.display = 'block';
             }
         }
         
@@ -416,41 +433,44 @@ padding: 10px;
                 }
             });
         });
-
+        
         function mudouTamanho() {
             if (window.innerWidth >= 768) {
                 // Desktop: sempre mostra o menu
                 itens.style.display = 'block';
             } else {
-<strong>// Mobile: esconde o menu (deixa apenas o botão)</strong>
+                <strong>// Mobile: esconde o menu (deixa apenas o botão)</strong>
                 itens.style.display = 'none';
             }
         }
-
-<strong>
-// Garante que a função seja chamada na primeira carga para definir o estado inicial
-mudouTamanho();
-</strong>
-    &lt;/script&gt;
-&lt;/body&gt;
-</pre>
-<p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+        
+        <strong>
+            // Garante que a função seja chamada na primeira carga para definir o estado inicial
+            mudouTamanho();
+        </strong>
+        &lt;/script&gt;
+        &lt;/body&gt;
+    </pre>
+    <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
 </div>
 <div id="parte05">
     <h2 id="titulos">| Aula 05 - FOOTER (rodapé)</h2>
-            <br>
-            <pre>
-                <code>
-Atenção para se obter o &copy; você deve digitar tudo junto <big><strong>&+copy;</strong></big> sem o sinal de (+).
-    &lt;Footer&gt;
-        &copy; Copyright 2024-2025 Nakata-dev
-    &lt;/Footer&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-                </code>
-            </pre>
-            <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
-        </div>
+    <br>
+    <pre>
+        <code>
+            Atenção para se obter o &copy; você deve digitar tudo junto <big><strong>&+copy;</strong></big> sem o sinal de (+).
+            &lt;Footer&gt;
+            &copy; Copyright 2024-2025 Nakata-dev
+            &lt;/Footer&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;
+        </code>
+    </pre>
+    <div id="voltar">
+        <a href="estudos.html">ESTUDOS</a>
+    </div>            
+    <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+</div>
     </main>
     <footer>
          &copy;Copyright 2024-2025 Nakata-dev
