@@ -41,13 +41,122 @@
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <h1>Título</h1>
-        <pre id="caixapre">
-            <code>
-informações
-            </code>
-        </pre>
-    <br>               
+        <h2>Alterando http para https</h2>
+        <hr>
+        <h3><span style="color: red;">Atenção:</span> Configuração válida somente para servidor privado</h3>
+        <p>Para alterar o protocolo de http para https em seu site WordPress, siga os passos abaixo:</p>
+        <br>
+        <ol>
+            <li>Faça backup do seu site.</li>
+            <li>Atualize a URL do WordPress e a URL do Site nas configurações gerais.</li>
+            <li>Instale um plugin de SSL, como o Really Simple SSL.</li>
+            <li>Verifique se todos os links internos estão usando https.</li>
+            <li>Teste seu site para garantir que tudo está funcionando corretamente.</li>
+        </ol>
+        <br>
+        <p><em>Essas configurações são essenciais para garantir que seu site WordPress funcione corretamente com HTTPS.</em></p>
+        <br>
+        <h2>Dúvidas sobre HTTPS</h2>
+        <hr>
+        <p>É importante você sempre perguntar para a empresa que escolheu para hospedar seu site, se <strong>tem ou não suporte a HTTPS</strong>. E claro, pergunte como instalar o mesmo.</p>
+        <h2>Criando um e-mail de notificação</h2>
+        <hr>
+        <p>Para criar um e-mail de notificação no WordPress, você pode perguntar se o seu servidor de hospedagem fornece e-mail. A maioria dos provedores de hospedagem oferece suporte a e-mail, mas é sempre bom verificar.</p>
+        <br>
+        <h2>Configurando o WPS Hide Login</h2>
+        <hr>
+        <p>Para proteger seu site WordPress de possíveis ataques de robôs, você pode seguir estas dicas:
+        </p>
+            <br>
+            <p>1º Ative WPS Hide Login</p>
+            <br>
+            <p>2º Acessa Configurações > WPS Hide Login</p>
+            <br>
+            <p>3º Altere a palavra do <strong>Campo URL</strong> de "login" para "<strong>palavra_de_sua_preferencia</strong>".</p>
+            <img src="../img/PALAVRA_DE_SUA_PREFERENCIA.png" alt="palavra_de_sua_preferencia">
+            <br>
+            <p>Clique em <strong>salvar alterações</strong>.</p>
+            <br>
+            <p>O importante é dificultar ao máximo o acesso de login contra invasões indesejadas.</p>
+            <br>
+            <p>Agora, quando você tentar acessar (http://localhost/cursowp/login/) vai aparecer uma página de erro 404.</p>
+            <img src="../img/PGINA_NAO_EXISTE.png" alt="pagina nao existe">
+            <br>
+            <p>Isso significa que a URL de login foi alterada com sucesso.</p>
+            <p>Para isso que serve o plugin <strong>WPS Hide Login</strong>.</p>
+            <br>
+            <p><em>Altere a palavra do URL de acesso:"login" para "******" e obtenha o acesso ao endereço.</em>
+            <br>
+            é assim que você vai conseguir se proteger minimamente de ataques de robôs maliciosos. <strong>Os famosos Crakers.</strong>
+            </p>
+            <img src="../img/ALTERANDO_PALAVRA.png" alt="ALTERANDO_PALAVRA">
+            <br>
+            <h2>Escrita</h2>
+            <hr>
+            <p>Para melhorar a escrita no WordPress, você pode seguir estas dicas:</p>
+            <br>
+            <p>1º Vá para Configurações > Escrita</p>
+            <p>Se teu site tem categoria Notícias e você escreve muito, seria interessante ativar uma categoria específica para suas postagens.</p>
+            <p><strong>Publicar por e-mail:</strong></p>
+            <br>
+            <p><em>Quando a pessoa tem uma necessidade de estar públicando em um blog ou site em questão, o professor <strong>Ramiro Lobo</strong> indica que você <strong>baixe um aplicativo</strong> diretamente do <strong>site da wordpress</strong> que vai te facilitar publicar conteúdos via <strong>e-mails</strong>.</em></p>
+            <br>
+            <h2>Configurações de leitura</h2>
+            <hr>
+            <p>Para configurar as opções de leitura no WordPress, siga estes passos:</p>
+            <br>
+            <p>1º Vá para Configurações > Leitura</p>
+            <p><em>Lembre-se que o seu cliente neste caso é um restaurante de culinária Italiana. Então faça a seguinte alteração: durante o processo de produção, será feita a seguinte alteração 
+                <br>
+                de (<strong>Seus posts recentes</strong>)
+                <br>
+                para
+                <br>
+                <strong><u>(Uma página estática (Selecione abaixo))</u></strong></em></p>
+            <img src="../img/PAGINA_ESTATICA.png" alt="PAGINA_ESTATICA">
+            <br>
+            <h2>Configurações de discussão</h2>
+            <hr>
+            <p>Para configurar as opções de discussão no WordPress, siga estes passos:</p>
+            <br>
+            <p>1º Vá para Configurações > Discussão</p>
+            <p><em>Aqui fica a seu critério, você ler e decidir o que é melhor ou pior para seu site. Ou para o site de seu cliente.</em></p>
+            <p>Desmarque a opção: <strong>Alguém publicar um comentário</strong></p>
+            <img src="../img/ENVIE_ME_UM_EMAIL_QUANDO.png" alt="ENVIE_ME_UM_EMAIL_QUANDO">
+            <br>
+            <p>Salve as alterações.</p>
+            <br>
+            <h2>Configurações de mídia</h2>
+            <hr>
+            <p>Para configurar as opções de mídia no WordPress, siga estes passos:</p>
+            <br>
+            <p>1º Vá para Configurações > Mídia</p>
+            <p><em>Aqui você pode definir os tamanhos padrão para as imagens que você faz upload no seu site. Ajuste conforme necessário para atender às suas necessidades.</em></p>
+            <br>
+            <p>
+                O professor <strong>Ramiro Lobo indica</strong> que você deixe os tamanhos como estão, ou seja, <strong>não altere nada</strong>.
+            </p>
+            <br>
+            <h2>Configurações de permalinks</h2>
+            <hr>
+            <p>
+                Aqui o professor <strong>Ramiro Lobo</strong> indica que você altere a configuração padrão de permalinks para a opção <strong>"Mês e nome"</strong>.
+            </p>
+            <img src="../img/MES_NOME.png" alt="MES_NOME">
+            <br>
+            <p>Salve as alterações.</p>
+            <br>
+            <h2>Configurações de Imsanity Settings</h2>
+            <hr>
+            <p>
+                Aqui o professor <strong>Ramiro Lobo</strong> indica que você ajuste as configurações do plugin Imsanity para otimizar o tamanho das imagens.
+            </p>
+            <p>Altere JPG imagem quality: para <u>72</u></p>
+            <br>
+            <p>Salve as alterações.</p>
+            <br>
+            <p><em>Para demais tópicos não faça nenhuma alteração</em></p>
+            <br>
         <div id="voltar">
             <a href="../../wordpress.html" >Voltar</a>
         </div>

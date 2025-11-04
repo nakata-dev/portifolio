@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro de Certificado de Segurança</title>
+    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        footer{
+            font-family: 'Courier New', Courier, monospace
+        }
+        a{
+            text-decoration: none;
+            
+        }
+        li{
+            line-height: 2;
+            font-size: 1em;
+        }
+        header{
+            margin-bottom: 15px;
+        }
+        #caixapre{
+            padding: 15px;
+            background-color: lightgray;
+            border-radius: 10px;
+            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
+        }
+        main p{
+            font-size: 1.2em;
+            text-align: justify;
+            line-height: 1.5;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Quando você trocar http para https</h2>
+        <p>por: Ailton A. Nakata</p>
+    </header>
+    <main>
+        <h1>Como corrigir esse erro?</h1>
+    <hr>
+    <img src="../img/ERRO_SSL.png" alt="ERRO_SSL">
+        <p>
+            O WordPress está tentando forçar uma conexão segura (HTTPS), mas o seu navegador não confia no certificado do seu servidor local. <br>
+<br>
+A solução mais rápida e eficiente é reverter essa alteração diretamente no banco de dados do seu WordPress. <br>
+<br>
+🛠️ Passos para Corrigir o Erro de HTTPS no Localhost
+Você precisará acessar a interface de gerenciamento do seu banco de dados (geralmente phpMyAdmin, Adminer, ou a ferramenta nativa do seu ambiente local, como XAMPP ou Local by Flywheel). <br>
+<br>
+<strong>1. Acesso ao Banco de Dados</strong>
+<br>
+<br>
+Abra o painel de controle do seu servidor local (XAMPP, WAMP, MAMP, etc.).
+<br>
+Inicie o servidor Apache e o servidor MySQL.
+<br>
+<br>
+Acesse a ferramenta de gerenciamento do banco de dados (normalmente digitando <a href="http://localhost/phpmyadmin" target="_blank">http://localhost/phpmyadmin</a> no navegador).
+<br>
+<br>
+Localize e clique no banco de dados que seu WordPress (cursowp) está utilizando.
+<br>
+<br>
+<strong>2. Edição da Tabela wp_options</strong>
+<br>
+<br>
+Dentro do seu banco de dados do WordPress:
+<br>
+<br>
+Procure e clique na tabela chamada wp_options (ou SEU_PREFIXO_options, se você tiver mudado o prefixo, mas geralmente é wp_options).
+<br>
+<br>
+Nesta tabela, você precisa localizar e editar as duas primeiras linhas, que definem a URL principal do site:
+<br>
+<br>
+
+Pela imagem que você enviou (image_907183.png), está claro que o erro ocorreu ao tentar acessar o endereço https://localhost/cursowp/wp-admin/options-general.php e o navegador está mostrando o aviso "Não seguro" e bloqueando o acesso.
+<br>
+<br>
+
+Você está absolutamente correto: esse erro acontece porque você alterou de http para https em um ambiente de desenvolvimento local (localhost) que não possui um certificado SSL válido.
+<br>
+<br>
+
+O WordPress está tentando forçar uma conexão segura (HTTPS), mas o seu navegador não confia no certificado do seu servidor local.
+<br>
+<br>
+
+A solução mais rápida e eficiente é reverter essa alteração diretamente no banco de dados do seu WordPress.
+<br>
+<br>
+
+🛠️ Passos para Corrigir o Erro de HTTPS no Localhost
+<br>
+<br>
+Você precisará acessar a interface de gerenciamento do seu banco de dados (geralmente phpMyAdmin, Adminer, ou a ferramenta nativa do seu ambiente local, como XAMPP ou Local by Flywheel).
+<br>
+<br>
+
+<strong>1. Acesso ao Banco de Dados</strong>
+<br>
+<br>
+Abra o painel de controle do seu servidor local (XAMPP, WAMP, MAMP, etc.).
+<br>
+<br>
+
+Inicie o servidor Apache e o servidor MySQL.
+<br>
+<br>
+
+Acesse a ferramenta de gerenciamento do banco de dados (normalmente digitando http://localhost/phpmyadmin no navegador).
+<br>
+<br>
+
+Localize e clique no banco de dados que seu WordPress (cursowp) está utilizando.
+<br>
+<br>
+
+<strong>2. Edição da Tabela wp_options</strong>
+<br>
+<br>
+Dentro do seu banco de dados do WordPress:
+<br>
+<br>
+
+Procure e clique na tabela chamada wp_options (ou SEU_PREFIXO_options, se você tiver mudado o prefixo, mas geralmente é wp_options).
+<br>
+<br>
+
+Nesta tabela, você precisa localizar e editar as duas primeiras linhas, que definem a URL principal do site:
+<br>
+<br>
+
+Campo (option_name)	Valor Atual (option_value)
+<br>
+<br>
+siteurl	https://localhost/cursowp
+home	https://localhost/cursowp
+<br>
+<br>
+<strong>3. Revertendo para HTTP</strong>
+<br>
+<br>
+Edite a linha onde o campo option_name é siteurl.
+<br>
+<br>
+
+Mude o option_value de https://localhost/cursowp para http://localhost/cursowp.
+<br>
+<br>
+
+Edite a linha onde o campo option_name é home.
+<br>
+<br>
+
+Mude o option_value de https://localhost/cursowp para http://localhost/cursowp.
+<br>
+<br>
+
+Salve as alterações (geralmente clicando em "Executar" ou "Salvar").
+<br>
+<br>
+
+<strong>4. Teste Final</strong>
+<br>
+<br>
+Feche e reabra seu navegador.
+<br>
+<br>
+
+Tente acessar seu painel de administração novamente, usando a URL HTTP: http://localhost/cursowp/wp-admin/.
+<br>
+<br>
+
+Se você reverteu as URLs corretamente no banco de dados, o WordPress voltará a carregar corretamente e o erro de "Não seguro" e bloqueio desaparecerá, pois ele não estará mais tentando forçar o HTTPS sem certificado.
+<br>
+<br>
+        </p>
+<h2>Se tudo der Certo</h2>
+<hr>
+<img src="../img/SE_TUDO_DER_CERTO.png" alt="Se_Tudo_Der_Certo">
+        <p>
+            Agora você deve conseguir acessar o painel de administração do WordPress sem problemas. <br>
+    <br>               
+    <br>               
+        <div id="voltar">
+            <a href="../../wordpress.html" >Voltar</a>
+        </div>
+    </div>
+    <br>
+    <br>                    
+    </main>
+    <footer>
+        <p>&copy; Ailton Akio Nakata</p>
+    </footer>
+</body>
+</html>
