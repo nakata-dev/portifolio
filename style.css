@@ -2,14 +2,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-/*fonte importada do computador */
 @import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Passion+One:wght@400;700;900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&display=swap');
+
+/*fonte importada do computador */
 @font-face {
     font-family: 'Android';
     src: url(fontes/idroid.otf) format('opentype');
 }
 
+
+@font-face{
+    font-family: 'Amsterdam';
+    src: url(fontes/amsterdam_4/Amsterdam.ttf) format('opentype');
+}
 :root {
     --cor00: #233CCF;
     --cor01: #3747A5;
@@ -23,8 +32,15 @@
     --fonte_destaque: "Bebas Neue", Sans-serif;
     --fonte_android: 'Android', sans-serif;
     --fonte_caligrafica: "Passion One", sans-serif;
+    --fonte_moderna: "Josefin Sans", sans-serif;
+    --fonte_titulos: "Birthstone", cursive;
+    --fonte_corinthia: "Corinthia", cursive;
 }
 
+
+    :root {
+        --fonte_moderna: 'Josefin Sans', sans-serif;
+    }
 * {
     margin: 0px;
     padding: 0px;
@@ -34,13 +50,13 @@
 body {
     color: rgb(0, 0, 0);
     background-color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--fonte_moderna);
 
 }
 
 
 nav {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: var(--fonte_moderna);
     background: linear-gradient(to right, #2626FE, #00bfff);
     padding: 10px;
     border-bottom-left-radius: 25px;
@@ -59,7 +75,7 @@ nav>a {
     color: white;
     padding: 10px;
     text-decoration: none;
-    font-weight: lighter;
+    font-weight: normal;
     border-radius: 2px;
     transition-duration: 0.3s;
     padding: 5px;
@@ -84,13 +100,15 @@ header {
     color: white;
     text-align: center;
     padding: 30px 15px;
-    font-family: 'Times New Roman', Times, serif;
+    
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 header h1 {
     text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.527);
     margin: 0;
+    font-family: 'Amsterdam', cursive;
+    font-weight: normal;
     font-size: 2rem;
 }
 
@@ -98,7 +116,7 @@ header p {
     text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.658);
     font-style: italic;
     margin-top: 5px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: var(--fonte_moderna);
 }
 
 main {
@@ -111,7 +129,7 @@ main {
 
     background-color: white;
     padding: 25px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: var(--fonte_moderna);
     box-shadow: 0px 0px 10px black;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -135,7 +153,7 @@ ul {
     columns: 2;
     text-align: left;
     list-style-type: none;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: var(--fonte_moderna);
 
 }
 
@@ -184,7 +202,7 @@ div#txt_exercicios a:hover {
 
 div#voltar {
     text-align: center;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: var(--fonte_moderna);
     transition: background-color 1s;
 }
 
