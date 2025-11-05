@@ -114,14 +114,14 @@ nav{
     background: linear-gradient(to right, #2626FE, #00bfff);
     padding: 10px;
     margin-bottom: 15px;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius:15px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     font-family: var(--fonte_moderna);
     /* Novo layout */
     display: flex;
     justify-content: center; /* Centraliza horizontalmente */
     align-items: center;     /* Centraliza verticalmente */
-    gap: 30px;               /* Espaçamento entre os links */
+    gap: 5px;               /* Espaçamento entre os links */
     
 }
 
@@ -137,11 +137,11 @@ nav a{
     
 }
 nav a:hover{
-    background-color: #0000f778;
-    padding: 5px;
+    background-color: #6464fc86;
+    padding: 10px;
     text-decoration: none;
     font-weight: bolder;
-    border-radius:5px;
+    border-radius:15px;
     transition-duration: color 0.5s;
 
 }

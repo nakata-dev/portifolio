@@ -87,7 +87,7 @@ nav a:hover {
     padding: 10px;
     text-decoration: none;
     font-weight: bolder;
-    border-radius: 5px;
+    border-radius: 15px;
     transition-duration: 1s;
 }
 
