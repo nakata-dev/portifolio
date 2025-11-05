@@ -30,6 +30,9 @@
             color: white;
             margin-bottom: 5px;
         }
+        header p{
+            padding-bottom: 10px;
+        }
         
         section{
             display: block;
@@ -44,6 +47,7 @@
             max-width: 600px;
 
         }
+
         section>div{
             text-align: left;
             padding: 20px;
@@ -75,6 +79,10 @@
     a{
         text-decoration: none;
     }
+    #conteiner{
+        padding: 30px;
+        line-height: 1.8;
+    }
     </style>
     <title>Sistema de Multas</title>
 </head>
@@ -84,16 +92,18 @@
         <p>por: Ailton A. Nakata</p>
     </header>
     <section>
-        <div>
-            <p>Sensor de velocidade:<input type="number" name="txtvel" id="txtvel"> km/h.
-            <input type="button" value="Verificar" onclick="calcular()"></p>
-        </div>
-        <div id="res">
-            <p>resultado...</p>
-        </div>
-        <br><br>
-        <div id="voltar">
-            <a href="../../testes.html">Voltar</a>
+        <div id="conteiner">
+            <div>
+                <p>Sensor de velocidade:<input type="number" name="txtvel" id="txtvel"> km/h.
+                <input type="button" value="Verificar" onclick="calcular()"></p>
+            </div>
+            <div id="res">
+                <p>resultado...</p>
+            </div>
+            <br><br>
+            <div id="voltar">
+                <a href="../../testes.html">Voltar</a>
+            </div>
         </div>
     </section>
     <footer>
