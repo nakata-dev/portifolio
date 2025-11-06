@@ -1,0 +1,11 @@
+CORES:
+1) #F5EFE6
+2) #4CB944
+3) #FF8800
+4) #C66300
+5) #F5EFE6
+6) #292827
+
+FONTES:
+TITULO: Berkshire Swash
+CONTEÚDO: Josefin Sans
