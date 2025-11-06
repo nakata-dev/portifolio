@@ -1,35 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formatando Strings</title>
     <link rel="stylesheet" href="../style.css">
     <style>
-       body{
-        font-family: Arial, Helvetica, sans-serif;
-        
-       }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f8f8f8;
+            text-align: center;
+        }
+
+        #resultado {
+            width: 70%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+            text-align: justify; /* ← texto justificado */
+            line-height: 1.6;
+        }
+
+        #voltar a {
+            text-decoration: none;
+            color: #0077cc;
+        }
     </style>
 </head>
-
 <body>
     <header>
         <h1>Formatando Strings</h1>
         <p>por: Ailton A. Nakata</p>
     </header>
-        <br><br>
-        <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
-        </div>
-        <br><br>
-    
+    <br>
+    <br>    
+    <div id="voltar">
+        <a href="../js.html">Voltar</a>
+    </div>
+
+    <div id="resultado"></div> <!-- ← onde o resultado aparecerá -->
+
     <script>
-        var nome = window.prompt('Qual é o seu nome?')
-        document.writeln(`Olá, ${nome}! Seu nome tem ${nome.length} letras <br/>`)
-        document.writeln(`Seu nome em Maiúsculas é ${nome.toUpperCase()} <br/>`)
-        document.writeln(`Seu nome em Minusculas é ${nome.toLowerCase()}`)
+        const nome = prompt('Qual é o seu nome?');
+        const resultado = document.getElementById('resultado');
+
+        resultado.innerHTML = `
+            <p>Olá, <strong>${nome}</strong>! Seu nome tem <strong>${nome.length}</strong> letras.</p>
+            <p>Seu nome em <strong>maiúsculas</strong> é <strong>${nome.toUpperCase()}</strong>.</p>
+            <p>Seu nome em <strong>minúsculas</strong> é <strong>${nome.toLowerCase()}</strong>.</p>
+        `;
     </script>
-    </body>
+</body>
 </html>

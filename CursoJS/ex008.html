@@ -27,6 +27,15 @@
 
 
         }
+
+        main p{
+        line-height: 1.8;
+        list-style-position: inside;
+        padding: 10px;
+       }
+       tr{
+        margin-bottom: 30px;
+       }
     </style>
 </head>
 
@@ -36,10 +45,10 @@
         <p>por: Ailton A. Nakata</p>
     </header>
     <main>
-        <p>Esta linha refere-se ao 'p' de número 1</p><br>
-        <div>Divisão de nível 0</div><br>
+        <p>Esta linha refere-se ao 'p' de número 1</p>
+        
         <p>Esta linha refere-se ao 'p' de número 2</p>
-        <br><br>
+        <br>
         <table>
             <caption>Esquema representativo</caption>
             <tr>
@@ -73,9 +82,6 @@
         </table>
         <br>
         <br>
-        <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
-        </div>
         <br><br>
         <script>
             var corpo = window.document.body
@@ -83,7 +89,14 @@
             window.document.write('Está escrito assim: ' + p1.innerText)
             p1.style.color = 'blue'
             document.write(p1.innerHTML)
-        </script>
+            </script>
+            <br>
+            <br>
+    <div id="voltar">
+        <a href="../js.html">Voltar</a>
+    </div>
+    <br>
+    <br>
     </main>
 </body>
 
