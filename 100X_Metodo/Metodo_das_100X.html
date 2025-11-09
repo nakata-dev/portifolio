@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧠 Método das 100 VEZES</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* PALETA DE CORES:
+        --indigo-dark: #311B92; (Sabedoria/Inteligência)
+        --cyan-light: #4DD0E1; (Clareza/Criatividade)
+        --cyan-medium: #00BCD4;
+        --background-light: #F8F9FA;
+        --shadow-color: rgba(49, 27, 146, 0.15);
+        */
+
+        /* RESET BÁSICO */
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* ESTILOS GERAIS E FUNDO */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centraliza Horizontalmente */
+            justify-content: center; /* **Centraliza Verticalmente em todas as telas** */
+            min-height: 100vh;
+            color: #311B92;
+            padding: 40px 20px;
+        }
+
+        /* HEADER E TÍTULO */
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            color: #311B92; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center; /* Garante que o texto do H1 esteja centralizado */
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #495057;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* TEXTAREA INICIAL, INPUT E BOTÃO - COMPONENTES */
+        textarea#inputText, .response-textarea {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #B0BEC5; 
+            box-shadow: 0 6px 15px var(--shadow-color); 
+            outline: none;
+            resize: vertical;
+            font-family: Arial, Helvetica, sans-serif;
+            font-style: italic;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-top: 15px;
+            font-weight: bold;
+            background-color: white;
+            color: #343A40;
+        }
+        textarea#inputText:focus, .response-textarea:focus {
+            border-color: #4DD0E1;
+            box-shadow: 0 8px 20px rgba(77, 208, 225, 0.4);
+        }
+        
+        .response-textarea {
+            height: 180px;
+        }
+
+        button {
+            background: #00BCD4;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            border: none;
+            border-radius: 35px;
+            padding: 14px 35px;
+            margin-top: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0, 188, 212, 0.4);
+            transition: 0.3s ease-in-out;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+        button:hover {
+            background: #4DD0E1;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 188, 212, 0.6);
+        }
+        
+        /* MENSAGENS E DIVS ESPECÍFICAS */
+        #memorizacao {
+            margin-top: 30px;
+            max-width: 600px;
+            width: 90%;
+            padding: 25px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Centraliza o conteúdo dentro da div de memorização */
+        }
+
+        #nivel {
+            font-family: 'Poppins', sans-serif;
+            color: #311B92; 
+            font-size: 1.6em;
+            margin-bottom: 20px;
+        }
+
+        #message {
+            font-size: 1.15em;
+            margin-top: 20px;
+            font-weight: 600;
+            color: #311B92;
+        }
+        #message b {
+            color: #00BCD4;
+        }
+        /* MENSAGENS de sucesso e erro */
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+
+
+        #hiddenText {
+            margin-top: 15px;
+            color: #311B92;
+            font-style: italic;
+            white-space: pre-wrap;
+            padding: 15px;
+            border: 2px dashed #4DD0E1;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 0.95em;
+            display: none;
+        }
+
+        /* MENSAGEM FINAL MODAL */
+        #finalMessage {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: #311B92;
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            text-align: center;
+            font-size: 1.4em;
+            max-width: 90%;
+            animation: fadeIn 0.8s ease-in-out;
+            border: 4px solid #4DD0E1;
+        }
+        pre {
+            text-align: center;
+            margin: 5px 0; /* Espaço para as instruções de tecla */
+            color: #495057;
+            font-size: 0.9em;
+            
+        }
+        footer {
+            margin-top: 20px;
+            color: #495057;
+            font-size: 0.85em;
+            text-align: center;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        /* MEDIA QUERIES */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            textarea, .response-textarea, #memorizacao { width: 100%; }
+            #finalMessage { padding: 30px; font-size: 1.2em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🧠 O Método das 100 Vezes</h1>
+    <p>Cole abaixo o texto que deseja memorizar:</p>
+
+    <textarea id="inputText" placeholder="Cole seu texto, fórmula ou conceito aqui..."></textarea><br>
+    <button onclick="iniciar()">Iniciar Memorização</button>
+    
+
+    <div id="memorizacao" style="display:none;">
+        <h3 id="nivel"></h3> 
+        <textarea id="resposta" class="response-textarea" placeholder="Digite exatamente como no texto original (Use Enter para validar)"></textarea>
+        <pre>Shift+Enter (Pula Linha)</pre>
+        <pre>Enter (Valida)</pre>
+        <div id="message"></div>
+        <div id="hiddenText"></div>
+    </div>
+    <div id="finalMessage">
+        🎉 Parabéns! Agora, você já pode revisar esse conteúdo após <b>7 dias</b> e provar para si mesmo que sua memória está malhando da forma correta!<br><br>Até breve. 💪 (F5 para Resetar)
+    </div>
+    
+<footer>
+     &copy;Copyright 2025 - <em>Ailton Akio Nakata</em>
+</footer>
+    <script>
+        let linhas = [];
+        let nivelAtual = 1;
+        let textoCompleto = "";
+
+        function iniciar() {
+            textoCompleto = document.getElementById("inputText").value.trim();
+            if (textoCompleto === "") {
+                alert("Por favor, cole ou digite um texto antes de iniciar.");
+                return;
+            }
+
+            // Divide por parágrafos e filtra espaços vazios
+            linhas = textoCompleto.split(/\n+/).map(l => l.trim()).filter(l => l !== "");
+            if (linhas.length === 0) linhas = [textoCompleto];
+
+            document.getElementById("inputText").style.display = "none";
+            document.querySelector("button").style.display = "none";
+            document.getElementById("memorizacao").style.display = "block";
+
+            document.getElementById("resposta").focus(); 
+
+            atualizarNivel();
+        }
+
+        // --- FUNÇÃO DE ATUALIZAÇÃO PARA MENSAGENS DINÂMICAS ---
+        function atualizarNivel() {
+            let mensagem = "";
+
+            if (nivelAtual === 1) {
+                mensagem = "Digite a **linha 1** do texto:";
+            } else if (nivelAtual === 2) {
+                mensagem = "Digite as **linhas 1 e 2** do texto:";
+            } else {
+                mensagem = `Digite das **linhas 1 à ${nivelAtual}** do texto:`;
+            }
+
+            document.getElementById("nivel").innerHTML = `Etapa ${nivelAtual} - ${mensagem}`;
+            document.getElementById("resposta").value = "";
+            document.getElementById("message").textContent = "";
+            document.getElementById("hiddenText").style.display = "none";
+        }
+
+        // --- FUNÇÃO DE VALIDAÇÃO COM NORMALIZAÇÃO ---
+        function validarResposta() {
+            const respostaUsuario = document.getElementById("resposta").value;
+            const alvoCompleto = linhas.slice(0, nivelAtual).join("\n"); 
+
+            // Função para normalizar strings: remove todos os espaços em branco (incluindo \n) e converte para minúsculo
+            const normalizar = (texto) => texto.replace(/\s/g, '').toLowerCase(); 
+
+            const respostaNormalizada = normalizar(respostaUsuario);
+            const alvoNormalizado = normalizar(alvoCompleto);
+            
+            if (respostaNormalizada === alvoNormalizado) {
+                document.getElementById("message").innerHTML = "<span class='success'>🎉 Parabéns, você tem uma ótima memória!</span>";
+                nivelAtual++;
+                if (nivelAtual > linhas.length) {
+                    document.getElementById("memorizacao").style.display = "none";
+                    document.getElementById("finalMessage").style.display = "block";
+                } else {
+                    setTimeout(atualizarNivel, 1500);
+                    document.getElementById("resposta").focus();
+                }
+            } else {
+                document.getElementById("message").innerHTML = "<span class='error'>❌ Pressione <b>F8</b> para ver o texto e tente novamente.</span>";
+            }
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "F8" && document.getElementById("memorizacao").style.display === "block") {
+                e.preventDefault();
+                const hiddenText = document.getElementById("hiddenText");
+                // Junta as linhas com duas quebras de linha para simular parágrafos no F8
+                hiddenText.textContent = linhas.slice(0, nivelAtual).join("\n\n"); 
+                hiddenText.style.display = "block";
+                setTimeout(() => {
+                    hiddenText.style.display = "none";
+                }, 6000);
+            }
+        });
+        
+        document.getElementById("resposta").addEventListener("keypress", function(e) {
+            // Verifica se a tecla é ENTER e se a tecla SHIFT NÃO está pressionada
+            if (e.key === "Enter" && !e.shiftKey) { 
+                e.preventDefault();
+                validarResposta();
+            }
+        });
+
+    </script>
+</body>
+</html>
