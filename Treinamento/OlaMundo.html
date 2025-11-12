@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pr-bt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: lightgray;
+        }
+        header{
+            display: block;
+            margin: auto;
+            align-items: center;
+            background-color: blue;
+            margin: auto;
+            color: white;
+            text-align: center;
+            height: 130px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            
+        }
+
+        header h1{
+            padding: 7px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        header p{
+            font-size: 0.7em;
+            font-style: italic;
+            padding: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #voltar a{
+            display: inline-block;
+            color: white;
+            margin-top: 10px;
+            padding: 10px;
+            text-align: left;
+            text-decoration: none;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1em;
+            transition: background-color 1s;       
+        }
+        #voltar a:hover{
+            color: rgb(255, 255, 255);
+            font-weight: bolder;
+            background-color: rgb(28, 85, 241);
+            border-radius: 50px;
+        }
+        main{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+            height: 68.5vh;
+            max-width: 900px;
+            min-width: 300px;
+        }
+        main p{
+            background-color: rgb(230, 91, 91);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 2em;
+            padding: 25px;
+            border-radius: 50px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-style: italic;
+            box-shadow: 5px 5px 20px black;
+        }
+
+            @keyframes pulsar {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+        }
+
+            main p:hover {
+        animation: pulsar 0.8s ease-in-out infinite;
+        cursor: pointer;
+        }
+
+        footer{
+            background-color: blue;
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            align-items: center;
+        }
+    </style>
+    <title>Olá Mundo ++</title>
+</head>
+<body>
+    <header>
+        <h1>Olá Mundo ++</h1>
+        <p>Por: Ailton Akio Nakata</p>
+        <nav id="voltar">
+            <a href="../estudos.html">Estudos</a>
+        </nav>
+    </header>
+    <main>
+        <div>
+            <p>Eh ae Mundão Véio!!!</p>
+        </div>
+    </main>
+    <footer>
+        Copyright &copy; - 2025 Todos os direitos reservados
+    </footer>
+
+    
+</body>
+</html>
