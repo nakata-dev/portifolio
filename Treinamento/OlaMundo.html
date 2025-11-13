@@ -53,23 +53,18 @@
             background-color: rgb(28, 85, 241);
             border-radius: 50px;
         }
-        main{
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        div#container{ /*Pai*/
             height: 68.5vh;
-            max-width: 900px;
-            min-width: 300px;
+            display: flex;/*Importante*/
+            flex: row nowrap;/*Importante*/
+            justify-content: center;/*Importante*/
+            align-items: center;/*Importante*/
             
         }
-        bootom p{
+        bottom{ /*filho*/
+            display: flex; /*Importante*/
             background-color: rgb(230, 91, 91);
             color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
             font-size: 1.8em;
             padding: 25px;
             border-radius: 50px;
@@ -90,7 +85,7 @@
         }
         }
 
-            bootom p:hover {
+            bottom:hover {
         animation: pulsar 0.8s ease-in-out infinite;
         cursor: pointer;
         }
@@ -105,25 +100,26 @@
         }
         
     </style>
-    <title>Olá Mundo ++</title>
+    <title>Olá Mundo 2.0</title>
 </head>
 <body>
     <header>
-        <h1>Olá Mundo ++</h1>
+        <h1>Olá Mundo 2.0</h1>
         <p>Por: Ailton Akio Nakata</p>
         <nav id="voltar">
             <a href="../estudos.html">Estudos</a>
         </nav>
     </header>
-    <main>
-        <bootom>
-                <p>Eh ae Mundão Véio!!!</p>
-        </bootom>
-    </main>
+    <div id="container">
+        <main>
+            <bottom>
+            Eh ae Mundão Véio!!!
+            </bottom>
+        </main>
+    </div>
     <footer>
-        Copyright &copy; - 2025 Todos os direitos reservados
+    Copyright &copy; - 2025 Todos os direitos reservados
     </footer>
-
     
 </body>
 </html>
