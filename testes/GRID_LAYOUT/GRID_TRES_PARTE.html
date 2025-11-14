@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    @charset "UTF-8";
     *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     }
     .container{
-    display:grid;
-    grid-template-rows: repeat(3, 200px);
-    grid-template-columns: repeat(4, 1fr);
+    display:grid; /*TRANSFORMA O DISPLAY UM TABULEIRO COM LINHAS E COLUNAS*/
+    grid-template-rows: repeat(3, 200px);/*CRIE TRÊS LINHAS, TODAS COM 200PX */
+    grid-template-columns: repeat(4, 1fr); /*CRIE QUATRO COLUNAS DE UMAS FRAÇÃO CADA UMA*/
     gap: 5px;
     }
 
@@ -33,12 +32,11 @@
     .caixa3{
     grid-row: 2/4;
     grid-column: 3/5;
-
     background-color: lightgreen;
     }
         
     </style>
-    <title>GRADE VERTICAL</title>
+    <title>GRID LAYOUT</title>
 </head>
 <body>
     <div class="container">

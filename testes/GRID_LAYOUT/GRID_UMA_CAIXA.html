@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container{
+            display:grid;
+            grid-template-rows: repeat(4, 25px);
+            grid-template-columns: repeat(4, 25px);
+        }
+        .caixa01{
+            grid-row: 1/5;
+            grid-column: 1/5;
+            background-color: salmon;
+                       
+        }
+    </style>
+    <title>GRID LAYOUT 1 CAIXA</title>
+</head>
+<body>
+    <div class="container">
+        <div class="caixa01">CAIXA 01
+        </div>
+    </div>
+</body>
+</html>
