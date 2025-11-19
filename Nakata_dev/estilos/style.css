@@ -7,15 +7,6 @@
     box-sizing: border-box;
 }
 
-:root{ /* As cores são opcionais */
-    --fundo-principal:#f5f5f5;
-    --texto: #222222;
-    --texto-inverso:#ffffff;
-    --destaque:#0077ff;
-    --destaque-inverso:#66bbff;
-    --fundo-card:#ffffff;
-
-}
 
 header{
     background-color: var(--destaque);    
@@ -24,7 +15,7 @@ header{
     display: flex;/*Torna a caixa do Header flexível*/
     justify-content: flex-end;/*Manda o conteúdo para o final da caixa, que no caso seria à direita*/
     align-content: center;/*Torna o conteúdo centralizado dentro de cada caixa indivídualmente*/
-
+    
     /*7º Estapa do desenvolvimento do site - fixa o Menu no Topo*/
     position: sticky; /*O comando position: sticky; no CSS é usado para criar elementos que “grudam” (ficam fixos) em uma posição enquanto o usuário rola a página, mas somente dentro do seu contêiner pai.*/
     top: 0; /*“Deixe o elemento rolar normalmente até chegar no topo da tela.
@@ -50,14 +41,34 @@ nav#menu a{
 nav#menu a:hover{ /*Quando passar o mouse por cima do menu, vai gerar um certo efeito desta configuração:*/
     background-color: var(--destaque-inverso);
     color: var(--destaque);
-
+    
 }
-
+:root{ /* As cores são opcionais */
+    --fundo-principal:#f5f5f5;
+    --texto: #222222;
+    --texto-inverso:#ffffff;
+    --destaque:#0077ff;
+    --destaque-inverso:#66bbff;
+    --fundo-card:#ffffff;
+}
+/* Ultima etapa - crie um seletor body.escuro e altere as variáveis para o modo escuro. fazendo essas alterações o site já vai funcionar no modo claro e escuro. */
+body.escuro{
+    --fundo-principal:#222222;
+    --texto: #e0e0e0;
+    --texto-inverso:#333333;
+    --destaque:#ff3c00;
+    --destaque-inverso:#a73917;
+    --fundo-card:#444444;
+    a {
+        color: white;
+    }
+}
 body{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     line-height: 1.5em; /*distância entre as linhas*/
     background-color: var(--fundo-principal);
     color: var(--texto);
+    transition: background-color 1s, color 1s; /*Por fim foi acrescentado essa transição para suavizar a troca de tema*/
 }
 /*2º Etapa de construção do Site*/
 main{

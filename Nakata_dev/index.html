@@ -16,13 +16,15 @@
     <title>Nakata-dev</title>
 </head>
 
+<!--<body class="escuro">-->
+<!--Não é necessário usar essa classe, pois o professor só mostrou o que acontreceria se colocasse uma classe escuro sem as configurações do css > body.escuro-->
 <body>
     <header>
         <nav id="menu">
             <ul>
                 <abbr title="Portifólio">
                 <li>
-                <a href="../index.html"><i class="fa-solid fa-spell-check"></i></a>
+                <a href="../index.html"><i class="fa-solid fa-spell-check" class="link"></i></a> <!--Ultima etapa do processo antes de acessar o JS, adicione class="link" no final do "a href" de cada "li" para poder tirar aquele volta ao menu quando você clicava lá da skill ou de qualquer parte do site.-->
                 </li>
                 </abbr>
                 <abbr title="HomePage">
@@ -35,10 +37,10 @@
                     <li><a href="#formacao" class="link"><i class="fa-solid fa-graduation-cap"></i></a></li>
                 </abbr>
                 <abbr title="Projetos">
-                    <li><a href="#projetos" class="link"><i class="fa-solid fa-trowel-bricks"></i></a></li>
+                    <li><a href="#projetos" class="link" ><i class="fa-solid fa-trowel-bricks" class="link"></i></a></li>
                 </abbr>
                 <abbr title="Modo Escuro">
-                    <li><a href="#" id="botao-tema"><i class="fa-solid fa-moon"></i></a></li>
+                    <li><a href="#" id="botao-tema" class="link"><i class="fa-solid fa-moon"></i></a></li>
                 </abbr>
             </ul>
         </nav>
@@ -50,10 +52,10 @@
 
             <h1>Nakata-Dev</h1>
 
-            <p>Meu nome é Ailton A. Nakata, sou estudante de Tecnologia desde Junho/2024 e hoje busco me especializar na
-                área de programação, desenvolvendo sites/aplicações. Atualmente estou a procura de oportunidade para
-                poder me desenvolver cada vez mais nessa área.
+            <p>
+                <em>Desenvolvedor Web desde junho de 2024</em>
             </p>
+        <br>
             <div id="social">
 <abbr title="Linkedin"><a href="https://www.linkedin.com/in/ailton-a-nakata-51205a327/" target="_blank" rel="nofollow"><i
 class="fa-brands fa-linkedin"></i></a></abbr>
@@ -70,18 +72,20 @@ class="fa-brands fa-linkedin"></i></a></abbr>
 <abbr title="HomePage">
 <a href="https://nakata-dev.github.io/portifolio/" target="_blank" rel="nofollow"><i class="fa-solid fa-house"></i></a></abbr></div>
         </section>
-
         <!--3º Etapa do Desenvolvimento do Site-->
-
         <section id="detalhes">
             <article id="video">
                 <h2><i class="fa-solid fa-handshake"></i> Deixe-me apresentar</h2>
                 <div class="video-container"><!--Position: Relative-->
                     <!--Position:Absolute-->
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/VdWfSfWA_BQ?si=DpaX6xNLadAXLvZR"
+                    <!--<iframe width="560" height="315" src="https://www.youtube.com/embed/VdWfSfWA_BQ?si=DpaX6xNLadAXLvZR"
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
+
+                        <p>
+                            Sou Ailton A. Nakata, desenvolvedor especializado na criação de sites modernos, rápidos e estratégicos que destacam marcas no ambiente digital. Na <a href="https://ikigaiweb.com.br/" target="_blank">IkigaiWeb</a>, transformo ideias em soluções que transmitem credibilidade, performance e profissionalismo, unindo design funcional, tecnologia atual e foco total em resultados reais. Se você busca um site que atrai, engaja e gera valor para o seu negócio, estou pronto para ajudar sua marca a crescer online.
+                        </p>
             </article><!--Fim Article vídeo-->
             <!--4º Etapa do Desenvolvimento do Site-->
             <article id="skills">
@@ -381,8 +385,9 @@ class="fa-brands fa-linkedin"></i></a></abbr>
     </main>
 
     <footer>
-        Portifólio de Ailton Akio Nakata - 2025
+    Portifólio de <a href="https://ikigaiweb.com.br/" target="_blank">Ailton Akio Nakata</a> - 2025
     </footer>
+    <!--Ultima etapa: Abra o arquivo script.js e altere alguns dados para que o Botão no modo escuro passe a funcionar.-->
     <script src="scripts/script.js"></script> <!--Linka com o arquivo do JS-->
 </body>
 
