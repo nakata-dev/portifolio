@@ -54,6 +54,10 @@ body {
 
 }
 
+main h2{
+    font-family: var(--fonte_moderna);
+    color: var(--cor02);
+}
 
 nav {
     font-family: var(--fonte_moderna);
