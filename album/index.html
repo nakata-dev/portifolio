@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álbum de Fotos - Portfólio Avançado</title>
+
+    <style>
+        /* ========= CONFIGURAÇÕES GERAIS ========= */
+        :root {
+            --bg: #f0f0f0;
+            --text: #222;
+            --card-bg: #fff;
+        }
+
+        body.dark {
+            --bg: #1a1a1a;
+            --text: #f5f5f5;
+            --card-bg: #2a2a2a;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s linear, color 0.3s linear;
+        }
+
+        /* ========= CABEÇALHO ========= */
+        header {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1.8em;
+            position: relative;
+        }
+
+        /* Botão Dark/Light */
+        #toggleTheme {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #444;
+            border: none;
+            padding: 8px 15px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #toggleTheme:hover {
+            background: #666;
+        }
+
+        /* ========= GALERIA ========= */
+        .album {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .foto {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .foto img {
+            width: 100%;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .foto:hover img {
+            transform: scale(1.1);
+        }
+
+        .legenda {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            text-align: center;
+            font-size: 1em;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .foto:hover .legenda {
+            opacity: 1;
+        }
+
+        /* ========= LIGHTBOX (Foto em Tela Cheia) ========= */
+        #lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+        }
+
+        #lightboxClose {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+        /* ========= RODAPÉ ========= */
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+            font-size: 0.9em;
+        }
+
+
+        div#voltar {
+            text-align: center;
+            font-family: var(--fonte_moderna);
+            transition: background-color 1s;
+        }
+
+        div#voltar a:hover {
+            padding: 10px;
+            background-image: linear-gradient(135deg, #2626FE, #00bfff);
+            color: white;
+            font-weight: bolder;
+            transition-duration: 0.5s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.656);
+            border-radius: 50px;
+            border: none;
+            font-family: 'Times New Roman', Times, serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        Álbum de Fotos
+        <button id="toggleTheme">Dark Mode</button>
+    </header>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox">
+        <span id="lightboxClose">✖</span>
+        <img id="lightboxImg" src="" alt="Foto ampliada">
+    </div>
+
+    <!-- GALERIA COM 15 FOTOS -->
+    <section class="album">
+        <!-- As 15 fotos serão automaticamente lidas pelo JS -->
+        <div class="foto"><img src="https://picsum.photos/800/600?random=1"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=2"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=3"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=4"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=5"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=6"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=7"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=8"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=9"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=10"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=11"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=12"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=13"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=14"></div>
+        <div class="foto"><img src="https://picsum.photos/800/600?random=15"></div>
+    </section>
+    
+    <div id="voltar">
+        <a href="../projetos.html">HOME</a>
+    </div>
+
+    <footer>
+        © 2025 - Ailton A. Nakata | Portfólio
+    </footer>
+    <script>
+        /* ================= DARK/LIGHT MODE ================= */
+        const toggle = document.getElementById('toggleTheme');
+        toggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            toggle.textContent = document.body.classList.contains('dark') ? "Light Mode" : "Dark Mode";
+        });
+
+        /* ================= LIGHTBOX ================= */
+        const fotos = document.querySelectorAll('.foto img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        fotos.forEach(img => {
+            img.addEventListener('click', () => {
+                lightbox.style.display = 'flex';
+                lightboxImg.src = img.src;
+            });
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.style.display = 'none';
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) lightbox.style.display = 'none';
+        });
+    </script>
+
+</body>
+
+</html>
