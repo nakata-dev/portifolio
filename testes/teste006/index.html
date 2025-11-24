@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora Simples</title>
+</head>
+<body>
+
+    <h2>Somando dois números diretamente na página</h2>
+
+    <!-- Campo para digitar o primeiro número -->
+    <label for="numero1">Digite o primeiro número:</label>
+    <input type="number" id="numero1"> 
+    <br><br>
+
+    <!-- Campo para digitar o segundo número -->
+    <label for="numero2">Digite o segundo número:</label>
+    <input type="number" id="numero2">
+    <br><br>
+
+    <!-- Botão que aciona o cálculo -->
+    <button onclick="somar()">Somar</button>
+
+    <hr>
+
+    <!-- Aqui aparecerá o resultado -->
+    <h3>Resultado:</h3>
+    <p id="resultado">Nenhum resultado ainda.</p>
+
+
+    <script>
+        function somar() {
+            // Pegando os valores digitados nos inputs
+            let num1 = document.getElementById("numero1").value;
+            let num2 = document.getElementById("numero2").value;
+
+            // Convertendo de texto para número
+            num1 = Number(num1);
+            num2 = Number(num2);
+
+            // Calculando a soma
+            let soma = num1 + num2;
+
+            // Mostrando o resultado na página
+            document.getElementById("resultado").innerText = "A soma é: " + soma;
+            
+        }
+    </script>
+
+</body>
+</html>
