@@ -1,12 +1,129 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícias</title>
-</head>
-<body style="background-color: aqua;">
+    <title>Notícias de Tecnologia - Curiosidade de Tecnologia</title>
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* A regra abaixo elimina o espaço indesejado */
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
 
-    
+        header {
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* O seu CSS original para header */
+        header>p {
+            text-align: center;
+            padding: 5px;
+        }
+
+        header>h1 {
+            font-family: var(--fonte-android);
+        }
+
+        /* Estilo específico para notícias (ajuste no seu style.css se necessário) */
+        article img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .img-destaque {
+            width: 80%; /* Exemplo de classe para imagem grande */
+            display: block;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .galeria {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .galeria img {
+            width: 30%;
+            min-width: 250px;
+            margin: 10px;
+            border: 1px solid var(--cor3);
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        footer p {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="justificado">
+        <h1>Curiosidade de Tecnologia</h1>
+        <p>Tudo aquilo que você sempre quis saber sobre o mundo<br> Tech, em um único lugar.</p>
+    </header>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="noticia.html">Notícias</a>
+        <a href="curiosidade.html">Curiosidade</a>
+        <a href="contato.html">Fale Conosco</a>
+        <a href="../projetos.html">Voltar</a>
+    </nav>
+
+    <main>
+        <article>
+            <h2>Tecnologia do Futuro: Chips Neutrais para Aprendizagem Acelerada</h2>
+            <p>Em um avanço que pode redefinir a educação e a produtividade, a startup fictícia <strong>Neuralink Pro</strong> anunciou o desenvolvimento de chips neurais de baixo custo que prometem acelerar a aquisição de novas habilidades em até <strong>500%</strong>. Os chips, ainda em fase de testes éticos, funcionam como um "acelerador de sinapses", permitindo que o cérebro processe e retenha informações complexas de forma quase instantânea.</p>
+
+            <img src="imagens/neural-chip-ficticio.jpg" alt="Imagem fictícia de um chip neural brilhante" class="img-destaque">
+
+            <p>O protótipo, apelidado de <strong>"Saber Rápido"</strong>, demonstrou em testes internos a capacidade de ensinar um idioma básico em menos de 24 horas. Os criadores alertam, no entanto, que o uso inicial será restrito a áreas de alta demanda de conhecimento, como medicina e engenharia espacial, antes de uma possível liberação para o mercado de consumo.</p>
+
+            <h2>Revolução Verde: Baterias Orgânicas Duram 10 Vezes Mais</h2>
+            <p>Esqueça o Lítio. Cientistas da <strong>Ecovolt Tech</strong>, um laboratório de pesquisa em bioeletrônica, desenvolveram a primeira bateria totalmente orgânica e biodegradável do mundo. A novidade não apenas é ecologicamente correta, mas também oferece uma densidade energética dez vezes superior às baterias atuais. Isso significa que um smartphone poderia durar mais de <strong>duas semanas</strong> com uma única carga.</p>
+
+            <div class="galeria">
+                <img src="imagens/bateria-organica-ficticia1.jpg" alt="Close-up de uma bateria orgânica em laboratório">
+                <img src="imagens/bateria-organica-ficticia2.jpg" alt="Protótipo de celular com bateria Ecovolt">
+                <img src="imagens/bateria-organica-ficticia3.jpg" alt="Símbolo de reciclagem em forma de folha">
+            </div>
+            
+            <p>A pesquisa utiliza compostos extraídos de algas marinhas modificadas geneticamente, que geram energia através de um processo de "fotossíntese reversa". A expectativa é que os primeiros dispositivos comerciais equipados com a nova tecnologia cheguem ao mercado em até 18 meses, prometendo um impacto gigantesco na indústria automotiva e de eletrônicos portáteis.</p>
+
+            <aside>
+                <h3>Outros Destaques</h3>
+                <p>Confira outras notícias rápidas que estão moldando o futuro da tecnologia:</p>
+                <ul>
+                    <li><strong>Robótica Doméstica:</strong> A empresa **RoboHelp** lançou um robô aspirador que também serve café expresso por comando de voz.</li>
+                    <li><strong>Realidade Mista:</strong> Novo óculos de Realidade Mista da **VisionCorp** permite sentir o cheiro e a textura de objetos virtuais.</li>
+                    <li><strong>Cibersegurança Quântica:</strong> Foi desenvolvido um novo protocolo de segurança que torna inviável qualquer tentativa de ataque de computadores quânticos.</li>
+                </ul>
+                <p>Fique ligado em nossa seção de notícias para mais novidades e análises aprofundadas sobre esses temas.</p>
+            </aside>
+            
+            <p>Acompanhe a Curiosidade de Tecnologia para se manter à frente das novidades que estão transformando o mundo.</p>
+
+        </article>
+    </main>
+
+    <footer>
+        <p>Site criado por <a href="https://www.youtube.com/c/cursoemvideo/videos" target="_blank">Curso em vídeo</a> e desenvolvido por <a
+                href="https://ikigaiweb.com.br/" target="_blank">Ailton A. Nakata</a></p>
+    </footer>
 </body>
+
 </html>
