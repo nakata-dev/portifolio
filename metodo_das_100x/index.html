@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧠 Método das 100 VEZES - Aprenda Programação</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    
+    <style>
+        /* PALETA DE CORES AVANÇADA:
+        --indigo-dark: #311B92; (Sabedoria/Inteligência)
+        --cyan-light: #4DD0E1; (Clareza/Criatividade)
+        --cyan-medium: #00BCD4;
+        --green-success: #28a745;
+        --red-error: #dc3545;
+        --yellow-hint: #ffc107;
+        --background-light: #F8F9FA;
+        --shadow-color: rgba(49, 27, 146, 0.15);
+        --progress-bar: #4DD0E1;
+        */
+
+        /* RESET BÁSICO */
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* ESTILOS GERAIS E FUNDO */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            color: #311B92;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        /* HEADER E TÍTULO */
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            color: #311B92; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #495057;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* CONTAINERS PRINCIPAIS */
+        #setup, #memorizacao {
+            max-width: 800px;
+            width: 100%;
+            padding: 25px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        #setup:hover, #memorizacao:hover {
+            transform: scale(1.02);
+        }
+
+        /* TEXTAREA INICIAL, INPUT E BOTÃO - COMPONENTES */
+        textarea#inputText, #resposta {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #B0BEC5; 
+            box-shadow: 0 6px 15px var(--shadow-color); 
+            outline: none;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-top: 15px;
+            background-color: white;
+            color: #343A40;
+            height: 200px;
+        }
+
+        textarea#inputText:focus, #resposta:focus {
+            border-color: #4DD0E1;
+            box-shadow: 0 8px 20px rgba(77, 208, 225, 0.4);
+        }
+
+        button {
+            background: #00BCD4;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            border: none;
+            border-radius: 35px;
+            padding: 14px 35px;
+            margin: 15px 10px 0;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0, 188, 212, 0.4);
+            transition: 0.3s ease-in-out;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: #4DD0E1;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 188, 212, 0.6);
+        }
+
+        /* PROGRESS BAR */
+        #progressContainer {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--progress-bar);
+            transition: width 0.5s ease;
+        }
+
+        /* NÍVEL E MENSAGENS */
+        #nivel {
+            font-family: 'Poppins', sans-serif;
+            color: #311B92; 
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #message {
+            font-size: 1.15em;
+            margin-top: 20px;
+            font-weight: 600;
+            color: #311B92;
+            text-align: center;
+        }
+
+        #message b {
+            color: #00BCD4;
+        }
+
+        .success { color: var(--green-success); }
+        .error { color: var(--red-error); }
+        .hint { color: var(--yellow-hint); font-style: italic; }
+
+        /* EXIBIÇÃO DE CÓDIGO COM HIGHLIGHT */
+        #hiddenText {
+            margin-top: 15px;
+            background: #1e1e1e;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 0.95em;
+            display: none;
+            overflow-x: auto;
+        }
+
+        /* MODAL FINAL E HINTS */
+        #finalMessage {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: #311B92;
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            text-align: center;
+            font-size: 1.4em;
+            max-width: 90%;
+            animation: fadeIn 0.8s ease-in-out;
+            border: 4px solid #4DD0E1;
+            z-index: 1000;
+        }
+
+        #hintContainer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #hintText {
+            font-size: 1em;
+            color: var(--yellow-hint);
+            margin-bottom: 10px;
+        }
+
+        pre.instructions {
+            text-align: center;
+            margin: 5px 0;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        /* EXECUÇÃO DE CÓDIGO */
+        #codeOutput {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #B0BEC5;
+            border-radius: 10px;
+            text-align: left;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* GAMIFICAÇÃO: PONTOS E NÍVEIS */
+        #stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        #stats span {
+            background: #e9ecef;
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        /* ANIMAÇÕES */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+
+        /* MEDIA QUERIES */
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            #setup, #memorizacao { padding: 15px; }
+            button { padding: 12px 25px; }
+            #finalMessage { padding: 30px; font-size: 1.2em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🧠 Método das 100 VEZES - Aprenda Programação</h1>
+    <p>Este é um programa aprimorado para aprender programação através de repetição cumulativa, com destaque de sintaxe, execução de código, dicas, gamificação e progresso salvo.</p>
+
+    <div id="setup">
+        <p>Selecione um tópico pré-definido ou cole seu próprio código/conceito:</p>
+        <select id="topicSelect">
+            <option value="">Selecione um Tópico</option>
+            <option value="js-basics">JavaScript Básico (Variáveis e Funções)</option>
+            <option value="loops">Loops em JavaScript</option>
+            <option value="arrays">Arrays e Manipulação</option>
+            <option value="objects">Objetos e JSON</option>
+            <option value="custom">Personalizado (Cole abaixo)</option>
+        </select>
+        <textarea id="inputText" placeholder="Cole seu código, fórmula ou conceito aqui... (use para tópico personalizado)"></textarea>
+        <button onclick="iniciar()">Iniciar Memorização</button>
+        <button onclick="carregarProgresso()">Carregar Progresso Salvo</button>
+    </div>
+
+    <div id="memorizacao" style="display:none;">
+        <div id="stats">
+            <span id="pontos">Pontos: 0</span>
+            <span id="streak">Streak: 0</span>
+        </div>
+        <h3 id="nivel"></h3>
+        <div id="progressContainer">
+            <div id="progressBar"></div>
+        </div>
+        <textarea id="resposta" placeholder="Digite exatamente como no texto original (Use Shift+Enter para pular linha, Enter para validar)"></textarea>
+        <pre class="instructions">Shift+Enter (Pula Linha)</pre>
+        <pre class="instructions">Enter (Valida)</pre>
+        <pre class="instructions">F8 (Ver Código por 6s)</pre>
+        <pre class="instructions">H (Dica Rápida)</pre>
+        <div id="message"></div>
+        <div id="hintContainer" style="display:none;">
+            <div id="hintText"></div>
+        </div>
+        <pre id="hiddenText" class="language-javascript"></pre>
+        <div id="codeOutput"></div>
+        <button onclick="executarCodigo()" style="display:none;" id="runButton">Executar Código</button>
+        <button onclick="salvarProgresso()">Salvar Progresso</button>
+        <button onclick="resetarNivel()">Resetar Nível</button>
+    </div>
+
+    <div id="finalMessage">
+        🎉 Parabéns! Você completou o método das 100 VEZES para este tópico.<br><br>
+        Pontos Totais: <span id="finalPontos"></span><br>
+        Agora, revise após <b>7 dias</b> para reforçar a memória.<br><br>
+        💪 Até breve! (F5 para Resetar)
+    </div>
+    
+    <footer>
+        &copy; Copyright 2025 - <em>Ailton Akio Nakata (Aprimorado por Grok)</em>
+    </footer>
+
+    <script>
+        let linhas = [];
+        let nivelAtual = 1;
+        let textoCompleto = "";
+        let pontos = 0;
+        let streak = 0;
+        let hintsUsados = 0;
+        let topicosPredefinidos = {
+            "js-basics": `let x = 5;\nfunction soma(a, b) {\n    return a + b;\n}\nconsole.log(soma(x, 3));`,
+            "loops": `for (let i = 0; i < 5; i++) {\n    console.log(i);\n}\nlet j = 0;\nwhile (j < 3) {\n    console.log(j);\n    j++;\n}`,
+            "arrays": `let arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr.length);\narr.forEach(item => console.log(item));`,
+            "objects": `let obj = { nome: "João", idade: 30 };\nconsole.log(obj.nome);\nlet json = JSON.stringify(obj);\nconsole.log(json);`
+        };
+        let hints = []; // Dicas por linha
+
+        function iniciar() {
+            const select = document.getElementById("topicSelect").value;
+            if (select === "custom") {
+                textoCompleto = document.getElementById("inputText").value.trim();
+            } else if (select) {
+                textoCompleto = topicosPredefinidos[select];
+            } else {
+                alert("Selecione um tópico ou cole um texto.");
+                return;
+            }
+
+            if (textoCompleto === "") {
+                alert("Por favor, cole ou digite um texto antes de iniciar.");
+                return;
+            }
+
+            // Divide por linhas, preservando indentação
+            linhas = textoCompleto.split('\n').filter(l => l.trim() !== "");
+            gerarHints(); // Gera dicas baseadas nas linhas
+
+            document.getElementById("setup").style.display = "none";
+            document.getElementById("memorizacao").style.display = "block";
+            document.getElementById("resposta").focus();
+            atualizarNivel();
+            atualizarProgresso();
+        }
+
+        function gerarHints() {
+            hints = linhas.map((linha, index) => {
+                if (linha.includes("let") || linha.includes("const")) return "Dica: Declaração de variável.";
+                if (linha.includes("function")) return "Dica: Definição de função.";
+                if (linha.includes("for") || linha.includes("while")) return "Dica: Estrutura de loop.";
+                if (linha.includes("console.log")) return "Dica: Saída no console.";
+                return `Dica para linha ${index + 1}: Começa com '${linha.trim().split(' ')[0]}'`;
+            });
+        }
+
+        function atualizarNivel() {
+            let mensagem = nivelAtual === 1 ? "Digite a linha 1 do código:" :
+                           nivelAtual === 2 ? "Digite as linhas 1 e 2 do código:" :
+                           `Digite das linhas 1 à ${nivelAtual} do código:`;
+
+            document.getElementById("nivel").innerHTML = `Etapa ${nivelAtual} / ${linhas.length} - ${mensagem}`;
+            document.getElementById("resposta").value = "";
+            document.getElementById("message").innerHTML = "";
+            document.getElementById("hiddenText").style.display = "none";
+            document.getElementById("hintContainer").style.display = "none";
+            document.getElementById("codeOutput").style.display = "none";
+            document.getElementById("runButton").style.display = nivelAtual === linhas.length ? "inline-block" : "none";
+            atualizarStats();
+            atualizarProgresso();
+        }
+
+        function atualizarProgresso() {
+            const progresso = (nivelAtual - 1) / linhas.length * 100;
+            document.getElementById("progressBar").style.width = `${progresso}%`;
+        }
+
+        function atualizarStats() {
+            document.getElementById("pontos").textContent = `Pontos: ${pontos}`;
+            document.getElementById("streak").textContent = `Streak: ${streak}`;
+        }
+
+        function validarResposta() {
+            const respostaUsuario = document.getElementById("resposta").value.trim();
+            const alvoCompleto = linhas.slice(0, nivelAtual).join("\n").trim();
+
+            // Normalização avançada: ignora diferenças mínimas de espaços, mas preserva indentação
+            const normalizar = (texto) => texto.replace(/\s+/g, ' ').toLowerCase().trim();
+            const respostaNormalizada = normalizar(respostaUsuario);
+            const alvoNormalizado = normalizar(alvoCompleto);
+
+            if (respostaNormalizada === alvoNormalizado) {
+                document.getElementById("message").innerHTML = "<span class='success'>🎉 Correto! +10 pontos!</span>";
+                pontos += 10 + (streak * 5);
+                streak++;
+                nivelAtual++;
+                if (nivelAtual > linhas.length) {
+                    completarDesafio();
+                } else {
+                    setTimeout(atualizarNivel, 1500);
+                }
+            } else {
+                document.getElementById("message").innerHTML = "<span class='error'>❌ Incorreto. Pressione <b>F8</b> para ver o código ou <b>H</b> para dica.</span>";
+                streak = 0;
+                pontos = Math.max(0, pontos - 5);
+            }
+            atualizarStats();
+        }
+
+        function completarDesafio() {
+            document.getElementById("memorizacao").style.display = "none";
+            document.getElementById("finalMessage").style.display = "block";
+            document.getElementById("finalPontos").textContent = pontos;
+            salvarProgresso();
+        }
+
+        function executarCodigo() {
+            const code = document.getElementById("resposta").value;
+            const outputDiv = document.getElementById("codeOutput");
+            outputDiv.style.display = "block";
+            outputDiv.innerHTML = "";
+
+            try {
+                const consoleOutput = [];
+                const originalConsoleLog = console.log;
+                console.log = (...args) => {
+                    consoleOutput.push(args.map(arg => JSON.stringify(arg)).join(' '));
+                };
+
+                eval(code); // Executa o código (cuidado: apenas para fins educacionais)
+
+                console.log = originalConsoleLog;
+                outputDiv.innerHTML = consoleOutput.join('<br>') || "Executado sem saída.";
+            } catch (error) {
+                outputDiv.innerHTML = `<span style="color: red;">Erro: ${error.message}</span>`;
+            }
+        }
+
+        function mostrarDica() {
+            if (hintsUsados < 3) { // Limite de dicas por nível
+                const hintIndex = Math.min(nivelAtual - 1, hints.length - 1);
+                document.getElementById("hintText").textContent = hints[hintIndex];
+                document.getElementById("hintContainer").style.display = "block";
+                hintsUsados++;
+                pontos = Math.max(0, pontos - 2); // Penalidade leve por dica
+            } else {
+                document.getElementById("message").innerHTML += "<br><span class='hint'>Limite de dicas atingido para este nível.</span>";
+            }
+        }
+
+        function salvarProgresso() {
+            const progresso = {
+                linhas,
+                nivelAtual,
+                pontos,
+                streak,
+                textoCompleto
+            };
+            localStorage.setItem("metodo100Progresso", JSON.stringify(progresso));
+            alert("Progresso salvo!");
+        }
+
+        function carregarProgresso() {
+            const salvo = localStorage.getItem("metodo100Progresso");
+            if (salvo) {
+                const progresso = JSON.parse(salvo);
+                linhas = progresso.linhas;
+                nivelAtual = progresso.nivelAtual;
+                pontos = progresso.pontos;
+                streak = progresso.streak;
+                textoCompleto = progresso.textoCompleto;
+                gerarHints();
+                document.getElementById("setup").style.display = "none";
+                document.getElementById("memorizacao").style.display = "block";
+                atualizarNivel();
+                alert("Progresso carregado!");
+            } else {
+                alert("Nenhum progresso salvo encontrado.");
+            }
+        }
+
+        function resetarNivel() {
+            if (confirm("Resetar o nível atual?")) {
+                document.getElementById("resposta").value = "";
+                document.getElementById("message").innerHTML = "";
+                document.getElementById("hiddenText").style.display = "none";
+                hintsUsados = 0;
+            }
+        }
+
+        // Eventos de Teclado
+        document.addEventListener("keydown", function(e) {
+            if (document.getElementById("memorizacao").style.display !== "block") return;
+
+            if (e.key === "F8") {
+                e.preventDefault();
+                const hiddenText = document.getElementById("hiddenText");
+                hiddenText.textContent = linhas.slice(0, nivelAtual).join("\n");
+                Prism.highlightElement(hiddenText);
+                hiddenText.style.display = "block";
+                setTimeout(() => { hiddenText.style.display = "none"; }, 6000);
+            } else if (e.key.toLowerCase() === "h") {
+                mostrarDica();
+            }
+        });
+
+        document.getElementById("resposta").addEventListener("keypress", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                validarResposta();
+            }
+        });
+
+        // Auto-highlight no carregamento
+        document.addEventListener("DOMContentLoaded", () => {
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+</html>
