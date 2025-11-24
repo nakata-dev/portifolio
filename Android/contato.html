@@ -1,11 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fale_conosco</title>
+    <title>Fale Conosco - Curiosidade de Tecnologia</title>
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* A regra abaixo elimina o espaço indesejado */
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        header {
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* O seu CSS original para header */
+        header>p {
+            text-align: center;
+            padding: 5px;
+        }
+
+        header>h1 {
+            font-family: var(--fonte-android);
+        }
+        
+        /* Estilos específicos para o formulário (Mantenha o estilo do site) */
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--cor0); /* Cor de fundo clara, ajuste no seu style.css se precisar */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--cor5); /* Cor escura para o texto, ajuste no seu style.css */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid var(--cor2); /* Borda suave */
+            border-radius: 5px;
+            box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+            font-size: 1em;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        fieldset {
+            border: 1px solid var(--cor2);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        legend {
+            font-weight: bold;
+            padding: 0 10px;
+            color: var(--cor5);
+        }
+
+        input[type="submit"] {
+            background-color: var(--cor4); /* Cor de destaque (Verde escuro) */
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--cor5); /* Cor mais escura no hover */
+        }
+        
+        footer p {
+            text-align: center;
+        }
+    </style>
 </head>
-<body style="background-color: brown;">
-    
+
+<body>
+    <header id="justificado">
+        <h1>Curiosidade de Tecnologia</h1>
+        <p>Tudo aquilo que você sempre quis saber sobre o mundo<br> Tech, em um único lugar.</p>
+    </header>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="noticia.html">Notícias</a>
+        <a href="curiosidade.html">Curiosidade</a>
+        <a href="contato.html">Fale Conosco</a>
+        <a href="../projetos.html">Voltar</a>
+    </nav>
+
+    <main>
+        <article>
+            <h2>Entre em Contato com a Equipe</h2>
+            <p>Se você tem dúvidas, sugestões de pauta, encontrou algum erro em nossos artigos, ou simplesmente quer nos enviar um olá, utilize o formulário abaixo. Sua opinião é muito importante para melhorarmos nosso conteúdo!</p>
+
+            <form action="#" method="post">
+                <fieldset>
+                    <legend>Informações Pessoais</legend>
+
+                    <label for="idnome">Nome Completo:</label>
+                    <input type="text" name="nome" id="idnome" required placeholder="Seu nome aqui">
+
+                    <label for="idemail">E-mail:</label>
+                    <input type="email" name="email" id="idemail" required placeholder="nome@dominio.com">
+
+                    <label for="idtel">Telefone (Opcional):</label>
+                    <input type="text" name="tel" id="idtel" placeholder="(XX) XXXXX-XXXX">
+                </fieldset>
+
+                <fieldset>
+                    <legend>Assunto do Contato</legend>
+
+                    <label for="idassunto">Qual o principal motivo do contato?</label>
+                    <select name="assunto" id="idassunto" required>
+                        <option value="" disabled selected>-- Escolha uma opção --</option>
+                        <option value="sugestao">Sugestão de Pauta/Curiosidade</option>
+                        <option value="erro">Reportar Erro no Site/Artigo</option>
+                        <option value="duvida">Dúvida sobre um Artigo</option>
+                        <option value="parceria">Proposta de Parceria</option>
+                        <option value="outro">Outro Assunto</option>
+                    </select>
+
+                    <label>Prefere ser contatado por:</label>
+                    <input type="radio" name="contato" id="idemailop" value="email" checked> <label for="idemailop" style="display: inline;">E-mail</label><br>
+                    <input type="radio" name="contato" id="idtelop" value="telefone"> <label for="idtelop" style="display: inline;">Telefone</label>
+                </fieldset>
+
+                <label for="idmensagem">Sua Mensagem:</label>
+                <textarea name="mensagem" id="idmensagem" cols="30" rows="10" required placeholder="Digite sua mensagem detalhada aqui."></textarea>
+
+                <input type="submit" value="Enviar Mensagem">
+            </form>
+
+            <p style="text-align: center; margin-top: 30px;">Agradecemos o seu contato. Tentaremos responder o mais breve possível!</p>
+
+        </article>
+    </main>
+
+    <footer>
+        <p>Site criado por <a href="https://www.youtube.com/c/cursoemvideo/videos" target="_blank">Curso em vídeo</a> e desenvolvido por <a
+                href="https://ikigaiweb.com.br/" target="_blank">Ailton A. Nakata</a></p>
+    </footer>
 </body>
+
 </html>

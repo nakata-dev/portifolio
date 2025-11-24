@@ -1,11 +1,122 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curiosidade</title>
+    <title>Curiosidades do Mascote - Curiosidade de Tecnologia</title>
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* A regra abaixo elimina o espaço indesejado */
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        header {
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* O seu CSS original para header */
+        header>p {
+            text-align: center;
+            padding: 5px;
+        }
+
+        header>h1 {
+            font-family: var(--fonte-android);
+        }
+
+        /* Estilo para imagens da seção de curiosidades */
+        .mascote-especial {
+            width: 80%;
+            max-width: 400px;
+            display: block;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        footer p {
+            text-align: center;
+        }
+        li{
+            display: inline-block;
+            padding: 15px;
+        }
+    </style>
 </head>
-<body style="background-color: black;">
-    
+
+<body>
+    <header id="justificado">
+        <h1>Curiosidade de Tecnologia</h1>
+        <p>Tudo aquilo que você sempre quis saber sobre o mundo<br> Tech, em um único lugar.</p>
+    </header>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="noticia.html">Notícias</a>
+        <a href="curiosidade.html">Curiosidade</a>
+        <a href="contato.html">Fale Conosco</a>
+        <a href="../projetos.html">Voltar</a>
+    </nav>
+
+    <main>
+        <article>
+            <h2>O Lado Oculto do Bugdroid</h2>
+            <p>Se você já se aprofundou na história do mascote do <strong>Android</strong>, o simpático <strong>Bugdroid</strong>, sabe que ele foi inspirado nos ícones de portas de banheiro. Mas o que você não sabe é que existem várias curiosidades e lendas internas no Google sobre esse robozinho, muitas delas inventadas ou distorcidas ao longo do tempo. Reunimos algumas "curiosidades" fictícias que circulam nos corredores da empresa.</p>
+
+            <h3>1. A Cor Secreta do Android</h3>
+            <p>Você sabia que a cor padrão do Bugdroid (o verde ${(\#3DDC84)}$) tem um nome interno secreto? A lenda diz que, nos primeiros dias de desenvolvimento, a equipe de design chamava a cor de <strong>"Marshmallow Mint"</strong> (Menta Marshmallow), uma referência direta à paixão da equipe por doces, antes mesmo de se tornar um padrão oficial de nomeclatura de versões.</p>
+            
+            <img src="img/desenho_referente_ao_bugdroid_da_cor_verde.jpg" alt="Desenho fictício de um Bugdroid na cor Marshmallow Mint" class="mascote-especial">
+
+            <p>Essa cor, segundo os rumores, foi escolhida por ter o melhor contraste em telas de baixa resolução da época, garantindo que o mascote fosse sempre facilmente identificável.</p>
+
+            <h3>2. O Código Oculto nos Olhos</h3>
+            <p>Os dois círculos simples que servem como olhos do Bugdroid são, na verdade, um <strong>código binário</strong>. É claro que isso é pura invenção, mas uma curiosidade que a equipe de engenharia adora espalhar é que, se você inverter os pixels dos olhos, a sequência forma o número ${42}$, uma homenagem geek a "Guia do Mochileiro das Galáxias" e sua "Resposta para a vida, o universo e tudo mais".</p>
+            
+            <h3>3. A Versão "Gelo" do Mascote</h3>
+            <p>Para a versão **Ice Cream Sandwich (4.0)**, a designer Irina Blok teria criado uma versão secreta e não utilizada do Bugdroid feita inteiramente de "gelo" ou um material transparente. O objetivo era usá-lo em propagandas interativas de Realidade Aumentada. O nome interno desse mascote era <strong>"FrostDroid"</strong>, e ele supostamente seria capaz de "derreter" em certas animações. Nunca foi usado, mas os rascunhos são mantidos como relíquias no arquivo de design.</p>
+            
+            <picture>
+                <source media="(max-width: 670px)" srcset="img/bugdroid_feito_de_cristal.jpg">
+                <img src="img/bugdroid_feito_de_cristal.jpg" alt="Imagem fictícia de um Bugdroid transparente ou de gelo">
+            </picture>
+
+            <div class="video">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/l2UDgpLz20M?si=wyQH9TO3WWYWoPgN"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+
+            <aside>
+                <h3>Mais sobre os Doces (Versões Fictícias)</h3>
+                <p>Já que falamos sobre o fascínio por doces, aqui estão algumas versões fictícias que quase entraram na lista oficial de nomes de sistemas:</p>
+                <ul>
+                    <li>**Android $\alpha$ - Abacaxi** (<abbr title="Versão interna com tema de fruta">Pineapple</abbr>)</li>
+                    <li>**Android 3.5 - Cheesecake de Morango** (<abbr title="Versão beta interna">Strawberry Cheesecake</abbr>)</li>
+                    <li>**Android $\Omega$ - Waffle com Cobertura** (<abbr title="Nome de código para testes de estabilidade">Waffle Supreme</abbr>)</li>
+                </ul>
+                <p>É divertido imaginar as versões alternativas do Android. Acesse aqui para conferir a lista oficial e real: <a href="https://www.android.com/intl/en_in/what-is-android/" target="_blank"
+                        class="externo">Android History</a>.</p>
+            </aside>
+            
+            <p>Essas são apenas algumas das muitas histórias, reais e inventadas, que tornam o mascote do Android uma das figuras mais carismáticas do mundo da tecnologia. O Bugdroid continua evoluindo, mas sua simplicidade e simpatia permanecem intactas.</p>
+
+        </article>
+    </main>
+    <footer>
+        <p>Site criado por <a href="https://www.youtube.com/c/cursoemvideo/videos" target="_blank">Curso em vídeo</a> e desenvolvido por <a
+                href="https://ikigaiweb.com.br/" target="_blank">Ailton A. Nakata</a></p>
+    </footer>
 </body>
+
 </html>
