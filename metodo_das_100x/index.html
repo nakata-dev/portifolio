@@ -63,7 +63,7 @@
         }
 
         /* CONTAINERS PRINCIPAIS */
-        #setup, #memorizacao {
+        #setup, #memorizacao, #exercicios {
             max-width: 800px;
             width: 100%;
             padding: 25px;
@@ -74,12 +74,12 @@
             transition: transform 0.3s ease;
         }
 
-        #setup:hover, #memorizacao:hover {
+        #setup:hover, #memorizacao:hover, #exercicios:hover {
             transform: scale(1.02);
         }
 
         /* TEXTAREA INICIAL, INPUT E BOTÃO - COMPONENTES */
-        textarea#inputText, #resposta {
+        textarea#inputText, #resposta, #exercicioCodigo {
             width: 100%;
             padding: 15px;
             border-radius: 15px;
@@ -96,7 +96,7 @@
             height: 200px;
         }
 
-        textarea#inputText:focus, #resposta:focus {
+        textarea#inputText:focus, #resposta:focus, #exercicioCodigo:focus {
             border-color: #4DD0E1;
             box-shadow: 0 8px 20px rgba(77, 208, 225, 0.4);
         }
@@ -141,7 +141,7 @@
         }
 
         /* NÍVEL E MENSAGENS */
-        #nivel {
+        #nivel, #exercicioTitulo {
             font-family: 'Poppins', sans-serif;
             color: #311B92; 
             font-size: 1.8em;
@@ -149,7 +149,7 @@
             text-align: center;
         }
 
-        #message {
+        #message, #exercicioMensagem {
             font-size: 1.15em;
             margin-top: 20px;
             font-weight: 600;
@@ -157,7 +157,7 @@
             text-align: center;
         }
 
-        #message b {
+        #message b, #exercicioMensagem b {
             color: #00BCD4;
         }
 
@@ -166,7 +166,7 @@
         .hint { color: var(--yellow-hint); font-style: italic; }
 
         /* EXIBIÇÃO DE CÓDIGO COM HIGHLIGHT */
-        #hiddenText {
+        #hiddenText, #exercicioSolucao {
             margin-top: 15px;
             background: #1e1e1e;
             color: #fff;
@@ -176,6 +176,14 @@
             font-size: 0.95em;
             display: none;
             overflow-x: auto;
+        }
+
+        /* DESCRIÇÃO DO EXERCÍCIO */
+        #exercicioDescricao {
+            font-size: 1.1em;
+            color: #495057;
+            margin-bottom: 20px;
+            text-align: left;
         }
 
         /* MODAL FINAL E HINTS */
@@ -217,7 +225,7 @@
         }
 
         /* EXECUÇÃO DE CÓDIGO */
-        #codeOutput {
+        #codeOutput, #exercicioOutput {
             margin-top: 20px;
             padding: 15px;
             background: #f8f9fa;
@@ -262,7 +270,7 @@
         /* MEDIA QUERIES */
         @media (max-width: 600px) {
             h1 { font-size: 2em; }
-            #setup, #memorizacao { padding: 15px; }
+            #setup, #memorizacao, #exercicios { padding: 15px; }
             button { padding: 12px 25px; }
             #finalMessage { padding: 30px; font-size: 1.2em; }
         }
@@ -270,7 +278,7 @@
 </head>
 <body>
     <h1>🧠 Método das 100 VEZES - Aprenda Programação</h1>
-    <p>Este é um programa aprimorado para aprender programação através de repetição cumulativa, com destaque de sintaxe, execução de código, dicas, gamificação e progresso salvo.</p>
+    <p>Este é um programa aprimorado para aprender programação através de repetição cumulativa, com destaque de sintaxe, execução de código, dicas, gamificação, progresso salvo e agora com exercícios interativos.</p>
 
     <div id="setup">
         <p>Selecione um tópico pré-definido ou cole seu próprio código/conceito:</p>
@@ -310,6 +318,22 @@
         <button onclick="executarCodigo()" style="display:none;" id="runButton">Executar Código</button>
         <button onclick="salvarProgresso()">Salvar Progresso</button>
         <button onclick="resetarNivel()">Resetar Nível</button>
+        <button onclick="iniciarExercicios()" style="display:none;" id="exerciciosButton">Ir para Exercícios</button>
+    </div>
+
+    <div id="exercicios" style="display:none;">
+        <h3 id="exercicioTitulo">Exercícios Interativos</h3>
+        <select id="exercicioSelect" onchange="carregarExercicio()">
+            <option value="">Selecione um Exercício</option>
+        </select>
+        <div id="exercicioDescricao"></div>
+        <textarea id="exercicioCodigo" placeholder="Escreva seu código aqui..."></textarea>
+        <button onclick="executarExercicio()">Executar e Testar</button>
+        <button onclick="mostrarSolucao()">Ver Solução (Penalidade de Pontos)</button>
+        <div id="exercicioOutput"></div>
+        <div id="exercicioMensagem"></div>
+        <pre id="exercicioSolucao" class="language-javascript"></pre>
+        <button onclick="voltarMemorizacao()">Voltar à Memorização</button>
     </div>
 
     <div id="finalMessage">
@@ -338,12 +362,60 @@
         };
         let hints = []; // Dicas por linha
 
+        let exercicios = {
+            "js-basics": [
+                {
+                    titulo: "Exercício 1: Crie uma função que multiplique dois números",
+                    descricao: "Escreva uma função chamada 'multiplicar' que recebe dois parâmetros e retorna o produto deles. Em seguida, chame a função com 4 e 5 e exiba o resultado com console.log.",
+                    template: `function multiplicar(a, b) {\n    // Seu código aqui\n}\nconsole.log(multiplicar(4, 5));`,
+                    testes: [
+                        { input: [4, 5], expected: "20" },
+                        { input: [3, 3], expected: "9" }
+                    ]
+                },
+                {
+                    titulo: "Exercício 2: Declare variáveis e some-as",
+                    descricao: "Declare duas variáveis 'num1' e 'num2' com valores 10 e 20. Some-as e exiba o resultado.",
+                    template: `// Seu código aqui`,
+                    testes: [
+                        { input: [], expected: "30" }
+                    ]
+                }
+            ],
+            "loops": [
+                {
+                    titulo: "Exercício 1: Some números de 1 a 10",
+                    descricao: "Use um loop for para somar números de 1 a 10 e exiba o total.",
+                    template: `let soma = 0;\n// Seu código aqui\nconsole.log(soma);`,
+                    testes: [
+                        { input: [], expected: "55" }
+                    ]
+                },
+                {
+                    titulo: "Exercício 2: Conte regressivamente",
+                    descricao: "Use um loop while para contar de 5 a 1 e exiba cada número.",
+                    template: `let i = 5;\n// Seu código aqui`,
+                    testes: [
+                        { input: [], expected: "5\n4\n3\n2\n1" }
+                    ]
+                }
+            ],
+            // Adicione mais para outros tópicos
+            "arrays": [],
+            "objects": [],
+            "custom": []
+        };
+
+        let exercicioAtual = null;
+        let topicoAtual = "";
+
         function iniciar() {
             const select = document.getElementById("topicSelect").value;
             if (select === "custom") {
                 textoCompleto = document.getElementById("inputText").value.trim();
             } else if (select) {
                 textoCompleto = topicosPredefinidos[select];
+                topicoAtual = select;
             } else {
                 alert("Selecione um tópico ou cole um texto.");
                 return;
@@ -387,6 +459,7 @@
             document.getElementById("hintContainer").style.display = "none";
             document.getElementById("codeOutput").style.display = "none";
             document.getElementById("runButton").style.display = nivelAtual === linhas.length ? "inline-block" : "none";
+            document.getElementById("exerciciosButton").style.display = nivelAtual > linhas.length ? "inline-block" : "none";
             atualizarStats();
             atualizarProgresso();
         }
@@ -417,6 +490,7 @@
                 nivelAtual++;
                 if (nivelAtual > linhas.length) {
                     completarDesafio();
+                    document.getElementById("exerciciosButton").style.display = "inline-block";
                 } else {
                     setTimeout(atualizarNivel, 1500);
                 }
@@ -429,7 +503,6 @@
         }
 
         function completarDesafio() {
-            document.getElementById("memorizacao").style.display = "none";
             document.getElementById("finalMessage").style.display = "block";
             document.getElementById("finalPontos").textContent = pontos;
             salvarProgresso();
@@ -475,7 +548,8 @@
                 nivelAtual,
                 pontos,
                 streak,
-                textoCompleto
+                textoCompleto,
+                topicoAtual
             };
             localStorage.setItem("metodo100Progresso", JSON.stringify(progresso));
             alert("Progresso salvo!");
@@ -490,10 +564,14 @@
                 pontos = progresso.pontos;
                 streak = progresso.streak;
                 textoCompleto = progresso.textoCompleto;
+                topicoAtual = progresso.topicoAtual || "";
                 gerarHints();
                 document.getElementById("setup").style.display = "none";
                 document.getElementById("memorizacao").style.display = "block";
                 atualizarNivel();
+                if (nivelAtual > linhas.length) {
+                    document.getElementById("exerciciosButton").style.display = "inline-block";
+                }
                 alert("Progresso carregado!");
             } else {
                 alert("Nenhum progresso salvo encontrado.");
@@ -509,7 +587,7 @@
             }
         }
 
-        // Eventos de Teclado
+        // Eventos de Teclado para Memorização
         document.addEventListener("keydown", function(e) {
             if (document.getElementById("memorizacao").style.display !== "block") return;
 
@@ -531,6 +609,102 @@
                 validarResposta();
             }
         });
+
+        // Funções para Exercícios
+        function iniciarExercicios() {
+            document.getElementById("memorizacao").style.display = "none";
+            document.getElementById("exercicios").style.display = "block";
+            carregarListaExercicios();
+        }
+
+        function carregarListaExercicios() {
+            const select = document.getElementById("exercicioSelect");
+            select.innerHTML = '<option value="">Selecione um Exercício</option>';
+            if (exercicios[topicoAtual]) {
+                exercicios[topicoAtual].forEach((ex, index) => {
+                    const option = document.createElement("option");
+                    option.value = index;
+                    option.textContent = ex.titulo;
+                    select.appendChild(option);
+                });
+            } else {
+                select.innerHTML += '<option value="">Nenhum exercício disponível para este tópico</option>';
+            }
+        }
+
+        function carregarExercicio() {
+            const index = document.getElementById("exercicioSelect").value;
+            if (index === "") return;
+            exercicioAtual = exercicios[topicoAtual][index];
+            document.getElementById("exercicioTitulo").textContent = exercicioAtual.titulo;
+            document.getElementById("exercicioDescricao").textContent = exercicioAtual.descricao;
+            document.getElementById("exercicioCodigo").value = exercicioAtual.template || "";
+            document.getElementById("exercicioOutput").style.display = "none";
+            document.getElementById("exercicioMensagem").innerHTML = "";
+            document.getElementById("exercicioSolucao").style.display = "none";
+        }
+
+        function executarExercicio() {
+            if (!exercicioAtual) return;
+            const code = document.getElementById("exercicioCodigo").value;
+            const outputDiv = document.getElementById("exercicioOutput");
+            outputDiv.style.display = "block";
+            outputDiv.innerHTML = "";
+
+            try {
+                const consoleOutput = [];
+                const originalConsoleLog = console.log;
+                console.log = (...args) => {
+                    consoleOutput.push(args.map(arg => JSON.stringify(arg)).join(' '));
+                };
+
+                eval(code);
+
+                console.log = originalConsoleLog;
+                const output = consoleOutput.join('\n');
+
+                // Testar contra expected
+                let passed = true;
+                for (let teste of exercicioAtual.testes) {
+                    // Para simplicidade, assumimos que os testes são baseados na saída total
+                    if (output !== teste.expected) {
+                        passed = false;
+                        break;
+                    }
+                }
+
+                if (passed) {
+                    document.getElementById("exercicioMensagem").innerHTML = "<span class='success'>🎉 Correto! +20 pontos!</span>";
+                    pontos += 20;
+                    streak++;
+                } else {
+                    document.getElementById("exercicioMensagem").innerHTML = "<span class='error'>❌ Incorreto. Tente novamente.</span>";
+                    streak = 0;
+                }
+
+                outputDiv.innerHTML = output || "Executado sem saída.";
+            } catch (error) {
+                outputDiv.innerHTML = `<span style="color: red;">Erro: ${error.message}</span>`;
+                document.getElementById("exercicioMensagem").innerHTML = "<span class='error'>❌ Erro na execução.</span>";
+            }
+            atualizarStats();
+        }
+
+        function mostrarSolucao() {
+            if (confirm("Ver a solução custará 10 pontos. Confirmar?")) {
+                pontos = Math.max(0, pontos - 10);
+                const solucaoDiv = document.getElementById("exercicioSolucao");
+                solucaoDiv.textContent = exercicioAtual.template; // Substitua por solução real se disponível
+                Prism.highlightElement(solucaoDiv);
+                solucaoDiv.style.display = "block";
+                atualizarStats();
+            }
+        }
+
+        function voltarMemorizacao() {
+            document.getElementById("exercicios").style.display = "none";
+            document.getElementById("memorizacao").style.display = "block";
+        }
 
         // Auto-highlight no carregamento
         document.addEventListener("DOMContentLoaded", () => {
