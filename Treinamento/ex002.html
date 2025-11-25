@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            background-color: rgb(48, 47, 47);
+        }
+
+        .quadrado {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            height: 200px;
+            background-color: lightblue;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .botao a {
+            text-decoration: none;
+            color: rgb(248, 241, 235);
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            background-color: brown;
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        @keyframes pulsar{
+            0% {
+                transform: rotate(0);
+            }
+
+            50% {
+                transform: rotate(1.5turn);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        .botao:hover{
+            animation: pulsar 0.8s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .txt {
+            display: flex;
+            background-color: salmon;
+            padding: 20px;
+            color: rgb(27, 0, 0);
+            text-align: justify;
+            text-indent: 30px;
+        }
+    </style>
+    <title>Botão e Seção</title>
+</head>
+
+<body>
+    <section>
+        <div class="quadrado">
+            <div class="botao">
+                <a href="../estudos.html">Retornar</a>
+            </div>
+        </div>
+        <div class="txt">
+            <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sit, temporibus. Modi possimus enim neque,
+                molestiae nulla adipisci, asperiores repudiandae incidunt odit eveniet nam sint aut voluptatum, fugiat
+                expedita repellendus accusantium.
+                <br>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint nesciunt nisi voluptatibus at enim
+                voluptatum aliquam dolore, harum eius optio, reprehenderit doloribus quo perspiciatis vero laudantium
+                distinctio neque earum similique.
+            </p>
+        </div>
+    </section>
+</body>
+
+</html>
