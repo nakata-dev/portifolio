@@ -12,7 +12,7 @@ html, body{
 }
 
 main{
-    height: 100vh;
+    height: 100%;
     position: relative;
     
 }
@@ -65,7 +65,7 @@ section#rede-social img:hover{
 
 section#rede-social{
     text-align: right;
-    padding-top: 100px;
+    padding-top: 200px;
     margin-right: 5px;
 }
     
