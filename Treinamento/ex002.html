@@ -29,21 +29,22 @@
 
         .botao a {
             text-decoration: none;
-            color: rgb(248, 241, 235);
+            color: rgb(36, 17, 0);
             font-family: Arial, Helvetica, sans-serif;
             font-weight: bold;
-            background-color: brown;
+            background-color: salmon;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.486);
             padding: 10px;
             border-radius: 15px;
         }
 
-        @keyframes pulsar{
+        @keyframes girar{
             0% {
-                transform: rotate(0);
+                transform: rotate(0deg);
             }
 
             50% {
-                transform: rotate(1.5turn);
+                transform: rotate(720deg);
             }
 
             100% {
@@ -52,8 +53,10 @@
         }
 
         .botao:hover{
-            animation: pulsar 0.8s ease-in-out infinite;
+            animation: girar 0.8s ease-in-out alternate-reverse;
             cursor: pointer;
+            font-weight: bold;
+            transform: scale(1.2);
         }
 
         section {
@@ -73,6 +76,10 @@
             text-align: justify;
             text-indent: 30px;
         }
+        h2{
+            color: white;
+            margin-bottom: 20px;
+        }
     </style>
     <title>Botão e Seção</title>
 </head>
@@ -84,15 +91,20 @@
                 <a href="../estudos.html">Retornar</a>
             </div>
         </div>
+        <h2>COMO FAZER O BOTÃO GIRAR?</h2>
         <div class="txt">
+            <br>
             <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sit, temporibus. Modi possimus enim neque,
-                molestiae nulla adipisci, asperiores repudiandae incidunt odit eveniet nam sint aut voluptatum, fugiat
-                expedita repellendus accusantium.
+                Para você conseguir fazer o botão girar, use o @keyframes (nome do movimento). <br>
                 <br>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint nesciunt nisi voluptatibus at enim
-                voluptatum aliquam dolore, harum eius optio, reprehenderit doloribus quo perspiciatis vero laudantium
-                distinctio neque earum similique.
+                No exemplo acima, o nome do movimento é "girar". <br>
+                <br>
+                Depois, dentro do hover do botão, chame a animação com o nome que você definiu no @keyframes. <br>
+                <br>
+                Exemplo: animation: girar 0.8s ease-in-out reverse; <
+                <br>
+                <br>
+                <em>O importante aqui, é você praticar para poder compreender a fundo cada detalhe, só assim conseguira aprender verdadeiramente cada coisa.</em> <br>
             </p>
         </div>
     </section>
