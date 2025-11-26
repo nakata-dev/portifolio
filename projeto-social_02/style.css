@@ -17,11 +17,14 @@ main{
     position: relative;
     
 }
-body{
+/*body{
     background-image:url('imagens/fundo-madeira.jpg');
     position:no-repeat top center;
     background-size: cover;
     background-attachment: fixed;
+}*/
+body{
+    background-color: #303030;
 }
 
 section#telefone{
