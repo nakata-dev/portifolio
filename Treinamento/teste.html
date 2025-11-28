@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .pai{
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-family: Arial, Helvetica, sans-serif;
+            
+        }
+        .filho{
+            display: flex;
+            background-color: rgb(99, 2, 2);
+            width: 200px;
+            height: 200px;
+            text-align: center;
+            padding: 20px;
+            border-radius: 50px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 29, 0.404);
+            justify-content: center;
+            align-items: center;
+        }
+        .filho:hover{
+            background-image: linear-gradient(to left, blue, rgb(79, 91, 255));
+            color: white;
+        }
+        a:hover{
+            color: white;
+        }
+        a{
+            text-decoration: none;
+            color: rgb(243, 129, 101);
+            font-weight: bold;
+        }
+
+        @keyframes pulsar{
+            0%{
+                transform:scale(1);
+            }
+            50%{
+                transform:scale(1.05);
+            }
+            100%{
+                transform:scale(1);
+            }
+        }
+        .pai{
+            animation:pulsar 0.8s ease-in-out infinite;
+            cursor:pointer;
+        }
+    </style>
+    <title>Teste</title>
+</head>
+<body>
+    <main class="pai">
+        <p class="filho"><a href="https://www.ikigaiweb.com.br">Site IkigaiWeb</a></p>
+    </main>
+</body>
+</html>
