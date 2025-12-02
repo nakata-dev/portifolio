@@ -4,13 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+<!--Terceiro passo - Buscando fontes externas e internas-->    
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Marhey:wght@300..700&display=swap');
 
+    @font-face {
+        src: url("FONTES/Kavivanar/Kavivanar-Regular.ttf") format("truetype");
+        src: url("FONTES/Marhey/Marhey-VariableFont_wght.ttf") format("truetype");
+        src: url("FONTES/Quintessential/Quintessential-Regular.ttf") format("truetype");
+        font-family: "Quintessential";
+        font-family: "Marhey";
+        font-family: "Kavivanar";
+        font-weight: normal;
+        font-style: normal;
+    }
 
-@import url('https://fonts.googleapis.com/css2?family=Marhey:wght@300..700&display=swap');
-
-
+        /*Segundo passo - Escolhendo os detalhes*/
         * {
             box-sizing: border-box;
             padding: 0;
@@ -38,41 +47,42 @@
             padding: 15px;
             border-radius: 50px;
             text-decoration: none;
-            font-family: "Marhey", cursive;
+            font-family:"quintessential";
         }
+/*Quinto passo - configurando Keyframes */
+@keyframes pulsar {
+    0% {
+        transform: scale(1);
+    }
+    
+    50% {
+        transform: scale(1.05);
+    }
+    
+    100% {
+        transform: scale(1);
+    }
+}
 
-        @keyframes pulsar {
-            0% {
-                transform: scale(1);
-            }
+button:hover {
+    animation: pulsar 0.8s ease-in-out infinite;
+    cursor: pointer;
+}
 
-            50% {
-                transform: scale(1.05);
-            }
+button a {
+    text-decoration: none;
+    color: white;
+}
 
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        button:hover {
-            animation: pulsar 0.8s ease-in-out infinite;
-            cursor: pointer;
-        }
-
-        button a {
-            text-decoration: none;
-            color: white;
-        }
-
-        button {
-            background-image: linear-gradient(to right, #E65B5B, #f78080);
-
-        }
-    </style>
-    <title>Botão</title>
+button {
+    background-image: linear-gradient(to right, #E65B5B, #f78080);
+    
+}
+</style>
+<title>Botão</title>
 </head>
 
+<!--Passo 01 - o botão ou button-->
 <body>
     <main>
         <button>
