@@ -1,404 +1,333 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Ikigai Simon - Versão Aprimorada</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simon</title>
+
 <style>
-  :root{
-    --bg:#111217;
-    --panel:#1b1f23;
-    --accent:#1E88E5;
-    --muted:#bfc5cc;
-    --size:440px;
-    --center-size:160px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
-    background:radial-gradient(1200px 600px at 10% 10%, #0f1720 0%, var(--bg) 35%), var(--bg);
-    color:var(--muted);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:32px;
-    gap:28px;
-    flex-direction:column;
-  }
+    *{margin:0;padding:0;box-sizing:border-box;}
 
-  h1{font-size:1.15rem;color:var(--muted);letter-spacing:0.6px}
-  .subinfo{font-size:0.95rem;color:#9aa3ad;margin-top:6px}
+    body{
+        font-family:Arial, sans-serif;
+        background:#1a1a1a;
+        color:white;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        min-height:100vh;
+    }
 
-  /* Container circular */
-  #game-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
-  #game-container{
-    width:var(--size); height:var(--size); position:relative;
-    border-radius:50%;
-    overflow:hidden;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
-    border:10px solid rgba(255,255,255,0.03);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 8px 30px rgba(255,255,255,0.02);
-  }
+    h1{
+        margin-bottom:20px;
+        font-size:2rem;
+        letter-spacing:2px;
+        text-transform:uppercase;
+    }
 
-  /* Quadrantes */
-  .quadrant{
-    position:absolute;
-    width:100%;
-    height:100%;
-    left:0; top:0;
-    cursor:pointer;
-    transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
-    opacity: .95;
-    filter:brightness(1);
-    -webkit-tap-highlight-color: transparent;
-  }
-  .quadrant:active{ transform: scale(0.995) }
+    #game-container{
+        position:relative;
+        width:420px;
+        height:420px;
+        border-radius:50%;
+        overflow:hidden;
+        border:12px solid #000;
+        box-shadow:0 0 30px rgba(255,255,255,0.1);
+    }
 
-  /* shape - wedge from center to edge (5 wedges) */
-  .quadrant{
-    clip-path: polygon(50% 50%, 0 0, 100% 0); /* default; we'll rotate each */
-  }
+    /* QUADRANTES */
+    .quadrant{
+        position:absolute;
+        width:100%;
+        height:100%;
+        clip-path:polygon(50% 50%,0 0,0 100%);
+        opacity:.7;
+        transition:all .2s;
+        cursor:pointer;
+    }
 
-  /* color classes + rotation (5 wedges evenly distributed) */
-  .blue   { background: linear-gradient(180deg,#2b8be8,#1466b8); transform: rotate(-18deg); }
-  .green  { background: linear-gradient(180deg,#4CAF50,#2b8b3b); transform: rotate(54deg);  }
-  .yellow { background: linear-gradient(180deg,#FFD54F,#ffb300); transform: rotate(126deg); }
-  .red    { background: linear-gradient(180deg,#ff6b6b,#d32f2f); transform: rotate(198deg); }
-  .orange { background: linear-gradient(180deg,#FF9800,#ff7a18); transform: rotate(270deg); }
+    .quadrant:hover{
+        opacity:1;
+    }
 
-  /* strong lit effect */
-  .quadrant.lit{
-    filter:brightness(2.6);
-    transform: scale(1.035);
-    box-shadow: 0 0 60px rgba(255,255,255,0.25), inset 0 0 40px rgba(255,255,255,0.08);
-    z-index: 5;
-    transition: transform .08s ease, filter .08s ease;
-  }
+    .blue{background:#2196F3;transform:rotate(18deg);}
+    .green{background:#4CAF50;transform:rotate(90deg);}
+    .yellow{background:#FFEB3B;transform:rotate(162deg);}
+    .red{background:#F44336;transform:rotate(234deg);}
+    .orange{background:#FF9800;transform:rotate(306deg);}
 
-  /* center big black button only */
-  #center {
-    position:absolute;
-    top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    width:var(--center-size);
-    height:var(--center-size);
-    border-radius:50%;
-    background:#0b0b0b;
-    border:6px solid rgba(255,255,255,0.04);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index: 10;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.7), 0 4px 12px rgba(0,0,0,0.6);
-  }
+    .lit{
+        filter:brightness(2);
+        box-shadow:0 0 40px white;
+        opacity:1 !important;
+    }
 
-  #restart-btn{
-    display:inline-block;
-    width:86%;
-    height:86%;
-    border-radius:50%;
-    background:#000;
-    color:#fff;
-    border:4px solid rgba(255,255,255,0.06);
-    font-weight:700;
-    font-size:1.05rem;
-    cursor:pointer;
-    transition:transform .12s ease, box-shadow .12s ease;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  }
-  #restart-btn:hover{ transform:translateY(-3px) scale(1.01) }
-  #restart-btn:active{ transform:scale(.99) }
+    /* CENTRO */
+    #center-panel{
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        width:170px;
+        height:170px;
+        background:black;
+        border-radius:50%;
+        border:5px solid #333;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        padding:10px;
+        gap:12px;
+        box-shadow:0 0 20px rgba(255,255,255,.2);
+    }
 
-  /* info area */
-  .info-row{display:flex;gap:16px;align-items:center}
-  #level-display{font-weight:700;color:#e6eef9;background:linear-gradient(90deg,rgba(255,255,255,0.03), rgba(255,255,255,0.01));padding:8px 12px;border-radius:10px;font-size:0.95rem}
-  #message{font-size:0.95rem;color:#cfe6ff;min-width:260px;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(0,0,0,0.05));}
+    #restart-button{
+        width:120px;
+        height:120px;
+        background:#000;
+        color:white;
+        border:3px solid white;
+        border-radius:50%;
+        font-size:1.1rem;
+        cursor:pointer;
+        transition:.3s;
+    }
 
-  /* small responsive adjustments */
-  @media (max-width:520px){
-    :root{--size:320px;--center-size:120px}
-    #message{min-width:160px}
-  }
+    #restart-button:hover{
+        background:#111;
+        transform:scale(1.05);
+    }
+
+    #message{
+        margin-top:15px;
+        font-size:1.1rem;
+        min-height:25px;
+        text-align:center;
+    }
+
+    #level-display{
+        margin-top:10px;
+        font-size:1rem;
+        opacity:.7;
+    }
 </style>
 </head>
 <body>
-  <div id="game-wrap">
-    <h1>Ikigai Simon</h1>
-    <div class="subinfo">Encontre o ritmo. Toque as cores na mesma ordem.</div>
 
-    <div id="game-container" aria-hidden="false">
-      <!-- 5 quadrantes -->
-      <div class="quadrant blue"   data-color="blue"  role="button" aria-label="blue"></div>
-      <div class="quadrant green"  data-color="green" role="button" aria-label="green"></div>
-      <div class="quadrant yellow" data-color="yellow" role="button" aria-label="yellow"></div>
-      <div class="quadrant red"    data-color="red"    role="button" aria-label="red"></div>
-      <div class="quadrant orange" data-color="orange" role="button" aria-label="orange"></div>
+<h1>Simon</h1>
 
-      <!-- centro com botão REINICIAR apenas -->
-      <div id="center">
-        <button id="restart-btn" title="Reiniciar jogo">REINICIAR</button>
-      </div>
+<div id="game-container">
+
+    <div class="quadrant blue" data-color="blue"></div>
+    <div class="quadrant green" data-color="green"></div>
+    <div class="quadrant yellow" data-color="yellow"></div>
+    <div class="quadrant red" data-color="red"></div>
+    <div class="quadrant orange" data-color="orange"></div>
+
+    <div id="center-panel">
+        <button id="restart-button">Reiniciar</button>
+        <span id="level-display">Nível 1</span>
     </div>
+</div>
 
-    <!-- área de informações -->
-    <div class="info-row">
-      <div id="level-display">Nível 1 / 10</div>
-      <div id="message">Clique em <strong>REINICIAR</strong> para começar</div>
-    </div>
-  </div>
+<div id="message">Clique em Reiniciar para começar!</div>
+
 
 <script>
-/*  Ikigai Simon - Lógica e Áudio com WebAudio
-    - Reiniciar inicia jogo do nível 1
-    - Ao errar, reapresenta a mesma sequência do mesmo nível
-    - Ao acertar, avança nível e adiciona passos
-    - Sons gerados via WebAudio para evitar dependências externas
-*/
 
-(() => {
-  // Configurações
-  const COLORS = ['blue','green','yellow','red','orange'];
-  const LEVEL_LENGTHS = [3,4,5,6,7,8,9,10,11,12]; // 10 níveis
-  const freqMap = {
-    blue: 261.63,   // C4
-    green: 329.63,  // E4
-    yellow: 392.00, // G4
-    red: 523.25,    // C5
-    orange: 440.00  // A4
-  };
-  const noteDuration = 300; // ms
-  const betweenNotes = 220; // ms during playback
-  const strongLightMs = 320;
-
-  // Estado
-  let gameSequence = [];    // sequência atual completa para o nível
-  let playerSequence = [];  // sequência que jogador entrou
-  let level = 1;
-  let isPlaying = false;    // se o jogo está ativo (não necessariamente enquanto exibindo)
-  let canClick = false;     // clicável apenas quando sequência finalizada
-  let audioCtx = null;
-  let masterGain = null;
-
-  // DOM
-  const quadrants = Array.from(document.querySelectorAll('.quadrant'));
-  const restartBtn = document.getElementById('restart-btn');
-  const levelDisplay = document.getElementById('level-display');
-  const messageEl = document.getElementById('message');
-  const container = document.getElementById('game-container');
-
-  // Inicialização de áudio (lazy)
-  function ensureAudio(){
-    if(!audioCtx){
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = audioCtx.createGain();
-      masterGain.gain.value = 0.12; // volume geral
-      masterGain.connect(audioCtx.destination);
+    // Desbloquear áudio no primeiro clique
+let audioUnlocked = false;
+window.addEventListener("click", () => {
+    if (!audioUnlocked) {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        ctx.resume();
+        audioUnlocked = true;
+        console.log("🔊 Áudio desbloqueado!");
     }
-  }
+});
 
-  // Toca um tom com envelope
-  function playTone(freq, duration = noteDuration){
-    ensureAudio();
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(1.0, now + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration/1000);
-    osc.connect(gain);
-    gain.connect(masterGain);
-    osc.start(now);
-    osc.stop(now + duration/1000 + 0.02);
-  }
+// ===========================
+// CONFIGURAÇÃO DO JOGO
+// ===========================
+const COLORS = ["blue", "green", "yellow", "red", "orange"];
+const LEVEL_LENGTHS = [3,4,5,6,7,8,9,10,11,12];
 
-  // Atualiza interface
-  function renderLevel(){
-    levelDisplay.textContent = `Nível ${level} / ${LEVEL_LENGTHS.length}`;
-  }
+let gameSequence = [];
+let playerSequence = [];
+let level = 1;
+let canClick = false;
+let isPlaying = false;
 
-  // Gera (ou completa) a sequência para o nível atual
-  function ensureSequenceForLevel(){
-    const target = LEVEL_LENGTHS[level - 1];
-    while(gameSequence.length < target){
-      const next = COLORS[Math.floor(Math.random()*COLORS.length)];
-      gameSequence.push(next);
-    }
-  }
+// SONS PARA CADA COR
+const sounds = {
+    blue: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c3b9482d1.mp3?filename=ui-confirmation-tone-28647.mp3"),
+    green: new Audio("https://cdn.pixabay.com/download/audio/2022/03/10/audio_a3dfcc5a13.mp3?filename=ui-click-97915.mp3"),
+    yellow: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_30e80217e1.mp3?filename=correct-choice-43861.mp3"),
+    red: new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_3e4160a9e0.mp3?filename=negative_beeps-6008.mp3"),
+    orange: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_d8f5cb918f.mp3?filename=click-21156.mp3"),
 
-  // Limpa sequência do jogador e habilita/reinicia controles
-  function resetPlayerTurn(){
-    playerSequence = [];
-    canClick = false;
-  }
+    error: new Audio("https://cdn.pixabay.com/download/audio/2022/03/01/audio_1b0852a8c9.mp3?filename=error-126627.mp3"),
+    success: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a7f2a7bc3.mp3?filename=success-1-6297.mp3")
+};
 
-  // Acende visual + som de uma cor (utilizado tanto em playback quanto em clique)
-  function flashColor(color){
-    const el = quadrants.find(q => q.dataset.color === color);
-    if(!el) return;
-    el.classList.add('lit');
-    // usar cor para som
-    const freq = freqMap[color] || 330;
-    playTone(freq, noteDuration);
-    // limpar visual após tempo
-    setTimeout(()=> {
-      el.classList.remove('lit');
-    }, strongLightMs);
-  }
 
-  // Exibe a sequência (usando async/await para evitar intervals)
-  async function playSequence(){
-    canClick = false;
-    messageEl.textContent = 'Observe a sequência...';
-    // curta pausa antes de iniciar
-    await wait(350);
-    const target = gameSequence.slice(0); // cópia
-    for(let i=0;i<target.length;i++){
-      flashColor(target[i]);
-      await wait(betweenNotes + 10);
-    }
-    // pronto para o jogador
-    canClick = true;
-    messageEl.textContent = 'Sua vez!';
-  }
+const quadrants = document.querySelectorAll(".quadrant");
+const message = document.getElementById("message");
+const levelDisplay = document.getElementById("level-display");
+const restartBtn = document.getElementById("restart-button");
 
-  // Promessa de espera
-  function wait(ms){ return new Promise(res => setTimeout(res, ms)); }
 
-  // Ao jogador clicar num quadrante
-  async function onPlayerClick(e){
-    if(!canClick || !isPlaying) return;
-    const color = e.currentTarget.dataset.color;
-    if(!color) return;
-
-    // tocar e animar
-    flashColor(color);
-
-    // gravar entrada do jogador
-    playerSequence.push(color);
-    const step = playerSequence.length - 1;
-
-    // verificação imediata
-    if(playerSequence[step] !== gameSequence[step]){
-      // erro
-      canClick = false;
-      messageEl.textContent = 'Infelizmente você errou!';
-      await wait(700);
-      // reapresentar a mesma sequência do mesmo nível (não reduz o level)
-      playerSequence = [];
-      await wait(400);
-      await playSequence();
-      return;
-    }
-
-    // se completou a sequência
-    if(playerSequence.length === gameSequence.length){
-      // acertou o nível
-      canClick = false;
-      // se foi o último nível
-      if(level === LEVEL_LENGTHS.length){
-        messageEl.textContent = 'PARABÉNS! Você venceu todos os níveis!';
-        // pequeno efeito de vitória
-        await celebration();
-        // reinicia jogo do nível 1 automaticamente
-        await wait(700);
-        startNewGame();
-        return;
-      }
-      // avança de nível
-      messageEl.textContent = 'Parabéns, você acertou!';
-      await wait(900);
-      level++;
-      renderLevel();
-      // gerar os passos que faltam para o novo nível (mantendo a sequência anterior)
-      ensureSequenceForLevel();
-      resetPlayerTurn();
-      await wait(600);
-      await playSequence();
-    }
-  }
-
-  // Pequena animação de vitória: acende todas as cores rapidamente
-  async function celebration(){
-    const order = ['blue','green','yellow','orange','red'];
-    for(let i=0;i<3;i++){
-      for(const c of order){
-        flashColor(c);
-        await wait(80);
-      }
-    }
-  }
-
-  // Inicia um novo jogo do nível 1
-  async function startNewGame(){
-    // ativa audio context caso bloqueado em alguns browsers (require user gesture)
-    ensureAudio();
-    gameSequence = []; // substituir
-    // (por segurança) recriar array vazio - precisamos sobrescrever referência
-    gameSequence.length = 0;
-    playerSequence = [];
+// ===========================
+// INÍCIO DO JOGO
+// ===========================
+function startGame(){
     level = 1;
+    gameSequence = [];
     isPlaying = true;
-    renderLevel();
-    messageEl.textContent = 'Iniciando...';
-    await wait(300);
-    ensureSequenceForLevel();
-    await playSequence();
-  }
+    message.textContent = "Observe a sequência...";
+    levelDisplay.textContent = `Nível ${level}`;
+    setTimeout(buildSequence, 800);
+}
 
-  // Reinicia o mesmo nível (usado ao reiniciar manualmente)
-  async function restartSameLevel(){
-    playerSequence = [];
+
+// ===========================
+// GERAR SEQUÊNCIA DO NÍVEL
+// ===========================
+function buildSequence(){
     canClick = false;
-    messageEl.textContent = 'Reiniciando nível...';
-    await wait(300);
-    // rebuild sequence for current level (if shorter than target, complete it; if longer, truncate)
+    playerSequence = [];
+
     const target = LEVEL_LENGTHS[level - 1];
-    // if sequence is longer than target (should not) truncate
-    gameSequence = gameSequence.slice(0, target);
+
     while(gameSequence.length < target){
-      const next = COLORS[Math.floor(Math.random()*COLORS.length)];
-      gameSequence.push(next);
+        gameSequence.push(COLORS[Math.floor(Math.random() * COLORS.length)]);
     }
-    await playSequence();
-  }
 
-  // ======== Eventos e binding ========
-  quadrants.forEach(q => {
-    q.addEventListener('click', onPlayerClick);
-    // suporte toque: touchstart -> treat as click
-    q.addEventListener('touchstart', (ev) => {
-      ev.preventDefault();
-      q.classList.remove('lit'); // remove eventual focus
-      // dispatch click
-      q.click();
-    }, {passive:false});
-  });
+    playSequence();
+}
 
-  // REINICIAR botão (central)
-  restartBtn.addEventListener('click', async () => {
-    // se não houver áudio inicializado, init with user gesture
-    ensureAudio();
-    // se jogo não começou, start new game; se já está em jogo, reinicia o nível atual
-    if(!isPlaying){
-      await startNewGame();
-    } else {
-      // reiniciar nível atual (mantendo progresso do level)
-      await restartSameLevel();
+
+// ===========================
+// EXECUTAR SEQUÊNCIA
+// ===========================
+function playSequence(){
+    let i = 0;
+    const delay = level <= 5 ? 900 : 550;
+
+    const interval = setInterval(() => {
+        const color = gameSequence[i];
+        lightUp(color);
+        playSound(color);
+
+        i++;
+        if(i >= gameSequence.length){
+            clearInterval(interval);
+
+            setTimeout(() => {
+                message.textContent = "Sua vez!";
+                canClick = true;
+            }, delay);
+        }
+    }, delay);
+}
+
+
+// ===========================
+// EFEITOS VISUAIS E SONOROS
+// ===========================
+function lightUp(color){
+    const el = [...quadrants].find(q => q.dataset.color === color);
+    el.classList.add("lit");
+    setTimeout(() => el.classList.remove("lit"), 300);
+}
+
+function playSound(color){
+    const s = sounds[color];
+    if(s){
+        s.volume = 0.8; // aumenta volume
+        s.currentTime = 0;
+        s.play().catch(()=>{});
     }
-  });
+}
 
-  // Inicial render
-  renderLevel();
 
-  // Expor para console debug (opcional)
-  window.ikigaiSimon = {
-    startNewGame, restartSameLevel, get state(){ return {level,gameSequence,playerSequence,isPlaying,canClick} }
-  };
 
-})(); 
+// ===========================
+// CLIQUE DO JOGADOR
+// ===========================
+function handleClick(e){
+    if(!canClick) return;
+
+    const color = e.target.dataset.color;
+
+    lightUp(color);
+    playSound(color);
+    playerSequence.push(color);
+
+    const index = playerSequence.length - 1;
+
+    // ERRO
+    if(playerSequence[index] !== gameSequence[index]){
+        errorFeedback();
+        return;
+    }
+
+    // SE ACERTOU A SEQUÊNCIA COMPLETA
+    if(playerSequence.length === gameSequence.length){
+        correctFeedback();
+    }
+}
+
+
+// ===========================
+// FEEDBACK DE ACERTO
+// ===========================
+function correctFeedback(){
+    canClick = false;
+    sounds.success.play();
+
+    message.textContent = "Parabéns, você acertou!";
+
+    if(level === LEVEL_LENGTHS.length){
+        message.textContent = "VOCÊ VENCEU TODO O JOGO!";
+        return setTimeout(startGame, 2500);
+    }
+
+    level++;
+    levelDisplay.textContent = `Nível ${level}`;
+
+    setTimeout(buildSequence, 1500);
+}
+
+
+// ===========================
+// FEEDBACK DE ERRO
+// ===========================
+function errorFeedback(){
+    canClick = false;
+    isPlaying = false;
+
+    sounds.error.play();
+    message.textContent = "Você errou! Reiniciando...";
+
+    document.body.style.background = "#5a0000";
+    setTimeout(() => {
+        document.body.style.background = "#1a1a1a";
+    }, 600);
+
+    setTimeout(startGame, 2000);
+}
+
+
+// ===========================
+// EVENTOS
+// ===========================
+quadrants.forEach(q => q.addEventListener("click", handleClick));
+restartBtn.addEventListener("click", startGame);
+
 </script>
 </body>
 </html>
