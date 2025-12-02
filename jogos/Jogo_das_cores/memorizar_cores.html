@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simon</title>
+
+<style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+
+    body{
+        font-family:Arial, sans-serif;
+        background:#1a1a1a;
+        color:white;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        min-height:100vh;
+    }
+
+    h1{
+        margin-bottom:20px;
+        font-size:2rem;
+        letter-spacing:2px;
+        text-transform:uppercase;
+    }
+
+    #game-container{
+        position:relative;
+        width:420px;
+        height:420px;
+        border-radius:50%;
+        overflow:hidden;
+        border:12px solid #000;
+        box-shadow:0 0 30px rgba(255,255,255,0.1);
+    }
+
+    /* QUADRANTES */
+    .quadrant{
+        position:absolute;
+        width:100%;
+        height:100%;
+        clip-path:polygon(50% 50%,0 0,0 100%);
+        opacity:.7;
+        transition:all .2s;
+        cursor:pointer;
+    }
+
+    .quadrant:hover{
+        opacity:1;
+    }
+
+    .blue{background:#2196F3;transform:rotate(18deg);}
+    .green{background:#4CAF50;transform:rotate(90deg);}
+    .yellow{background:#FFEB3B;transform:rotate(162deg);}
+    .red{background:#F44336;transform:rotate(234deg);}
+    .orange{background:#FF9800;transform:rotate(306deg);}
+
+    .lit{
+        filter:brightness(2);
+        box-shadow:0 0 40px white;
+        opacity:1 !important;
+    }
+
+    /* CENTRO */
+    #center-panel{
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+        width:170px;
+        height:170px;
+        background:black;
+        border-radius:50%;
+        border:5px solid #333;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        padding:10px;
+        gap:12px;
+        box-shadow:0 0 20px rgba(255,255,255,.2);
+    }
+
+    #restart-button{
+        width:120px;
+        height:120px;
+        background:#000;
+        color:white;
+        border:3px solid white;
+        border-radius:50%;
+        font-size:1.1rem;
+        cursor:pointer;
+        transition:.3s;
+    }
+
+    #restart-button:hover{
+        background:#111;
+        transform:scale(1.05);
+    }
+
+    #message{
+        margin-top:15px;
+        font-size:1.1rem;
+        min-height:25px;
+        text-align:center;
+    }
+
+    #level-display{
+        margin-top:10px;
+        font-size:1rem;
+        opacity:.7;
+    }
+</style>
+</head>
+<body>
+
+<h1>Simon</h1>
+
+<div id="game-container">
+
+    <div class="quadrant blue" data-color="blue"></div>
+    <div class="quadrant green" data-color="green"></div>
+    <div class="quadrant yellow" data-color="yellow"></div>
+    <div class="quadrant red" data-color="red"></div>
+    <div class="quadrant orange" data-color="orange"></div>
+
+    <div id="center-panel">
+        <button id="restart-button">Reiniciar</button>
+        <span id="level-display">Nível 1</span>
+    </div>
+</div>
+
+<div id="message">Clique em Reiniciar para começar!</div>
+
+
+<script>
+
+    // Desbloquear áudio no primeiro clique
+let audioUnlocked = false;
+window.addEventListener("click", () => {
+    if (!audioUnlocked) {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        ctx.resume();
+        audioUnlocked = true;
+        console.log("🔊 Áudio desbloqueado!");
+    }
+});
+
+// ===========================
+// CONFIGURAÇÃO DO JOGO
+// ===========================
+const COLORS = ["blue", "green", "yellow", "red", "orange"];
+const LEVEL_LENGTHS = [3,4,5,6,7,8,9,10,11,12];
+
+let gameSequence = [];
+let playerSequence = [];
+let level = 1;
+let canClick = false;
+let isPlaying = false;
+
+// SONS PARA CADA COR
+const sounds = {
+    blue: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c3b9482d1.mp3?filename=ui-confirmation-tone-28647.mp3"),
+    green: new Audio("https://cdn.pixabay.com/download/audio/2022/03/10/audio_a3dfcc5a13.mp3?filename=ui-click-97915.mp3"),
+    yellow: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_30e80217e1.mp3?filename=correct-choice-43861.mp3"),
+    red: new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_3e4160a9e0.mp3?filename=negative_beeps-6008.mp3"),
+    orange: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_d8f5cb918f.mp3?filename=click-21156.mp3"),
+
+    error: new Audio("https://cdn.pixabay.com/download/audio/2022/03/01/audio_1b0852a8c9.mp3?filename=error-126627.mp3"),
+    success: new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a7f2a7bc3.mp3?filename=success-1-6297.mp3")
+};
+
+
+const quadrants = document.querySelectorAll(".quadrant");
+const message = document.getElementById("message");
+const levelDisplay = document.getElementById("level-display");
+const restartBtn = document.getElementById("restart-button");
+
+
+// ===========================
+// INÍCIO DO JOGO
+// ===========================
+function startGame(){
+    level = 1;
+    gameSequence = [];
+    isPlaying = true;
+    message.textContent = "Observe a sequência...";
+    levelDisplay.textContent = `Nível ${level}`;
+    setTimeout(buildSequence, 800);
+}
+
+
+// ===========================
+// GERAR SEQUÊNCIA DO NÍVEL
+// ===========================
+function buildSequence(){
+    canClick = false;
+    playerSequence = [];
+
+    const target = LEVEL_LENGTHS[level - 1];
+
+    while(gameSequence.length < target){
+        gameSequence.push(COLORS[Math.floor(Math.random() * COLORS.length)]);
+    }
+
+    playSequence();
+}
+
+
+// ===========================
+// EXECUTAR SEQUÊNCIA
+// ===========================
+function playSequence(){
+    let i = 0;
+    const delay = level <= 5 ? 900 : 550;
+
+    const interval = setInterval(() => {
+        const color = gameSequence[i];
+        lightUp(color);
+        playSound(color);
+
+        i++;
+        if(i >= gameSequence.length){
+            clearInterval(interval);
+
+            setTimeout(() => {
+                message.textContent = "Sua vez!";
+                canClick = true;
+            }, delay);
+        }
+    }, delay);
+}
+
+
+// ===========================
+// EFEITOS VISUAIS E SONOROS
+// ===========================
+function lightUp(color){
+    const el = [...quadrants].find(q => q.dataset.color === color);
+    el.classList.add("lit");
+    setTimeout(() => el.classList.remove("lit"), 300);
+}
+
+function playSound(color){
+    const s = sounds[color];
+    if(s){
+        s.volume = 0.8; // aumenta volume
+        s.currentTime = 0;
+        s.play().catch(()=>{});
+    }
+}
+
+
+
+// ===========================
+// CLIQUE DO JOGADOR
+// ===========================
+function handleClick(e){
+    if(!canClick) return;
+
+    const color = e.target.dataset.color;
+
+    lightUp(color);
+    playSound(color);
+    playerSequence.push(color);
+
+    const index = playerSequence.length - 1;
+
+    // ERRO
+    if(playerSequence[index] !== gameSequence[index]){
+        errorFeedback();
+        return;
+    }
+
+    // SE ACERTOU A SEQUÊNCIA COMPLETA
+    if(playerSequence.length === gameSequence.length){
+        correctFeedback();
+    }
+}
+
+
+// ===========================
+// FEEDBACK DE ACERTO
+// ===========================
+function correctFeedback(){
+    canClick = false;
+    sounds.success.play();
+
+    message.textContent = "Parabéns, você acertou!";
+
+    if(level === LEVEL_LENGTHS.length){
+        message.textContent = "VOCÊ VENCEU TODO O JOGO!";
+        return setTimeout(startGame, 2500);
+    }
+
+    level++;
+    levelDisplay.textContent = `Nível ${level}`;
+
+    setTimeout(buildSequence, 1500);
+}
+
+
+// ===========================
+// FEEDBACK DE ERRO
+// ===========================
+function errorFeedback(){
+    canClick = false;
+    isPlaying = false;
+
+    sounds.error.play();
+    message.textContent = "Você errou! Reiniciando...";
+
+    document.body.style.background = "#5a0000";
+    setTimeout(() => {
+        document.body.style.background = "#1a1a1a";
+    }, 600);
+
+    setTimeout(startGame, 2000);
+}
+
+
+// ===========================
+// EVENTOS
+// ===========================
+quadrants.forEach(q => q.addEventListener("click", handleClick));
+restartBtn.addEventListener("click", startGame);
+
+</script>
+</body>
+</html>
