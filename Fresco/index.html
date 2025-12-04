@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template - Fresco Pizzaria</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* =================================
+        1. RESET E VARIAVEIS GLOBAIS
+        ================================= */
+        :root {
+            --primary-color: #ff9800; /* Laranja do botão Contato */
+            --text-color: #333;
+            --light-bg: #fff;
+            --header-height: 80px;
+            --max-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: var(--text-color);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+
+        /* Container principal que centraliza o conteúdo */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* =================================
+        2. HEADER & NAVEGAÇÃO
+        ================================= */
+        header {
+            background-color: var(--light-bg);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--header-height);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-height);
+        }
+
+        /* LOGO / Nome da Empresa */
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 40px; /* Ajuste o tamanho da logo */
+            margin-right: 10px;
+        }
+
+        /* Menu Principal */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        .nav-menu a {
+            padding: 5px 0;
+            font-weight: 500;
+        }
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* O botão de "Contato" destacado */
+        .btn-contact {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-contact:hover {
+            background-color: #e68900; /* Um tom mais escuro */
+        }
+
+        /* Menu de ícones sociais (opcional, como visto na imagem) */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-left: 20px;
+        }
+        .social-icons a {
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+
+
+        /* =================================
+        3. HERO SECTION / CONTEÚDO PRINCIPAL
+        ================================= */
+        .hero-section {
+            background-color: var(--light-bg);
+            padding: 40px 0;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .inner-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        /* Estilo para a imagem grande central (como visto na imagem de referência) */
+        .large-image-container {
+            width: 100%;
+            height: 500px; /* Altura padrão, ajuste conforme necessário */
+            background-color: #333; /* Cor para simular o fundo da foto */
+            background-image: url('caminho/para/sua/imagem-principal.jpg'); /* Sua imagem */
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+            margin-bottom: 40px;
+        }
+
+        /* =================================
+        4. MEDIA QUERIES (Responsividade)
+        ================================= */
+        @media (max-width: 900px) {
+            .nav-menu {
+                display: none; /* Esconde o menu principal em telas menores */
+            }
+            .navbar {
+                justify-content: space-around; /* Centraliza logo e botão */
+            }
+            .social-icons {
+                display: none; /* Esconde ícones sociais em mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container navbar">
+            <a href="#" class="logo">
+                Fresco Pizzaria
+            </a>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Notícias</a></li>
+                    <li><a href="#">Cardápio</a></li>
+                    <li><a href="#">Quem Somos</a></li>
+                </ul>
+            </nav>
+
+            <div style="display: flex; align-items: center;">
+                <a href="#" class="btn-contact">Contato</a>
+                
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            
+            <section class="hero-section">
+                
+                <div class="large-image-container">
+                    </div>
+
+                <div class="inner-content">
+                    <h2>ESPECIALIDADES ITALIANAS</h2>
+                    <p>Comida boa | Bom vinho</p>
+                    <p>Reconhecido pela boa comida e bebida desde 1978. Premiada pelo instituto de qualidade culinária e oferecendo os melhores serviços.</p>
+                    <a href="#" class="btn-contact" style="margin-top: 15px; display: inline-block;">Mais sobre nós</a>
+                </div>
+                
+                <div class="inner-content">
+                    <h2>Nosso Cardápio</h2>
+                    <p>Estrutura para itens de menu...</p>
+                    <a href="#" style="color: blue;">CARDÁPIO COMPLETO</a>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container" style="text-align: center; padding: 20px 0; border-top: 1px solid #ddd; margin-top: 30px;">
+            <p>Fresco © 2025 | Desenvolvido por Ailton A. Nakata</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
