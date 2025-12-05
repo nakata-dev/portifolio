@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Tabela de Pontuação</title>
+
 <style>
     body {
         background: #0d0d0d;
@@ -70,14 +71,12 @@
         width: 100%;
     }
 
-    .icon {
-        font-size: 30px;
+    .icon-symbol {
         position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0.92;
+        top: 2px;
+        right: 4px;
+        font-size: 16px;
+        opacity: 0.9;
         pointer-events: none;
     }
 
@@ -107,7 +106,7 @@
         table { font-size: 13px; }
         th, td { padding: 6px; font-size: 12px; }
         select, input { font-size: 12px; }
-        .icon { font-size: 24px; }
+        .icon-symbol { font-size: 14px; }
     }
 
     footer{
@@ -151,7 +150,7 @@ const STORAGE_KEY = 'scoreboard_names_v2';
 let nomes = [];
 let jogadoresAtuais = 0;
 
-/* ----- STORAGE ----- */
+/* ---------- STORAGE ---------- */
 function salvarNomes() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes));
 }
@@ -180,7 +179,7 @@ function limparNomesSalvos() {
     gerarTopo();
 }
 
-/* ----- RENDER ----- */
+/* ---------- RENDER ---------- */
 function gerarTopo() {
     const topo = document.getElementById("topo-nomes");
     topo.innerHTML = "<th>Nome</th>";
@@ -215,7 +214,7 @@ function gerarTabela() {
 
         for (let j = 0; j < rodadas; j++) {
             linha += `
-            <td onclick="abrirMenu(this)">
+            <td class="cell-ponto">
                 <span class="score">-</span>
             </td>`;
         }
@@ -227,7 +226,7 @@ function gerarTabela() {
     gerarTopo();
 }
 
-/* ----- Nomes ----- */
+/* ---------- Nomes ---------- */
 function onInputNome(index, valor) {
     nomes[index] = valor;
     salvarNomes();
@@ -254,8 +253,16 @@ function salvarNomesDosInputs() {
     salvarNomes();
 }
 
-/* ----- MENU DE PONTUAÇÃO CORRIGIDO ----- */
+/* ---------- MENU EM CELULAR (pointerdown) ---------- */
+document.addEventListener("pointerdown", function(e) {
+    const celula = e.target.closest(".cell-ponto");
+    if (celula) abrirMenu(celula);
+});
+
+/* ---------- MENU DE PONTOS ---------- */
 function abrirMenu(celula) {
+
+    celula.innerHTML = ""; // limpa conteúdo
 
     const menu = document.createElement("select");
     menu.innerHTML = `
@@ -276,52 +283,54 @@ function abrirMenu(celula) {
     `;
 
     menu.style.position = "absolute";
-    menu.style.left = 0;
     menu.style.top = 0;
+    menu.style.left = 0;
     menu.style.width = "100%";
     menu.style.height = "100%";
     menu.style.zIndex = "999";
 
-    celula.innerHTML = "";
     celula.appendChild(menu);
     menu.focus();
 
-    menu.onchange = () => {
-        atualizarCelula(celula, menu.value);
-    };
-
-    menu.onblur = () => {
-        atualizarCelula(celula, menu.value);
-    };
+    menu.onchange = () => atualizarCelula(celula, menu.value);
+    menu.onblur   = () => atualizarCelula(celula, menu.value);
 }
 
 function atualizarCelula(celula, val) {
     celula.innerHTML = "";
 
+    let numero = "-";
+
+    if (!isNaN(val) && val !== "") {
+        numero = val;
+    }
+
+    celula.innerHTML = `<span class="score">${numero}</span>`;
+
     if (val === "T") {
-        celula.innerHTML = `<div class="icon">▲</div>`;
-    } else if (val === "C") {
-        celula.innerHTML = `<div class="icon">○</div>`;
-    } else {
-        celula.innerHTML = `<span class="score">${val || "-"}</span>`;
+        celula.innerHTML += `<span class="icon-symbol">▲</span>`;
+    }
+
+    if (val === "C") {
+        celula.innerHTML += `<span class="icon-symbol">○</span>`;
     }
 }
 
-/* ----- NOVO JOGO ----- */
+/* ---------- NOVO JOGO ---------- */
 function novoJogo() {
-    document.querySelectorAll("td").forEach(td => {
-        if (!td.querySelector("input")) td.innerHTML = `<span class="score">-</span>`;
+    document.querySelectorAll(".cell-ponto").forEach(td => {
+        td.innerHTML = `<span class="score">-</span>`;
     });
 }
 
-/* ----- UTILS ----- */
+/* ---------- UTILS ---------- */
 function escapeHtml(str) {
     return String(str || '').replace(/[&<>"']/g, m => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[m]));
 }
 
-/* ----- INIT ----- */
+/* ---------- INIT ---------- */
 function init() {
     if (!carregarNomes()) {
         nomes = Array(4).fill("");
