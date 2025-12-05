@@ -6,30 +6,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caderno de Vendas — Simples</title>
 
-    <!-- PDF — ADIÇÃO -->
+    <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
+        /* ------------------------- */
+        /*        VARIÁVEIS          */
+        /* ------------------------- */
+        :root {
+            --bg: #f5f6fa;
+            --page-bg: #ffffff;
+            --text: #1a1a1a;
+
+            --input-bg: #ffffff;
+            --input-border: #c5c5c5;
+
+            --btn-primary: #006aff;
+            --btn-primary-hover: #247df8;
+
+            --btn-pdf: #0a5;
+            --btn-pdf-hover: #0c7;
+
+            --btn-clear: #b30000;
+            --btn-clear-hover: #ff1a1a;
+
+            --table-border: #e1e1e1;
+
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        /* ------------------------- */
+        /*        MODO ESCURO        */
+        /* ------------------------- */
+        body.dark {
+            --bg: #0f0f0f;
+            --page-bg: #1a1a1a;
+            --text: #eaeaea;
+
+            --input-bg: #2a2a2a;
+            --input-border: #444;
+
+            --btn-primary: #0d6efd;
+            --btn-primary-hover: #3b82f6;
+
+            --btn-pdf: #00994d;
+            --btn-pdf-hover: #00cc66;
+
+            --btn-clear: #cc0000;
+            --btn-clear-hover: #ff3333;
+
+            --table-border: #333;
+
+            --shadow: rgba(255, 255, 255, 0.06);
+        }
+
+        /* ------------------------- */
+        /*         ESTILOS           */
+        /* ------------------------- */
+
         body {
             font-family: "Segoe UI", Arial, sans-serif;
-            background: #f5f6fa;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 20px;
+            transition: 0.3s ease;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 28px;
         }
 
+        /* BOTÃO TEMA */
+        .btn-theme {
+            display: block;
+            margin: 0 auto 20px auto;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: var(--btn-primary);
+            color: white;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .btn-theme:hover {
+            background: var(--btn-primary-hover);
+        }
+
         .page {
-            background: #fff;
+            background: var(--page-bg);
             padding: 20px;
             max-width: 950px;
             margin: 0 auto;
             border-radius: 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 12px var(--shadow);
+            transition: 0.3s ease;
         }
 
         /* FORM GRID */
@@ -39,21 +114,23 @@
             gap: 12px;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--table-border);
         }
 
         .form input,
         .form select {
             padding: 10px;
-            border: 1px solid #5f5f5f;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 8px;
             font-size: 15px;
-            width: 90%;
+            width: 100%;
+            color: var(--text);
         }
 
         .btn {
             width: 100%;
-            background: #006AFF;
+            background: var(--btn-primary);
             border: none;
             color: white;
             padding: 12px;
@@ -64,12 +141,12 @@
         }
 
         .btn:hover {
-            background: #247df8;
+            background: var(--btn-primary-hover);
         }
 
         .btn-pdf {
             width: 100%;
-            background: #0a5;
+            background: var(--btn-pdf);
             border: none;
             color: white;
             padding: 12px;
@@ -80,13 +157,12 @@
         }
 
         .btn-pdf:hover {
-            background: #0c7;
+            background: var(--btn-pdf-hover);
         }
 
-        /* NOVA: botão limpar */
         .btn-clear {
             width: 100%;
-            background: #b30000;
+            background: var(--btn-clear);
             border: none;
             color: white;
             padding: 12px;
@@ -97,22 +173,23 @@
         }
 
         .btn-clear:hover {
-            background: #ff1a1a;
+            background: var(--btn-clear-hover);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            background: white;
+            background: var(--page-bg);
         }
 
         table th,
         table td {
-            border-bottom: 1px solid #ececec;
+            border-bottom: 1px solid var(--table-border);
             padding: 20px;
             text-align: left;
             font-size: 15px;
+            color: var(--text);
         }
 
         .delete-btn {
@@ -130,7 +207,7 @@
         }
 
         .edit-btn {
-            background: #006AFF;
+            background: var(--btn-primary);
             color: white;
             padding: 6px 10px;
             font-size: 13px;
@@ -141,17 +218,13 @@
         }
 
         .edit-btn:hover {
-            background: #247df8;
+            background: var(--btn-primary-hover);
         }
 
         .totals {
             text-align: right;
             margin-top: 20px;
             font-size: 18px;
-        }
-
-        .totals div {
-            margin-bottom: 6px;
         }
 
         footer {
@@ -161,12 +234,9 @@
             color: #777;
         }
 
-        h2 {
-            text-align: center;
-        }
-
         /* RESPONSIVIDADE */
         @media (max-width: 650px) {
+
             table thead {
                 display: none;
             }
@@ -180,11 +250,11 @@
             }
 
             table tr {
-                background: #fff;
+                background: var(--page-bg);
                 margin-bottom: 12px;
                 padding: 12px;
                 border-radius: 10px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+                box-shadow: 0 2px 6px var(--shadow);
             }
 
             table td {
@@ -193,26 +263,11 @@
                 font-size: 15px;
                 display: flex;
                 justify-content: space-between;
-                gap: 10px;
             }
 
             table td::before {
                 content: attr(data-label);
                 font-weight: bold;
-                color: #333;
-            }
-
-            .delete-btn,
-            .edit-btn {
-                width: 48%;
-                padding: 10px 0;
-                font-size: 15px;
-            }
-                /* Força os botões a ocuparem metade da linha no celular */
-                .btn,
-                .btn-pdf,
-                .btn-clear {
-                    width: auto !important;
             }
         }
     </style>
@@ -221,6 +276,9 @@
 <body>
 
     <h1>Caderno de Vendas</h1>
+
+    <!-- Botão Tema -->
+    <button id="toggleTheme" class="btn-theme">🌙 Modo Escuro</button>
 
     <div class="page">
 
@@ -242,8 +300,6 @@
 
             <button class="btn" onclick="adicionarVenda()">Adicionar</button>
             <button class="btn-pdf" onclick="gerarPDF()">Gerar PDF</button>
-
-            <!-- NOVO BOTÃO -->
             <button class="btn-clear" onclick="limparMes()">Limpar</button>
         </div>
 
@@ -264,7 +320,6 @@
             <tbody id="tabela"></tbody>
         </table>
 
-        <!-- Totais -->
         <div class="totals">
             <div><strong>Total Diário:</strong> <span id="totalDia">R$ 0,00</span></div>
             <div><strong>Total Mensal:</strong> <span id="totalMes">R$ 0,00</span></div>
@@ -296,9 +351,7 @@
 
             if (editandoId !== null) {
                 const i = vendas.findIndex(v => v.id === editandoId);
-
                 vendas[i] = { id: editandoId, data, produto, codigo, pagamento, obs, valor };
-
                 editandoId = null;
                 document.querySelector(".btn").textContent = "Adicionar";
             } else {
@@ -365,18 +418,18 @@
             vendas.forEach(v => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-            <td data-label="#">${v.id}</td>
-            <td data-label="Data">${v.data}</td>
-            <td data-label="Produto">${v.produto}</td>
-            <td data-label="Código">${v.codigo}</td>
-            <td data-label="Pagamento">${v.pagamento}</td>
-            <td data-label="Obs">${v.obs}</td>
-            <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
-            <td data-label="Ação">
-                <button class="delete-btn" onclick="deletarVenda(${v.id})">Apagar ❌</button>
-                <button class="edit-btn" onclick="editarVenda(${v.id})">Editar ✏️</button>
-            </td>
-        `;
+                <td data-label="#">${v.id}</td>
+                <td data-label="Data">${v.data}</td>
+                <td data-label="Produto">${v.produto}</td>
+                <td data-label="Código">${v.codigo}</td>
+                <td data-label="Pagamento">${v.pagamento}</td>
+                <td data-label="Obs">${v.obs}</td>
+                <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
+                <td data-label="Ação">
+                    <button class="delete-btn" onclick="deletarVenda(${v.id})">Apagar ❌</button>
+                    <button class="edit-btn" onclick="editarVenda(${v.id})">Editar ✏️</button>
+                </td>
+            `;
                 tabela.appendChild(tr);
             });
 
@@ -410,7 +463,7 @@
             const pdf = new jsPDF();
 
             pdf.setFontSize(14);
-            pdf.text("Relatório de Vendas - Itiban Presentes", 10, 15);
+            pdf.text("Relatório de Vendas", 10, 15);
 
             pdf.setFontSize(11);
             let y = 30;
@@ -435,7 +488,7 @@
             pdf.save("vendas.pdf");
         }
 
-        /* --------------------- NOVA FUNÇÃO: LIMPAR MÊS --------------------- */
+        /* --------------------- LIMPAR MÊS --------------------- */
         function limparMes() {
             if (!confirm("Tem certeza que deseja limpar todas as vendas do mês?")) return;
 
@@ -445,10 +498,29 @@
             alert("Vendas do mês apagadas com sucesso!");
         }
 
-        /* Inicialização */
+        /* --------------------- TEMA ESCURO --------------------- */
+        const btnTheme = document.getElementById("toggleTheme");
+
+        btnTheme.addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+
+            const dark = document.body.classList.contains("dark");
+            localStorage.setItem("tema_vendas", dark ? "dark" : "light");
+
+            btnTheme.textContent = dark ? "☀️ Modo Claro" : "🌙 Modo Escuro";
+        });
+
+        // Carrega o tema salvo
+        window.onload = () => {
+            const tema = localStorage.getItem("tema_vendas");
+            if (tema === "dark") {
+                document.body.classList.add("dark");
+                btnTheme.textContent = "☀️ Modo Claro";
+            }
+        };
+
         atualizarTabela();
         calcularTotais();
-
     </script>
 
 </body>
