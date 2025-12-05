@@ -180,27 +180,65 @@ footer{
     cursor: pointer;
 }
 
+/*FIXANDO COLUNA DO NOME*/
+/* Fixa a primeira coluna (Nome) */
+/* Container que permite a tabela rolar lateralmente */
+.tabela-container {
+    overflow-x: auto;
+    position: relative;
+    width: 100%;
+}
+td:first-child::after,
+th:first-child::after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0.7), transparent);
+    pointer-events: none;
+}
+
+/* Fixa a coluna "Nome" */
+td:first-child,
+th:first-child {
+    position: sticky;
+    left: 0;
+    background: #151515; /* mesma cor da tabela */
+    z-index: 10;
+}
+
+/* Cabeçalho tem prioridade maior */
+th:first-child {
+    background: #1f1f1f;
+    z-index: 15;
+}
+
+
 </style>
 </head>
 <body>
 
 <h2>Tabela de Pontuação</h2>
-
-<table id="tabela">
-    <thead>
-        <!-- Linha 1: números das rodadas -->
-        <tr id="linha-rodadas">
-            <th>Nome</th>
-        </tr>
-
-        <!-- Linha 2: selects -->
-        <tr id="topo-nomes">
-            <th>—</th>
-        </tr>
-    </thead>
-
-    <tbody id="jogadores"></tbody>
-</table>
+<div class="tabela-container">
+    
+    <table id="tabela">
+        <thead>
+            <!-- Linha 1: números das rodadas -->
+            <tr id="linha-rodadas">
+                <th>Nome</th>
+            </tr>
+    
+            <!-- Linha 2: selects -->
+            <tr id="topo-nomes">
+                <th>—</th>
+            </tr>
+        </thead>
+    
+        <tbody id="jogadores"></tbody>
+    </table>
+</div>
 
 <div class="buttons">
     <button id="novoBtn">Novo jogo</button>
