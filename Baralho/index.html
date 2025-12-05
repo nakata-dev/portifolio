@@ -68,7 +68,6 @@
         padding: 5px;
     }
 
-    /* ÍCONES MAIORES E CENTRALIZADOS */
     .icon {
         font-size: 30px;
         position: absolute;
@@ -97,22 +96,22 @@
         cursor: pointer;
     }
 
-    button:hover{
+    button:hover {
         background: #333;
     }
 
-    /* RESPONSIVIDADE */
     @media (max-width: 720px) {
         table { font-size: 13px; }
         th, td { padding: 6px; font-size: 12px; }
         select, input { font-size: 12px; }
         .icon { font-size: 24px; }
     }
+
     footer{
         margin-top: 20px;
         text-align: center;
-        font-size: 14px;
         color: #666;
+        font-size: 14px;
     }
 </style>
 </head>
@@ -133,26 +132,22 @@
     <button id="addBtn">Adicionar</button>
     <button id="limparBtn" title="Apaga nomes salvos">Limpar nomes</button>
 </div>
-<footer>
-    copyright © Ailton A. Nakata - 2025
-</footer>
+
+<footer>copyright © Ailton A. Nakata - 2025</footer>
+
 <script>
-/* Configurações */
+/* CONFIG */
 const rodadas = 10;
 const maxJogadores = 9;
 const STORAGE_KEY = 'scoreboard_names_v1';
 
-/* Estado */
-let nomes = [];        // array com nomes (string)
+let nomes = [];
 let jogadoresAtuais = 0;
 
-/* ----- Funções de storage ----- */
+/* STORAGE */
 function salvarNomes() {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes));
-    } catch (e) {
-        console.warn("Não foi possível salvar no localStorage:", e);
-    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes)); }
+    catch(e){ console.warn(e); }
 }
 
 function carregarNomes() {
@@ -165,9 +160,7 @@ function carregarNomes() {
             jogadoresAtuais = nomes.length;
             return true;
         }
-    } catch (e) {
-        console.warn("Erro ao carregar nomes:", e);
-    }
+    } catch(e){ console.warn(e); }
     return false;
 }
 
@@ -179,17 +172,17 @@ function limparNomesSalvos() {
     gerarTopo();
 }
 
-/* ----- Render ----- */
+/* RENDER */
 function gerarTopo() {
     const topo = document.getElementById("topo-nomes");
     topo.innerHTML = "<th>Nome</th>";
 
-    // Para cada rodada adiciona um select com as opções dos nomes (abreviados)
     for (let i = 0; i < rodadas; i++) {
         const opcoes = nomes
-            .filter(n => n && n.trim() !== "")
+            .filter(n => n.trim() !== "")
             .map(n => `<option>${escapeHtml(n.substring(0,3)).toUpperCase()}</option>`)
             .join("");
+
         topo.innerHTML += `<th><select>${opcoes}</select></th>`;
     }
 }
@@ -198,99 +191,79 @@ function gerarTabela() {
     const tbody = document.getElementById("jogadores");
     tbody.innerHTML = "";
 
-    // gera linhas de acordo com jogadoresAtuais (se 0, inicia com 4 vazios como antes)
     if (jogadoresAtuais === 0) {
-        // se não há nomes salvos, iniciar com 4 linhas vazias (comportamento anterior)
         jogadoresAtuais = 4;
-        nomes = Array(jogadoresAtuais).fill("");
+        nomes = Array(4).fill("");
         salvarNomes();
     }
 
     for (let i = 0; i < jogadoresAtuais; i++) {
-        const valor = nomes[i] || "";
+        const valor = nomes[i] ?? "";
         let linha = `<tr>
             <td>
-                <input placeholder="Jogador ${i+1}" 
+                <input placeholder="Jogador ${i+1}"
                        value="${escapeHtml(valor)}"
                        oninput="onInputNome(${i}, this.value)" />
             </td>`;
 
         for (let j = 0; j < rodadas; j++) {
-            linha += `<td onclick="abrirMenu(this)">
-                        <span class='score'>-</span>
-                      </td>`;
+            linha += `<td class="tdPontuacao"><span class='score'>-</span></td>`;
         }
 
         linha += "</tr>";
-        tbody.insertAdjacentHTML('beforeend', linha);
+        tbody.insertAdjacentHTML("beforeend", linha);
     }
 
+    prepararClicksPontuacao();
     gerarTopo();
 }
 
-/* ----- Helpers e eventos para nomes ----- */
-function onInputNome(index, valor) {
-    nomes[index] = valor;
+/* Nomes */
+function onInputNome(i, val){
+    nomes[i] = val;
     salvarNomes();
-    gerarTopo(); // atualiza os selects do topo com as 3 primeiras letras
+    gerarTopo();
 }
 
-function adicionarJogador() {
-    if (jogadoresAtuais >= maxJogadores) {
-        alert("Limite máximo de 9 jogadores atingido.");
-        return;
-    }
+function adicionarJogador(){
+    if (jogadoresAtuais >= maxJogadores) return alert("Limite máximo atingido.");
 
-    // garante que pegamos os valores atuais dos inputs (caso o usuário digitou e não salvou)
     salvarNomesDosInputs();
-
     nomes.push("");
     jogadoresAtuais++;
     salvarNomes();
-
-    // Recria a tabela (assim mantemos consistência das posições)
     gerarTabela();
 }
 
-/* Lê todos os inputs existentes e atualiza 'nomes' antes de operações que re-renderizam */
 function salvarNomesDosInputs() {
-    const inputs = Array.from(document.querySelectorAll("#jogadores input"));
-    inputs.forEach((inp, idx) => {
-        nomes[idx] = inp.value || "";
-    });
-    // corta nomes caso inputs tenham sido removidos
-    nomes = nomes.slice(0, playersCountFromDOM());
+    const inputs = document.querySelectorAll("#jogadores input");
+    inputs.forEach((inp, idx) => nomes[idx] = inp.value);
     salvarNomes();
 }
 
-function playersCountFromDOM() {
-    return document.querySelectorAll("#jogadores tr").length;
+/* CORREÇÃO ANDROID — MENU FUNCIONA EM CELULAR */
+function prepararClicksPontuacao() {
+    document.querySelectorAll(".tdPontuacao").forEach(td => {
+        td.addEventListener("click", () => abrirMenu(td));
+    });
 }
 
-/* ----- Menu de pontuação (dropdown temporário) ----- */
 function abrirMenu(celula) {
-    // antes de re-render criar menu, salvamos nomes dos inputs atuais
     salvarNomesDosInputs();
 
     const menu = document.createElement("select");
     menu.innerHTML = `
         <option value="">-</option>
-        <option value="10">10</option>
-        <option value="9">9</option>
-        <option value="8">8</option>
-        <option value="7">7</option>
-        <option value="6">6</option>
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1</option>
+        <option value="10">10</option><option value="9">9</option>
+        <option value="8">8</option><option value="7">7</option>
+        <option value="6">6</option><option value="5">5</option>
+        <option value="4">4</option><option value="3">3</option>
+        <option value="2">2</option><option value="1">1</option>
         <option value="0">0</option>
         <option value="T">▲</option>
         <option value="C">○</option>
     `;
 
-    // posiciona para cobrir a célula inteira
     menu.style.position = "absolute";
     menu.style.left = "0";
     menu.style.top = "0";
@@ -298,70 +271,54 @@ function abrirMenu(celula) {
     menu.style.height = "100%";
     menu.style.zIndex = 999;
 
+    celula.innerHTML = "";
     celula.appendChild(menu);
-    menu.focus();
+
+    // **CORREÇÃO ANDROID: abrir com pequeno atraso**
+    setTimeout(() => {
+        menu.size = 12; // lista expandida, Android entende
+        menu.focus();
+        menu.click();
+    }, 50);
 
     menu.onchange = () => {
-        const val = menu.value;
-        celula.innerHTML = "";
-
-        if (val === "T") {
-            celula.innerHTML = `<div class="icon">▲</div>`;
-        } else if (val === "C") {
-            celula.innerHTML = `<div class="icon">○</div>`;
-        } else {
-            celula.innerHTML = `<span class="score">${val || "-"}</span>`;
-        }
+        const v = menu.value;
+        celula.innerHTML =
+            v === "T" ? `<div class="icon">▲</div>` :
+            v === "C" ? `<div class="icon">○</div>` :
+            `<span class='score'>${v || "-"}</span>`;
     };
-
-    // fechar o select se clicar fora (UX melhor)
-    menu.addEventListener('blur', () => {
-        // se não escolheu nada, volta para '-'
-        if (!menu.value) {
-            celula.innerHTML = `<span class="score">-</span>`;
-        }
-    });
 }
 
-/* ----- Novo jogo (zera somente pontuações) ----- */
-function novoJogo() {
-    document.querySelectorAll(".score").forEach(s => s.innerText = "-");
-    document.querySelectorAll(".icon").forEach(i => i.remove());
+/* Novo jogo */
+function novoJogo(){
+    document.querySelectorAll(".score").forEach(s=>s.textContent="-");
+    document.querySelectorAll(".icon").forEach(i=>i.remove());
 }
 
-/* ----- Inicialização ----- */
-function init() {
-    const had = carregarNomes();
-    if (!had) {
-        // sem nomes salvos -> inicia com 4 linhas vazias
+/* INIT */
+function init(){
+    const ok = carregarNomes();
+    if (!ok || nomes.length === 0){
         nomes = Array(4).fill("");
         jogadoresAtuais = 4;
         salvarNomes();
-    } else {
-        jogadoresAtuais = nomes.length;
-        if (jogadoresAtuais === 0) {
-            // se storage existia mas vazio, inicializa 4 linhas vazias
-            nomes = Array(4).fill("");
-            jogadoresAtuais = 4;
-            salvarNomes();
-        }
     }
 
     gerarTabela();
     gerarTopo();
 
-    // botões
-    document.getElementById('novoBtn').addEventListener('click', novoJogo);
-    document.getElementById('addBtn').addEventListener('click', adicionarJogador);
-    document.getElementById('limparBtn').addEventListener('click', () => {
+    document.getElementById("novoBtn").onclick = novoJogo;
+    document.getElementById("addBtn").onclick = adicionarJogador;
+    document.getElementById("limparBtn").onclick = () => {
         if (confirm("Deseja apagar todos os nomes salvos?")) limparNomesSalvos();
-    });
+    };
 }
 
-function escapeHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, function(m) {
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-    });
+function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g,m=>(
+        {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
+    ));
 }
 
 init();
