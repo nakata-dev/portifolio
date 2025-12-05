@@ -1,316 +1,371 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caderno de Vendas — Simples</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caderno de Vendas — Simples</title>
 
-    <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f5f6fa;
-            margin: 0;
-            padding: 20px;
+<style>
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f5f6fa;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 28px;
+    }
+
+    .page {
+        background: #fff;
+        padding: 20px;
+        max-width: 950px;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.08);
+    }
+
+    /* FORM GRID */
+    .form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .form input,
+    .form select {
+        padding: 10px;
+        border: 1px solid #bbb;
+        border-radius: 8px;
+        font-size: 15px;
+        width: 90%;
+    }
+
+    .btn {
+        width: 100%;
+        background: #006aff;
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 5px;
+    }
+
+    .btn:hover {
+        background: #004fcc;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: white;
+    }
+
+    table th,
+    table td {
+        border-bottom: 1px solid #ececec;
+        padding: 20px;
+        text-align: left;
+        font-size: 15px;
+    }
+
+    /* Botões */
+    .delete-btn {
+        background: #fd0000;
+        color: white;
+        padding: 6px 10px;
+        font-size: 13px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+
+    .delete-btn:hover {
+        background: #d62828;
+    }
+
+    .edit-btn {
+        background: #006AFF;
+        color: white;
+        padding: 6px 10px;
+        font-size: 13px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+    .edit-btn:hover {
+        background: #cc8800;
+    }
+
+    .totals {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 18px;
+    }
+
+    .totals div {
+        margin-bottom: 6px;
+    }
+
+    footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 650px) {
+        table thead {
+            display: none;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .page {
-            background: #fff;
-            padding: 20px;
-            max-width: 950px;
-            margin: 0 auto;
-            border-radius: 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
-        }
-
-        /* FORM GRID */
-        .form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .form input,
-        .form select {
-            padding: 10px;
-            border: 1px solid #bbb;
-            border-radius: 8px;
-            font-size: 15px;
-            width: 90%;
-        }
-
-        .btn {
-            width: 100%;
-            background: #006aff;
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 5px;
-        }
-
-        .btn:hover {
-            background: #004fcc;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: white;
-        }
-
-        table th,
+        table,
+        table tbody,
+        table tr,
         table td {
-            border-bottom: 1px solid #ececec;
-            padding: 20px;
-            text-align: left;
+            display: block;
+            width: 98%;
+        }
+
+        table tr {
+            background: #fff;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        table td {
+            border: none;
+            padding: 6px 5px;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: #333;
+        }
+
+        .delete-btn,
+        .edit-btn {
+            width: 48%;
+            padding: 10px 0;
             font-size: 15px;
         }
-
-        /* Botão Delete */
-        .delete-btn {
-            background: #ff4b4b;
-            color: white;
-            padding: 5px 10px;
-            font-size: 13px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .delete-btn:hover {
-            background: #d62828;
-        }
-
-        .totals {
-            text-align: right;
-            margin-top: 20px;
-            font-size: 18px;
-        }
-
-        .totals div {
-            margin-bottom: 6px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #777;
-        }
-
-        /* RESPONSIVIDADE PARA CELULAR */
-        @media (max-width: 650px) {
-            table thead {
-                display: none;
-            }
-
-            table,
-            table tbody,
-            table tr,
-            table td {
-                display: block;
-                width: 100%;
-            }
-
-            table tr {
-                background: #fff;
-                margin-bottom: 12px;
-                padding: 12px;
-                border-radius: 10px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-            }
-
-            table td {
-                border: none;
-                padding: 6px 5px;
-                font-size: 15px;
-                display: flex;
-                justify-content: space-between;
-                gap: 10px;
-            }
-
-            table td::before {
-                content: attr(data-label);
-                font-weight: bold;
-                color: #333;
-            }
-
-            /* Botão apagar ocupa largura total */
-            .delete-btn {
-                width: 100%;
-                padding: 10px 0;
-                font-size: 15px;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
-
 <body>
 
-    <h1>Caderno de Vendas</h1>
+<h1>Caderno de Vendas</h1>
 
-    <div class="page">
+<div class="page">
 
-        <!-- Formulário -->
-        <div class="form">
-            <input type="date" id="data" placeholder="Data">
-            <input type="text" id="produto" placeholder="Nome do Produto">
-            <input type="text" id="codigo" placeholder="Código">
-            <select id="pagamento">
-                <option value="">Pagamento</option>
-                <option>Dinheiro</option>
-                <option>Cartão</option>
-                <option>Pix</option>
-                <option>Fiado</option>
-                <option>Outro</option>
-            </select>
-            <input type="text" id="obs" placeholder="Observação">
-            <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
-            <button class="btn" onclick="adicionarVenda()">Adicionar</button>
-        </div>
-
-        <!-- Tabela -->
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Data</th>
-                    <th>Produto</th>
-                    <th>Código</th>
-                    <th>Pagamento</th>
-                    <th>Obs</th>
-                    <th>Valor (R$)</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody id="tabela"></tbody>
-        </table>
-
-        <!-- Totais -->
-        <div class="totals">
-            <div><strong>Total Diário:</strong> <span id="totalDia">R$ 0,00</span></div>
-            <div><strong>Total Mensal:</strong> <span id="totalMes">R$ 0,00</span></div>
-        </div>
-
+    <!-- Formulário -->
+    <div class="form">
+        <input type="date" id="data" placeholder="Data">
+        <input type="text" id="produto" placeholder="Nome do Produto">
+        <input type="text" id="codigo" placeholder="Código">
+        <select id="pagamento">
+            <option value="">Pagamento</option>
+            <option>Dinheiro</option>
+            <option>Cartão</option>
+            <option>Pix</option>
+            <option>Fiado</option>
+            <option>Outro</option>
+        </select>
+        <input type="text" id="obs" placeholder="Observação">
+        <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
+        <button class="btn" onclick="adicionarVenda()">Adicionar</button>
     </div>
-    <footer>
-        copyright © 2025 Ailton A. Nakata
-    </footer>
-    <script>
-        let vendas = JSON.parse(localStorage.getItem("vendas_diarias") || "[]");
 
-        function adicionarVenda() {
-            const data = document.getElementById("data").value;
-            const produto = document.getElementById("produto").value.trim();
-            const codigo = document.getElementById("codigo").value.trim();
-            const pagamento = document.getElementById("pagamento").value;
-            const obs = document.getElementById("obs").value.trim();
-            const valor = parseFloat(document.getElementById("valor").value || 0);
+    <!-- Tabela -->
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Data</th>
+                <th>Produto</th>
+                <th>Código</th>
+                <th>Pagamento</th>
+                <th>Obs</th>
+                <th>Valor (R$)</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="tabela"></tbody>
+    </table>
 
-            if (!data || !produto || valor <= 0) {
-                alert("Preencha Data, Produto e Valor corretamente.");
-                return;
-            }
+    <!-- Totais -->
+    <div class="totals">
+        <div><strong>Total Diário:</strong> <span id="totalDia">R$ 0,00</span></div>
+        <div><strong>Total Mensal:</strong> <span id="totalMes">R$ 0,00</span></div>
+    </div>
 
-            vendas.push({
-                id: vendas.length + 1,
-                data,
-                produto,
-                codigo,
-                pagamento,
-                obs,
-                valor
-            });
+</div>
 
-            salvar();
-            atualizarTabela();
+<footer>
+    copyright © 2025 Ailton A. Nakata
+</footer>
 
-            // LIMPA CAMPOS
-            document.getElementById("produto").value = "";
-            document.getElementById("codigo").value = "";
-            document.getElementById("pagamento").value = "";
-            document.getElementById("obs").value = "";
-            document.getElementById("valor").value = "";
-        }
+<script>
+let vendas = JSON.parse(localStorage.getItem("vendas_diarias") || "[]");
+let editandoId = null;
 
-        function deletarVenda(id) {
-            if (!confirm("Deseja realmente deletar este item?")) return;
+// --------------------- ADICIONAR OU EDITAR ---------------------
+function adicionarVenda() {
 
-            vendas = vendas.filter(v => v.id !== id);
+    const data = document.getElementById("data").value;
+    const produto = document.getElementById("produto").value.trim();
+    const codigo = document.getElementById("codigo").value.trim();
+    const pagamento = document.getElementById("pagamento").value;
+    const obs = document.getElementById("obs").value.trim();
+    const valor = parseFloat(document.getElementById("valor").value || 0);
 
-            // Reorganizar IDs
-            vendas = vendas.map((v, index) => ({ ...v, id: index + 1 }));
+    if (!data || !produto || valor <= 0) {
+        alert("Preencha Data, Produto e Valor corretamente.");
+        return;
+    }
 
-            salvar();
-            atualizarTabela();
-        }
+    if (editandoId !== null) {
+        const i = vendas.findIndex(v => v.id === editandoId);
 
-        function salvar() {
-            localStorage.setItem("vendas_diarias", JSON.stringify(vendas));
-        }
+        vendas[i] = {
+            id: editandoId,
+            data,
+            produto,
+            codigo,
+            pagamento,
+            obs,
+            valor
+        };
 
-        function atualizarTabela() {
-            const tabela = document.getElementById("tabela");
-            tabela.innerHTML = "";
+        editandoId = null;
+        document.querySelector(".btn").textContent = "Adicionar";
+    } else {
+        vendas.push({
+            id: vendas.length + 1,
+            data,
+            produto,
+            codigo,
+            pagamento,
+            obs,
+            valor
+        });
+    }
 
-            vendas.forEach(v => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                <td data-label="#">${v.id}</td>
-                <td data-label="Data">${v.data}</td>
-                <td data-label="Produto">${v.produto}</td>
-                <td data-label="Código">${v.codigo}</td>
-                <td data-label="Pagamento">${v.pagamento}</td>
-                <td data-label="Obs">${v.obs}</td>
-                <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
-                <td data-label="Ação">
-                    <button class="delete-btn" onclick="deletarVenda(${v.id})">❌ Deletar</button>
-                </td>
-            `;
+    salvar();
+    atualizarTabela();
 
-                tabela.appendChild(tr);
-            });
+    document.getElementById("produto").value = "";
+    document.getElementById("codigo").value = "";
+    document.getElementById("pagamento").value = "";
+    document.getElementById("obs").value = "";
+    document.getElementById("valor").value = "";
+}
 
-            calcularTotais();
-        }
+// --------------------- EDITAR ---------------------
+function editarVenda(id) {
+    const v = vendas.find(x => x.id === id);
+    if (!v) return;
 
-        function calcularTotais() {
-            const hoje = document.getElementById("data").value;
+    document.getElementById("data").value = v.data;
+    document.getElementById("produto").value = v.produto;
+    document.getElementById("codigo").value = v.codigo;
+    document.getElementById("pagamento").value = v.pagamento;
+    document.getElementById("obs").value = v.obs;
+    document.getElementById("valor").value = v.valor;
 
-            let totalDia = 0;
-            let totalMes = 0;
+    editandoId = id;
+    document.querySelector(".btn").textContent = "Salvar Alterações";
 
-            vendas.forEach(v => {
-                const mesVenda = v.data.substring(0, 7);
-                const mesAtual = hoje.substring(0, 7);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-                if (v.data === hoje) totalDia += v.valor;
-                if (mesVenda === mesAtual) totalMes += v.valor;
-            });
+// --------------------- DELETAR ---------------------
+function deletarVenda(id) {
+    if (!confirm("Deseja realmente deletar este item?")) return;
 
-            document.getElementById("totalDia").textContent = "R$ " + totalDia.toFixed(2);
-            document.getElementById("totalMes").textContent = "R$ " + totalMes.toFixed(2);
-        }
+    vendas = vendas.filter(v => v.id !== id);
 
-        document.getElementById("data").addEventListener("change", calcularTotais);
+    vendas = vendas.map((v, index) => ({ ...v, id: index + 1 }));
 
-        atualizarTabela();
-        calcularTotais();
-    </script>
+    salvar();
+    atualizarTabela();
+}
+
+// --------------------- SALVAR ---------------------
+function salvar() {
+    localStorage.setItem("vendas_diarias", JSON.stringify(vendas));
+}
+
+// --------------------- ATUALIZAR TABELA ---------------------
+function atualizarTabela() {
+    const tabela = document.getElementById("tabela");
+    tabela.innerHTML = "";
+
+    vendas.forEach(v => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td data-label="#">${v.id}</td>
+            <td data-label="Data">${v.data}</td>
+            <td data-label="Produto">${v.produto}</td>
+            <td data-label="Código">${v.codigo}</td>
+            <td data-label="Pagamento">${v.pagamento}</td>
+            <td data-label="Obs">${v.obs}</td>
+            <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
+            <td data-label="Ação">
+                <button class="delete-btn" onclick="deletarVenda(${v.id})">❌</button>
+                <button class="edit-btn" onclick="editarVenda(${v.id})">✏️</button>
+            </td>
+        `;
+        tabela.appendChild(tr);
+    });
+
+    calcularTotais();
+}
+
+// --------------------- CALCULAR TOTAIS ---------------------
+function calcularTotais() {
+    const hoje = document.getElementById("data").value;
+
+    let totalDia = 0;
+    let totalMes = 0;
+
+    vendas.forEach(v => {
+        const mesVenda = v.data.substring(0, 7);
+        const mesAtual = hoje.substring(0, 7);
+
+        if (v.data === hoje) totalDia += v.valor;
+        if (mesVenda === mesAtual) totalMes += v.valor;
+    });
+
+    document.getElementById("totalDia").textContent = "R$ " + totalDia.toFixed(2);
+    document.getElementById("totalMes").textContent = "R$ " + totalMes.toFixed(2);
+}
+
+document.getElementById("data").addEventListener("change", calcularTotais);
+
+atualizarTabela();
+calcularTotais();
+
+</script>
 
 </body>
-
 </html>
