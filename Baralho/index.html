@@ -41,6 +41,19 @@ th {
     font-size: 15px;
 }
 
+.round-number {
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+select {
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 4px;
+    border-radius: 4px;
+}
+
 input {
     width: 100%;
     background: transparent;
@@ -175,10 +188,17 @@ footer{
 
 <table id="tabela">
     <thead>
-        <tr id="topo-nomes">
+        <!-- Linha 1: números das rodadas -->
+        <tr id="linha-rodadas">
             <th>Nome</th>
         </tr>
+
+        <!-- Linha 2: selects -->
+        <tr id="topo-nomes">
+            <th>—</th>
+        </tr>
     </thead>
+
     <tbody id="jogadores"></tbody>
 </table>
 
@@ -254,13 +274,17 @@ function limparNomesSalvos() {
 /* ------------------------- RENDER ------------------------- */
 function gerarTopo() {
     const topo = document.getElementById("topo-nomes");
-    topo.innerHTML = "<th>Nome</th>";
+    const linhaRodadas = document.getElementById("linha-rodadas");
+
+    topo.innerHTML = "<th>—</th>";
+    linhaRodadas.innerHTML = "<th>Nome</th>";
 
     const opcoes = nomes
         .map(n => `<option>${escapeHtml(n.substring(0,3).toUpperCase())}</option>`)
         .join("");
 
     for (let i = 0; i < rodadas; i++) {
+        linhaRodadas.innerHTML += `<th><span class="round-number">${i+1}</span></th>`;
         topo.innerHTML += `<th><select>${opcoes}</select></th>`;
     }
 }
@@ -331,11 +355,11 @@ document.addEventListener("pointerdown", e => {
 const overlay = document.getElementById("bottomSheetOverlay");
 const sheet = document.getElementById("bottomSheet");
 const numerosContainer = document.getElementById("numerosContainer");
+const simbolosContainer = document.getElementById("simbolosContainer");
 
 function abrirBottomSheet(celula){
     celulaAtual = celula;
 
-    // criar botões dos números
     numerosContainer.innerHTML = "";
     for(let n=10; n>=0; n--){
         numerosContainer.innerHTML += `<div class="sheet-btn" data-num="${n}">${n}</div>`;
