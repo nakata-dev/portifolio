@@ -1,411 +1,345 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tabela de Pontuação</title>
-    <style>
-        body {
-            background: #0d0d0d;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            padding: 16px;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tabela de Pontuação</title>
+<style>
+    body {
+        background: #0d0d0d;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        padding: 16px;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 12px;
-        }
+    h2 {
+        text-align: center;
+        margin-bottom: 12px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #151515;
-            border-radius: 10px;
-            overflow: hidden;
-            font-size: 16px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #151515;
+        border-radius: 10px;
+        overflow: hidden;
+        font-size: 16px;
+    }
 
-        th,
-        td {
-            border: 1px solid #333;
-            padding: 8px;
-            text-align: center;
-            position: relative;
-            min-width: 48px;
-        }
+    th, td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: center;
+        position: relative;
+        min-width: 48px;
+    }
 
-        th {
-            background: #1f1f1f;
-            font-size: 15px;
-        }
+    th {
+        background: #1f1f1f;
+        font-size: 15px;
+    }
 
-        select {
-            background: #1e1e1e;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 5px;
-            border-radius: 5px;
-            width: 100%;
-            font-size: 13px;
-        }
+    select {
+        background: #1e1e1e;
+        color: #fff;
+        border: 1px solid #444;
+        padding: 5px;
+        border-radius: 5px;
+        width: 100%;
+        font-size: 13px;
+    }
 
-        input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #444;
-            color: #fff;
-            text-align: center;
-            padding: 5px;
-            font-size: 14px;
-            outline: none;
-        }
+    input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #444;
+        color: #fff;
+        text-align: center;
+        padding: 5px;
+        font-size: 14px;
+        outline: none;
+    }
 
-        .score {
-            cursor: pointer;
-            user-select: none;
-            font-size: 18px;
-            padding: 5px;
-        }
+    .score {
+        cursor: pointer;
+        user-select: none;
+        font-size: 18px;
+        padding: 5px;
+        display: inline-block;
+        width: 100%;
+    }
 
-        .icon {
-            font-size: 30px;
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.92;
-        }
+    .icon {
+        font-size: 30px;
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.92;
+        pointer-events: none;
+    }
 
-        .buttons {
-            margin-top: 14px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+    .buttons {
+        margin-top: 14px;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 
-        button {
-            background: #1f1f1f;
-            border: 1px solid #444;
-            padding: 10px 14px;
-            color: #fff;
-            border-radius: 8px;
-            font-size: 15px;
-            cursor: pointer;
-        }
+    button {
+        background: #1f1f1f;
+        border: 1px solid #444;
+        padding: 10px 14px;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+    }
 
-        button:hover {
-            background: #333;
-        }
+    button:hover{
+        background: #333;
+    }
 
-        @media (max-width: 720px) {
-            table {
-                font-size: 13px;
-            }
+    @media (max-width: 720px) {
+        table { font-size: 13px; }
+        th, td { padding: 6px; font-size: 12px; }
+        select, input { font-size: 12px; }
+        .icon { font-size: 24px; }
+    }
 
-            th,
-            td {
-                padding: 6px;
-                font-size: 12px;
-            }
-
-            select,
-            input {
-                font-size: 12px;
-            }
-
-            .icon {
-                font-size: 24px;
-            }
-        }
-
-        footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-        }
-    </style>
+    footer{
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+    }
+</style>
 </head>
-
 <body>
 
-    <h2>Tabela de Pontuação</h2>
-    <table id="tabela">
-        <thead>
-            <tr id="topo-nomes">
-                <th>Nome</th>
-            </tr>
-        </thead>
-        <tbody id="jogadores"></tbody>
-    </table>
+<h2>Tabela de Pontuação</h2>
 
-    <div class="buttons">
-        <button id="novoBtn">Novo jogo</button>
-        <button id="addBtn">Adicionar</button>
-        <button id="limparBtn" title="Apaga nomes salvos">Limpar nomes</button>
-    </div>
+<table id="tabela">
+    <thead>
+        <tr id="topo-nomes">
+            <th>Nome</th>
+        </tr>
+    </thead>
+    <tbody id="jogadores"></tbody>
+</table>
 
-    <footer>copyright © Ailton A. Nakata - 2025</footer>
+<div class="buttons">
+    <button id="novoBtn">Novo jogo</button>
+    <button id="addBtn">Adicionar</button>
+    <button id="limparBtn" title="Apaga nomes salvos">Limpar nomes</button>
+</div>
 
-    <script>
-        /* CONFIG */
-        const rodadas = 10;
-        const maxJogadores = 9;
-        const STORAGE_KEY = 'scoreboard_names_v1';
+<footer>
+    copyright © Ailton A. Nakata - 2025
+</footer>
 
-        let nomes = [];
-        let jogadoresAtuais = 0;
+<script>
+/* Configurações */
+const rodadas = 10;
+const maxJogadores = 9;
+const STORAGE_KEY = 'scoreboard_names_v2';
 
-        /* STORAGE */
-        function salvarNomes() {
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes)); }
-            catch (e) { console.warn(e); }
-        }
+/* Estado */
+let nomes = [];
+let jogadoresAtuais = 0;
 
-        function carregarNomes() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return false;
-                const arr = JSON.parse(raw);
-                if (Array.isArray(arr)) {
-                    nomes = arr.slice(0, maxJogadores);
-                    jogadoresAtuais = nomes.length;
-                    return true;
-                }
-            } catch (e) { console.warn(e); }
-            return false;
-        }
-
-        function limparNomesSalvos() {
-            localStorage.removeItem(STORAGE_KEY);
-            nomes = [];
-            jogadoresAtuais = 0;
-            gerarTabela();
-            gerarTopo();
-        }
-
-        /* RENDER */
-        function gerarTopo() {
-            const topo = document.getElementById("topo-nomes");
-            topo.innerHTML = "<th>Nome</th>";
-
-            for (let i = 0; i < rodadas; i++) {
-                const opcoes = nomes
-                    .filter(n => n && n.trim() !== "")
-                    .map(n => `<option>${escapeHtml(n.substring(0, 3)).toUpperCase()}</option>`)
-                    .join("");
-
-                topo.innerHTML += `<th><select>${opcoes}</select></th>`;
-            }
-        }
-
-        function gerarTabela() {
-            const tbody = document.getElementById("jogadores");
-            tbody.innerHTML = "";
-
-            if (jogadoresAtuais === 0) {
-                jogadoresAtuais = 4;
-                nomes = Array(4).fill("");
-                salvarNomes();
-            }
-
-            for (let i = 0; i < jogadoresAtuais; i++) {
-                const valor = nomes[i] ?? "";
-                let linha = `<tr>
-            <td>
-                <input placeholder="Jogador ${i + 1}"
-                       value="${escapeHtml(valor)}"
-                       oninput="onInputNome(${i}, this.value)" />
-            </td>`;
-
-                for (let j = 0; j < rodadas; j++) {
-                    linha += `<td class="tdPontuacao"><span class='score'>-</span></td>`;
-                }
-
-                linha += "</tr>";
-                tbody.insertAdjacentHTML("beforeend", linha);
-            }
-
-            prepararClicksPontuacao();
-            gerarTopo();
-        }
-
-        /* Nomes */
-        function onInputNome(i, val) {
-            nomes[i] = val;
-            salvarNomes();
-            gerarTopo();
-        }
-
-        function adicionarJogador() {
-            if (jogadoresAtuais >= maxJogadores) return alert("Limite máximo atingido.");
-
-            salvarNomesDosInputs();
-            nomes.push("");
-            jogadoresAtuais++;
-            salvarNomes();
-            gerarTabela();
-        }
-
-        function salvarNomesDosInputs() {
-            const inputs = document.querySelectorAll("#jogadores input");
-            inputs.forEach((inp, idx) => nomes[idx] = inp.value);
-            salvarNomes();
-        }
-
-        /* CORREÇÃO ANTI-TRAVAMENTO — MENU FUNCIONA EM CELULAR */
-        function prepararClicksPontuacao() {
-            // remove listeners antigos (por segurança)
-            document.querySelectorAll(".tdPontuacao").forEach(td => {
-                td.replaceWith(td.cloneNode(true)); // limpa listeners
-            });
-
-            // re-obtem as células atualizadas
-            document.querySelectorAll(".tdPontuacao").forEach(td => {
-                td.addEventListener("click", function handler(ev) {
-                    // se já houver um menu aberto nessa célula, não reentrar
-                    if (td.dataset.open === "1") return;
-                    abrirMenu(td);
-                });
-            });
-        }
-
-        function abrirMenu(celula) {
-            salvarNomesDosInputs();
-
-            // Se já existir um menu aberto, não abrir outro
-            if (document.getElementById("menuFlutuante")) return;
-
-            // Recupera posição da célula na tela
-            const rect = celula.getBoundingClientRect();
-
-            // Cria menu flutuante
-            const menu = document.createElement("div");
-            menu.id = "menuFlutuante";
-            menu.style.position = "fixed";
-            menu.style.left = rect.left + "px";
-            menu.style.top = rect.bottom + "px";
-            menu.style.width = rect.width + "px";
-            menu.style.background = "#1e1e1e";
-            menu.style.border = "1px solid #444";
-            menu.style.zIndex = 99999;
-            menu.style.borderRadius = "6px";
-            menu.style.padding = "4px";
-            menu.style.maxHeight = "240px";
-            menu.style.overflowY = "auto";
-            menu.style.boxShadow = "0 4px 14px rgba(0,0,0,0.6)";
-
-            // OPÇÕES
-            const valores = [
-                "-", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0", "▲", "○"
-            ];
-
-            valores.forEach(v => {
-                const item = document.createElement("div");
-                item.textContent = v;
-                item.style.padding = "8px";
-                item.style.cursor = "pointer";
-                item.style.textAlign = "center";
-
-                item.onmouseenter = () => item.style.background = "#333";
-                item.onmouseleave = () => item.style.background = "transparent";
-
-                item.onclick = () => {
-                    menu.remove();
-                    if (v === "▲") celula.innerHTML = `<div class="icon">▲</div>`;
-                    else if (v === "○") celula.innerHTML = `<div class="icon">○</div>`;
-                    else celula.innerHTML = `<span class='score'>${v}</span>`;
-                };
-
-                menu.appendChild(item);
-            });
-
-            // clicar fora = fechar menu
-            document.body.appendChild(menu);
-            document.addEventListener("click", fecharMenu);
-
-            function fecharMenu(e) {
-                if (!menu.contains(e.target)) {
-                    menu.remove();
-                    document.removeEventListener("click", fecharMenu);
-                }
-            }
-        }
-
-
-        // Tentar abrir o select no mobile com pequeno atraso.
-        // Mantemos menu.click() mas com a proteção da flag, evitando loop.
-        setTimeout(() => {
-            try {
-                menu.size = 12; // força lista exibida em algumas implementações mobile
-                menu.focus();
-                menu.click();
-            } catch (err) {
-                // não crítico — apenas falha silenciosamente
-                console.warn("Erro ao tentar forçar abertura do select:", err);
-            }
-        }, 60);
-
-        // Ao selecionar um valor
-        menu.onchange = () => {
-            const v = menu.value;
-            celula.dataset.open = ""; // limpa flag
-            celula.innerHTML =
-                v === "T" ? `<div class="icon">▲</div>` :
-                    v === "C" ? `<div class="icon">○</div>` :
-                        `<span class='score'>${v || "-"}</span>`;
-
-            // re-associa o click à célula (preparClicks já cuida de re-ligar listeners ao re-render)
-        };
-
-        // Se o usuário perder foco sem selecionar
-        menu.addEventListener('blur', () => {
-            // apenas restaura visual e limpa flag
-            if (!menu.value) {
-                celula.dataset.open = "";
-                celula.innerHTML = `<span class='score'>-</span>`;
-            }
-        });
+/* ----- STORAGE ----- */
+function salvarNomes() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes));
 }
 
-        /* Novo jogo */
-        function novoJogo() {
-            document.querySelectorAll(".score").forEach(s => s.textContent = "-");
-            document.querySelectorAll(".icon").forEach(i => i.remove());
+function carregarNomes() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) return false;
+
+        nomes = arr.slice(0, maxJogadores);
+        jogadoresAtuais = nomes.length;
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+function limparNomesSalvos() {
+    localStorage.removeItem(STORAGE_KEY);
+    nomes = [];
+    jogadoresAtuais = 0;
+    gerarTabela();
+    gerarTopo();
+}
+
+/* ----- RENDER ----- */
+function gerarTopo() {
+    const topo = document.getElementById("topo-nomes");
+    topo.innerHTML = "<th>Nome</th>";
+
+    const opcoes = nomes
+        .map(n => `<option>${escapeHtml(n.substring(0,3).toUpperCase())}</option>`)
+        .join("");
+
+    for (let i = 0; i < rodadas; i++) {
+        topo.innerHTML += `<th><select>${opcoes}</select></th>`;
+    }
+}
+
+function gerarTabela() {
+    const tbody = document.getElementById("jogadores");
+    tbody.innerHTML = "";
+
+    if (jogadoresAtuais === 0) {
+        jogadoresAtuais = 4;
+        nomes = Array(4).fill("");
+        salvarNomes();
+    }
+
+    for (let i = 0; i < jogadoresAtuais; i++) {
+        let linha = `
+        <tr>
+            <td>
+                <input value="${escapeHtml(nomes[i] || "")}"
+                       placeholder="Jogador ${i+1}"
+                       oninput="onInputNome(${i}, this.value)">
+            </td>`;
+
+        for (let j = 0; j < rodadas; j++) {
+            linha += `
+            <td onclick="abrirMenu(this)">
+                <span class="score">-</span>
+            </td>`;
         }
 
-        /* INIT */
-        function init() {
-            const ok = carregarNomes();
-            if (!ok || nomes.length === 0) {
-                nomes = Array(4).fill("");
-                jogadoresAtuais = 4;
-                salvarNomes();
-            }
+        linha += "</tr>";
+        tbody.insertAdjacentHTML("beforeend", linha);
+    }
 
-            gerarTabela();
-            gerarTopo();
+    gerarTopo();
+}
 
-            document.getElementById("novoBtn").onclick = novoJogo;
-            document.getElementById("addBtn").onclick = adicionarJogador;
-            document.getElementById("limparBtn").onclick = () => {
-                if (confirm("Deseja apagar todos os nomes salvos?")) limparNomesSalvos();
-            };
-        }
+/* ----- Nomes ----- */
+function onInputNome(index, valor) {
+    nomes[index] = valor;
+    salvarNomes();
+    gerarTopo();
+}
 
-        function escapeHtml(str) {
-            return String(str || '').replace(/[&<>"']/g, m => (
-                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]
-            ));
-        }
+function adicionarJogador() {
+    if (jogadoresAtuais >= maxJogadores) {
+        alert("Limite máximo de 9 jogadores atingido.");
+        return;
+    }
 
-        init();
-    </script>
+    salvarNomesDosInputs();
+    nomes.push("");
+    jogadoresAtuais++;
+    salvarNomes();
+    gerarTabela();
+}
+
+function salvarNomesDosInputs() {
+    document.querySelectorAll("#jogadores input").forEach((inp, i) => {
+        nomes[i] = inp.value;
+    });
+    salvarNomes();
+}
+
+/* ----- MENU DE PONTUAÇÃO CORRIGIDO ----- */
+function abrirMenu(celula) {
+
+    const menu = document.createElement("select");
+    menu.innerHTML = `
+        <option value="">-</option>
+        <option value="10">10</option>
+        <option value="9">9</option>
+        <option value="8">8</option>
+        <option value="7">7</option>
+        <option value="6">6</option>
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+        <option value="0">0</option>
+        <option value="T">▲</option>
+        <option value="C">○</option>
+    `;
+
+    menu.style.position = "absolute";
+    menu.style.left = 0;
+    menu.style.top = 0;
+    menu.style.width = "100%";
+    menu.style.height = "100%";
+    menu.style.zIndex = "999";
+
+    celula.innerHTML = "";
+    celula.appendChild(menu);
+    menu.focus();
+
+    menu.onchange = () => {
+        atualizarCelula(celula, menu.value);
+    };
+
+    menu.onblur = () => {
+        atualizarCelula(celula, menu.value);
+    };
+}
+
+function atualizarCelula(celula, val) {
+    celula.innerHTML = "";
+
+    if (val === "T") {
+        celula.innerHTML = `<div class="icon">▲</div>`;
+    } else if (val === "C") {
+        celula.innerHTML = `<div class="icon">○</div>`;
+    } else {
+        celula.innerHTML = `<span class="score">${val || "-"}</span>`;
+    }
+}
+
+/* ----- NOVO JOGO ----- */
+function novoJogo() {
+    document.querySelectorAll("td").forEach(td => {
+        if (!td.querySelector("input")) td.innerHTML = `<span class="score">-</span>`;
+    });
+}
+
+/* ----- UTILS ----- */
+function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, m => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+}
+
+/* ----- INIT ----- */
+function init() {
+    if (!carregarNomes()) {
+        nomes = Array(4).fill("");
+        jogadoresAtuais = 4;
+        salvarNomes();
+    }
+
+    gerarTabela();
+    gerarTopo();
+
+    document.getElementById("addBtn").onclick = adicionarJogador;
+    document.getElementById("novoBtn").onclick = novoJogo;
+    document.getElementById("limparBtn").onclick = () => {
+        if (confirm("Apagar nomes salvos?")) limparNomesSalvos();
+    };
+}
+
+init();
+</script>
 </body>
-
 </html>
