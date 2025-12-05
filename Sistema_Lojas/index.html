@@ -1,357 +1,372 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Caderno de Vendas — Simples</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caderno de Vendas — Simples</title>
 
-<!-- PDF — ADIÇÃO -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- PDF — ADIÇÃO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<style>
-    body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #f5f6fa;
-        margin: 0;
-        padding: 20px;
-    }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 28px;
-    }
-
-    .page {
-        background: #fff;
-        padding: 20px;
-        max-width: 950px;
-        margin: 0 auto;
-        border-radius: 12px;
-        box-shadow: 0 0 12px rgba(0,0,0,0.08);
-    }
-
-    /* FORM GRID */
-    .form {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .form input,
-    .form select {
-        padding: 10px;
-        border: 1px solid #5f5f5f;
-        border-radius: 8px;
-        font-size: 15px;
-        width: 90%;
-    }
-
-    .btn {
-        width: 100%;
-        background: #006AFF;
-        border: none;
-        color: white;
-        padding: 12px;
-        border-radius: 50px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 5px;
-    }
-
-    .btn:hover {
-        background: #247df8;
-    }
-
-    .btn-pdf {
-        width: 100%;
-        background: #0a5;
-        border: none;
-        color: white;
-        padding: 12px;
-        border-radius: 50px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 5px;
-    }
-
-    .btn-pdf:hover {
-        background: #0c7;
-    }
-
-    /* NOVA: botão limpar */
-    .btn-clear {
-        width: 100%;
-        background: #b30000;
-        border: none;
-        color: white;
-        padding: 12px;
-        border-radius: 50px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 5px;
-    }
-
-    .btn-clear:hover {
-        background: #ff1a1a;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-        background: white;
-    }
-
-    table th,
-    table td {
-        border-bottom: 1px solid #ececec;
-        padding: 20px;
-        text-align: left;
-        font-size: 15px;
-    }
-
-    .delete-btn {
-        background: #660000;
-        color: white;
-        padding: 6px 10px;
-        font-size: 13px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-    }
-
-    .delete-btn:hover {
-        background: #d62828;
-    }
-
-    .edit-btn {
-        background: #006AFF;
-        color: white;
-        padding: 6px 10px;
-        font-size: 13px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        margin-left: 5px;
-    }
-
-    .edit-btn:hover {
-        background: #247df8;
-    }
-
-    .totals {
-        text-align: right;
-        margin-top: 20px;
-        font-size: 18px;
-    }
-
-    .totals div {
-        margin-bottom: 6px;
-    }
-
-    footer {
-        text-align: center;
-        margin-top: 30px;
-        font-size: 14px;
-        color: #777;
-    }
-
-    h2{
-        text-align: center;
-    }
-
-    /* RESPONSIVIDADE */
-    @media (max-width: 650px) {
-        table thead { display: none; }
-
-        table, table tbody, table tr, table td {
-            display: block;
-            width: 98%;
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 20px;
         }
 
-        table tr {
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .page {
             background: #fff;
-            margin-bottom: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            max-width: 950px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
         }
 
-        table td {
+        /* FORM GRID */
+        .form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .form input,
+        .form select {
+            padding: 10px;
+            border: 1px solid #5f5f5f;
+            border-radius: 8px;
+            font-size: 15px;
+            width: 90%;
+        }
+
+        .btn {
+            width: 100%;
+            background: #006AFF;
             border: none;
-            padding: 6px 5px;
-            font-size: 15px;
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
+            color: white;
+            padding: 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 5px;
         }
 
-        table td::before {
-            content: attr(data-label);
-            font-weight: bold;
-            color: #333;
+        .btn:hover {
+            background: #247df8;
         }
 
-        .delete-btn, .edit-btn {
-            width: 48%;
-            padding: 10px 0;
+        .btn-pdf {
+            width: 100%;
+            background: #0a5;
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .btn-pdf:hover {
+            background: #0c7;
+        }
+
+        /* NOVA: botão limpar */
+        .btn-clear {
+            width: 100%;
+            background: #b30000;
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .btn-clear:hover {
+            background: #ff1a1a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+        }
+
+        table th,
+        table td {
+            border-bottom: 1px solid #ececec;
+            padding: 20px;
+            text-align: left;
             font-size: 15px;
         }
-    }
-</style>
+
+        .delete-btn {
+            background: #660000;
+            color: white;
+            padding: 6px 10px;
+            font-size: 13px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #d62828;
+        }
+
+        .edit-btn {
+            background: #006AFF;
+            color: white;
+            padding: 6px 10px;
+            font-size: 13px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .edit-btn:hover {
+            background: #247df8;
+        }
+
+        .totals {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .totals div {
+            margin-bottom: 6px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 650px) {
+            table thead {
+                display: none;
+            }
+
+            table,
+            table tbody,
+            table tr,
+            table td {
+                display: block;
+                width: 98%;
+            }
+
+            table tr {
+                background: #fff;
+                margin-bottom: 12px;
+                padding: 12px;
+                border-radius: 10px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            }
+
+            table td {
+                border: none;
+                padding: 6px 5px;
+                font-size: 15px;
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #333;
+            }
+
+            .delete-btn,
+            .edit-btn {
+                width: 48%;
+                padding: 10px 0;
+                font-size: 15px;
+            }
+
+            /* Força os botões a ocuparem metade da linha no celular */
+            .btn,
+            .btn-pdf,
+            .btn-clear {
+                width: 1fr !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Caderno de Vendas</h1>
-<h2>Itiban Presentes</h2>
+    <h1>Caderno de Vendas</h1>
+    <h2>Itiban Presentes</h2>
 
-<div class="page">
+    <div class="page">
 
-    <!-- Formulário -->
-    <div class="form">
-        <input type="date" id="data" placeholder="Data">
-        <input type="text" id="produto" placeholder="Nome do Produto">
-        <input type="text" id="codigo" placeholder="Código">
-        <select id="pagamento">
-            <option value="">Pagamento</option>
-            <option>Dinheiro</option>
-            <option>Cartão</option>
-            <option>Pix</option>
-            <option>Fiado</option>
-            <option>Outro</option>
-        </select>
-        <input type="text" id="obs" placeholder="Observação">
-        <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
+        <!-- Formulário -->
+        <div class="form">
+            <input type="date" id="data" placeholder="Data">
+            <input type="text" id="produto" placeholder="Nome do Produto">
+            <input type="text" id="codigo" placeholder="Código">
+            <select id="pagamento">
+                <option value="">Pagamento</option>
+                <option>Dinheiro</option>
+                <option>Cartão</option>
+                <option>Pix</option>
+                <option>Fiado</option>
+                <option>Outro</option>
+            </select>
+            <input type="text" id="obs" placeholder="Observação">
+            <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
 
-        <button class="btn" onclick="adicionarVenda()">Adicionar</button>
-        <button class="btn-pdf" onclick="gerarPDF()">Gerar PDF</button>
+            <button class="btn" onclick="adicionarVenda()">Adicionar</button>
+            <button class="btn-pdf" onclick="gerarPDF()">Gerar PDF</button>
 
-        <!-- NOVO BOTÃO -->
-        <button class="btn-clear" onclick="limparMes()">Limpar Mês</button>
+            <!-- NOVO BOTÃO -->
+            <button class="btn-clear" onclick="limparMes()">Limpar Mês</button>
+        </div>
+
+        <!-- Tabela -->
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Data</th>
+                    <th>Produto</th>
+                    <th>Código</th>
+                    <th>Pagamento</th>
+                    <th>Obs</th>
+                    <th>Valor (R$)</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="tabela"></tbody>
+        </table>
+
+        <!-- Totais -->
+        <div class="totals">
+            <div><strong>Total Diário:</strong> <span id="totalDia">R$ 0,00</span></div>
+            <div><strong>Total Mensal:</strong> <span id="totalMes">R$ 0,00</span></div>
+        </div>
+
     </div>
 
-    <!-- Tabela -->
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Data</th>
-                <th>Produto</th>
-                <th>Código</th>
-                <th>Pagamento</th>
-                <th>Obs</th>
-                <th>Valor (R$)</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody id="tabela"></tbody>
-    </table>
+    <footer>
+        copyright © 2025 Ailton A. Nakata
+    </footer>
 
-    <!-- Totais -->
-    <div class="totals">
-        <div><strong>Total Diário:</strong> <span id="totalDia">R$ 0,00</span></div>
-        <div><strong>Total Mensal:</strong> <span id="totalMes">R$ 0,00</span></div>
-    </div>
+    <script>
+        let vendas = JSON.parse(localStorage.getItem("vendas_diarias") || "[]");
+        let editandoId = null;
 
-</div>
+        /* --------------------- ADICIONAR OU EDITAR --------------------- */
+        function adicionarVenda() {
+            const data = document.getElementById("data").value;
+            const produto = document.getElementById("produto").value.trim();
+            const codigo = document.getElementById("codigo").value.trim();
+            const pagamento = document.getElementById("pagamento").value;
+            const obs = document.getElementById("obs").value.trim();
+            const valor = parseFloat(document.getElementById("valor").value || 0);
 
-<footer>
-    copyright © 2025 Ailton A. Nakata
-</footer>
+            if (!data || !produto || valor <= 0) {
+                alert("Preencha Data, Produto e Valor corretamente.");
+                return;
+            }
 
-<script>
-let vendas = JSON.parse(localStorage.getItem("vendas_diarias") || "[]");
-let editandoId = null;
+            if (editandoId !== null) {
+                const i = vendas.findIndex(v => v.id === editandoId);
 
-/* --------------------- ADICIONAR OU EDITAR --------------------- */
-function adicionarVenda() {
-    const data = document.getElementById("data").value;
-    const produto = document.getElementById("produto").value.trim();
-    const codigo = document.getElementById("codigo").value.trim();
-    const pagamento = document.getElementById("pagamento").value;
-    const obs = document.getElementById("obs").value.trim();
-    const valor = parseFloat(document.getElementById("valor").value || 0);
+                vendas[i] = { id: editandoId, data, produto, codigo, pagamento, obs, valor };
 
-    if (!data || !produto || valor <= 0) {
-        alert("Preencha Data, Produto e Valor corretamente.");
-        return;
-    }
+                editandoId = null;
+                document.querySelector(".btn").textContent = "Adicionar";
+            } else {
+                vendas.push({
+                    id: vendas.length + 1,
+                    data,
+                    produto,
+                    codigo,
+                    pagamento,
+                    obs,
+                    valor
+                });
+            }
 
-    if (editandoId !== null) {
-        const i = vendas.findIndex(v => v.id === editandoId);
+            salvar();
+            atualizarTabela();
 
-        vendas[i] = { id: editandoId, data, produto, codigo, pagamento, obs, valor };
+            document.getElementById("produto").value = "";
+            document.getElementById("codigo").value = "";
+            document.getElementById("pagamento").value = "";
+            document.getElementById("obs").value = "";
+            document.getElementById("valor").value = "";
+        }
 
-        editandoId = null;
-        document.querySelector(".btn").textContent = "Adicionar";
-    } else {
-        vendas.push({
-            id: vendas.length + 1,
-            data,
-            produto,
-            codigo,
-            pagamento,
-            obs,
-            valor
-        });
-    }
+        /* --------------------- EDITAR --------------------- */
+        function editarVenda(id) {
+            const v = vendas.find(x => x.id === id);
+            if (!v) return;
 
-    salvar();
-    atualizarTabela();
+            document.getElementById("data").value = v.data;
+            document.getElementById("produto").value = v.produto;
+            document.getElementById("codigo").value = v.codigo;
+            document.getElementById("pagamento").value = v.pagamento;
+            document.getElementById("obs").value = v.obs;
+            document.getElementById("valor").value = v.valor;
 
-    document.getElementById("produto").value = "";
-    document.getElementById("codigo").value = "";
-    document.getElementById("pagamento").value = "";
-    document.getElementById("obs").value = "";
-    document.getElementById("valor").value = "";
-}
+            editandoId = id;
+            document.querySelector(".btn").textContent = "Salvar Alterações";
 
-/* --------------------- EDITAR --------------------- */
-function editarVenda(id) {
-    const v = vendas.find(x => x.id === id);
-    if (!v) return;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
 
-    document.getElementById("data").value = v.data;
-    document.getElementById("produto").value = v.produto;
-    document.getElementById("codigo").value = v.codigo;
-    document.getElementById("pagamento").value = v.pagamento;
-    document.getElementById("obs").value = v.obs;
-    document.getElementById("valor").value = v.valor;
+        /* --------------------- DELETAR --------------------- */
+        function deletarVenda(id) {
+            if (!confirm("Deseja realmente deletar este item?")) return;
 
-    editandoId = id;
-    document.querySelector(".btn").textContent = "Salvar Alterações";
+            vendas = vendas.filter(v => v.id !== id);
+            vendas = vendas.map((v, index) => ({ ...v, id: index + 1 }));
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
+            salvar();
+            atualizarTabela();
+        }
 
-/* --------------------- DELETAR --------------------- */
-function deletarVenda(id) {
-    if (!confirm("Deseja realmente deletar este item?")) return;
+        /* --------------------- SALVAR --------------------- */
+        function salvar() {
+            localStorage.setItem("vendas_diarias", JSON.stringify(vendas));
+        }
 
-    vendas = vendas.filter(v => v.id !== id);
-    vendas = vendas.map((v, index) => ({ ...v, id: index + 1 }));
+        /* --------------------- ATUALIZAR TABELA --------------------- */
+        function atualizarTabela() {
+            const tabela = document.getElementById("tabela");
+            tabela.innerHTML = "";
 
-    salvar();
-    atualizarTabela();
-}
-
-/* --------------------- SALVAR --------------------- */
-function salvar() {
-    localStorage.setItem("vendas_diarias", JSON.stringify(vendas));
-}
-
-/* --------------------- ATUALIZAR TABELA --------------------- */
-function atualizarTabela() {
-    const tabela = document.getElementById("tabela");
-    tabela.innerHTML = "";
-
-    vendas.forEach(v => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
+            vendas.forEach(v => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
             <td data-label="#">${v.id}</td>
             <td data-label="Data">${v.data}</td>
             <td data-label="Produto">${v.produto}</td>
@@ -364,79 +379,80 @@ function atualizarTabela() {
                 <button class="edit-btn" onclick="editarVenda(${v.id})">Editar ✏️</button>
             </td>
         `;
-        tabela.appendChild(tr);
-    });
+                tabela.appendChild(tr);
+            });
 
-    calcularTotais();
-}
-
-/* --------------------- CALCULAR TOTAIS --------------------- */
-function calcularTotais() {
-    const hoje = document.getElementById("data").value;
-
-    let totalDia = 0;
-    let totalMes = 0;
-
-    vendas.forEach(v => {
-        const mesVenda = v.data.substring(0, 7);
-        const mesAtual = hoje.substring(0, 7);
-
-        if (v.data === hoje) totalDia += v.valor;
-        if (mesVenda === mesAtual) totalMes += v.valor;
-    });
-
-    document.getElementById("totalDia").textContent = "R$ " + totalDia.toFixed(2);
-    document.getElementById("totalMes").textContent = "R$ " + totalMes.toFixed(2);
-}
-
-document.getElementById("data").addEventListener("change", calcularTotais);
-
-/* --------------------- GERAR PDF --------------------- */
-async function gerarPDF() {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-
-    pdf.setFontSize(14);
-    pdf.text("Relatório de Vendas - Itiban Presentes", 10, 15);
-
-    pdf.setFontSize(11);
-    let y = 30;
-
-    vendas.forEach(v => {
-        pdf.text(`ID: ${v.id}`, 10, y);
-        pdf.text(`Data: ${v.data}`, 40, y);
-        pdf.text(`Produto: ${v.produto}`, 10, y + 7);
-        pdf.text(`Código: ${v.codigo}`, 10, y + 14);
-        pdf.text(`Pagamento: ${v.pagamento}`, 60, y + 14);
-        pdf.text(`Obs: ${v.obs}`, 10, y + 21);
-        pdf.text(`Valor: R$ ${v.valor.toFixed(2)}`, 10, y + 28);
-
-        y += 38;
-
-        if (y > 270) {
-            pdf.addPage();
-            y = 15;
+            calcularTotais();
         }
-    });
 
-    pdf.save("vendas.pdf");
-}
+        /* --------------------- CALCULAR TOTAIS --------------------- */
+        function calcularTotais() {
+            const hoje = document.getElementById("data").value;
 
-/* --------------------- NOVA FUNÇÃO: LIMPAR MÊS --------------------- */
-function limparMes() {
-    if (!confirm("Tem certeza que deseja limpar todas as vendas do mês?")) return;
+            let totalDia = 0;
+            let totalMes = 0;
 
-    vendas = [];
-    salvar();
-    atualizarTabela();
-    alert("Vendas do mês apagadas com sucesso!");
-}
+            vendas.forEach(v => {
+                const mesVenda = v.data.substring(0, 7);
+                const mesAtual = hoje.substring(0, 7);
 
-/* Inicialização */
-atualizarTabela();
-calcularTotais();
+                if (v.data === hoje) totalDia += v.valor;
+                if (mesVenda === mesAtual) totalMes += v.valor;
+            });
 
-</script>
+            document.getElementById("totalDia").textContent = "R$ " + totalDia.toFixed(2);
+            document.getElementById("totalMes").textContent = "R$ " + totalMes.toFixed(2);
+        }
+
+        document.getElementById("data").addEventListener("change", calcularTotais);
+
+        /* --------------------- GERAR PDF --------------------- */
+        async function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+
+            pdf.setFontSize(14);
+            pdf.text("Relatório de Vendas - Itiban Presentes", 10, 15);
+
+            pdf.setFontSize(11);
+            let y = 30;
+
+            vendas.forEach(v => {
+                pdf.text(`ID: ${v.id}`, 10, y);
+                pdf.text(`Data: ${v.data}`, 40, y);
+                pdf.text(`Produto: ${v.produto}`, 10, y + 7);
+                pdf.text(`Código: ${v.codigo}`, 10, y + 14);
+                pdf.text(`Pagamento: ${v.pagamento}`, 60, y + 14);
+                pdf.text(`Obs: ${v.obs}`, 10, y + 21);
+                pdf.text(`Valor: R$ ${v.valor.toFixed(2)}`, 10, y + 28);
+
+                y += 38;
+
+                if (y > 270) {
+                    pdf.addPage();
+                    y = 15;
+                }
+            });
+
+            pdf.save("vendas.pdf");
+        }
+
+        /* --------------------- NOVA FUNÇÃO: LIMPAR MÊS --------------------- */
+        function limparMes() {
+            if (!confirm("Tem certeza que deseja limpar todas as vendas do mês?")) return;
+
+            vendas = [];
+            salvar();
+            atualizarTabela();
+            alert("Vendas do mês apagadas com sucesso!");
+        }
+
+        /* Inicialização */
+        atualizarTabela();
+        calcularTotais();
+
+    </script>
 
 </body>
+
 </html>
