@@ -179,7 +179,7 @@ function gerarTopo() {
 
     for (let i = 0; i < rodadas; i++) {
         const opcoes = nomes
-            .filter(n => n.trim() !== "")
+            .filter(n => n && n.trim() !== "")
             .map(n => `<option>${escapeHtml(n.substring(0,3)).toUpperCase()}</option>`)
             .join("");
 
@@ -241,15 +241,29 @@ function salvarNomesDosInputs() {
     salvarNomes();
 }
 
-/* CORREÇÃO ANDROID — MENU FUNCIONA EM CELULAR */
+/* CORREÇÃO ANTI-TRAVAMENTO — MENU FUNCIONA EM CELULAR */
 function prepararClicksPontuacao() {
+    // remove listeners antigos (por segurança)
     document.querySelectorAll(".tdPontuacao").forEach(td => {
-        td.addEventListener("click", () => abrirMenu(td));
+        td.replaceWith(td.cloneNode(true)); // limpa listeners
+    });
+
+    // re-obtem as células atualizadas
+    document.querySelectorAll(".tdPontuacao").forEach(td => {
+        td.addEventListener("click", function handler(ev) {
+            // se já houver um menu aberto nessa célula, não reentrar
+            if (td.dataset.open === "1") return;
+            abrirMenu(td);
+        });
     });
 }
 
 function abrirMenu(celula) {
     salvarNomesDosInputs();
+
+    // marca que a célula tem menu aberto (previne reentrada)
+    celula.dataset.open = "1";
+    celula.style.position = "relative"; // garante posicionamento para o select
 
     const menu = document.createElement("select");
     menu.innerHTML = `
@@ -264,30 +278,55 @@ function abrirMenu(celula) {
         <option value="C">○</option>
     `;
 
+    // estilos para garantir que receba toque no mobile
     menu.style.position = "absolute";
     menu.style.left = "0";
     menu.style.top = "0";
     menu.style.width = "100%";
     menu.style.height = "100%";
-    menu.style.zIndex = 999;
+    menu.style.zIndex = 9999;
+    menu.style.pointerEvents = "auto";
 
+    // limpa conteúdo e anexa o select
     celula.innerHTML = "";
     celula.appendChild(menu);
 
-    // **CORREÇÃO ANDROID: abrir com pequeno atraso**
-    setTimeout(() => {
-        menu.size = 12; // lista expandida, Android entende
-        menu.focus();
-        menu.click();
-    }, 50);
+    // Se o usuário clicar no select, evitar que o click suba e re-ative o td
+    menu.addEventListener('click', e => e.stopPropagation());
 
+    // Tentar abrir o select no mobile com pequeno atraso.
+    // Mantemos menu.click() mas com a proteção da flag, evitando loop.
+    setTimeout(() => {
+        try {
+            menu.size = 12; // força lista exibida em algumas implementações mobile
+            menu.focus();
+            menu.click();
+        } catch (err) {
+            // não crítico — apenas falha silenciosamente
+            console.warn("Erro ao tentar forçar abertura do select:", err);
+        }
+    }, 60);
+
+    // Ao selecionar um valor
     menu.onchange = () => {
         const v = menu.value;
+        celula.dataset.open = ""; // limpa flag
         celula.innerHTML =
             v === "T" ? `<div class="icon">▲</div>` :
             v === "C" ? `<div class="icon">○</div>` :
             `<span class='score'>${v || "-"}</span>`;
+
+        // re-associa o click à célula (preparClicks já cuida de re-ligar listeners ao re-render)
     };
+
+    // Se o usuário perder foco sem selecionar
+    menu.addEventListener('blur', () => {
+        // apenas restaura visual e limpa flag
+        if (!menu.value) {
+            celula.dataset.open = "";
+            celula.innerHTML = `<span class='score'>-</span>`;
+        }
+    });
 }
 
 /* Novo jogo */
@@ -316,7 +355,7 @@ function init(){
 }
 
 function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g,m=>(
+    return String(str || '').replace(/[&<>"']/g,m=>(
         {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
     ));
 }
