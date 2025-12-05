@@ -27,7 +27,7 @@
             --btn-pdf: #0a5;
             --btn-pdf-hover: #0c7;
 
-            --btn-clear: #b30000;
+            --btn-clear: #FF3333;
             --btn-clear-hover: #ff1a1a;
 
             --table-border: #e1e1e1;
@@ -52,7 +52,7 @@
             --btn-pdf: #00994d;
             --btn-pdf-hover: #00cc66;
 
-            --btn-clear: #cc0000;
+            --btn-clear: #FF3333;
             --btn-clear-hover: #ff3333;
 
             --table-border: #333;
@@ -193,7 +193,7 @@
         }
 
         .delete-btn {
-            background: #660000;
+            background: #FF3333;
             color: white;
             padding: 6px 10px;
             font-size: 13px;
@@ -426,7 +426,7 @@
                 <td data-label="Obs">${v.obs}</td>
                 <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
                 <td data-label="Ação">
-                    <button class="delete-btn" onclick="deletarVenda(${v.id})">Apagar ❌</button>
+                    <button class="delete-btn" onclick="deletarVenda(${v.id})">Apagar 🗑️</button>
                     <button class="edit-btn" onclick="editarVenda(${v.id})">Editar ✏️</button>
                 </td>
             `;
