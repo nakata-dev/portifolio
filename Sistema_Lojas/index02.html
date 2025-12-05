@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caderno de Vendas — Simples</title>
 
-<!-- PDF — ADIÇÃO -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
     body {
         font-family: "Segoe UI", Arial, sans-serif;
@@ -44,15 +41,15 @@
     .form input,
     .form select {
         padding: 10px;
-        border: 1px solid #5f5f5f;
+        border: 1px solid #bbb;
         border-radius: 8px;
         font-size: 15px;
-        width: 90%;
+        width: 100%;
     }
 
     .btn {
         width: 100%;
-        background: #006AFF;
+        background: #006aff;
         border: none;
         color: white;
         padding: 12px;
@@ -63,24 +60,7 @@
     }
 
     .btn:hover {
-        background: #247df8;
-    }
-
-    /* PDF BUTTON — ADIÇÃO */
-    .btn-pdf {
-        width: 100%;
-        background: #0a5;
-        border: none;
-        color: white;
-        padding: 12px;
-        border-radius: 50px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 5px;
-    }
-
-    .btn-pdf:hover {
-        background: #0c7;
+        background: #004fcc;
     }
 
     table {
@@ -100,12 +80,12 @@
 
     /* Botões */
     .delete-btn {
-        background: #660000;
+        background: #ff4b4b;
         color: white;
         padding: 6px 10px;
         font-size: 13px;
         border: none;
-        border-radius: 50px;
+        border-radius: 6px;
         cursor: pointer;
     }
 
@@ -114,18 +94,18 @@
     }
 
     .edit-btn {
-        background: #006AFF;
+        background: #ffaa00;
         color: white;
         padding: 6px 10px;
         font-size: 13px;
         border: none;
-        border-radius: 50px;
+        border-radius: 6px;
         cursor: pointer;
         margin-left: 5px;
     }
 
     .edit-btn:hover {
-        background: #247df8;
+        background: #cc8800;
     }
 
     .totals {
@@ -147,7 +127,6 @@
     h2{
         text-align: center;
     }
-
     /* RESPONSIVIDADE */
     @media (max-width: 650px) {
         table thead {
@@ -159,7 +138,7 @@
         table tr,
         table td {
             display: block;
-            width: 98%;
+            width: 100%;
         }
 
         table tr {
@@ -197,7 +176,6 @@
 <body>
 
 <h1>Caderno de Vendas</h1>
-<h2>Itiban Presentes</h2>
 
 <div class="page">
 
@@ -216,11 +194,7 @@
         </select>
         <input type="text" id="obs" placeholder="Observação">
         <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
-        
         <button class="btn" onclick="adicionarVenda()">Adicionar</button>
-
-        <!-- PDF BUTTON — ADIÇÃO -->
-        <button class="btn-pdf" onclick="gerarPDF()">Gerar PDF</button>
     </div>
 
     <!-- Tabela -->
@@ -258,6 +232,7 @@ let editandoId = null;
 
 // --------------------- ADICIONAR OU EDITAR ---------------------
 function adicionarVenda() {
+
     const data = document.getElementById("data").value;
     const produto = document.getElementById("produto").value.trim();
     const codigo = document.getElementById("codigo").value.trim();
@@ -358,8 +333,8 @@ function atualizarTabela() {
             <td data-label="Obs">${v.obs}</td>
             <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
             <td data-label="Ação">
-                <button class="delete-btn" onclick="deletarVenda(${v.id})">Apagar ❌</button>
-                <button class="edit-btn" onclick="editarVenda(${v.id})">Editar ✏️</button>
+                <button class="delete-btn" onclick="deletarVenda(${v.id})">❌</button>
+                <button class="edit-btn" onclick="editarVenda(${v.id})">✏️</button>
             </td>
         `;
         tabela.appendChild(tr);
@@ -389,40 +364,6 @@ function calcularTotais() {
 
 document.getElementById("data").addEventListener("change", calcularTotais);
 
-
-// --------------------- GERAR PDF — ADIÇÃO ---------------------
-async function gerarPDF() {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-
-    pdf.setFontSize(14);
-    pdf.text("Relatório de Vendas - Itiban Presentes", 10, 15);
-
-    pdf.setFontSize(11);
-    let y = 30;
-
-    vendas.forEach(v => {
-        pdf.text(`ID: ${v.id}`, 10, y);
-        pdf.text(`Data: ${v.data}`, 40, y);
-        pdf.text(`Produto: ${v.produto}`, 10, y + 7);
-        pdf.text(`Código: ${v.codigo}`, 10, y + 14);
-        pdf.text(`Pagamento: ${v.pagamento}`, 60, y + 14);
-        pdf.text(`Obs: ${v.obs}`, 10, y + 21);
-        pdf.text(`Valor: R$ ${v.valor.toFixed(2)}`, 10, y + 28);
-
-        y += 38;
-
-        if (y > 270) {
-            pdf.addPage();
-            y = 15;
-        }
-    });
-
-    pdf.save("vendas.pdf");
-}
-
-
-// Inicialização
 atualizarTabela();
 calcularTotais();
 
