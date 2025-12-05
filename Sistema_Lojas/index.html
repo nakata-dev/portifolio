@@ -80,7 +80,7 @@
 
     /* Botões */
     .delete-btn {
-        background: #fd0000;
+        background: #660000;
         color: white;
         padding: 6px 10px;
         font-size: 13px;
@@ -105,7 +105,7 @@
     }
 
     .edit-btn:hover {
-        background: #cc8800;
+        background: #247df8;
     }
 
     .totals {
@@ -332,8 +332,8 @@ function atualizarTabela() {
             <td data-label="Obs">${v.obs}</td>
             <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
             <td data-label="Ação">
-                <button class="delete-btn" onclick="deletarVenda(${v.id})">❌</button>
-                <button class="edit-btn" onclick="editarVenda(${v.id})">✏️</button>
+                <button class="delete-btn" onclick="deletarVenda(${v.id})">Apagar ❌</button>
+                <button class="edit-btn" onclick="editarVenda(${v.id})">Editar ✏️</button>
             </td>
         `;
         tabela.appendChild(tr);
