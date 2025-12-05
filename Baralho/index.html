@@ -6,115 +6,167 @@
 <title>Tabela de Pontuação</title>
 
 <style>
-    body {
-        background: #0d0d0d;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        padding: 16px;
-    }
+/* -------------------- ESTILO BASE -------------------- */
+body {
+    background: #0d0d0d;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 16px;
+}
 
-    h2 {
-        text-align: center;
-        margin-bottom: 12px;
-    }
+h2 {
+    text-align: center;
+    margin-bottom: 12px;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #151515;
-        border-radius: 10px;
-        overflow: hidden;
-        font-size: 16px;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #151515;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 16px;
+}
 
-    th, td {
-        border: 1px solid #333;
-        padding: 8px;
-        text-align: center;
-        position: relative;
-        min-width: 48px;
-    }
+th, td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: center;
+    position: relative;
+    min-width: 48px;
+}
 
-    th {
-        background: #1f1f1f;
-        font-size: 15px;
-    }
+th {
+    background: #1f1f1f;
+    font-size: 15px;
+}
 
-    select {
-        background: #1e1e1e;
-        color: #fff;
-        border: 1px solid #444;
-        padding: 5px;
-        border-radius: 5px;
-        width: 100%;
-        font-size: 13px;
-    }
+input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #444;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    font-size: 14px;
+    outline: none;
+}
 
-    input {
-        width: 100%;
-        background: transparent;
-        border: none;
-        border-bottom: 1px solid #444;
-        color: #fff;
-        text-align: center;
-        padding: 5px;
-        font-size: 14px;
-        outline: none;
-    }
+.score {
+    cursor: pointer;
+    user-select: none;
+    font-size: 18px;
+    padding: 5px;
+    display: inline-block;
+    width: 100%;
+}
 
-    .score {
-        cursor: pointer;
-        user-select: none;
-        font-size: 18px;
-        padding: 5px;
-        display: inline-block;
-        width: 100%;
-    }
+.icon-symbol {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 16px;
+    opacity: 0.9;
+    pointer-events: none;
+}
 
-    .icon-symbol {
-        position: absolute;
-        top: 2px;
-        right: 4px;
-        font-size: 16px;
-        opacity: 0.9;
-        pointer-events: none;
-    }
+.buttons {
+    margin-top: 14px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
-    .buttons {
-        margin-top: 14px;
-        display: flex;
-        gap: 12px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
+button {
+    background: #1f1f1f;
+    border: 1px solid #444;
+    padding: 10px 14px;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
 
-    button {
-        background: #1f1f1f;
-        border: 1px solid #444;
-        padding: 10px 14px;
-        color: #fff;
-        border-radius: 8px;
-        font-size: 15px;
-        cursor: pointer;
-    }
+button:hover{
+    background: #333;
+}
 
-    button:hover{
-        background: #333;
-    }
+@media (max-width: 720px) {
+    table { font-size: 13px; }
+    th, td { padding: 6px; font-size: 12px; }
+    .icon-symbol { font-size: 14px; }
+}
 
-    @media (max-width: 720px) {
-        table { font-size: 13px; }
-        th, td { padding: 6px; font-size: 12px; }
-        select, input { font-size: 12px; }
-        .icon-symbol { font-size: 14px; }
-    }
+footer{
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
 
-    footer{
-        margin-top: 20px;
-        text-align: center;
-        font-size: 14px;
-        color: #666;
-    }
+
+/* -------------------- BOTTOM SHEET MODERNO -------------------- */
+#bottomSheetOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    z-index: 99999;
+}
+
+#bottomSheet {
+    position: fixed;
+    left: 0;
+    bottom: -400px;
+    width: 100%;
+    background: #1c1c1c;
+    border-radius: 16px 16px 0 0;
+    padding: 16px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    transition: bottom 0.28s ease;
+}
+
+.sheet-title {
+    text-align: center;
+    font-size: 17px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.sheet-btn {
+    background: #262626;
+    border: 1px solid #444;
+    padding: 12px 0;
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.sheet-btn:hover {
+    background: #333;
+}
+
+#cancelSheet {
+    width: 100%;
+    padding: 12px;
+    background: #333;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
 </style>
 </head>
 <body>
@@ -140,17 +192,37 @@
     copyright © Ailton A. Nakata - 2025
 </footer>
 
+<!-- ---------------- BOTTOM SHEET ---------------- -->
+<div id="bottomSheetOverlay"></div>
+
+<div id="bottomSheet">
+    <div class="sheet-title">Selecione o número</div>
+
+    <div id="numerosContainer" class="sheet-grid"></div>
+
+    <div class="sheet-title">Selecione o símbolo</div>
+    <div id="simbolosContainer" class="sheet-grid">
+        <div class="sheet-btn" data-symbol="">Nenhum</div>
+        <div class="sheet-btn" data-symbol="▲">▲</div>
+        <div class="sheet-btn" data-symbol="○">○</div>
+    </div>
+
+    <div id="cancelSheet">Cancelar</div>
+</div>
+
 <script>
-/* Configurações */
+/* -----------------------------------------------------------
+   SISTEMA PRINCIPAL
+----------------------------------------------------------- */
 const rodadas = 10;
 const maxJogadores = 9;
 const STORAGE_KEY = 'scoreboard_names_v2';
 
-/* Estado */
 let nomes = [];
 let jogadoresAtuais = 0;
+let celulaAtual = null;
 
-/* ---------- STORAGE ---------- */
+/* ------------------------- STORAGE ------------------------- */
 function salvarNomes() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes));
 }
@@ -179,7 +251,7 @@ function limparNomesSalvos() {
     gerarTopo();
 }
 
-/* ---------- RENDER ---------- */
+/* ------------------------- RENDER ------------------------- */
 function gerarTopo() {
     const topo = document.getElementById("topo-nomes");
     topo.innerHTML = "<th>Nome</th>";
@@ -226,93 +298,93 @@ function gerarTabela() {
     gerarTopo();
 }
 
-/* ---------- Nomes ---------- */
-function onInputNome(index, valor) {
-    nomes[index] = valor;
+function onInputNome(i, v){
+    nomes[i] = v;
     salvarNomes();
     gerarTopo();
 }
 
-function adicionarJogador() {
-    if (jogadoresAtuais >= maxJogadores) {
+function adicionarJogador(){
+    if(jogadoresAtuais >= maxJogadores){
         alert("Limite máximo de 9 jogadores atingido.");
         return;
     }
+    document.querySelectorAll("#jogadores input").forEach((inp,i)=>{
+        nomes[i]=inp.value;
+    });
 
-    salvarNomesDosInputs();
     nomes.push("");
     jogadoresAtuais++;
     salvarNomes();
     gerarTabela();
 }
 
-function salvarNomesDosInputs() {
-    document.querySelectorAll("#jogadores input").forEach((inp, i) => {
-        nomes[i] = inp.value;
-    });
-    salvarNomes();
-}
-
-/* ---------- MENU EM CELULAR (pointerdown) ---------- */
-document.addEventListener("pointerdown", function(e) {
+/* ----------------- EVENTO PARA ABRIR PAINEL ----------------- */
+document.addEventListener("pointerdown", e => {
     const celula = e.target.closest(".cell-ponto");
-    if (celula) abrirMenu(celula);
+    if (celula) abrirBottomSheet(celula);
 });
 
-/* ---------- MENU DE PONTOS ---------- */
-function abrirMenu(celula) {
+/* -----------------------------------------------------------
+   BOTTOM SHEET MODERNO
+----------------------------------------------------------- */
+const overlay = document.getElementById("bottomSheetOverlay");
+const sheet = document.getElementById("bottomSheet");
+const numerosContainer = document.getElementById("numerosContainer");
 
-    celula.innerHTML = ""; // limpa conteúdo
+function abrirBottomSheet(celula){
+    celulaAtual = celula;
 
-    const menu = document.createElement("select");
-    menu.innerHTML = `
-        <option value="">-</option>
-        <option value="10">10</option>
-        <option value="9">9</option>
-        <option value="8">8</option>
-        <option value="7">7</option>
-        <option value="6">6</option>
-        <option value="5">5</option>
-        <option value="4">4</option>
-        <option value="3">3</option>
-        <option value="2">2</option>
-        <option value="1">1</option>
-        <option value="0">0</option>
-        <option value="T">▲</option>
-        <option value="C">○</option>
-    `;
+    // criar botões dos números
+    numerosContainer.innerHTML = "";
+    for(let n=10; n>=0; n--){
+        numerosContainer.innerHTML += `<div class="sheet-btn" data-num="${n}">${n}</div>`;
+    }
 
-    menu.style.position = "absolute";
-    menu.style.top = 0;
-    menu.style.left = 0;
-    menu.style.width = "100%";
-    menu.style.height = "100%";
-    menu.style.zIndex = "999";
-
-    celula.appendChild(menu);
-    menu.focus();
-
-    menu.onchange = () => atualizarCelula(celula, menu.value);
-    menu.onblur   = () => atualizarCelula(celula, menu.value);
+    overlay.style.display = "block";
+    setTimeout(()=>{ sheet.style.bottom = "0"; }, 10);
 }
 
-function atualizarCelula(celula, val) {
-    celula.innerHTML = "";
+function fecharBottomSheet(){
+    sheet.style.bottom = "-400px";
+    setTimeout(()=>{ overlay.style.display = "none"; }, 250);
+}
 
-    let numero = "-";
+overlay.onclick = fecharBottomSheet;
+document.getElementById("cancelSheet").onclick = fecharBottomSheet;
 
-    if (!isNaN(val) && val !== "") {
-        numero = val;
-    }
+/* escolha do número */
+numerosContainer.onclick = e => {
+    const btn = e.target.closest(".sheet-btn");
+    if(!btn) return;
 
-    celula.innerHTML = `<span class="score">${numero}</span>`;
+    const numero = btn.dataset.num;
+    celulaAtual.dataset.numeroSelecionado = numero;
 
-    if (val === "T") {
-        celula.innerHTML += `<span class="icon-symbol">▲</span>`;
-    }
+    atualizarCelula();
+};
 
-    if (val === "C") {
-        celula.innerHTML += `<span class="icon-symbol">○</span>`;
+/* escolha do símbolo */
+simbolosContainer.onclick = e => {
+    const btn = e.target.closest(".sheet-btn");
+    if(!btn) return;
+
+    const simbolo = btn.dataset.symbol;
+    celulaAtual.dataset.simboloSelecionado = simbolo;
+
+    atualizarCelula();
+    fecharBottomSheet();
+};
+
+/* ------------ aplica na célula ------------ */
+function atualizarCelula(){
+    const numero = celulaAtual.dataset.numeroSelecionado || "-";
+    const simbolo = celulaAtual.dataset.simboloSelecionado || "";
+
+    celulaAtual.innerHTML = `<span class="score">${numero}</span>`;
+
+    if (simbolo){
+        celulaAtual.innerHTML += `<span class="icon-symbol">${simbolo}</span>`;
     }
 }
 
@@ -320,6 +392,8 @@ function atualizarCelula(celula, val) {
 function novoJogo() {
     document.querySelectorAll(".cell-ponto").forEach(td => {
         td.innerHTML = `<span class="score">-</span>`;
+        td.dataset.numeroSelecionado = "";
+        td.dataset.simboloSelecionado = "";
     });
 }
 
@@ -331,8 +405,8 @@ function escapeHtml(str) {
 }
 
 /* ---------- INIT ---------- */
-function init() {
-    if (!carregarNomes()) {
+function init(){
+    if(!carregarNomes()){
         nomes = Array(4).fill("");
         jogadoresAtuais = 4;
         salvarNomes();
@@ -343,12 +417,12 @@ function init() {
 
     document.getElementById("addBtn").onclick = adicionarJogador;
     document.getElementById("novoBtn").onclick = novoJogo;
-    document.getElementById("limparBtn").onclick = () => {
-        if (confirm("Apagar nomes salvos?")) limparNomesSalvos();
+    document.getElementById("limparBtn").onclick = ()=>{
+        if(confirm("Apagar nomes salvos?")) limparNomesSalvos();
     };
 }
-
 init();
 </script>
+
 </body>
 </html>
