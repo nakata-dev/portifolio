@@ -225,8 +225,8 @@ button:hover, button:active{
     transition: background 0.1s;
     user-select: none;
 }
-.sheet-btn:active {
-    background: #444;
+.sheet-btn:active, .sheet-btn.active-num {
+    background: var(--accent-color); /* Destaque azul para o número ativo */
 }
 
 #cancelSheet {
@@ -431,7 +431,7 @@ document.addEventListener("pointerdown", e => {
 });
 
 /* -----------------------------------------------------------
-    BOTTOM SHEET MODERNO
+    BOTTOM SHEET MODERNO (CORRIGIDO)
 ----------------------------------------------------------- */
 const overlay = document.getElementById("bottomSheetOverlay");
 const sheet = document.getElementById("bottomSheet");
@@ -445,11 +445,28 @@ function abrirBottomSheet(celula){
     sheet.dataset.numTemp = celula.dataset.num || '-';
     sheet.dataset.simboloTemp = celula.dataset.simbolo || '';
 
-    // Popula os botões de 10 a 0
+    // Limpa e popula os botões de 10 a 0 com listeners individuais
     numerosContainer.innerHTML = "";
+    
     for(let n=10; n>=0; n--){
-        numerosContainer.innerHTML += `<div class="sheet-btn" data-num="${n}">${n}</div>`;
+        const btn = document.createElement('div');
+        btn.className = 'sheet-btn';
+        btn.dataset.num = n;
+        btn.textContent = n;
+        
+        // Adiciona o manipulador de clique diretamente ao botão (Correção principal)
+        btn.addEventListener('click', handleNumberClick);
+
+        // Se o número for o valor atual, destaca ele
+        if (n == sheet.dataset.numTemp) {
+             btn.classList.add('active-num');
+        }
+
+        numerosContainer.appendChild(btn);
     }
+    
+    // Remove o manipulador de clique anterior do contêiner, se houver, para evitar conflitos
+    numerosContainer.onclick = null; 
 
     // Exibe o painel
     overlay.style.display = "block";
@@ -468,18 +485,19 @@ function fecharBottomSheet(){
 overlay.onclick = fecharBottomSheet;
 document.getElementById("cancelSheet").onclick = fecharBottomSheet;
 
-
-/* escolha do número (temporária) - CORRIGIDA */
-numerosContainer.onclick = e => {
-    const btn = e.target.closest(".sheet-btn");
-    if(!btn) return;
-
-    const numero = btn.dataset.num;
+// NOVO: Função dedicada para o clique do número com feedback visual
+function handleNumberClick(e) {
+    const numero = e.currentTarget.dataset.num; 
     sheet.dataset.numTemp = numero;
     
-    // Atualiza a visualização da célula imediatamente com o novo número
+    // Feedback visual: remove o destaque de todos e marca o clicado
+    document.querySelectorAll('#numerosContainer .sheet-btn').forEach(b => b.classList.remove('active-num'));
+    e.currentTarget.classList.add('active-num');
+    
+    // Atualiza a visualização da célula imediatamente
     atualizarCelulaVisual(celulaAtual, numero, sheet.dataset.simboloTemp);
-};
+}
+
 
 /* escolha do símbolo (e aplica o número e fecha) */
 simbolosContainer.onclick = e => {
@@ -491,22 +509,19 @@ simbolosContainer.onclick = e => {
     
     // Pega o número temporário selecionado
     const numFinal = sheet.dataset.numTemp;
+    let numToSave = numFinal;
 
-    if (!numFinal || numFinal === '-') {
-         // Se nenhum número foi selecionado, use a pontuação atual da célula
-         // Isso permite que o usuário mude apenas o símbolo sem clicar no número novamente
-        const numAtual = celulaAtual.dataset.num || '-';
-        if (numAtual === '-' && simbolo === '') {
-            return fecharBottomSheet(); // Não faz nada se for vazio
-        }
-        
-        // Atualiza o DOM e salva os dados com o número atual e o novo símbolo
-        atualizarCelulaFinal(celulaAtual, numAtual, simbolo);
-
-    } else {
-        // Atualiza o DOM e salva os dados com o novo número e o novo símbolo
-        atualizarCelulaFinal(celulaAtual, numFinal, simbolo);
+    // Se nenhum número foi selecionado, usa o número que já estava na célula
+    if (numFinal === '-' || numFinal === '') {
+        numToSave = celulaAtual.dataset.num || '-';
     }
+
+    if (numToSave === '-' && simbolo === '') {
+        return fecharBottomSheet(); // Não faz nada se for vazio e não houver alteração
+    }
+    
+    // Atualiza o DOM e salva os dados
+    atualizarCelulaFinal(celulaAtual, numToSave, simbolo);
     
     fecharBottomSheet();
 };
