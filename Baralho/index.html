@@ -3,234 +3,262 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tabela de Pontuação</title>
+<title>Tabela de Pontuação Responsiva</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-/* -------------------- ESTILO BASE -------------------- */
+/* -------------------- ESTILO BASE OTIMIZADO -------------------- */
+:root {
+    --bg-dark: #0d0d0d;
+    --bg-mid: #151515;
+    --bg-light: #1f1f1f;
+    --text-color: #f0f0f0;
+    --border-color: #333;
+    --accent-color: #00bcd4; /* Azul/Ciano para destaque */
+    --sheet-bg: #222222;
+}
+
 body {
-    background: #0d0d0d;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    padding: 16px;
+    background: var(--bg-dark);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 16px 10px;
+    touch-action: manipulation; /* Otimização para toque */
 }
 
 h2 {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    color: var(--accent-color);
+    font-weight: 400;
+}
+
+/* Tabela e Container */
+.tabela-container {
+    overflow-x: auto;
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: #151515;
-    border-radius: 10px;
-    overflow: hidden;
-    font-size: 16px;
+    background: var(--bg-mid);
+    min-width: 450px; /* Garante usabilidade mínima */
 }
 
 th, td {
-    border: 1px solid #333;
-    padding: 8px;
+    border: 1px solid var(--border-color);
+    padding: 8px 4px; /* Mais compacto para mobile */
     text-align: center;
     position: relative;
-    min-width: 48px;
+    min-width: 50px;
+    height: 48px;
+    box-sizing: border-box;
 }
 
 th {
-    background: #1f1f1f;
-    font-size: 15px;
+    background: var(--bg-light);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-color);
 }
 
 .round-number {
-    font-weight: bold;
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
+/* Inputs e Selects */
 select {
-    background: #222;
-    color: #fff;
-    border: 1px solid #444;
-    padding: 4px;
+    background: #2a2a2a;
+    color: var(--text-color);
+    border: 1px solid #555;
+    padding: 3px;
     border-radius: 4px;
+    width: 100%;
+    font-size: 11px;
 }
 
 input {
-    width: 100%;
+    width: 90%;
     background: transparent;
     border: none;
     border-bottom: 1px solid #444;
-    color: #fff;
-    text-align: center;
-    padding: 5px;
-    font-size: 14px;
+    color: var(--text-color);
+    text-align: left;
+    padding: 5px 0;
+    font-size: 13px;
     outline: none;
 }
 
+/* Pontuação */
 .score {
     cursor: pointer;
     user-select: none;
     font-size: 18px;
-    padding: 5px;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     width: 100%;
 }
 
 .icon-symbol {
     position: absolute;
-    top: 2px;
-    right: 4px;
-    font-size: 16px;
+    top: 0px;
+    right: 0px;
+    font-size: 14px;
     opacity: 0.9;
     pointer-events: none;
+    /* Cores de destaque para os símbolos */
+    color: #ff9800; /* Laranja para Triângulo (Obrigado) */
+}
+.icon-symbol[data-symbol="○"] {
+    color: #4caf50; /* Verde para Círculo (Vencedor) */
 }
 
+
+/* Fixação da Coluna Nome */
+td:first-child, th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: var(--bg-mid);
+    text-align: left;
+    padding-left: 12px;
+}
+th:first-child {
+    background: var(--bg-light);
+    z-index: 15;
+}
+td:first-child::after, th:first-child::after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0.4), transparent);
+    pointer-events: none;
+    z-index: 11;
+}
+
+
+/* Botões */
 .buttons {
-    margin-top: 14px;
+    margin-top: 20px;
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 button {
-    background: #1f1f1f;
+    background: var(--bg-light);
     border: 1px solid #444;
-    padding: 10px 14px;
-    color: #fff;
+    padding: 10px 15px;
+    color: var(--text-color);
     border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-}
-
-button:hover{
-    background: #333;
-}
-
-@media (max-width: 720px) {
-    table { font-size: 13px; }
-    th, td { padding: 6px; font-size: 12px; }
-    .icon-symbol { font-size: 14px; }
-}
-
-footer{
-    margin-top: 20px;
-    text-align: center;
     font-size: 14px;
-    color: #666;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    flex-grow: 1;
+    max-width: 180px;
 }
 
+button:hover, button:active{
+    background: #333;
+    transform: scale(0.99);
+}
 
-/* -------------------- BOTTOM SHEET MODERNO -------------------- */
+/* -------------------- BOTTOM SHEET -------------------- */
 #bottomSheetOverlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.7);
     display: none;
-    z-index: 99999;
+    z-index: 9999;
 }
 
 #bottomSheet {
     position: fixed;
     left: 0;
-    bottom: -400px;
+    bottom: -500px;
     width: 100%;
-    background: #1c1c1c;
+    background: var(--sheet-bg);
     border-radius: 16px 16px 0 0;
     padding: 16px;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
-    transition: bottom 0.28s ease;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+    transition: bottom 0.3s ease-out;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .sheet-title {
     text-align: center;
-    font-size: 17px;
-    margin-bottom: 10px;
+    font-size: 15px;
+    margin: 10px 0;
+    color: var(--accent-color);
     opacity: 0.9;
+    font-weight: 600;
 }
 
 .sheet-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 .sheet-btn {
-    background: #262626;
-    border: 1px solid #444;
+    background: #333;
+    border: none;
     padding: 12px 0;
     color: white;
     border-radius: 8px;
     text-align: center;
     font-size: 16px;
     cursor: pointer;
+    transition: background 0.1s;
+    user-select: none;
 }
-
-.sheet-btn:hover {
-    background: #333;
+.sheet-btn:active {
+    background: #444;
 }
 
 #cancelSheet {
     width: 100%;
     padding: 12px;
-    background: #333;
+    background: #444;
     border-radius: 8px;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 15px;
     cursor: pointer;
 }
 
-/*FIXANDO COLUNA DO NOME*/
-/* Fixa a primeira coluna (Nome) */
-/* Container que permite a tabela rolar lateralmente */
-.tabela-container {
-    overflow-x: auto;
-    position: relative;
-    width: 100%;
+footer{
+    margin-top: 30px;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
 }
-td:first-child::after,
-th:first-child::after {
-    content: "";
-    position: absolute;
-    right: -6px;
-    top: 0;
-    width: 6px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.7), transparent);
-    pointer-events: none;
-}
-
-/* Fixa a coluna "Nome" */
-td:first-child,
-th:first-child {
-    position: sticky;
-    left: 0;
-    background: #151515; /* mesma cor da tabela */
-    z-index: 10;
-}
-
-/* Cabeçalho tem prioridade maior */
-th:first-child {
-    background: #1f1f1f;
-    z-index: 15;
-}
-
 
 </style>
 </head>
 <body>
 
-<h2>Tabela de Pontuação</h2>
+<h2>MARCADOR DE BARALHO</h2>
 <div class="tabela-container">
     
     <table id="tabela">
         <thead>
-            <!-- Linha 1: números das rodadas -->
             <tr id="linha-rodadas">
                 <th>Nome</th>
             </tr>
     
-            <!-- Linha 2: selects -->
             <tr id="topo-nomes">
                 <th>—</th>
             </tr>
@@ -241,28 +269,29 @@ th:first-child {
 </div>
 
 <div class="buttons">
-    <button id="novoBtn">Novo jogo</button>
-    <button id="addBtn">Adicionar</button>
-    <button id="limparBtn" title="Apaga nomes salvos">Limpar nomes</button>
+    <button id="novoBtn"><i class="fas fa-redo"></i> Novo Jogo</button>
+    <button id="addBtn"><i class="fas fa-user-plus"></i> Adicionar Jogador</button>
+    <button id="limparBtn" title="Apaga nomes salvos"><i class="fas fa-trash"></i> Limpar Nomes</button>
 </div>
 
 <footer>
     copyright © Ailton A. Nakata - 2025
 </footer>
 
-<!-- ---------------- BOTTOM SHEET ---------------- -->
 <div id="bottomSheetOverlay"></div>
 
 <div id="bottomSheet">
-    <div class="sheet-title">Selecione o número</div>
+    <div class="sheet-title">Selecione a Pontuação (0-10)</div>
 
     <div id="numerosContainer" class="sheet-grid"></div>
 
-    <div class="sheet-title">Selecione o símbolo</div>
+    <hr style="border-color:#333; margin: 15px 0;">
+
+    <div class="sheet-title">Selecione o Símbolo</div>
     <div id="simbolosContainer" class="sheet-grid">
-        <div class="sheet-btn" data-symbol="">Nenhum</div>
-        <div class="sheet-btn" data-symbol="▲">▲</div>
-        <div class="sheet-btn" data-symbol="○">○</div>
+        <div class="sheet-btn" data-symbol="" data-label="Nenhum">Nenhum</div>
+        <div class="sheet-btn" data-symbol="▲" data-label="Obrigado" style="color:#ff9800;">▲ (Obrigado)</div>
+        <div class="sheet-btn" data-symbol="○" data-label="Vencedor" style="color:#4caf50;">○ (Vencedor)</div>
     </div>
 
     <div id="cancelSheet">Cancelar</div>
@@ -270,11 +299,11 @@ th:first-child {
 
 <script>
 /* -----------------------------------------------------------
-   SISTEMA PRINCIPAL
+    SISTEMA PRINCIPAL
 ----------------------------------------------------------- */
 const rodadas = 10;
 const maxJogadores = 9;
-const STORAGE_KEY = 'scoreboard_names_v2';
+const STORAGE_KEY = 'scoreboard_names_v3'; // Chave atualizada
 
 let nomes = [];
 let jogadoresAtuais = 0;
@@ -321,6 +350,8 @@ function gerarTopo() {
         .map(n => `<option>${escapeHtml(n.substring(0,3).toUpperCase())}</option>`)
         .join("");
 
+    // Popula a linha de números de rodada (1 a 10)
+    // Popula a linha de selects (3 primeiras letras)
     for (let i = 0; i < rodadas; i++) {
         linhaRodadas.innerHTML += `<th><span class="round-number">${i+1}</span></th>`;
         topo.innerHTML += `<th><select>${opcoes}</select></th>`;
@@ -331,6 +362,7 @@ function gerarTabela() {
     const tbody = document.getElementById("jogadores");
     tbody.innerHTML = "";
 
+    // Inicializa com 4 jogadores se não houver dados salvos
     if (jogadoresAtuais === 0) {
         jogadoresAtuais = 4;
         nomes = Array(4).fill("");
@@ -338,18 +370,29 @@ function gerarTabela() {
     }
 
     for (let i = 0; i < jogadoresAtuais; i++) {
+        // Recupera dados salvos da pontuação e símbolo (se existirem)
+        const pontuacoes = JSON.parse(localStorage.getItem(`pontuacao_${i}`) || '[]');
+
         let linha = `
         <tr>
             <td>
                 <input value="${escapeHtml(nomes[i] || "")}"
-                       placeholder="Jogador ${i+1}"
-                       oninput="onInputNome(${i}, this.value)">
+                        placeholder="Jogador ${i+1}"
+                        oninput="onInputNome(${i}, this.value)">
             </td>`;
 
         for (let j = 0; j < rodadas; j++) {
+            const ponto = pontuacoes[j] || { num: '-', simbolo: '' };
+            const simboloTag = ponto.simbolo ? `<span class="icon-symbol" data-symbol="${ponto.simbolo}">${ponto.simbolo}</span>` : '';
+
             linha += `
-            <td class="cell-ponto">
-                <span class="score">-</span>
+            <td class="cell-ponto" 
+                data-jogador="${i}" 
+                data-rodada="${j}"
+                data-num="${ponto.num}"
+                data-simbolo="${ponto.simbolo}">
+                <span class="score">${ponto.num}</span>
+                ${simboloTag}
             </td>`;
         }
 
@@ -371,6 +414,8 @@ function adicionarJogador(){
         alert("Limite máximo de 9 jogadores atingido.");
         return;
     }
+    
+    // Salva os nomes atuais antes de adicionar um novo
     document.querySelectorAll("#jogadores input").forEach((inp,i)=>{
         nomes[i]=inp.value;
     });
@@ -383,12 +428,13 @@ function adicionarJogador(){
 
 /* ----------------- EVENTO PARA ABRIR PAINEL ----------------- */
 document.addEventListener("pointerdown", e => {
+    // Usamos pointerdown pois é mais responsivo em mobile que 'click'
     const celula = e.target.closest(".cell-ponto");
     if (celula) abrirBottomSheet(celula);
 });
 
 /* -----------------------------------------------------------
-   BOTTOM SHEET MODERNO
+    BOTTOM SHEET MODERNO
 ----------------------------------------------------------- */
 const overlay = document.getElementById("bottomSheetOverlay");
 const sheet = document.getElementById("bottomSheet");
@@ -398,65 +444,123 @@ const simbolosContainer = document.getElementById("simbolosContainer");
 function abrirBottomSheet(celula){
     celulaAtual = celula;
 
+    // Inicializa o dataset do painel com os valores da célula
+    sheet.dataset.numTemp = celula.dataset.num || '-';
+    sheet.dataset.simboloTemp = celula.dataset.simbolo || '';
+
+    // Popula os botões de 10 a 0
     numerosContainer.innerHTML = "";
     for(let n=10; n>=0; n--){
         numerosContainer.innerHTML += `<div class="sheet-btn" data-num="${n}">${n}</div>`;
     }
 
+    // Exibe o painel
     overlay.style.display = "block";
     setTimeout(()=>{ sheet.style.bottom = "0"; }, 10);
 }
 
 function fecharBottomSheet(){
-    sheet.style.bottom = "-400px";
-    setTimeout(()=>{ overlay.style.display = "none"; }, 250);
+    // Limpa o estado temporário ao fechar
+    sheet.dataset.numTemp = '';
+    sheet.dataset.simboloTemp = '';
+
+    sheet.style.bottom = "-500px";
+    setTimeout(()=>{ overlay.style.display = "none"; }, 300);
 }
 
 overlay.onclick = fecharBottomSheet;
 document.getElementById("cancelSheet").onclick = fecharBottomSheet;
 
-/* escolha do número */
+
+/* escolha do número (temporária) */
 numerosContainer.onclick = e => {
     const btn = e.target.closest(".sheet-btn");
     if(!btn) return;
 
     const numero = btn.dataset.num;
-    celulaAtual.dataset.numeroSelecionado = numero;
-
-    atualizarCelula();
+    sheet.dataset.numTemp = numero;
+    
+    // Atualiza a visualização da célula imediatamente
+    atualizarCelulaVisual(celulaAtual, numero, sheet.dataset.simboloTemp);
+    
+    // Opcional: Fechar o painel imediatamente após selecionar o número, se preferir não usar símbolos.
+    // fecharBottomSheet(); 
 };
 
-/* escolha do símbolo */
+/* escolha do símbolo (e aplica o número e fecha) */
 simbolosContainer.onclick = e => {
     const btn = e.target.closest(".sheet-btn");
     if(!btn) return;
 
     const simbolo = btn.dataset.symbol;
-    celulaAtual.dataset.simboloSelecionado = simbolo;
+    sheet.dataset.simboloTemp = simbolo;
+    
+    // Aplica a alteração final
+    const numFinal = sheet.dataset.numTemp;
 
-    atualizarCelula();
+    if (numFinal === '-' && simbolo === '') {
+        // Evita salvar dados vazios se não houver pontuação selecionada
+        return fecharBottomSheet();
+    }
+    
+    // Atualiza o DOM e salva os dados
+    atualizarCelulaFinal(celulaAtual, numFinal, simbolo);
+    
     fecharBottomSheet();
 };
 
-/* ------------ aplica na célula ------------ */
-function atualizarCelula(){
-    const numero = celulaAtual.dataset.numeroSelecionado || "-";
-    const simbolo = celulaAtual.dataset.simboloSelecionado || "";
 
-    celulaAtual.innerHTML = `<span class="score">${numero}</span>`;
+/* ------------ FUNÇÕES DE ATUALIZAÇÃO E SALVAMENTO ------------ */
 
+// Atualiza o DOM para visualização temporária (só número muda)
+function atualizarCelulaVisual(celula, numero, simbolo){
+    celula.querySelector(".score").textContent = numero;
+    
+    // Remove o símbolo se existir e não foi selecionado um novo
+    let simboloSpan = celula.querySelector(".icon-symbol");
+    if (simboloSpan) simboloSpan.remove();
+    
+    // Adiciona o símbolo se um novo foi selecionado
     if (simbolo){
-        celulaAtual.innerHTML += `<span class="icon-symbol">${simbolo}</span>`;
+        celula.innerHTML += `<span class="icon-symbol" data-symbol="${simbolo}">${simbolo}</span>`;
     }
 }
 
+// Atualiza o DOM e salva no localStorage
+function atualizarCelulaFinal(celula, numero, simbolo){
+    const jogadorIndex = parseInt(celula.dataset.jogador);
+    const rodadaIndex = parseInt(celula.dataset.rodada);
+
+    // 1. Atualiza o DOM (para garantir que a visualização final esteja correta)
+    celula.dataset.num = numero;
+    celula.dataset.simbolo = simbolo;
+    atualizarCelulaVisual(celula, numero, simbolo);
+
+
+    // 2. Persiste os dados (pontuação e símbolo)
+    const pontuacoesKey = `pontuacao_${jogadorIndex}`;
+    const pontuacoes = JSON.parse(localStorage.getItem(pontuacoesKey) || '[]');
+    
+    pontuacoes[rodadaIndex] = { num: numero, simbolo: simbolo };
+    localStorage.setItem(pontuacoesKey, JSON.stringify(pontuacoes));
+}
+
+
 /* ---------- NOVO JOGO ---------- */
 function novoJogo() {
+    if(!confirm("Zerar todas as pontuações e símbolos?")) return;
+
     document.querySelectorAll(".cell-ponto").forEach(td => {
         td.innerHTML = `<span class="score">-</span>`;
-        td.dataset.numeroSelecionado = "";
-        td.dataset.simboloSelecionado = "";
+        td.dataset.num = "-";
+        td.dataset.simbolo = "";
     });
+    
+    // Limpa todas as chaves de pontuação
+    for (let i = 0; i < jogadoresAtuais; i++) {
+         localStorage.removeItem(`pontuacao_${i}`);
+    }
+    alert("Pontuações zeradas! Novo jogo iniciado.");
 }
 
 /* ---------- UTILS ---------- */
@@ -468,19 +572,21 @@ function escapeHtml(str) {
 
 /* ---------- INIT ---------- */
 function init(){
+    // Carrega ou inicializa nomes e jogadores
     if(!carregarNomes()){
         nomes = Array(4).fill("");
         jogadoresAtuais = 4;
         salvarNomes();
     }
 
+    // Gera a tabela com dados persistidos
     gerarTabela();
-    gerarTopo();
 
+    // Associa eventos dos botões
     document.getElementById("addBtn").onclick = adicionarJogador;
     document.getElementById("novoBtn").onclick = novoJogo;
     document.getElementById("limparBtn").onclick = ()=>{
-        if(confirm("Apagar nomes salvos?")) limparNomesSalvos();
+        if(confirm("Apagar todos os nomes salvos? Isso reiniciará a lista de jogadores.")) limparNomesSalvos();
     };
 }
 init();
