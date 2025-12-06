@@ -303,7 +303,7 @@ footer{
 ----------------------------------------------------------- */
 const rodadas = 10;
 const maxJogadores = 9;
-const STORAGE_KEY = 'scoreboard_names_v3'; // Chave atualizada
+const STORAGE_KEY = 'scoreboard_names_v3';
 
 let nomes = [];
 let jogadoresAtuais = 0;
@@ -350,8 +350,6 @@ function gerarTopo() {
         .map(n => `<option>${escapeHtml(n.substring(0,3).toUpperCase())}</option>`)
         .join("");
 
-    // Popula a linha de números de rodada (1 a 10)
-    // Popula a linha de selects (3 primeiras letras)
     for (let i = 0; i < rodadas; i++) {
         linhaRodadas.innerHTML += `<th><span class="round-number">${i+1}</span></th>`;
         topo.innerHTML += `<th><select>${opcoes}</select></th>`;
@@ -362,7 +360,6 @@ function gerarTabela() {
     const tbody = document.getElementById("jogadores");
     tbody.innerHTML = "";
 
-    // Inicializa com 4 jogadores se não houver dados salvos
     if (jogadoresAtuais === 0) {
         jogadoresAtuais = 4;
         nomes = Array(4).fill("");
@@ -444,7 +441,7 @@ const simbolosContainer = document.getElementById("simbolosContainer");
 function abrirBottomSheet(celula){
     celulaAtual = celula;
 
-    // Inicializa o dataset do painel com os valores da célula
+    // Inicializa o estado temporário do painel com os valores atuais da célula
     sheet.dataset.numTemp = celula.dataset.num || '-';
     sheet.dataset.simboloTemp = celula.dataset.simbolo || '';
 
@@ -472,7 +469,7 @@ overlay.onclick = fecharBottomSheet;
 document.getElementById("cancelSheet").onclick = fecharBottomSheet;
 
 
-/* escolha do número (temporária) */
+/* escolha do número (temporária) - CORRIGIDA */
 numerosContainer.onclick = e => {
     const btn = e.target.closest(".sheet-btn");
     if(!btn) return;
@@ -480,11 +477,8 @@ numerosContainer.onclick = e => {
     const numero = btn.dataset.num;
     sheet.dataset.numTemp = numero;
     
-    // Atualiza a visualização da célula imediatamente
+    // Atualiza a visualização da célula imediatamente com o novo número
     atualizarCelulaVisual(celulaAtual, numero, sheet.dataset.simboloTemp);
-    
-    // Opcional: Fechar o painel imediatamente após selecionar o número, se preferir não usar símbolos.
-    // fecharBottomSheet(); 
 };
 
 /* escolha do símbolo (e aplica o número e fecha) */
@@ -495,16 +489,24 @@ simbolosContainer.onclick = e => {
     const simbolo = btn.dataset.symbol;
     sheet.dataset.simboloTemp = simbolo;
     
-    // Aplica a alteração final
+    // Pega o número temporário selecionado
     const numFinal = sheet.dataset.numTemp;
 
-    if (numFinal === '-' && simbolo === '') {
-        // Evita salvar dados vazios se não houver pontuação selecionada
-        return fecharBottomSheet();
+    if (!numFinal || numFinal === '-') {
+         // Se nenhum número foi selecionado, use a pontuação atual da célula
+         // Isso permite que o usuário mude apenas o símbolo sem clicar no número novamente
+        const numAtual = celulaAtual.dataset.num || '-';
+        if (numAtual === '-' && simbolo === '') {
+            return fecharBottomSheet(); // Não faz nada se for vazio
+        }
+        
+        // Atualiza o DOM e salva os dados com o número atual e o novo símbolo
+        atualizarCelulaFinal(celulaAtual, numAtual, simbolo);
+
+    } else {
+        // Atualiza o DOM e salva os dados com o novo número e o novo símbolo
+        atualizarCelulaFinal(celulaAtual, numFinal, simbolo);
     }
-    
-    // Atualiza o DOM e salva os dados
-    atualizarCelulaFinal(celulaAtual, numFinal, simbolo);
     
     fecharBottomSheet();
 };
@@ -512,32 +514,39 @@ simbolosContainer.onclick = e => {
 
 /* ------------ FUNÇÕES DE ATUALIZAÇÃO E SALVAMENTO ------------ */
 
-// Atualiza o DOM para visualização temporária (só número muda)
+// Atualiza o DOM para visualização. Não persiste no Storage.
 function atualizarCelulaVisual(celula, numero, simbolo){
-    celula.querySelector(".score").textContent = numero;
+    // Atualiza a pontuação exibida
+    const scoreSpan = celula.querySelector(".score");
+    if (scoreSpan) scoreSpan.textContent = numero;
     
-    // Remove o símbolo se existir e não foi selecionado um novo
+    // Remove o símbolo antigo
     let simboloSpan = celula.querySelector(".icon-symbol");
     if (simboloSpan) simboloSpan.remove();
     
-    // Adiciona o símbolo se um novo foi selecionado
+    // Adiciona o novo símbolo, se houver
     if (simbolo){
-        celula.innerHTML += `<span class="icon-symbol" data-symbol="${simbolo}">${simbolo}</span>`;
+        const newSimboloTag = document.createElement('span');
+        newSimboloTag.className = 'icon-symbol';
+        newSimboloTag.dataset.symbol = simbolo;
+        newSimboloTag.textContent = simbolo;
+        celula.appendChild(newSimboloTag);
     }
 }
 
-// Atualiza o DOM e salva no localStorage
+// Atualiza o DOM (data-attrs) e persiste no localStorage
 function atualizarCelulaFinal(celula, numero, simbolo){
     const jogadorIndex = parseInt(celula.dataset.jogador);
     const rodadaIndex = parseInt(celula.dataset.rodada);
 
-    // 1. Atualiza o DOM (para garantir que a visualização final esteja correta)
+    // 1. Atualiza os data attributes da célula
     celula.dataset.num = numero;
     celula.dataset.simbolo = simbolo;
+    
+    // 2. Atualiza a visualização no DOM
     atualizarCelulaVisual(celula, numero, simbolo);
 
-
-    // 2. Persiste os dados (pontuação e símbolo)
+    // 3. Persiste os dados (pontuação e símbolo)
     const pontuacoesKey = `pontuacao_${jogadorIndex}`;
     const pontuacoes = JSON.parse(localStorage.getItem(pontuacoesKey) || '[]');
     
