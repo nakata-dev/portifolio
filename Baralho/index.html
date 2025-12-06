@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tabela de Pontuação Responsiva</title>
+<title>Tabela de Pontuação Responsiva — FIX MOBILE</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
@@ -14,7 +14,7 @@
     --bg-light: #1f1f1f;
     --text-color: #f0f0f0;
     --border-color: #333;
-    --accent-color: #00bcd4; /* Azul/Ciano para destaque */
+    --accent-color: #00bcd4;
     --sheet-bg: #222222;
 }
 
@@ -23,7 +23,7 @@ body {
     color: var(--text-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 16px 10px;
-    touch-action: manipulation; /* Otimização para toque */
+    touch-action: manipulation;
 }
 
 h2 {
@@ -33,12 +33,10 @@ h2 {
     font-weight: 400;
 }
 
-/* Tabela e Container */
+/* Tabela */
 .tabela-container {
     overflow-x: auto;
-    position: relative;
     width: 100%;
-    max-width: 100vw;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
@@ -47,105 +45,60 @@ table {
     width: 100%;
     border-collapse: collapse;
     background: var(--bg-mid);
-    min-width: 450px; /* Garante usabilidade mínima */
+    min-width: 450px;
 }
 
 th, td {
     border: 1px solid var(--border-color);
-    padding: 8px 4px; /* Mais compacto para mobile */
+    padding: 6px 4px;
     text-align: center;
-    position: relative;
-    min-width: 50px;
-    height: 48px;
-    box-sizing: border-box;
+    min-width: 48px;
+    height: 44px;
 }
 
 th {
     background: var(--bg-light);
-    font-size: 14px;
-    font-weight: 600;
     color: var(--accent-color);
 }
 
-.round-number {
-    opacity: 0.8;
+/* Fix da coluna Nome */
+th:first-child, td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: var(--bg-mid);
 }
 
-/* Inputs e Selects */
-select {
-    background: #2a2a2a;
-    color: var(--text-color);
-    border: 1px solid #555;
-    padding: 3px;
-    border-radius: 4px;
-    width: 100%;
-    font-size: 11px;
-}
+/* garante que o ícone seja posicionado em relação à célula */
+.cell-ponto { position: relative; }
 
+/* Input */
 input {
     width: 90%;
     background: transparent;
     border: none;
     border-bottom: 1px solid #444;
     color: var(--text-color);
-    text-align: left;
     padding: 5px 0;
-    font-size: 13px;
-    outline: none;
 }
 
-/* Pontuação */
 .score {
-    cursor: pointer;
-    user-select: none;
     font-size: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
+    user-select: none;
 }
 
 .icon-symbol {
     position: absolute;
-    top: 0px;
-    right: 0px;
-    font-size: 14px;
-    opacity: 0.9;
+    top: 4px;
+    right: 6px;
+    font-size: 15px;
     pointer-events: none;
-    /* Cores de destaque para os símbolos */
-    color: #ff9800; /* Laranja para Triângulo (Obrigado) */
-}
-.icon-symbol[data-symbol="○"] {
-    color: #4caf50; /* Verde para Círculo (Vencedor) */
+    opacity: 0.95;
 }
 
-
-/* Fixação da Coluna Nome */
-td:first-child, th:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 10;
-    background: var(--bg-mid);
-    text-align: left;
-    padding-left: 12px;
-}
-th:first-child {
-    background: var(--bg-light);
-    z-index: 15;
-}
-td:first-child::after, th:first-child::after {
-    content: "";
-    position: absolute;
-    right: -1px;
-    top: 0;
-    width: 5px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.4), transparent);
-    pointer-events: none;
-    z-index: 11;
-}
-
+/* cores por símbolo (apenas para melhor visibilidade) */
+.icon-symbol[data-symbol="▲"] { color: #ff9800; }
+.icon-symbol[data-symbol="○"] { color: #4caf50; }
 
 /* Botões */
 .buttons {
@@ -155,23 +108,13 @@ td:first-child::after, th:first-child::after {
     justify-content: center;
     flex-wrap: wrap;
 }
-
 button {
+    padding: 10px 15px;
+    border-radius: 8px;
     background: var(--bg-light);
     border: 1px solid #444;
-    padding: 10px 15px;
-    color: var(--text-color);
-    border-radius: 8px;
-    font-size: 14px;
+    color: white;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    flex-grow: 1;
-    max-width: 180px;
-}
-
-button:hover, button:active{
-    background: #333;
-    transform: scale(0.99);
 }
 
 /* -------------------- BOTTOM SHEET -------------------- */
@@ -180,7 +123,7 @@ button:hover, button:active{
     inset: 0;
     background: rgba(0,0,0,0.7);
     display: none;
-    z-index: 9999;
+    z-index: 9998;
 }
 
 #bottomSheet {
@@ -190,249 +133,167 @@ button:hover, button:active{
     width: 100%;
     background: var(--sheet-bg);
     border-radius: 16px 16px 0 0;
-    padding: 16px;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
-    transition: bottom 0.3s ease-out;
+    padding: 18px;
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.6);
+    transition: bottom 0.28s ease-out;
     max-height: 80vh;
     overflow-y: auto;
+    z-index: 9999;
+    touch-action: manipulation;
 }
 
 .sheet-title {
     text-align: center;
-    font-size: 15px;
     margin: 10px 0;
     color: var(--accent-color);
-    opacity: 0.9;
-    font-weight: 600;
 }
 
 .sheet-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 8px;
-    margin-bottom: 10px;
 }
 
 .sheet-btn {
-    background: #333;
-    border: none;
     padding: 12px 0;
-    color: white;
+    background: #333;
     border-radius: 8px;
     text-align: center;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.1s;
     user-select: none;
+    touch-action: manipulation;
 }
 .sheet-btn:active, .sheet-btn.active-num {
-    background: var(--accent-color); /* Destaque azul para o número ativo */
+    background: var(--accent-color) !important;
 }
 
 #cancelSheet {
-    width: 100%;
-    padding: 12px;
     background: #444;
+    padding: 12px;
     border-radius: 8px;
+    margin-top: 10px;
     text-align: center;
-    margin-top: 15px;
     cursor: pointer;
 }
-
 footer{
-    margin-top: 30px;
     text-align: center;
-    font-size: 12px;
+    margin-top: 25px;
+    font-size: 14px;
     color: #666;
 }
-
 </style>
 </head>
 <body>
 
-<h2>MARCADOR DE BARALHO</h2>
+<h2>MARCADOR DE BARALHO — FIX MOBILE</h2>
+
 <div class="tabela-container">
-    
     <table id="tabela">
         <thead>
-            <tr id="linha-rodadas">
-                <th>Nome</th>
-            </tr>
-    
-            <tr id="topo-nomes">
-                <th>—</th>
-            </tr>
+            <tr id="linha-rodadas"><th>Nome</th></tr>
+            <tr id="topo-nomes"><th>—</th></tr>
         </thead>
-    
         <tbody id="jogadores"></tbody>
     </table>
 </div>
 
 <div class="buttons">
-    <button id="novoBtn"><i class="fas fa-redo"></i> Novo Jogo</button>
-    <button id="addBtn"><i class="fas fa-user-plus"></i> Adicionar Jogador</button>
-    <button id="limparBtn" title="Apaga nomes salvos"><i class="fas fa-trash"></i> Limpar Nomes</button>
+    <button id="novoBtn">Novo Jogo</button>
+    <button id="addBtn">Adicionar Jogador</button>
+    <button id="limparBtn">Limpar Nomes</button>
 </div>
 
-<footer>
-    copyright © Ailton A. Nakata - 2025
-</footer>
-
 <div id="bottomSheetOverlay"></div>
-
 <div id="bottomSheet">
-    <div class="sheet-title">Selecione a Pontuação (0-10)</div>
-
+    <div class="sheet-title">Selecione a Pontuação</div>
     <div id="numerosContainer" class="sheet-grid"></div>
 
-    <hr style="border-color:#333; margin: 15px 0;">
+    <hr style="margin:15px 0; border-color:#333;">
 
-    <div class="sheet-title">Selecione o Símbolo</div>
+    <div class="sheet-title">Símbolo</div>
     <div id="simbolosContainer" class="sheet-grid">
-        <div class="sheet-btn" data-symbol="" data-label="Nenhum">Nenhum</div>
-        <div class="sheet-btn" data-symbol="▲" data-label="Obrigado" style="color:#ff9800;">▲ (Obrigado)</div>
-        <div class="sheet-btn" data-symbol="○" data-label="Vencedor" style="color:#4caf50;">○ (Vencedor)</div>
+        <div class="sheet-btn" data-symbol="">Nenhum</div>
+        <div class="sheet-btn" data-symbol="▲" style="color:#ff9800">▲ Obrigado</div>
+        <div class="sheet-btn" data-symbol="○" style="color:#4caf50">○ Vencedor</div>
     </div>
 
     <div id="cancelSheet">Cancelar</div>
 </div>
+<footer>
+    copyright &copy; 2025 - Ailton A. Nakata
+</footer>
 
 <script>
-/* -----------------------------------------------------------
-    SISTEMA PRINCIPAL
------------------------------------------------------------ */
 const rodadas = 10;
 const maxJogadores = 9;
-const STORAGE_KEY = 'scoreboard_names_v3';
-
+const STORAGE_KEY = "scoreboard_names_v3";
 let nomes = [];
 let jogadoresAtuais = 0;
 let celulaAtual = null;
 
-/* ------------------------- STORAGE ------------------------- */
-function salvarNomes() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes));
-}
-
-function carregarNomes() {
-    try {
+function salvarNomes(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes)); }
+function carregarNomes(){
+    try{
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return false;
-
+        if(!raw) return false;
         const arr = JSON.parse(raw);
-        if (!Array.isArray(arr)) return false;
-
+        if(!Array.isArray(arr)) return false;
         nomes = arr.slice(0, maxJogadores);
         jogadoresAtuais = nomes.length;
         return true;
-    } catch {
-        return false;
-    }
+    }catch{ return false; }
 }
 
-function limparNomesSalvos() {
-    localStorage.removeItem(STORAGE_KEY);
-    nomes = [];
-    jogadoresAtuais = 0;
-    gerarTabela();
-    gerarTopo();
-}
-
-/* ------------------------- RENDER ------------------------- */
-function gerarTopo() {
+function gerarTopo(){
     const topo = document.getElementById("topo-nomes");
     const linhaRodadas = document.getElementById("linha-rodadas");
-
     topo.innerHTML = "<th>—</th>";
     linhaRodadas.innerHTML = "<th>Nome</th>";
 
-    const opcoes = nomes
-        .map(n => `<option>${escapeHtml(n.substring(0,3).toUpperCase())}</option>`)
-        .join("");
-
-    for (let i = 0; i < rodadas; i++) {
-        linhaRodadas.innerHTML += `<th><span class="round-number">${i+1}</span></th>`;
+    const opcoes = nomes.map(n => `<option>${(n||'').substring(0,3).toUpperCase()}</option>`).join("");
+    for(let i=0;i<rodadas;i++){
+        linhaRodadas.innerHTML += `<th>${i+1}</th>`;
         topo.innerHTML += `<th><select>${opcoes}</select></th>`;
     }
 }
 
-function gerarTabela() {
+function gerarTabela(){
     const tbody = document.getElementById("jogadores");
     tbody.innerHTML = "";
 
-    if (jogadoresAtuais === 0) {
+    if(jogadoresAtuais === 0){
         jogadoresAtuais = 4;
         nomes = Array(4).fill("");
         salvarNomes();
     }
 
-    for (let i = 0; i < jogadoresAtuais; i++) {
-        // Recupera dados salvos da pontuação e símbolo (se existirem)
-        const pontuacoes = JSON.parse(localStorage.getItem(`pontuacao_${i}`) || '[]');
+    for(let i=0;i<jogadoresAtuais;i++){
+        const pont = JSON.parse(localStorage.getItem(`pontuacao_${i}`) || "[]");
+        let linha = `<tr><td><input value="${nomes[i]||''}" placeholder="Jogador ${i+1}" 
+                     oninput="nomes[${i}] = this.value; salvarNomes(); gerarTopo();"></td>`;
 
-        let linha = `
-        <tr>
-            <td>
-                <input value="${escapeHtml(nomes[i] || "")}"
-                        placeholder="Jogador ${i+1}"
-                        oninput="onInputNome(${i}, this.value)">
-            </td>`;
+        for(let j=0;j<rodadas;j++){
+            const p = pont[j] || {num:"-", simbolo:""};
+            const simb = p.simbolo ? `<span class='icon-symbol' data-symbol='${p.simbolo}'>${p.simbolo}</span>` : "";
 
-        for (let j = 0; j < rodadas; j++) {
-            const ponto = pontuacoes[j] || { num: '-', simbolo: '' };
-            const simboloTag = ponto.simbolo ? `<span class="icon-symbol" data-symbol="${ponto.simbolo}">${ponto.simbolo}</span>` : '';
-
-            linha += `
-            <td class="cell-ponto" 
-                data-jogador="${i}" 
-                data-rodada="${j}"
-                data-num="${ponto.num}"
-                data-simbolo="${ponto.simbolo}">
-                <span class="score">${ponto.num}</span>
-                ${simboloTag}
-            </td>`;
+            linha += `<td class='cell-ponto' data-j='${i}' data-r='${j}' data-num='${p.num}' data-simbolo='${p.simbolo}'>
+                         <span class='score'>${p.num}</span>
+                         ${simb}
+                      </td>`;
         }
-
         linha += "</tr>";
         tbody.insertAdjacentHTML("beforeend", linha);
     }
-
     gerarTopo();
 }
 
-function onInputNome(i, v){
-    nomes[i] = v;
-    salvarNomes();
-    gerarTopo();
-}
-
-function adicionarJogador(){
-    if(jogadoresAtuais >= maxJogadores){
-        alert("Limite máximo de 9 jogadores atingido.");
-        return;
-    }
-    
-    // Salva os nomes atuais antes de adicionar um novo
-    document.querySelectorAll("#jogadores input").forEach((inp,i)=>{
-        nomes[i]=inp.value;
-    });
-
-    nomes.push("");
-    jogadoresAtuais++;
-    salvarNomes();
-    gerarTabela();
-}
-
-/* ----------------- EVENTO PARA ABRIR PAINEL ----------------- */
 document.addEventListener("pointerdown", e => {
-    // Usamos pointerdown pois é mais responsivo em mobile que 'click'
-    const celula = e.target.closest(".cell-ponto");
-    if (celula) abrirBottomSheet(celula);
+    const cel = e.target.closest(".cell-ponto");
+    if(!cel) return;
+    abrirBottomSheet(cel);
 });
 
-/* -----------------------------------------------------------
-    BOTTOM SHEET MODERNO (CORRIGIDO)
------------------------------------------------------------ */
 const overlay = document.getElementById("bottomSheetOverlay");
 const sheet = document.getElementById("bottomSheet");
 const numerosContainer = document.getElementById("numerosContainer");
@@ -441,180 +302,115 @@ const simbolosContainer = document.getElementById("simbolosContainer");
 function abrirBottomSheet(celula){
     celulaAtual = celula;
 
-    // Inicializa o estado temporário do painel com os valores atuais da célula
-    sheet.dataset.numTemp = celula.dataset.num || '-';
-    sheet.dataset.simboloTemp = celula.dataset.simbolo || '';
+    // garante que dataset num esteja sincronizado com o texto exibido
+    const scoreSpan = celulaAtual.querySelector(".score");
+    if (scoreSpan) celulaAtual.dataset.num = scoreSpan.textContent;
 
-    // Limpa e popula os botões de 10 a 0 com listeners individuais
     numerosContainer.innerHTML = "";
-    
     for(let n=10; n>=0; n--){
-        const btn = document.createElement('div');
-        btn.className = 'sheet-btn';
-        btn.dataset.num = n;
+        const btn = document.createElement("div");
+        btn.className = "sheet-btn";
         btn.textContent = n;
-        
-        // Adiciona o manipulador de clique diretamente ao botão (Correção principal)
-        btn.addEventListener('click', handleNumberClick);
+        btn.dataset.num = n;
 
-        // Se o número for o valor atual, destaca ele
-        if (n == sheet.dataset.numTemp) {
-             btn.classList.add('active-num');
-        }
+        btn.addEventListener("click", () => selecionarNumero(n));
 
         numerosContainer.appendChild(btn);
     }
-    
-    // Remove o manipulador de clique anterior do contêiner, se houver, para evitar conflitos
-    numerosContainer.onclick = null; 
 
-    // Exibe o painel
     overlay.style.display = "block";
-    setTimeout(()=>{ sheet.style.bottom = "0"; }, 10);
+    setTimeout(()=> sheet.style.bottom = "0", 10);
 }
 
 function fecharBottomSheet(){
-    // Limpa o estado temporário ao fechar
-    sheet.dataset.numTemp = '';
-    sheet.dataset.simboloTemp = '';
-
     sheet.style.bottom = "-500px";
-    setTimeout(()=>{ overlay.style.display = "none"; }, 300);
+    setTimeout(()=> overlay.style.display = "none", 280);
 }
 
-overlay.onclick = fecharBottomSheet;
-document.getElementById("cancelSheet").onclick = fecharBottomSheet;
+overlay.addEventListener("click", fecharBottomSheet);
+document.getElementById("cancelSheet").addEventListener("click", fecharBottomSheet);
 
-// NOVO: Função dedicada para o clique do número com feedback visual
-function handleNumberClick(e) {
-    const numero = e.currentTarget.dataset.num; 
-    sheet.dataset.numTemp = numero;
-    
-    // Feedback visual: remove o destaque de todos e marca o clicado
-    document.querySelectorAll('#numerosContainer .sheet-btn').forEach(b => b.classList.remove('active-num'));
-    e.currentTarget.classList.add('active-num');
-    
-    // Atualiza a visualização da célula imediatamente
-    atualizarCelulaVisual(celulaAtual, numero, sheet.dataset.simboloTemp);
+function selecionarNumero(n){
+    if(!celulaAtual) return;
+    aplicarValor(n, celulaAtual.dataset.simbolo || "");
 }
 
-
-/* escolha do símbolo (e aplica o número e fecha) */
-simbolosContainer.onclick = e => {
+/* CORREÇÃO: ao escolher símbolo, pega o número mostrado (seguro) e aplica o símbolo */
+simbolosContainer.addEventListener("click", e =>{
     const btn = e.target.closest(".sheet-btn");
     if(!btn) return;
 
-    const simbolo = btn.dataset.symbol;
-    sheet.dataset.simboloTemp = simbolo;
-    
-    // Pega o número temporário selecionado
-    const numFinal = sheet.dataset.numTemp;
-    let numToSave = numFinal;
+    const simbolo = btn.dataset.symbol !== undefined ? btn.dataset.symbol : (btn.getAttribute('data-symbol') || '');
 
-    // Se nenhum número foi selecionado, usa o número que já estava na célula
-    if (numFinal === '-' || numFinal === '') {
-        numToSave = celulaAtual.dataset.num || '-';
+    // PEGA O NÚMERO REAL DA CÉLULA — assim nunca gravamos undefined
+    const numeroAtual = (celulaAtual && celulaAtual.querySelector(".score"))
+        ? celulaAtual.querySelector(".score").textContent
+        : '-';
+
+    aplicarValor(numeroAtual, simbolo);
+});
+
+function aplicarValor(numero, simbolo){
+    const cel = celulaAtual;
+    // segurança: se por acaso cel for nulo, sai
+    if(!cel) return;
+
+    cel.dataset.num = numero;
+    cel.dataset.simbolo = simbolo;
+    const scoreEl = cel.querySelector(".score");
+    if (scoreEl) scoreEl.textContent = numero;
+
+    let simb = cel.querySelector(".icon-symbol");
+    if(simb) simb.remove();
+    if(simbolo){
+        const t = document.createElement("span");
+        t.className = "icon-symbol";
+        t.dataset.symbol = simbolo;        // <--- importante para cor/identificação
+        t.textContent = simbolo;
+        cel.appendChild(t);
     }
 
-    if (numToSave === '-' && simbolo === '') {
-        return fecharBottomSheet(); // Não faz nada se for vazio e não houver alteração
-    }
-    
-    // Atualiza o DOM e salva os dados
-    atualizarCelulaFinal(celulaAtual, numToSave, simbolo);
-    
+    const j = cel.dataset.j;
+    const r = cel.dataset.r;
+    const key = `pontuacao_${j}`;
+    const arr = JSON.parse(localStorage.getItem(key) || "[]");
+    arr[r] = {num:numero, simbolo:simbolo};
+    localStorage.setItem(key, JSON.stringify(arr));
+
     fecharBottomSheet();
-};
-
-
-/* ------------ FUNÇÕES DE ATUALIZAÇÃO E SALVAMENTO ------------ */
-
-// Atualiza o DOM para visualização. Não persiste no Storage.
-function atualizarCelulaVisual(celula, numero, simbolo){
-    // Atualiza a pontuação exibida
-    const scoreSpan = celula.querySelector(".score");
-    if (scoreSpan) scoreSpan.textContent = numero;
-    
-    // Remove o símbolo antigo
-    let simboloSpan = celula.querySelector(".icon-symbol");
-    if (simboloSpan) simboloSpan.remove();
-    
-    // Adiciona o novo símbolo, se houver
-    if (simbolo){
-        const newSimboloTag = document.createElement('span');
-        newSimboloTag.className = 'icon-symbol';
-        newSimboloTag.dataset.symbol = simbolo;
-        newSimboloTag.textContent = simbolo;
-        celula.appendChild(newSimboloTag);
-    }
 }
 
-// Atualiza o DOM (data-attrs) e persiste no localStorage
-function atualizarCelulaFinal(celula, numero, simbolo){
-    const jogadorIndex = parseInt(celula.dataset.jogador);
-    const rodadaIndex = parseInt(celula.dataset.rodada);
+document.getElementById("addBtn").addEventListener("click", ()=>{
+    if(jogadoresAtuais >= maxJogadores) return alert("Máximo de jogadores atingido.");
+    nomes.push("");
+    jogadoresAtuais++;
+    salvarNomes();
+    gerarTabela();
+});
 
-    // 1. Atualiza os data attributes da célula
-    celula.dataset.num = numero;
-    celula.dataset.simbolo = simbolo;
-    
-    // 2. Atualiza a visualização no DOM
-    atualizarCelulaVisual(celula, numero, simbolo);
+document.getElementById("novoBtn").addEventListener("click", ()=>{
+    if(!confirm("Zerar tudo?")) return;
+    for(let i=0;i<jogadoresAtuais;i++) localStorage.removeItem(`pontuacao_${i}`);
+    gerarTabela();
+});
 
-    // 3. Persiste os dados (pontuação e símbolo)
-    const pontuacoesKey = `pontuacao_${jogadorIndex}`;
-    const pontuacoes = JSON.parse(localStorage.getItem(pontuacoesKey) || '[]');
-    
-    pontuacoes[rodadaIndex] = { num: numero, simbolo: simbolo };
-    localStorage.setItem(pontuacoesKey, JSON.stringify(pontuacoes));
-}
+document.getElementById("limparBtn").addEventListener("click", ()=>{
+    if(!confirm("Apagar nomes?")) return;
+    localStorage.removeItem(STORAGE_KEY);
+    nomes = [];
+    jogadoresAtuais = 0;
+    gerarTabela();
+});
 
-
-/* ---------- NOVO JOGO ---------- */
-function novoJogo() {
-    if(!confirm("Zerar todas as pontuações e símbolos?")) return;
-
-    document.querySelectorAll(".cell-ponto").forEach(td => {
-        td.innerHTML = `<span class="score">-</span>`;
-        td.dataset.num = "-";
-        td.dataset.simbolo = "";
-    });
-    
-    // Limpa todas as chaves de pontuação
-    for (let i = 0; i < jogadoresAtuais; i++) {
-         localStorage.removeItem(`pontuacao_${i}`);
-    }
-    alert("Pontuações zeradas! Novo jogo iniciado.");
-}
-
-/* ---------- UTILS ---------- */
-function escapeHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, m => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-    }[m]));
-}
-
-/* ---------- INIT ---------- */
 function init(){
-    // Carrega ou inicializa nomes e jogadores
     if(!carregarNomes()){
         nomes = Array(4).fill("");
         jogadoresAtuais = 4;
         salvarNomes();
     }
-
-    // Gera a tabela com dados persistidos
     gerarTabela();
-
-    // Associa eventos dos botões
-    document.getElementById("addBtn").onclick = adicionarJogador;
-    document.getElementById("novoBtn").onclick = novoJogo;
-    document.getElementById("limparBtn").onclick = ()=>{
-        if(confirm("Apagar todos os nomes salvos? Isso reiniciará a lista de jogadores.")) limparNomesSalvos();
-    };
 }
 init();
 </script>
-
 </body>
 </html>
