@@ -269,20 +269,20 @@
 &lt;head&gt;
 &lt;meta charset="UTF-8"&gt;
 &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-&lt;<strong>LINK de referêcia no Google Icons</strong>&gt;
-&lt;title&gt;Menu Hamburguer&lt;/title&gt;
+&lt;<strong>link do Google Icons</strong>&gt;
+&lt;title&gt;Menu&lt;/title&gt;
 &lt;body&gt;
-&lt;h1&gt;Hamburger Menu&lt;h1&gt;
+&lt;h1&gt;Menu&lt;/h1&gt;
 <strong>&lt;i id="burguer" class="material-icons" onclick="clickMenu()"&gt;Menu&lt;/i&gt;</strong>
 &lt;menu id="itens"&gt;
 
 &lt;ul&gt;
 &lt;li&gt;
-&lt;a href="#">Opção 01&lt;/a&gt;
-&lt;a href="#"&gt;Opção 02&lt;/a&gt;
-&lt;a href="#"&gt;Opção 03&lt;/a&gt;
-&lt;a href="#"&gt;Opção 04&lt;/a&gt;
-&lt;a href="#"&gt;Opção 05&lt;/a&gt;
+&lt;a href="#">Op01&lt;/a&gt;
+&lt;a href="#"&gt;Op02&lt;/a&gt;
+&lt;a href="#"&gt;Op03&lt;/a&gt;
+&lt;a href="#"&gt;Op04&lt;/a&gt;
+&lt;a href="#"&gt;Op05&lt;/a&gt;
 &lt;/li&gt;
 &lt;/html&gt;
 &lt;/body&gt;
@@ -298,119 +298,103 @@ margin: 0;
 box-sizing: border-box;
 }
 
-<strong>/* 1. ESTRUTURA E POSICIONAMENTO DO HEADER */</strong>
 header{
 background-color: blue;
 color: white;
-position: fixed; <strong>/* O header deve ficar no topo */</strong>
+position: fixed; 
 width: 100%;
-z-index: 1000; <strong>/*indexa o conteúdo no eixo z ou seja horizontal acima de 1000 coisas que existam no site*/   </strong>      
+z-index: 1000;     
 }
 
-<strong>/* 2. ESTILO DO ÍCONE BURGUER */</strong>
 span#burguer{
-display: block; <strong>/* Garante que o ícone ocupe toda a largura no mobile */</strong>
+display: block;
 cursor: pointer;
 padding: 10px;
 font-size: 2em;
 color: white;
 background-color: blue;
-text-align: center; <strong>/* Alinha o ícone para a direita no mobile */</strong>
+text-align: center; 
 transition: background-color 0.5s;
 }
+
 span#burguer:hover{
 background-color: rgba(0, 0, 255, 0.7); /* Efeito hover no ícone */
 }
 
-<strong>/* 3. ESTILO DO MENU (NAV) */</strong>
 menu#itens{
-<strong>/* No mobile, o JS controla o display */</strong>
 background-color: white;
 padding: 10px 0;
-<strong>
-    /* Garante que o conteúdo (UL) fique centralizado */
-    text-align: center;
-</strong>
-
 }
 
-<strong>/* 4. LISTA (UL) - Sem columns para centralizar */</strong>
 ul{
 list-style-type: none;
 padding: 0;
 }
 
-<strong>/* 5. ITENS DE LISTA (LI) */</strong>
 ul > li{
-/* Transforma os itens em blocos em linha para que fiquem lado a lado no desktop */
 display: inline-block; 
-padding: 0 8px; <strong>/* Espaçamento lateral entre os itens */</strong>
+padding: 0 8px; 
 flex-direction: column-reverse;
 }
 
-<strong>/* 6. LINKS (A) */</strong>
 li > a {
 color: gray;
 text-decoration: none;
-display: block; <strong>/* Permite que o padding e hover peguem toda a área do LI */</strong>
+display: block; 
 padding: 5px; 
 border-radius: 8px;
 }
 
 li > a:hover{
 background-color: rgba(25, 0, 255, 0.507);
-color: white; /* Muda a cor do texto no hover para melhor contraste */
+color: white; 
 }
 
-<strong>/* 7. ESTILO DO CONTEÚDO PRINCIPAL */</strong>
 main{
 display: block;
 margin: auto;
 padding: 20px;
 width: 90vw;
-/* ADICIONA ESPAÇO NO TOPO DO MAIN PARA EVITAR QUE O CONTEÚDO FIQUE DEBAIXO DO HEADER */
-padding-top: 80px; /* Ajuste este valor se o header for maior */
+padding-top: 80px; 
 box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.397);
 }
 
-<strong>/* CSS para o efeito âncora (já estava funcionando!) */</strong>
 html {
 scroll-behavior: smooth;
 }
 
 main div {
-/* ESSENCIAL: Garante que, ao clicar no link, o topo do DIV pare abaixo do header */
-scroll-margin-top: 65px; /* Ajuste este valor para ser um pouco MAIOR que a altura do seu header */
+scroll-margin-top: 65px; 
 padding: 20px;
 }
 
-<strong>/* 8. MEDIA QUERY (Responsividade para Desktop) */</strong>
 @media screen and (min-width: 600px) {
 span#burguer {
-/* Esconde o ícone no desktop */
 display: none;
 
 }
 main{
 max-width: 800px;
 }
+
 menu#itens {
-<strong>/* Garante que o menu esteja sempre visível no desktop */</strong>
 display: block !important; 
 background-color: blue;
 color: aliceblue;
 }
+
 menu a{
 max-width: 800px;
 color: white;
 }
+
 menu a:hover{
 background-color: rgba(128, 128, 128, 0.685);
 padding: 5px;
 transition: background-color 1s;
 }
+
 header {
-<strong>/* Centraliza o título do header no desktop, se houver */</strong>
 text-align: center; 
 
 }
@@ -426,6 +410,7 @@ font-size: 0.9em;
 padding: 5px;
 text-align: center;
 }
+
 #titulos{
 color: aliceblue;
 padding: 3px;
@@ -434,6 +419,7 @@ border-bottom-right-radius: 8px;
 border-top-left-radius: 4px;
 max-width: 400px;
 }
+
 pre{
 display: block;
 margin: auto;
@@ -463,11 +449,9 @@ itens.style.display = 'block';
 }
 }
 
-// Fecha o menu automaticamente ao clicar em um link
 const links = document.querySelectorAll('#itens a');
 links.forEach(link => {
 link.addEventListener('click', () =&gt; {
-// Apenas fecha se estiver em tela menor que 768px (Mobile)
 if (window.innerWidth &lt; 768) { 
 itens.style.display = 'none';
 }
@@ -479,15 +463,10 @@ if (window.innerWidth >= 768) {
 // Desktop: sempre mostra o menu
 itens.style.display = 'block';
 } else {
-<strong>// Mobile: esconde o menu (deixa apenas o botão)</strong>
 itens.style.display = 'none';
 }
 }
-
-<strong>
-// Garante que a função seja chamada na primeira carga para definir o estado inicial
 mudouTamanho();
-</strong>
 &lt;/script&gt;
 &lt;/body&gt;
     </pre>
