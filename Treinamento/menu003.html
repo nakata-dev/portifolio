@@ -69,5 +69,52 @@
             <footer>
                 Copyright &copy; 2025 - Ailton A. Nakata
             </footer>
+
+            <script>
+    // Seleciona o elemento do menu pelo ID
+    const itens = document.getElementById('itens');
+
+    // Função para abrir/fechar o menu quando o botão for clicado
+    function clickMenu() {
+        if (itens.style.display == 'block') {
+            // Se o menu estiver visível, esconde-o
+            itens.style.display = 'none';
+        } else {
+            // Se estiver escondido, mostra o menu
+            itens.style.display = 'block';
+        }
+    }
+    
+    // Seleciona todos os links dentro do menu (as <a> dentro de #itens)
+    const links = document.querySelectorAll('#itens a');
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            // Quando um link for clicado...
+            if (window.innerWidth < 768) { 
+                // ... e a largura da tela for menor que 768px (celular/tablet)...
+                // esconde o menu automaticamente
+                itens.style.display = 'none';
+            }
+        });
+    });
+
+    // Função para ajustar o menu conforme o tamanho da tela
+    function mudouTamanho() {
+        if (window.innerWidth >= 768) {
+            // Se tela de computador (grande), mantém o menu visível
+            itens.style.display = 'block';
+        } else {
+            // Se tela pequena (celular), começa com menu escondido
+            itens.style.display = 'none';
+        }
+    }
+
+    // Chama a função ao carregar a página, para definir o estado inicial
+    mudouTamanho(); 
+
+    // (Opcional) — Se quiser que o menu ajuste automaticamente quando o usuário redimensionar a janela:
+    window.addEventListener('resize', mudouTamanho);
+
+</script>
 </body>
 </html>

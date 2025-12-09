@@ -20,6 +20,7 @@
                 <a href="#parte05">FOOTER</a>
             </li>
         </ul>
+    </menu>
 
         <main>
             <div id="parte01">
@@ -66,6 +67,36 @@
         <footer>
             Copyright &copy; 2025 - Ailton A. Nakata
         </footer>
-    </menu>
+
+    <script>
+        const itens=document.getElementById('itens')
+        function clickMenu(){ //ativar o menu
+            if(itens.style.display=='block'){
+                itens.style.display='none'; //esconde
+            }else{
+                itens.style.display='block'; //mostra
+            }
+            }
+
+            const links=document.querySelectorAll('#itens a') // todos itens selecionaveis
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    if(window.innerWidth < 768){ //se a tela for menor que 768px
+                        itens.style.display='none' //esconde o menu apos clicar
+                    }
+                })
+            })
+
+            function mudouTamanho(){
+                if(window.innerWidth >= 768){
+                    itens.style.display='block' //mostra o menu
+                }else{
+                    itens.style.display='none' //esconde o menu
+                }
+            }
+
+            mudouTamanho() //chama a funcao ao carregar a pagina
+            window.addEventListener('resize', mudouTamanho) //chama a funcao ao redimensionar a tela
+    </script>
 </body>
 </html>
