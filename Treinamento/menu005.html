@@ -100,5 +100,38 @@
 <footer>
     Copyright &copy; 2025 - Ailton A. Nakata
 </footer>
+
+<script>
+    const itens = document.getElementById('itens')
+
+    function clickMenu(){
+        if(itens.style.display=='block'){
+            itens.style.display='none';
+        }else{
+            itens.style.display='block';
+        }
+    }
+
+    const links=document.querySelectorAll('#itens a');
+    links.forEach(link=>{
+        link.addEventListener('click', () => {
+            if(window.innerWidth < 768){
+                itens.style.display = 'none';
+            }
+        })
+    })
+
+    function mudouTamanho(){
+        if(window.innerWidth >= 768){
+            itens.style.display = 'block';
+        }else{
+            itens.style.display = 'none';
+        }
+    }
+    mudouTamanho();
+
+    window.addEventListener('resize', mudouTamanho);
+
+</script>
 </body>
 </html>

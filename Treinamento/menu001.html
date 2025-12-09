@@ -85,34 +85,34 @@ Atenção para se obter o &copy; você deve digitar tudo junto <strong>&+copy;</
     </footer>
     
     <script>
-        const itens=document.getElementById('itens')
-        function clickMenu(){ //ativar o menu
-            if(itens.style.display=='block'){
-                itens.style.display='none'; //esconde
-            }else{
-                itens.style.display='block'; //mostra
+        const itens=document.getElementById('itens') //SELEÇÃO
+        function clickMenu(){ //AÇÃO
+            if(itens.style.display=='block'){ //CONDIÇÃO (mostra em linha)
+                itens.style.display='none'; //OCULTAR (oculta a linha)
+            }else{ //ALTERAR
+                itens.style.display='block'; //MOSTRAR (mostra em linha)
             }
             }
 
-            const links=document.querySelectorAll('#itens a') // todos itens selecionaveis
-            links.forEach(link => {
-                link.addEventListener('click', () => {
-                    if(window.innerWidth < 768){ //se a tela for menor que 768px
-                        itens.style.display='none' //esconde o menu apos clicar
+            const links=document.querySelectorAll('#itens a') //LISTA
+            links.forEach(link => { //LOOP
+                link.addEventListener('click', () => {//EVENTO
+                    if(window.innerWidth < 768){ //TAMANHO
+                        itens.style.display='none' //FECHAR
                     }
                 })
             })
 
-            function mudouTamanho(){
-                if(window.innerWidth >= 768){
-                    itens.style.display='block' //mostra o menu
-                }else{
-                    itens.style.display='none' //esconde o menu
+            function mudouTamanho(){ //VERIFICAR
+                if(window.innerWidth >= 768){ //DESKTOP
+                    itens.style.display='block' //EXIBIR
+                }else{ //SENÃO
+                    itens.style.display='none' //OCULTAR
                 }
             }
 
-            mudouTamanho() //chama a funcao ao carregar a pagina
-            window.addEventListener('resize', mudouTamanho) //chama a funcao ao redimensionar a tela
+            mudouTamanho() //INICIALIZAR
+            window.addEventListener('resize', mudouTamanho) //ESCULTAR
     </script>
 </body>
 
