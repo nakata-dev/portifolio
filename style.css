@@ -121,6 +121,7 @@ header p {
     font-style: italic;
     margin-top: 5px;
     font-family: var(--fonte_moderna);
+    text-align: center;
 }
 
 main {
