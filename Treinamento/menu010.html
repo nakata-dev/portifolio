@@ -3,125 +3,543 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Busque esta informação de indexação de api icons dentro do site do google icons ou google materials-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
+    <title>DIREITO</title>
 
-    <title>Burguer menu010</title>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fredericka+the+Great&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Passion+One:wght@400;700;900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&display=swap');
+
+/*fonte importada do computador */
+@font-face {
+    font-family: 'Android';
+    src: url(fontes/idroid.otf) format('opentype');
+}
+
+
+@font-face{
+    font-family: 'Amsterdam';
+    src: url(fontes/amsterdam_4/Amsterdam.ttf) format('opentype');
+}
+:root {
+    --cor00: #233CCF;
+    --cor01: #3747A5;
+    --cor02: #0025FA;
+    --cor03: #3D467A;
+    --cor04: #353950;
+    --cor05: #2B2C33;
+
+    --fonte_padrao: Arial, Verdana, Helvetica, Sans-serif;
+    --fonte_padrao02: "Libre Baskerville", serif;
+    --fonte_destaque: "Bebas Neue", Sans-serif;
+    --fonte_android: 'Android', sans-serif;
+    --fonte_caligrafica: "Passion One", sans-serif;
+    --fonte_moderna: "Josefin Sans", sans-serif;
+    --fonte_titulos: "Birthstone", cursive;
+    --fonte_corinthia: "Corinthia", cursive;
+}
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        /* 1. ESTRUTURA E POSICIONAMENTO DO HEADER */
+        header{
+            background-color: blue;
+            color: white;
+            position: fixed; /* O header deve ficar no topo */
+            width: 100%;
+            z-index: 1000; /*indexa o conteúdo no eixo z ou seja horizontal acima de 1000 coisas que existam no site*/         
+        }
+
+        /* 2. ESTILO DO ÍCONE BURGUER */
+        span#burguer{
+            display: block; /* Garante que o ícone ocupe toda a largura no mobile */
+            cursor: pointer;
+            padding: 10px;
+            font-size: 2em;
+            color: white;
+            background-color: blue;
+            text-align: right; /* Alinha o ícone para a direita no mobile */
+            transition: background-color 0.5s;
+        }
+        span#burguer:hover{
+            background-color: rgba(0, 0, 255, 0.7); /* Efeito hover no ícone */
+        }
+
+        /* 3. ESTILO DO MENU (NAV) */
+        menu#itens{
+            /* No mobile, o JS controla o display */
+            background-color: white;
+            padding: 10px 0;
+            /* Garante que o conteúdo (UL) fique centralizado */
+            text-align: right; 
+            font-family: var(--fonte_moderna);
+            
+        }
+        
+        /* 4. LISTA (UL) - Sem columns para centralizar */
+        ul{
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        /* 5. ITENS DE LISTA (LI) */
+        ul > li{
+            /* Transforma os itens em blocos em linha para que fiquem lado a lado no desktop */
+            display: block; 
+            padding: 0 8px; /* Espaçamento lateral entre os itens */
+            flex-direction: column-reverse;
+        }
+        
+        /* 6. LINKS (A) */
+        li > a {
+            color: gray;
+            text-decoration: none;
+            display: block; /* Permite que o padding e hover peguem toda a área do LI */
+            padding: 5px; 
+            border-radius: 8px;
+        }
+
+        li > a:hover{
+            background-color: rgba(25, 0, 255, 0.507);
+            color: white; /* Muda a cor do texto no hover para melhor contraste */
+        }
+
+        /* 7. ESTILO DO CONTEÚDO PRINCIPAL */
+        main{
+            display: block;
+            margin: auto;
+            padding: 20px;
+            width: 90vw;
+            /* ADICIONA ESPAÇO NO TOPO DO MAIN PARA EVITAR QUE O CONTEÚDO FIQUE DEBAIXO DO HEADER */
+            padding-top: 80px; /* Ajuste este valor se o header for maior */
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.397);
+        }
+
+        /* CSS para o efeito âncora (já estava funcionando!) */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        main div {
+            /* ESSENCIAL: Garante que, ao clicar no link, o topo do DIV pare abaixo do header */
+            scroll-margin-top: 65px; /* Ajuste este valor para ser um pouco MAIOR que a altura do seu header */
+            padding: 20px;
+        }
+        
+        /* 8. MEDIA QUERY (Responsividade para Desktop) */
+        @media screen and (min-width: 600px) {
+            span#burguer {
+                /* Esconde o ícone no desktop */
+                display: none;
+                
+            }
+            main{
+                max-width: 800px;
+            }
+            menu#itens {
+                /* Garante que o menu esteja sempre visível no desktop */
+                display: block !important; 
+                background-color: blue;
+                color: aliceblue;
+            }
+            menu a{
+                max-width: 800px;
+                color: white;
+            }
+            menu a:hover{
+                background-color: rgba(128, 128, 128, 0.685);
+                padding: 5px;
+                transition: background-color 1s;
+            }
+            header {
+                /* Centraliza o título do header no desktop, se houver */
+                text-align: center; 
+                
+            }
+        }
+        footer{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: blue;
+            color: white;
+            font-size: 0.9em;
+            padding: 5px;
+            text-align: center;
+        }
+        #titulos{
+            color: aliceblue;
+            padding: 10px;
+            background-image: linear-gradient(to right, rgb(55, 0, 252),rgb(162, 68, 185), rgba(1, 70, 97, 0.479));
+            border-bottom-right-radius: 8px;
+            border-top-left-radius: 4px;
+            max-width: 400px;
+            font-family: var(--fonte_moderna);
+        }
+        pre{
+            display: block;
+            margin: auto;
+            width: auto;
+            white-space: pre-wrap;
+            line-height: 1.8em;
+            background-color: rgb(174, 189, 204);
+            border-radius: 8px;
+            margin: 5px;
+            padding: 20px;
+            font-family: var(--fonte_moderna);
+        }
+        #paragrafo{
+            text-align: right;
+            padding-right: 10px;
+        }
+        div#voltar {
+            text-align: center;
+            font-family: var(--fonte_moderna);
+            transition: background-color 1s;
+        }
+
+        div#voltar a:hover {
+            padding: 10px;
+            background-image: linear-gradient(135deg, #2626FE, #00bfff);
+            color: white;
+            font-weight: bolder;
+            transition-duration: 0.5s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.656);
+            border-radius: 50px;
+            border: none;
+            font-family: var(--fonte_moderna);
+        }
+    </style>
 </head>
-<body>
-    <h1>Burguer Menu</h1>
-<i id="burguer" class="material-symbols-outlined" onclick="clickMenu()">menu</i>
+<body onresize="mudouTamanho()">
 
-<menu id="itens">
-    <ul>
-        <li>
-            <a href="#parte01">HTML5</a>
-            <a href="#parte02">MENU</a>
-            <a href="#parte03">CSS3</a>
-            <a href="#parte04">JS</a>
-            <a href="#parte05">FOOTER</a>
-        </li>
-    </ul>
-</menu>
+    <header>
+        <span id="burguer" class="material-symbols-outlined" onclick="clickMenu()">menu</span>
+        <menu id="itens">
+            <ul>
+                <li><a href="#parte01">HTML5</a></li>
+                <li><a href="#parte02">MENU</a></li>
+                <li><a href="#parte03">CSS</a></li>
+                <li><a href="#parte04">JS</a></li>
+                <li><a href="#parte05">FOOTER</a></li>
+            </ul>
+        </menu>
+    </header>
 
-<main>
-    <div id="parte01">
-        <h2 id="titulos">
-            HTML5
-        </h2>
-        <br>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed repudiandae, temporibus suscipit tempora veniam enim possimus mollitia sint odit quidem nulla laborum aliquam optio, hic in exercitationem, consequatur id nobis.
-        <br>
-        <p id="paragrafo" style="height:100vh;">
-            <em>navegue pelo menu...</em>
-        </p>
-    </div>
+    <main>
+        <div id="parte01">
+            <h2 id="titulos">| Aula 01 - Estrutura HTML</h2>
+            <br>
+            <pre>
+            
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width,initial-scale=1.0"&gt;
+&lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+    &lt;body&gt;
 
-    <div id="parte02">
-        <h2 id="titulos">
-            MENU
-        </h2>
+    &lt;/body&gt;
+&lt;/html&gt;
+                
+            </pre>
+            <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+        </div>
         <br>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Perspiciatis doloremque autem, assumenda molestias placeat esse a quia recusandae unde repudiandae? Tenetur reprehenderit debitis, quis fugit incidunt quod quas recusandae quam.
-        <br>
-        <p id="paragrafo" style="height:100vh;">
-            navegue pelo menu...
-        </p>
-    </div>
+        <div id="parte02">
+<h2 id="titulos">| Aula 02 - MENU BURGUER</h2>
+<br>
+<pre>
+&lt;!DOCTYPE html&gt;
+&LT;html lang="UTF-8"
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;<strong>link do Google Icons</strong>&gt;
+&lt;title&gt;Menu&lt;/title&gt;
+&lt;body&gt;
+&lt;h1&gt;Menu&lt;/h1&gt;
+<strong>&lt;i id="burguer" class="material-icons" onclick="clickMenu()"&gt;Menu&lt;/i&gt;</strong>
+&lt;menu id="itens"&gt;
 
-    <div id="parte03">
-        <h2 id="titulos">
-            CSS3
-        </h2>
-        <br>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, maiores. Quidem blanditiis, eius itaque consequatur impedit reiciendis dignissimos vitae exercitationem tempora. Atque nostrum, aut iure cum odio praesentium exercitationem voluptates.
-        <br>
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href="#">Op01&lt;/a&gt;
+&lt;a href="#"&gt;Op02&lt;/a&gt;
+&lt;a href="#"&gt;Op03&lt;/a&gt;
+&lt;a href="#"&gt;Op04&lt;/a&gt;
+&lt;a href="#"&gt;Op05&lt;/a&gt;
+&lt;/li&gt;
+&lt;/html&gt;
+&lt;/body&gt;
+</pre>
+<p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+</div>
+        <div id="parte03">
+            <h2 id="titulos">Aula 03 - CSS{ }</h2>
+            <pre>
+*{
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+}
 
-    </div>
+header{
+background-color: blue;
+color: white;
+position: fixed; 
+width: 100%;
+z-index: 1000;     
+}
 
-    <div id="parte04">
-        <h2 id="titulos">
-            JavaScript
-        </h2>
-        <br>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. At ipsa iure ducimus voluptatem sunt, esse explicabo quibusdam officia, nam voluptatibus, nulla sequi aut porro minima nesciunt repellat accusantium ab cupiditate.
-        <br>
-        <p id="paragrafo" style="height:100vh;">
-            navegue pelo menu...
-        </p>
-    </div>
+span#burguer{
+display: block;
+cursor: pointer;
+padding: 10px;
+font-size: 2em;
+color: white;
+background-color: blue;
+text-align: center; 
+transition: background-color 0.5s;
+}
 
-    <div id="parte05">
-        <h2 id="titulos">
-            FOOTER
-        </h2>
-        <br>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellendus repudiandae quis sunt. Necessitatibus, numquam molestias consectetur quasi tempora voluptatum. Corporis, placeat debitis doloremque iusto quos suscipit numquam optio vitae.
-        <br>
-        <p id="paragrafo" style="height: 100vh;">
-            navegue pelo menu...
-        </p>
-    </div>
+span#burguer:hover{
+background-color: rgba(0, 0, 255, 0.7); /* Efeito hover no ícone */
+}
 
+menu#itens{
+background-color: white;
+padding: 10px 0;
+}
+
+ul{
+list-style-type: none;
+padding: 0;
+}
+
+ul > li{
+display: inline-block; 
+padding: 0 8px; 
+flex-direction: column-reverse;
+}
+
+li > a {
+color: gray;
+text-decoration: none;
+display: block; 
+padding: 5px; 
+border-radius: 8px;
+}
+
+li > a:hover{
+background-color: rgba(25, 0, 255, 0.507);
+color: white; 
+}
+
+main{
+display: block;
+margin: auto;
+padding: 20px;
+width: 90vw;
+padding-top: 80px; 
+box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.397);
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+main div {
+scroll-margin-top: 65px; 
+padding: 20px;
+}
+
+@media screen and (min-width: 600px) {
+span#burguer {
+display: none;
+
+}
+main{
+max-width: 800px;
+}
+
+menu#itens {
+display: block !important; 
+background-color: blue;
+color: aliceblue;
+}
+
+menu a{
+max-width: 800px;
+color: white;
+}
+
+menu a:hover{
+background-color: rgba(128, 128, 128, 0.685);
+padding: 5px;
+transition: background-color 1s;
+}
+
+header {
+text-align: center; 
+
+}
+}
+footer{
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+background-color: blue;
+color: white;
+font-size: 0.9em;
+padding: 5px;
+text-align: center;
+}
+
+#titulos{
+color: aliceblue;
+padding: 3px;
+background-image: linear-gradient(to right, rgb(55, 0, 252),rgb(162, 68, 185), rgba(1, 70, 97, 0.479));
+border-bottom-right-radius: 8px;
+border-top-left-radius: 4px;
+max-width: 400px;
+}
+
+pre{
+display: block;
+margin: auto;
+width: auto;
+white-space: pre-wrap;
+line-height: 1.8em;
+background-color: rgb(174, 189, 204);
+border-radius: 8px;
+margin: 5px;
+padding: 10px;
+}
+            </pre>
+            <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+        </div>
+        <div id="parte04">
+            <h2 id="titulos">| Aula 04 - JavaScript (JS)</h2>
+            <br>
+            <pre>
+&lt;script&gt;
+const itens = document.getElementById('itens');
+
+function clickMenu() {
+if (itens.style.display == 'block') {
+itens.style.display = 'none';
+} else {
+itens.style.display = 'block';
+}
+}
+
+const links = document.querySelectorAll('#itens a');
+links.forEach(link => {
+link.addEventListener('click', () =&gt; {
+if (window.innerWidth &lt; 768) { 
+itens.style.display = 'none';
+}
+});
+});
+
+function mudouTamanho() {
+if (window.innerWidth >= 768) {
+// Desktop: sempre mostra o menu
+itens.style.display = 'block';
+} else {
+itens.style.display = 'none';
+}
+}
+mudouTamanho();
+&lt;/script&gt;
+&lt;/body&gt;
+    </pre>
+    <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+</div>
+<div id="parte05">
+    <h2 id="titulos">| Aula 05 - FOOTER (rodapé)</h2>
+    <br>
+<pre>
+
+Atenção para se obter o &copy; você deve digitar tudo junto <strong>&+copy;</strong> sem o sinal de (+).
+&lt;Footer&gt;
+&copy; Copyright 2024-2025 Nakata-dev
+&lt;/Footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+</pre>
     <div id="voltar">
-        <a href="../estudos.html">voltar</a>
-    </div>
-</main>
-<footer>
-    Copyright &copy; 2025 - Ailton A. Nakata
-</footer>
-
-<script>
+        <a href="../estudos.html">ESTUDOS</a>
+    </div>            
+    <p id="paragrafo" style="height: 100vh;"><em>Navegue pelo menu...</em></p>
+</div>
+    </main>
+    <footer>
+         &copy;Copyright 2024-2025 Nakata-dev
+    </footer>
+    <script>
+    // Seleciona o elemento do menu pelo ID
     const itens = document.getElementById('itens');
 
-    function clickMenu(){
-        if(itens.style.display=='block'){
-            itens.style.display='none';
-        }else{
-            itens.style.display='block';
+    // Função para abrir/fechar o menu quando o botão for clicado
+    function clickMenu() {
+        if (itens.style.display == 'block') {
+            // Se o menu estiver visível, esconde-o
+            itens.style.display = 'none';
+        } else {
+            // Se estiver escondido, mostra o menu
+            itens.style.display = 'block';
         }
     }
-
-    const links=document.querySelectorAll('#itens a');
-    links.forEach(link=>{
-        link.addEventListener('click',() =>{
-            if(window.innerWidth < 768){
-                itens.style.display='none';
+    
+    // Seleciona todos os links dentro do menu (as <a> dentro de #itens)
+    const links = document.querySelectorAll('#itens a');
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            // Quando um link for clicado...
+            if (window.innerWidth < 768) { 
+                // ... e a largura da tela for menor que 768px (celular/tablet)...
+                // esconde o menu automaticamente
+                itens.style.display = 'none';
             }
-        })
-    })
+        });
+    });
 
-    function mudouTamanho(){
-        if(window.innerWidth >=768){
+    // Função para ajustar o menu conforme o tamanho da tela
+    function mudouTamanho() {
+        if (window.innerWidth >= 768) {
+            // Se tela de computador (grande), mantém o menu visível
             itens.style.display = 'block';
-        }else{
+        } else {
+            // Se tela pequena (celular), começa com menu escondido
             itens.style.display = 'none';
         }
     }
 
-    mudouTamanho();
+    // Chama a função ao carregar a página, para definir o estado inicial
+    mudouTamanho(); 
 
-    window.addEventListener('resize',mudouTamanho);
+    // (Opcional) — Se quiser que o menu ajuste automaticamente quando o usuário redimensionar a janela:
+    window.addEventListener('resize', mudouTamanho);
+
 </script>
+
 </body>
 </html>
