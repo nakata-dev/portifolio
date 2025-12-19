@@ -1,55 +1,82 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contador de Frases</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=BBH+Bartle&family=Cabin+Sketch:wght@400;700&family=Fredericka+the+Great&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap"
+    rel="stylesheet">
+  <title>CONTADOR DE PÁGINAS</title>
   <style>
+    @font-face {
+      font-family: right;
+      src: url(right_chalk/Right\ Chalk.ttf);
+    }
+
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f9f9f9;
+      background-color: #0f0f0f;
       padding: 20px;
-      color: #333;
+      color: #a0a0a0;
     }
 
     h1 {
       margin-bottom: 10px;
-      font-size: 1.6rem;
-      color: #444;
+      font-size: 1.7rem;
+      font-weight: bolder;
+      color: #f8f8f8;
+      font-family: "Cabin Sketch", sans-serif;
+      font-weight: 400;
+      font-style: normal;
     }
 
     .meta-container {
       margin-bottom: 20px;
+      font-family: "Cabin Sketch", sans-serif;
+      font-size: 1.2em;
+      font-weight: 400;
+      font-style: normal;
     }
 
     input {
       padding: 8px;
-      font-size: 1rem;
+      font-size: 1.5rem;
       width: 120px;
       border: 2px solid #ddd;
       border-radius: 8px;
       text-align: center;
+      font-family: "Cabin Sketch", sans-serif;
+      font-weight: 400;
+      font-style: normal;
     }
+
     #definirMetaBtn {
       padding: 12px 20px;
     }
+
     button {
       padding: 24px 40px;
       margin: 10px;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       border: none;
-      border-radius: 12px;
-      background-color: #4CAF50;
+      border-radius: 50px;
+      background-color: #2222FF;
       color: white;
       cursor: pointer;
       font-weight: bold;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 8px rgba(114, 114, 114, 0.2);
       transition: 0.2s;
+      font-family: "Cabin Sketch", sans-serif;
+      font-weight: 400;
+      font-style: normal;
     }
 
     button:hover {
-      background-color: #45a049;
+      background-color: #3232b4;
       transform: scale(1.05);
     }
 
@@ -57,30 +84,44 @@
       font-size: 8rem;
       font-weight: bold;
       margin: 20px 0;
-      color: #222;
+      color: #e4e4e4;
+      font-family: "Cabin Sketch", sans-serif;
+      font-weight: 400;
+      font-style: normal;
     }
 
     .info {
       font-size: 1.2rem;
       margin-bottom: 10px;
+      font-family: "Cabin Sketch", sans-serif;
+      font-weight: 400;
+      font-style: normal;
     }
   </style>
 </head>
-<body>
-  <h1>📖 Contador de Frases</h1>
 
+<body>
+  <h1>📖 CONTADOR DE PÁGINAS</h1>
+  <br>
   <div class="meta-container">
-    <label for="meta">Quantas frases quer ler hoje:</label><br>
+    <label for="meta">Quantas páginas quer ler hoje?</label>
+    <br>
+    <br>
     <input type="number" id="meta" value="100" min="15" step="15">
     <button id="definirMetaBtn" onclick="definirMeta()">Definir Meta</button>
   </div>
 
-  <p class="info" id="metaInfo">Meta de hoje: 100 frases</p>
+  <p class="info" id="metaInfo">Meta de hoje: 100 páginas</p>
   <p id="contador">0</p>
 
   <button onclick="alterarContador(-15)">-15</button>
   <button onclick="alterarContador(15)">+15</button>
 
+  <footer>
+    <p style="font-size: 0.8rem; color: #b3b3b3; margin-top: 40px;">
+      Copyright &copy; Ailton A. Nakata - 2025
+    </p>
+  </footer>
   <script>
     let contador = 0;
     let meta = 100;
@@ -100,4 +141,5 @@
     }
   </script>
 </body>
+
 </html>
