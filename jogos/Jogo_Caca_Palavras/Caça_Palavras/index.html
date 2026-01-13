@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Caça-Palavras</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: url('https://picsum.photos/800/1200?blur=3') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    margin: 12px 0;
+    text-align: center;
+}
+
+.nivel {
+    background: #22c55e;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-top: 6px;
+    font-weight: bold;
+}
+
+.grid {
+    display: grid;
+    gap: 4px;
+    background: rgba(15,23,36,.9);
+    padding: 10px;
+    border-radius: 14px;
+    touch-action: none;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background: #0f1724;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+.cell.selected {
+    background: #f59e0b;
+    color: #000;
+}
+
+.palavras {
+    margin: 12px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+.palavras span {
+    background: rgba(0,0,0,.6);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+footer {
+    margin: 12px 0;
+    font-size: 14px;
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1 id="titulo">NÍVEL 1</h1>
+    <div class="nivel" id="dificuldade">INICIANTE</div>
+</header>
+
+<div class="grid" id="grid"></div>
+<div class="palavras" id="lista"></div>
+
+<footer>
+   Copyright &copy; Ailton A. Nakata - 2026
+</footer>
+<script>
+const palavrasPorNivel = [
+ ["MAPA","ORBE","PISTA"],
+ ["MAPA","ORBE","PISTA","SIGILO"],
+ ["MAPA","ORBE","PISTA","SIGILO","PORTAL"],
+ ["TESOURO","MAPA","ORBE","PISTA"],
+ ["TESOURO","CAVERNA","MAPA","ORBE"],
+ ["TESOURO","CAVERNA","SIGILO","PORTAL"],
+ ["TESOURO","CAVERNA","SIGILO","PORTAL","CODIGO"],
+ ["TESOURO","CAVERNA","SIGILO","PORTAL","CODIGO","VILAO"],
+ ["TESOURO","CAVERNA","SIGILO","PORTAL","CODIGO","VILAO","HEROI"],
+ ["TESOURO","CAVERNA","SIGILO","PORTAL","CODIGO","VILAO","HEROI","MAPA"]
+];
+
+let nivel = 0;
+let selecionando = false;
+let selecaoAtual = [];
+let direcaoAtual = null;
+
+const direcoes = [
+ [1,0],[0,1],[1,1],[-1,1],
+ [-1,0],[0,-1],[-1,-1],[1,-1]
+];
+
+const grid = document.getElementById("grid");
+const lista = document.getElementById("lista");
+
+function iniciarNivel() {
+ grid.innerHTML = "";
+ lista.innerHTML = "";
+ selecaoAtual = [];
+ direcaoAtual = null;
+
+ document.getElementById("titulo").textContent = `NÍVEL ${nivel+1}`;
+
+ const palavras = palavrasPorNivel[nivel];
+ const size = 10 + Math.floor(nivel/3);
+ grid.style.gridTemplateColumns = `repeat(${size},1fr)`;
+
+ let matriz = Array.from({length:size},()=>Array(size).fill(""));
+
+ function pode(p,x,y,dx,dy){
+  for(let i=0;i<p.length;i++){
+   let nx=x+i*dx, ny=y+i*dy;
+   if(nx<0||ny<0||nx>=size||ny>=size) return false;
+   if(matriz[ny][nx] && matriz[ny][nx]!==p[i]) return false;
+  }
+  return true;
+ }
+
+ function colocar(p){
+  while(true){
+   let [dx,dy]=direcoes[Math.floor(Math.random()*direcoes.length)];
+   let x=Math.floor(Math.random()*size);
+   let y=Math.floor(Math.random()*size);
+   if(pode(p,x,y,dx,dy)){
+    for(let i=0;i<p.length;i++){
+     matriz[y+i*dy][x+i*dx]=p[i];
+    }
+    break;
+   }
+  }
+ }
+
+ palavras.forEach(p=>{
+  colocar(Math.random()>0.5 ? p : p.split("").reverse().join(""));
+  let s=document.createElement("span");
+  s.textContent=p;
+  lista.appendChild(s);
+ });
+
+ for(let y=0;y<size;y++){
+  for(let x=0;x<size;x++){
+   const c=document.createElement("div");
+   c.className="cell";
+   c.textContent=matriz[y][x]||String.fromCharCode(65+Math.random()*26);
+   c.dataset.x = x;
+   c.dataset.y = y;
+
+   c.addEventListener("touchstart",()=>{
+    selecionando=true;
+    selecaoAtual=[c];
+    direcaoAtual=null;
+    limpar();
+    c.classList.add("selected");
+   });
+
+   c.addEventListener("touchmove",e=>{
+    if(!selecionando) return;
+    const t=e.touches[0];
+    const el=document.elementFromPoint(t.clientX,t.clientY);
+    if(!el || !el.classList.contains("cell")) return;
+
+    const ultimo = selecaoAtual[selecaoAtual.length-1];
+    const dx = el.dataset.x - ultimo.dataset.x;
+    const dy = el.dataset.y - ultimo.dataset.y;
+
+    if(!direcaoAtual){
+     direcaoAtual = [Math.sign(dx), Math.sign(dy)];
+    }
+
+    if(dx == direcaoAtual[0] && dy == direcaoAtual[1]){
+     if(!selecaoAtual.includes(el)){
+      el.classList.add("selected");
+      selecaoAtual.push(el);
+     }
+    }
+   });
+
+   c.addEventListener("touchend",()=>{
+    selecionando=false;
+    verificar();
+   });
+
+   grid.appendChild(c);
+  }
+ }
+}
+
+function limpar(){
+ document.querySelectorAll(".cell").forEach(c=>c.classList.remove("selected"));
+}
+
+function verificar(){
+ const palavra = selecaoAtual.map(c=>c.textContent).join("");
+ const inversa = palavra.split("").reverse().join("");
+ const palavras = palavrasPorNivel[nivel];
+
+ if(palavras.includes(palavra) || palavras.includes(inversa)){
+  navigator.vibrate?.(80);
+  document.querySelectorAll(".palavras span").forEach(s=>{
+   if(s.textContent===palavra || s.textContent===inversa){
+    s.style.background="#22c55e";
+    s.style.textDecoration="line-through";
+   }
+  });
+
+  if(document.querySelectorAll(".palavras span[style]").length === palavras.length){
+   setTimeout(()=>{
+    nivel++;
+    nivel < palavrasPorNivel.length ? iniciarNivel() : alert("🏆 Você venceu!");
+   },600);
+  }
+ } else {
+  limpar();
+ }
+}
+
+iniciarNivel();
+</script>
+
+
+
+</body>
+</html>
