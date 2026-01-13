@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forca Pro</title>
+
+<style>
+:root{
+  --bg:#0e0f13;
+  --card:#181a22;
+  --accent:#4ade80;
+  --error:#f87171;
+  --warn:#facc15;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui;
+  display:flex;
+  justify-content:center;
+}
+
+.app{
+  width:100%;
+  max-width:420px;
+  padding:16px;
+}
+
+header{text-align:center;margin-bottom:10px;}
+header h1{margin:0;font-size:1.4rem;}
+header span{font-size:.85rem;color:var(--muted);}
+
+.info{
+  display:flex;
+  justify-content:space-between;
+  font-size:.85rem;
+  margin:10px 0;
+}
+
+.forca{
+  background:var(--card);
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
+  white-space:pre;
+  font-family:monospace;
+  font-size:1.1rem;
+}
+
+.word{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:14px 0;
+}
+
+.letter{
+  width:28px;
+  border-bottom:2px solid var(--muted);
+  text-align:center;
+  font-size:1.2rem;
+}
+
+.keyboard{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+}
+
+.key{
+  background:var(--card);
+  padding:10px 0;
+  border-radius:10px;
+  text-align:center;
+  font-weight:600;
+  user-select:none;
+}
+
+.key.used{opacity:.4;}
+.key.correct{background:rgba(74,222,128,.4);}
+.key.wrong{background:rgba(248,113,113,.4);}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+button{
+  flex:1;
+  background:var(--card);
+  border:none;
+  color:var(--text);
+  padding:10px;
+  border-radius:10px;
+}
+
+.message{
+  text-align:center;
+  margin-top:10px;
+  font-size:.9rem;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <header>
+    <h1>🪢 Forca Pro</h1>
+    <span id="levelLabel"></span>
+  </header>
+
+  <div class="info">
+    <div>⏱ <span id="timer">00:00</span></div>
+    <div>❌ <span id="errors">0</span>/6</div>
+    <div>💡 <span id="hints">2</span></div>
+  </div>
+
+  <div id="forca" class="forca"></div>
+  <div id="word" class="word"></div>
+  <div id="keyboard" class="keyboard"></div>
+
+  <div class="actions">
+    <button onclick="useHint()">Usar dica</button>
+  </div>
+
+  <div id="message" class="message"></div>
+</div>
+
+<script>
+const levels = [
+  {
+    cat: "Animais",
+    words: [
+      "LEAO","GATO","CACHORRO","ELEFANTE","TIGRE","GIRAFA",
+      "MACACO","COBRA","CAVALO","BALEIA","TUBARAO","RINOCERONTE"
+    ]
+  },
+  {
+    cat: "Natureza",
+    words: [
+      "MONTANHA","FLORESTA","OCEANO","DESERTO","CACHOEIRA",
+      "VULCAO","PLANICIE","ILHA","RIO","LAGO","TUNDRA","GELEIRA"
+    ]
+  },
+  {
+    cat: "Objetos",
+    words: [
+      "CADEIRA","MESA","LIVRO","LAPIS","CELULAR","COMPUTADOR",
+      "TECLADO","MOCHILA","RELAMPAGO","TELEVISAO","GARRAFA"
+    ]
+  },
+  {
+    cat: "Tecnologia",
+    words: [
+      "ALGORITMO","JAVASCRIPT","COMPUTADOR","PROGRAMACAO",
+      "INTELIGENCIA","SOFTWARE","HARDWARE","PROCESSADOR",
+      "MEMORIA","INTERNET","CRIPTOGRAFIA"
+    ]
+  },
+  {
+    cat: "Corpo Humano",
+    words: [
+      "CEREBRO","CORACAO","PULMAO","ESTOMAGO","COLUNA",
+      "MUSCULO","ESQUELETO","ARTICULACAO","SANGUE","NEURONIO"
+    ]
+  },
+  {
+    cat: "Mente",
+    words: [
+      "DISCIPLINA","RESILIENCIA","ATENCAO","FOCO","MEMORIA",
+      "VONTADE","CONCENTRACAO","AUTOCONTROLE","PERSISTENCIA"
+    ]
+  },
+  {
+    cat: "Emocoes",
+    words: [
+      "ALEGRIA","TRISTEZA","MEDO","CORAGEM","ANSIEDADE",
+      "ESPERANCA","ORGULHO","GRATIDAO","EMPATIA","SERENIDADE"
+    ]
+  },
+  {
+    cat: "Filosofia",
+    words: [
+      "CONSCIENCIA","SABEDORIA","PROPOSITO","EXISTENCIA",
+      "REALIDADE","VERDADE","ESSENCIA","ETICA","MORAL","LOGICA"
+    ]
+  },
+  {
+    cat: "Sociedade",
+    words: [
+      "CULTURA","EDUCACAO","JUSTICA","LIBERDADE","TRABALHO",
+      "POLITICA","COMUNICACAO","ECONOMIA","RESPONSABILIDADE"
+    ]
+  },
+  {
+    cat: "Abstrato",
+    words: [
+      "TEMPO","INFINITO","CAOS","ORDEM","SILENCIO",
+      "ENERGIA","CONSCIENCIA","EQUILIBRIO","TRANSFORMACAO"
+    ]
+  }
+];
+
+
+const hangman=[
+` +---+
+ |   |
+     |
+     |
+     |
+     |
+=========`,
+`
+ +---+
+ |   |
+ O   |
+     |
+     |
+     |
+=========`,
+`
+ +---+
+ |   |
+ O   |
+ |   |
+     |
+     |
+=========`,
+`
+ +---+
+ |   |
+ O   |
+/|   |
+     |
+     |
+=========`,
+`
+ +---+
+ |   |
+ O   |
+/|\\  |
+     |
+     |
+=========`,
+`
+ +---+
+ |   |
+ O   |
+/|\\  |
+/    |
+     |
+=========`,
+`
+ +---+
+ |   |
+ O   |
+/|\\  |
+/ \\  |
+     |
+=========`
+];
+
+let levelIndex=0, word="", guessed=[], errors=0, hints=2;
+let seconds=0, timerInt, locked=false;
+
+const levelLabel=document.getElementById("levelLabel");
+const forcaEl=document.getElementById("forca");
+const wordEl=document.getElementById("word");
+const keyboardEl=document.getElementById("keyboard");
+const errorsEl=document.getElementById("errors");
+const hintsEl=document.getElementById("hints");
+const timerEl=document.getElementById("timer");
+const messageEl=document.getElementById("message");
+
+function startLevel(){
+  locked=true;
+  clearInterval(timerInt);
+  seconds=0; errors=0; hints=2;
+  guessed=[];
+  const level=levels[levelIndex];
+  word=level.words[Math.random()*level.words.length|0];
+  levelLabel.textContent=`Nível ${levelIndex+1} • ${level.cat}`;
+  renderKeyboard();
+  render();
+  timerInt=setInterval(()=>{seconds++;timerEl.textContent=format(seconds)},1000);
+  setTimeout(()=>locked=false,200);
+}
+
+function render(){
+  forcaEl.textContent=hangman[errors];
+  errorsEl.textContent=errors;
+  hintsEl.textContent=hints;
+  wordEl.innerHTML="";
+  [...word].forEach(l=>{
+    const s=document.createElement("div");
+    s.className="letter";
+    s.textContent=guessed.includes(l)?l:"";
+    wordEl.appendChild(s);
+  });
+}
+
+function renderKeyboard(){
+  keyboardEl.innerHTML="";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l=>{
+    const k=document.createElement("div");
+    k.className="key";
+    k.textContent=l;
+    k.onclick=()=>guess(l,k);
+    keyboardEl.appendChild(k);
+  });
+}
+
+function guess(l,k){
+  if(locked||k.classList.contains("used"))return;
+  k.classList.add("used");
+  if(word.includes(l)){
+    guessed.push(l);
+    k.classList.add("correct");
+    render(); checkWin();
+  } else {
+    errors++; k.classList.add("wrong");
+    navigator.vibrate?.(50);
+    render();
+    if(errors>=6)lose();
+  }
+}
+
+function useHint(){
+  if(locked||hints<=0)return;
+  const remaining=[...word].filter(l=>!guessed.includes(l));
+  if(!remaining.length)return;
+  guessed.push(remaining[0]);
+  hints--; render(); checkWin();
+}
+
+function checkWin(){
+  if([...word].every(l=>guessed.includes(l))){
+    locked=true;
+    clearInterval(timerInt);
+    const score=Math.max(0,1000-(seconds*2)-(errors*120)-(2-hints)*80);
+    messageEl.textContent=`✔ Palavra descoberta! Pontos: ${score}`;
+    setTimeout(()=>{
+      levelIndex++;
+      if(levelIndex<levels.length){
+        messageEl.textContent="";
+        startLevel();
+      } else messageEl.textContent="🏆 Forca concluída!";
+    },1000);
+  }
+}
+
+function lose(){
+  locked=true;
+  clearInterval(timerInt);
+  messageEl.textContent=`❌ Palavra era: ${word}`;
+  setTimeout(startLevel,1200);
+}
+
+const format=s=>`${String(s/60|0).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+
+startLevel();
+</script>
+</body>
+</html>

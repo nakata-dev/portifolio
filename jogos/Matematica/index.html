@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Brain</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+
+body{
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.app{
+  width:100%;
+  max-width:420px;
+  background:#111;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.6);
+}
+
+header{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+header h1{
+  font-size:1.6rem;
+}
+
+.info{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-size:.9rem;
+  opacity:.9;
+}
+
+.problem{
+  background:#1e1e1e;
+  border-radius:15px;
+  padding:25px;
+  font-size:2rem;
+  text-align:center;
+  margin:20px 0;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  font-size:1.4rem;
+  border:none;
+  border-radius:12px;
+  text-align:center;
+  outline:none;
+}
+
+button{
+  width:100%;
+  margin-top:15px;
+  padding:15px;
+  font-size:1rem;
+  background:#00c6ff;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+.feedback{
+  text-align:center;
+  margin-top:10px;
+  font-size:.95rem;
+  min-height:22px;
+}
+
+.progress{
+  height:6px;
+  background:#222;
+  border-radius:5px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.bar{
+  height:100%;
+  width:100%;
+  background:#00ff99;
+  transition:width .2s linear;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+<h1>🧠 Calculando</h1>
+</header>
+
+<div class="info">
+<span>Nível: <b id="level">1</b></span>
+<span>⏱ <b id="time">10</b>s</span>
+</div>
+
+<div class="problem" id="problem">0 + 0</div>
+
+<input type="number" id="answer" placeholder="Resposta">
+
+<button onclick="check()">Confirmar</button>
+
+<div class="feedback" id="feedback"></div>
+
+<div class="progress">
+  <div class="bar" id="bar"></div>
+</div>
+
+</div>
+
+<script>
+let level=1,time=10,timer,solution;
+const maxLevel=10;
+
+const config=[
+{ops:["+"],max:10},
+{ops:["+","-"],max:20},
+{ops:["+","-"],max:50},
+{ops:["+","-","*"],max:10},
+{ops:["*"],max:20},
+{ops:["+","-","*"],max:50},
+{ops:["/"],max:100},
+{ops:["+","-","*","/"],max:100},
+{ops:["+","-","*","/"],max:200},
+{ops:["+","-","*","/"],max:500},
+];
+
+function rand(n){return Math.floor(Math.random()*n)}
+
+function generate(){
+  const cfg=config[level-1];
+  let a=rand(cfg.max)+1;
+  let b=rand(cfg.max)+1;
+  const op=cfg.ops[rand(cfg.ops.length)];
+
+  if(op==="/"){
+    solution=a;
+    b=rand(10)+1;
+    a=a*b;
+  }else if(op==="*"){
+    solution=a*b;
+  }else if(op==="+"){
+    solution=a+b;
+  }else{
+    solution=a-b;
+  }
+
+  document.getElementById("problem").textContent=`${a} ${op} ${b}`;
+  document.getElementById("answer").value="";
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  time=Math.max(11-level,6);
+  document.getElementById("time").textContent=time;
+  updateBar();
+
+  timer=setInterval(()=>{
+    time--;
+    document.getElementById("time").textContent=time;
+    updateBar();
+    if(time<=0) fail();
+  },1000);
+}
+
+function updateBar(){
+  document.getElementById("bar").style.width=(time/(11-level))*100+"%";
+}
+
+function check(){
+  const val=Number(document.getElementById("answer").value);
+  if(val===solution){
+    success();
+  }else{
+    document.getElementById("feedback").textContent="❌ Errado!";
+  }
+}
+
+function success(){
+  clearInterval(timer);
+  document.getElementById("feedback").textContent="✅ Correto!";
+  if(level<maxLevel){
+    level++;
+    setTimeout(next,800);
+  }else{
+    document.getElementById("problem").textContent="🏆 Parabéns!";
+  }
+}
+
+function fail(){
+  clearInterval(timer);
+  document.getElementById("feedback").textContent="⏳ Tempo esgotado!";
+  setTimeout(generate,1000);
+}
+
+function next(){
+  document.getElementById("level").textContent=level;
+  document.getElementById("feedback").textContent="";
+  generate();
+}
+
+generate();
+</script>
+</body>
+</html>
