@@ -270,14 +270,14 @@ body{
 
 .keyboard{
   display:grid;
-  gap: 10px;
+  gap: 7px;
   grid-template-columns: repeat(7, 1fr);
 }
 
 .key{
   border: none;
   border-radius: 50px;
-  padding: 9px 0;
+  padding: 10px 0;
   font-weight: 1000;
   color:#08101c;
   cursor:pointer;
