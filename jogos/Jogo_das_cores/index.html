@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simon Neon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">🎛️</div>
+        <div>
+          <h1>Simon Neon</h1>
+          <p class="sub">Memória, ritmo e cores no bolso 📱</p>
+        </div>
+      </div>
+
+      <div class="toggles">
+        <button class="icon-btn" id="btnSound" type="button" title="Som">🔊</button>
+        <button class="icon-btn" id="btnVibe" type="button" title="Vibração">📳</button>
+      </div>
+    </header>
+
+    <section class="hud card">
+      <div class="chip">
+        <span class="k">Nível</span>
+        <span class="v" id="level">1</span>
+      </div>
+      <div class="chip">
+        <span class="k">Score</span>
+        <span class="v" id="score">0</span>
+      </div>
+      <div class="chip">
+        <span class="k">Recorde</span>
+        <span class="v" id="best">0</span>
+      </div>
+      <div class="chip">
+        <span class="k">Modo</span>
+        <span class="v" id="modeLabel">Clássico</span>
+      </div>
+    </section>
+
+    <main class="main">
+      <section class="board card">
+        <div class="ring" id="ring">
+          <button class="pad pad-blue" data-color="blue" aria-label="Azul"></button>
+          <button class="pad pad-green" data-color="green" aria-label="Verde"></button>
+          <button class="pad pad-yellow" data-color="yellow" aria-label="Amarelo"></button>
+          <button class="pad pad-red" data-color="red" aria-label="Vermelho"></button>
+          <button class="pad pad-orange" data-color="orange" aria-label="Laranja"></button>
+
+          <div class="center" id="centerPanel">
+            <div class="center-top">
+              <div class="pill small" id="speedLabel">Vel: 1.00x</div>
+              <div class="pill small" id="streakLabel">Combo: 0</div>
+            </div>
+
+            <button class="btn primary" id="btnStart" type="button">Iniciar</button>
+
+            <div class="center-actions">
+              <button class="btn ghost" id="btnMode" type="button">Modo</button>
+              <button class="btn ghost" id="btnReset" type="button">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <p class="message" id="message" aria-live="polite">Toque em Iniciar para começar.</p>
+      </section>
+
+      <!-- Overlay + Sheet -->
+      <div class="overlay" id="overlay" hidden></div>
+
+      <section class="sheet card" id="modeSheet" hidden aria-label="Selecionar modo">
+        <div class="sheet-head">
+          <h2>Escolha o modo</h2>
+          <button class="icon-btn" id="btnCloseSheet" type="button" aria-label="Fechar">✕</button>
+        </div>
+
+        <div class="modes">
+          <button class="mode" data-mode="classic" type="button">
+            <b>Clássico</b>
+            <span>Sequência cresce 1 por rodada.</span>
+          </button>
+          <button class="mode" data-mode="sprint" type="button">
+            <b>Sprint</b>
+            <span>Tempo curto para responder. 🔥</span>
+          </button>
+          <button class="mode" data-mode="zen" type="button">
+            <b>Zen</b>
+            <span>Treino relax, sem pressão.</span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Copyright &copy; 2026 - Ailton A. Nakata
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
