@@ -1,426 +1,276 @@
-/* ==========================
-   Forca Fun (Kid/Teen UI)
-   - SVG Hangman animado
-   - Sons WebAudio (sem arquivos)
-   - Moedas/XP/Sequência
-   - LocalStorage (progresso, bests, stats)
-   - Fácil de adicionar palavras e categorias
-========================== */
-
-const LS_KEY = "forca_fun_v1";
-
-/* 1) COMO ADICIONAR PALAVRAS:
-   - levels[0].words.push("NOVO NOME");
-   - levels.push({ cat:"Nomes", words:["MARIA","JOAO","AILTON"] });
-*/
+/* Forca Pro - versão responsiva + SVG + sons */
 const levels = [
-  { cat:"Animais", words:["LEAO","GATO","CACHORRO","ELEFANTE","TIGRE","GIRAFA","MACACO","COBRA","CAVALO","BALEIA","TUBARAO"] },
-  { cat:"Natureza", words:["MONTANHA","FLORESTA","OCEANO","DESERTO","CACHOEIRA","VULCAO","ILHA","RIO","LAGO","GELEIRA"] },
-  { cat:"Objetos", words:["CADEIRA","MESA","LIVRO","LAPIS","CELULAR","TECLADO","MOCHILA","TELEVISAO","GARRAFA"] },
-  { cat:"Tecnologia", words:["ALGORITMO","JAVASCRIPT","COMPUTADOR","SOFTWARE","HARDWARE","INTERNET","PROCESSADOR","MEMORIA"] },
-  { cat:"Mente", words:["FOCO","MEMORIA","DISCIPLINA","ATENCAO","CORAGEM","PACIENCIA","RESILIENCIA"] }
+  { cat:"Animais", words:["LEAO","GATO","CACHORRO","ELEFANTE","TIGRE","GIRAFA","MACACO","COBRA","CAVALO","BALEIA","TUBARAO","RINOCERONTE"] },
+  { cat:"Natureza", words:["MONTANHA","FLORESTA","OCEANO","DESERTO","CACHOEIRA","VULCAO","PLANICIE","ILHA","RIO","LAGO","TUNDRA","GELEIRA"] },
+  { cat:"Objetos", words:["CADEIRA","MESA","LIVRO","LAPIS","CELULAR","COMPUTADOR","TECLADO","MOCHILA","TELEVISAO","GARRAFA"] },
+  { cat:"Tecnologia", words:["ALGORITMO","JAVASCRIPT","COMPUTADOR","PROGRAMACAO","INTELIGENCIA","SOFTWARE","HARDWARE","PROCESSADOR","MEMORIA","INTERNET","CRIPTOGRAFIA"] },
+  { cat:"Corpo Humano", words:["CEREBRO","CORACAO","PULMAO","ESTOMAGO","COLUNA","MUSCULO","ESQUELETO","ARTICULACAO","SANGUE","NEURONIO"] },
+  { cat:"Mente", words:["DISCIPLINA","RESILIENCIA","ATENCAO","FOCO","MEMORIA","VONTADE","CONCENTRACAO","AUTOCONTROLE","PERSISTENCIA"] },
+  { cat:"Emocoes", words:["ALEGRIA","TRISTEZA","MEDO","CORAGEM","ANSIEDADE","ESPERANCA","ORGULHO","GRATIDAO","EMPATIA","SERENIDADE"] },
+  { cat:"Filosofia", words:["CONSCIENCIA","SABEDORIA","PROPOSITO","EXISTENCIA","REALIDADE","VERDADE","ESSENCIA","ETICA","MORAL","LOGICA"] },
+  { cat:"Sociedade", words:["CULTURA","EDUCACAO","JUSTICA","LIBERDADE","TRABALHO","POLITICA","COMUNICACAO","ECONOMIA","RESPONSABILIDADE"] },
+  { cat:"Abstrato", words:["TEMPO","INFINITO","CAOS","ORDEM","SILENCIO","ENERGIA","CONSCIENCIA","EQUILIBRIO","TRANSFORMACAO"] }
 ];
 
-// ==========================
-// DOM
-// ==========================
-const levelLabel = document.getElementById("levelLabel");
-const categoryChip = document.getElementById("categoryChip");
-const tipText = document.getElementById("tipText");
+const $ = (id) => document.getElementById(id);
 
-const timerEl = document.getElementById("timer");
-const errorsEl = document.getElementById("errors");
-const hintsEl = document.getElementById("hints");
+const levelLabel = $("levelLabel");
+const wordEl = $("word");
+const keyboardEl = $("keyboard");
+const errorsEl = $("errors");
+const hintsEl = $("hints");
+const timerEl = $("timer");
+const messageEl = $("message");
+const tipEl = $("tip");
 
-const xpLabel = document.getElementById("xpLabel");
-const coinsLabel = document.getElementById("coinsLabel");
-const streakLabel = document.getElementById("streakLabel");
+const btnHint = $("btnHint");
+const btnRestart = $("btnRestart");
 
-const messageEl = document.getElementById("message");
-const wordEl = document.getElementById("word");
-const keyboardEl = document.getElementById("keyboard");
+const soundToggle = $("soundToggle");
+const vibeToggle  = $("vibeToggle");
 
-const btnHint = document.getElementById("btnHint");
-const btnNew = document.getElementById("btnNew");
-const btnSkip = document.getElementById("btnSkip");
+// Partes do SVG (1..6) + carinha (no final)
+const parts = [
+  $("p1"), $("p2"), $("p3"), $("p4"), $("p5"), $("p6"),
+  $("face1"), $("face2"), $("face3"), $("face4"), $("face5")
+];
 
-const toggleSound = document.getElementById("toggleSound");
-const toggleVibe = document.getElementById("toggleVibe");
-
-// SVG parts
-const faceEl = document.getElementById("part-face");
-const order = ["part-rope","part-head","part-body","part-armL","part-armR","part-legL","part-legR"];
-
-// ==========================
-// Estado
-// ==========================
-let state = loadState();
-
-let levelIndex = state.levelIndex ?? 0;
+let levelIndex = 0;
 let word = "";
-let guessed = new Set();
+let guessed = [];
 let errors = 0;
 let hints = 2;
-let locked = false;
 
 let seconds = 0;
 let timerInt = null;
+let locked = false;
 
-// ==========================
-// Áudio (WebAudio)
-// ==========================
+// ---------- Sons (WebAudio, sem arquivos) ----------
 let audioCtx = null;
 
-function ensureAudio() {
-  if (!toggleSound.checked) return null;
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === "suspended") audioCtx.resume().catch(()=>{});
+function ensureAudio(){
+  if(!soundToggle.checked) return null;
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioCtx.state === "suspended") audioCtx.resume().catch(()=>{});
   return audioCtx;
 }
 
-function tone({ type="sine", freq=440, dur=0.12, gain=0.06, bend=0 }) {
+function beep({freq=440, dur=0.12, type="sine", gain=0.06, sweep=null}={}){
   const ctx = ensureAudio();
-  if (!ctx) return;
+  if(!ctx) return;
 
   const o = ctx.createOscillator();
   const g = ctx.createGain();
-
   o.type = type;
-  o.frequency.setValueAtTime(freq, ctx.currentTime);
-  if (bend) o.frequency.exponentialRampToValueAtTime(freq * bend, ctx.currentTime + dur);
-
-  g.gain.setValueAtTime(0.0001, ctx.currentTime);
-  g.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + 0.015);
-  g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+  o.frequency.value = freq;
+  g.gain.value = gain;
 
   o.connect(g);
   g.connect(ctx.destination);
 
-  o.start();
-  o.stop(ctx.currentTime + dur + 0.02);
+  const t = ctx.currentTime;
+  if(sweep){
+    o.frequency.setValueAtTime(sweep.from, t);
+    o.frequency.exponentialRampToValueAtTime(sweep.to, t + dur);
+  }
+
+  g.gain.setValueAtTime(gain, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+  o.start(t);
+  o.stop(t + dur);
 }
 
-function sfxSuccess(){
-  tone({ type:"triangle", freq: 660, dur: 0.10, gain:0.07, bend:1.25 });
-  setTimeout(()=> tone({ type:"triangle", freq: 880, dur: 0.10, gain:0.06, bend:1.18 }), 80);
+function sfxCorrect(){
+  // “tadá” curto
+  beep({freq:523, dur:0.08, type:"triangle", gain:0.07});
+  setTimeout(()=>beep({freq:659, dur:0.09, type:"triangle", gain:0.07}), 90);
+  setTimeout(()=>beep({freq:784, dur:0.10, type:"triangle", gain:0.07}), 180);
 }
+
 function sfxWrong(){
-  tone({ type:"square", freq: 220, dur: 0.10, gain:0.05, bend:0.75 });
-  setTimeout(()=> tone({ type:"square", freq: 180, dur: 0.10, gain:0.05, bend:0.70 }), 70);
+  // “bloop” engraçado
+  beep({dur:0.18, type:"sawtooth", gain:0.06, sweep:{from:260, to:90}});
 }
+
 function sfxWin(){
-  tone({ type:"sine", freq: 523.25, dur: 0.12, gain:0.06, bend:1.2 });
-  setTimeout(()=> tone({ type:"sine", freq: 659.25, dur: 0.12, gain:0.06, bend:1.2 }), 120);
-  setTimeout(()=> tone({ type:"sine", freq: 783.99, dur: 0.14, gain:0.07, bend:1.15 }), 240);
+  beep({freq:523, dur:0.10, type:"square", gain:0.06});
+  setTimeout(()=>beep({freq:659, dur:0.10, type:"square", gain:0.06}), 120);
+  setTimeout(()=>beep({freq:784, dur:0.12, type:"square", gain:0.06}), 240);
+  setTimeout(()=>beep({freq:988, dur:0.14, type:"square", gain:0.06}), 380);
 }
+
 function sfxLose(){
-  tone({ type:"sawtooth", freq: 180, dur: 0.18, gain:0.05, bend:0.6 });
-  setTimeout(()=> tone({ type:"sawtooth", freq: 140, dur: 0.18, gain:0.05, bend:0.55 }), 140);
+  beep({dur:0.25, type:"sawtooth", gain:0.06, sweep:{from:220, to:60}});
+  setTimeout(()=>beep({dur:0.18, type:"sawtooth", gain:0.05, sweep:{from:160, to:50}}), 260);
 }
 
-window.addEventListener("pointerdown", () => ensureAudio(), { once:true });
-
-// ==========================
-// Utils
-// ==========================
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-function randInt(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
-
-function formatTime(s){
-  const m = Math.floor(s/60);
-  const r = s%60;
-  return `${String(m).padStart(2,"0")}:${String(r).padStart(2,"0")}`;
-}
-
-function vibrate(ms=25){
-  if (!toggleVibe.checked) return;
+function vibe(ms){
+  if(!vibeToggle.checked) return;
   navigator.vibrate?.(ms);
 }
 
-function setMessage(text){
-  messageEl.textContent = text;
-}
-
-function sanitizeWord(w){
-  return String(w||"")
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .replace(/[^A-Z ]/g,"")
-    .replace(/\s+/g," ")
-    .trim();
-}
-
-// ==========================
-// SVG
-// ==========================
-function resetHangman(){
-  order.forEach(id => document.getElementById(id)?.classList.remove("show"));
-  faceEl?.classList.remove("show");
-}
-
-function showHangman(n){
-  resetHangman();
-  // mostra 1..6 partes (erro 6 = perdeu)
-  for(let i=0;i<Math.min(n,6);i++){
-    document.getElementById(order[i])?.classList.add("show");
-  }
-  if(n>=6){
-    document.getElementById("part-legL")?.classList.add("show");
-    document.getElementById("part-legR")?.classList.add("show");
-    faceEl?.classList.add("show");
-  }
-}
-
-// ==========================
-// Render
-// ==========================
-function renderWord(){
-  wordEl.innerHTML="";
-  for(const ch of word){
-    const box=document.createElement("div");
-    box.className="letter";
-    box.textContent = ch===" " ? " " : (guessed.has(ch) ? ch : "");
-    wordEl.appendChild(box);
-  }
-}
-
-function renderKeyboard(){
-  keyboardEl.innerHTML="";
-  ALPHABET.forEach(l=>{
-    const btn=document.createElement("button");
-    btn.type="button";
-    btn.className="key";
-    btn.textContent=l;
-    btn.addEventListener("click", ()=> guess(l, btn));
-    keyboardEl.appendChild(btn);
-  });
-}
-
-function markKey(btn, cls){
-  btn.classList.add("used");
-  if(cls) btn.classList.add(cls);
-}
-
-function updateHUD(){
-  errorsEl.textContent = String(errors);
-  hintsEl.textContent = String(hints);
-  xpLabel.textContent = String(state.xp ?? 0);
-  coinsLabel.textContent = String(state.coins ?? 0);
-  streakLabel.textContent = String(state.streak ?? 0);
-}
-
-// ==========================
-// Game
-// ==========================
-function startRound({ keepTimer=false } = {}){
-  locked=true;
-
-  // timer
+// ---------- Game ----------
+function startLevel(){
+  locked = true;
   clearInterval(timerInt);
-  if(!keepTimer){
-    seconds=0;
-    timerEl.textContent="00:00";
-  }
-  timerInt=setInterval(()=>{
-    seconds++;
-    timerEl.textContent=formatTime(seconds);
-  },1000);
+  seconds = 0;
+  errors = 0;
+  hints = 2;
+  guessed = [];
+  messageEl.textContent = "";
 
-  errors=0;
-  hints=2;
-  guessed=new Set();
+  // limpa SVG
+  parts.forEach(p => p.classList.remove("show"));
 
-  const lvl = levels[levelIndex % levels.length];
-  const picked = lvl.words[randInt(0, lvl.words.length-1)];
-  word = sanitizeWord(picked);
+  const level = levels[levelIndex];
+  word = pickWord(level.words);
+  levelLabel.textContent = `Nível ${levelIndex+1} • ${level.cat}`;
 
-  levelLabel.textContent = `Nível ${levelIndex + 1} • ${lvl.cat}`;
-  categoryChip.textContent = lvl.cat;
-
-  resetHangman();
-  showHangman(0);
+  tipEl.textContent = "Dica: tente vogais primeiro 😉";
 
   renderKeyboard();
   renderWord();
-
-  tipText.textContent = "Dica: use o 💡 quando travar!";
-  setMessage("Escolha uma letra! ✨");
-
   updateHUD();
-  saveState();
 
-  setTimeout(()=> locked=false, 180);
+  timerInt = setInterval(()=>{
+    seconds++;
+    timerEl.textContent = format(seconds);
+  }, 1000);
+
+  setTimeout(()=>locked=false, 200);
+}
+
+function pickWord(list){
+  // normaliza e remove espaços extras
+  const w = (list[Math.random()*list.length|0] || "").toUpperCase().trim();
+  return w;
+}
+
+function updateHUD(){
+  timerEl.textContent = format(seconds);
+  errorsEl.textContent = errors;
+  hintsEl.textContent = hints;
+}
+
+function renderWord(){
+  wordEl.innerHTML = "";
+  [...word].forEach(ch=>{
+    const s = document.createElement("div");
+    s.className = "letter";
+    s.textContent = guessed.includes(ch) || ch === " " ? ch : "";
+    if(ch === " "){
+      s.style.borderBottomColor = "transparent";
+      s.style.width = "14px";
+    }
+    wordEl.appendChild(s);
+  });
+}
+
+function renderKeyboard(){
+  keyboardEl.innerHTML = "";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l=>{
+    const btn = document.createElement("button");
+    btn.className = "key";
+    btn.type = "button";
+    btn.textContent = l;
+    btn.addEventListener("click", ()=>guess(l, btn));
+    keyboardEl.appendChild(btn);
+  });
 }
 
 function guess(letter, btn){
   if(locked) return;
   if(btn.classList.contains("used")) return;
 
+  btn.classList.add("used");
+
   if(word.includes(letter)){
-    guessed.add(letter);
-    markKey(btn, "correct");
-    sfxSuccess();
-    vibrate(15);
+    guessed.push(letter);
+    btn.classList.add("correct");
+    sfxCorrect();
+    vibe(30);
     renderWord();
-
-    // XP pequeno por acerto
-    state.xp = (state.xp ?? 0) + 5;
-
-    // completou?
-    if(checkWin()){
-      win();
-    }else{
-      setMessage("Boa! 😄");
-      updateHUD();
-      saveState();
-    }
+    checkWin();
   }else{
     errors++;
-    markKey(btn, "wrong");
+    btn.classList.add("wrong");
     sfxWrong();
-    vibrate(45);
+    vibe(70);
+    revealHangman(errors);
+    updateHUD();
 
-    showHangman(errors);
-
-    // errou: streak zera
-    state.streak = 0;
-
-    if(errors>=6){
-      lose();
-    }else{
-      setMessage("Quase! tenta outra 😅");
-      updateHUD();
-      saveState();
-    }
+    if(errors >= 6) lose();
   }
 }
 
-function checkWin(){
-  for(const ch of word){
-    if(ch!==" " && !guessed.has(ch)) return false;
+function revealHangman(err){
+  // 1..6 mostram as partes principais
+  const map = ["p1","p2","p3","p4","p5","p6"];
+  const id = map[err-1];
+  const el = document.getElementById(id);
+  if(el) el.classList.add("show");
+
+  // quando perde, mostra carinha (X_X)
+  if(err >= 6){
+    ["face1","face2","face3","face4","face5"].forEach(fid=>{
+      document.getElementById(fid)?.classList.add("show");
+    });
   }
-  return true;
 }
 
 function useHint(){
-  if(locked) return;
-  if(hints<=0){
-    setMessage("Você já usou todas as dicas 😄");
-    return;
-  }
+  if(locked || hints <= 0) return;
 
-  const remaining = [...new Set([...word].filter(ch=>ch!==" " && !guessed.has(ch)))];
+  const remaining = [...new Set([...word].filter(ch => ch !== " " && !guessed.includes(ch)))];
   if(!remaining.length) return;
 
+  // escolhe uma letra ainda não revelada (mais "útil")
+  const pick = remaining[Math.random()*remaining.length|0];
+  guessed.push(pick);
   hints--;
-  const pick = remaining[randInt(0, remaining.length-1)];
-  guessed.add(pick);
-
-  // marca o botão
-  const keyBtn=[...keyboardEl.querySelectorAll(".key")].find(b=>b.textContent===pick);
-  if(keyBtn && !keyBtn.classList.contains("used")) markKey(keyBtn,"correct");
-
-  tone({ type:"triangle", freq: 520, dur: 0.08, gain:0.05, bend:1.15 });
-  vibrate(20);
-
-  setMessage(`💡 A letra "${pick}" está na palavra!`);
+  sfxCorrect();
+  vibe(25);
   renderWord();
   updateHUD();
-  saveState();
-
-  if(checkWin()) win();
+  checkWin();
 }
 
-function win(){
-  locked=true;
-  clearInterval(timerInt);
-
-  // recompensa
-  state.coins = (state.coins ?? 0) + 4;
-  state.xp = (state.xp ?? 0) + 25;
-  state.streak = (state.streak ?? 0) + 1;
-
-  // best time
-  const bestKey = `best_${levelIndex}`;
-  const prev = state.bests?.[bestKey];
-  if(!state.bests) state.bests = {};
-  if(prev == null || seconds < prev) state.bests[bestKey] = seconds;
-
-  sfxWin();
-  setMessage(`🎉 Você venceu! +4🪙 +25⭐ • ${formatTime(seconds)}`);
-  tipText.textContent = "Mandou bem! Vamos pro próximo nível?";
-
-  levelIndex++;
-  state.levelIndex = levelIndex;
-  updateHUD();
-  saveState();
-
-  setTimeout(()=> startRound(), 1200);
+function checkWin(){
+  if([...word].every(ch => ch === " " || guessed.includes(ch))){
+    locked = true;
+    clearInterval(timerInt);
+    sfxWin();
+    messageEl.textContent = `🎉 Boa! Você acertou em ${format(seconds)}.`;
+    setTimeout(()=>{
+      levelIndex++;
+      if(levelIndex < levels.length){
+        startLevel();
+      }else{
+        messageEl.textContent = "🏆 Você concluiu todos os níveis!";
+      }
+    }, 1100);
+  }
 }
 
 function lose(){
-  locked=true;
+  locked = true;
   clearInterval(timerInt);
   sfxLose();
-  showHangman(6);
-
-  setMessage(`😵 Você perdeu! A palavra era: ${word}`);
-  tipText.textContent = "Sem problema. Treino deixa você forte! 💪";
-
-  updateHUD();
-  saveState();
-
-  setTimeout(()=> startRound(), 1500);
+  messageEl.textContent = `😵 Não foi dessa vez! A palavra era: ${word}`;
+  setTimeout(startLevel, 1400);
 }
 
-function skipWord(){
-  if(locked) return;
-  const cost = 3;
-  state.coins = state.coins ?? 0;
-  if(state.coins < cost){
-    setMessage(`Você precisa de ${cost}🪙 para pular 😅`);
-    vibrate(30);
-    return;
-  }
-  state.coins -= cost;
-  state.streak = 0;
-  state.levelIndex = levelIndex; // mantém
-  saveState();
-  updateHUD();
-
-  tone({ type:"sine", freq: 740, dur: 0.10, gain:0.05, bend:1.08 });
-  setMessage("⏭ Pulou! Nova palavra chegando...");
-  setTimeout(()=> startRound({ keepTimer:false }), 350);
-}
-
-// ==========================
-// LocalStorage
-// ==========================
-function loadState(){
-  try{
-    const raw = localStorage.getItem(LS_KEY);
-    return raw ? JSON.parse(raw) : { xp:0, coins:0, streak:0, levelIndex:0, bests:{} };
-  }catch{
-    return { xp:0, coins:0, streak:0, levelIndex:0, bests:{} };
-  }
-}
-
-function saveState(){
-  const payload = {
-    ...state,
-    levelIndex
-  };
-  localStorage.setItem(LS_KEY, JSON.stringify(payload));
-}
-
-// ==========================
-// Events
-// ==========================
 btnHint.addEventListener("click", useHint);
-btnNew.addEventListener("click", ()=> startRound());
-btnSkip.addEventListener("click", skipWord);
+btnRestart.addEventListener("click", startLevel);
 
-// inicia
-startRound();
+// desbloqueia áudio no primeiro toque
+window.addEventListener("pointerdown", () => ensureAudio(), { once:true });
+
+function format(s){
+  return `${String(s/60|0).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+}
+
+startLevel();
