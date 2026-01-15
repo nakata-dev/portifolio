@@ -1,43 +1,171 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Rastreador de Hábitos</title>
-    <style>
-        div#voltar{
-        text-align: center; 
-        font-family: 'Times New Roman', Times, serif;   
-    }
-    div#voltar a:hover{
-        padding: 10px;
-        background-color: rgba(125, 208, 235, 0.637);
-        font-weight: bolder;
-        transition-duration: 0.5s;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        border-radius: 5px;
-        border: none;
-        font-family: 'Times New Roman', Times, serif;
-    }
-    </style>
-    <link rel="stylesheet" href="style.css"> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rastreador de Hábitos</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-    <div class="container">
-        <h1>Meu Rastreador de Hábitos</h1>
 
-        <form id="habit-form">
-            <input type="text" id="new-habit-input" placeholder="Adicionar novo hábito (ex: Beber água)" required>
-            <button type="submit">Adicionar</button>
-        </form>
-        
-        <ul id="habit-list">
-        </ul>
-        <div id="voltar">
-            <a href="../projetos.html">voltar</a>
-        </div>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">H</div>
+      <div>
+        <h1>Rastreador de Hábitos</h1>
+        <p class="subtitle">Faça pouco, mas faça sempre.</p>
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <div class="top-actions">
+      <button id="exportBtn" class="btn ghost" type="button" title="Exportar JSON">Exportar</button>
+      <button id="clearBtn" class="btn danger" type="button" title="Apagar tudo">Reset</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Coluna esquerda -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Adicionar hábito</h2>
+        <p class="muted">Crie hábitos com tempo e meta semanal.</p>
+      </div>
+
+      <form id="habit-form" class="form">
+        <div class="grid2">
+          <label class="field">
+            <span>Hábito</span>
+            <input id="new-habit-input" type="text" placeholder="Ex: Leitura" required />
+          </label>
+
+          <label class="field">
+            <span>Categoria</span>
+            <select id="category">
+              <option value="Saúde">Saúde</option>
+              <option value="Mente">Mente</option>
+              <option value="Produtividade">Produtividade</option>
+              <option value="Estudos">Estudos</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid3">
+          <label class="field">
+            <span>Minutos (timer)</span>
+            <input id="minutes" type="number" min="1" max="300" value="20" />
+          </label>
+
+          <label class="field">
+            <span>Meta semanal</span>
+            <select id="weeklyGoal">
+              <option value="3">3x / semana</option>
+              <option value="4">4x / semana</option>
+              <option value="5" selected>5x / semana</option>
+              <option value="6">6x / semana</option>
+              <option value="7">7x / semana</option>
+            </select>
+          </label>
+
+          <button class="btn primary" type="submit">
+            + Adicionar
+          </button>
+        </div>
+
+        <div class="tip">
+          Dica: comece com metas pequenas. Consistência vence empolgação.
+        </div>
+      </form>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">Concluídos hoje</span>
+          <span id="statToday" class="stat-value">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Taxa semanal</span>
+          <span id="statWeekRate" class="stat-value">0%</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Maior streak</span>
+          <span id="statBestStreak" class="stat-value">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coluna direita -->
+    <section class="panel">
+      <div class="panel-head row">
+        <div>
+          <h2>Cronograma</h2>
+          <p class="muted">Selecione um dia e marque seus hábitos.</p>
+        </div>
+        <div class="day-pill" id="selectedDayLabel">Hoje</div>
+      </div>
+
+      <div id="weekBar" class="weekbar" aria-label="Cronograma semanal"></div>
+
+      <div class="list-head">
+        <h3>Seus hábitos</h3>
+        <div class="filters">
+          <select id="filterCategory" class="mini-select">
+            <option value="all">Todas categorias</option>
+          </select>
+          <select id="sortBy" class="mini-select">
+            <option value="created">Ordem de criação</option>
+            <option value="name">Nome (A-Z)</option>
+            <option value="streak">Streak (maior)</option>
+            <option value="weekly">Progresso semanal</option>
+          </select>
+        </div>
+      </div>
+
+      <ul id="habit-list" class="habit-list"></ul>
+
+      <div class="footer-actions">
+        <div id="voltar" class="voltar">
+          <a href="../projetos.html">voltar</a>
+        </div>
+        <p class="muted small">Tudo fica salvo no seu navegador.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Timer -->
+  <dialog id="timerModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h3 id="timerTitle">Timer</h3>
+          <p id="timerSubtitle" class="muted">Foco total.</p>
+        </div>
+        <button id="closeModal" class="icon-btn" type="button" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="timer">
+        <div class="ring" id="ring"></div>
+        <div class="timer-center">
+          <div id="timerTime" class="timer-time">20:00</div>
+          <div class="timer-mini muted" id="timerHint">Você consegue.</div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="timerStart" class="btn primary" type="button">Iniciar</button>
+        <button id="timerPause" class="btn warning" type="button" style="display:none;">Pausar</button>
+        <button id="timerReset" class="btn ghost" type="button">Resetar</button>
+        <button id="timerDone" class="btn success" type="button">Concluir hábito</button>
+      </div>
+    </div>
+  </dialog>
+
+  <audio id="ding" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3" type="audio/mpeg">
+  </audio>
+
+    <footer>
+    Copiright © 2026 Ailton A. Nakata
+    </footer>
+  <script src="script.js"></script>
 </body>
 </html>
