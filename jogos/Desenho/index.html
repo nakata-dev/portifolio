@@ -1,208 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Traço Único • Desafios Lógicos</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-
-body{
-  background:linear-gradient(135deg,#0a0a0a,#000);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:#fff;
-}
-
-.app{
-  width:100%;
-  max-width:420px;
-  padding:20px;
-}
-
-h1{
-  text-align:center;
-  font-size:1.3rem;
-  margin-bottom:4px;
-}
-
-.level{
-  text-align:center;
-  font-size:.85rem;
-  opacity:.8;
-  margin-bottom:10px;
-}
-
-canvas{
-  width:100%;
-  background:#0d0d0d;
-  border-radius:18px;
-  touch-action:none;
-  box-shadow:0 0 30px rgba(0,255,180,.2);
-}
-
-.msg{
-  text-align:center;
-  min-height:26px;
-  margin-top:10px;
-  font-size:.95rem;
-}
-
-button{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  font-weight:bold;
-  background:#00ffb0;
-  color:#000;
-  cursor:pointer;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Traço Único • Desafios Lógicos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-<div class="app">
-<h1>🧠 Traço Único</h1>
-<div class="level">Nível <b id="lvl">1</b></div>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">🧠</div>
+        <div>
+          <h1>Traço Único</h1>
+          <p class="sub">Passe por cada linha 1 vez, sem cruzar e sem repetir.</p>
+        </div>
+      </div>
 
-<canvas id="c" width="360" height="360"></canvas>
+      <button class="icon-btn" id="btnHelp" type="button" title="Regras">❔</button>
+    </header>
 
-<div class="msg" id="msg"></div>
-<button onclick="reset()">Reiniciar nível</button>
-</div>
+    <section class="hud card">
+      <div class="chip">
+        <span class="k">Nível</span>
+        <span class="v"><b id="lvl">1</b>/10</span>
+      </div>
+      <div class="chip">
+        <span class="k">Arestas</span>
+        <span class="v"><b id="done">0</b>/<span id="total">0</span></span>
+      </div>
+      <div class="chip">
+        <span class="k">Tentativas</span>
+        <span class="v"><b id="tries">0</b></span>
+      </div>
+      <div class="chip">
+        <span class="k">Dica</span>
+        <span class="v"><b id="hint">Start</b></span>
+      </div>
+    </section>
 
-<script>
-const canvas=document.getElementById("c");
-const ctx=canvas.getContext("2d");
-const msg=document.getElementById("msg");
-const lvlTxt=document.getElementById("lvl");
+    <main class="main">
+      <section class="board card">
+        <canvas id="c" width="360" height="360"></canvas>
+        <p class="msg" id="msg" aria-live="polite"></p>
+      </section>
 
-let drawing=false,last=null;
-let used=new Set();
-let level=0;
-let startPoints=[];
+      <section class="controls card">
+        <div class="row">
+          <button class="btn ghost" id="btnPrev" type="button">⬅</button>
+          <button class="btn primary" id="btnReset" type="button">Reiniciar</button>
+          <button class="btn ghost" id="btnNext" type="button">➡</button>
+        </div>
 
-// ---------- NÍVEIS ----------
-const levels=[
-  [
-    [[80,220],[180,100]],[[180,100],[280,220]],
-    [[80,220],[280,220]],
-    [[120,220],[120,280]],[[240,220],[240,280]],
-    [[120,280],[240,280]]
-  ],
-  [
-    [[100,200],[260,200]],[[100,200],[100,320]],
-    [[260,200],[260,320]],[[100,320],[260,320]],
-    [[100,200],[180,120]],[[260,200],[180,120]]
-  ],
-  [
-    [[100,100],[260,100]],[[260,100],[260,260]],
-    [[260,260],[100,260]],[[100,260],[100,100]],
-    [[100,180],[260,180]],[[180,100],[180,260]]
-  ]
-];
+        <div class="row">
+          <button class="btn" id="btnUndo" type="button">↩ Desfazer</button>
+          <button class="btn" id="btnHint" type="button">💡 Mostrar início</button>
+          <button class="btn" id="btnNodes" type="button">• Pontos</button>
+        </div>
+      </section>
+    </main>
 
-// ---------- LÓGICA ----------
-function getVertices(){
-  const map={};
-  levels[level].forEach(l=>{
-    const a=l[0].join(",");
-    const b=l[1].join(",");
-    map[a]=(map[a]||0)+1;
-    map[b]=(map[b]||0)+1;
-  });
-  return Object.entries(map).filter(v=>v[1]%2!==0).map(v=>v[0].split(",").map(Number));
-}
+    <footer class="footer">
+      Copyright @ 2026 - Ailton A. Nakata
+    </footer>
+  </div>
 
-function draw(){
-  ctx.clearRect(0,0,360,360);
-  ctx.lineWidth=7;
-  ctx.lineCap="round";
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>Regras rápidas</h2>
+        <button class="icon-btn" id="btnClose" type="button" aria-label="Fechar">✕</button>
+      </div>
+      <ul>
+        <li>Você deve passar por <b>todas as linhas</b> (arestas).</li>
+        <li>Não pode passar pela <b>mesma linha duas vezes</b>.</li>
+        <li>O traço deve ser <b>contínuo</b>, indo de ponto em ponto.</li>
+        <li>Comece por um ponto sugerido (quando existir).</li>
+      </ul>
+      <p class="small">Dica: se existirem 2 pontos “ímpares”, você deve começar em um deles.</p>
+    </div>
+  </div>
 
-  levels[level].forEach((l,i)=>{
-    ctx.strokeStyle=used.has(i)?"#00ffb0":"#333";
-    ctx.beginPath();
-    ctx.moveTo(...l[0]);
-    ctx.lineTo(...l[1]);
-    ctx.stroke();
-  });
-
-  // pontos de início válidos
-  startPoints.forEach(p=>{
-    ctx.fillStyle="#00ffb0";
-    ctx.beginPath();
-    ctx.arc(p[0],p[1],6,0,Math.PI*2);
-    ctx.fill();
-  });
-}
-
-function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1])}
-function near(p,a,b){
-  const d=dist(a,b);
-  return Math.abs(d-(dist(p,a)+dist(p,b)))<6;
-}
-
-function pos(e){
-  const r=canvas.getBoundingClientRect();
-  return [e.clientX-r.left,e.clientY-r.top];
-}
-
-canvas.addEventListener("pointerdown",e=>{
-  const p=pos(e);
-  if(startPoints.length && !startPoints.some(s=>dist(p,s)<12)){
-    msg.textContent="❌ Comece por um ponto destacado";
-    return;
-  }
-  drawing=true;
-  last=p;
-});
-
-canvas.addEventListener("pointermove",e=>{
-  if(!drawing) return;
-  const p=pos(e);
-
-  levels[level].forEach((l,i)=>{
-    if(!used.has(i) && (near(p,l[0],l[1])||near(last,l[0],l[1]))){
-      used.add(i);
-      navigator.vibrate?.(20);
-    }
-  });
-
-  last=p;
-  draw();
-
-  if(used.size===levels[level].length){
-    msg.textContent="🏆 Nível concluído!";
-    drawing=false;
-    setTimeout(next,900);
-  }
-});
-
-canvas.addEventListener("pointerup",()=>drawing=false);
-
-function reset(){
-  used.clear();
-  msg.textContent="";
-  startPoints=getVertices();
-  draw();
-}
-
-function next(){
-  if(level<levels.length-1){
-    level++;
-    lvlTxt.textContent=level+1;
-    reset();
-  }else{
-    msg.textContent="✨ Mestre do Traço!";
-  }
-}
-
-reset();
-</script>
+  <script src="game.js"></script>
 </body>
 </html>
