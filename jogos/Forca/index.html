@@ -1,373 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forca Pro</title>
-
-<style>
-:root{
-  --bg:#0e0f13;
-  --card:#181a22;
-  --accent:#4ade80;
-  --error:#f87171;
-  --warn:#facc15;
-  --text:#e5e7eb;
-  --muted:#9ca3af;
-}
-
-*{box-sizing:border-box;}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui;
-  display:flex;
-  justify-content:center;
-}
-
-.app{
-  width:100%;
-  max-width:420px;
-  padding:16px;
-}
-
-header{text-align:center;margin-bottom:10px;}
-header h1{margin:0;font-size:1.4rem;}
-header span{font-size:.85rem;color:var(--muted);}
-
-.info{
-  display:flex;
-  justify-content:space-between;
-  font-size:.85rem;
-  margin:10px 0;
-}
-
-.forca{
-  background:var(--card);
-  border-radius:14px;
-  padding:14px;
-  text-align:center;
-  white-space:pre;
-  font-family:monospace;
-  font-size:1.1rem;
-}
-
-.word{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  margin:14px 0;
-}
-
-.letter{
-  width:28px;
-  border-bottom:2px solid var(--muted);
-  text-align:center;
-  font-size:1.2rem;
-}
-
-.keyboard{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:8px;
-}
-
-.key{
-  background:var(--card);
-  padding:10px 0;
-  border-radius:10px;
-  text-align:center;
-  font-weight:600;
-  user-select:none;
-}
-
-.key.used{opacity:.4;}
-.key.correct{background:rgba(74,222,128,.4);}
-.key.wrong{background:rgba(248,113,113,.4);}
-
-.actions{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-}
-
-button{
-  flex:1;
-  background:var(--card);
-  border:none;
-  color:var(--text);
-  padding:10px;
-  border-radius:10px;
-}
-
-.message{
-  text-align:center;
-  margin-top:10px;
-  font-size:.9rem;
-  color:var(--muted);
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forca Fun</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-<div class="app">
-  <header>
-    <h1>🪢 Forca Pro</h1>
-    <span id="levelLabel"></span>
-  </header>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">🎈</div>
+        <div>
+          <h1>Forca Fun</h1>
+          <p class="sub" id="levelLabel">Nível 1 • Categoria</p>
+        </div>
+      </div>
 
-  <div class="info">
-    <div>⏱ <span id="timer">00:00</span></div>
-    <div>❌ <span id="errors">0</span>/6</div>
-    <div>💡 <span id="hints">2</span></div>
+      <div class="stats">
+        <div class="stat">
+          <span class="k">⏱</span>
+          <span class="v" id="timer">00:00</span>
+        </div>
+        <div class="stat">
+          <span class="k">❌</span>
+          <span class="v"><b id="errors">0</b>/6</span>
+        </div>
+        <div class="stat">
+          <span class="k">💡</span>
+          <span class="v" id="hints">2</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="card stage">
+        <div class="stage-left">
+          <div class="chip" id="categoryChip">Categoria</div>
+
+          <svg id="hangmanSvg" viewBox="0 0 220 220" class="hangman" aria-hidden="true">
+            <path class="gallow" d="M30 200 H190" />
+            <path class="gallow" d="M60 200 V35" />
+            <path class="gallow" d="M60 35 H150" />
+            <path class="gallow" d="M150 35 V55" />
+
+            <path id="part-rope" class="part" d="M150 55 V72" />
+            <circle id="part-head" class="part" cx="150" cy="90" r="18" />
+            <path id="part-body" class="part" d="M150 108 V150" />
+            <path id="part-armL" class="part" d="M150 120 L128 138" />
+            <path id="part-armR" class="part" d="M150 120 L172 138" />
+            <path id="part-legL" class="part" d="M150 150 L132 176" />
+            <path id="part-legR" class="part" d="M150 150 L168 176" />
+
+            <g id="part-face" class="part face">
+              <path d="M144 88 l-6 -6" />
+              <path d="M138 88 l6 -6" />
+              <path d="M162 88 l-6 -6" />
+              <path d="M156 88 l6 -6" />
+              <path d="M142 100 q8 8 16 0" />
+            </g>
+          </svg>
+
+          <p class="tip" id="tipText">Toque nas letras para adivinhar 🎯</p>
+        </div>
+
+        <div class="stage-right">
+          <div class="bigstats">
+            <div class="pill">
+              <span>⭐ XP</span>
+              <b id="xpLabel">0</b>
+            </div>
+            <div class="pill">
+              <span>🪙 Moedas</span>
+              <b id="coinsLabel">0</b>
+            </div>
+            <div class="pill">
+              <span>🔥 Sequência</span>
+              <b id="streakLabel">0</b>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-3d blue" id="btnNew" type="button">🔁 Nova</button>
+            <button class="btn btn-3d yellow" id="btnHint" type="button">💡 Dica</button>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-3d green" id="btnSkip" type="button" title="Custa 3 moedas">
+              ⏭ Pular (3🪙)
+            </button>
+          </div>
+
+          <div class="toggles">
+            <label class="toggle">
+              <input type="checkbox" id="toggleSound" checked />
+              <span>🔊 Som</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="toggleVibe" checked />
+              <span>📳 Vibração</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div id="word" class="word" aria-label="Palavra"></div>
+        <div class="message" id="message" aria-live="polite"></div>
+      </section>
+
+      <section class="card keyboard-card" aria-label="Teclado">
+        <div id="keyboard" class="keyboard"></div>
+      </section>
+    </main>
+
+    <footer class="footer">Copyright @ 2026 - Ailton A. Nakata</footer>
   </div>
 
-  <div id="forca" class="forca"></div>
-  <div id="word" class="word"></div>
-  <div id="keyboard" class="keyboard"></div>
-
-  <div class="actions">
-    <button onclick="useHint()">Usar dica</button>
-  </div>
-
-  <div id="message" class="message"></div>
-</div>
-
-<script>
-const levels = [
-  {
-    cat: "Animais",
-    words: [
-      "LEAO","GATO","CACHORRO","ELEFANTE","TIGRE","GIRAFA",
-      "MACACO","COBRA","CAVALO","BALEIA","TUBARAO","RINOCERONTE"
-    ]
-  },
-  {
-    cat: "Natureza",
-    words: [
-      "MONTANHA","FLORESTA","OCEANO","DESERTO","CACHOEIRA",
-      "VULCAO","PLANICIE","ILHA","RIO","LAGO","TUNDRA","GELEIRA"
-    ]
-  },
-  {
-    cat: "Objetos",
-    words: [
-      "CADEIRA","MESA","LIVRO","LAPIS","CELULAR","COMPUTADOR",
-      "TECLADO","MOCHILA","RELAMPAGO","TELEVISAO","GARRAFA"
-    ]
-  },
-  {
-    cat: "Tecnologia",
-    words: [
-      "ALGORITMO","JAVASCRIPT","COMPUTADOR","PROGRAMACAO",
-      "INTELIGENCIA","SOFTWARE","HARDWARE","PROCESSADOR",
-      "MEMORIA","INTERNET","CRIPTOGRAFIA"
-    ]
-  },
-  {
-    cat: "Corpo Humano",
-    words: [
-      "CEREBRO","CORACAO","PULMAO","ESTOMAGO","COLUNA",
-      "MUSCULO","ESQUELETO","ARTICULACAO","SANGUE","NEURONIO"
-    ]
-  },
-  {
-    cat: "Mente",
-    words: [
-      "DISCIPLINA","RESILIENCIA","ATENCAO","FOCO","MEMORIA",
-      "VONTADE","CONCENTRACAO","AUTOCONTROLE","PERSISTENCIA"
-    ]
-  },
-  {
-    cat: "Emocoes",
-    words: [
-      "ALEGRIA","TRISTEZA","MEDO","CORAGEM","ANSIEDADE",
-      "ESPERANCA","ORGULHO","GRATIDAO","EMPATIA","SERENIDADE"
-    ]
-  },
-  {
-    cat: "Filosofia",
-    words: [
-      "CONSCIENCIA","SABEDORIA","PROPOSITO","EXISTENCIA",
-      "REALIDADE","VERDADE","ESSENCIA","ETICA","MORAL","LOGICA"
-    ]
-  },
-  {
-    cat: "Sociedade",
-    words: [
-      "CULTURA","EDUCACAO","JUSTICA","LIBERDADE","TRABALHO",
-      "POLITICA","COMUNICACAO","ECONOMIA","RESPONSABILIDADE"
-    ]
-  },
-  {
-    cat: "Abstrato",
-    words: [
-      "TEMPO","INFINITO","CAOS","ORDEM","SILENCIO",
-      "ENERGIA","CONSCIENCIA","EQUILIBRIO","TRANSFORMACAO"
-    ]
-  }
-];
-
-
-const hangman=[
-` +---+
- |   |
-     |
-     |
-     |
-     |
-=========`,
-`
- +---+
- |   |
- O   |
-     |
-     |
-     |
-=========`,
-`
- +---+
- |   |
- O   |
- |   |
-     |
-     |
-=========`,
-`
- +---+
- |   |
- O   |
-/|   |
-     |
-     |
-=========`,
-`
- +---+
- |   |
- O   |
-/|\\  |
-     |
-     |
-=========`,
-`
- +---+
- |   |
- O   |
-/|\\  |
-/    |
-     |
-=========`,
-`
- +---+
- |   |
- O   |
-/|\\  |
-/ \\  |
-     |
-=========`
-];
-
-let levelIndex=0, word="", guessed=[], errors=0, hints=2;
-let seconds=0, timerInt, locked=false;
-
-const levelLabel=document.getElementById("levelLabel");
-const forcaEl=document.getElementById("forca");
-const wordEl=document.getElementById("word");
-const keyboardEl=document.getElementById("keyboard");
-const errorsEl=document.getElementById("errors");
-const hintsEl=document.getElementById("hints");
-const timerEl=document.getElementById("timer");
-const messageEl=document.getElementById("message");
-
-function startLevel(){
-  locked=true;
-  clearInterval(timerInt);
-  seconds=0; errors=0; hints=2;
-  guessed=[];
-  const level=levels[levelIndex];
-  word=level.words[Math.random()*level.words.length|0];
-  levelLabel.textContent=`Nível ${levelIndex+1} • ${level.cat}`;
-  renderKeyboard();
-  render();
-  timerInt=setInterval(()=>{seconds++;timerEl.textContent=format(seconds)},1000);
-  setTimeout(()=>locked=false,200);
-}
-
-function render(){
-  forcaEl.textContent=hangman[errors];
-  errorsEl.textContent=errors;
-  hintsEl.textContent=hints;
-  wordEl.innerHTML="";
-  [...word].forEach(l=>{
-    const s=document.createElement("div");
-    s.className="letter";
-    s.textContent=guessed.includes(l)?l:"";
-    wordEl.appendChild(s);
-  });
-}
-
-function renderKeyboard(){
-  keyboardEl.innerHTML="";
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l=>{
-    const k=document.createElement("div");
-    k.className="key";
-    k.textContent=l;
-    k.onclick=()=>guess(l,k);
-    keyboardEl.appendChild(k);
-  });
-}
-
-function guess(l,k){
-  if(locked||k.classList.contains("used"))return;
-  k.classList.add("used");
-  if(word.includes(l)){
-    guessed.push(l);
-    k.classList.add("correct");
-    render(); checkWin();
-  } else {
-    errors++; k.classList.add("wrong");
-    navigator.vibrate?.(50);
-    render();
-    if(errors>=6)lose();
-  }
-}
-
-function useHint(){
-  if(locked||hints<=0)return;
-  const remaining=[...word].filter(l=>!guessed.includes(l));
-  if(!remaining.length)return;
-  guessed.push(remaining[0]);
-  hints--; render(); checkWin();
-}
-
-function checkWin(){
-  if([...word].every(l=>guessed.includes(l))){
-    locked=true;
-    clearInterval(timerInt);
-    const score=Math.max(0,1000-(seconds*2)-(errors*120)-(2-hints)*80);
-    messageEl.textContent=`✔ Palavra descoberta! Pontos: ${score}`;
-    setTimeout(()=>{
-      levelIndex++;
-      if(levelIndex<levels.length){
-        messageEl.textContent="";
-        startLevel();
-      } else messageEl.textContent="🏆 Forca concluída!";
-    },1000);
-  }
-}
-
-function lose(){
-  locked=true;
-  clearInterval(timerInt);
-  messageEl.textContent=`❌ Palavra era: ${word}`;
-  setTimeout(startLevel,1200);
-}
-
-const format=s=>`${String(s/60|0).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
-
-startLevel();
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
