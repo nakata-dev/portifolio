@@ -1,366 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Caça-Palavras</title>
-
-<style>
-:root {
-  --bg: #0e0f13;
-  --card: #181a22;
-  --accent: #4ade80;
-  --accent-soft: rgba(74,222,128,.25);
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --error: #f87171;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  display: flex;
-  justify-content: center;
-}
-
-.app {
-  width: 100%;
-  max-width: 520px;
-  padding: 16px;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-header h1 {
-  font-size: 1.4rem;
-  margin: 0;
-}
-
-header span {
-  font-size: .85rem;
-  color: var(--muted);
-}
-
-.board {
-  display: grid;
-  gap: 6px;
-  margin: 16px 0;
-  touch-action: none;
-}
-
-.cell {
-  background: var(--card);
-  border-radius: 10px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.2rem;
-  user-select: none;
-  transition: background .15s, transform .1s;
-}
-
-.cell.active {
-  background: var(--accent-soft);
-}
-
-.cell.found {
-  background: var(--accent);
-  color: #06240f;
-}
-
-.words {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 12px;
-}
-
-.words h2 {
-  font-size: 1rem;
-  margin: 0 0 8px;
-}
-
-.word {
-  display: inline-block;
-  margin: 4px 8px 4px 0;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #222433;
-  font-size: .85rem;
-}
-
-.word.found {
-  background: var(--accent);
-  color: #06240f;
-  text-decoration: line-through;
-}
-
-.progress {
-  height: 6px;
-  background: #1f2230;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 12px;
-}
-
-.progress span {
-  display: block;
-  height: 100%;
-  background: var(--accent);
-  width: 0%;
-  transition: width .3s;
-}
-
-.message {
-  text-align: center;
-  margin-top: 12px;
-  font-size: .9rem;
-  color: var(--muted);
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧠 Caça-Palavras</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-<div class="app">
-  <header>
-    <h1>🧠 Caça-Palavras</h1>
-    <span id="levelLabel"></span>
-  </header>
+  <div class="app">
+    <header class="top">
+      <div class="title">
+        <h1>🧠 Caça-Palavras</h1>
+        <p class="sub" id="levelLabel">Nível 1</p>
+      </div>
 
-  <div id="board" class="board"></div>
+      <div class="hud">
+        <div class="hud-item">
+          <span class="hud-label">Tempo</span>
+          <span class="hud-value" id="timeLabel">00:00</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Movimentos</span>
+          <span class="hud-value" id="movesLabel">0</span>
+        </div>
+      </div>
+    </header>
 
-  <div class="words">
-    <h2>Palavras</h2>
-    <div id="wordList"></div>
-    <div class="progress"><span id="progressBar"></span></div>
+    <main class="content">
+      <section class="card">
+        <div id="board" class="board" aria-label="Tabuleiro do caça-palavras"></div>
+      </section>
+
+      <section class="card words-card">
+        <div class="words-head">
+          <h2>Palavras</h2>
+          <div class="progress" aria-label="Progresso do nível">
+            <span id="progressBar"></span>
+          </div>
+        </div>
+        <div id="wordList" class="words"></div>
+        <p class="msg" id="message" aria-live="polite"></p>
+      </section>
+
+      <section class="card dev-card" id="devPanel" hidden>
+        <div class="dev-head">
+          <h2>Editor de Níveis</h2>
+          <button class="btn ghost" id="closeDev" type="button">Fechar</button>
+        </div>
+
+        <p class="hint">
+          Cole um JSON de níveis (array). Exemplo já vem preenchido.
+          Clique em “Aplicar” para testar rapidamente.
+        </p>
+
+        <textarea id="levelsInput" class="dev-textarea" spellcheck="false"></textarea>
+
+        <div class="row">
+          <button class="btn primary" id="applyLevels" type="button">Aplicar</button>
+          <button class="btn danger" id="resetLevels" type="button">Restaurar padrão</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Barra fixa no mobile -->
+    <nav class="mobilebar" aria-label="Ações rápidas">
+      <button class="btn ghost" id="btnHint" type="button">💡 Dica</button>
+      <button class="btn ghost" id="btnRestart" type="button">🔁 Reiniciar</button>
+      <button class="btn primary" id="btnNext" type="button">➡️ Próximo</button>
+      <button class="btn ghost" id="btnDev" type="button" title="Editor de níveis">⚙️</button>
+    </nav>
+
+    <footer class="footer">
+      Copyright @ 2026 - Ailton A. Nakata
+    </footer>
   </div>
 
-  <div id="message" class="message"></div>
-</div>
-
-<script>
-const levels = [
-  { size: 6,  words: ["SOL","MAR","LUZ"], directions: 2 },
-  { size: 6,  words: ["VENTO","NORTE","SUL"], directions: 3 },
-  { size: 7,  words: ["FOGO","TERRA","AGUA"], directions: 4 },
-  { size: 7,  words: ["ENERGIA","MENTE","CORPO"], directions: 5 },
-  { size: 8,  words: ["EQUILIBRIO","FOCO","CAOS"], directions: 6 },
-  { size: 8,  words: ["DISCIPLINA","PACIENCIA","FORCA"], directions: 7 },
-  { size: 9,  words: ["CONSCIENCIA","ATENCAO","CLAREZA"], directions: 8 },
-  { size: 9,  words: ["RESILIENCIA","PROPOSITO","INTENCAO"], directions: 8 },
-  { size:10,  words: ["AUTOCONHECIMENTO","SABEDORIA"], directions: 8 },
-  { size:10,  words: ["TRANSFORMACAO","EVOLUCAO","PRESENCA"], directions: 8 }
-];
-
-const directions = [
-  [1,0],[-1,0],[0,1],[0,-1],
-  [1,1],[-1,-1],[1,-1],[-1,1]
-];
-
-let levelIndex = 0;
-let grid = [];
-let placedWords = [];
-let foundWords = new Set();
-
-let selecting = false;
-let selectedCells = [];
-let selectionVector = null;
-let locked = false;
-
-const boardEl = document.getElementById("board");
-const wordListEl = document.getElementById("wordList");
-const levelLabel = document.getElementById("levelLabel");
-const progressBar = document.getElementById("progressBar");
-const messageEl = document.getElementById("message");
-
-function startLevel() {
-  locked = true;
-
-  const level = levels[levelIndex];
-  levelLabel.textContent = `Nível ${levelIndex + 1} • ${level.size}×${level.size}`;
-  boardEl.style.gridTemplateColumns = `repeat(${level.size}, 1fr)`;
-
-  grid = Array.from({ length: level.size }, () =>
-    Array(level.size).fill("")
-  );
-
-  placedWords = [];
-  foundWords.clear();
-  selectionVector = null;
-
-  placeWords(level);
-  fillGrid();
-  render();
-
-  setTimeout(() => locked = false, 200);
-}
-
-function placeWords(level) {
-  level.words.forEach(word => {
-    let placed = false;
-
-    while (!placed) {
-      const dir = directions[Math.floor(Math.random() * level.directions)];
-      const reversed = Math.random() < 0.4;
-      const letters = (reversed ? word.split("").reverse() : word.split(""));
-      const x = Math.floor(Math.random() * level.size);
-      const y = Math.floor(Math.random() * level.size);
-
-      if (canPlace(x, y, dir, letters, level.size)) {
-        letters.forEach((l, i) => {
-          grid[y + dir[1]*i][x + dir[0]*i] = l;
-        });
-        placedWords.push(word);
-        placed = true;
-      }
-    }
-  });
-}
-
-function canPlace(x, y, dir, letters, size) {
-  for (let i = 0; i < letters.length; i++) {
-    const nx = x + dir[0]*i;
-    const ny = y + dir[1]*i;
-    if (nx < 0 || ny < 0 || nx >= size || ny >= size) return false;
-    if (grid[ny][nx] && grid[ny][nx] !== letters[i]) return false;
-  }
-  return true;
-}
-
-function fillGrid() {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  for (let y = 0; y < grid.length; y++) {
-    for (let x = 0; x < grid.length; x++) {
-      if (!grid[y][x]) {
-        grid[y][x] = alphabet[Math.floor(Math.random() * alphabet.length)];
-      }
-    }
-  }
-}
-
-function render() {
-  boardEl.innerHTML = "";
-  wordListEl.innerHTML = "";
-  messageEl.textContent = "";
-
-  grid.forEach((row, y) => {
-    row.forEach((letter, x) => {
-      const cell = document.createElement("div");
-      cell.className = "cell";
-      cell.textContent = letter;
-      cell.dataset.x = x;
-      cell.dataset.y = y;
-      boardEl.appendChild(cell);
-    });
-  });
-
-  placedWords.forEach(word => {
-    const span = document.createElement("span");
-    span.className = "word";
-    span.textContent = word;
-    span.dataset.word = word;
-    wordListEl.appendChild(span);
-  });
-
-  updateProgress();
-}
-
-function updateProgress() {
-  const pct = (foundWords.size / placedWords.length) * 100;
-  progressBar.style.width = pct + "%";
-
-  if (pct === 100 && !locked) {
-    locked = true;
-    messageEl.textContent = "✔ Nível concluído";
-
-    setTimeout(() => {
-      levelIndex++;
-      if (levelIndex < levels.length) startLevel();
-      else messageEl.textContent = "🏆 Jogo finalizado";
-    }, 800);
-  }
-}
-
-function clearSelection() {
-  selectedCells.forEach(c => c.classList.remove("active"));
-  selectedCells = [];
-  selectionVector = null;
-}
-
-function validateSelection() {
-  if (selectedCells.length < 2) {
-    clearSelection();
-    return;
-  }
-
-  const word = selectedCells.map(c => c.textContent).join("");
-  const reversed = word.split("").reverse().join("");
-
-  const match = placedWords.find(w =>
-    !foundWords.has(w) && (w === word || w === reversed)
-  );
-
-  if (match) {
-    foundWords.add(match);
-    selectedCells.forEach(c => {
-      c.classList.remove("active");
-      c.classList.add("found");
-    });
-    document.querySelector(`[data-word="${match}"]`).classList.add("found");
-    navigator.vibrate?.(60);
-  }
-
-  clearSelection();
-  updateProgress();
-}
-
-boardEl.addEventListener("pointerdown", e => {
-  if (locked) return;
-  const cell = e.target.closest(".cell");
-  if (!cell) return;
-
-  selecting = true;
-  clearSelection();
-
-  selectedCells.push(cell);
-  cell.classList.add("active");
-});
-
-boardEl.addEventListener("pointermove", e => {
-  if (!selecting || locked) return;
-  const cell = document.elementFromPoint(e.clientX, e.clientY)?.closest(".cell");
-  if (!cell || selectedCells.includes(cell)) return;
-
-  const last = selectedCells[selectedCells.length - 1];
-  const dx = cell.dataset.x - last.dataset.x;
-  const dy = cell.dataset.y - last.dataset.y;
-
-  if (!selectionVector) {
-    selectionVector = [dx, dy];
-  } else if (dx !== selectionVector[0] || dy !== selectionVector[1]) {
-    return;
-  }
-
-  selectedCells.push(cell);
-  cell.classList.add("active");
-});
-
-window.addEventListener("pointerup", () => {
-  if (!selecting) return;
-  selecting = false;
-  validateSelection();
-});
-
-startLevel();
-</script>
-
+  <script src="app.js"></script>
 </body>
 </html>

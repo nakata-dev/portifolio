@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tabuada Turbo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Inter:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">⭐</div>
+        <div>
+          <h1>Tabuada Turbo</h1>
+          <p class="sub">Aprender brincando, direto no celular 📱</p>
+        </div>
+      </div>
+
+      <button id="soundBtn" class="icon-btn" type="button" aria-label="Som ligado/desligado" title="Som">
+        🔊
+      </button>
+    </header>
+
+    <section class="hud">
+      <div class="pill">
+        <span class="label">Nível</span>
+        <span class="value">Tabuada <b id="level">1</b></span>
+      </div>
+
+      <div class="pill">
+        <span class="label">Tempo</span>
+        <span class="value">⏱ <b id="time">10</b>s</span>
+      </div>
+
+      <div class="pill">
+        <span class="label">Sequência</span>
+        <span class="value">🔥 <b id="streak">0</b></span>
+      </div>
+
+      <div class="pill">
+        <span class="label">Moedas</span>
+        <span class="value">🪙 <b id="coins">0</b></span>
+      </div>
+    </section>
+
+    <main class="game">
+      <section class="card problem-card">
+        <div class="stars" id="stars" aria-hidden="true"></div>
+
+        <div class="problem" id="problem">
+          <span id="a">1</span>
+          <span class="op">×</span>
+          <span id="b">1</span>
+          <span class="op">=</span>
+          <span class="q">?</span>
+        </div>
+
+        <div class="progress" aria-label="Barra de tempo">
+          <div class="bar" id="bar"></div>
+        </div>
+
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+      </section>
+
+      <section class="card answers-card">
+        <div class="answers" id="answers" aria-label="Alternativas"></div>
+
+        <div class="actions">
+          <button class="btn ghost" id="btnHint" type="button">💡 Dica (−2🪙)</button>
+          <button class="btn danger" id="btnReset" type="button">🔁 Recomeçar</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Copyright @ 2025 - Ailton A. Nakata
+    </footer>
+  </div>
+
+  <!-- Sons simples (gerados por WebAudio no JS, sem arquivos externos) -->
+  <script src="app.js"></script>
+</body>
+</html>

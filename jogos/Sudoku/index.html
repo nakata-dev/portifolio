@@ -1,297 +1,94 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sudoku Pro</title>
-
-<style>
-:root{
-  --bg:#0e0f13;
-  --card:#181a22;
-  --accent:#60a5fa;
-  --error:#f87171;
-  --success:#4ade80;
-  --text:#e5e7eb;
-  --muted:#9ca3af;
-}
-
-*{box-sizing:border-box;}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui;
-  display:flex;
-  justify-content:center;
-}
-
-.app{
-  width:100%;
-  max-width:420px;
-  padding:16px;
-}
-
-header{
-  text-align:center;
-  margin-bottom:10px;
-}
-
-header h1{margin:0;font-size:1.4rem;}
-header span{font-size:.85rem;color:var(--muted);}
-
-.info{
-  display:flex;
-  justify-content:space-between;
-  margin:10px 0;
-  font-size:.85rem;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(9,1fr);
-  gap:2px;
-  background:#2a2d3e;
-  padding:4px;
-  border-radius:12px;
-}
-
-.cell{
-  background:var(--card);
-  aspect-ratio:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.1rem;
-  border-radius:8px;
-  user-select:none;
-}
-
-.cell.fixed{color:#93c5fd;}
-.cell.selected{background:rgba(96,165,250,.3);}
-.cell.error{background:rgba(248,113,113,.45);}
-
-.keyboard{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:8px;
-  margin-top:14px;
-}
-
-.key{
-  background:var(--card);
-  padding:12px;
-  text-align:center;
-  border-radius:10px;
-  font-weight:600;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-}
-
-button{
-  flex:1;
-  background:var(--card);
-  color:var(--text);
-  border:none;
-  padding:10px;
-  border-radius:10px;
-}
-
-.message{
-  margin-top:10px;
-  text-align:center;
-  font-size:.9rem;
-  color:var(--muted);
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧩 Sudoku Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-<div class="app">
-  <header>
-    <h1>🧩 Sudoku Pro</h1>
-    <span id="levelLabel"></span>
-  </header>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🧩</div>
+        <div>
+          <h1>Sudoku Pro</h1>
+          <p class="sub" id="levelLabel">Nível: Fácil</p>
+        </div>
+      </div>
 
-  <div class="info">
-    <div>⏱ <span id="timer">00:00</span></div>
-    <div>❌ <span id="errors">0</span>/3</div>
-    <div>💡 <span id="hints">3</span></div>
+      <div class="top-actions">
+        <button class="btn ghost" id="btnNew" type="button" title="Novo jogo">Novo</button>
+        <button class="btn ghost" id="btnContinue" type="button" title="Continuar jogo salvo">Continuar</button>
+      </div>
+    </header>
+
+    <section class="hud card">
+      <div class="chip">
+        <span class="chip-ico">⏱</span>
+        <div>
+          <span class="chip-label">Tempo</span>
+          <span class="chip-value" id="timer">00:00</span>
+        </div>
+      </div>
+
+      <div class="chip">
+        <span class="chip-ico">❌</span>
+        <div>
+          <span class="chip-label">Erros</span>
+          <span class="chip-value"><span id="errors">0</span>/3</span>
+        </div>
+      </div>
+
+      <div class="chip">
+        <span class="chip-ico">💡</span>
+        <div>
+          <span class="chip-label">Dicas</span>
+          <span class="chip-value" id="hints">3</span>
+        </div>
+      </div>
+
+      <div class="chip best">
+        <span class="chip-ico">🏁</span>
+        <div>
+          <span class="chip-label">Melhor</span>
+          <span class="chip-value" id="bestScore">—</span>
+        </div>
+      </div>
+    </section>
+
+    <main class="main">
+      <section class="board-wrap card">
+        <div id="grid" class="grid" aria-label="Tabuleiro do Sudoku"></div>
+        <p class="message" id="message" aria-live="polite"></p>
+      </section>
+
+      <section class="panel card">
+        <div class="panel-row">
+          <button class="btn" id="btnHint" type="button">💡 Dica</button>
+          <button class="btn" id="btnErase" type="button">⌫ Apagar</button>
+          <button class="btn" id="btnPencil" type="button" aria-pressed="false">✎ Lápis</button>
+        </div>
+
+        <div class="panel-row">
+          <button class="btn ghost" id="btnUndo" type="button">↶ Desfazer</button>
+          <button class="btn ghost" id="btnSave" type="button">💾 Salvar</button>
+          <button class="btn danger" id="btnReset" type="button">Reset nível</button>
+        </div>
+
+        <div class="keyboard" id="keyboard" aria-label="Teclado numérico"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Copyright &copy; 2025 - Ailton A. Nakata
+    </footer>
   </div>
 
-  <div id="grid" class="grid"></div>
-
-  <div class="keyboard" id="keyboard"></div>
-
-  <div class="actions">
-    <button onclick="useHint()">Dica</button>
-    <button onclick="clearCell()">Apagar</button>
-  </div>
-
-  <div class="message" id="message"></div>
-</div>
-
-<script>
-const levels=[
- {name:"Fácil",remove:35},
- {name:"Médio",remove:45},
- {name:"Difícil",remove:52},
- {name:"Especialista",remove:58},
- {name:"Mestre",remove:62}
-];
-
-let levelIndex=0;
-let solution=[], puzzle=[];
-let selected=null;
-let errors=0, hints=3;
-let seconds=0, timerInt;
-
-const gridEl=document.getElementById("grid");
-const keyboardEl=document.getElementById("keyboard");
-const levelLabel=document.getElementById("levelLabel");
-const messageEl=document.getElementById("message");
-
-function startGame(){
-  clearInterval(timerInt);
-  seconds=0; errors=0; hints=3;
-  updateHUD();
-
-  levelLabel.textContent=`Nível: ${levels[levelIndex].name}`;
-  solution=generateSolvedGrid();
-  puzzle=removeNumbers(solution,levels[levelIndex].remove);
-  renderGrid();
-  renderKeyboard();
-
-  timerInt=setInterval(()=>{
-    seconds++; updateHUD();
-  },1000);
-}
-
-function updateHUD(){
-  document.getElementById("timer").textContent=formatTime(seconds);
-  document.getElementById("errors").textContent=errors;
-  document.getElementById("hints").textContent=hints;
-}
-
-function generateSolvedGrid(){
-  const g=Array.from({length:9},()=>Array(9).fill(0));
-  solve(g); return g;
-}
-
-function solve(g){
-  for(let y=0;y<9;y++)for(let x=0;x<9;x++)
-    if(!g[y][x]){
-      for(let n of shuffle([1,2,3,4,5,6,7,8,9])){
-        if(valid(g,x,y,n)){
-          g[y][x]=n;
-          if(solve(g))return true;
-          g[y][x]=0;
-        }
-      } return false;
-    }
-  return true;
-}
-
-function valid(g,x,y,n){
-  for(let i=0;i<9;i++)if(g[y][i]==n||g[i][x]==n)return false;
-  const sx=Math.floor(x/3)*3, sy=Math.floor(y/3)*3;
-  for(let yy=0;yy<3;yy++)for(let xx=0;xx<3;xx++)
-    if(g[sy+yy][sx+xx]==n)return false;
-  return true;
-}
-
-function removeNumbers(g,c){
-  const p=g.map(r=>r.slice());
-  while(c){
-    const x=Math.random()*9|0,y=Math.random()*9|0;
-    if(p[y][x]){p[y][x]=0;c--;}
-  } return p;
-}
-
-function renderGrid(){
-  gridEl.innerHTML="";
-  puzzle.forEach((r,y)=>r.forEach((v,x)=>{
-    const c=document.createElement("div");
-    c.className="cell";
-    if(v){c.textContent=v;c.classList.add("fixed");}
-    c.onclick=()=>select(c,x,y);
-    c.dataset.x=x; c.dataset.y=y;
-    gridEl.appendChild(c);
-  }));
-}
-
-function renderKeyboard(){
-  keyboardEl.innerHTML="";
-  for(let i=1;i<=9;i++){
-    const k=document.createElement("div");
-    k.className="key"; k.textContent=i;
-    k.onclick=()=>input(i);
-    keyboardEl.appendChild(k);
-  }
-}
-
-function select(c,x,y){
-  if(c.classList.contains("fixed"))return;
-  document.querySelectorAll(".cell").forEach(e=>e.classList.remove("selected"));
-  selected={c,x,y}; c.classList.add("selected");
-}
-
-function input(n){
-  if(!selected)return;
-  const {x,y,c}=selected;
-  puzzle[y][x]=n;
-  c.textContent=n;
-  if(n!==solution[y][x]){
-    c.classList.add("error");
-    errors++; updateHUD();
-    if(errors>=3)gameOver();
-  } else c.classList.remove("error");
-  checkWin();
-}
-
-function clearCell(){
-  if(!selected)return;
-  puzzle[selected.y][selected.x]=0;
-  selected.c.textContent="";
-}
-
-function useHint(){
-  if(!selected||hints<=0)return;
-  const {x,y,c}=selected;
-  puzzle[y][x]=solution[y][x];
-  c.textContent=solution[y][x];
-  c.classList.remove("error");
-  hints--; updateHUD();
-  checkWin();
-}
-
-function checkWin(){
-  if(puzzle.every((r,y)=>r.every((v,x)=>v&&v==solution[y][x]))){
-    clearInterval(timerInt);
-    const score=Math.max(0,1000-(seconds*2)-(errors*100)-(3-hints)*50);
-    messageEl.textContent=`✔ Concluído! Pontuação: ${score}`;
-    setTimeout(()=>{
-      levelIndex++;
-      if(levelIndex<levels.length)startGame();
-      else messageEl.textContent="🏆 Você zerou o Sudoku!";
-    },1200);
-  }
-}
-
-function gameOver(){
-  clearInterval(timerInt);
-  messageEl.textContent="❌ Muitas tentativas incorretas";
-}
-
-const shuffle=a=>a.sort(()=>Math.random()-.5);
-const formatTime=s=>`${String(s/60|0).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
-
-startGame();
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
