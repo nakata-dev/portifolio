@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧠 Método das 100 Vezes PRO</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🧠</div>
+        <div>
+          <h1>Método das 100 Vezes <span class="pro">PRO</span></h1>
+          <p class="subtitle">Treine memória com textos, palavras e senhas. Tudo salvo automaticamente.</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn ghost" id="btnHelp" type="button">⌨️ Atalhos</button>
+        <button class="btn ghost" id="btnExport" type="button">⬇️ Exportar</button>
+        <button class="btn ghost" id="btnImport" type="button">⬆️ Importar</button>
+        <button class="btn danger" id="btnResetAll" type="button">Reset</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <!-- SETUP -->
+      <section class="card">
+        <div class="card-head">
+          <h2>Configuração</h2>
+          <p class="muted">Escolha um modo e cole o conteúdo.</p>
+        </div>
+
+        <div class="modes" id="modeRow" role="tablist" aria-label="Modos">
+          <button class="chip active" data-mode="text" type="button" role="tab" aria-selected="true">📄 Texto</button>
+          <button class="chip" data-mode="words" type="button" role="tab" aria-selected="false">🧩 Palavras</button>
+          <button class="chip" data-mode="password" type="button" role="tab" aria-selected="false">🔒 Senhas</button>
+        </div>
+
+        <div class="fields">
+          <label class="field">
+            <span>Dificuldade</span>
+            <select id="difficulty">
+              <option value="easy">Fácil (ignora espaços/maiúsculas)</option>
+              <option value="normal" selected>Normal (espaços “inteligentes”)</option>
+              <option value="hard">Difícil (exato)</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Etapas</span>
+            <select id="stepMode">
+              <option value="lines" selected>Por linhas/frases</option>
+              <option value="chunks">Por blocos (3 linhas por etapa)</option>
+              <option value="full">Conteúdo completo</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Dica (segundos)</span>
+            <input id="hintSeconds" type="number" min="2" max="20" value="6" />
+          </label>
+
+          <label class="field">
+            <span>Tentativas por etapa</span>
+            <input id="maxTries" type="number" min="1" max="50" value="10" />
+          </label>
+
+          <label class="field">
+            <span>Auto salvar</span>
+            <select id="autosave">
+              <option value="on" selected>Ativado</option>
+              <option value="off">Desativado</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="field" style="margin-top: 10px;">
+          <span id="sourceLabel">Conteúdo</span>
+          <textarea id="sourceInput" placeholder="Cole aqui..."></textarea>
+          <small class="muted small" id="sourceHint">
+            Dica: no modo Palavras, separe com vírgula ou uma por linha.
+          </small>
+        </label>
+
+        <div class="row">
+          <button class="btn primary" id="btnStart" type="button">▶️ Iniciar / Continuar</button>
+          <button class="btn ghost" id="btnSave" type="button">💾 Salvar</button>
+          <button class="btn ghost" id="btnClearSource" type="button">🧽 Limpar</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="label">Etapa</span>
+            <span class="value" id="statStage">0/0</span>
+          </div>
+          <div class="stat">
+            <span class="label">Acertos</span>
+            <span class="value" id="statHits">0</span>
+          </div>
+          <div class="stat">
+            <span class="label">Melhor streak</span>
+            <span class="value" id="statBestStreak">0</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TREINO -->
+      <section class="card">
+        <div class="card-head trainer-head">
+          <div>
+            <h2 id="stageTitle">Pronto para iniciar</h2>
+            <p class="muted" id="stageSubtitle">Cole um conteúdo e clique em iniciar.</p>
+          </div>
+
+          <div class="trainer-actions desktop-only">
+            <button class="btn ghost" id="btnHint" type="button">👀 Dica (F8)</button>
+            <button class="btn warn" id="btnCheck" type="button">✅ Validar</button>
+            <button class="btn ghost" id="btnSkip" type="button">⏭️ Pular</button>
+          </div>
+        </div>
+
+        <div class="hintbox" id="hintBox" aria-live="polite"></div>
+
+        <label class="field" style="margin-top: 10px;">
+          <span>Sua resposta</span>
+          <textarea id="answerInput" placeholder="Digite aqui... (Enter valida, Shift+Enter quebra linha)"></textarea>
+        </label>
+
+        <div class="feedback" id="feedback" aria-live="polite">Sem treino ativo.</div>
+
+        <div class="diff" id="diffBox" style="display:none;"></div>
+
+        <div class="row">
+          <button class="btn good" id="btnFinishSession" type="button">🏁 Finalizar sessão</button>
+          <button class="btn ghost" id="btnRestartStage" type="button">🔁 Repetir etapa</button>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="history">
+          <div class="history-head">
+            <h3>Histórico</h3>
+            <p class="muted small">Suas sessões concluídas ficam salvas.</p>
+          </div>
+          <ul class="history-list" id="historyList"></ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- Barra de ações no mobile -->
+    <nav class="mobile-bar mobile-only" aria-label="Ações rápidas">
+      <button class="btn ghost" id="mBtnHint" type="button">👀 Dica</button>
+      <button class="btn warn" id="mBtnCheck" type="button">✅ Validar</button>
+      <button class="btn ghost" id="mBtnSkip" type="button">⏭️ Pular</button>
+    </nav>
+  </div>
+
+  <!-- HELP MODAL -->
+  <dialog id="helpModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2>Atalhos</h2>
+          <p class="muted small">Feito para teclado e celular.</p>
+        </div>
+        <button class="btn ghost" id="btnCloseHelp" type="button">✕ Fechar</button>
+      </div>
+
+      <div class="modal-body muted small">
+        <p><strong>Enter</strong>: validar resposta</p>
+        <p><strong>Shift + Enter</strong>: nova linha</p>
+        <p><strong>F8</strong>: mostrar dica</p>
+        <p><strong>Ctrl/Cmd + S</strong>: salvar</p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- EXPORT MODAL -->
+  <audio id="ding" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3" type="audio/mpeg">
+  </audio>
+  <script src="app.js"></script>
+</body>
+</html>
