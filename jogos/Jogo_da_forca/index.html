@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forca Neon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="top card">
+      <div class="brand">
+        <div class="logo">⚡</div>
+        <div>
+          <h1>Forca Neon</h1>
+          <p class="sub">Adivinhe a palavra antes que suas tentativas acabem.</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="icon-btn" id="btnSound" type="button" title="Som">🔊</button>
+        <button class="icon-btn" id="btnVibe" type="button" title="Vibração">📳</button>
+      </div>
+    </header>
+
+    <section class="hud card">
+      <div class="chip">
+        <span class="k">Categoria</span>
+        <select id="category" class="select">
+          <option value="all">Tudo</option>
+          <option value="names">Nomes</option>
+          <option value="space">Espaço</option>
+          <option value="heroes">Personagens</option>
+        </select>
+      </div>
+
+      <div class="chip">
+        <span class="k">Recorde</span>
+        <span class="v" id="best">0</span>
+      </div>
+
+      <div class="chip">
+        <span class="k">Vitórias</span>
+        <span class="v" id="wins">0</span>
+      </div>
+
+      <div class="chip">
+        <span class="k">Derrotas</span>
+        <span class="v" id="losses">0</span>
+      </div>
+    </section>
+
+    <main class="main">
+      <section class="panel card">
+        <div class="status">
+          <div class="meter">
+            <div class="meter-top">
+              <span class="label">Tentativas</span>
+              <span class="value"><b id="tries">6</b>/6</span>
+            </div>
+            <div class="bar"><span id="bar"></span></div>
+          </div>
+
+          <div class="hintbox">
+            <span class="label">Dicas</span>
+            <span class="value"><b id="hints">2</b></span>
+          </div>
+        </div>
+
+        <div class="word" id="word"></div>
+
+        <div class="bad">
+          <span class="label">Erros</span>
+          <div class="badletters" id="badletters"></div>
+        </div>
+
+        <div class="msg" id="msg" aria-live="polite"></div>
+
+        <div class="buttons">
+          <button class="btn primary" id="btnNew" type="button">🔁 Novo jogo</button>
+          <button class="btn ghost" id="btnHint" type="button">💡 Usar dica</button>
+        </div>
+      </section>
+
+      <section class="keyboard card">
+        <div class="kbd" id="kbd"></div>
+        <div class="kbd-footer">
+          <span class="small">Dica: no PC, use o teclado para jogar.</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Copyright &copy; 2026 - Ailton A. Nakata
+    </footer>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
