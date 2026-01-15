@@ -6,28 +6,33 @@
    - Timer + movimentos
    - LocalStorage: nível, melhores tempos e progresso
    - Editor de níveis (JSON)
+
+   PATCH PRO (2026):
+   ✅ Diagonais de verdade + direções embaralhadas
+   ✅ Cruzamentos mais frequentes (anchor em letras já existentes)
+   ✅ Lista de palavras reflete APENAS placements (o que está no tabuleiro)
 ========================== */
 
 const LS_KEY = "wordsearch_pro_v1";
 
-// Direções possíveis: 8
+// 8 direções possíveis
 const DIRS = [
   [1,0],[-1,0],[0,1],[0,-1],
   [1,1],[-1,-1],[1,-1],[-1,1]
 ];
 
-// Níveis padrão (você edita fácil)
+// Níveis padrão (pode editar)
 const DEFAULT_LEVELS = [
-  { size: 6,  words: ["SOL","MAR","LUZ","DIA"], directions: 2 },
-  { size: 6,  words: ["VENTO","NORTE","SUL"], directions: 3 },
-  { size: 7,  words: ["FOGO","TERRA","AGUA"], directions: 4 },
-  { size: 7,  words: ["ENERGIA","MENTE","CORPO"], directions: 5 },
-  { size: 8,  words: ["EQUILIBRIO","FOCO","CAOS"], directions: 6 },
-  { size: 8,  words: ["DISCIPLINA","PACIENCIA","FORCA"], directions: 7 },
-  { size: 9,  words: ["CONSCIENCIA","ATENCAO","CLAREZA"], directions: 8 },
-  { size: 9,  words: ["RESILIENCIA","PROPOSITO","INTENCAO"], directions: 8 },
-  { size:10,  words: ["AUTOCONHECIMENTO","SABEDORIA"], directions: 8 },
-  { size:10,  words: ["TRANSFORMACAO","EVOLUCAO","PRESENCA"], directions: 8 }
+  { size: 6,  words: ["SOL","MAR","LUZ","DIA","PAI","MAE"], directions: 8 },
+  { size: 6,  words: ["VENTO","NORTE","SUL","CARRO","GATO","BEBE"], directions: 8 },
+  { size: 7,  words: ["FOGO","TERRA","AGUA","QUEIJO","FRUTA","ZEBRA"], directions: 8 },
+  { size: 8,  words: ["ENERGIA","MENTE","CORPO","TOALHA","LARANJA","LEITE"], directions: 8 },
+  { size: 8,  words: ["ESQUILO","FOCO","QUATI","MENINA","FLORESTA","CASCAVEL"], directions: 8 },
+  { size: 10, words: ["DISCIPLINA","PACIENCIA","FORCA","QUITANDA","FACULDADE","OVELHA"], directions: 8 },
+  { size: 12, words: ["CONSCIENCIA","ATENCAO","CLAREZA","TREINAMENTO","PROGRESSO","BERINGELA"], directions: 8 },
+  { size: 12, words: ["GUAXINIM","PROPOSITO","INTENÇÃO","ESTUDANTE","SISTEMA","PANGARÉ"], directions: 8 },
+  { size: 12, words: ["AUTOMÁTICO","SABEDORIA","PROPOSITO","REALIZAÇÃO","SUPERAÇÃO","AXOLOTE"], directions: 8 },
+  { size: 12, words: ["FELICIDADE","EVOLUCAO","PRESENCA","FAMILIAR","CLAREZA","TARDÍGRADO"], directions: 8 }
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -103,6 +108,7 @@ function wireUI() {
       toast("✔ Níveis aplicados!");
     } catch (e) {
       toast("❌ JSON inválido. Confira o formato.");
+      console.error(e);
     }
   });
 
@@ -140,6 +146,7 @@ function startLevel(index, opts = {}) {
   const level = levels[index];
   if (!level) {
     toast("🏆 Jogo finalizado!");
+    stopTimer();
     return;
   }
 
@@ -167,79 +174,159 @@ function startLevel(index, opts = {}) {
   grid = Array.from({ length: size }, () => Array(size).fill(""));
   placements = [];
 
-  // place words
-  placeAllWords(level);
+  // place words (com cruzamentos)
+  const ignored = placeAllWords(level);
+
+  // preenche o resto
   fillGridRandom();
 
   // render
   renderBoard(size);
-  renderWords(level.words);
+
+  // ✅ lista fiel ao que existe de verdade
+  renderWords(placements.map(p => p.word));
 
   updateProgress();
 
-  // desbloqueia após pequeno delay (evita "toques fantasmas")
-  setTimeout(() => locked = false, 180);
+  if (ignored.length) {
+    console.warn("Palavras ignoradas (não couberam/falharam):", ignored);
+    toast("⚠ Algumas palavras foram ignoradas.");
+  } else {
+    toast("Boa sorte! 😄");
+  }
 
-  // persist
+  setTimeout(() => locked = false, 180);
   saveProgress({ levelIndex });
 }
 
 function nextLevel() {
-  // Permite ir ao próximo manualmente (bom para dev)
   levelIndex = Math.min(levelIndex + 1, levels.length - 1);
   saveProgress({ levelIndex });
   startLevel(levelIndex, { resetStats:true });
 }
 
+/**
+ * Coloca palavras com prioridade de cruzamento:
+ * - tenta "ancorar" em letras já existentes no grid (interseção real)
+ * - se falhar, usa tentativa aleatória
+ * Retorna lista de palavras ignoradas.
+ */
 function placeAllWords(level) {
-  const maxDir = clamp(level.directions ?? 8, 1, 8);
+  const ignored = [];
+
+  // ✅ direções permitidas (embaralhadas)
+  const allowedDirs = buildAllowedDirs(level.directions);
 
   level.words.forEach(rawWord => {
     const word = sanitizeWord(rawWord);
     if (!word) return;
 
+    // se não cabe, ignora
+    if (word.length > level.size) {
+      ignored.push(word);
+      return;
+    }
+
     let placed = false;
     let attempts = 0;
 
-    while (!placed && attempts < 400) {
+    while (!placed && attempts < 650) {
       attempts++;
 
-      const dir = DIRS[Math.floor(Math.random() * maxDir)];
+      // Direção aleatória (agora embaralhada)
+      const dir = allowedDirs[randInt(0, allowedDirs.length - 1)];
+
+      // às vezes inverte
       const reversed = Math.random() < 0.35;
       const letters = (reversed ? word.split("").reverse() : word.split(""));
 
+      // tenta cruzar se já tem células preenchidas
+      const filled = getFilledCells();
+      if (filled.length) {
+        const anchor = filled[randInt(0, filled.length - 1)];
+        const idxs = [];
+
+        for (let i = 0; i < letters.length; i++) {
+          if (letters[i] === anchor.ch) idxs.push(i);
+        }
+
+        // se existe ao menos uma letra compatível, tenta encaixar
+        if (idxs.length) {
+          const i = idxs[randInt(0, idxs.length - 1)];
+          const x = anchor.x - dir[0] * i;
+          const y = anchor.y - dir[1] * i;
+
+          if (canPlace(x, y, dir, letters, level.size)) {
+            writeWord(word, letters, x, y, dir);
+            placed = true;
+            break;
+          }
+        }
+      }
+
+      // fallback: tentativa aleatória normal
       const x = randInt(0, level.size - 1);
       const y = randInt(0, level.size - 1);
 
       if (canPlace(x, y, dir, letters, level.size)) {
-        const cells = [];
-        letters.forEach((ch, i) => {
-          const nx = x + dir[0] * i;
-          const ny = y + dir[1] * i;
-          grid[ny][nx] = ch;
-          cells.push({ x: nx, y: ny });
-        });
-
-        placements.push({ word, cells });
+        writeWord(word, letters, x, y, dir);
         placed = true;
       }
     }
 
     if (!placed) {
+      ignored.push(word);
       console.warn("Não consegui posicionar:", word);
     }
   });
+
+  return ignored;
+}
+
+function writeWord(word, letters, x, y, dir) {
+  const cells = [];
+  for (let i = 0; i < letters.length; i++) {
+    const nx = x + dir[0] * i;
+    const ny = y + dir[1] * i;
+    grid[ny][nx] = letters[i];
+    cells.push({ x: nx, y: ny });
+  }
+  placements.push({ word, cells });
 }
 
 function canPlace(x, y, dir, letters, size) {
   for (let i = 0; i < letters.length; i++) {
     const nx = x + dir[0] * i;
     const ny = y + dir[1] * i;
+
     if (nx < 0 || ny < 0 || nx >= size || ny >= size) return false;
+
     const existing = grid[ny][nx];
+    // ✅ permite cruzar se a letra bater
     if (existing && existing !== letters[i]) return false;
   }
   return true;
+}
+
+function buildAllowedDirs(directions) {
+  const n = clamp(directions ?? 8, 1, 8);
+
+  // Se n < 8, ainda assim não queremos “somente reto”
+  // então pegamos as 8 e sorteamos n delas (misturadas).
+  const all = DIRS.map(d => d.slice());
+  shuffleInPlace(all);
+
+  // se pedir 8, usa todas; senão usa subset aleatório
+  const subset = all.slice(0, n);
+
+  // Se o subset não contém diagonal nenhuma, força ao menos 1 diagonal
+  const hasDiagonal = subset.some(d => Math.abs(d[0]) === 1 && Math.abs(d[1]) === 1);
+  if (!hasDiagonal && n >= 2) {
+    // troca uma direção por uma diagonal
+    subset[subset.length - 1] = [1, 1];
+  }
+
+  return subset;
 }
 
 function fillGridRandom() {
@@ -271,7 +358,10 @@ function renderBoard(size) {
 
 function renderWords(words) {
   wordListEl.innerHTML = "";
-  const cleanWords = words.map(w => sanitizeWord(w)).filter(Boolean);
+
+  const cleanWords = words
+    .map(w => sanitizeWord(w))
+    .filter(Boolean);
 
   cleanWords.forEach(w => {
     const span = document.createElement("span");
@@ -280,6 +370,10 @@ function renderWords(words) {
     span.dataset.word = w;
     wordListEl.appendChild(span);
   });
+
+  if (cleanWords.length === 0) {
+    toast("⚠ Nenhuma palavra coube neste nível. Ajuste o tamanho ou as palavras.");
+  }
 }
 
 // ---------- Selection ----------
@@ -312,10 +406,8 @@ function onPointerMove(e) {
   if (Math.abs(dx) > 1 || Math.abs(dy) > 1) return;
 
   if (!selectionVector) {
-    // trava no primeiro movimento (direção)
-    selectionVector = [dx, dy];
+    selectionVector = [dx, dy]; // trava direção
   } else {
-    // mantém direção fixa
     if (dx !== selectionVector[0] || dy !== selectionVector[1]) return;
   }
 
@@ -347,7 +439,6 @@ function validateSelection() {
   const selectedWord = selectedCells.map(c => c.textContent).join("");
   const reversed = selectedWord.split("").reverse().join("");
 
-  // match: palavra posicionada e ainda não encontrada
   const match = placements.find(p =>
     !foundWords.has(p.word) && (p.word === selectedWord || p.word === reversed)
   );
@@ -401,19 +492,17 @@ function updateProgress() {
 function hint() {
   if (locked) return;
 
-  // pega uma palavra não encontrada
   const remaining = placements.filter(p => !foundWords.has(p.word));
   if (remaining.length === 0) return;
 
   const pick = remaining[randInt(0, remaining.length - 1)];
-  const first = pick.cells[0]; // primeira letra posicionada
+  const first = pick.cells[0];
 
-  // destaca rapidamente a célula
   const cellEl = findCellEl(first.x, first.y);
   if (!cellEl) return;
 
   cellEl.classList.add("hint");
-  setTimeout(() => cellEl.classList.remove("hint"), 800);
+  setTimeout(() => cellEl.classList.remove("hint"), 900);
 
   toast("💡 Dica: primeira letra destacada.");
 }
@@ -490,11 +579,11 @@ function readAllStorage() {
   }
 }
 
-// ---------- Levels validation (dev-friendly) ----------
+// ---------- Levels validation ----------
 function validateLevels(arr) {
   arr.forEach((lvl, idx) => {
     if (typeof lvl !== "object") throw new Error("Nível inválido");
-    if (!Number.isInteger(lvl.size) || lvl.size < 4 || lvl.size > 14) throw new Error("size inválido");
+    if (!Number.isInteger(lvl.size) || lvl.size < 4 || lvl.size > 30) throw new Error("size inválido");
     if (!Array.isArray(lvl.words) || lvl.words.length < 1) throw new Error("words inválidas");
     lvl.words.forEach(w => {
       const s = sanitizeWord(w);
@@ -527,4 +616,24 @@ function clamp(n, min, max) {
 
 function toast(text) {
   messageEl.textContent = text;
+}
+
+// células já preenchidas (para ancorar cruzamentos)
+function getFilledCells() {
+  const out = [];
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid.length; x++) {
+      const ch = grid[y][x];
+      if (ch) out.push({ x, y, ch });
+    }
+  }
+  return out;
+}
+
+function shuffleInPlace(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = randInt(0, i);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
