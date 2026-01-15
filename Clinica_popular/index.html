@@ -1,337 +1,470 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clínica Popular | Atendimento Acessível</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clínica Popular | Atendimento Acessível</title>
 
-  <style>
-    :root{
-      --bg: #0b1220;
-      --card: rgba(255,255,255,.06);
-      --text: #eaf0ff;
-      --muted: rgba(234,240,255,.72);
-      --brand: #4FCE5D;
-      --brand2: #2de2a6;
-      --radius: 18px;
-    }
+    <style>
+        :root {
+            --bg: #0b1220;
+            --card: rgba(255, 255, 255, .06);
+            --text: #eaf0ff;
+            --muted: rgba(234, 240, 255, .72);
+            --brand: #4FCE5D;
+            --brand2: #2de2a6;
+            --radius: 18px;
+        }
 
-    *{ box-sizing: border-box; margin:0; padding:0; }
-    body{
-      font-family: Arial, sans-serif;
-      background: radial-gradient(1000px 500px at 20% 0%, rgba(91,124,255,.25), transparent 60%),
-                  radial-gradient(800px 500px at 80% 20%, rgba(45,226,166,.16), transparent 55%),
-                  var(--bg);
-      color: var(--text);
-      line-height: 1.4;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    a{ color: inherit; text-decoration: none; }
+        body {
+            font-family: Arial, sans-serif;
+            background: radial-gradient(1000px 500px at 20% 0%, rgba(91, 124, 255, .25), transparent 60%),
+                radial-gradient(800px 500px at 80% 20%, rgba(45, 226, 166, .16), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+        }
 
-    .container{
-      width: min(1100px, 92%);
-      margin: 0 auto;
-    }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
-    /* HEADER */
-    header{
-      position: sticky;
-      top: 0;
-      backdrop-filter: blur(10px);
-      background: rgba(11,18,32,.7);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      z-index: 10;
-    }
+        .container {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+        }
 
-    .nav{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding: 14px 0;
-      gap: 12px;
-    }
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(10px);
+            background: rgba(11, 18, 32, .7);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            z-index: 10;
+        }
 
-    .logo{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:700;
-      letter-spacing:.3px;
-    }
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            gap: 12px;
+        }
 
-    .logo-badge{
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--brand), var(--brand2));
-      box-shadow: 0 12px 40px rgba(0,0,0,.35);
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
 
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-weight: 700;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      cursor: pointer;
-      transition: .25s;
-    }
-    .btn:hover{ transform: translateY(-1px); }
+        .logo-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--brand), var(--brand2));
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+        }
 
-    .btn-primary{
-      border: none;
-      background: linear-gradient(135deg, var(--brand), #4FCE5D);
-      box-shadow: 0 18px 50px rgba(91,124,255,.25);
-    }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .06);
+            cursor: pointer;
+            transition: .25s;
+        }
 
-    /* HERO */
-    .hero{
-      padding: 42px 0 26px;
-    }
+        .btn:hover {
+            transform: translateY(-1px);
+        }
 
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      align-items:center;
-    }
+        .btn-primary {
+            border: none;
+            background: linear-gradient(135deg, var(--brand), #4FCE5D);
+            box-shadow: 0 18px 50px rgba(91, 124, 255, .25);
+        }
 
-    .tag{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 8px 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      border-radius: 999px;
-      color: var(--muted);
-      width: fit-content;
-      font-size: .95rem;
-    }
+        /* HERO */
+        .hero {
+            padding: 42px 0 26px;
+        }
 
-    h1{
-      font-size: clamp(1.8rem, 4.3vw, 3rem);
-      line-height: 1.1;
-      margin-top: 12px;
-      letter-spacing: -0.5px;
-    }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            align-items: center;
+        }
 
-    .subtitle{
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
+        .tag {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .05);
+            border-radius: 999px;
+            color: var(--muted);
+            width: fit-content;
+            font-size: .95rem;
+        }
 
-    .cta-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
+        h1 {
+            font-size: clamp(1.8rem, 4.3vw, 3rem);
+            line-height: 1.1;
+            margin-top: 12px;
+            letter-spacing: -0.5px;
+        }
 
-    .hero-card{
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      padding: 16px;
-      box-shadow: 0 22px 80px rgba(0,0,0,.35);
-    }
+        .subtitle {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
 
-    .hero-card h3{
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
+        .cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
 
-    .list{
-      display:grid;
-      gap:10px;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: .98rem;
-    }
+        .hero-card {
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .04));
+            padding: 16px;
+            box-shadow: 0 22px 80px rgba(0, 0, 0, .35);
+        }
 
-    .list li{
-      list-style: none;
-      padding-left: 22px;
-      position: relative;
-    }
-    .list li::before{
-      content:"✓";
-      position:absolute;
-      left:0;
-      color: var(--brand2);
-      font-weight: 900;
-    }
+        .hero-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
 
-    /* SECTIONS */
-    section{
-      padding: 22px 0;
-    }
+        .list {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: .98rem;
+        }
 
-    .section-title{
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-      letter-spacing: -0.3px;
-    }
+        .list li {
+            list-style: none;
+            padding-left: 22px;
+            position: relative;
+        }
 
-    .grid-3{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
+        .list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--brand2);
+            font-weight: 900;
+        }
 
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      padding: 16px;
-    }
+        /* SECTIONS */
+        section {
+            padding: 22px 0;
+        }
 
-    .card strong{ display:block; font-size: 1.05rem; }
-    .card p{ color: var(--muted); margin-top: 6px; }
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
 
-    /* FOOTER */
-    footer{
-      padding: 22px 0 40px;
-      color: rgba(234,240,255,.6);
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,.08);
-      margin-top: 20px;
-    }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
 
-    /* RESPONSIVE DESKTOP */
-    @media (min-width: 900px){
-      .hero{ padding: 56px 0 30px; }
-      .hero-grid{ grid-template-columns: 1.25fr .75fr; gap: 22px; }
-      .grid-3{ grid-template-columns: repeat(3, 1fr); }
-    }
-  </style>
+        .card {
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .05);
+            padding: 16px;
+        }
+
+        .card strong {
+            display: block;
+            font-size: 1.05rem;
+        }
+
+        .card p {
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 22px 0 40px;
+            color: rgba(234, 240, 255, .6);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            margin-top: 20px;
+        }
+
+        /* TESTIMONIALS */
+        .testimonial {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(600px 200px at 0% 0%, rgba(91, 124, 255, .12), transparent 60%);
+            pointer-events: none;
+        }
+
+        .stars {
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: var(--brand2);
+        }
+
+        .quote {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .person {
+            margin-top: 14px;
+            display: grid;
+            gap: 2px;
+        }
+
+        .person span {
+            color: rgba(234, 240, 255, .55);
+            font-size: .95rem;
+        }
+
+
+        /* RESPONSIVE DESKTOP */
+        @media (min-width: 900px) {
+            .hero {
+                padding: 56px 0 30px;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1.25fr .75fr;
+                gap: 22px;
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <header>
-    <div class="container nav">
-      <div class="logo">
-        <div class="logo-badge"></div>
-        <span>Nakata Care</span>
-      </div>
-      <a class="btn btn-primary" href="#contato">Agendar no WhatsApp</a>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <div class="tag">🏥 Atendimento humano • preço acessível • rápido</div>
-
-          <h1>Saúde acessível para você e sua família.</h1>
-          <p class="subtitle">
-            Consultas e exames com preços populares. Atendimento claro, rápido e sem burocracia.
-          </p>
-
-          <div class="cta-row">
-            <a class="btn btn-primary" href="#contato">Quero agendar</a>
-            <a class="btn" href="#servicos">Ver Serviços</a>
-          </div>
+    <header>
+        <div class="container nav">
+            <div class="logo">
+                <div class="logo-badge"></div>
+                <span>Nakata Care</span>
+            </div>
+            <a class="btn btn-primary" href="#contato">Agendar no WhatsApp</a>
         </div>
+    </header>
 
-        <div class="hero-card">
-          <h3>O que você encontra aqui</h3>
-          <ul class="list">
-            <li>Clínico geral, pediatria e ginecologia</li>
-            <li>Exames básicos com laudo rápido</li>
-            <li>Agendamento por WhatsApp</li>
-            <li>Atendimento particular com valor justo</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <main class="container">
+        <section class="hero">
+            <div class="hero-grid">
+                <div>
+                    <div class="tag">🏥 Atendimento humano • preço acessível • rápido</div>
 
-    <section id="beneficios">
-      <h2 class="section-title">Benefícios</h2>
+                    <h1>Saúde acessível para você e sua família.</h1>
+                    <p class="subtitle">
+                        Consultas e exames com preços populares. Atendimento claro, rápido e sem burocracia.
+                    </p>
 
-      <div class="grid-3">
-        <div class="card">
-          <strong>✅ Preço popular</strong>
-          <p>Valores acessíveis, com clareza total antes do atendimento.</p>
-        </div>
+                    <div class="cta-row">
+                        <a class="btn btn-primary" href="#contato">Quero agendar</a>
+                        <a class="btn" href="#servicos">Serviços</a>
+                        <a class="btn" href="#depoimentos">Depoimentos</a>
 
-        <div class="card">
-          <strong>⚡ Agendamento rápido</strong>
-          <p>Marque em minutos e seja atendido sem burocracia.</p>
-        </div>
+                    </div>
+                </div>
 
-        <div class="card">
-          <strong>📱 100% mobile</strong>
-          <p>Site pensado para celular, com botões grandes e leitura fácil.</p>
-        </div>
-      </div>
-    </section>
+                <div class="hero-card">
+                    <h3>O que você encontra aqui</h3>
+                    <ul class="list">
+                        <li>Clínico geral, pediatria e ginecologia</li>
+                        <li>Exames básicos com laudo rápido</li>
+                        <li>Agendamento por WhatsApp</li>
+                        <li>Atendimento particular com valor justo</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-    <section id="servicos">
-  <h2 class="section-title">Serviços</h2>
+        <section id="beneficios">
+            <h2 class="section-title">Benefícios</h2>
 
-  <div class="grid-3">
-    <div class="card">
-      <strong>Consultas</strong>
-      <ul class="list">
-        <li>Clínico geral</li>
-        <li>Pediatria</li>
-        <li>Ginecologia</li>
-        <li>Ortopedia</li>
-        <li>Dermatologia</li>
-      </ul>
-    </div>
+            <div class="grid-3">
+                <div class="card">
+                    <strong>✅ Preço popular</strong>
+                    <p>Valores acessíveis, com clareza total antes do atendimento.</p>
+                </div>
 
-    <div class="card">
-      <strong>Exames</strong>
-      <ul class="list">
-        <li>Hemograma</li>
-        <li>Glicose</li>
-        <li>Colesterol</li>
-        <li>Urina</li>
-        <li>Raio-x (parcerias)</li>
-      </ul>
-    </div>
+                <div class="card">
+                    <strong>⚡ Agendamento rápido</strong>
+                    <p>Marque em minutos e seja atendido sem burocracia.</p>
+                </div>
 
-    <div class="card">
-      <strong>Atendimento</strong>
-      <ul class="list">
-        <li>Agendamento por WhatsApp</li>
-        <li>Horários flexíveis</li>
-        <li>Preço popular</li>
-        <li>Confirmação rápida</li>
-        <li>Suporte humanizado</li>
-      </ul>
-    </div>
-  </div>
-</section>
+                <div class="card">
+                    <strong>📱 100% mobile</strong>
+                    <p>Site pensado para celular, com botões grandes e leitura fácil.</p>
+                </div>
+            </div>
+        </section>
 
-    <section id="contato">
-      <h2 class="section-title">Contato</h2>
+        <section id="servicos">
+            <h2 class="section-title">Serviços</h2>
 
-      <div class="card">
-        <strong>Agende agora</strong>
-        <p style="margin-top:8px;">
-          📍 Rua Exemplo, 123 - Centro<br/>
-          📞 (11) 99999-9999<br/>
-          🕒 Seg a Sex: 08h às 18h
-        </p>
+            <div class="grid-3">
+                <div class="card">
+                    <strong>Consultas</strong>
+                    <ul class="list">
+                        <li>Clínico geral</li>
+                        <li>Pediatria</li>
+                        <li>Ginecologia</li>
+                        <li>Ortopedia</li>
+                        <li>Dermatologia</li>
+                    </ul>
+                </div>
 
-        <div class="cta-row" style="margin-top:14px;">
-          <a class="btn btn-primary" href="#">Abrir WhatsApp</a>
-          <a class="btn" href="#">Ver localização</a>
-        </div>
-      </div>
-    </section>
-  </main>
+                <div class="card">
+                    <strong>Exames</strong>
+                    <ul class="list">
+                        <li>Hemograma</li>
+                        <li>Glicose</li>
+                        <li>Colesterol</li>
+                        <li>Urina</li>
+                        <li>Raio-x (parcerias)</li>
+                    </ul>
+                </div>
 
-  <footer>
-    © 2026 Clínica Popular • Ailton A. Nakata
-  </footer>
+                <div class="card">
+                    <strong>Atendimento</strong>
+                    <ul class="list">
+                        <li>Agendamento por WhatsApp</li>
+                        <li>Horários flexíveis</li>
+                        <li>Preço popular</li>
+                        <li>Confirmação rápida</li>
+                        <li>Suporte humanizado</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="depoimentos">
+            <h2 class="section-title">Depoimentos</h2>
+            <p class="subtitle" style="margin-top: -6px;">Pessoas reais que foram atendidas e aprovaram</p>
+
+            <div class="grid-3">
+                <article class="card testimonial">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">
+                        Atendimento rápido e muito humano. Consegui marcar no mesmo dia e fui muito bem atendido.
+                    </p>
+                    <div class="person">
+                        <strong>Maria S.</strong>
+                        <span>Centro • 32 anos</span>
+                    </div>
+                </article>
+                <article class="card testimonial">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">
+                        A clínica tem preços justos e o atendimento é excelente. Recomendo para toda a minha família.
+                    </p>
+                    <div class="person">
+                        <strong>João P.</strong>
+                        <span>Vila Nova • 45 anos</span>
+                    </div>
+                </article>
+
+                <article class="card testimonial">
+                    <div class="stars">★★★★☆</div>
+                    <p class="quote">
+                        Fui muito bem atendida pela pediatra. Meu filho se sentiu confortável.
+                    </p>
+                    <div class="person">
+                        <strong>Ana P. da Silva</strong>
+                        <span>Jardim das Flores • 29 anos</span>
+                    </div>
+                </article>
+
+                <article class="card testimonial">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">
+                        Fui muito bem atendida pela pediatra. Meu filho se sentiu confortável e o preço foi ótimo.
+                    </p>
+                    <div class="person">
+                        <strong>Jeniffer M.</strong>
+                        <span>Eurico Filho • 29 anos</span>
+                    </div>
+                </article>
+
+                <article class="card testimonial">
+                    <div class="stars">★★★★★</div>
+                    <p class="quote">
+                        Atendimento ótimo. Vou recomendar a clinica para meus amigos e familiares.
+                    </p>
+                    <div class="person">
+                        <strong>Izabella B.</strong>
+                        <span>Zona 7 • 42 anos</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <section id="contato">
+            <h2 class="section-title">Contato</h2>
+
+            <div class="card">
+                <strong>Agende agora</strong>
+                <p style="margin-top:8px;">
+                    📍 Rua Exemplo, 123 - Centro<br />
+                    📞 (11) 99999-9999<br />
+                    🕒 Seg a Sex: 08h às 18h
+                </p>
+
+                <div class="cta-row" style="margin-top:14px;">
+                    <a class="btn btn-primary" href="#">Abrir WhatsApp</a>
+                    <a class="btn" href="#">Ver localização</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 Clínica Popular • Ailton A. Nakata
+    </footer>
 </body>
+
 </html>
