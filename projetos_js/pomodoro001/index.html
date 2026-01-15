@@ -1,513 +1,464 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Focus Timer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Variáveis de Cores e Estilos */
-        :root {
-            --cor-fundo-principal: #1a1a2e; /* Azul Escuro Púrpura */
-            --cor-fundo-secundario: #1e1e40; /* Púrpura Mais Claro */
-            --cor-texto-claro: #e0e0f0;
-            --cor-texto-escuro: #c0c0d0;
-            --cor-destaque: #ff6a88; /* Rosa Vibrante */
-            --cor-botao-primario: #5cb85c; /* Verde Sucesso */
-            --cor-botao-secundario: #f0ad4e; /* Amarelo Aviso */
-            --cor-botao-perigo: #d9534f; /* Vermelho Perigo */
-            --cor-contorno-circulo: rgba(255, 255, 255, 0.1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro Focus Timer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-        /* Estilos Globais e Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <style>
+    :root {
+      --cor-fundo-principal: #1a1a2e;
+      --cor-fundo-secundario: #1e1e40;
+      --cor-texto-claro: #e0e0f0;
+      --cor-texto-escuro: #c0c0d0;
+      --cor-destaque: #ff6a88;
+      --cor-botao-primario: #5cb85c;
+      --cor-botao-secundario: #f0ad4e;
+      --cor-botao-perigo: #d9534f;
+      --cor-contorno-circulo: rgba(255, 255, 255, 0.10);
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--cor-fundo-principal) 0%, #0a0a1a 100%);
-            color: var(--cor-texto-claro);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            overflow-x: hidden; /* Evita scroll horizontal em excesso */
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .container {
-            background-color: var(--cor-fundo-secundario);
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 0 5px rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--cor-fundo-principal) 0%, #0a0a1a 100%);
+      color: var(--cor-texto-claro);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
 
-        h1 {
-            font-size: 2.2rem;
-            color: var(--cor-destaque);
-            margin-bottom: 25px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-        }
+    .container {
+      background-color: var(--cor-fundo-secundario);
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 0 5px rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeIn 0.7s ease-out forwards;
+    }
 
-        /* Seleção de Modos (Pomodoro, Pausa Curta, Pausa Longa) */
-        .mode-selector {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
+    h1 {
+      font-size: 2.2rem;
+      color: var(--cor-destaque);
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
 
-        .mode-selector button {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--cor-texto-escuro);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+    .mode-selector {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
 
-        .mode-selector button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: var(--cor-texto-claro);
-        }
+    .mode-selector button {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--cor-texto-escuro);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .mode-selector button.active {
-            background-color: var(--cor-destaque);
-            color: var(--cor-fundo-principal);
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(255, 106, 136, 0.4);
-            transform: translateY(-2px);
-        }
+    .mode-selector button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: var(--cor-texto-claro);
+    }
 
-        /* Área do Timer */
-        .timer-display {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 30px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, var(--cor-fundo-secundario) 70%, rgba(255, 255, 255, 0.05) 100%);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 0 0 8px var(--cor-contorno-circulo);
-            overflow: hidden; /* Para o efeito de progresso */
-        }
+    .mode-selector button.active {
+      background-color: var(--cor-destaque);
+      color: var(--cor-fundo-principal);
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(255, 106, 136, 0.4);
+      transform: translateY(-2px);
+    }
 
-        .timer-progress {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            clip: rect(0, 125px, 250px, 0); /* Para o efeito de preenchimento do círculo */
-        }
-        
-        .timer-progress .circle-half {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 8px solid var(--cor-destaque); /* Cor de preenchimento */
-            clip: rect(0, 125px, 250px, 0);
-            transform: rotate(0deg); /* Controlado por JS */
-            transition: transform 1s linear; /* Animação suave */
-        }
+    /* Timer */
+    .timer-display {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin: 0 auto 18px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, var(--cor-fundo-secundario) 67%, rgba(255, 255, 255, 0.05) 100%);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 0 0 8px var(--cor-contorno-circulo);
+      overflow: hidden;
+    }
 
-        .timer-progress.fill .circle-half:nth-child(1) {
-            border-color: var(--cor-destaque);
-        }
-        .timer-progress.fill .circle-half:nth-child(2) {
-            border-color: var(--cor-destaque);
-        }
+    /* Camada do progresso (conic-gradient) */
+    .progress-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(var(--cor-destaque) 0deg, var(--cor-contorno-circulo) 0deg);
+      transition: background 0.2s linear;
+      opacity: 0.95;
+    }
 
+    /* “Janela” interna para parecer um anel */
+    .progress-hole {
+      position: absolute;
+      inset: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, var(--cor-fundo-secundario) 70%, rgba(255,255,255,0.03) 100%);
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.45);
+      z-index: 1;
+    }
 
-        #time {
-            font-size: 5rem; /* Tamanho do tempo */
-            font-weight: 700;
-            color: var(--cor-destaque);
-            position: relative;
-            z-index: 2; /* Para ficar acima do progresso */
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-        }
+    #time {
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--cor-destaque);
+      position: relative;
+      z-index: 2;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+      letter-spacing: 1px;
+    }
 
-        /* Controles (Start, Pause, Reset) */
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap; /* Para responsividade */
-        }
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
 
-        .controls button {
-            background-color: var(--cor-botao-primario);
-            color: var(--cor-fundo-principal);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .controls button {
+      background-color: var(--cor-botao-primario);
+      color: var(--cor-fundo-principal);
+      border: none;
+      padding: 14px 26px;
+      border-radius: 30px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .controls button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
+    .controls button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); }
+    .controls button:active { transform: translateY(0); }
 
-        .controls button:active {
-            transform: translateY(0);
-        }
+    .controls button.pause-btn { background-color: var(--cor-botao-secundario); }
+    .controls button.reset-btn { background-color: var(--cor-botao-perigo); }
 
-        .controls button i {
-            font-size: 1.2rem;
-        }
+    /* Toggle som */
+    .sound-row {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+      color: var(--cor-texto-escuro);
+      font-size: 0.95rem;
+    }
 
-        .controls button.pause-btn {
-            background-color: var(--cor-botao-secundario);
-        }
+    .sound-row button {
+      background: rgba(255,255,255,0.08);
+      color: var(--cor-texto-claro);
+      border: 1px solid rgba(255,255,255,0.10);
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.25s ease;
+    }
 
-        .controls button.reset-btn {
-            background-color: var(--cor-botao-perigo);
-        }
+    .sound-row button:hover { background: rgba(255,255,255,0.14); }
 
-        /* Mensagens de estado */
-        #status-message {
-            margin-top: 25px;
-            font-size: 1.1rem;
-            color: var(--cor-texto-escuro);
-        }
+    #status-message {
+      margin-top: 18px;
+      font-size: 1.1rem;
+      color: var(--cor-texto-escuro);
+      min-height: 1.3em;
+    }
 
-        /* Rodapé */
-        footer {
-            margin-top: 40px;
-            font-size: 0.85rem;
-            color: var(--cor-texto-escuro);
-        }
+    footer {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      color: var(--cor-texto-escuro);
+      text-align: center;
+    }
 
-        footer a {
-            color: var(--cor-destaque);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        footer a:hover {
-            color: var(--cor-texto-claro);
-        }
+    @media (max-width: 480px) {
+      .container { padding: 20px; border-radius: 15px; }
+      h1 { font-size: 1.8rem; margin-bottom: 18px; }
+      .mode-selector button { padding: 8px 15px; font-size: 0.9rem; }
+      .timer-display { width: 200px; height: 200px; }
+      #time { font-size: 4rem; }
+      .controls button { padding: 12px 20px; font-size: 1rem; gap: 6px; }
+      #status-message { font-size: 1rem; }
+    }
 
-        /* Animações */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .container {
-            animation: fadeIn 0.7s ease-out forwards;
-        }
-
-        /* Responsividade */
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-                border-radius: 15px;
-            }
-            h1 {
-                font-size: 1.8rem;
-                margin-bottom: 20px;
-            }
-            .mode-selector button {
-                padding: 8px 15px;
-                font-size: 0.9rem;
-            }
-            .timer-display {
-                width: 200px;
-                height: 200px;
-                margin-bottom: 25px;
-            }
-            #time {
-                font-size: 4rem;
-            }
-            .controls button {
-                padding: 12px 20px;
-                font-size: 1rem;
-                gap: 5px;
-            }
-            .controls button i {
-                font-size: 1rem;
-            }
-            #status-message {
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 320px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            #time {
-                font-size: 3.5rem;
-            }
-            .controls button {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+    @media (max-width: 320px) {
+      h1 { font-size: 1.5rem; }
+      #time { font-size: 3.5rem; }
+      .controls button { padding: 10px 15px; font-size: 0.9rem; }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="container">
+    <h1><i class="fas fa-hourglass-half"></i> Pomodoro Focus Timer</h1>
 
-    <div class="container">
-        <h1><i class="fas fa-hourglass-half"></i> Pomodoro Focus Timer</h1>
-
-        <div class="mode-selector">
-            <button id="pomodoro-btn" class="active"><i class="fas fa-play-circle"></i> Pomodoro</button>
-            <button id="short-break-btn"><i class="fas fa-coffee"></i> Pausa Curta</button>
-            <button id="long-break-btn"><i class="fas fa-couch"></i> Pausa Longa</button>
-        </div>
-
-        <div class="timer-display">
-            <div id="timer-progress" class="timer-progress">
-                </div>
-            <span id="time">25:00</span>
-        </div>
-
-        <div class="controls">
-            <button id="start-btn"><i class="fas fa-play"></i> Iniciar</button>
-            <button id="pause-btn" class="pause-btn" style="display: none;"><i class="fas fa-pause"></i> Pausar</button>
-            <button id="reset-btn" class="reset-btn"><i class="fas fa-redo"></i> Resetar</button>
-        </div>
-
-        <p id="status-message">Hora de focar!</p>
+    <div class="mode-selector">
+      <button id="pomodoro-btn" class="active"><i class="fas fa-play-circle"></i> Pomodoro</button>
+      <button id="short-break-btn"><i class="fas fa-coffee"></i> Pausa Curta</button>
+      <button id="long-break-btn"><i class="fas fa-couch"></i> Pausa Longa</button>
     </div>
 
-    <footer>
-        Desenvolvido com <i class="fas fa-heart" style="color: var(--cor-destaque);"></i> para produtividade.
-    </footer>
+    <div class="timer-display" aria-label="Timer Pomodoro">
+      <div id="progress-ring" class="progress-ring"></div>
+      <div class="progress-hole"></div>
+      <span id="time">25:00</span>
+    </div>
 
-    <audio id="alarm-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-confirmation-alert-2038.mp3" preload="auto"></audio>
+    <div class="controls">
+      <button id="start-btn"><i class="fas fa-play"></i> Iniciar</button>
+      <button id="pause-btn" class="pause-btn" style="display: none;"><i class="fas fa-pause"></i> Pausar</button>
+      <button id="reset-btn" class="reset-btn"><i class="fas fa-redo"></i> Resetar</button>
+    </div>
 
-    <script>
-        const timeDisplay = document.getElementById('time');
-        const pomodoroBtn = document.getElementById('pomodoro-btn');
-        const shortBreakBtn = document.getElementById('short-break-btn');
-        const longBreakBtn = document.getElementById('long-break-btn');
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const statusMessage = document.getElementById('status-message');
-        const alarmSound = document.getElementById('alarm-sound');
-        const timerProgress = document.getElementById('timer-progress');
+    <div class="sound-row">
+      <span>Som:</span>
+      <button id="sound-toggle" type="button" aria-pressed="true">
+        <i class="fas fa-volume-up"></i> Ativado
+      </button>
+      <span id="cycle-info" title="Quantidade de pomodoros concluídos no ciclo">Ciclo: 0/4</span>
+    </div>
 
-        const POMODORO_TIME = 25 * 60; // 25 minutos
-        const SHORT_BREAK_TIME = 5 * 60; // 5 minutos
-        const LONG_BREAK_TIME = 15 * 60; // 15 minutos
+    <p id="status-message">Hora de focar!</p>
+  </div>
 
-        let currentMode = 'pomodoro';
-        let timeLeft = POMODORO_TIME;
-        let timerInterval;
-        let isPaused = true;
+  <footer>
+    Copiright &copy; 2025 - 2026 Ailton A. Nakata. Todos os direitos reservados.
+  </footer>
 
-        // Função para formatar o tempo
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-        }
+  <audio id="alarm-sound"
+    src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-confirmation-alert-2038.mp3"
+    preload="auto">
+  </audio>
 
-        // Função para atualizar o display do timer e o progresso visual
-        function updateDisplay() {
-            timeDisplay.textContent = formatTime(timeLeft);
-            updateProgressBar();
-        }
+  <script>
+    // Elementos
+    const timeDisplay = document.getElementById('time');
+    const pomodoroBtn = document.getElementById('pomodoro-btn');
+    const shortBreakBtn = document.getElementById('short-break-btn');
+    const longBreakBtn = document.getElementById('long-break-btn');
 
-        // Função para iniciar ou retomar o timer
-        function startTimer() {
-            if (!isPaused) return; // Já está rodando
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
 
-            isPaused = false;
-            startBtn.style.display = 'none';
-            pauseBtn.style.display = 'inline-flex';
-            statusMessage.textContent = 'Foco total!';
+    const statusMessage = document.getElementById('status-message');
+    const alarmSound = document.getElementById('alarm-sound');
+    const progressRing = document.getElementById('progress-ring');
 
-            timerInterval = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    updateDisplay();
-                } else {
-                    clearInterval(timerInterval);
-                    alarmSound.play();
-                    statusMessage.textContent = 'Tempo esgotado!';
-                    startBtn.style.display = 'inline-flex';
-                    pauseBtn.style.display = 'none';
-                    isPaused = true;
-                    // Lógica para mudar para o próximo modo automaticamente (opcional)
-                    if (currentMode === 'pomodoro') {
-                        // Poderia alternar para pausa curta automaticamente
-                        // switchMode('short-break');
-                    }
-                }
-            }, 1000);
-        }
+    const soundToggle = document.getElementById('sound-toggle');
+    const cycleInfo = document.getElementById('cycle-info');
 
-        // Função para pausar o timer
-        function pauseTimer() {
-            if (isPaused) return; // Já está pausado
+    // Tempos (em segundos)
+    const DURATIONS = {
+      pomodoro: 25 * 60,
+      'short-break': 5 * 60,
+      'long-break': 15 * 60,
+    };
 
-            isPaused = true;
-            clearInterval(timerInterval);
-            startBtn.style.display = 'inline-flex';
-            pauseBtn.style.display = 'none';
-            statusMessage.textContent = 'Pausado.';
-        }
+    // Estado
+    let currentMode = 'pomodoro';
+    let timeLeft = DURATIONS[currentMode];
+    let totalTime = DURATIONS[currentMode];
 
-        // Função para resetar o timer
-        function resetTimer() {
-            clearInterval(timerInterval);
-            isPaused = true;
-            startBtn.style.display = 'inline-flex';
-            pauseBtn.style.display = 'none';
-            statusMessage.textContent = 'Pronto para começar!';
-            
-            // Define o tempo e o display com base no modo atual
-            if (currentMode === 'pomodoro') {
-                timeLeft = POMODORO_TIME;
-            } else if (currentMode === 'short-break') {
-                timeLeft = SHORT_BREAK_TIME;
-            } else if (currentMode === 'long-break') {
-                timeLeft = LONG_BREAK_TIME;
-            }
-            updateDisplay();
-        }
+    let intervalId = null;
+    let running = false;
 
-        // Função para mudar o modo (Pomodoro, Pausa Curta, Pausa Longa)
-        function switchMode(mode) {
-            if (currentMode === mode && !isPaused) return; // Não muda se já estiver no modo e rodando
+    let soundEnabled = true;
 
-            clearInterval(timerInterval);
-            isPaused = true;
-            startBtn.style.display = 'inline-flex';
-            pauseBtn.style.display = 'none';
+    // Ciclo: a cada 4 pomodoros, pausa longa
+    let pomodorosDoneInCycle = 0;
+    const POMODOROS_PER_CYCLE = 4;
 
-            // Remove a classe 'active' de todos e adiciona ao botão clicado
-            document.querySelectorAll('.mode-selector button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`${mode}-btn`).classList.add('active');
+    // Helpers
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
 
-            currentMode = mode;
-            if (mode === 'pomodoro') {
-                timeLeft = POMODORO_TIME;
-                statusMessage.textContent = 'Hora de focar!';
-            } else if (mode === 'short-break') {
-                timeLeft = SHORT_BREAK_TIME;
-                statusMessage.textContent = 'Pausa curta!';
-            } else if (mode === 'long-break') {
-                timeLeft = LONG_BREAK_TIME;
-                statusMessage.textContent = 'Pausa longa!';
-            }
-            updateDisplay();
-        }
+    function setActiveButton(mode) {
+      document.querySelectorAll('.mode-selector button').forEach(btn => btn.classList.remove('active'));
+      if (mode === 'pomodoro') pomodoroBtn.classList.add('active');
+      if (mode === 'short-break') shortBreakBtn.classList.add('active');
+      if (mode === 'long-break') longBreakBtn.classList.add('active');
+    }
 
-        // Função para atualizar o progresso do círculo (visual)
-        function updateProgressBar() {
-            const totalTime = (currentMode === 'pomodoro' ? POMODORO_TIME :
-                               currentMode === 'short-break' ? SHORT_BREAK_TIME :
-                               LONG_BREAK_TIME);
-            const percentage = (timeLeft / totalTime) * 100;
-            const angle = (360 - (percentage * 3.6)); // Calcula o ângulo de rotação
+    function updateCycleInfo() {
+      cycleInfo.textContent = `Ciclo: ${pomodorosDoneInCycle}/${POMODOROS_PER_CYCLE}`;
+    }
 
-            timerProgress.innerHTML = ''; // Limpa os elementos de progresso anteriores
+    function updateProgress() {
+      // progresso = quanto já passou (0 -> 1)
+      const elapsed = totalTime - timeLeft;
+      const ratio = totalTime === 0 ? 0 : (elapsed / totalTime);
+      const deg = Math.max(0, Math.min(360, ratio * 360));
 
-            if (angle <= 180) {
-                // Primeira metade do círculo
-                timerProgress.innerHTML = `
-                    <div class="circle-half" style="transform: rotate(${angle}deg); border-left-color: transparent; border-bottom-color: transparent;"></div>
-                    <div class="circle-half" style="transform: rotate(0deg); border-right-color: transparent; border-top-color: transparent;"></div>
-                `;
-            } else {
-                // Segunda metade do círculo
-                timerProgress.innerHTML = `
-                    <div class="circle-half" style="transform: rotate(${angle - 180}deg); border-left-color: transparent; border-bottom-color: transparent;"></div>
-                    <div class="circle-half" style="transform: rotate(180deg); border-right-color: transparent; border-top-color: transparent;"></div>
-                `;
-            }
+      progressRing.style.background = `conic-gradient(var(--cor-destaque) ${deg}deg, var(--cor-contorno-circulo) ${deg}deg)`;
+    }
 
-            // Para simular o preenchimento, precisamos de duas metades que giram
-            // Para um preenchimento real, seria melhor usar SVG ou canvas.
-            // Para simplicidade, vou manter a borda fixa e simular um "limpador".
-            // O estilo atual já tenta fazer isso girando a borda, que não é um preenchimento.
+    function updateUI() {
+      timeDisplay.textContent = formatTime(timeLeft);
+      updateProgress();
+      updateCycleInfo();
+    }
 
-            // Vou simplificar o progresso para uma barra retangular para evitar complexidade CSS/JS excessiva no SVG/Canvas.
-            // Se o objetivo é um círculo preenchendo, o SVG ou Canvas seria a melhor abordagem.
-            // Para um efeito mais simples e funcional, posso mudar para uma barra de progresso horizontal ou deixar o círculo com uma "borda animada" que desaparece.
+    function setButtonsState(isRunning) {
+      running = isRunning;
+      startBtn.style.display = isRunning ? 'none' : 'inline-flex';
+      pauseBtn.style.display = isRunning ? 'inline-flex' : 'none';
+    }
 
-            // Simplificando o efeito de preenchimento para uma rotação de borda
-            const progressCircle1 = document.createElement('div');
-            progressCircle1.classList.add('circle-half');
-            const progressCircle2 = document.createElement('div');
-            progressCircle2.classList.add('circle-half');
+    function playAlarm() {
+      if (!soundEnabled) return;
+      alarmSound.currentTime = 0;
+      // Alguns navegadores bloqueiam autoplay; como é acionado por interação anterior (start), geralmente funciona.
+      alarmSound.play().catch(() => {});
+    }
 
-            timerProgress.innerHTML = ''; // Limpa qualquer progresso anterior
+    function announceMode() {
+      if (currentMode === 'pomodoro') statusMessage.textContent = 'Foco total!';
+      if (currentMode === 'short-break') statusMessage.textContent = 'Pausa curta: respira e volta.';
+      if (currentMode === 'long-break') statusMessage.textContent = 'Pausa longa: recarrega a mente.';
+    }
 
-            if (percentage > 50) {
-                // Mais de 50% preenchido
-                progressCircle1.style.transform = `rotate(180deg)`;
-                progressCircle1.style.borderColor = var_cor_destaque;
-                progressCircle1.style.clipPath = `polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)`; // Left half
-                
-                progressCircle2.style.transform = `rotate(${90 + (percentage - 50) * 3.6}deg)`; // Rotate right half
-                progressCircle2.style.borderColor = var_cor_destaque;
-                progressCircle2.style.clipPath = `polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)`; // Right half
-                
-            } else {
-                // Menos de 50% preenchido
-                progressCircle1.style.transform = `rotate(${90 + percentage * 3.6}deg)`;
-                progressCircle1.style.borderColor = var_cor_destaque;
-                progressCircle1.style.clipPath = `polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)`; // Right half only
-            }
-            
-            // Revertendo para uma borda giratória simples, pois o preenchimento total em CSS é complexo para um círculo.
-            // O ideal seria SVG ou Canvas para preenchimento.
-            // Para manter a simplicidade e o foco no JS, vou deixar a borda girar para indicar o tempo.
+    function switchMode(mode, { reset = true } = {}) {
+      stopTimer();
+      currentMode = mode;
+      totalTime = DURATIONS[mode];
+      if (reset) timeLeft = totalTime;
 
-            // Simplesmente controlando a rotação de um elemento para representar o tempo
-            const degree = (360 * timeLeft) / totalTime;
-            timerProgress.style.backgroundImage = `conic-gradient(var(--cor-destaque) ${degree}deg, var(--cor-contorno-circulo) ${degree}deg)`;
-        }
+      setActiveButton(mode);
+      announceMode();
+      updateUI();
+    }
 
+    function tick() {
+      if (timeLeft > 0) {
+        timeLeft--;
+        updateUI();
+        return;
+      }
 
-        // Event Listeners
-        pomodoroBtn.addEventListener('click', () => switchMode('pomodoro'));
-        shortBreakBtn.addEventListener('click', () => switchMode('short-break'));
-        longBreakBtn.addEventListener('click', () => switchMode('long-break'));
-        startBtn.addEventListener('click', startTimer);
-        pauseBtn.addEventListener('click', pauseTimer);
-        resetBtn.addEventListener('click', resetTimer);
+      // Terminou
+      stopTimer();
+      playAlarm();
 
-        // Inicializa o timer na carga da página
-        updateDisplay();
-        updateProgressBar(); // Garante que a barra de progresso inicial seja desenhada
-    </script>
+      // Auto alternância
+      if (currentMode === 'pomodoro') {
+        pomodorosDoneInCycle++;
+        updateCycleInfo();
+
+        // Decide pausa curta ou longa
+        const isLong = (pomodorosDoneInCycle % POMODOROS_PER_CYCLE === 0);
+        statusMessage.textContent = isLong ? 'Pomodoro concluído! Pausa longa!' : 'Pomodoro concluído! Pausa curta!';
+        switchMode(isLong ? 'long-break' : 'short-break');
+      } else {
+        statusMessage.textContent = 'Pausa concluída! Hora de focar!';
+        switchMode('pomodoro');
+      }
+    }
+
+    function startTimer() {
+      if (running) return;
+
+      // “Acorda” o áudio no primeiro clique (boa prática)
+      if (soundEnabled) {
+        alarmSound.play().then(() => {
+          alarmSound.pause();
+          alarmSound.currentTime = 0;
+        }).catch(() => {});
+      }
+
+      setButtonsState(true);
+      announceMode();
+      intervalId = setInterval(tick, 1000);
+    }
+
+    function stopTimer() {
+      if (intervalId) clearInterval(intervalId);
+      intervalId = null;
+      setButtonsState(false);
+    }
+
+    function pauseTimer() {
+      stopTimer();
+      statusMessage.textContent = 'Pausado.';
+    }
+
+    function resetTimer() {
+      stopTimer();
+      timeLeft = DURATIONS[currentMode];
+      totalTime = DURATIONS[currentMode];
+      statusMessage.textContent = 'Pronto para começar!';
+      updateUI();
+    }
+
+    // Eventos de modo
+    pomodoroBtn.addEventListener('click', () => switchMode('pomodoro'));
+    shortBreakBtn.addEventListener('click', () => switchMode('short-break'));
+    longBreakBtn.addEventListener('click', () => switchMode('long-break'));
+
+    // Controles
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+
+    // Som
+    soundToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundToggle.setAttribute('aria-pressed', String(soundEnabled));
+      soundToggle.innerHTML = soundEnabled
+        ? '<i class="fas fa-volume-up"></i> Ativado'
+        : '<i class="fas fa-volume-mute"></i> Mutado';
+    });
+
+    // Inicializa
+    setActiveButton(currentMode);
+    updateUI();
+    announceMode();
+  </script>
 </body>
 </html>
