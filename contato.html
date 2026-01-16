@@ -1,89 +1,175 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <script src="https://kit.fontawesome.com/d322381ebe.js" crossorigin="anonymous"></script>
-    <style>
-        *{
-            margin: 0px;
-            padding: 0px;
-        }
-     
-        footer {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: linear-gradient(to right, #2626FE, #00bfff);
-        }
-        img:hover {
-        transform: none;
-        }
-        #contato>img{
-            width: 100%;
-        }
-        img{
-            display: block;
-            margin: auto;
-            width: 50%;
-        }
-        /*CSS do botão*/
-        .btn-whatsapp {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        background-color: #25d366;
-        color: white;
-        font-weight: bold;
-        padding: 10px 18px;
-        border-radius: 30px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 8px rgba(37, 211, 102, 0.4);
-        }
-
-        .btn-whatsapp:hover {
-            
-        background-color: #1ebd5a;
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(37, 211, 102, 0.5);
-        }
-
-        .btn-whatsapp i {
-        
-        font-size: 20px;
-        }
-        .container-botao{
-            text-align: center;
-            padding: 20px;
-            margin: 10px;
-        }
-        header{
-            margin-bottom: 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="site.css" />
+  <title>Contato | Ailton A. Nakata</title>
+  <script src="site.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <h1>Contato</h1>
-        <p>Ailton A. Nakata</p>
-    </header>
-    <nav>
-        <a href="index.html">HOME</a>
-    </nav>
-    <div class="container-botao">
-        <a href="https://wa.me/5544998398116" target="_blank" class="btn-whatsapp">Fale comigo<i class="fa-brands fa-whatsapp" style="font-size: 1.5em;"></i></a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="estudos.html">Estudos</a>
+        <a href="certificados.html">Certificados</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
+  </header>
 
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Contato</h1>
+          <p class="muted">Me diga seu segmento e objetivo. Eu retorno com proposta e prazo.</p>
+        </div>
 
-    <div id="contato"><img src="img/CodigoQR-WhatsApp.jfif" alt="QR-CODE_WhatsApp"></div>
-    <footer>
-        <p>Meu lema é: "simplificar o complexo e potencializar resultados."</p>
-    </footer>
+        <div class="cards">
+          <article class="card">
+            <h3>Fale comigo agora</h3>
+            <p class="muted">
+              Clique abaixo e me envie as informações. Eu respondo com proposta e prazo.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary" data-open-modal type="button">Fazer orçamento (30s)</button>
+              <a class="btn btn-secondary"
+                 href="https://wa.me/5544998398116?text=Olá%20Ailton!%20Quero%20um%20site%20profissional.%20Meu%20segmento%20é:%20____%20e%20meu%20objetivo%20é:%20____"
+                 target="_blank" rel="noopener noreferrer">
+                Abrir WhatsApp
+              </a>
+            </div>
+
+            <p class="help">O botão flutuante do WhatsApp no canto inferior também funciona.</p>
+          </article>
+
+          <article class="card">
+            <h3>QR Code do WhatsApp</h3>
+            <p class="muted">Escaneie para iniciar a conversa.</p>
+            <div style="border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 12px;">
+              <img src="img/CodigoQR-WhatsApp.jfif" alt="QR Code do WhatsApp" style="width: 100%; height: auto;">
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>O que me enviar para eu orçar</h3>
+            <ul class="list">
+              <li>Seu negócio/segmento</li>
+              <li>Objetivo (WhatsApp, vendas, orçamento)</li>
+              <li>Prazo</li>
+              <li>Referências de sites (se tiver)</li>
+              <li>Conteúdo (logo, fotos, textos)</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="cta-box">
+          <h2>Meu lema</h2>
+          <p class="muted">“Simplificar o complexo e potencializar resultados.”</p>
+          <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal (atualizado) -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Referência (opcional)</label>
+            <input name="referencia" placeholder="Link de referência (se tiver)" inputmode="url" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+            <span class="help">Ao enviar, abriremos o WhatsApp com a mensagem pronta.</span>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>

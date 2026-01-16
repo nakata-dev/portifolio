@@ -1,97 +1,244 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="index.css">
-
-
-    <title>Portfólio</title>
-    <style>
-        .paragrafo {
-            text-align: justify;
-            text-indent: 30px;
-        }
-        .listas > ul{
-            list-style-position: inside;
-            list-style-type: square;
-        }
-        nav{
-            /* Novo layout */
-            display: flex;
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center;     /* Centraliza verticalmente */
-            gap: 5px;               /* Espaçamento entre os links */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="site.css" />
+  <title>Portfólio | Ailton A. Nakata</title>
+  <script src="site.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <div><img src="./img/Linkedin.png"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
 
-        <h1>Ailton A. Nakata</h1>
-        <p>Desenvolvedor de Sites/Aplicativos</p>
-
-    </header>
-    <nav>
-        <a href="estudos.html">ESTUDOS</a>
-        <a href="projetos.html">PROJETOS</a>
-        <a href="certificados.html">CERTFICADOS</a>
-        <a href="contato.html">CONTATO</a>
-    </nav>
-
-    <main>
-        <section id="ficha">
-            <h2>Sobre Mim:</h2>
-            <br>
-            <p class="paragrafo">
-                Meu nome é Ailton A. Nakata, sou estudante de Tecnologia
-                desde Junho/2024 e hoje busco me especializar na área de programação, desenvolvendo sites/aplicações.
-                Atualmente estou em busca de <b>oportunidade</b> para poder me desenvolver cada vez mais nessa área.
-            </p>
-            <br>
-            <h2>Cursos</h2>
-            <br>
-            <div class="listas">
-                <ul>
-                    <li>Algoritmo</li>
-                    <li>HTML5 e CSS3</li>
-                    <li>JavaScript</li>
-                    <li>MySQL</li>
-                    <li>WordPress</li>
-                </ul>
-            </div>
-            <br>
-            <section>
-                <p class="paragrafo">
-                    "Atualmente estou em processo de treinamento em <em>WordPress</em>, com foco em desenvolvimento de Web-Sites. Estou me dedicando ao
-                    aprendizado contínuo para me especializar na criação de sites e aplicações web, unindo
-                    programação com soluções práticas. Meu objetivo é dominar as ferramentas essenciais da programação
-                    moderna JavaScript e aplicar esse conhecimento em projetos funcionais."
-                </p>
-            </section>
-        </section>
-    </main>
-
-    <footer>
-        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">
-            <img src="./img/github.svg">
-            <p>Github</p>
-        </a>
-        <a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noopener noreferrer">
-            <img src="./img/youtube.svg">
-            <p>YouTube</p>
-        </a>
-        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">
-            <img src="./img/linkedin.svg">
-            <p>Linkedin</p>
-        </a>
-    </footer>
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="estudos.html">Estudos</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="certificados.html">Certificados</a>
+        <a href="contato.html">Contato</a>
+        <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+      </nav>
     </div>
+  </header>
 
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="pill">Atendimento para Brasil e remoto</p>
+          <h1>Criação de sites modernos que transformam visitantes em clientes.</h1>
+          <p class="lead">
+            Landing pages, sites institucionais e páginas para WhatsApp: rápidas, responsivas e com foco em conversão.
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-open-modal>Quero um orçamento</button>
+            <a class="btn btn-ghost" href="contato.html">Ver contato</a>
+          </div>
+
+          <ul class="trust">
+            <li>✅ Mobile-first</li>
+            <li>✅ CTA otimizado</li>
+            <li>✅ SEO básico</li>
+            <li>✅ Entrega com checklist</li>
+          </ul>
+        </div>
+
+        <div class="hero-card" aria-label="Resumo profissional">
+          <h2>Resumo</h2>
+          <p class="muted">
+            Desenvolvedor focado em sites e páginas de conversão. Processo simples: briefing, layout, desenvolvimento e publicação.
+          </p>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>+10</strong>
+              <span>projetos/práticas</span>
+            </div>
+            <div class="stat">
+              <strong>72h</strong>
+              <span>para 1ª versão</span>
+            </div>
+            <div class="stat">
+              <strong>100%</strong>
+              <span>responsivo</span>
+            </div>
+          </div>
+
+          <a class="btn btn-secondary" href="projetos.html">Ver projetos em destaque</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Serviços</h2>
+          <p class="muted">Escolha o formato ideal para seu negócio.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Landing Page</h3>
+            <p class="muted">Página única focada em conversão (WhatsApp/lead).</p>
+            <ul class="list">
+              <li>Estrutura persuasiva</li>
+              <li>CTA forte</li>
+              <li>Mobile-first</li>
+            </ul>
+            <button class="btn btn-primary" data-open-modal>Quero uma Landing</button>
+          </article>
+
+          <article class="card">
+            <h3>Site Institucional</h3>
+            <p class="muted">Presença profissional e credibilidade.</p>
+            <ul class="list">
+              <li>4 a 6 páginas</li>
+              <li>SEO básico</li>
+              <li>Formulário/WhatsApp</li>
+            </ul>
+            <button class="btn btn-primary" data-open-modal>Quero um Site</button>
+          </article>
+
+          <article class="card">
+            <h3>WordPress</h3>
+            <p class="muted">Site gerenciável para editar conteúdo com facilidade.</p>
+            <ul class="list">
+              <li>Layout moderno</li>
+              <li>Treinamento rápido</li>
+              <li>Manutenção opcional</li>
+            </ul>
+            <button class="btn btn-primary" data-open-modal>Quero em WordPress</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="depoimentos">
+      <div class="container">
+        <div class="section-head">
+          <h2>Depoimentos</h2>
+          <p class="muted">O que dizem sobre meu trabalho.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <p>“Entrega rápida e comunicação clara. O site ficou leve e bonito.”</p>
+            <p class="muted"><strong>Cliente 1</strong> · Segmento</p>
+          </article>
+          <article class="card">
+            <p>“A página ficou objetiva e o botão do WhatsApp aumentou os contatos.”</p>
+            <p class="muted"><strong>Cliente 2</strong> · Segmento</p>
+          </article>
+          <article class="card">
+            <p>“Organizado, explicou o processo e entregou do jeito combinado.”</p>
+            <p class="muted"><strong>Cliente 3</strong> · Segmento</p>
+          </article>
+        </div>
+
+        <div class="cta-box">
+          <h2>Vamos criar seu site profissional?</h2>
+          <p class="muted">Me diga seu segmento e objetivo. Eu te respondo com proposta e prazo.</p>
+          <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Botão WhatsApp flutuante -->
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp">
+    WhatsApp
+  </button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form>
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ailton" required />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Clínica, pizzaria, barbearia..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 7 dias / até final do mês" />
+          </div>
+
+          <div class="field">
+            <label>Referência (opcional)</label>
+            <input name="referencia" placeholder="Link de um site que você gosta (se tiver)" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Conte brevemente o que precisa (páginas, conteúdo, fotos, etc.)"></textarea>
+            <span class="help">Ao enviar, abriremos o WhatsApp com a mensagem pronta.</span>
+          </div>
+
+          <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>

@@ -1,55 +1,292 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <title>Certificados</title>
-    <style>
-        footer {
-            font-family: 'Courier New', Courier, monospace
-        }
-        nav {
-            margin-bottom: 30px;
-        }
-        header{
-            margin-bottom: 0px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="site.css" />
+  <title>Certificados | Ailton A. Nakata</title>
+  <script src="site.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <h1>Certificados</h1>
-        <p>Ailton A. Nakata</p>
-    </header>
-    <nav>
-        <a href="index.html">HOME</a>
-    </nav>
-    <main>
-        <div class="galeria">
-            <img src="img/Wordpress.jpg" alt="WordPress">
-            <img src="img/AILTON-NAKATA-Marketing-Digital-40-Horas-Certificado-Curso-em-Video_page-0001.jpg" alt="Curso_Marketing_Digital">
-            <img src="img/M005.jpg" alt="Curso_HTML5">
-            <img src="img/AILTON-NAKATA-Algoritmo-40-Horas-Certificado-Curso-em-Video.jpg" alt="Curso_Algoritmo">
-            <img src="img/AILTON-NAKATA-MySQL-40-Horas-Certificado-Curso-em-Video.jpg" alt="Curso_MySQL">
-            <img src="img/javascript.jpg" alt="JavaScript">
-            <img src="img/M004.jpg" alt="Módulo_04">
-            <img src="img/M003.jpg" alt="Módulo_03">
-            <img src="img/M002.jpg" alt="Módulo_02">
-            <img src="img/M001.jpg" alt="Módulo_03">
-            <img src="img/Certificado-Grau Técnico.jpg" alt="Grau_tecnico">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <div id="voltar">
-            <a href="index.html">HOME</a>
-        </div>
-        <br>
-    </main>
-    <footer>
-        <p>"Na junção entre lógica e criatividade, nascem minhas soluções digitais."</p>
-    </footer>
-</body>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="estudos.html">Estudos</a>
+        <a href="contato.html">Contato</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Certificados</h1>
+          <p class="muted">Clique em um certificado para visualizar em tamanho maior.</p>
+        </div>
+
+        <div class="gallery-grid">
+          <!-- WordPress -->
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/Wordpress.jpg" data-title="WordPress">
+              <img src="img/Wordpress.jpg" alt="Certificado WordPress">
+            </button>
+            <div class="cert-body">
+              <h3>WordPress</h3>
+              <p>Formação e prática em criação de sites gerenciáveis.</p>
+            </div>
+          </article>
+
+          <!-- Marketing Digital -->
+          <article class="cert">
+            <button type="button" data-cert-btn
+              data-src="img/AILTON-NAKATA-Marketing-Digital-40-Horas-Certificado-Curso-em-Video_page-0001.jpg"
+              data-title="Marketing Digital (40h) - Curso em Vídeo">
+              <img src="img/AILTON-NAKATA-Marketing-Digital-40-Horas-Certificado-Curso-em-Video_page-0001.jpg" alt="Certificado Marketing Digital">
+            </button>
+            <div class="cert-body">
+              <h3>Marketing Digital (40h)</h3>
+              <p>Conceitos de aquisição, funil e comunicação.</p>
+            </div>
+          </article>
+
+          <!-- HTML5 -->
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/M005.jpg" data-title="HTML5 e CSS3 - Módulo 05">
+              <img src="img/M005.jpg" alt="Certificado HTML5 e CSS3 Módulo 05">
+            </button>
+            <div class="cert-body">
+              <h3>HTML5 e CSS3 (Mód. 05)</h3>
+              <p>Layout, responsividade e boas práticas.</p>
+            </div>
+          </article>
+
+          <!-- Algoritmo -->
+          <article class="cert">
+            <button type="button" data-cert-btn
+              data-src="img/AILTON-NAKATA-Algoritmo-40-Horas-Certificado-Curso-em-Video.jpg"
+              data-title="Algoritmo (40h) - Curso em Vídeo">
+              <img src="img/AILTON-NAKATA-Algoritmo-40-Horas-Certificado-Curso-em-Video.jpg" alt="Certificado Algoritmo">
+            </button>
+            <div class="cert-body">
+              <h3>Algoritmo (40h)</h3>
+              <p>Base de lógica e resolução de problemas.</p>
+            </div>
+          </article>
+
+          <!-- MySQL -->
+          <article class="cert">
+            <button type="button" data-cert-btn
+              data-src="img/AILTON-NAKATA-MySQL-40-Horas-Certificado-Curso-em-Video.jpg"
+              data-title="MySQL (40h) - Curso em Vídeo">
+              <img src="img/AILTON-NAKATA-MySQL-40-Horas-Certificado-Curso-em-Video.jpg" alt="Certificado MySQL">
+            </button>
+            <div class="cert-body">
+              <h3>MySQL (40h)</h3>
+              <p>Modelagem e consultas para aplicações.</p>
+            </div>
+          </article>
+
+          <!-- JavaScript -->
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/javascript.jpg" data-title="JavaScript">
+              <img src="img/javascript.jpg" alt="Certificado JavaScript">
+            </button>
+            <div class="cert-body">
+              <h3>JavaScript</h3>
+              <p>Interação, DOM e lógica para web.</p>
+            </div>
+          </article>
+
+          <!-- Módulos -->
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/M004.jpg" data-title="HTML5 e CSS3 - Módulo 04">
+              <img src="img/M004.jpg" alt="Certificado Módulo 04">
+            </button>
+            <div class="cert-body">
+              <h3>HTML/CSS (Mód. 04)</h3>
+              <p>Avanços em layout e componentes.</p>
+            </div>
+          </article>
+
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/M003.jpg" data-title="HTML5 e CSS3 - Módulo 03">
+              <img src="img/M003.jpg" alt="Certificado Módulo 03">
+            </button>
+            <div class="cert-body">
+              <h3>HTML/CSS (Mód. 03)</h3>
+              <p>Estrutura e estilo com consistência.</p>
+            </div>
+          </article>
+
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/M002.jpg" data-title="HTML5 e CSS3 - Módulo 02">
+              <img src="img/M002.jpg" alt="Certificado Módulo 02">
+            </button>
+            <div class="cert-body">
+              <h3>HTML/CSS (Mód. 02)</h3>
+              <p>Base de responsividade e layout.</p>
+            </div>
+          </article>
+
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/M001.jpg" data-title="HTML5 e CSS3 - Módulo 01">
+              <img src="img/M001.jpg" alt="Certificado Módulo 01">
+            </button>
+            <div class="cert-body">
+              <h3>HTML/CSS (Mód. 01)</h3>
+              <p>Fundamentos e estrutura inicial.</p>
+            </div>
+          </article>
+
+          <!-- Grau Técnico -->
+          <article class="cert">
+            <button type="button" data-cert-btn data-src="img/Certificado-Grau Técnico.jpg" data-title="Grau Técnico">
+              <img src="img/Certificado-Grau Técnico.jpg" alt="Certificado Grau Técnico">
+            </button>
+            <div class="cert-body">
+              <h3>Grau Técnico</h3>
+              <p>Formação e desenvolvimento contínuo.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="cta-box">
+          <h2>Quer um site profissional e moderno?</h2>
+          <p class="muted">Clique abaixo e me diga seu segmento e objetivo.</p>
+          <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+        </div>
+
+        <p class="tiny muted" style="margin-top: 14px;">
+          “Na junção entre lógica e criatividade, nascem minhas soluções digitais.”
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Botão WhatsApp flutuante -->
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Referência (opcional)</label>
+            <input name="referencia" placeholder="Link de referência (se tiver)" inputmode="url" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+            <span class="help">Ao enviar, abriremos o WhatsApp com a mensagem pronta.</span>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de preview do certificado -->
+  <div class="modal-overlay" data-cert-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Visualizar certificado">
+      <div class="modal-head">
+        <strong data-cert-title>Certificado</strong>
+        <button class="modal-close" data-cert-close aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="img-preview">
+          <img data-cert-img src="" alt="Certificado ampliado" />
+
+          <div class="preview-actions">
+            <a class="btn btn-secondary" data-cert-download href="#" target="_blank" rel="noopener noreferrer">
+              Abrir em nova aba
+            </a>
+            <button class="btn btn-ghost" data-cert-close type="button">Fechar</button>
+          </div>
+
+          <p class="help">Dica: no celular, use zoom para ver detalhes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 </html>

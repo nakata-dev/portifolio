@@ -30,6 +30,8 @@ body{
   margin: 0 auto;
 }
 
+a { color: inherit; }
+
 /* ===== Botões ===== */
 .btn{
   display: inline-flex;
@@ -42,8 +44,8 @@ body{
   text-decoration: none;
   color: var(--text);
   background: transparent;
-  transition: transform .12s ease, background .12s ease, border-color .12s ease;
-  font-weight: 600;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+  font-weight: 700;
 }
 .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,0.18); }
 .btn:active{ transform: translateY(0px); }
@@ -55,15 +57,13 @@ body{
 }
 .btn-primary:hover{ box-shadow: 0 14px 30px rgba(79,124,255,0.30); }
 
-.btn-secondary{
-  background: rgba(255,255,255,0.06);
-}
+.btn-secondary{ background: rgba(255,255,255,0.06); }
+.btn-ghost{ background: transparent; }
 
-.btn-ghost{
-  background: transparent;
-}
+.muted{ color: var(--muted); }
+.center{ display: grid; place-items: center; }
 
-/* ===== Header ===== */
+/* ===== Header/Nav ===== */
 .site-header{
   position: sticky;
   top: 0;
@@ -96,7 +96,7 @@ body{
   place-items: center;
   background: rgba(255,255,255,0.06);
   border: 1px solid var(--border);
-  font-weight: 800;
+  font-weight: 900;
 }
 .brand-text{ display: grid; }
 .brand-text span{ color: var(--muted); font-size: 0.92rem; }
@@ -119,18 +119,38 @@ body{
   color: var(--text);
 }
 
-/* ===== Hero ===== */
-.hero{
-  padding: 64px 0 20px;
+/* ===== Seções ===== */
+.section{ padding: 56px 0; }
+.section.alt{
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.section-head{ margin-bottom: 18px; }
+.section-head h1,
+.section-head h2{
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+.section-head p{ margin: 0; }
+
+h1{
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1.1;
+}
+.lead{
+  color: var(--muted);
+  font-size: 1.06rem;
 }
 
+/* ===== Hero (home) ===== */
+.hero{ padding: 64px 0 20px; }
 .hero-grid{
   display: grid;
   grid-template-columns: 1.3fr 0.9fr;
   gap: 22px;
   align-items: start;
 }
-
 .pill{
   display: inline-flex;
   width: fit-content;
@@ -139,29 +159,15 @@ body{
   background: rgba(255,255,255,0.06);
   border: 1px solid var(--border);
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 14px;
 }
-
-h1{
-  font-size: clamp(2rem, 3.4vw, 3rem);
-  line-height: 1.1;
-  margin: 0 0 12px;
-  letter-spacing: -0.02em;
-}
-.lead{
-  color: var(--muted);
-  font-size: 1.06rem;
-  margin: 0 0 18px;
-}
-
 .hero-actions{
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin: 10px 0 16px;
+  margin: 12px 0 16px;
 }
-
 .trust{
   list-style: none;
   padding: 0;
@@ -177,7 +183,6 @@ h1{
   padding: 8px 10px;
   border-radius: 12px;
 }
-
 .hero-card{
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
   border: 1px solid var(--border);
@@ -186,7 +191,6 @@ h1{
   box-shadow: var(--shadow);
 }
 .hero-card h2{ margin: 0 0 8px; font-size: 1.1rem; }
-.muted{ color: var(--muted); }
 .stats{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -202,24 +206,7 @@ h1{
 .stat strong{ font-size: 1.2rem; display: block; }
 .stat span{ color: var(--muted); font-size: 0.9rem; }
 
-/* ===== Seções ===== */
-.section{
-  padding: 56px 0;
-}
-.section.alt{
-  background: rgba(255,255,255,0.02);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.section-head{
-  margin-bottom: 18px;
-}
-.section-head h2{
-  margin: 0 0 6px;
-  font-size: 1.6rem;
-}
-
-/* ===== Cards ===== */
+/* ===== Cards / grid ===== */
 .cards{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -233,92 +220,86 @@ h1{
   box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 .card h3{ margin: 0 0 6px; }
+
 .list{
   margin: 12px 0 14px;
   padding-left: 18px;
   color: var(--muted);
 }
-.quote{ margin: 0 0 10px; font-size: 1rem; }
 
-/* ===== Projetos ===== */
-.grid-2{
+/* ===== Projetos (cards com imagem) ===== */
+.projects-grid{
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
-.showcase{
-  border: 1px solid var(--border);
+.project{
   border-radius: var(--radius);
-  background: rgba(255,255,255,0.03);
   overflow: hidden;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
-.shot{
+.project img{
+  width: 100%;
   height: 170px;
-  background: radial-gradient(400px 200px at 20% 20%, rgba(79,124,255,0.35), transparent 60%),
-              radial-gradient(400px 200px at 70% 30%, rgba(46,96,255,0.22), transparent 60%),
-              rgba(255,255,255,0.03);
+  object-fit: cover;
   border-bottom: 1px solid var(--border);
 }
-.showcase-body{
-  padding: 16px;
+.project-body{ padding: 14px; }
+.badge{
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
 }
-.showcase-actions{
+.project-actions{
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 12px;
 }
 
-.center{
+/* ===== Formulários ===== */
+.form{
   display: grid;
-  place-items: center;
-  margin-top: 18px;
+  gap: 12px;
+  margin-top: 12px;
 }
-
-/* ===== Passos ===== */
-.steps{
+.field{
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 6px;
 }
-.step{
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: rgba(255,255,255,0.03);
-  padding: 16px;
-}
-.step-num{
-  width: 34px;
-  height: 34px;
+label{ font-weight: 700; }
+input, select, textarea{
+  width: 100%;
+  padding: 12px 12px;
   border-radius: 12px;
-  display: grid;
-  place-items: center;
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.04);
-  font-weight: 800;
-  margin-bottom: 10px;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  outline: none;
 }
+textarea{ min-height: 120px; resize: vertical; }
+.help{ font-size: 0.92rem; color: var(--muted); }
 
 /* ===== FAQ ===== */
-.faq{
-  display: grid;
-  gap: 10px;
-}
+.faq{ display: grid; gap: 10px; }
 .faq-item{
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: rgba(255,255,255,0.03);
   padding: 12px 14px;
 }
-.faq-item summary{
-  cursor: pointer;
-  font-weight: 700;
-}
-.faq-item p{
-  margin: 10px 0 0;
-}
+.faq-item summary{ cursor: pointer; font-weight: 800; }
+.faq-item p{ margin: 10px 0 0; }
 
-/* ===== CTA Box ===== */
+/* ===== CTA box ===== */
 .cta-box{
   margin-top: 20px;
   padding: 18px;
@@ -351,12 +332,175 @@ h1{
 .footer-links a:hover{ color: var(--text); }
 .tiny{ font-size: 0.9rem; text-align: center; margin: 14px 0 0; }
 
+/* ===== WhatsApp flutuante ===== */
+.wa-float{
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 200;
+  border-radius: 999px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, #24d366, #1fb85a);
+  color: #06230f;
+  border: none;
+  cursor: pointer;
+  font-weight: 900;
+  box-shadow: 0 16px 35px rgba(0,0,0,0.35);
+}
+.wa-float:hover{ transform: translateY(-1px); }
+.wa-float:active{ transform: translateY(0px); }
+
+/* ===== Modal ===== */
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  place-items: center;
+  z-index: 300;
+  padding: 14px;
+}
+.modal-overlay.open{ display: grid; }
+.modal{
+  width: min(720px, 96%);
+  background: rgba(16,24,38,0.95);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.modal-head{
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-head strong{ font-size: 1.05rem; }
+.modal-close{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 900;
+}
+.modal-body{ padding: 16px; }
+
 /* ===== Responsivo ===== */
 @media (max-width: 900px){
   .hero-grid{ grid-template-columns: 1fr; }
   .cards{ grid-template-columns: 1fr; }
-  .grid-2{ grid-template-columns: 1fr; }
-  .steps{ grid-template-columns: 1fr; }
+  .projects-grid{ grid-template-columns: 1fr; }
   .footer-grid{ grid-template-columns: 1fr; }
   .footer-links{ justify-content: flex-start; }
+}
+
+/* ===== FIX: Modal com scroll (botão não some) ===== */
+.modal{
+  max-height: 90vh;              /* cabe na tela */
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body{
+  overflow: auto;                /* scroll interno */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* se quiser, dá um respiro no final do form */
+.modal-body .form{
+  padding-bottom: 6px;
+}
+
+/* ===== FIX: Select/Options legíveis ===== */
+select{
+  color: var(--text);
+  background: rgba(255,255,255,0.03);
+}
+
+/* options em geral: melhor garantir contraste */
+select option{
+  color: #111;                   /* texto escuro */
+  background: #fff;              /* fundo claro */
+}
+
+/* quando o select está aberto/selecionado no Chrome/Edge */
+select:focus{
+  border-color: rgba(79,124,255,0.65);
+  box-shadow: 0 0 0 4px rgba(79,124,255,0.18);
+}
+
+/* ===== Certificados: galeria bonita ===== */
+.gallery-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cert{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.cert button{
+  all: unset;
+  cursor: pointer;
+  display: block;
+}
+
+.cert img{
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border);
+  transition: transform .18s ease;
+}
+
+.cert:hover img{
+  transform: scale(1.02);
+}
+
+.cert-body{
+  padding: 14px;
+}
+
+.cert-body h3{
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.cert-body p{
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ===== Modal de imagem (visualização do certificado) ===== */
+.img-preview{
+  display: grid;
+  gap: 10px;
+}
+
+.img-preview img{
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.img-preview .preview-actions{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Responsivo */
+@media (max-width: 900px){
+  .gallery-grid{ grid-template-columns: 1fr; }
 }

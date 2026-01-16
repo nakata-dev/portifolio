@@ -1,110 +1,428 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <title>Projetos</title>
-    <style>
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
 
-        :root {
-            --fonte_moderna: 'Josefin Sans', sans-serif;
-        }
-        li {
-            display: grid;
-            grid-template-columns: repeat(2, auto);
-            justify-content: left;
-            gap: 15px 30px;
-            padding: 5px;
-            line-height: 1;
+  <!-- Use o CSS global profissional -->
+  <link rel="stylesheet" href="site.css" />
 
-        }
+  <title>Projetos | Ailton A. Nakata</title>
 
-        li:hover {
-            background-color: rgba(30, 143, 255, 0.336);
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            animation-duration: 0.5s;
-        }
-        header{
-            margin-bottom: 0;
-        }
-    </style>
+  <!-- JS do modal + WhatsApp -->
+  <script src="site.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <h1>Projetos</h1>
-        <p>Ailton A. Nakata</p>
-    </header>
-
-    <nav>
-        <a href="index.html">HOME</a>
-        <a href="jogos/index.html">JOGOS</a>
-    </nav>
-    <main>
-        <br>
-        <h3>Projetos:</h3>
-        <ul>
-
-            <a href="Clinica_popular/index.html" target="_blank">
-                <li>Clinica Popular</li>
-            </a>
-            <a href="Sistema_Lojas/index.html" target="_blank">
-                <li>Sistema de Loja</li>
-            </a>
-            <a href="Nakata_dev/index.html" target="_blank">
-                <li>Portfólio Pessoal</li>
-            </a>
-            <a href="Baralho/index.html" target="_blank">
-                <li>Placar Cacheta</li>
-            </a>
-            <a href="Fresco/index.html" target="_blank">
-                <li>Fresco Pizzaria</li>
-            </a>
-            <a href="Android/home.html" target="_blank">
-                <li>Site - Android</li>
-            </a>
-            <a href="Cordel/index.html" target="_blank">
-                <li>Site - Cordel</li>
-            </a>
-            <a href="projeto-social_02/index.html" target="_blank">
-                <li>Site - Social</li>
-            </a>
-            <a href="projetos_js/contador_paginas/index.html" target="_blank">
-                <li>Contador 1</li>
-            </a>
-            <a href="projetos_js/contador001/index.html" target="_blank">
-                <li>Contador 2</li>
-            <a href="projetos_js/pomodoro001/index.html" target="_blank">
-                <li>Pomodoro</li>
-            </a>
-            <a href="Login/index.html" target="_blank">
-                <li>Login</li>
-                <a href="Projeto_habitos/index.html" target="_blank">
-                    <li>Rastreador de Hábitos</li>
-                <a href="Projeto_Quiz/index.html" target="_blank">
-                    <li>Quiz</li>
-                </a>
-                <a href="100X_Metodo/index.html" target="_blank">
-                    <li>Métodos 100X</li>
-                </a>
-                <a href="album/index.html" target="_blank">
-                    <li>Álbum</li>
-                </a>
-        </ul>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="index.html">HOME</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
-</body>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="estudos.html">Estudos</a>
+        <a href="certificados.html">Certificados</a>
+        <a href="contato.html">Contato</a>
+        <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Projetos</h1>
+          <p class="muted">Seleção de projetos com foco em UI moderna, responsividade e boa experiência.</p>
+        </div>
+
+        <!-- Filtros simples (opcional, só visual por enquanto) -->
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="#sites">Sites</a>
+          <a class="btn btn-secondary" href="#apps">Apps/JS</a>
+          <a class="btn btn-secondary" href="#jogos">Jogos</a>
+        </div>
+
+        <!-- SITES -->
+        <div class="section-head" id="sites" style="margin-top: 10px;">
+          <h2>Sites</h2>
+          <p class="muted">Projetos que simulam negócios reais (ótimos para apresentar a clientes).</p>
+        </div>
+
+        <div class="projects-grid">
+          <!-- Clínica Popular -->
+          <article class="project">
+            <img src="img/thumbs/clinica.jpg" alt="Projeto Clínica Popular" />
+            <div class="project-body">
+              <span class="badge">Institucional</span>
+              <h3>Clínica Popular</h3>
+              <p class="muted">Layout de site para clínica com foco em credibilidade e contato.</p>
+              <ul class="list">
+                <li>Seções bem organizadas</li>
+                <li>Boa leitura no mobile</li>
+                <li>Estrutura pronta para CTA</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Clinica_popular/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
+                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Fresco Pizzaria -->
+          <article class="project">
+            <img src="img/thumbs/pizzaria.jpg" alt="Projeto Fresco Pizzaria" />
+            <div class="project-body">
+              <span class="badge">Conversão</span>
+              <h3>Fresco Pizzaria</h3>
+              <p class="muted">Projeto com potencial para cardápio + botão WhatsApp.</p>
+              <ul class="list">
+                <li>Visual moderno</li>
+                <li>Boa identidade</li>
+                <li>Ideal para pedidos</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Fresco/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
+                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Android -->
+          <article class="project">
+            <img src="img/thumbs/android.jpg" alt="Projeto Site Android" />
+            <div class="project-body">
+              <span class="badge">Landing</span>
+              <h3>Site Android</h3>
+              <p class="muted">Página temática com estrutura bem clara e organizada.</p>
+              <ul class="list">
+                <li>Boa hierarquia visual</li>
+                <li>Seções objetivas</li>
+                <li>Responsivo</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Android/home.html" target="_blank" rel="noopener noreferrer">Ver site</a>
+                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Cordel -->
+          <article class="project">
+            <img src="img/thumbs/cordel.jpg" alt="Projeto Site Cordel" />
+            <div class="project-body">
+              <span class="badge">Conteúdo</span>
+              <h3>Site Cordel</h3>
+              <p class="muted">Página focada em leitura e estética editorial.</p>
+              <ul class="list">
+                <li>Tipografia e layout</li>
+                <li>Boa experiência de leitura</li>
+                <li>Estrutura simples</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Cordel/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
+                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Social -->
+          <article class="project">
+            <img src="img/thumbs/social.jpg" alt="Projeto Site Social" />
+            <div class="project-body">
+              <span class="badge">Institucional</span>
+              <h3>Projeto Social</h3>
+              <p class="muted">Layout para causa/ONG com organização em seções.</p>
+              <ul class="list">
+                <li>Estrutura pronta para doações</li>
+                <li>Seções por objetivo</li>
+                <li>Responsivo</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="projeto-social_02/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
+                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Portfólio (antigo) -->
+          <article class="project">
+            <img src="img/thumbs/portfolio.jpg" alt="Projeto Portfólio Pessoal" />
+            <div class="project-body">
+              <span class="badge">Pessoal</span>
+              <h3>Portfólio Pessoal</h3>
+              <p class="muted">Versão anterior do seu portfólio, organizada por páginas.</p>
+              <ul class="list">
+                <li>Navegação simples</li>
+                <li>Conteúdo bem separado</li>
+                <li>Base para evolução</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Nakata_dev/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
+                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- APPS/JS -->
+        <div class="section-head" id="apps" style="margin-top: 30px;">
+          <h2>Apps e JavaScript</h2>
+          <p class="muted">Pequenas aplicações e componentes que mostram lógica e interação.</p>
+        </div>
+
+        <div class="projects-grid">
+          <article class="project">
+            <img src="img/thumbs/sistema-loja.jpg" alt="Projeto Sistema de Loja" />
+            <div class="project-body">
+              <span class="badge">App</span>
+              <h3>Sistema de Loja</h3>
+              <p class="muted">Projeto de sistema com estrutura de páginas e interação.</p>
+              <ul class="list">
+                <li>Organização</li>
+                <li>Componentes reutilizáveis</li>
+                <li>Boa base de evolução</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Sistema_Lojas/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <img src="img/thumbs/pomodoro.jpg" alt="Projeto Pomodoro" />
+            <div class="project-body">
+              <span class="badge">JS</span>
+              <h3>Pomodoro</h3>
+              <p class="muted">Timer com lógica e interface simples.</p>
+              <ul class="list">
+                <li>Interação com botões</li>
+                <li>Fluxo claro</li>
+                <li>Boa usabilidade</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="projetos_js/pomodoro001/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <img src="img/thumbs/habitos.jpg" alt="Projeto Rastreador de Hábitos" />
+            <div class="project-body">
+              <span class="badge">JS</span>
+              <h3>Rastreador de Hábitos</h3>
+              <p class="muted">Projeto que mostra lógica + organização de interface.</p>
+              <ul class="list">
+                <li>CRUD simples</li>
+                <li>Interface clara</li>
+                <li>Ótimo para demonstrar</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Projeto_habitos/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <img src="img/thumbs/quiz.jpg" alt="Projeto Quiz" />
+            <div class="project-body">
+              <span class="badge">JS</span>
+              <h3>Quiz</h3>
+              <p class="muted">Interação com perguntas e respostas.</p>
+              <ul class="list">
+                <li>Fluxo de tela</li>
+                <li>Lógica de pontuação</li>
+                <li>Engajamento</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Projeto_Quiz/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <img src="img/thumbs/login.jpg" alt="Projeto Login" />
+            <div class="project-body">
+              <span class="badge">UI</span>
+              <h3>Login</h3>
+              <p class="muted">Tela de login com UI simples e agradável.</p>
+              <ul class="list">
+                <li>Layout limpo</li>
+                <li>Form organizado</li>
+                <li>Boa base para sistema</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Login/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <img src="img/thumbs/contador.jpg" alt="Projeto Contadores" />
+            <div class="project-body">
+              <span class="badge">JS</span>
+              <h3>Contadores</h3>
+              <p class="muted">Dois projetos simples para demonstrar DOM e eventos.</p>
+              <ul class="list">
+                <li>DOM</li>
+                <li>Eventos</li>
+                <li>JS básico</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="projetos_js/contador_paginas/index.html" target="_blank" rel="noopener noreferrer">Contador 1</a>
+                <a class="btn btn-secondary" href="projetos_js/contador001/index.html" target="_blank" rel="noopener noreferrer">Contador 2</a>
+                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- JOGOS -->
+        <div class="section-head" id="jogos" style="margin-top: 30px;">
+          <h2>Jogos</h2>
+          <p class="muted">Projetos para praticar lógica e interface.</p>
+        </div>
+
+        <div class="projects-grid">
+          <article class="project">
+            <img src="img/thumbs/jogos.jpg" alt="Página de Jogos" />
+            <div class="project-body">
+              <span class="badge">Jogos</span>
+              <h3>Meus jogos</h3>
+              <p class="muted">Coleção de projetos interativos.</p>
+              <ul class="list">
+                <li>Interatividade</li>
+                <li>Regras e lógica</li>
+                <li>UI prática</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="jogos/index.html" target="_blank" rel="noopener noreferrer">Abrir jogos</a>
+                <button class="btn btn-primary" data-open-modal>Quero um projeto assim</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <img src="img/thumbs/cacheta.jpg" alt="Projeto Placar Cacheta" />
+            <div class="project-body">
+              <span class="badge">Jogo</span>
+              <h3>Placar Cacheta</h3>
+              <p class="muted">Placar para baralho com interface simples.</p>
+              <ul class="list">
+                <li>Eventos e DOM</li>
+                <li>UX simples</li>
+                <li>Projeto leve</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="Baralho/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="cta-box">
+          <h2>Quer um site com design moderno e foco em conversão?</h2>
+          <p class="muted">Me diga seu segmento e objetivo. Eu respondo com proposta e prazo.</p>
+          <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Botão WhatsApp flutuante -->
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp">WhatsApp</button>
+
+  <!-- Modal de orçamento (mesmo padrão do site) -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form>
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Referência (opcional)</label>
+            <input name="referencia" placeholder="Link de referência (se tiver)" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
 </html>

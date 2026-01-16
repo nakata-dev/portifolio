@@ -1,67 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercícios</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="site.css" />
+  <title>Algoritmo | Estudos - Ailton A. Nakata</title>
+  <script src="site.js" defer></script>
 </head>
+
 <body>
-    <header>
-        <h1>Algoritmo</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <nav>
-        <a href="estudos.html">VOLTAR</a>
-    </nav>
-    <main>
-        <div id="txt_exercicios">
-            
-<ul>
-<li>
-<a href="VisuAlg/ex001/index.html">Olá Mundo</a></li>
-<li><a href="VisuAlg/ex002/index.html">Prazer meu nome é...</a></li>
-<li><a href="VisuAlg/ex003/index.html">Soma de dois números</a></li>
-<li><a href="VisuAlg/ex004/index.html">Converter Graus p/ Radianos</a></li>
-<li><a href="VisuAlg/ex005/index.html">Teste Lógico</a></li>
-<li><a href="VisuAlg/ex006/index.html">Teste de Triângulo</a></li>
-<li><a href="VisuAlg/ex007/index.html">Calculo de Idade</a></li>
-<li><a href="VisuAlg/ex008/index.html">Conversor de Dólar</a></li>
-<li><a href="VisuAlg/ex009/index.html">ConversorFC</a></li>
-<li><a href="VisuAlg/ex010/index.html">Imposto sobre Importação</a></li>
-<li><a href="VisuAlg/ex011/index.html">Média</a></li>
-<li><a href="VisuAlg/ex012/index.html">Condicional SE / SENAO</a></li>
-<li><a href="VisuAlg/ex013/index.html">Empréstimo</a></li>
-</ul>
-                
-                    <br>
-                
-        <div id="voltar">
-            <a href="estudos.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="projetos.html">Projetos</a>
+        <a href="estudos.html">Estudos</a>
+        <a href="certificados.html">Certificados</a>
+        <a href="contato.html">Contato</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>"Meu código não é apenas funcional, ele é pensado para impactar."</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Algoritmo</h1>
+          <p class="muted">Lista de exercícios (VisuAlg) para treinar lógica e raciocínio.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="projetos.html">Ver Projetos</a>
+        </div>
+
+        <!-- Lista em formato de cards -->
+        <div class="cards">
+          <article class="card">
+            <h3>Exercícios</h3>
+            <p class="muted">Clique para abrir em nova aba e testar.</p>
+
+            <ul class="list">
+              <li><a class="muted" href="VisuAlg/ex001/index.html" target="_blank" rel="noopener noreferrer">Olá Mundo</a></li>
+              <li><a class="muted" href="VisuAlg/ex002/index.html" target="_blank" rel="noopener noreferrer">Prazer, meu nome é...</a></li>
+              <li><a class="muted" href="VisuAlg/ex003/index.html" target="_blank" rel="noopener noreferrer">Soma de dois números</a></li>
+              <li><a class="muted" href="VisuAlg/ex004/index.html" target="_blank" rel="noopener noreferrer">Converter Graus p/ Radianos</a></li>
+              <li><a class="muted" href="VisuAlg/ex005/index.html" target="_blank" rel="noopener noreferrer">Teste Lógico</a></li>
+              <li><a class="muted" href="VisuAlg/ex006/index.html" target="_blank" rel="noopener noreferrer">Teste de Triângulo</a></li>
+              <li><a class="muted" href="VisuAlg/ex007/index.html" target="_blank" rel="noopener noreferrer">Cálculo de Idade</a></li>
+              <li><a class="muted" href="VisuAlg/ex008/index.html" target="_blank" rel="noopener noreferrer">Conversor de Dólar</a></li>
+              <li><a class="muted" href="VisuAlg/ex009/index.html" target="_blank" rel="noopener noreferrer">Conversor F/C</a></li>
+              <li><a class="muted" href="VisuAlg/ex010/index.html" target="_blank" rel="noopener noreferrer">Imposto sobre Importação</a></li>
+              <li><a class="muted" href="VisuAlg/ex011/index.html" target="_blank" rel="noopener noreferrer">Média</a></li>
+              <li><a class="muted" href="VisuAlg/ex012/index.html" target="_blank" rel="noopener noreferrer">Condicional SE / SENÃO</a></li>
+              <li><a class="muted" href="VisuAlg/ex013/index.html" target="_blank" rel="noopener noreferrer">Empréstimo</a></li>
+            </ul>
+
+            <div class="hero-actions">
+              <a class="btn btn-secondary" href="estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Quero um site profissional</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Como isso ajuda nos projetos</h3>
+            <p class="muted">
+              Esses exercícios fortalecem lógica e tomada de decisão no código. Isso vira vantagem em:
+            </p>
+            <ul class="list">
+              <li>Validação de formulários</li>
+              <li>Fluxos de tela e navegação</li>
+              <li>Regras de negócio</li>
+              <li>Interações com o usuário</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Próximo passo</h3>
+            <p class="muted">Depois da lógica, o combo que mais rende é UI + JavaScript.</p>
+            <div class="hero-actions">
+              <a class="btn btn-secondary" href="html.html">Ir para HTML</a>
+              <a class="btn btn-secondary" href="js.html">Ir para JavaScript</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="cta-box">
+          <h2>Quer um site moderno com foco em conversão?</h2>
+          <p class="muted">Me diga seu segmento e objetivo. Eu retorno com proposta e prazo.</p>
+          <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+          <p class="tiny muted" style="margin-top: 12px;">“Meu código não é apenas funcional, ele é pensado para impactar.”</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@Akioartes" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Referência (opcional)</label>
+            <input name="referencia" placeholder="Link de referência (se tiver)" inputmode="url" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+            <span class="help">Ao enviar, abriremos o WhatsApp com a mensagem pronta.</span>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
