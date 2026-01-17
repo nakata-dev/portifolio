@@ -1,191 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estudos HTML & CSS</title>
-  <link rel="shortcut icon" href="favicon (1).ico" type="image/x-icon">
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    /* Estilo global */
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estudos HTML & CSS | Ailton A. Nakata</title>
 
-    *{
-      margin: 0px;
-      padding: 0px;
-      box-sizing: border-box;
-    }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f6f9;
-      color: #333;
-      line-height: 1.6;
-    }
-
-    header {
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;      
-      border-bottom-left-radius: 25px;
-      border-bottom-right-radius: 25px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    header h1 {
-      margin: 0;
-      padding: 0px;
-      font-size: 2rem;
-      text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.719);
-    }
-    
-    header p {
-      text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.719);
-      font-style: italic;
-      margin-top: 0px;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 20px;
-    }
-
-    h2, h3 {
-      margin-top: 40px;
-      color: #1e90ff;
-      border-left: 6px solid #1e90ff;
-      padding-left: 10px;
-    }
-
-    p#paragrafo {
-      text-align: justify;
-      text-indent: 30px;
-      padding: 10px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-
-    .exemplo {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 15px 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      font-family: "Courier New", monospace;
-    }
-
-    hr {
-      margin: 25px 0;
-      border: none;
-      border-top: 2px dashed #aaa;
-    }
-
-    ul {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 0;
-    }
-
-    li {
-      list-style-type: square;
-    }
-
-    a {
-      text-decoration: none;
-      color: #1e90ff;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    a:hover {
-      border-radius: 10px;
-      padding: 6px 10px;
-      background-color: rgba(30, 144, 255, 0.15);
-    }
-
-    /* Caixas de lembrete */
-    .caixa {
-      background: #eaf6ff;
-      border-left: 6px solid #1e90ff;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px 0;
-    }
-
-    #voltar {
-      text-align: center;
-      margin-top: 40px;
-    }
-
-    #voltar a {
-      background: #1e90ff;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-weight: bold;
-    }
-
-    #voltar a:hover {
-      background: #104e8b;
-    }
-  </style>
+  <meta name="description" content="Estudos de HTML e CSS: quebra de linha, hr, símbolos especiais, emojis, e links úteis." />
 </head>
+
 <body>
-  <header>
-    <h1>📘 Meus Estudos de HTML & CSS</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h2>📍 Quebra de Linhas (<code>&lt;br&gt;</code>)</h2>
-    <div class="exemplo">
-      <p id="paragrafo">Exemplo de quebra de linha usando a tag: <strong>&lt;br&gt;</strong></p>
-    </div>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Estudos de HTML & CSS</h1>
+          <p class="muted">Mini guia com tags básicas, símbolos especiais e emojis para seus primeiros projetos.</p>
+        </div>
 
-    <h3>📍 Linha Horizontal (<code>&lt;hr&gt;</code>)</h3>
-    <div class="exemplo">
-      <p>Entre qualquer linha, insira a tag: <strong>&lt;hr&gt;</strong></p>
-      <hr>
-    </div>
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
 
-    <h3>📍 Símbolos Especiais</h3>
-    <div class="exemplo">
-      <p>
-        &reg; &copy; &trade; &euro; &pound; &yen; &cent; &Delta;
-      </p>
-    </div>
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Quebra de linha (<code>&lt;br&gt;</code>)</h2>
 
-    <h3>📍 Emojis</h3>
-    <div class="exemplo">
-      <p>
-        &#x1F596; <br>
-        &#x1FAC1; <br>
-        &#x1F444; <br>
-        &#x1F418; <br>
-        &#x1F96A; <br>
-        &#x1F947; <br>
-        &#x1F6F8;
-      </p>
-    </div>
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Use <strong>&lt;br&gt;</strong> para quebrar linha em um texto.
+                Mais tarde, a gente substitui isso por CSS (margin/padding), mas para começar é ótimo.
+              </p>
+            </div>
 
-    <div class="caixa">
-      💡 <strong>Dica:</strong> Para inserir emojis use a sintaxe <code>&amp;#xCODE;</code>, onde <code>CODE</code> é o código do emoji no formato hexadecimal.
-    </div>
+            <h2 class="lesson-title" style="margin-top: 18px;">Linha Horizontal (<code>&lt;hr&gt;</code>)</h2>
 
-    <h3>📍 Onde Baixar?</h3>
-    <ul>
-      <li><a href="https://emojipedia.org/pt" target="_blank">Emojipedia</a></li>
-      <li><a href="https://favicon.io" target="_blank">Favicon.io</a></li>
-    </ul>
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                A tag <strong>&lt;hr&gt;</strong> cria uma linha divisória para separar sessões no conteúdo.
+              </p>
+            </div>
 
-    <div id="voltar">
-      <a href="../html.html">Voltar</a>
-    </div>
-    <br><br>
+            <div class="card" style="margin-top: 12px;">
+              <p style="margin-top:0;"><strong>Exemplo:</strong></p>
+              <hr>
+              <p class="muted" style="margin-bottom:0;">Acima está uma linha gerada com <code>&lt;hr&gt;</code>.</p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Símbolos especiais</h2>
+
+            <div class="card soft">
+              <p style="margin:0; font-size: 1.1rem;">
+                &reg; &copy; &trade; &euro; &pound; &yen; &cent; &Delta;
+              </p>
+              <p class="tiny muted" style="margin-top:10px;">
+                Eles são úteis para páginas institucionais (copyright, marcas, moeda, etc).
+              </p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Emojis no HTML</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin-top:0;">
+                Você pode inserir emojis usando código hexadecimal nesse formato:
+                <code>&amp;#xCODE;</code>
+              </p>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin:0; line-height: 2;">
+                  &#x1F596;<br>
+                  &#x1FAC1;<br>
+                  &#x1F444;<br>
+                  &#x1F418;<br>
+                  &#x1F96A;<br>
+                  &#x1F947;<br>
+                  &#x1F6F8;
+                </p>
+              </div>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Dica:</strong> quando usar muitos emojis, mantenha consistência (mesmo estilo/tema),
+              senão o layout vira carnaval fora de época 😄
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Links úteis</h2>
+
+            <div class="card soft">
+              <ul class="list">
+                <li>
+                  <strong>Emojipedia</strong> (códigos e lista):
+                  <a href="https://emojipedia.org/pt" target="_blank" rel="noopener noreferrer">emojipedia.org</a>
+                </li>
+                <li>
+                  <strong>Favicon</strong> (ícone do site):
+                  <a href="https://favicon.io" target="_blank" rel="noopener noreferrer">favicon.io</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu <code>&lt;br&gt;</code></li>
+                <li>Entendeu <code>&lt;hr&gt;</code></li>
+                <li>Usou símbolos especiais</li>
+                <li>Inseriu emoji via <code>&amp;#xCODE;</code></li>
+                <li>Salvou fontes úteis</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

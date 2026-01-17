@@ -1,111 +1,247 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            margin-bottom: 15px;
-            line-height: 1.8;
-            text-align: justify;
-            text-indent: 30px;
-        }
-        </style>
-    <title>Rodapé Personalizado</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rodapé Personalizado | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Como criar e personalizar o rodapé no WordPress usando o tema Astra: construtor de rodapé, copyright, widgets e ajustes de estilo." />
 </head>
+
 <body>
-    <header>
-        <h2>Rodapé Personalizado com Astra</h2>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-    <h2>Construtor de rodapé para sites WordPress com novo Astra:</h2>
-    <hr>
-    <br>
-    <br>
-    <p>
-Com o tema Astra instalado e ativo no WordPress, vá para Aparência &gt; Personalizar &gt; Rodapé &gt; Construir rodapé. </p>
-<br>
-<p>
-Escolha o número de linhas e colunas desejadas para o rodapé do site. Em seguida, adicione os blocos desejados em cada seção do rodapé, como texto, menus, ícones sociais, etc. Personalize o estilo e o layout conforme necessário. Após concluir as configurações, clique em "Publicar" para salvar as alterações e tornar o rodapé visível no site.
-</p>
-<br>
-<p>
-Dessa forma, você pode criar um rodapé personalizado para o seu site WordPress usando o construtor de rodapé do tema Astra.
-</p>
-<h2>Inserindo Rodapé Personalizado - Copyright</h2>
-<hr>
-<br>
-<br>
-<p>
-Para adicionar um rodapé personalizado com informações de copyright no WordPress usando o tema Astra, siga estes passos:</p>
-<br>    
-<p>
-    clique em "Aparência" no menu lateral do painel do WordPress.</p>
-<p>
-    Selecione "Personalizar" para abrir o personalizador de temas.</p>
-</p>
-<p>
-    No personalizador, clique em "Rodapé" e depois em "Construir rodapé".</p>
-</p>
-<p>
-    adicione um bloco de "Texto" na seção do rodapé onde deseja exibir as informações de copyright.</p>
-</p>
-<img src="../img/COPYRIGHT.png" alt="Copyright Astra">
-</p>    
-<h2>Inserindo um Rodapé Personalizado</h2>
-<hr>
-<br>
-<br>
-<p>
-    Click em widgets no menu do personalizador.</p>
-<p>
-    Selecione a área do rodapé onde deseja adicionar o widget personalizado.</p>
-</p>
-<p> 
-    Adicione um widget de "Texto" ou "HTML Personalizado" à área do rodapé.</p>
-</p>
-<img src="../img/RODAPE_PERSONALIZADO.webp" alt="RODAPE_PERSONALIZADO">
-</p>
-<br>
-<p>
-    Para outras configurações de rodapé, como cores, tipografia e layout, você pode explorar as opções disponíveis no personalizador do Astra.</p>
-<img src="../img/CONFIGURACOES.png" alt="configurações de rodapé">
-<br>
-<p>Click sobre os três pontos para acessar mais opções.</p>
-<img src="../img/RODAPE_PERSONALIZADO_SITE.webp" alt="RODAPE_PERSONALIZADO_SITE">
-    <br>               
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Rodapé Personalizado com Astra</h1>
+          <p class="muted">Guia prático para criar rodapés no WordPress usando o construtor do tema Astra.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Construtor de rodapé (Astra)</h2>
+            <p>
+              Com o tema Astra instalado e ativo no WordPress, vá em:
+              <strong>Aparência → Personalizar → Rodapé → Construir rodapé</strong>.
+            </p>
+
+            <div class="card soft">
+              <ul class="list">
+                <li>Escolha o número de <strong>linhas</strong> e <strong>colunas</strong> para o rodapé.</li>
+                <li>Adicione blocos em cada área: <strong>Texto</strong>, <strong>Menus</strong>, <strong>Ícones sociais</strong>, etc.</li>
+                <li>Personalize o <strong>estilo</strong> e o <strong>layout</strong> conforme necessário.</li>
+                <li>Ao finalizar, clique em <strong>Publicar</strong> para salvar e aplicar no site.</li>
+              </ul>
+            </div>
+
+            <div class="alert">
+              <strong>Resumo:</strong> o Astra permite montar o rodapé como “peças”, definindo estrutura (linhas/colunas),
+              conteúdo (blocos) e estilo (cores/tipografia).
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Copyright no rodapé</h2>
+            <p>
+              Para exibir informações de copyright no rodapé usando Astra, a lógica é simples:
+              você coloca um bloco de <strong>Texto</strong> no rodapé.
+            </p>
+
+            <ol class="steps">
+              <li>
+                <h3>Acesse o Personalizar</h3>
+                <p>No painel do WordPress: <strong>Aparência → Personalizar</strong>.</p>
+              </li>
+              <li>
+                <h3>Abra o construtor do rodapé</h3>
+                <p>Vá em <strong>Rodapé → Construir rodapé</strong>.</p>
+              </li>
+              <li>
+                <h3>Adicione um bloco de Texto</h3>
+                <p>Insira um bloco de <strong>Texto</strong> na área onde o copyright deve aparecer.</p>
+                <figure class="media">
+                  <img src="../img/COPYRIGHT.png" alt="Astra: adicionando copyright no rodapé" loading="lazy">
+                </figure>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Rodapé personalizado via Widgets</h2>
+            <p>
+              Outra forma comum é usar <strong>Widgets</strong> dentro do personalizador, colocando um bloco de texto
+              ou HTML na área do rodapé.
+            </p>
+
+            <ol class="steps">
+              <li>
+                <h3>Entre em Widgets</h3>
+                <p>No personalizador, clique em <strong>Widgets</strong>.</p>
+              </li>
+              <li>
+                <h3>Escolha a área do rodapé</h3>
+                <p>Selecione a área de rodapé onde o widget vai aparecer.</p>
+              </li>
+              <li>
+                <h3>Adicione Texto ou HTML Personalizado</h3>
+                <p>Insira um widget de <strong>Texto</strong> ou <strong>HTML Personalizado</strong>.</p>
+                <figure class="media">
+                  <img src="../img/RODAPE_PERSONALIZADO.webp" alt="Astra: rodapé personalizado com widget" loading="lazy">
+                </figure>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Configurações de estilo</h2>
+            <p>
+              Para ajustes finos como <strong>cores</strong>, <strong>tipografia</strong> e <strong>layout</strong>,
+              explore as opções do personalizador do Astra.
+            </p>
+
+            <figure class="media">
+              <img src="../img/CONFIGURACOES.png" alt="Astra: configurações de rodapé (cores, tipografia e layout)" loading="lazy">
+            </figure>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <p class="muted" style="margin:0;">
+                Dica: clique nos <strong>três pontos</strong> para ver mais opções e ações do componente.
+              </p>
+            </div>
+
+            <figure class="media">
+              <img src="../img/RODAPE_PERSONALIZADO_SITE.webp" alt="Astra: opções extras (três pontos) no rodapé" loading="lazy">
+            </figure>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Astra ativo no WordPress</li>
+                <li>Construir rodapé (linhas/colunas)</li>
+                <li>Bloco de Texto para copyright</li>
+                <li>Widgets (Texto/HTML) no rodapé</li>
+                <li>Estilo: cores, tipografia e layout</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

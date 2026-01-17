@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Material Symbols Outlined (Google Icon) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap">
+
   <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
   <link rel="stylesheet" href="site.css" />
   <title>Portfólio | Ailton A. Nakata</title>
@@ -20,12 +24,24 @@
         </div>
       </a>
 
-      <nav class="nav" aria-label="Navegação principal">
+      <!-- ✅ Burger (mobile): padrão data-nav-toggle -->
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-nav-toggle>
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+
+      <!-- ✅ Nav com id + data-nav -->
+      <nav class="nav" id="site-nav" aria-label="Navegação principal" data-nav>
         <a href="estudos.html">Estudos</a>
         <a href="projetos.html">Projetos</a>
         <a href="certificados.html">Certificados</a>
         <a href="contato.html">Contato</a>
-        <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
       </nav>
     </div>
   </header>
@@ -41,7 +57,7 @@
           </p>
 
           <div class="hero-actions">
-            <button class="btn btn-primary" data-open-modal>Quero um orçamento</button>
+            <button class="btn btn-primary" data-open-modal type="button">Quero um orçamento</button>
             <a class="btn btn-ghost" href="contato.html">Ver contato</a>
           </div>
 
@@ -95,7 +111,7 @@
               <li>CTA forte</li>
               <li>Mobile-first</li>
             </ul>
-            <button class="btn btn-primary" data-open-modal>Quero uma Landing</button>
+            <button class="btn btn-primary" data-open-modal type="button">Quero uma Landing</button>
           </article>
 
           <article class="card">
@@ -106,7 +122,7 @@
               <li>SEO básico</li>
               <li>Formulário/WhatsApp</li>
             </ul>
-            <button class="btn btn-primary" data-open-modal>Quero um Site</button>
+            <button class="btn btn-primary" data-open-modal type="button">Quero um Site</button>
           </article>
 
           <article class="card">
@@ -117,7 +133,7 @@
               <li>Treinamento rápido</li>
               <li>Manutenção opcional</li>
             </ul>
-            <button class="btn btn-primary" data-open-modal>Quero em WordPress</button>
+            <button class="btn btn-primary" data-open-modal type="button">Quero em WordPress</button>
           </article>
         </div>
       </div>
@@ -148,7 +164,7 @@
         <div class="cta-box">
           <h2>Vamos criar seu site profissional?</h2>
           <p class="muted">Me diga seu segmento e objetivo. Eu te respondo com proposta e prazo.</p>
-          <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+          <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
         </div>
       </div>
     </section>
@@ -171,7 +187,7 @@
   </footer>
 
   <!-- Botão WhatsApp flutuante -->
-  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp">
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">
     WhatsApp
   </button>
 
@@ -180,7 +196,7 @@
     <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
       <div class="modal-head">
         <strong>Solicitar orçamento</strong>
-        <button class="modal-close" data-close-modal aria-label="Fechar">X</button>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
       </div>
 
       <div class="modal-body">
@@ -235,7 +251,10 @@
             <span class="help">Ao enviar, abriremos o WhatsApp com a mensagem pronta.</span>
           </div>
 
-          <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
         </form>
       </div>
     </div>

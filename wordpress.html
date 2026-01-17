@@ -3,10 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap">
+
   <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
+
+  <!-- ✅ Corrigido: esta página está na RAIZ (wordpress.html), então sem ../../ -->
   <link rel="stylesheet" href="site.css" />
-  <title>WordPress | Estudos - Ailton A. Nakata</title>
   <script src="site.js" defer></script>
+
+  <title>WordPress | Estudos - Ailton A. Nakata</title>
 </head>
 
 <body>
@@ -20,7 +26,19 @@
         </div>
       </a>
 
-      <nav class="nav" aria-label="Navegação principal">
+      <!-- ✅ Burger (padrão do site): sem onclick, usa data-nav-toggle -->
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-nav-toggle>
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+
+      <!-- ✅ Nav com id + data-nav (JS controla .is-open no mobile) -->
+      <nav class="nav" id="site-nav" aria-label="Navegação principal" data-nav>
         <a href="index.html">Início</a>
         <a href="projetos.html">Projetos</a>
         <a href="estudos.html">Estudos</a>
@@ -84,40 +102,7 @@
               <li><a class="muted" href="WordPress/ex012/index.html" target="_blank" rel="noopener noreferrer">Topo e rodapé</a></li>
               <li><a class="muted" href="WordPress/ex016/index.html" target="_blank" rel="noopener noreferrer">Rodapé personalizado</a></li>
               <li><a class="muted" href="WordPress/ex018/index.html" target="_blank" rel="noopener noreferrer">Colunas e caixas</a></li>
-              <li><a class="muted" href="WordPress/ex019/index.html" target="_blank" rel="noopener noreferrer">Seção e cardápio</a></li>
-              <li><a class="muted" href="WordPress/ex020/index.html" target="_blank" rel="noopener noreferrer">Seção de depoimentos</a></li>
-              <li><a class="muted" href="WordPress/ex017/index.html" target="_blank" rel="noopener noreferrer">Efeito Parallax</a></li>
-            </ul>
-          </article>
-
-          <!-- Astra -->
-          <article class="card">
-            <h3>Astra (tema) e modelos</h3>
-            <p class="muted">Montagem rápida com qualidade e personalização.</p>
-            <ul class="list">
-              <li><a class="muted" href="WordPress/ex013/index.html" target="_blank" rel="noopener noreferrer">WordPress com Astra</a></li>
-              <li><a class="muted" href="WordPress/ex014/index.html" target="_blank" rel="noopener noreferrer">Rodapé com Astra</a></li>
-              <li><a class="muted" href="WordPress/ex015/index.html" target="_blank" rel="noopener noreferrer">Topo com Astra</a></li>
-              <li><a class="muted" href="WordPress/ex031/index.html" target="_blank" rel="noopener noreferrer">Modelos do Astra</a></li>
-              <li><a class="muted" href="WordPress/ex032/index.html" target="_blank" rel="noopener noreferrer">Fim do módulo 01</a></li>
-            </ul>
-          </article>
-
-          <!-- Microthemer / Forms / Conteúdo -->
-          <article class="card">
-            <h3>Personalização e recursos</h3>
-            <p class="muted">Customização fina, formulários e conteúdo.</p>
-            <ul class="list">
-              <li><a class="muted" href="WordPress/ex021/index.html" target="_blank" rel="noopener noreferrer">Rodapé personalizado (reforço)</a></li>
-              <li><a class="muted" href="WordPress/ex022/index.html" target="_blank" rel="noopener noreferrer">Microthemer</a></li>
-              <li><a class="muted" href="WordPress/ex023/index.html" target="_blank" rel="noopener noreferrer">Microthemer I</a></li>
-              <li><a class="muted" href="WordPress/ex024/index.html" target="_blank" rel="noopener noreferrer">Microthemer II</a></li>
-              <li><a class="muted" href="WordPress/ex025/index.html" target="_blank" rel="noopener noreferrer">WPForms</a></li>
-              <li><a class="muted" href="WordPress/ex026/index.html" target="_blank" rel="noopener noreferrer">WPForms (Contato)</a></li>
-              <li><a class="muted" href="WordPress/ex027/index.html" target="_blank" rel="noopener noreferrer">Post</a></li>
-              <li><a class="muted" href="WordPress/ex028/index.html" target="_blank" rel="noopener noreferrer">Notícias</a></li>
-              <li><a class="muted" href="WordPress/ex029/index.html" target="_blank" rel="noopener noreferrer">Internas</a></li>
-              <li><a class="muted" href="WordPress/ex030/index.html" target="_blank" rel="noopener noreferrer">Responsivo</a></li>
+              
             </ul>
           </article>
 

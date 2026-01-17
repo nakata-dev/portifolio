@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Material Symbols Outlined (Google Icon) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap">
+
   <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
   <link rel="stylesheet" href="site.css" />
   <title>Algoritmo | Estudos - Ailton A. Nakata</title>
@@ -20,7 +24,19 @@
         </div>
       </a>
 
-      <nav class="nav" aria-label="Navegação principal">
+      <!-- ✅ Burger (mobile): usa o padrão data-nav-toggle -->
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-nav-toggle>
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+
+      <!-- ✅ Nav com id + data-nav (JS controla no mobile) -->
+      <nav class="nav" id="site-nav" aria-label="Navegação principal" data-nav>
         <a href="index.html">Início</a>
         <a href="projetos.html">Projetos</a>
         <a href="estudos.html">Estudos</a>

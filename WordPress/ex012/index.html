@@ -1,90 +1,204 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 15px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-            line-height: 1.8;
-        }
-         main{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-        </style>
-    <title>Topo e Rodapé 16A</title>
-</head>
-<body>
-    <header>
-        <h1>Topo e Rodapé</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topo e Rodapé | WordPress - Ailton A. Nakata</title>
 
-    
-    <main>
-        <h2>Personalizando Fresco:</h2>
-        <hr>
-        <br>
-        
-<p>
-    Acesse o menu personalizar
-    <br>
-    Em seguida insira a logo do seu site Fresco
-    <br>
-    Defina o nome para o seu site: <em>Fresco Pizzaria</em>
-    <br>    
-    <br>    
-    Carregue a logo em <strong>identidade do site</strong> e preencha os campos com "Fresco Pizzaria", menos o Descrição que você completa com: <em><Strong>Fresco Pizzaria a melhor Pizzaria do Leblon</Strong></em>
-    <br>    
-    
-</p>
-        <img src="../img/Personalizando_Topo.png" alt="Personalizando_Topo">
-        <br>
-    <h2>Adicione um botão de Contato:</h2>
-    <hr>
-        <br>
-        
-<p>
-    Acesse o menu <strong>Cabeçalho</strong>, é possível fazer alterações como: Inserir botões, mudar sua cor etc.
-    <br>
-    <br>
-    No menu <strong>Tema do Botão</strong> é possível fazer alterações em sua cor e posição quando o site mudar de formato de tela.
-    <br>
-    <br>
-    Agora para alterar a cor do botão, entre em <strong>global > botão > Customizar Botão (Style Guide)</strong>
-</p>
-    
-    <br>               
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Como personalizar topo e rodapé no WordPress (tema Fresco): inserir logo, nome do site e adicionar botão de contato no cabeçalho." />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Topo e Rodapé</h1>
+          <p class="muted">Aula prática: personalizando o tema Fresco (logo, nome do site e botão no cabeçalho).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Personalizando Fresco</h2>
+
+            <div class="card soft">
+              <ul class="list">
+                <li>Acesse o menu <strong>Personalizar</strong>.</li>
+                <li>Em seguida, insira a <strong>logo</strong> do seu site Fresco.</li>
+                <li>Defina o nome para o site: <em>Fresco Pizzaria</em>.</li>
+                <li>
+                  Carregue a logo em <strong>Identidade do site</strong> e preencha os campos com
+                  <strong>Fresco Pizzaria</strong>, menos o campo de descrição.
+                </li>
+                <li>
+                  No campo descrição, use:
+                  <strong>Fresco Pizzaria a melhor Pizzaria do Leblon</strong>.
+                </li>
+              </ul>
+            </div>
+
+            <figure class="media">
+              <img src="../img/Personalizando_Topo.png" alt="Personalizando o topo no WordPress (tema Fresco)" loading="lazy">
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Adicione um botão de Contato</h2>
+
+            <div class="card soft">
+              <ul class="list">
+                <li>Acesse o menu <strong>Cabeçalho</strong>.</li>
+                <li>
+                  Ali você pode inserir botões, mudar cor e ajustar comportamento.
+                </li>
+                <li>
+                  No menu <strong>Tema do Botão</strong> você altera cor e posição (responsivo).
+                </li>
+                <li>
+                  Para mudar a cor do botão, vá em:
+                  <strong>Global → Botão → Customizar Botão (Style Guide)</strong>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="alert">
+              <strong>Dica:</strong> se o botão “sumir” no mobile, normalmente é configuração de posição/visibilidade do
+              cabeçalho. Confira o modo responsivo dentro do Personalizar.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Logo inserida</li>
+                <li>Nome do site configurado</li>
+                <li>Descrição preenchida</li>
+                <li>Botão no cabeçalho</li>
+                <li>Cor e posição responsiva</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -7,7 +7,9 @@ function openWhatsApp(message) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
-// Modal helpers
+/* =========================
+   MODAL (Orçamento)
+========================= */
 function openModal() {
   const overlay = document.querySelector("[data-modal-overlay]");
   if (!overlay) return;
@@ -33,17 +35,19 @@ function setupModal() {
       if (e.target === overlay) closeModal();
     });
   }
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
-  });
 }
 
+/* =========================
+   YEAR
+========================= */
 function setupYear() {
   const el = document.getElementById("year");
   if (el) el.textContent = new Date().getFullYear();
 }
 
+/* =========================
+   WhatsApp Float
+========================= */
 function setupWhatsAppFloat() {
   const btn = document.querySelector("[data-wa-float]");
   if (!btn) return;
@@ -58,6 +62,9 @@ function setupWhatsAppFloat() {
   });
 }
 
+/* =========================
+   Form de Orçamento
+========================= */
 function setupBudgetForm() {
   const form = document.querySelector("[data-budget-form]");
   if (!form) return;
@@ -88,14 +95,10 @@ function setupBudgetForm() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  setupYear();
-  setupModal();
-  setupWhatsAppFloat();
-  setupBudgetForm();
-});
-
-function setupCertificatePreview(){
+/* =========================
+   Certificados: Preview
+========================= */
+function setupCertificatePreview() {
   const buttons = document.querySelectorAll("[data-cert-btn]");
   const overlay = document.querySelector("[data-cert-overlay]");
   const imgEl = document.querySelector("[data-cert-img]");
@@ -118,7 +121,7 @@ function setupCertificatePreview(){
     btn.addEventListener("click", () => {
       const src = btn.getAttribute("data-src");
       const title = btn.getAttribute("data-title") || "Certificado";
-      open(src, title);
+      if (src) open(src, title);
     });
   });
 
@@ -127,36 +130,23 @@ function setupCertificatePreview(){
   });
 
   document.querySelectorAll("[data-cert-close]").forEach(b => b.addEventListener("click", close));
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") close();
-  });
 }
 
-// No seu DOMContentLoaded, adicione:
-document.addEventListener("DOMContentLoaded", () => {
-  setupYear();
-  setupModal();
-  setupWhatsAppFloat();
-  setupBudgetForm();
-  setupCertificatePreview(); // <-- adiciona aqui
-});
-
-
-
-function setupTOC(){
+/* =========================
+   TOC (Sumário nas aulas)
+========================= */
+function setupTOC() {
   const toc = document.querySelector("[data-toc]");
   if (!toc) return;
 
-  // pega títulos dentro do conteúdo
-  const headings = document.querySelectorAll(".lesson .steps h3");
+  const headings = document.querySelectorAll(".lesson h2, .lesson .steps h3");
   if (!headings.length) {
     toc.innerHTML = "<p class='muted'>Sem seções disponíveis.</p>";
     return;
   }
 
   headings.forEach((h, i) => {
-    const id = h.id || `passo-${i+1}`;
+    const id = h.id || `sec-${i + 1}`;
     h.id = id;
 
     const a = document.createElement("a");
@@ -166,4 +156,86 @@ function setupTOC(){
   });
 }
 
+/* =========================
+   BURGER MENU (MOBILE)
+   Requer:
+   - botão: .nav-toggle [data-nav-toggle]
+   - menu: .nav [data-nav]
+   - JS alterna: .nav.is-open
+========================= */
+function setupMobileNav() {
+  const btn = document.querySelector("[data-nav-toggle]") || document.querySelector(".nav-toggle");
+  const nav = document.querySelector("[data-nav]") || document.querySelector(".nav");
+  if (!btn || !nav) return;
 
+  const icon = btn.querySelector(".material-symbols-outlined");
+
+  function openNav() {
+    nav.classList.add("is-open");
+    btn.setAttribute("aria-expanded", "true");
+    btn.setAttribute("aria-label", "Fechar menu");
+    if (icon) icon.textContent = "close";
+  }
+
+  function closeNav() {
+    nav.classList.remove("is-open");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-label", "Abrir menu");
+    if (icon) icon.textContent = "menu";
+  }
+
+  btn.addEventListener("click", () => {
+    const isOpen = nav.classList.contains("is-open");
+    isOpen ? closeNav() : openNav();
+  });
+
+  // fecha ao clicar num link do menu (no mobile)
+  nav.addEventListener("click", (e) => {
+    if (e.target.closest("a")) closeNav();
+  });
+
+  // fecha ao clicar fora
+  document.addEventListener("click", (e) => {
+    const clickedInside = nav.contains(e.target) || btn.contains(e.target);
+    if (!clickedInside) closeNav();
+  });
+
+  // fecha com ESC (também fecha modal/certificados via handlers abaixo)
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeNav();
+  });
+
+  // ao ir para desktop, garante fechado
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 860) closeNav();
+  });
+}
+
+/* =========================
+   Handlers globais de ESC
+   (Modal + Certificados)
+========================= */
+function setupGlobalEsc() {
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    // fecha modal
+    closeModal();
+    // fecha preview de certificado
+    const cert = document.querySelector("[data-cert-overlay]");
+    if (cert) cert.classList.remove("open");
+  });
+}
+
+/* =========================
+   INIT
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  setupYear();
+  setupModal();
+  setupWhatsAppFloat();
+  setupBudgetForm();
+  setupCertificatePreview();
+  setupTOC();
+  setupMobileNav();
+  setupGlobalEsc();
+});

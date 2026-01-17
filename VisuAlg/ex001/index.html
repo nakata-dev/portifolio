@@ -1,148 +1,64 @@
 <!DOCTYPE html>
-<html lang="pr-br">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../style.css">
-    
-    <style>
-    /* Estilo global */
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f6f9;
-      color: #333;
-      line-height: 1.6;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olá Mundo | VisuAlg - Ailton A. Nakata</title>
 
-    header {
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      border-bottom-left-radius: 25px;
-      border-bottom-right-radius: 25px; 
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-
-    header p {
-      font-style: italic;
-      margin-top: 5px;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 20px;
-    }
-
-    h2, h3 {
-      margin-top: 40px;
-      color: #1e90ff;
-      border-left: 6px solid #1e90ff;
-      padding-left: 10px;
-    }
-
-    p#paragrafo {
-      text-align: justify;
-      text-indent: 30px;
-      padding: 10px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-
-    .exemplo {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 15px 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      font-family: "Courier New", monospace;
-    }
-
-    hr {
-      margin: 25px 0;
-      border: none;
-      border-top: 2px dashed #aaa;
-    }
-
-    ul {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 0;
-    }
-
-    li {
-      list-style-type: square;
-    }
-
-    a {
-      text-decoration: none;
-      color: #1e90ff;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    a:hover {
-      border-radius: 10px;
-      padding: 6px 10px;
-      background-color: rgba(30, 144, 255, 0.15);
-    }
-
-    /* Caixas de lembrete */
-    .caixa {
-      background: #eaf6ff;
-      border-left: 6px solid #1e90ff;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px 0;
-    }
-
-    #voltar {
-      text-align: center;
-      margin-top: 40px;
-    }
-
-    #voltar a {
-      background: #1e90ff;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-weight: bold;
-    }
-
-    #voltar a:hover {
-      background: #104e8b;
-    }
-     pre{
-      white-space:pre-wrap;
-      padding: 15px;
-    }
-    </style>
-    <title>Olá Mundo!</title>
+  <meta name="description" content="Algoritmo 'Olá, Mundo!' no VisuAlg: exemplo completo e botão para copiar o código rapidamente." />
 </head>
+
 <body>
-    <header>
-        <h1>Olá Mundo!</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Como foi pensado o HTML?</h2>
-        
-        <hr>
-        <div class="Bloco_codiogo">
-            <pre>
-                <code id="codigoParaCopiar">
-algoritmo "Mensagem"
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Olá Mundo!</h1>
+          <p class="muted">Exemplo de algoritmo no VisuAlg e botão para copiar o código.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../visualg.html">Voltar para VisuAlg</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Como foi pensado o algoritmo?</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Copie e cole no VisuAlg para testar. (O botão abaixo já copia tudo.)
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoParaCopiar">algoritmo "Mensagem"
 // Função :Apresentar uma mensagem na tela.
 // Autor :cursoemvideo
 // Data : 05/11/2024
@@ -157,35 +73,145 @@ escrevaL ("----------")
 escreval(msg)
 escreval ("Mensagem: ", msg)
 
-fimalgoritmo
-                </code>
-            </pre>
-            <hr>
-            <br>
-            <button onclick="copiarCodigo()">Copiar</button>
+fimalgoritmo</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code>Copiar</button>
+                <a class="btn btn-ghost" href="../../visualg.html">Voltar</a>
+              </div>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Dica:</strong> se você quiser remover os alertas e deixar mais discreto,
+              dá pra trocar por um toast no futuro. Mas por enquanto está ótimo pra estudo.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../visualg.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Copiar o algoritmo</li>
+                <li>Colar no VisuAlg</li>
+                <li>Executar e observar a saída</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
         </div>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../../visualg.html">Voltar</a>
-        </div>
-        <br>
-        <br>
-    </main>
-    <!--Script do Algoritmo para ser testado no VisuAlg-->
-    <script>
-        function copiarCodigo() {
-            const codigo = document.getElementById('codigoParaCopiar').textContent;
-            
-            navigator.clipboard.writeText(codigo)
-                .then(() => {
-                    alert('Código copiado com sucesso!');
-                })
-                .catch(err => {
-                    console.error('Falha ao copiar o código: ', err);
-                    alert('Houve um erro ao copiar o código.');
-                });
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código -->
+  <script>
+    (function () {
+      const btn = document.querySelector('[data-copy-code]');
+      const codeEl = document.getElementById('codigoParaCopiar');
+      if (!btn || !codeEl) return;
+
+      btn.addEventListener('click', async () => {
+        const codigo = codeEl.textContent.trim();
+
+        try {
+          await navigator.clipboard.writeText(codigo);
+          alert('Código copiado com sucesso!');
+        } catch (err) {
+          console.error('Falha ao copiar o código: ', err);
+          alert('Houve um erro ao copiar o código.');
         }
-    </script>
+      });
+    })();
+  </script>
 </body>
 </html>

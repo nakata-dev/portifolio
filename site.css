@@ -79,6 +79,7 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  position: relative; /* IMPORTANTE para o dropdown do mobile ancorar */
 }
 
 .brand{
@@ -118,6 +119,90 @@ a { color: inherit; }
   background: rgba(255,255,255,0.05);
   color: var(--text);
 }
+
+/* ===== Burger Menu (Mobile) ===== */
+/* Botão do menu: só aparece no mobile. */
+.nav-toggle{
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  flex: 0 0 auto;
+}
+.nav-toggle:hover{
+  background: rgba(79,124,255,0.10);
+  border-color: rgba(79,124,255,0.25);
+}
+.nav-toggle:active{
+  transform: scale(0.98);
+}
+
+/* Ícone Google (Material Symbols) se você usar */
+.material-symbols-outlined{
+  font-variation-settings: "wght" 400;
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* Estilo mobile: menu vira dropdown, abre via .is-open */
+@media (max-width: 860px){
+  /* mostra o botão */
+  .nav-toggle{
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  /* menu fechado por padrão */
+  .nav{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 10px);
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(10,14,25,0.96);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    z-index: 120;
+  }
+
+  /* abre quando JS adicionar is-open */
+  .nav.is-open{
+    display: flex;
+  }
+
+  /* links e botões ocupam largura total */
+  .nav a,
+  .nav .btn{
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* melhora espaçamento no mobile */
+  .nav a{
+    padding: 12px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+  }
+  .nav a:hover{
+    background: rgba(79,124,255,0.10);
+    color: var(--text);
+  }
+}
+/* ===== Fim Burger Menu ===== */
+
 
 /* ===== Seções ===== */
 .section{ padding: 56px 0; }
@@ -312,6 +397,7 @@ textarea{ min-height: 120px; resize: vertical; }
 .site-footer{
   padding: 26px 0;
   border-top: 1px solid var(--border);
+  text-align: center;
 }
 .footer-grid{
   display: grid;
@@ -320,14 +406,14 @@ textarea{ min-height: 120px; resize: vertical; }
   align-items: start;
 }
 .footer-links{
-  display: flex;
-  gap: 14px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  display: block;
+  gap: 20px;
+  text-align: center;
 }
 .footer-links a{
   color: var(--muted);
   text-decoration: none;
+  padding: 10px;
 }
 .footer-links a:hover{ color: var(--text); }
 .tiny{ font-size: 0.9rem; text-align: center; margin: 14px 0 0; }
@@ -739,4 +825,14 @@ select:focus{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.95rem;
   line-height: 1.5;
+}
+
+footer{
+  text-align: center;
+}
+.site-footer a{
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+  text-align: center;
 }

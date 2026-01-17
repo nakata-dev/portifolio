@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
 
+  <!-- Material Symbols Outlined (Google Icon) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap">
+
   <!-- Use o CSS global profissional -->
   <link rel="stylesheet" href="site.css" />
 
@@ -25,12 +28,24 @@
         </div>
       </a>
 
-      <nav class="nav" aria-label="Navegação principal">
+      <!-- ✅ Burger (mobile) -->
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-nav-toggle>
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+
+      <!-- ✅ Nav com id + data-nav -->
+      <nav class="nav" id="site-nav" aria-label="Navegação principal" data-nav>
         <a href="index.html">Início</a>
         <a href="estudos.html">Estudos</a>
         <a href="certificados.html">Certificados</a>
         <a href="contato.html">Contato</a>
-        <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
       </nav>
     </div>
   </header>
@@ -71,7 +86,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Clinica_popular/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
-                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um site assim</button>
               </div>
             </div>
           </article>
@@ -90,7 +105,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Fresco/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
-                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um site assim</button>
               </div>
             </div>
           </article>
@@ -109,7 +124,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Android/home.html" target="_blank" rel="noopener noreferrer">Ver site</a>
-                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um site assim</button>
               </div>
             </div>
           </article>
@@ -128,7 +143,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Cordel/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
-                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um site assim</button>
               </div>
             </div>
           </article>
@@ -147,7 +162,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="projeto-social_02/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
-                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um site assim</button>
               </div>
             </div>
           </article>
@@ -166,7 +181,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Nakata_dev/index.html" target="_blank" rel="noopener noreferrer">Ver site</a>
-                <button class="btn btn-primary" data-open-modal>Quero um site assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um site assim</button>
               </div>
             </div>
           </article>
@@ -192,7 +207,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Sistema_Lojas/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero algo assim</button>
               </div>
             </div>
           </article>
@@ -210,7 +225,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="projetos_js/pomodoro001/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero algo assim</button>
               </div>
             </div>
           </article>
@@ -228,7 +243,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Projeto_habitos/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero algo assim</button>
               </div>
             </div>
           </article>
@@ -246,7 +261,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Projeto_Quiz/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero algo assim</button>
               </div>
             </div>
           </article>
@@ -264,7 +279,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Login/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero algo assim</button>
               </div>
             </div>
           </article>
@@ -283,7 +298,7 @@
               <div class="project-actions">
                 <a class="btn btn-secondary" href="projetos_js/contador_paginas/index.html" target="_blank" rel="noopener noreferrer">Contador 1</a>
                 <a class="btn btn-secondary" href="projetos_js/contador001/index.html" target="_blank" rel="noopener noreferrer">Contador 2</a>
-                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero algo assim</button>
               </div>
             </div>
           </article>
@@ -309,7 +324,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="jogos/index.html" target="_blank" rel="noopener noreferrer">Abrir jogos</a>
-                <button class="btn btn-primary" data-open-modal>Quero um projeto assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um projeto assim</button>
               </div>
             </div>
           </article>
@@ -327,7 +342,7 @@
               </ul>
               <div class="project-actions">
                 <a class="btn btn-secondary" href="Baralho/index.html" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-                <button class="btn btn-primary" data-open-modal>Quero algo assim</button>
+                <button class="btn btn-primary" data-open-modal type="button">Quero algo assim</button>
               </div>
             </div>
           </article>
@@ -336,7 +351,7 @@
         <div class="cta-box">
           <h2>Quer um site com design moderno e foco em conversão?</h2>
           <p class="muted">Me diga seu segmento e objetivo. Eu respondo com proposta e prazo.</p>
-          <button class="btn btn-primary" data-open-modal>Solicitar orçamento</button>
+          <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
         </div>
       </div>
     </section>
@@ -358,14 +373,14 @@
   </footer>
 
   <!-- Botão WhatsApp flutuante -->
-  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp">WhatsApp</button>
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
   <!-- Modal de orçamento (mesmo padrão do site) -->
   <div class="modal-overlay" data-modal-overlay>
     <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
       <div class="modal-head">
         <strong>Solicitar orçamento</strong>
-        <button class="modal-close" data-close-modal aria-label="Fechar">X</button>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
       </div>
 
       <div class="modal-body">
