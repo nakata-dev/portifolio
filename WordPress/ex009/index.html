@@ -1,97 +1,232 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imagens</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        .caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main{
-            overflow-wrap: break-word;
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-            margin-bottom: 1em;
-            
-        }
-        p{
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Imagens | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Sites para imagens: bancos pagos (Adobe Stock, Shutterstock, Behance) e gratuitos (Pexels, Pixabay, Unsplash). Dicas rápidas de uso." />
 </head>
+
 <body>
-    <header>
-        <h1>Dicas sobre Imagens</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Site pago</h2>
-        <hr>
-        <br>
-       
-<p>
-    <a href="https://stock.adobe.com/br/photos" target="_blank">Stock Adobe</a>
-    <img src="../img/STOCK_ADOBE.png" alt="STOCK_ADOBE">
-    <br>
-    <br>
-    <a href="https://www.shutterstock.com/pt/photos" target="_blank">ShutterStock</a>
-    <img src="../img/SHUTTERSTOCK.png" alt="shutterstock">
-    <br>
-    <br>
-    <a href="https://www.behance.net/" target="_blank">Behance</a>
-    <img src="../img/BEHANCE.png" alt="behance">
-</p>
-            
-    <br>               
-    <h2>Sites gratuitos</h2>
-    <hr>
-    <br>
-    
-<p>
-    <a href="https://www.pexels.com/pt-BR/licenca/" target="_blank">Pexels</a>
-    <img src="../img/PEXELS.png" alt="pexels">
-    <br>
-    <br>
-    <a href="https://pixabay.com/pt/" target="_blank">Pixabay</a>
-    <img src="../img/PIXABAY.png" alt="pixabay">
-    <br>
-    <br>
-    <a href="https://unsplash.com/pt-br" target="_blank">Unsplash</a>
-    <img src="../img/UNSCPLASH.png" alt="unsplash">
-</p>
-        
-    <br>
-    <br>
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-   
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Dicas sobre Imagens</h1>
+          <p class="muted">Onde buscar imagens para sites (pagas e gratuitas) e manter o visual profissional.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Checklist rápido (antes de baixar)</h2>
+            <div class="card soft">
+              <ul class="list">
+                <li>Use imagens em <strong>alta qualidade</strong> (mas otimizadas para web).</li>
+                <li>Prefira fotos com <strong>boa iluminação</strong> e “espaço negativo” para títulos/CTA.</li>
+                <li>Evite imagens “genéricas demais” para serviços premium.</li>
+                <li>Respeite a <strong>licença</strong> (principalmente em projetos para clientes).</li>
+              </ul>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Bancos pagos</h2>
+            <p class="muted">Geralmente: melhor curadoria, mais qualidade e menos risco de repetição.</p>
+
+            <div class="resource-grid">
+              <a class="resource-card" href="https://stock.adobe.com/br/photos" target="_blank" rel="noopener noreferrer">
+                <div class="resource-head">
+                  <strong>Adobe Stock</strong>
+                  <span class="pill">Pago</span>
+                </div>
+                <img src="../img/STOCK_ADOBE.png" alt="Adobe Stock" loading="lazy">
+              </a>
+
+              <a class="resource-card" href="https://www.shutterstock.com/pt/photos" target="_blank" rel="noopener noreferrer">
+                <div class="resource-head">
+                  <strong>Shutterstock</strong>
+                  <span class="pill">Pago</span>
+                </div>
+                <img src="../img/SHUTTERSTOCK.png" alt="Shutterstock" loading="lazy">
+              </a>
+
+              <a class="resource-card" href="https://www.behance.net/" target="_blank" rel="noopener noreferrer">
+                <div class="resource-head">
+                  <strong>Behance</strong>
+                  <span class="pill">Inspiração</span>
+                </div>
+                <img src="../img/BEHANCE.png" alt="Behance" loading="lazy">
+              </a>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Bancos gratuitos</h2>
+            <p class="muted">Ótimos para começar, mas sempre confira licença e consistência visual.</p>
+
+            <div class="resource-grid">
+              <a class="resource-card" href="https://www.pexels.com/pt-BR/licenca/" target="_blank" rel="noopener noreferrer">
+                <div class="resource-head">
+                  <strong>Pexels</strong>
+                  <span class="pill">Grátis</span>
+                </div>
+                <img src="../img/PEXELS.png" alt="Pexels" loading="lazy">
+              </a>
+
+              <a class="resource-card" href="https://pixabay.com/pt/" target="_blank" rel="noopener noreferrer">
+                <div class="resource-head">
+                  <strong>Pixabay</strong>
+                  <span class="pill">Grátis</span>
+                </div>
+                <img src="../img/PIXABAY.png" alt="Pixabay" loading="lazy">
+              </a>
+
+              <a class="resource-card" href="https://unsplash.com/pt-br" target="_blank" rel="noopener noreferrer">
+                <div class="resource-head">
+                  <strong>Unsplash</strong>
+                  <span class="pill">Grátis</span>
+                </div>
+                <img src="../img/UNSCPLASH.png" alt="Unsplash" loading="lazy">
+              </a>
+            </div>
+
+            <div class="alert" style="margin-top: 16px;">
+              <strong>Dica de conversão:</strong> imagens boas não são “enfeite”.
+              Elas precisam apoiar a promessa do site (ex.: comida apetitosa, equipe real, ambiente real, produto em uso).
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Atalho pro “visual pro”</h3>
+              <ul class="list">
+                <li>Fotos com luz natural</li>
+                <li>Mesma temperatura de cor</li>
+                <li>Mesma “vibe” (estilo)</li>
+                <li>Menos, porém melhores</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site forte</button>
+            </div>
+          </aside>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

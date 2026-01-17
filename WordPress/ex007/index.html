@@ -1,117 +1,275 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paleta de Cores</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paleta de Cores | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Como definir paleta de cores para sites: ColourLovers, Adobe Color e Coolors. Dicas para harmonia, contraste e consistência visual." />
 </head>
+
 <body>
-    <header>
-        <h1>Como definir paleta de cores?</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Color Lovers</h2>
-        <hr>
-        <br>
-        <p>
-            Acesse o site: <a href="https://www.colourlovers.com/" target="_blank">https://www.colourlovers.com/</a>
-            <br>
-            <br>
-            No campo de busca (Search Colors & Palettes), digite o tema do site que você irá criar.
-            <br>
-            <br>
-            <em>Exemplo: <strong>pizza</strong></em>
-            <br>
-            <br>
-            Escolha uma paleta que combine com o tema do site.
-            <br>
-            <br>
-            <em>Este site pode estar com problemas, pois quando testei não consegui nem pesquisar nem acessar os menus</em>
-            <br>
-            <br>
-        <h2>Adobe Color:</h2>
-        <hr>
-        <br>
-       
-<p>
-    Acesse o site: <a href="https://color.adobe.com/pt/create" target="_blank">https://color.adobe.com/pt/create</a>
-    <br>
-    <br>
-    faça uma pesquisa em inglês sobre o produto, sensação ou sentimento que o cliente deseja transmitir através do site.
-    <br>
-    <br>
-    Caso precise, adicione duas cores principais da logo em sua paleta de cores do site.
-    <br>
-</p>
-            
-        
-        <br>
-        <h2>Editado a paleta, faça download:</h2>
-        <img src="../img/Editando_Imagem.png" alt="">
-        <p>Para editar a paleta de cores no Adobe Color, clique no botão "Download" e salve o arquivo em seu computador.
-            <br>
-        <h2>Coolors</h2>
-        <hr>
-        <p>Acesse o site: <a href="https://coolors.co/" target="_blank">https://coolors.co/</a>
-        </p>
-        <br>
-        <p>
-        Para usar o Coolors, clique em "Start the Generator" e explore as paletas de cores disponíveis ou crie a sua própria.
-        <br>
-        <br>
-        você pode inserir as cores que você já tem ou gerar novas paletas com base em suas preferências.
-        <br>
-        <br>
-        A cada cor que você gostar, clique na barra de espaço para gerar uma nova combinação de cores.
-        </p>
-        <img src="../img/CADEADO_PARA_FECHAR.png" alt="CADEADO_PARA_FECHAR">
-        <p>Click no cadeado para bloquear a paleta de cores e vá buscando as cores que mais combinam com a <strong>proposta do seu site</strong>.</p>
-        <br>
-        <br>
-        <p>A dica é que você altere as cores quando sentir a necessidade de aprimorar e refinar sua paleta. Veja abaixo um exemplo de como alterar a tonalidade da cor.</p>
-        <img src="../img/CONFIGURANDO_COR.png" alt="CONFIGURANDO_COR">
-        <p><em>Fique a vontade de explorar e poder ir melhorando o site de seu cliente, tonando o mesmo mais harmônico e atraente.</em></p>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Como definir paleta de cores?</h1>
+          <p class="muted">Ferramentas e um método simples para escolher cores com harmonia e boa leitura.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Antes de escolher cores</h2>
+            <div class="card soft">
+              <ul class="list">
+                <li><strong>Objetivo</strong>: o site precisa transmitir o quê? (confiança, energia, sofisticação...)</li>
+                <li><strong>Público</strong>: para quem é? (idade, estilo, setor)</li>
+                <li><strong>Marca</strong>: existe logo? Use 1–2 cores principais como base.</li>
+              </ul>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">ColourLovers</h2>
+            <p>
+              É um site para explorar paletas prontas e temas. Você pode buscar por assuntos, por exemplo:
+              <strong>pizza</strong>.
+            </p>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Acesse:
+                <a href="https://www.colourlovers.com/" target="_blank" rel="noopener noreferrer">
+                  colourlovers.com
+                </a>
+              </p>
+            </div>
+
+            <div class="alert alert-warn">
+              <strong>Observação:</strong> você comentou que o site pode estar instável (menus/pesquisa). Se estiver,
+              use as opções abaixo (Adobe Color e Coolors).
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Adobe Color</h2>
+            <p>
+              Ótimo para criar paletas e ajustar harmonia. A dica aqui é pesquisar em inglês o “sentimento” ou
+              “sensação” que o cliente quer transmitir.
+            </p>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Acesse:
+                <a href="https://color.adobe.com/pt/create" target="_blank" rel="noopener noreferrer">
+                  color.adobe.com/pt/create
+                </a>
+              </p>
+            </div>
+
+            <ol class="steps">
+              <li>
+                <h3>Pesquise o tema/sensação</h3>
+                <p>Ex.: “italian restaurant”, “premium”, “fresh”, “minimal”, “trust”.</p>
+              </li>
+              <li>
+                <h3>Traga 1–2 cores da logo (se existir)</h3>
+                <p>Isso ajuda a manter identidade visual consistente.</p>
+              </li>
+              <li>
+                <h3>Feche a paleta e faça download</h3>
+                <p>Quando estiver satisfeito, baixe a paleta para referência.</p>
+                <figure class="media">
+                  <img src="../img/Editando_Imagem.png" alt="Adobe Color: editando paleta e fazendo download" loading="lazy">
+                </figure>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Coolors</h2>
+            <p>
+              Ferramenta rápida e divertida para gerar paletas.
+              Você pode “travar” cores com o cadeado e continuar gerando novas combinações.
+            </p>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Acesse:
+                <a href="https://coolors.co/" target="_blank" rel="noopener noreferrer">
+                  coolors.co
+                </a>
+              </p>
+            </div>
+
+            <ol class="steps">
+              <li>
+                <h3>Start the Generator</h3>
+                <p>Explore paletas prontas ou gere do zero.</p>
+              </li>
+              <li>
+                <h3>Barra de espaço para gerar</h3>
+                <p>A cada “space”, o Coolors sugere uma nova combinação.</p>
+              </li>
+              <li>
+                <h3>Trave as cores boas</h3>
+                <p>Clique no cadeado para bloquear a cor e ir refinando o conjunto.</p>
+                <figure class="media">
+                  <img src="../img/CADEADO_PARA_FECHAR.png" alt="Coolors: cadeado para travar cores" loading="lazy">
+                </figure>
+              </li>
+              <li>
+                <h3>Ajuste tonalidade e variações</h3>
+                <p>Refine a cor até ficar harmônica com a proposta do site.</p>
+                <figure class="media">
+                  <img src="../img/CONFIGURANDO_COR.png" alt="Coolors: configurando a tonalidade de uma cor" loading="lazy">
+                </figure>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Um método simples (pra nunca errar)</h2>
+            <div class="card soft">
+              <ul class="list">
+                <li><strong>1 cor primária</strong> (CTA, links, destaque)</li>
+                <li><strong>1 cor secundária</strong> (detalhes, badges, fundos leves)</li>
+                <li><strong>Neutros</strong> (branco/preto/cinza para texto e layout)</li>
+                <li><strong>Regra de contraste</strong>: texto sempre com boa leitura no fundo</li>
+              </ul>
+            </div>
+
+            <div class="alert">
+              <strong>Dica final:</strong> se ficou “colorido demais”, você não precisa de mais cores.
+              Você precisa de <strong>mais espaço</strong> (respiro) e <strong>neutros</strong>.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>CTA com cor primária</li>
+                <li>Texto com contraste</li>
+                <li>Neutros dominando o layout</li>
+                <li>Cores repetidas com consistência</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

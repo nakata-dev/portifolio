@@ -1,114 +1,270 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inst. Temas e Plugins</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-        ol{
-            padding: 25px;
-            
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instalando Temas e Plugins | Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Tutorial: instalar temas e plugins no WordPress. Astra (tema), tema filho, Spectra (Gutenberg blocks) e lista de plugins recomendados." />
 </head>
+
 <body>
-    <header>
-        <h1>Instalando Temas e Plugins</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Plugin que mudou o nome:</h2>
-        <hr>
-        <p>Antes o nome desse plugin era: <strong><em>Utimate addons for Gutenberg</em></strong>, agora o plugin passou a ser chamado de <strong>Spectra - WodrPress Gutenberg Blocks.</strong></p>
-        
-        <img src="../img/PLUGIN_SPECTRA.png" alt="PLUGIN_SPECTRA">
-        <p><em>Dica do Ramiro Lobo: Plugin e tema que não são usados, <strong>exclua</strong> pois mesmo estando inativado dentro de seu painel, o atualizador automático vai fazer a atualização desses plugins.</em></p>
-        <br>
-        <h2>Temas</h2>
-        <hr>
-        <p>1º Para adicionar um tema, acesse em: <strong>Aparência > Temas</strong></p>
-        <img src="../img/TEMA.png" alt="Tema">
-        <p>Instale o tema <strong>Astra</strong></p>
-        <p>2º <strong>Não ative o tema Pai!!!</strong>Baixe o tema filho pelo link: <a href="https://wpastra.com/child-theme-generator/" target="_blank">Download</a> </p>
-        <p>ou 
-            <br>
-           Pesquise no Google: <em>Astra Child Generator</em>
-        </p>
-        <p>Acesse o site oficial do Astra: https://wpastra.com/child-theme-generator/</p>
-        <p>3º Click em <strong>Generate</strong> para <strong>baixar</strong></p>
-        <p>4º Depois que baixar, vá para <strong>Aparência</strong> e Adicionar Tema</p>
-        <img src="../img/ADICIONANDO_ASTRA_FILHO.png" alt="ADICIONANDO_ASTRA_FILHO">
-        <p>5º <strong>Enviar Tema</strong></p>
-        <img src="../img/ENVIAR_TEMA.png" alt="ENVIAR_TEMA">
-        <p>Agora o arquivo do astra vai ser descompactado e instalado automaticamente.</p>
-        <img src="../img/INTALANDO_TEMA_ASTRA_CHILD.png" alt="INSTALANDO_TEMA_ASTRA_CHILD">
-        <p>6º Assim que for instalado, você pode <strong>Ativar</strong> o tema e passar para o próximo processo.</p>
-        <img src="../img/EXCLUINDO_TEMAS_NAO_USADOS.png" alt="EXCLUINDO_TEMAS_NAO_USADOS">
-        <p><strong>Agora o Tema <em>Astra</em> esta pronto...</strong></p>
-        <img src="../img/PRONTO_PARA_COMECAR.png" alt="PRONTO_PARA_COMECAR">
-        <br>
-        <h2>Lista de Plugins</h2>
-        <hr>
-        <ol style="color: blue;">
-            <li>Editor Classico (<em>por:WodrPress Contributors</em>)</li>
-            <li>Microthemer (por:Themeover)</li>
-            <li>Spectra - WodrPress Gutenberg Blocks (por: Brainstorm Force)</li>
-            <li>Astra Widgets (por:Brainstorm Force)</li>
-            <li>Companion Auto Update (por:Papin Schipper)</li>
-            <li>EWWW Image Optimizer (por:Exactly WWW)</li>
-            <li>Google Analytics for WordPress By MonsterInsights (por: Monster Insights)</li>
-            <li>Importador do WordPress (por:WordPress.org)</li>
-            <li>Rank Math SEO (por: Rank Math)</li>
-            <li>Imsanity (por: nosilver4u)</li>
-            <li>Really Simple SSL (por: Rogier Lankhorst, Mark Wolters)</li>
-            <li>UpdraftPlus: Backup/Restore (por: UpdraftPlus.com, David Anderson)</li>
-            <li>WP mail SMTP (por: WPForms)</li>
-            <li>WPForms Lite (por:WPForms)</li>
-            <li>WPS Hide Login (por: WPServeur, NicolasKulka, Tabrisrp)</li>            
-        </ol>
-        <p>Caso apareça alguma mensagem como: <span style="color: red;"><em>"O Ultimate Addons for Gutenberg requer <strong>Editor de blocos</strong>.Você pode alterar as definições do seu Editor de Blocos <u style="color: blue; font-weight: bold;">here</u></em>. O plugin NÃO ESTÁ funcionando no momento"</span></p>
-        <img src="../img/CONFIGURACOES_EDITOR_CLASSICO.png" alt="CONFIGURACOES_EDITOR_CLASSICO">
-        <p>Click em <span style="color: blue; font-weight: bolder;">Configurações</span> do Editor Classico</p>
-        <img src="../img/ALTERANDO_CONFIGURACAO_EDITOR_CLASSICO.png" alt="ALTERANDO_CONFIGURACAO_EDITOR_CLASSICO">
-        <p style="background-color: blue; color: white;text-align: center;width: 180px;border-radius: 15px;">Salvar Alterações</p>
-    <br>
-    <br>               
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Instalando Temas e Plugins</h1>
+          <p class="muted">Configuração inicial com Astra, tema filho e plugins essenciais.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Antes de começar</h2>
+            <p>
+              Um plugin que mudou de nome: antes era <strong><em>Ultimate Addons for Gutenberg</em></strong>,
+              agora passou a se chamar <strong>Spectra - WordPress Gutenberg Blocks</strong>.
+            </p>
+
+            <figure class="media">
+              <img src="../img/PLUGIN_SPECTRA.png" alt="Plugin Spectra no WordPress" loading="lazy">
+              <figcaption class="muted">Spectra: blocos extras para Gutenberg.</figcaption>
+            </figure>
+
+            <div class="alert">
+              <strong>Dica:</strong> plugin/tema que não será usado, <strong>exclua</strong>.
+              Mesmo desativado, pode continuar recebendo atualizações automáticas.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Temas (Astra + tema filho)</h2>
+
+            <ol class="steps">
+              <li>
+                <h3>Instale o tema Astra</h3>
+                <p>Vá em <strong>Aparência → Temas</strong> e instale o tema <strong>Astra</strong>.</p>
+                <figure class="media">
+                  <img src="../img/TEMA.png" alt="Tela de temas do WordPress" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Gere e baixe o tema filho</h3>
+                <p>
+                  Use o gerador oficial:
+                  <a href="https://wpastra.com/child-theme-generator/" target="_blank" rel="noopener noreferrer">
+                    Astra Child Theme Generator
+                  </a>.
+                  Depois, clique em <strong>Generate</strong> para baixar.
+                </p>
+
+                <div class="alert alert-warn">
+                  <strong>Atenção:</strong> a ideia é usar o tema filho para personalizações, evitando perder ajustes em updates.
+                </div>
+              </li>
+
+              <li>
+                <h3>Envie e instale o tema filho</h3>
+                <p>Depois de baixar, vá em <strong>Aparência → Adicionar tema</strong> e envie o arquivo do tema filho.</p>
+                <figure class="media">
+                  <img src="../img/ADICIONANDO_ASTRA_FILHO.png" alt="Adicionar tema filho no WordPress" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/ENVIAR_TEMA.png" alt="Enviar tema no WordPress" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Ative e limpe o que não usa</h3>
+                <p>
+                  Após instalar, <strong>ative</strong> o tema filho.
+                  Depois, exclua temas que não serão utilizados.
+                </p>
+
+                <figure class="media">
+                  <img src="../img/INTALANDO_TEMA_ASTRA_CHILD.png" alt="Instalando tema Astra Child" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/EXCLUINDO_TEMAS_NAO_USADOS.png" alt="Excluindo temas não usados" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/PRONTO_PARA_COMECAR.png" alt="WordPress pronto para começar" loading="lazy">
+                  <figcaption class="muted"><strong>Astra</strong> pronto para configuração.</figcaption>
+                </figure>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Lista de plugins (recomendação)</h2>
+            <p class="muted">Base para sites de negócio: editor, performance, SEO, backup, segurança e formulários.</p>
+
+            <div class="card soft">
+              <ul class="checklist">
+                <li><strong>Editor Clássico</strong> (por: WordPress Contributors)</li>
+                <li><strong>Microthemer</strong> (por: Themeover)</li>
+                <li><strong>Spectra - WordPress Gutenberg Blocks</strong> (por: Brainstorm Force)</li>
+                <li><strong>Astra Widgets</strong> (por: Brainstorm Force)</li>
+                <li><strong>Companion Auto Update</strong> (por: Papin Schipper)</li>
+                <li><strong>EWWW Image Optimizer</strong> (por: Exactly WWW)</li>
+                <li><strong>MonsterInsights (Google Analytics)</strong> (por: Monster Insights)</li>
+                <li><strong>Importador do WordPress</strong> (por: WordPress.org)</li>
+                <li><strong>Rank Math SEO</strong> (por: Rank Math)</li>
+                <li><strong>Imsanity</strong> (por: nosilver4u)</li>
+                <li><strong>Really Simple SSL</strong> (por: Rogier Lankhorst, Mark Wolters)</li>
+                <li><strong>UpdraftPlus: Backup/Restore</strong> (por: UpdraftPlus.com, David Anderson)</li>
+                <li><strong>WP Mail SMTP</strong> (por: WPForms)</li>
+                <li><strong>WPForms Lite</strong> (por: WPForms)</li>
+                <li><strong>WPS Hide Login</strong> (por: WPServeur, NicolasKulka, Tabrisrp)</li>
+              </ul>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Se aparecer erro com Gutenberg</h2>
+            <p>
+              Se surgir mensagem dizendo que o Spectra requer o <strong>Editor de blocos</strong>,
+              vá nas configurações do <strong>Editor Clássico</strong> e ajuste.
+            </p>
+
+            <figure class="media">
+              <img src="../img/CONFIGURACOES_EDITOR_CLASSICO.png" alt="Configurações do Editor Clássico" loading="lazy">
+            </figure>
+
+            <figure class="media">
+              <img src="../img/ALTERANDO_CONFIGURACAO_EDITOR_CLASSICO.png" alt="Alterando configurações do Editor Clássico" loading="lazy">
+            </figure>
+
+            <div class="pill">Salvar alterações</div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Regra de ouro</h3>
+              <p class="muted">
+                Menos plugins, mais performance. Instale só o que realmente precisa e mantenha tudo atualizado.
+              </p>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site em WP</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

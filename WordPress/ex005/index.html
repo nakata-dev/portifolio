@@ -1,171 +1,300 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações Importantes</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-        
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configurações Importantes | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Configurações essenciais do WordPress: HTTPS, e-mail de notificação, WPS Hide Login, escrita, leitura, discussão, mídia, permalinks e Imsanity." />
 </head>
+
 <body>
-    <header>
-        <h1>Configurações Importantes</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Alterando http para https</h2>
-        <hr>
-        <h3><span style="color: red;">Atenção:</span> Configuração válida somente para servidor privado</h3>
-        <p>Para alterar o protocolo de http para https em seu site WordPress, siga os passos abaixo:</p>
-        <br>
-        <ol>
-            <li>Faça backup do seu site.</li>
-            <li>Atualize a URL do WordPress e a URL do Site nas configurações gerais.</li>
-            <li>Instale um plugin de SSL, como o Really Simple SSL.</li>
-            <li>Verifique se todos os links internos estão usando https.</li>
-            <li>Teste seu site para garantir que tudo está funcionando corretamente.</li>
-        </ol>
-        <br>
-        <p><em>Essas configurações são essenciais para garantir que seu site WordPress funcione corretamente com HTTPS.</em></p>
-        <br>
-        <h2>Dúvidas sobre HTTPS</h2>
-        <hr>
-        <p>É importante você sempre perguntar para a empresa que escolheu para hospedar seu site, se <strong>tem ou não suporte a HTTPS</strong>. E claro, pergunte como instalar o mesmo.</p>
-        <h2>Criando um e-mail de notificação</h2>
-        <hr>
-        <p>Para criar um e-mail de notificação no WordPress, você pode perguntar se o seu servidor de hospedagem fornece e-mail. A maioria dos provedores de hospedagem oferece suporte a e-mail, mas é sempre bom verificar.</p>
-        <br>
-        <h2>Configurando o WPS Hide Login</h2>
-        <hr>
-        <p>Para proteger seu site WordPress de possíveis ataques de robôs, você pode seguir estas dicas:
-        </p>
-            <br>
-            <p>1º Ative WPS Hide Login</p>
-            <br>
-            <p>2º Acessa Configurações > WPS Hide Login</p>
-            <br>
-            <p>3º Altere a palavra do <strong>Campo URL</strong> de "login" para "<strong>palavra_de_sua_preferencia</strong>".</p>
-            <img src="../img/PALAVRA_DE_SUA_PREFERENCIA.png" alt="palavra_de_sua_preferencia">
-            <br>
-            <p>Clique em <strong>salvar alterações</strong>.</p>
-            <br>
-            <p>O importante é dificultar ao máximo o acesso de login contra invasões indesejadas.</p>
-            <br>
-            <p>Agora, quando você tentar acessar (http://localhost/cursowp/login/) vai aparecer uma página de erro 404.</p>
-            <img src="../img/PGINA_NAO_EXISTE.png" alt="pagina nao existe">
-            <br>
-            <p>Isso significa que a URL de login foi alterada com sucesso.</p>
-            <p>Para isso que serve o plugin <strong>WPS Hide Login</strong>.</p>
-            <br>
-            <p><em>Altere a palavra do URL de acesso:"login" para "******" e obtenha o acesso ao endereço.</em>
-            <br>
-            é assim que você vai conseguir se proteger minimamente de ataques de robôs maliciosos. <strong>Os famosos Crakers.</strong>
-            </p>
-            <img src="../img/ALTERANDO_PALAVRA.png" alt="ALTERANDO_PALAVRA">
-            <br>
-            <h2>Escrita</h2>
-            <hr>
-            <p>Para melhorar a escrita no WordPress, você pode seguir estas dicas:</p>
-            <br>
-            <p>1º Vá para Configurações > Escrita</p>
-            <p>Se teu site tem categoria Notícias e você escreve muito, seria interessante ativar uma categoria específica para suas postagens.</p>
-            <p><strong>Publicar por e-mail:</strong></p>
-            <br>
-            <p><em>Quando a pessoa tem uma necessidade de estar públicando em um blog ou site em questão, o professor <strong>Ramiro Lobo</strong> indica que você <strong>baixe um aplicativo</strong> diretamente do <strong>site da wordpress</strong> que vai te facilitar publicar conteúdos via <strong>e-mails</strong>.</em></p>
-            <br>
-            <h2>Configurações de leitura</h2>
-            <hr>
-            <p>Para configurar as opções de leitura no WordPress, siga estes passos:</p>
-            <br>
-            <p>1º Vá para Configurações > Leitura</p>
-            <p><em>Lembre-se que o seu cliente neste caso é um restaurante de culinária Italiana. Então faça a seguinte alteração: durante o processo de produção, será feita a seguinte alteração 
-                <br>
-                de (<strong>Seus posts recentes</strong>)
-                <br>
-                para
-                <br>
-                <strong><u>(Uma página estática (Selecione abaixo))</u></strong></em></p>
-            <img src="../img/PAGINA_ESTATICA.png" alt="PAGINA_ESTATICA">
-            <br>
-            <h2>Configurações de discussão</h2>
-            <hr>
-            <p>Para configurar as opções de discussão no WordPress, siga estes passos:</p>
-            <br>
-            <p>1º Vá para Configurações > Discussão</p>
-            <p><em>Aqui fica a seu critério, você ler e decidir o que é melhor ou pior para seu site. Ou para o site de seu cliente.</em></p>
-            <p>Desmarque a opção: <strong>Alguém publicar um comentário</strong></p>
-            <img src="../img/ENVIE_ME_UM_EMAIL_QUANDO.png" alt="ENVIE_ME_UM_EMAIL_QUANDO">
-            <br>
-            <p>Salve as alterações.</p>
-            <br>
-            <h2>Configurações de mídia</h2>
-            <hr>
-            <p>Para configurar as opções de mídia no WordPress, siga estes passos:</p>
-            <br>
-            <p>1º Vá para Configurações > Mídia</p>
-            <p><em>Aqui você pode definir os tamanhos padrão para as imagens que você faz upload no seu site. Ajuste conforme necessário para atender às suas necessidades.</em></p>
-            <br>
-            <p>
-                O professor <strong>Ramiro Lobo indica</strong> que você deixe os tamanhos como estão, ou seja, <strong>não altere nada</strong>.
-            </p>
-            <br>
-            <h2>Configurações de permalinks</h2>
-            <hr>
-            <p>
-                Aqui o professor <strong>Ramiro Lobo</strong> indica que você altere a configuração padrão de permalinks para a opção <strong>"Mês e nome"</strong>.
-            </p>
-            <img src="../img/MES_NOME.png" alt="MES_NOME">
-            <br>
-            <p>Salve as alterações.</p>
-            <br>
-            <h2>Configurações de Imsanity Settings</h2>
-            <hr>
-            <p>
-                Aqui o professor <strong>Ramiro Lobo</strong> indica que você ajuste as configurações do plugin Imsanity para otimizar o tamanho das imagens.
-            </p>
-            <p>Altere JPG imagem quality: para <u>72</u></p>
-            <br>
-            <p>Salve as alterações.</p>
-            <br>
-            <p><em>Para demais tópicos não faça nenhuma alteração</em></p>
-            <br>
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Configurações Importantes</h1>
+          <p class="muted">Checklist para deixar o WordPress seguro, organizado e pronto para SEO.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">HTTPS: quando usar</h2>
+
+            <div class="alert alert-warn">
+              <strong>Atenção:</strong> esta configuração é válida para <strong>servidor/hospedagem</strong> com SSL ativo.
+              Em localhost, trocar para https sem certificado pode causar erro (como vimos na aula do SSL).
+            </div>
+
+            <p>Para mudar de <strong>http</strong> para <strong>https</strong> no WordPress:</p>
+            <ol class="steps">
+              <li>
+                <h3>Faça backup</h3>
+                <p>Antes de tudo, faça um backup completo (arquivos + banco).</p>
+              </li>
+              <li>
+                <h3>Atualize as URLs em Configurações → Geral</h3>
+                <p>Altere “URL do WordPress” e “URL do site”.</p>
+              </li>
+              <li>
+                <h3>Instale plugin de SSL (se necessário)</h3>
+                <p>Ex.: <strong>Really Simple SSL</strong>.</p>
+              </li>
+              <li>
+                <h3>Verifique links internos</h3>
+                <p>Garanta que tudo está carregando via https (sem conteúdo misto).</p>
+              </li>
+              <li>
+                <h3>Teste o site</h3>
+                <p>Revise páginas, admin, formulários e recursos (imagens, scripts, CSS).</p>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Dúvidas sobre HTTPS</h2>
+            <p>
+              Pergunte ao provedor de hospedagem se há <strong>suporte a HTTPS/SSL</strong> e como ativar.
+              (Em boa hospedagem, isso costuma ser simples.)
+            </p>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">E-mail de notificação</h2>
+            <p>
+              Verifique se a hospedagem oferece e-mail profissional (ex.: <strong>contato@seudominio.com</strong>).
+              Em geral, é melhor usar e-mail profissional para notificações e formulários.
+            </p>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">WPS Hide Login (segurança)</h2>
+            <p>Para reduzir ataques automáticos em páginas de login:</p>
+
+            <ol class="steps">
+              <li>
+                <h3>Ative o plugin</h3>
+                <p>Instale/ative o <strong>WPS Hide Login</strong>.</p>
+              </li>
+              <li>
+                <h3>Abra as configurações</h3>
+                <p>Vá em <strong>Configurações → WPS Hide Login</strong>.</p>
+              </li>
+              <li>
+                <h3>Troque a URL de login</h3>
+                <p>
+                  Mude o campo de “login” para uma palavra de sua preferência e salve.
+                </p>
+                <figure class="media">
+                  <img src="../img/PALAVRA_DE_SUA_PREFERENCIA.png" alt="Alterando a palavra do login no WPS Hide Login" loading="lazy">
+                </figure>
+              </li>
+              <li>
+                <h3>Teste</h3>
+                <p>
+                  Ao acessar <code>http://localhost/cursowp/login/</code> deve aparecer 404.
+                </p>
+                <figure class="media">
+                  <img src="../img/PGINA_NAO_EXISTE.png" alt="Página 404 após alterar URL de login" loading="lazy">
+                </figure>
+              </li>
+              <li>
+                <h3>Guarde a nova URL</h3>
+                <p>Use a nova URL para acessar o painel e mantenha isso anotado de forma segura.</p>
+                <figure class="media">
+                  <img src="../img/ALTERANDO_PALAVRA.png" alt="Exemplo alterando palavra do login" loading="lazy">
+                </figure>
+              </li>
+            </ol>
+
+            <div class="alert">
+              <strong>Nota:</strong> isso não “blinda” o site sozinho, mas ajuda a reduzir tentativas automáticas.
+              Combine com senha forte, atualizações e boas práticas.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Escrita</h2>
+            <p>
+              Em <strong>Configurações → Escrita</strong>, você define padrões de postagem.
+              Se seu site tem muita publicação (ex.: notícias), vale organizar categorias.
+            </p>
+            <p class="muted">
+              Dica do professor: para publicar via e-mail, use o app/recursos oficiais quando fizer sentido para o projeto.
+            </p>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Leitura</h2>
+            <p>Em <strong>Configurações → Leitura</strong>:</p>
+            <ul class="list">
+              <li>Para sites institucionais, geralmente use <strong>Uma página estática</strong> como Home.</li>
+              <li>Posts podem ficar em uma página específica (ex.: “Blog/Notícias”).</li>
+            </ul>
+
+            <figure class="media">
+              <img src="../img/PAGINA_ESTATICA.png" alt="Configuração de página estática na leitura do WordPress" loading="lazy">
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Discussão</h2>
+            <p>Em <strong>Configurações → Discussão</strong>, ajuste comentários e notificações.</p>
+            <p class="muted">Se o projeto não usa comentários, desmarcar notificações reduz ruído.</p>
+
+            <figure class="media">
+              <img src="../img/ENVIE_ME_UM_EMAIL_QUANDO.png" alt="Configuração de notificações de comentários" loading="lazy">
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Mídia</h2>
+            <p>Em <strong>Configurações → Mídia</strong>, você define tamanhos padrão de imagens.</p>
+            <div class="alert">
+              <strong>Dica do professor:</strong> em muitos casos, manter os tamanhos padrão é o suficiente.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Permalinks</h2>
+            <p>
+              Em <strong>Configurações → Links Permanentes</strong>, escolha um formato amigável.
+              Uma opção comum é <strong>“Mês e nome”</strong> (ou “Nome do post” dependendo do projeto).
+            </p>
+
+            <figure class="media">
+              <img src="../img/MES_NOME.png" alt="Configuração de permalinks mês e nome" loading="lazy">
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Imsanity (otimização de imagens)</h2>
+            <p>
+              No <strong>Imsanity Settings</strong>, você pode otimizar tamanho/qualidade.
+              Exemplo: alterar a qualidade JPG para <strong>72</strong>.
+            </p>
+            <div class="alert">
+              <strong>Recomendação:</strong> fora isso, evite mexer em opções que você não entende. Teste sempre.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist de cliente</h3>
+              <ul class="list">
+                <li>Home estática</li>
+                <li>Permalinks amigáveis</li>
+                <li>SSL ativo (HTTPS)</li>
+                <li>Plugins essenciais apenas</li>
+                <li>Backup automático</li>
+                <li>Formulário enviando e-mail</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Orçamento rápido</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

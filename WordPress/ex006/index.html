@@ -1,90 +1,226 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-        
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel de Controle | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Entenda o painel de controle do WordPress: visão geral, menu dinâmico, personalizar e áreas principais do admin." />
 </head>
+
 <body>
-    <header>
-        <h1>Painel de Controle</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Painel de Controle</h2>
-        <hr>
-        <br>
-        <p>O Painel de Controle do WordPress é a interface administrativa onde você pode gerenciar todo o conteúdo e as configurações do seu site. Ele oferece uma variedade de ferramentas e opções para personalizar seu site, adicionar novos conteúdos, gerenciar usuários, instalar plugins e temas, e muito mais.</p>
-        <br>
-        <a href="https://comunidade.hostnet.com.br/t/wordpress" target="_blank">Link - Grupo WordPress</a>
-        <br>
-        <br>
-        <h2>Como é o Painel do WordPress?</h2>
-        <hr>
-        <img src="../img/PAINEL_DO_WP.png" alt="PAINEL_DO_WP">
-        <br>
-        <h2>Menu Dinâmico WordPress</h2>
-        <hr>
-        <img src="../img/MENU_DINAMICO.png" alt="MENU_DINAMICO">
-        <br>
-        <p>Use o <strong>Menu Dinâmico</strong> para poder ter acesso mais rápido às funcionalidades do WordPress.</p>
-        <br>
-        <h2>Menu Personalizar</h2>
-        <hr>
-        <p>O <strong>Menu Personalizar</strong> vamos ver quando estivermos aplicando as cores, fontes e novos estilos ao site.</p>
-        <br>
-        <h2>Menu Geral</h2>
-        <hr>
-        <img src="../img/MENU_GERAL.png" alt="MENU_GERAL">
-        <p>Aqui você vai ter acesso direto ao Painel de Controle do WordPress.</p>
-        <br>
-        <h2>Painel de Controle</h2>
-        <hr>
-        <img src="../img/PAINEL_DE_CONTROLE.png" alt="PAINEL_DE_CONTROLE">
-        <p><strong>O Painel de Controle do WordPress</strong> oferece uma visão geral rápida do status do seu site, incluindo estatísticas de visitantes, atualizações recentes, rascunhos de posts e outras informações importantes.</p>
-        <br>
-        <p>Como é um painel de controle típico, você encontrará <strong>seções para gerenciar seu conteúdo, aparência e configurações do site</strong>. Orienta-se que você explore cada uma dessas seções para aproveitar ao máximo o WordPress.</p>
-    <br>
-    <br>
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+      <span class="brand-avatar" aria-hidden="true">AN</span>
+      <div class="brand-text">
+        <strong>Ailton A. Nakata</strong>
+        <span>Sites modernos que convertem</span>
+      </div>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" aria-label="Navegação principal" data-nav>
+      <a href="../../index.html">Início</a>
+      <a href="../../projetos.html">Projetos</a>
+      <a href="../../estudos.html">Estudos</a>
+      <a href="../../wordpress.html">WordPress</a>
+      <a class="btn btn-primary" href="../../contato.html">Orçamento</a>
+    </nav>
+  </div>
+</header>
+
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Painel de Controle do WordPress</h1>
+          <p class="muted">O “centro de comando” do site: conteúdo, aparência, plugins e configurações.</p>
         </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">O que é o Painel de Controle?</h2>
+            <p>
+              O painel do WordPress é a interface administrativa onde você gerencia tudo:
+              páginas e posts, aparência, menus, plugins, usuários e configurações.
+            </p>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <p class="muted" style="margin:0;">
+                Link útil: 
+                <a href="https://comunidade.hostnet.com.br/t/wordpress" target="_blank" rel="noopener noreferrer">
+                  Comunidade HostNet (WordPress)
+                </a>
+              </p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Como é o painel?</h2>
+            <figure class="media">
+              <img src="../img/PAINEL_DO_WP.png" alt="Visão do painel administrativo do WordPress" loading="lazy">
+              <figcaption class="muted">Admin do WordPress: menu lateral + área de conteúdo.</figcaption>
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Menu dinâmico</h2>
+            <p>
+              O <strong>Menu Dinâmico</strong> facilita o acesso rápido às funcionalidades do WordPress.
+              É uma forma de navegar com mais agilidade no admin.
+            </p>
+            <figure class="media">
+              <img src="../img/MENU_DINAMICO.png" alt="Menu dinâmico do WordPress" loading="lazy">
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Personalizar</h2>
+            <p>
+              O menu <strong>Personalizar</strong> é usado para ajustar visual do tema:
+              cores, tipografia, identidade e alguns componentes do layout (dependendo do tema).
+            </p>
+            <div class="alert">
+              <strong>Dica:</strong> quando estiver criando site para cliente, defina primeiro:
+              paleta, fontes, hierarquia e espaçamentos. A estética fica consistente e “de agência”.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Menu geral</h2>
+            <p>
+              No menu lateral você encontra as áreas principais para administrar o site.
+            </p>
+            <figure class="media">
+              <img src="../img/MENU_GERAL.png" alt="Menu lateral geral do WordPress" loading="lazy">
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">A tela “Painel” (Visão geral)</h2>
+            <p>
+              A tela do Painel mostra uma visão rápida do status do site: avisos de atualização, rascunhos,
+              atalhos e outros widgets informativos.
+            </p>
+            <figure class="media">
+              <img src="../img/PAINEL_DE_CONTROLE.png" alt="Tela do painel de controle do WordPress" loading="lazy">
+            </figure>
+
+            <div class="alert">
+              <strong>Recomendação:</strong> explore o menu com calma.
+              Entender onde cada coisa fica deixa você muito mais rápido na produção de sites.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Mapa mental do admin</h3>
+              <ul class="list">
+                <li><strong>Páginas</strong>: conteúdo fixo</li>
+                <li><strong>Posts</strong>: blog/notícias</li>
+                <li><strong>Aparência</strong>: tema, menus, widgets</li>
+                <li><strong>Plugins</strong>: recursos</li>
+                <li><strong>Configurações</strong>: base do site</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site em WP</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,202 +1,233 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erro de Certificado de Segurança</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-        
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erro de SSL no Localhost | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Como corrigir erro de certificado SSL no WordPress local (localhost). Reverter https para http no banco (wp_options) e voltar a acessar o wp-admin." />
 </head>
+
 <body>
-    <header>
-        <h2>Quando você trocar http para https</h2>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h1>Como corrigir esse erro?</h1>
-    <hr>
-    <img src="../img/ERRO_SSL.png" alt="ERRO_SSL">
-        <p>
-            O WordPress está tentando forçar uma conexão segura (HTTPS), mas o seu navegador não confia no certificado do seu servidor local. <br>
-<br>
-A solução mais rápida e eficiente é reverter essa alteração diretamente no banco de dados do seu WordPress. <br>
-<br>
-🛠️ Passos para Corrigir o Erro de HTTPS no Localhost
-Você precisará acessar a interface de gerenciamento do seu banco de dados (geralmente phpMyAdmin, Adminer, ou a ferramenta nativa do seu ambiente local, como XAMPP ou Local by Flywheel). <br>
-<br>
-<strong>1. Acesso ao Banco de Dados</strong>
-<br>
-<br>
-Abra o painel de controle do seu servidor local (XAMPP, WAMP, MAMP, etc.).
-<br>
-Inicie o servidor Apache e o servidor MySQL.
-<br>
-<br>
-Acesse a ferramenta de gerenciamento do banco de dados (normalmente digitando <a href="http://localhost/phpmyadmin" target="_blank">http://localhost/phpmyadmin</a> no navegador).
-<br>
-<br>
-Localize e clique no banco de dados que seu WordPress (cursowp) está utilizando.
-<br>
-<br>
-<strong>2. Edição da Tabela wp_options</strong>
-<br>
-<br>
-Dentro do seu banco de dados do WordPress:
-<br>
-<br>
-Procure e clique na tabela chamada wp_options (ou SEU_PREFIXO_options, se você tiver mudado o prefixo, mas geralmente é wp_options).
-<br>
-<br>
-Nesta tabela, você precisa localizar e editar as duas primeiras linhas, que definem a URL principal do site:
-<br>
-<br>
-
-Pela imagem que você enviou (image_907183.png), está claro que o erro ocorreu ao tentar acessar o endereço https://localhost/cursowp/wp-admin/options-general.php e o navegador está mostrando o aviso "Não seguro" e bloqueando o acesso.
-<br>
-<br>
-
-Você está absolutamente correto: esse erro acontece porque você alterou de http para https em um ambiente de desenvolvimento local (localhost) que não possui um certificado SSL válido.
-<br>
-<br>
-
-O WordPress está tentando forçar uma conexão segura (HTTPS), mas o seu navegador não confia no certificado do seu servidor local.
-<br>
-<br>
-
-A solução mais rápida e eficiente é reverter essa alteração diretamente no banco de dados do seu WordPress.
-<br>
-<br>
-
-🛠️ Passos para Corrigir o Erro de HTTPS no Localhost
-<br>
-<br>
-Você precisará acessar a interface de gerenciamento do seu banco de dados (geralmente phpMyAdmin, Adminer, ou a ferramenta nativa do seu ambiente local, como XAMPP ou Local by Flywheel).
-<br>
-<br>
-
-<strong>1. Acesso ao Banco de Dados</strong>
-<br>
-<br>
-Abra o painel de controle do seu servidor local (XAMPP, WAMP, MAMP, etc.).
-<br>
-<br>
-
-Inicie o servidor Apache e o servidor MySQL.
-<br>
-<br>
-
-Acesse a ferramenta de gerenciamento do banco de dados (normalmente digitando http://localhost/phpmyadmin no navegador).
-<br>
-<br>
-
-Localize e clique no banco de dados que seu WordPress (cursowp) está utilizando.
-<br>
-<br>
-
-<strong>2. Edição da Tabela wp_options</strong>
-<br>
-<br>
-Dentro do seu banco de dados do WordPress:
-<br>
-<br>
-
-Procure e clique na tabela chamada wp_options (ou SEU_PREFIXO_options, se você tiver mudado o prefixo, mas geralmente é wp_options).
-<br>
-<br>
-
-Nesta tabela, você precisa localizar e editar as duas primeiras linhas, que definem a URL principal do site:
-<br>
-<br>
-
-Campo (option_name)	Valor Atual (option_value)
-<br>
-<br>
-siteurl	https://localhost/cursowp
-home	https://localhost/cursowp
-<br>
-<br>
-<strong>3. Revertendo para HTTP</strong>
-<br>
-<br>
-Edite a linha onde o campo option_name é siteurl.
-<br>
-<br>
-
-Mude o option_value de https://localhost/cursowp para http://localhost/cursowp.
-<br>
-<br>
-
-Edite a linha onde o campo option_name é home.
-<br>
-<br>
-
-Mude o option_value de https://localhost/cursowp para http://localhost/cursowp.
-<br>
-<br>
-
-Salve as alterações (geralmente clicando em "Executar" ou "Salvar").
-<br>
-<br>
-
-<strong>4. Teste Final</strong>
-<br>
-<br>
-Feche e reabra seu navegador.
-<br>
-<br>
-
-Tente acessar seu painel de administração novamente, usando a URL HTTP: http://localhost/cursowp/wp-admin/.
-<br>
-<br>
-
-Se você reverteu as URLs corretamente no banco de dados, o WordPress voltará a carregar corretamente e o erro de "Não seguro" e bloqueio desaparecerá, pois ele não estará mais tentando forçar o HTTPS sem certificado.
-<br>
-<br>
-        </p>
-<h2>Se tudo der Certo</h2>
-<hr>
-<img src="../img/SE_TUDO_DER_CERTO.png" alt="Se_Tudo_Der_Certo">
-        <p>
-            Agora você deve conseguir acessar o painel de administração do WordPress sem problemas. <br>
-    <br>               
-    <br>               
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Erro de certificado (SSL) no WordPress local</h1>
+          <p class="muted">
+            Isso acontece quando você troca <strong>http</strong> por <strong>https</strong> no <strong>localhost</strong>
+            sem ter um certificado válido.
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">O que está acontecendo?</h2>
+            <p>
+              Quando você define o site como <strong>https</strong> em um ambiente local, o navegador tenta validar um
+              certificado SSL. Como o localhost normalmente não possui certificado confiável, o acesso pode ser bloqueado,
+              principalmente no painel (<code>/wp-admin</code>).
+            </p>
+
+            <figure class="media">
+              <img src="../img/ERRO_SSL.png" alt="Erro SSL ao acessar WordPress no localhost" loading="lazy">
+              <figcaption class="muted">Erro ao acessar WordPress local após trocar http por https.</figcaption>
+            </figure>
+
+            <div class="alert alert-warn">
+              <strong>Meta:</strong> fazer o WordPress parar de forçar HTTPS no local e voltar para HTTP.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Como corrigir (passo a passo)</h2>
+
+            <ol class="steps">
+              <li>
+                <h3>Inicie Apache e MySQL</h3>
+                <p>Abra o XAMPP (ou WAMP/MAMP) e inicie os serviços <strong>Apache</strong> e <strong>MySQL</strong>.</p>
+              </li>
+
+              <li>
+                <h3>Acesse o phpMyAdmin</h3>
+                <p>
+                  Abra no navegador:
+                  <a href="http://localhost/phpmyadmin" target="_blank" rel="noopener noreferrer">http://localhost/phpmyadmin</a>
+                  e selecione o banco do seu WordPress (ex.: <strong>cursowp</strong>).
+                </p>
+              </li>
+
+              <li>
+                <h3>Abra a tabela wp_options</h3>
+                <p>
+                  Procure a tabela <strong>wp_options</strong>. Se você mudou o prefixo, pode ser algo como
+                  <strong>seuprefixo_options</strong>.
+                </p>
+              </li>
+
+              <li>
+                <h3>Edite “siteurl” e “home”</h3>
+                <p>
+                  Localize os campos <strong>siteurl</strong> e <strong>home</strong> e troque:
+                  <strong>https://localhost/cursowp</strong> por <strong>http://localhost/cursowp</strong>.
+                </p>
+
+                <div class="codebox" role="note" aria-label="Valores que você precisa alterar">
+<pre><code>option_name: siteurl   option_value: http://localhost/cursowp
+option_name: home      option_value: http://localhost/cursowp</code></pre>
+                </div>
+
+                <div class="alert">
+                  <strong>Dica:</strong> se seu projeto tiver outro nome, substitua <code>cursowp</code> pelo nome correto.
+                </div>
+              </li>
+
+              <li>
+                <h3>Teste o acesso</h3>
+                <p>
+                  Feche e reabra o navegador e acesse:
+                  <code>http://localhost/cursowp/wp-admin/</code>
+                </p>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Se tudo der certo</h2>
+            <figure class="media">
+              <img src="../img/SE_TUDO_DER_CERTO.png" alt="Painel do WordPress acessando normalmente após correção" loading="lazy">
+              <figcaption class="muted">Acesso restaurado: WordPress volta a carregar sem forçar HTTPS.</figcaption>
+            </figure>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Quando usar HTTPS?</h3>
+              <p class="muted">
+                Em sites reais (hospedagem), você deve ter SSL ativo e usar HTTPS.
+                Em localhost, só se configurar um certificado local (não obrigatório para treino).
+              </p>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site seguro</button>
+            </div>
+          </aside>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 // === CONFIGURE AQUI SEU WHATSAPP (DDI+DDD+NUMERO) ===
 // Exemplo real: "5511999999999"
-const WHATSAPP_NUMBER = "5544998398116";
+const WHATSAPP_NUMBER = "5500000000000";
 
 function openWhatsApp(message) {
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -141,29 +141,3 @@ document.addEventListener("DOMContentLoaded", () => {
   setupBudgetForm();
   setupCertificatePreview(); // <-- adiciona aqui
 });
-
-
-
-function setupTOC(){
-  const toc = document.querySelector("[data-toc]");
-  if (!toc) return;
-
-  // pega títulos dentro do conteúdo
-  const headings = document.querySelectorAll(".lesson .steps h3");
-  if (!headings.length) {
-    toc.innerHTML = "<p class='muted'>Sem seções disponíveis.</p>";
-    return;
-  }
-
-  headings.forEach((h, i) => {
-    const id = h.id || `passo-${i+1}`;
-    h.id = id;
-
-    const a = document.createElement("a");
-    a.href = `#${id}`;
-    a.textContent = h.textContent.trim();
-    toc.appendChild(a);
-  });
-}
-
-

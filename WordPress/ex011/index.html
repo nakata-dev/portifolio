@@ -1,85 +1,223 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menus</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-         main{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-        
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menus no WordPress | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Como criar páginas e configurar menus no WordPress: atualizações, criação de páginas e menu principal em Aparência > Menus." />
 </head>
+
 <body>
-    <header>
-        <h2>Menus no WordPress</h2>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Dica Profissional</h2>
-        <hr>
-<br>            
-<p>Sempre verifique atualizações de <strong>plugins</strong> no Painel do WordPress</p>
-            
-<img src="../img/Atualize.png" alt="Atualize_seu_wordpress">        
-        <h2>Criando uma página</h2>
-        <hr>
-        <br>
-        <br>
-       
-Vá até o <strong>
-    Menu Página > Adicionar Página > Home(name) >
-    Publique
-</strong>
-<br>
-<br>
-Crie mais duas páginas: <strong>Cardápio; Contato; Home; Notícias; Quem somos</strong>
-<img src="../img/CRIANDO_PAGINAS.png" alt="CRIANDO_PAGINAS">
-<br>
-<br>
-        <h2>Menu</h2>
-        <hr>
-<br>        
-<p>Para criar um menu vá até <strong>Aparência > Menus</strong></p>           
-<br>
-<p>Agora acesse: <strong>Aparência > Menus</strong> Configure o Menu Principal com os itens que você tem a esquerda.</p>
-<img src="../img/MENU.png" alt="Menu_WordPress">          
-        <br>
-        <br>                
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Menus no WordPress</h1>
+          <p class="muted">Crie páginas e monte um menu principal organizado e pronto pra conversão.</p>
+        </div>
+
+        <div class="hero-actions mb-3">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Dica profissional</h2>
+
+            <div class="alert alert-warn">
+              <strong>Rotina:</strong> sempre verifique atualizações de <strong>plugins</strong> e do WordPress.
+              Isso evita falhas, melhora segurança e performance.
+            </div>
+
+            <figure class="media">
+              <img src="../img/Atualize.png" alt="Atualize plugins e WordPress no painel" loading="lazy">
+              <figcaption class="muted">Mantenha o WordPress e plugins atualizados.</figcaption>
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Criando páginas</h2>
+            <p class="muted">A base do menu é um conjunto de páginas bem nomeadas.</p>
+
+            <ol class="steps">
+              <li>
+                <h3>Crie a página Home</h3>
+                <p>
+                  Vá em <strong>Páginas</strong> → <strong>Adicionar nova</strong> → crie a página
+                  <strong>Home</strong> → <strong>Publicar</strong>.
+                </p>
+              </li>
+              <li>
+                <h3>Crie páginas essenciais</h3>
+                <p>
+                  Sugestão para um site “padrão profissional”:
+                  <strong>Home</strong>, <strong>Quem somos</strong>, <strong>Cardápio/Serviços</strong>,
+                  <strong>Notícias/Blog</strong> (opcional), <strong>Contato</strong>.
+                </p>
+              </li>
+            </ol>
+
+            <figure class="media">
+              <img src="../img/CRIANDO_PAGINAS.png" alt="Criando páginas no WordPress" loading="lazy">
+              <figcaption class="muted">Crie as páginas antes de montar o menu.</figcaption>
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Criando o menu</h2>
+            <p>
+              Para criar um menu: <strong>Aparência</strong> → <strong>Menus</strong>.
+            </p>
+
+            <div class="card soft">
+              <ul class="list">
+                <li>Crie um menu chamado <strong>Menu Principal</strong>.</li>
+                <li>Adicione as páginas no menu (coluna da esquerda).</li>
+                <li>Organize a ordem arrastando e soltando.</li>
+                <li>Defina a posição do menu (ex.: <strong>Primary Menu</strong> / menu principal).</li>
+                <li>Salve.</li>
+              </ul>
+            </div>
+
+            <figure class="media" style="margin-top: 12px;">
+              <img src="../img/MENU.png" alt="Aparência > Menus no WordPress" loading="lazy">
+              <figcaption class="muted">Monte o menu principal com as páginas criadas.</figcaption>
+            </figure>
+
+            <div class="alert" style="margin-top: 16px;">
+              <strong>Dica de conversão:</strong> deixe o menu com no máximo <strong>5 a 6 itens</strong>.
+              Menus enormes confundem e diminuem cliques no CTA.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Menu ideal (exemplo)</h3>
+              <ul class="list">
+                <li>Home</li>
+                <li>Serviços / Cardápio</li>
+                <li>Quem somos</li>
+                <li>Depoimentos (opcional)</li>
+                <li>Contato</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site pro</button>
+            </div>
+          </aside>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

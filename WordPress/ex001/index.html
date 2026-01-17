@@ -1,143 +1,238 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalando WordPress</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer {
-            font-family: 'Courier New', Courier, monospace
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instalando WordPress (Local) | Ailton A. Nakata</title>
 
-        a {
-            text-decoration: none;
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
 
-        }
+  <!-- Base global -->
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        li {
-            line-height: 2;
-            font-size: 1em;
-        }
-
-        header {
-            margin-bottom: 15px;
-        }
-
-        #caixapre {
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;
-            /* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-
-        main p {
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-    </style>
+  <!-- (Opcional) SEO simples -->
+  <meta name="description" content="Tutorial: instalando WordPress local com XAMPP. Passo a passo com imagens e boas práticas." />
 </head>
 
 <body>
-    <header>
-        <h1>Instalando o WordPress</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h1>Instalando WordPress - Local</h1>
-        <br>
-        <p>
-            1º <strong>Abra o XAMPP</strong> (servidor local). Caso <strong>Apache ou MySQL</strong> não abram.
-            Recomenda-se que você feche o software que provavelmente esteja usando a porta de entrada.
-        </p>
-        <br>
-        <hr>
-        <br>
-        <img src="../img/XAMPP.png" alt="xampp">
-        <br>
-        <hr>
-        <br>
-        <p>
-            2º <strong>Baixe o WordPress</strong> pelo <a href=" https://br.wordpress.org/download/"
-                target="_blank"><i>Link de Download - WordPress</i></a>.
-            <br>
-            3º <strong>Instale a Aplicação</strong>
-        </p>
-        <br>
-        <hr>
-        <br>
-        <img src="../img/HTDOCS.png" alt="Colando pasta em HTDOCS">
-        <br>
-        <hr>
-        <br>
-        <p>
-            4º <strong>Cole o zip dentro da pasta C:\xampp\htdocs</strong>
-            <br>
-            5º <strong>Estraia e Renomeie</strong> a pasta extraida, e em seguida dê o <strong>Nome do Site</strong>.
-            Exemplo: <strong>cursowp</strong>.
-        </p>
-        <br>
-        <hr>
-        <br>
-        <p>
-            6º <strong>Click em Admin</strong>
-        </p>
-        <img src="../img/ADMIN.png" alt="Tela do ADMIN">
-        <hr>
-        <br>
-        <p>
-            7º http://localhost/<strong>dashboard/</strong> por http://localhost/<strong>cursowp/</strong>
-        </p>
-        <br>
-        <img src="../img/CURSOWP.png" alt="substituindo nomes dashboard por cursowp">
-        <br>
-        <hr>
-        <br>
-        <p>
-            8º Configure o Idioma: <strong>português (Brasil)</strong>
-            <br>
-            <i>Atualize sempre seu software WordPress e todos os Plugins</i>
-            <br>
-            <i>Há um plugin pago que atualiza tudo Automaticamente.</i>
-            <br>
-        </p>
-        <img src="../img/COFIGURACAO_INICIAL_WP.png" alt="COFIGURACAO_INICIAL_WP">
-        <br>
-        <hr>
-        <br>
-        <p>
-            9º Configure o <strong>informaões necessárias</strong>
-            <br>
-            <i>Não marque a opção Visibilidade nos mecanismos de busca</i>
-            <br>
-            10º <strong>Click em Instalar</strong>
-        </p>
-        <img src="../img/CONFIGURANDO_NOME_USURARIO_SENHA.png" alt="CONFIGURANDO_NOME_USURARIO_SENHA">
-        <br>
-        <hr>
-        <br>
-        <p>
-            11º <strong>acesse o Painel de Cotrole do WP</strong>
-            <br>
-            <i>Lembre-se: este é um <strong>servidor local</strong>, para treino do uso e o desenvolvimento do site
-                através do <strong>WordPress</strong></i>
-        </p>
-        <img src="../img/PRIMEIRO_ACESSO_WORDPRESS.png" alt="PRIMEIRO_ACESSO_WORDPRESS">
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../../wordpress.html">Voltar</a>
+  <!-- Header global -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
-</body>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+
+        <!-- Cabeçalho do conteúdo -->
+        <div class="section-head">
+          <h1>Instalando o WordPress (Local)</h1>
+          <p class="muted">Passo a passo com XAMPP para treinar e desenvolver localmente.</p>
+        </div>
+
+        <!-- Barra de ações -->
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <!-- Layout: conteúdo + sumário -->
+        <div class="lesson-grid">
+          <!-- Conteúdo principal -->
+          <article class="lesson">
+            <h2 class="lesson-title">Guia rápido</h2>
+
+            <ol class="steps">
+              <li>
+                <h3>Abra o XAMPP</h3>
+                <p>Inicie o servidor local. Se Apache ou MySQL não abrirem, feche o software que está usando a mesma porta.</p>
+                <figure class="media">
+                  <img src="../../img/XAMPP.png" alt="Tela do XAMPP com Apache e MySQL" loading="lazy">
+                  <figcaption class="muted">XAMPP: painel de controle.</figcaption>
+                </figure>
+              </li>
+
+              <li>
+                <h3>Baixe o WordPress</h3>
+                <p>
+                  Faça o download no site oficial:
+                  <a href="https://br.wordpress.org/download/" target="_blank" rel="noopener noreferrer">Download WordPress</a>.
+                </p>
+              </li>
+
+              <li>
+                <h3>Coloque na pasta htdocs</h3>
+                <p>Cole o ZIP dentro de <code>C:\xampp\htdocs</code>, extraia e renomeie a pasta (ex.: <strong>cursowp</strong>).</p>
+                <figure class="media">
+                  <img src="../../img/HTDOCS.png" alt="Pasta htdocs no XAMPP" loading="lazy">
+                  <figcaption class="muted">Colando a pasta em htdocs.</figcaption>
+                </figure>
+              </li>
+
+              <li>
+                <h3>Acesse o phpMyAdmin</h3>
+                <p>No XAMPP, clique em <strong>Admin</strong> para abrir o painel.</p>
+                <figure class="media">
+                  <img src="../../img/ADMIN.png" alt="Botão Admin no XAMPP" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Acesse o projeto no navegador</h3>
+                <p>Troque <code>http://localhost/dashboard/</code> por <code>http://localhost/cursowp/</code>.</p>
+                <figure class="media">
+                  <img src="../../img/CURSOWP.png" alt="URL do projeto cursowp no navegador" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Configuração inicial</h3>
+                <p>Selecione o idioma <strong>Português (Brasil)</strong> e mantenha WordPress/Plugins atualizados.</p>
+                <figure class="media">
+                  <img src="../../img/COFIGURACAO_INICIAL_WP.png" alt="Configuração inicial do WordPress" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Defina as informações do site</h3>
+                <p>Preencha nome, usuário e senha. Dica: não marque “Visibilidade nos mecanismos de busca” no servidor local.</p>
+                <figure class="media">
+                  <img src="../../img/CONFIGURANDO_NOME_USURARIO_SENHA.png" alt="Tela de configuração do usuário no WordPress" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Primeiro acesso ao painel</h3>
+                <p>Pronto. Agora você está em um ambiente local para treinar e desenvolver com WordPress.</p>
+                <figure class="media">
+                  <img src="../../img/PRIMEIRO_ACESSO_WORDPRESS.png" alt="Painel do WordPress após instalação" loading="lazy">
+                </figure>
+              </li>
+            </ol>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <!-- Sidebar: sumário / dicas -->
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Use para navegar rápido pelos passos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Dica profissional</h3>
+              <p class="muted">
+                Para sites de clientes, o fluxo ideal é: WP + tema leve + performance + SEO + CTA no WhatsApp.
+              </p>
+              <a class="btn btn-secondary" href="../../contato.html">Falar comigo</a>
+            </div>
+          </aside>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- WhatsApp flutuante -->
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal orçamento (global) -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
 </html>

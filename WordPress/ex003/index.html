@@ -1,82 +1,224 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalando WordPress Automaticamente</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-        
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Instalando o WordPress Automaticamente</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Instando o WordPress pelo painel da Hostnet:</h2>
-        <hr>
-        <p>
-            1º Ao acessar pela primeira vez o painel de controle da Hostnet, acesse <em>construtor de Site/blog Wordpress</em>
-        </p>
-        <img src="../img/INSTALAR_AUTOMATICAMENTE.png" alt="INSTALAR_AUTOMATICAMENTE">
-        <p>2º Clik em Instalar</p>
-        <img src="../img/PASTA_CURSOWP.png" alt="PASTA_CURSOWP">
-        <p>Caso você tenha o seu domínio próprio, preencha o campo <strong>Site</strong>. Agora, em situações em que você não tenha alterado o nome da pasta do wodpress, você tem a opção de deixar tudo na <strong>pasta (www)</strong></p>
-        <img src="../img/OUTRAS_CONFIGURAÇÕES.png" alt="OUTRAS_CONFIGURAÇÕES">
-        <p>3º Check - Alterar</p>
-        <p>4º - Selecione um Banco de Dados</p>
-        <p>5º - Digite a Senha</p>
-        <p>6º - Digite a Senha do Aplicativo</p>
-        <p>7º - Confirme a Senha do Aplicativo</p>
-        <p>7º - Click em Instalar</p>
-        <h3>Importante - URL amigável</h3>
-        <hr>
-        <p>Pesquise: <em>como instalar URL amigável para poder se posicionar no GOOGLE</em></p>
-        <img src="../img/PÓS_INSTALAÇÃO.png" alt="PÓS_INSTALAÇÃO">
-        <h3>Instalado o WordPress:</h3>
-        <hr>
-        <p>Agora você tem acesso ao menu: <em>Acessar; Administração; Desinstalar; Alterar Senha; Alterar Dados de Configuração; Configurar Domínio</em></p>
-        <br>
-        <p>Na versão do instalador automático através da <strong>HostNet</strong>, a maioria dos plugins essenciais já vêm instalado e configurado.</p>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instalando WordPress Automaticamente | Ailton A. Nakata</title>
 
-    <br>               
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Tutorial: instalação automática do WordPress no painel da HostNet. Passo a passo com imagens e boas práticas (URLs amigáveis/SEO)." />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Instalando o WordPress Automaticamente</h1>
+          <p class="muted">Instalador automático no painel da HostNet (mais rápido e prático).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Passo a passo</h2>
+
+            <ol class="steps">
+              <li>
+                <h3>Acesse o instalador no painel</h3>
+                <p>
+                  Ao acessar o painel da HostNet, procure por <em>Construtor de site / blog WordPress</em> (ou seção de instaladores).
+                </p>
+                <figure class="media">
+                  <img src="../img/INSTALAR_AUTOMATICAMENTE.png" alt="Opção de instalar WordPress automaticamente no painel" loading="lazy">
+                  <figcaption class="muted">Localizando o instalador automático no painel.</figcaption>
+                </figure>
+              </li>
+
+              <li>
+                <h3>Clique em instalar</h3>
+                <p>Clique em <strong>Instalar</strong> e selecione onde o WordPress será instalado (domínio/pasta).</p>
+                <figure class="media">
+                  <img src="../img/PASTA_CURSOWP.png" alt="Escolha de pasta ou diretório para instalação do WordPress" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Configure domínio e pasta</h3>
+                <p>
+                  Se você tiver domínio próprio, preencha o campo <strong>Site</strong>.
+                  Se não quiser mudar o nome da pasta do WordPress, você pode instalar direto na pasta <strong>www</strong>.
+                </p>
+                <figure class="media">
+                  <img src="../img/OUTRAS_CONFIGURAÇÕES.png" alt="Configurações adicionais do instalador automático" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Defina banco de dados e senha</h3>
+                <p>Marque a opção de alteração e preencha os dados necessários:</p>
+                <ul class="list">
+                  <li>Selecionar um banco de dados</li>
+                  <li>Definir senha</li>
+                  <li>Definir senha do aplicativo</li>
+                  <li>Confirmar a senha do aplicativo</li>
+                  <li>Clicar em <strong>Instalar</strong></li>
+                </ul>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Importante: URL amigável (SEO)</h2>
+            <p>
+              Pesquise e aplique: <em>como configurar URLs amigáveis no WordPress</em>.
+              Isso ajuda o site a ficar melhor posicionado no Google.
+            </p>
+            <figure class="media">
+              <img src="../img/PÓS_INSTALAÇÃO.png" alt="Tela pós-instalação do WordPress no painel" loading="lazy">
+              <figcaption class="muted">Depois de instalado, revise configurações e permalinks.</figcaption>
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Depois de instalado</h2>
+            <p>
+              Você terá acesso a opções como: <em>Acessar, Administração, Desinstalar, Alterar Senha,
+              Alterar Dados de Configuração, Configurar Domínio</em>.
+            </p>
+            <p class="muted">
+              Normalmente, no instalador automático da <strong>HostNet</strong>, vários plugins essenciais já vêm instalados e configurados.
+            </p>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>SSL ativo (HTTPS) no domínio</li>
+                <li>Permalinks em “Nome do post”</li>
+                <li>Tema leve (Astra, etc.)</li>
+                <li>Plugin de cache/performance</li>
+                <li>Formulário + WhatsApp no CTA</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site em WordPress</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

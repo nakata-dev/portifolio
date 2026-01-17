@@ -1,89 +1,235 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fontes</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer{
-            font-family: 'Courier New', Courier, monospace
-        }
-        a{
-            text-decoration: none;
-            
-        }
-        li{
-            line-height: 2;
-            font-size: 1em;
-        }
-        header{
-            margin-bottom: 15px;
-        }
-        #caixapre{
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;/* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-        main p{
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-            
-        }
-        
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fontes | WordPress - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Como escolher fontes para sites: regra das 2 fontes, Google Fonts, combinação de título e texto, exemplo Josefin Sans + Berkshire Swash." />
 </head>
+
 <body>
-    <header>
-        <h1>Dicas de Fontes</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>        
-        <h2>Quantas fontes é ideal usar para cada Site Desenvolvido?</h2>
-        <hr>
-        <br>
-        <p>O ideal é usar no máximo 2 (duas) fontes diferentes em um site. Uma fonte para os títulos e outra para o conteúdo (textos).</p>
-        <br>
-        <p>
-            Acesse Google Fonts: <a href="https://fonts.google.com/" target="_blank">https://fonts.google.com/</a>
-            <br>
-            <br>
-            
-            Configure em customize: <strong>"Compre nossa pizza, a mais gostosa do bairro!!!"</strong>
-            <br>
-            <br>
-            
-            Pesquise uma fonte para o conteúdo e uma para os títulos. No caso, selecionamos a fonte Josefin Sans para o conteúdo e a fonte fresco para os títulos.
-            <br>
-            <br>
-            <img src="../img/TESTANDO_FONTES.png" alt="TESTANDO_FONTES">
-            Para encontrar a fonte Fresco, pesquise por: <em>Berkshire Swash</em>
-            <br>
-            <br>
-            <p>O ideal é usar no máximo 2 (duas) fontes diferentes em um site. Uma fonte para os títulos e outra para o conteúdo (textos).
-            <br>
-            <br>
-            <em>Josefin Sans</em> para o conteúdo e <em>Berkshire Swash</em> para os títulos.Use sempre no máximo 2 fontes diferentes em um site.
-            <br>
-            <br>
-            Os melhores desenvolvedores de sites usam apenas 2 fontes diferentes.
-            </p>
-        <br>
-        </p>
-        <img src="../img/FONTES_ESCOLHIDAS.png" alt="Fontes Escolhidas">
-    <br>     
-        <div id="voltar">
-            <a href="../../wordpress.html" >Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>                    
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Dicas de Fontes</h1>
+          <p class="muted">Um método simples para escolher tipografia com clareza, estilo e consistência.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Quantas fontes usar no site?</h2>
+
+            <div class="alert">
+              <strong>Regra prática:</strong> use no máximo <strong>2 fontes</strong>.
+              Uma para <strong>títulos</strong> e outra para <strong>textos</strong>.
+            </div>
+
+            <p class="muted">
+              Isso deixa o site mais consistente e profissional (e evita o efeito “colcha de retalhos”).
+            </p>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Onde escolher fontes</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Acesse:
+                <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">
+                  Google Fonts
+                </a>
+              </p>
+            </div>
+
+            <ol class="steps">
+              <li>
+                <h3>Teste com uma frase real do projeto</h3>
+                <p>
+                  Em “Customize”, coloque um texto parecido com o do cliente, por exemplo:
+                  <strong>“Compre nossa pizza, a mais gostosa do bairro!!!”</strong>
+                </p>
+              </li>
+
+              <li>
+                <h3>Escolha 1 fonte para texto</h3>
+                <p>
+                  Para conteúdo, prefira uma fonte legível em parágrafos (ex.: <strong>Josefin Sans</strong>).
+                </p>
+              </li>
+
+              <li>
+                <h3>Escolha 1 fonte para títulos</h3>
+                <p>
+                  Para títulos, pode ser mais “expressiva” (ex.: <strong>Berkshire Swash</strong>).
+                </p>
+                <figure class="media">
+                  <img src="../img/TESTANDO_FONTES.png" alt="Testando fontes no Google Fonts" loading="lazy">
+                  <figcaption class="muted">
+                    Exemplo de combinação: texto com legibilidade + título com personalidade.
+                  </figcaption>
+                </figure>
+                <div class="alert alert-warn">
+                  <strong>Dica:</strong> para encontrar a “Fonte Fresco” que você citou, pesquise por
+                  <strong>Berkshire Swash</strong>.
+                </div>
+              </li>
+            </ol>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Exemplo de combinação (pronta)</h2>
+            <div class="card soft">
+              <ul class="list">
+                <li><strong>Texto:</strong> Josefin Sans</li>
+                <li><strong>Títulos:</strong> Berkshire Swash</li>
+              </ul>
+            </div>
+
+            <figure class="media">
+              <img src="../img/FONTES_ESCOLHIDAS.png" alt="Fontes escolhidas para o projeto" loading="lazy">
+              <figcaption class="muted">Paleta de fontes definida e consistente.</figcaption>
+            </figure>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Checklist rápido</h2>
+            <div class="card soft">
+              <ul class="list">
+                <li>2 fontes no máximo</li>
+                <li>Título com personalidade, texto com legibilidade</li>
+                <li>Teste em mobile</li>
+                <li>Use tamanhos e pesos consistentes (hierarquia)</li>
+              </ul>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Regra de ouro</h3>
+              <p class="muted">
+                Se o site “não parece profissional”, quase sempre é:
+                <strong>muitas fontes</strong>, <strong>pouco espaçamento</strong> e <strong>hierarquia fraca</strong>.
+              </p>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um layout pro</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

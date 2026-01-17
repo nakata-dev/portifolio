@@ -1,139 +1,275 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalando WordPress Manualmente</title>
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../style.css">
-    <style>
-        footer {
-            font-family: 'Courier New', Courier, monospace
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instalando WordPress Manualmente | Ailton A. Nakata</title>
 
-        a {
-            text-decoration: none;
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        }
-
-        li {
-            line-height: 2;
-            font-size: 1em;
-        }
-
-        header {
-            margin-bottom: 15px;
-        }
-
-        #caixapre {
-            padding: 15px;
-            background-color: lightgray;
-            border-radius: 10px;
-            white-space: pre-wrap;
-            /* → mantém as quebras de linha e múltiplos espaços.*/
-        }
-
-        main p {
-            font-size: 1.2em;
-            text-align: justify;
-            line-height: 1.5;
-        }
-
-    
-    </style>
+  <meta name="description" content="Tutorial: instalação manual do WordPress em hospedagem. Passo a passo com FTP (FileZilla) e acesso via SSH (PuTTY)." />
 </head>
 
 <body>
-    <header>
-        <h1>Instalando o WordPress Manualmente</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>No Painel de Controle HostNet</h2>
-        <hr>
-        <p>
-            <br>
-            1º Ao contratar o serviço de hospedagem de uma empresa, a primeira coisa que você vai pegar é o endereço do <strong>Servidor ftp</strong> e o <strong>endereço do host provisório</strong>.
-            <br>
-            <br>
-            2º Verificar atualização PHP
-        </p>
-        <img src="../img/NO_PAINEL_DE_CONTROLE.png" alt="">
-        <h2>FileZilla</h2>
-        <hr>
-        <br>
-        <p>
-            3º Abra o programa FileZilla e insira o <strong>Host, Nome de Usuário e Senha.</strong> 
-            <br>
-            <br>
-            <i>Assista aula de como baixar FileZilla</i>
-        </p>
-        <img src="../img/FILEZILLA.png" alt="FileZilla">
-        <br>
-        <p>4º Clique em Conexão Rápida e Ok</p>
-        <img src="../img/CONEXÃO_RÁPIDA.png" alt="CONEXÃO_RÁPIDA">
-        <br>
-        <p>5º Dentro da pasta WWW do Servidor FTP</p>
-        <img src="../img/PASTA_WWW.png" alt="PASTA_WWW">
-        <br>
-        <p>6º Crie uma pasta com o nome de <strong>cursowp</strong></p>
-        <br>
-        <img src="../img/CRIANDO_PASTA_CURSOWP.png" alt="CRIANDO_PASTA_CURSOWP">
-        <p>7º Baixe o WordPress: <a href="https://wordpress.org/" target="_blank">Link de Download</a></p>
-        <br>
-        <p>8º Com o arquivo compactado, envio para dentro da pasta <strong>cursowp</strong></p>
-        <img src="../img/COPIANDO_PARA_PASTA_WWW.png" alt="COPIANDO_PARA_PASTA_WWW">
-        <br>
-        <p>9º Abra o programa <strong>PUTTY</strong></p>
-        <img src="../img/ABRA_O_PROGRAMA_PUTTY.png" alt="ABRA_O_PROGRAMA_PUTTY">
-        <p>Click em <strong>Sim</strong> para continuar...</p>
-    
-        <p>login as:<strong>cursoemvideo2</strong></p>
-        <p>senha:*********</p>
-        <p>digite <strong>cd www</strong> para entrar no diretório www <br> agora digite: <strong>cd cursowp</strong> <br> agora digite: <strong>unzip wordpress-5.2.1.zip</strong>
-        após descompactar, digite: <strong>rm wordpress-5.2.1.zip</strong> para remover o arquivo. <br> Em seguida vá para o programa FileZilla e renomeie a <strong>(wordpress)</strong> para <strong>(manual)</strong></p>
-
-        <img src="../img/RENOMEANDO_PASTA.png" alt="RENOMEANDO_PASTA">
-
-        <p>10º Acesse: <strong>www.cursoemvideo.com/cursowp/manual/</strong> para poder ter o primerio acesso ao seu painel de controle do WordPress.</p>
-
-        <img src="../img/PRIMEIRO_ACESSO_WP_MANUAL.png" alt="PRIMEIRO_ACESSO_WP_MANUAL">
-
-        <p>Configure normalmente...</p>
-
-        <img src="../img/CONFIGURANDO_WORDPRESS.png" alt="CONFIGURANDO_WORDPRESS">
-
-        <p>11º Agora você só precisa finalizar essas configurações</p>
-
-        <img src="../img/ABA_BEM_VINDO.png" alt="ABA_BEM_VINDO">
-        <p>Escolha uma senha forte, e use um e-mail de respostas profissional e nunca o pessoal. 
-            <br>
-            <br>
-            Agora acesse o site do wordpress usando seu <strong>usuário e senha</strong></p>
-        <img src="../img/ACESSANDO_WORDPRESS_MODO_MANUAL.png" alt="ACESSANDO_WORDPRESS_MODO_MANUAL">
-        <p>Outras alterações sugeridas pelo professor <strong>Ramiro Lobo</strong>, na aba configurações, lá em Endereço do WordPress(URL)...</p>
-
-        <img src="../img/HTTPS.png" alt="HTTPS">
-        
-        <p>Altere de <strong>http</strong> para <strong>https</strong>. Atente-se que isso só funciona para servidor privado e não o local.</p>
-        <br>
-        <p><strong>Salve as Alterações</strong></p>
-        <br>
-        <p>Agora seu <em>WordPress</em> esta pronto apra receber configurações como no exemplo anterior em que configuramos no <strong>servidor local</strong></p>
-        <hr>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../../wordpress.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Instalando o WordPress Manualmente</h1>
+          <p class="muted">Instalação em hospedagem: painel da HostNet, FileZilla (FTP) e PuTTY (SSH).</p>
         </div>
-        <br>
-        <br>
-    </main>
-    <footer>
-        <p>&copy; Ailton Akio Nakata</p>
-    </footer>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../wordpress.html">Voltar para WordPress</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Passo a passo</h2>
+
+            <ol class="steps">
+              <li>
+                <h3>Painel de controle da hospedagem</h3>
+                <p>
+                  Ao contratar a hospedagem, você recebe o endereço do <strong>Servidor FTP</strong> e o
+                  <strong>host provisório</strong>. Aproveite e confira se o PHP está atualizado.
+                </p>
+                <figure class="media">
+                  <img src="../img/NO_PAINEL_DE_CONTROLE.png" alt="Painel de controle da hospedagem" loading="lazy">
+                  <figcaption class="muted">Painel de controle: dados do FTP e configurações do servidor.</figcaption>
+                </figure>
+              </li>
+
+              <li>
+                <h3>Conecte no FTP com FileZilla</h3>
+                <p>
+                  No FileZilla, informe <strong>Host</strong>, <strong>Usuário</strong> e <strong>Senha</strong> e clique em
+                  <strong>Conexão Rápida</strong>.
+                </p>
+                <figure class="media">
+                  <img src="../img/FILEZILLA.png" alt="Tela do FileZilla" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/CONEXÃO_RÁPIDA.png" alt="Botão Conexão Rápida no FileZilla" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Crie a pasta do projeto</h3>
+                <p>
+                  Dentro da pasta <strong>www</strong> no servidor FTP, crie uma pasta com o nome do seu site
+                  (ex.: <strong>cursowp</strong>).
+                </p>
+                <figure class="media">
+                  <img src="../img/PASTA_WWW.png" alt="Pasta WWW no servidor FTP" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/CRIANDO_PASTA_CURSOWP.png" alt="Criando pasta cursowp no servidor" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Baixe o WordPress e envie para o servidor</h3>
+                <p>
+                  Baixe no site oficial:
+                  <a href="https://wordpress.org/" target="_blank" rel="noopener noreferrer">wordpress.org</a>.
+                  Depois, envie o ZIP para dentro da pasta <strong>cursowp</strong>.
+                </p>
+                <figure class="media">
+                  <img src="../img/COPIANDO_PARA_PASTA_WWW.png" alt="Enviando arquivo para pasta do site via FTP" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Descompacte usando PuTTY (SSH)</h3>
+                <p>
+                  Abra o <strong>PuTTY</strong> e acesse por SSH. Entre no diretório <code>www</code>, depois em
+                  <code>cursowp</code>, descompacte o ZIP e remova o arquivo compactado.
+                </p>
+
+                <figure class="media">
+                  <img src="../img/ABRA_O_PROGRAMA_PUTTY.png" alt="Abrindo PuTTY" loading="lazy">
+                </figure>
+
+                <div class="codebox" role="note" aria-label="Comandos sugeridos">
+                  <pre><code>cd www
+cd cursowp
+unzip wordpress-5.2.1.zip
+rm wordpress-5.2.1.zip</code></pre>
+                </div>
+
+                <p class="muted" style="margin-top: 10px;">
+                  ⚠️ Evite publicar usuário/senha no seu site (mesmo como exemplo). Se quiser, posso te ajudar a esconder isso com placeholders.
+                </p>
+
+                <figure class="media">
+                  <img src="../img/RENOMEANDO_PASTA.png" alt="Renomeando a pasta wordpress no servidor" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Primeiro acesso ao WordPress</h3>
+                <p>
+                  Acesse a URL do seu projeto e finalize as configurações do WordPress.
+                </p>
+                <figure class="media">
+                  <img src="../img/PRIMEIRO_ACESSO_WP_MANUAL.png" alt="Primeiro acesso ao instalador do WordPress" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/CONFIGURANDO_WORDPRESS.png" alt="Configurando WordPress" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/ABA_BEM_VINDO.png" alt="Tela de boas-vindas do WordPress" loading="lazy">
+                </figure>
+
+                <figure class="media">
+                  <img src="../img/ACESSANDO_WORDPRESS_MODO_MANUAL.png" alt="Acessando painel do WordPress após instalação" loading="lazy">
+                </figure>
+              </li>
+
+              <li>
+                <h3>Ative HTTPS quando disponível</h3>
+                <p>
+                  Em servidor (hospedagem), você pode trocar <strong>http</strong> por <strong>https</strong> quando houver SSL ativo.
+                  Em servidor local, isso normalmente não se aplica.
+                </p>
+                <figure class="media">
+                  <img src="../img/HTTPS.png" alt="Configuração de HTTPS no WordPress" loading="lazy">
+                </figure>
+              </li>
+            </ol>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../wordpress.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos passos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Boas práticas</h3>
+              <ul class="list">
+                <li>Use senha forte e e-mail profissional.</li>
+                <li>Ative SSL e force HTTPS quando possível.</li>
+                <li>Mantenha plugins e tema atualizados.</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site em WP</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>
