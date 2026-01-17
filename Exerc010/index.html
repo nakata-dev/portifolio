@@ -1,62 +1,248 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Links Externos</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header{
-            border-bottom-left-radius: 25px;
-            border-bottom-right-radius: 25px;
-        }
-        p{
-            line-height: 1.8;
-            text-align: justify;
-            text-indent: 30px;
-            
-        }
-        h2{
-            padding: 10px;
-        }
-        header p{
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Links | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aprenda links no HTML: links externos, links locais, navegação por subpastas e downloads (PDF/ZIP) com boas práticas." />
 </head>
+
 <body>
-    <header>
-        <h1>Links Externos</h1>
-        <p>por:Ailton A. Nakata</p>
-    </header>
-    <main>
-        <p>Você pode usar o repertório do professor <a href="https://github.com/gustavoguanabara?tab=repositories" target="_blank" rel="external">Guanabara no GitHub</a></p>
-        <p>Você também pode acessar o meu tag(a href)<a href="https://www.youtube.com/c/CursoemV%C3%ADdeo" target="_blank" rel="external">canal gratuito no YouTube</a></p>
-        <br><br>
-        <hr>
-        <br><br>
-        <h2>Link Local</h2>
-        <p>Esta é a Primeira página de meu site, mas também você pode acessar a <a href="pag002.html" rel="next">segunda página de meu site.</a></p>
-        <br><br>
-        <hr>
-        <br><br>
-        <p>Para acessar links dentro de Subpastas.Use "ctrl+backspace" para acionar subpastas, como neste exemplo.</p>
-        <p>Para acessar a Terceira página de meu site, você pode acessar por aqui: <a href="pag003/pag003.html" rel="next">terceira página do meu site</a></p>
-        <br><br>
-        <hr>
-        <br><br>
-        <h2>Download</h2>
-        <ul>
-            <li><a href="download/01 - História da Internet.pdf" download="download/01 - História da internet.pdf" type="application/pdf">Baixar livro em PDF</a></li>
-            <li><a href="download/01 - História da Internet.zip" download="01 - História da Internet.zip" type="application/zip">Baixar meu livro em ZIP</a></li>
-        </ul>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Links no HTML</h1>
+          <p class="muted">Externo, interno, subpastas e downloads, com boas práticas de segurança e navegação.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+
+            <h2 class="lesson-title">Links externos</h2>
+            <div class="card soft">
+              <p class="muted" style="margin-top:0;">
+                Links externos abrem para outro site. Use <code>target="_blank"</code> e também
+                <code>rel="noopener noreferrer"</code> por segurança.
+              </p>
+
+              <ul class="list">
+                <li>
+                  Repositórios do professor:
+                  <a href="https://github.com/gustavoguanabara?tab=repositories"
+                     target="_blank" rel="noopener noreferrer">
+                    Guanabara no GitHub
+                  </a>
+                </li>
+                <li>
+                  Canal gratuito:
+                  <a href="https://www.youtube.com/c/CursoemV%C3%ADdeo"
+                     target="_blank" rel="noopener noreferrer">
+                    Curso em Vídeo no YouTube
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="alert alert-warn">
+              <strong>Boa prática:</strong> evite <code>rel="external"</code>. Prefira <code>noopener</code> e <code>noreferrer</code>
+              quando usar <code>target="_blank"</code>.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Links locais</h2>
+            <div class="card soft">
+              <p style="margin-top:0;">
+                Você pode navegar entre páginas do seu próprio site:
+              </p>
+
+              <ul class="list">
+                <li>
+                  Ir para a
+                  <a href="pag002.html" rel="next">segunda página do meu site</a>
+                </li>
+              </ul>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Links em subpastas</h2>
+            <div class="card soft">
+              <p style="margin-top:0;">
+                Para acessar arquivos dentro de subpastas, use o caminho relativo:
+              </p>
+
+              <ul class="list">
+                <li>
+                  Ir para a
+                  <a href="pag003/pag003.html" rel="next">terceira página do meu site</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="alert">
+              <strong>Dica:</strong> caminho relativo é basicamente “onde estou agora” + “para onde quero ir”.
+              Se você subir uma pasta, usa <code>../</code>.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Downloads</h2>
+            <div class="card soft">
+              <p class="muted" style="margin-top:0;">
+                Use o atributo <code>download</code> para sugerir download do arquivo.
+                (Alguns navegadores podem abrir PDF inline dependendo das configurações.)
+              </p>
+
+              <ul class="list">
+                <li>
+                  <a href="download/01%20-%20Hist%C3%B3ria%20da%20Internet.pdf"
+                     download
+                     type="application/pdf">
+                    Baixar livro em PDF
+                  </a>
+                </li>
+                <li>
+                  <a href="download/01%20-%20Hist%C3%B3ria%20da%20Internet.zip"
+                     download
+                     type="application/zip">
+                    Baixar livro em ZIP
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Links externos com <code>target="_blank"</code></li>
+                <li><code>rel="noopener noreferrer"</code> aplicado</li>
+                <li>Links locais funcionam</li>
+                <li>Subpasta com caminho relativo</li>
+                <li>Downloads com <code>download</code></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

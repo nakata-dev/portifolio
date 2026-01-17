@@ -1,93 +1,251 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        main, h2 {
-            margin: auto;
-            text-align: center;
-        }
-        header{
-            border-bottom-left-radius: 25px;
-            border-bottom-right-radius: 25px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inserindo Vídeos | HTML - Ailton A. Nakata</title>
 
-        /* No seu arquivo style.css */
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        .video {
-            /* Define a largura máxima para o contêiner do vídeo */
-            max-width: 300px;
-            /* Centraliza o contêiner na página */
-            margin: 0 auto;
-        }
+  <meta name="description" content="Como inserir vídeos em HTML5: servidor próprio com video/source, e embeds responsivos do YouTube e Vimeo." />
 
-        /* Garante que os vídeos preencham o contêiner e mantenham a proporção */
-        .video video,.video iframe {
-            display: block;
-            /* Garante o comportamento de bloco */
-            width: 100%;
-            /* Faz com que o vídeo preencha toda a largura do contêiner */
-            height: auto;
-            /* Mantém a proporção do vídeo */
-        }
+  <style>
+    /* Extras específicos desta página (o resto fica no site.css) */
+    .video-wrap{
+      max-width: 720px;
+      margin: 0 auto;
+    }
 
-        /* Opcional: Adiciona espaçamento entre os vídeos */
-        .video {
-            margin-bottom: 20px;
-        }
-    </style>
-    <title>Inserindo Vídeos</title>
+    .video-card{
+      display: grid;
+      gap: 10px;
+    }
+
+    /* Video local */
+    .video-local{
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    /* Embeds responsivos (YouTube/Vimeo) */
+    .embed{
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+      border-radius: 12px;
+      overflow: hidden;
+      background: #0f1724;
+    }
+    .embed iframe{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
 </head>
 
 <body>
-    <header>
-        <h1>Inserindo Vídeos</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Servidor próprio:</h2>
-        <div class="video">
-            <video width="80%" controls>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Inserindo Vídeos</h1>
+          <p class="muted">Três jeitos comuns: vídeo local (servidor próprio), YouTube e Vimeo, tudo responsivo.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">1) Servidor próprio (HTML5)</h2>
+
+            <div class="card soft video-wrap video-card">
+              <p class="muted" style="margin:0;">
+                Use <code>&lt;video&gt;</code> com múltiplos <code>&lt;source&gt;</code> para aumentar compatibilidade.
+                Na prática, <strong>mp4</strong> e <strong>webm</strong> já resolvem quase tudo.
+              </p>
+
+              <video class="video-local" controls preload="metadata">
                 <source src="midias/Esquilo-mp4.mp4" type="video/mp4">
                 <source src="midias/Esquilo-webm.webm" type="video/webm">
-                <source src="midias/Esquilo-mkv.mkv" type="video/mkv">
-                <source src="midias/esquilo-ogv.ogv" type="video/ogv">
-                <p>seu navegador não é compatível com o navegador!</p>
-            </video>
-        </div>
-        <h2>Vídeo do YouTube</h2>
-        <div class="video">
-            <iframe width="300" height="auto" src="https://www.youtube.com/embed/XUaTdMVMDFo?si=-T5MyzfdDalDqq9C"
-                title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
+                <p>Seu navegador não suporta vídeo HTML5.</p>
+              </video>
 
-        <h2>Vídeo do Vimeo</h2>
-        <div class="video">
-            <div style="padding:56.25% 0 0 0;position:relative;">
-                <iframe
-                    src="https://player.vimeo.com/video/172578124?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                    frameborder="0"
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                    style="position:absolute;top:0;left:0;width: 300px;height:auto;" title="Barlavento Reel 2016">
-                </iframe>
+              <div class="alert alert-warn" style="margin:0;">
+                <strong>Dica:</strong> vídeo local pesa no seu servidor. Se for conteúdo longo, YouTube/Vimeo costuma ser melhor.
+              </div>
             </div>
-        </div>
 
+            <h2 class="lesson-title" style="margin-top: 18px;">2) Vídeo do YouTube (embed)</h2>
 
-        <script src="https://player.vimeo.com/api/player.js"></script>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+            <div class="card soft video-wrap video-card">
+              <div class="embed" aria-label="Vídeo do YouTube">
+                <iframe
+                  src="https://www.youtube.com/embed/XUaTdMVMDFo?si=-T5MyzfdDalDqq9C"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <div class="alert" style="margin:0;">
+                <strong>Vantagem:</strong> carrega rápido e não pesa no seu servidor. <strong>Desvantagem:</strong> depende da plataforma.
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">3) Vídeo do Vimeo (embed)</h2>
+
+            <div class="card soft video-wrap video-card">
+              <div class="embed" aria-label="Vídeo do Vimeo">
+                <iframe
+                  src="https://player.vimeo.com/video/172578124?badge=0&autopause=0&player_id=0&app_id=58479"
+                  title="Barlavento Reel 2016"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <p class="tiny muted" style="margin:0;">
+                Observação: o script da API do Vimeo só é necessário se você for controlar o player via JavaScript.
+              </p>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Vídeo local com <code>mp4</code> e <code>webm</code></li>
+                <li><code>preload="metadata"</code> (página mais leve)</li>
+                <li>Embed responsivo (16:9)</li>
+                <li>Fallback texto para compatibilidade</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
         </div>
-        <br>
-        <br>
-    </main>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>

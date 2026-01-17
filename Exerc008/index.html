@@ -1,80 +1,246 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formatação de texto</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        p{
-            line-height: 1.8;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formatação de Texto | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Formatação de texto no HTML: b/strong, i/em, mark, del/ins, sup/sub e boas práticas." />
+
+  <style>
+    /* Ajuste leve só para esta página (didática com MARK) */
+    .demo p { line-height: 1.8; }
+    .code-inline {
+      background: rgba(0,0,0,0.04);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+    pre.codeblock{
+      white-space: pre-wrap;
+      margin: 0;
+      line-height: 1.8;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Formatação de Texto</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Negrito(B) / Destaque(STRONG)</h2>
-        <p>Nessa frase temos um <b>termo em negrito</b> usando a tag B(não semântica).</p>
-        <p>Já nesta outra frase aqui, temos um <strong>termo em negrito</strong> usando a tag STRONG (semântica).</p><br>
-        <h2>Itálico(I) / Ênfase(EM)</h2>
-        <p>Agora, neste outro caso temos um <i>termo em itálico</i> usando a tag I(Não semântica).</p>
-        <p>Agora, nesta outra frase temos o <em>termo ênfase</em> usando o termo EM (semântica).</p><br>
-        <h2>Texto Marcado(MARK)</h2>
-        <p>Podemos criar também um <mark>texto marcado</mark> usando a tag MARK.</p>
-        <p>também podemos usar a tag (mark style) <mark style="background-color: rgb(118, 223, 118);">para poder marcar um texto com outra cor.</mark></p>
-        <br>
-        <hr>
-        <br>
-        <h2>Quando eu tiver várias tags de marcação(MARK)?</h2>
-        <p>Primeiro você deixa <mark>todos os textos marcado de amarelo básico</mark></p>
-        <p>Como eu vou fazer neste <mark>exemplo aqui.</mark></p>
-        <p>Em seguida, na cabeça(HEAD) crie uma tag(STYLE) e entre esta tag crie uma marcação para adicionar o fundo de outra cor.</p>
-        <br>
-        <hr>
-        <br>
-        <p>Exemplo: <br><br> 
-            &lt;style&gt;<br>
-                mark {<br>
-                background-color: linegreen;<br>
-                    }<br>
-            &lt;/style&gt;<br>
-            <br>
-            <em>Assim o texto de todas as marcações ficará <mark style="background-color: rgb(50, 238, 106);">"verde"</mark></em>
-        </p>
-        <br>
-        <hr>
-        <br>
-        <h2>Texto Grande(BIG) / Texto pequeno(SMALL)</h2>
-        <p>Estamos criando um <big>texto grande</big> e um <small>texto pequeno.</small></p> <!--Aqui ambas as tags estão obsoletas, porém, somente uma aparece em vermelho.-->
-        <br>
-        <hr>
-        <br>
-        <h2>Texto excluido(DEL)</h2>
-        <p>Podemos marcar <del>um texto como excluído</del> para indicar que ele deve ser lido, mas não considerado.</p>
-        <br>
-        <hr>
-        <br>
-        <h2>Texto inserido(INS)</h2>
-        <p>Podemos marcar <ins>um texto inserido</ins> para dar ênfase e indicar que ele foi adicionado depois.</p>
-        <br>
-        <hr>
-        <br>
-        <h2>Texto Sobrescrito / Texto Subescrito</h2>
-        <h2>Texto Sobrescrito (SUP)</h2>
-        <p>Também conseguimos colocar textos Sobrescrito, como por exemplo: x<sup>20</sup>+3</p>
-        <h2>Texto Subescrito(SUB)</h2>
-        <p>Também conseguimos colocar textos Subescrito, como por exemplo: H<sub>2</sub>O</p>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Formatação de Texto</h1>
+          <p class="muted">Tags mais usadas para destaque, ênfase, marcação, inserção/exclusão e índices (sup/sub).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson demo">
+
+            <h2 class="lesson-title">Negrito: <code>&lt;b&gt;</code> vs <code>&lt;strong&gt;</code></h2>
+            <div class="card">
+              <p>Nessa frase temos um <b>termo em negrito</b> usando a tag <strong>B</strong> (não semântica).</p>
+              <p>Já nesta outra frase aqui, temos um <strong>termo em negrito</strong> usando a tag <strong>STRONG</strong> (semântica).</p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Itálico: <code>&lt;i&gt;</code> vs <code>&lt;em&gt;</code></h2>
+            <div class="card">
+              <p>Agora, neste outro caso temos um <i>termo em itálico</i> usando a tag <strong>I</strong> (não semântica).</p>
+              <p>Agora, nesta outra frase temos o <em>termo ênfase</em> usando o termo <strong>EM</strong> (semântica).</p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Texto marcado: <code>&lt;mark&gt;</code></h2>
+            <div class="card">
+              <p>Podemos criar também um <mark>texto marcado</mark> usando a tag <strong>MARK</strong>.</p>
+              <p>
+                Também podemos usar <span class="code-inline">mark style</span> para trocar a cor:
+                <mark style="background-color: rgb(118, 223, 118);">marcação com outra cor</mark>.
+              </p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Várias marcações com a mesma cor</h2>
+            <div class="card soft">
+              <p>Primeiro você deixa <mark>todos os textos marcado de amarelo básico</mark>.</p>
+              <p>Como eu vou fazer neste <mark>exemplo aqui.</mark></p>
+              <p>Em seguida, na cabeça (<strong>HEAD</strong>) crie uma tag <strong>STYLE</strong> e personalize o <code>mark</code>.</p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <pre class="codeblock"><code>&lt;style&gt;
+  mark {
+    background-color: limegreen;
+  }
+&lt;/style&gt;</code></pre>
+
+              <div class="alert" style="margin-top: 12px;">
+                <em>Assim o texto de todas as marcações ficará</em>
+                <mark style="background-color: rgb(50, 238, 106);">verde</mark>.
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Texto grande e pequeno: <code>&lt;big&gt;</code> / <code>&lt;small&gt;</code></h2>
+            <div class="card">
+              <p>Estamos criando um <big>texto grande</big> e um <small>texto pequeno</small>.</p>
+              <div class="alert alert-warn" style="margin-top: 12px;">
+                <strong>Observação:</strong> <code>&lt;big&gt;</code> é considerado obsoleto.
+                Para “tamanho”, o ideal é usar CSS (font-size) e manter a semântica com HTML.
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Texto excluído: <code>&lt;del&gt;</code></h2>
+            <div class="card">
+              <p>Podemos marcar <del>um texto como excluído</del> para indicar que ele deve ser lido, mas não considerado.</p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Texto inserido: <code>&lt;ins&gt;</code></h2>
+            <div class="card">
+              <p>Podemos marcar <ins>um texto inserido</ins> para dar ênfase e indicar que ele foi adicionado depois.</p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Sobrescrito e Subscrito: <code>&lt;sup&gt;</code> / <code>&lt;sub&gt;</code></h2>
+            <div class="card">
+              <h3 style="margin-top:0;">Sobrescrito (SUP)</h3>
+              <p>Exemplo: x<sup>20</sup>+3</p>
+
+              <h3>Subscrito (SUB)</h3>
+              <p>Exemplo: H<sub>2</sub>O</p>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Preferiu <code>&lt;strong&gt;</code> ao <code>&lt;b&gt;</code></li>
+                <li>Preferiu <code>&lt;em&gt;</code> ao <code>&lt;i&gt;</code></li>
+                <li>Usou <code>&lt;mark&gt;</code> com consistência</li>
+                <li>Entendeu <code>&lt;del&gt;</code> e <code>&lt;ins&gt;</code></li>
+                <li>Usou <code>&lt;sup&gt;</code> e <code>&lt;sub&gt;</code></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,121 +1,259 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Tags Obsoletas</title>
-    <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tags Obsoletas | HTML - Ailton A. Nakata</title>
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.8em;
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        /* HEADER parecido com o da página anterior */
-        header {
-            background-color: #336ea1; /* nova cor */
-            color: white;
-            padding: 25px;
-            text-align: center;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-        }
-        header h1 {
-            margin: 0;
-        }
-        header p {
-            text-align: center;
-            margin: 5px 0 0;
-            font-size: 0.9em;
-            font-style: italic;
-        }
-
-        main {
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-        }
-        h2, h3, h4 {
-            text-align: center;
-            margin: 20px 0 10px;
-        }
-        p {
-            text-align: justify;
-            text-indent: 20px;
-        }
-
-        /* Links */
-        a {
-            text-decoration: none;
-            color: #0066cc;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Bloco marquee */
-        .marquee-box {
-            border: 2px dashed #666;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px auto;
-            background: #f9f9f9;
-            text-align: center;
-            max-width: 600px;
-        }
-        marquee {
-            font-weight: bold;
-            color: #cc0000;
-            font-size: 1.1em;
-        }
-
-        /* Botão voltar */
-        #voltar {
-            text-align: center;
-            margin: 30px 0;
-        }
-        #voltar a {
-            background: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-        #voltar a:hover {
-            background: #555;
-        }
-    </style>
+  <meta name="description" content="Tags obsoletas no HTML: onde consultar a lista oficial, por que evitar e exemplo do marquee (com alternativa moderna)." />
 </head>
+
 <body>
-    <header>
-        <h1>Tags Obsoletas</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-
-    <main>
-        <h2>Confira na documentação oficial:</h2>
-        <p>
-            Você pode ver a lista completa de elementos e atributos <strong>obsoletos</strong> 
-            diretamente no site da 
-            <a href="https://www.w3.org/TR/2014/REC-html5-20141028/obsolete.html" target="_blank">W3C</a>.
-        </p>
-
-        <h4>Exemplo da tag <code>&lt;marquee&gt;</code>:</h4>
-        <div class="marquee-box">
-            <marquee behavior="" direction="right">
-                Marquee serve para fazer este letreiro se movimentar na tela.
-            </marquee>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <p>
-            Apesar de funcionar em alguns navegadores, o uso do <code>&lt;marquee&gt;</code> 
-            não é recomendado atualmente, pois é considerado um recurso obsoleto 
-            e prejudica a acessibilidade.
-        </p>
+      </a>
 
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Tags Obsoletas</h1>
+          <p class="muted">Como identificar recursos antigos (deprecated) e evitar problemas de acessibilidade e compatibilidade.</p>
         </div>
-    </main>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Onde conferir a lista oficial</h2>
+
+            <div class="card soft">
+              <p style="margin:0;">
+                Você pode ver a lista completa de elementos e atributos <strong>obsoletos</strong> na documentação oficial.
+              </p>
+              <p class="muted" style="margin:10px 0 0;">
+                Link:
+                <a href="https://www.w3.org/TR/2014/REC-html5-20141028/obsolete.html" target="_blank" rel="noopener noreferrer">
+                  W3C (lista de elementos obsoletos)
+                </a>
+              </p>
+            </div>
+
+            <div class="alert alert-warn" style="margin-top: 14px;">
+              <strong>Por que evitar?</strong> Tags/atributos obsoletos podem quebrar em navegadores, atrapalhar leitores de tela
+              e dificultar manutenção do site.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Exemplo: a tag <code>&lt;marquee&gt;</code></h2>
+
+            <div class="card">
+              <div class="card soft" style="border: 1px dashed rgba(0,0,0,0.2);">
+                <marquee behavior="" direction="right">
+                  Marquee serve para fazer este letreiro se movimentar na tela.
+                </marquee>
+              </div>
+
+              <p class="muted" style="margin:12px 0 0;">
+                Apesar de funcionar em alguns navegadores, <code>&lt;marquee&gt;</code> não é recomendado hoje:
+                é obsoleto e prejudica acessibilidade.
+              </p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Alternativa moderna (CSS)</h2>
+
+            <div class="card">
+              <p class="muted" style="margin-top:0;">
+                Em vez de <code>&lt;marquee&gt;</code>, você pode animar com CSS. Exemplo simples:
+              </p>
+
+              <pre style="white-space:pre-wrap; margin:0; line-height:1.8;"><code id="code-css-marquee">&lt;div class="ticker" aria-label="Letreiro animado"&gt;
+  &lt;div class="ticker-track"&gt;Letreiro animado com CSS (mais controlável e acessível).&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .ticker{
+    overflow:hidden;
+    border:1px dashed rgba(0,0,0,.2);
+    border-radius:12px;
+    padding:12px;
+    background:#fff;
+  }
+  .ticker-track{
+    display:inline-block;
+    white-space:nowrap;
+    padding-left:100%;
+    animation: ticker 10s linear infinite;
+  }
+  @keyframes ticker{
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ticker-track{ animation:none; padding-left:0; }
+  }
+&lt;/style&gt;</code></pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-target="code-css-marquee">Copiar</button>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> o trecho <code>prefers-reduced-motion</code> respeita usuários que preferem menos animação.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Consultou a doc oficial</li>
+                <li>Entendeu “obsoleto/deprecated”</li>
+                <li>Viu o exemplo do <code>marquee</code></li>
+                <li>Aprendeu alternativa com CSS</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar por data-copy-target -->
+  <script>
+    (function () {
+      document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-copy-target');
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const text = el.textContent.trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.textContent;
+            btn.textContent = 'Copiado!';
+            setTimeout(() => (btn.textContent = old), 1200);
+          } catch (err) {
+            console.error(err);
+            alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

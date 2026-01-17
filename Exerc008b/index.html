@@ -1,156 +1,295 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercício 008_B - Monoformatação</title>
-    <link rel="shortcut icon" href="favicon (2).ico" type="image/x-icon">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.8;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monoformatação | HTML - Ailton A. Nakata</title>
 
-        /* HEADER no mesmo estilo dos anteriores */
-        header {
-            background-color: #4a148c; /* roxo elegante */
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
-        }
-        header h1 {
-            padding: 0px;
-            margin: 0;
-        }
-        header p {
-            margin: 0px;
-            padding: 0px;
-            text-align: center;
-            font-size: 0.9em;
-            font-style: italic;
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        main {
-            max-width: 850px;
-            margin: auto;
-            padding: 20px;
-        }
+  <meta name="description" content="Monoformatação e citações no HTML: code/pre, q/blockquote/cite, abbr e bdo com exemplos práticos." />
 
-        h2 {
-            margin-top: 40px;
-            text-align: center;
-            color: #333;
-        }
-
-        p {
-            text-align: justify;
-            text-indent: 20px;
-            padding: 10px 0;
-        }
-
-        /* Blocos de código */
-        pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            border: 1px solid #ddd;
-        }
-        code {
-            font-family: Consolas, monospace;
-            font-size: 0.95em;
-            color: #d6336c;
-        }
-
-        /* Citações */
-        blockquote {
-            background: #f9f9f9;
-            border-left: 5px solid #4a148c;
-            margin: 20px 0;
-            padding: 15px;
-            font-style: italic;
-            border-radius: 5px;
-        }
-
-        q {
-            color: #444;
-            font-style: italic;
-        }
-
-        /* Botão voltar */
-        #voltar {
-            text-align: center;
-            margin: 40px 0 20px;
-        }
-        #voltar a {
-            background: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        #voltar a:hover {
-            background: #555;
-        }
-    </style>
+  <style>
+    /* Extras locais para “cara de aula” sem depender do site.css */
+    pre.codeblock{
+      white-space: pre-wrap;
+      margin: 0;
+      line-height: 1.8;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.04);
+      overflow: auto;
+    }
+    code.inline{
+      background: rgba(0,0,0,0.04);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+    blockquote.quote{
+      margin: 0;
+      padding: 14px 16px;
+      border-left: 6px solid rgba(0,0,0,0.18);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.03);
+      font-style: italic;
+      line-height: 1.8;
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <h1>Monoformatação</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
 
-    <main>
-        <h2>Código Fonte</h2>
-        <p>
-            A tag <code>&lt;code&gt;</code> deixa o texto <strong>monoformatado</strong>: é muito usada em linguagens de programação como <em>JavaScript</em> ou <em>Python</em>.
-        </p>
-        <pre><code>
-num = int(input("Digite um número"))
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Monoformatação</h1>
+          <p class="muted">Como exibir código, criar citações, abreviações e inverter direção de texto no HTML.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+
+            <h2 class="lesson-title">Código fonte: <code>&lt;code&gt;</code> e <code>&lt;pre&gt;</code></h2>
+            <div class="card">
+              <p class="muted" style="margin-top:0;">
+                A tag <code class="inline">&lt;code&gt;</code> deixa o texto <strong>monoformatado</strong>.
+                Quando você junta com <code class="inline">&lt;pre&gt;</code>, você preserva quebras de linha e indentação.
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <pre class="codeblock"><code id="code-python">num = int(input("Digite um número"))
 if num % 2 == 0:
     print(f"O número {num} é PAR")
 else:
     print(f"O número {num} é ÍMPAR")
 
-print("Fim do programa")
-        </code></pre>
+print("Fim do programa")</code></pre>
 
-        <hr>
-        <h2>Citações Curtas (q)</h2>
-        <p>
-            Como diria o pai de um amigo: 
-            <q>o computador é um burro muito rápido.</q>
-        </p>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-python">Copiar</button>
+                </div>
+              </div>
 
-        <hr>
-        <h2>Citações Completas (blockquote)</h2>
-        <p>Segundo a IA da Google denominada Gemini:</p>
-        <blockquote cite="https://www.w3.org/TR/html52/grouping-content.html#the-blockquote-element">
-            Em HTML, existem três principais elementos para lidar com citações: <code>q</code>, <code>blockquote</code> e <code>cite</code>. 
-            O <code>q</code> é usado para citações curtas em linha, o <code>blockquote</code> para citações longas e o <code>cite</code> para indicar a fonte da citação.
-            <br><br>
-            (@todos os direitos reservados Gemini)
-        </blockquote>
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> use <code class="inline">&lt;code&gt;</code> para trechos curtos e <code class="inline">&lt;pre&gt;&lt;code&gt;</code> para blocos.
+              </div>
+            </div>
 
-        <hr>
-        <h2>Abreviações (abbr)</h2>
-        <p>
-            Estou estudando <abbr title="HyperText MarkUp Language">HTML</abbr> e 
-            <abbr title="Cascading Style Sheets">CSS</abbr>. Estou adorando.
-        </p>
+            <h2 class="lesson-title" style="margin-top: 18px;">Citações curtas: <code>&lt;q&gt;</code></h2>
+            <div class="card">
+              <p>Como diria o pai de um amigo: <q>o computador é um burro muito rápido.</q></p>
+              <p class="muted" style="margin-bottom:0;">
+                Use <code class="inline">&lt;q&gt;</code> para citações <strong>na mesma linha</strong> do texto.
+              </p>
+            </div>
 
-        <hr>
-        <h2>Texto Invertido (bdo)</h2>
-        <p><bdo dir="rtl">Texto invertido</bdo> / Texto normal.</p>
-        <p>A tag <code>&lt;bdo dir="rtl"&gt;</code> inverte o sentido da escrita, enquanto <code>&lt;bdo dir="ltr"&gt;</code> mantém a direção normal.</p>
+            <h2 class="lesson-title" style="margin-top: 18px;">Citações longas: <code>&lt;blockquote&gt;</code> e fonte</h2>
+            <div class="card">
+              <p class="muted" style="margin-top:0;">Exemplo de citação em bloco:</p>
 
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+              <blockquote
+                class="quote"
+                cite="https://www.w3.org/TR/html52/grouping-content.html#the-blockquote-element">
+                Em HTML, existem três principais elementos para lidar com citações: <code class="inline">q</code>,
+                <code class="inline">blockquote</code> e <code class="inline">cite</code>.
+                O <code class="inline">q</code> é usado para citações curtas em linha, o <code class="inline">blockquote</code>
+                para citações longas e o <code class="inline">cite</code> para indicar a fonte da citação.
+              </blockquote>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin:0;">
+                  Fonte (exibida para o leitor):
+                  <a href="https://www.w3.org/TR/html52/grouping-content.html#the-blockquote-element" target="_blank" rel="noopener noreferrer">
+                    W3C HTML (blockquote element)
+                  </a>
+                </p>
+              </div>
+
+              <div class="alert alert-warn" style="margin-top: 12px;">
+                <strong>Boa prática:</strong> o atributo <code class="inline">cite</code> ajuda, mas mostrar a fonte como link
+                deixa a página mais transparente (e útil).
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Abreviações: <code>&lt;abbr&gt;</code></h2>
+            <div class="card">
+              <p>
+                Estou estudando
+                <abbr title="HyperText MarkUp Language">HTML</abbr> e
+                <abbr title="Cascading Style Sheets">CSS</abbr>. Estou adorando.
+              </p>
+              <p class="muted" style="margin-bottom:0;">
+                Passe o mouse em cima das siglas para ver o significado (o <code class="inline">title</code>).
+              </p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Texto invertido: <code>&lt;bdo&gt;</code></h2>
+            <div class="card">
+              <p><bdo dir="rtl">Texto invertido</bdo> / Texto normal.</p>
+              <p class="muted" style="margin-bottom:0;">
+                A tag <code class="inline">&lt;bdo dir="rtl"&gt;</code> inverte o sentido da escrita,
+                enquanto <code class="inline">&lt;bdo dir="ltr"&gt;</code> mantém a direção normal.
+              </p>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>&lt;code&gt;</code> e <code>&lt;pre&gt;</code> corretamente</li>
+                <li>Entendeu <code>&lt;q&gt;</code> (curto) vs <code>&lt;blockquote&gt;</code> (longo)</li>
+                <li>Aprendeu <code>&lt;abbr&gt;</code> com <code>title</code></li>
+                <li>Testou <code>&lt;bdo&gt;</code> rtl/ltr</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
         </div>
-    </main>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copiar por data-copy-target (apenas nesta página) -->
+  <script>
+    (function () {
+      document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-copy-target');
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const text = el.textContent.trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.textContent;
+            btn.textContent = 'Copiado!';
+            setTimeout(() => (btn.textContent = old), 1200);
+          } catch (err) {
+            console.error(err);
+            alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
