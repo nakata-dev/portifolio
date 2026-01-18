@@ -1,65 +1,281 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Personalização dos Fundos</title>
-    <style>
-        *{
-            margin: 0px;
-            padding: 0px;
-        }
-        body{
-            
-            
-            margin: auto;
-            width:100vw;
-            height: 100vh;
-            text-align: center;           
-        }
-        header{
-            display: block;
-            width: 100vw;
-            height: 80px;
-            margin: auto;
-        }
-        main{
-            background-image: url('https://gustavoguanabara.github.io/html-css/imagens/mascote.png');
-            
-            background-size: 100px 100px;
-            background-repeat: no-repeat;
-            background-position: center center;
-            border-radius: 20px;
-            min-width: 300px;
-            max-width: 800px;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>background-position</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    
-        <main>
-            <br><br>
-                <h2>
-                   background-image
-                </h2>
-            <br><br>
-            <br><br>
-            <br><br>
-            <br><br>
-            <br><br>
-            <br><br>
-            
-            <div id="voltar">
-                <a href="../html.html">Voltar</a>
-            </div>
-            <br>
-            <br>
-        </main>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Personalização dos Fundos | HTML - Ailton A. Nakata</title>
 
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aula prática de background-position: como posicionar uma imagem de fundo com repeat e size, em um exemplo responsivo." />
+
+  <style>
+    /* Escopo da aula */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+
+    .demo{
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      background: rgba(0,0,0,0.02);
+      padding: 14px;
+    }
+
+    .stage{
+      /* “Palco” para ver o background-position */
+      min-height: 340px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.10);
+      background-color: #fff;
+
+      background-image: url('https://gustavoguanabara.github.io/html-css/imagens/mascote.png');
+      background-size: 110px 110px;
+      background-repeat: no-repeat;
+      background-position: center center; /* ponto principal da aula */
+
+      display: grid;
+      place-items: center;
+      padding: 16px;
+    }
+
+    /* Um “overlay” leve só para dar contexto visual */
+    .stage-inner{
+      width: min(520px, 100%);
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .mini-grid{
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 720px){
+      .mini-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .pos-btn{
+      width: 100%;
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.02);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .pos-btn:hover{
+      background: rgba(0,0,0,0.05);
+    }
+
+    .code{
+      background:#0f1724;
+      color:#e6edf3;
+      padding:12px;
+      border-radius:12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:0.92rem;
+      overflow:auto;
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-top: 12px;
+    }
+    .code pre{ margin:0; white-space:pre-wrap; line-height:1.7; }
+  </style>
+</head>
+
+<body>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Background-position</h1>
+          <p class="muted">Posicionando uma imagem de fundo com <code>background-position</code>, sem usar <code>&lt;br&gt;</code> para “forçar” altura.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow demo">
+              <div class="stage" id="stage">
+                <div class="stage-inner">
+                  <h2 style="margin:0;">background-image</h2>
+                  <p class="muted" style="margin:8px 0 0;">
+                    Clique nos botões abaixo para mudar o <strong>position</strong>.
+                  </p>
+
+                  <div class="mini-grid" style="margin-top:12px;">
+                    <button class="pos-btn" type="button" data-pos="top left">Top left</button>
+                    <button class="pos-btn" type="button" data-pos="center center">Center</button>
+                    <button class="pos-btn" type="button" data-pos="bottom right">Bottom right</button>
+                  </div>
+
+                  <div class="code" aria-label="CSS atual">
+                    <pre><code id="css-out">background-position: center center;</code></pre>
+                  </div>
+
+                  <div class="hero-actions" style="margin-top: 12px; justify-content:center;">
+                    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Combo padrão:</strong> <code>background-repeat: no-repeat</code> + <code>background-size</code> + <code>background-position</code>.
+              </div>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>background-image</code></li>
+                <li>Entendeu <code>background-size</code></li>
+                <li>Usou <code>no-repeat</code></li>
+                <li>Testou <code>background-position</code></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS simples da aula -->
+  <script>
+    (function(){
+      const stage = document.getElementById('stage');
+      const out = document.getElementById('css-out');
+      document.querySelectorAll('[data-pos]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const pos = btn.getAttribute('data-pos');
+          stage.style.backgroundPosition = pos;
+          out.textContent = `background-position: ${pos};`;
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
+

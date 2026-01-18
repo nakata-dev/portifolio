@@ -1,161 +1,271 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../style.css">
-        <style>
-            *{
-                font-family: 'Times New Roman', Times, serif;
-            }
-        #voltar>a{
-             color: white;
-        }
-        #voltar{
-            font-family: 'Times New Roman', Times, serif;
-            
-            background-color: lightsalmon;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: rgb(211, 166, 149);;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
-        .container{
-            display: flex;
-            flex-flow: row nowrap;
-            background-color: lightsalmon;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flexbox | Shrink & Grow - Ailton A. Nakata</title>
 
-        }
+  <!-- Padrão do seu site -->
+  <link rel="stylesheet" href="../../site.css">
+  <script src="../../site.js" defer></script>
 
-        .item{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-            flex-basis: 100px;
-            border: 1px solid black;
-        }
-        /*flex-shrink serve para menores que 100px*/
-        /*flex-grow serve para maiores que 100px*/
-        #cxa{
-            flex-shrink: 0;
-            flex-grow: 0;
-        }
-        #cxb{
-            flex-shrink: 0;
-            flex-grow: 0;
-        }
-        #cxc{
-            flex-shrink: 0;
-            flex-grow: 0;
-        }
-        .container1{
-            display: flex;
-            flex-flow: row nowrap;
-            background-color: lightsalmon;
+  <style>
+    /* ===== Base profissional escura ===== */
+    *{ margin:0; padding:0; box-sizing:border-box; }
 
-        }
+    body{
+      background:#0b1220;
+      color:rgba(255,255,255,.92);
+      font-family: Arial, Helvetica, sans-serif;
+      padding:16px;
+    }
 
-        .item1{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-            flex-basis: 100px;
-            border: 1px solid black;
-        }
-        #cxa{
-            flex-shrink: 1;
-            flex-grow: 0;
-        }
-        #cxb{
-            flex-shrink: 1;
-            flex-grow: 3;
-        }
-        #cxc{
-            flex-shrink: 1;
-            flex-grow: 9;
-        }
+    /* Botões no topo */
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
 
-        main > p{
-            text-align: justify;
-            text-indent: 25px;
-            line-height: 1.5;
-        }
-    </style>
-    <title>Flex_box</title>
+    /* remove hover antigo que girava tudo */
+    a:hover{
+      transform:none !important;
+      animation:none !important;
+    }
+
+    hr{
+      border:0;
+      border-top:1px solid rgba(255,255,255,.12);
+      margin:14px 0;
+    }
+
+    header h1{ margin: 8px 0 6px; }
+    header p{ color: rgba(255,255,255,.72); margin-bottom: 6px; }
+
+    main{
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    main p{
+      text-align: justify;
+      text-indent: 25px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.82);
+      margin: 10px 0;
+    }
+
+    h2{ margin-top: 10px; }
+    h3{ margin-top: 10px; }
+    h4{ margin: 10px 0 6px; }
+
+    /* Voltar antigo escondido (agora usamos botões do topo) */
+    #voltar{ display:none; }
+
+    /* ===== Containers (mesma lógica, só tons profissionais) ===== */
+    .container,
+    .container1{
+      display:flex;
+      flex-flow: row nowrap;
+      background-color:#111a2e;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      padding:10px;
+      overflow:hidden;
+      gap:10px;
+    }
+
+    .item,
+    .item1{
+      flex-basis: 100px;
+      background-color:#0f2a44;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:10px;
+      color: rgba(255,255,255,.92);
+      text-align:center;
+      padding:14px 10px;
+      font-weight: 900;
+    }
+
+    /* =========================================================
+       ✅ EXEMPLO 1 (Configuração Padrão)
+       - Você explicava shrink/grow, mas o CSS estava duplicado e confuso.
+       - Aqui fica claro: NINGUÉM cresce e NINGUÉM encolhe.
+       ========================================================= */
+    #cxa{ flex-shrink: 0; flex-grow: 0; }
+    #cxb{ flex-shrink: 0; flex-grow: 0; }
+    #cxc{ flex-shrink: 0; flex-grow: 0; }
+
+    /* =========================================================
+       ✅ EXEMPLO 2 (Alterando proporção)
+       - Agora o CSS mira os IDs certos: cxa1 / cxb1 / cxc1
+       ========================================================= */
+    #cxa1{ flex-shrink: 1; flex-grow: 0; }
+    #cxb1{ flex-shrink: 1; flex-grow: 3; }
+    #cxc1{ flex-shrink: 1; flex-grow: 9; }
+
+    /* caixinha de leitura (só visual) */
+    .card{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 14px;
+      margin: 12px 0;
+    }
+
+    .muted{
+      color: rgba(255,255,255,.72);
+    }
+
+    .code{
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 12px;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: rgba(255,255,255,.92);
+      overflow: auto;
+      margin-top: 10px;
+    }
+  </style>
 </head>
+
 <body>
+  <!-- ✅ Botões necessários acima do título -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <main>
     <header>
-        <h1>flex-Shrink / grow</h1>
-        <p>por: Ailton A. Nakata</p>
+      <h1>flex-shrink / flex-grow</h1>
+      <p class="muted">por: Ailton A. Nakata</p>
     </header>
 
-    <main>
-        
-        <hr>
-        <h3>Para valores menores: flex-shrink</h3>
-        <p>
-<h4>📌 1. flex-shrink: 1;</h4>
-Significado: diz se o item pode encolher quando faltar espaço no container. <br>
+    <hr>
 
-O valor 1 significa que ele pode encolher proporcionalmente. <br>
+    <div class="card">
+      <h3>Para valores menores: <strong>flex-shrink</strong></h3>
 
-O valor 0 significa que ele não encolhe nunca, mesmo que estoure o container. <br><br>
+      <h4>📌 flex-shrink: 1;</h4>
+      <p>
+        Diz se o item pode encolher quando faltar espaço no container.
+        O valor <strong>1</strong> significa que ele pode encolher proporcionalmente.
+        O valor <strong>0</strong> significa que ele não encolhe nunca.
+      </p>
 
-✅ Exemplo prático <br><br>
-Imagine 3 caixas dentro de um display: flex; e a largura total delas é maior  que o container:
-<br>
-Se todas têm flex-shrink: 1, elas vão encolher de forma igual.
-<br>
-Se uma tiver flex-shrink: 0, essa caixa não encolhe, e as outras terão que encolher mais para caber.
-</p>
-<br>
-<hr>
-        <h3>Para valores maiores flex-grow</h3>
-<br>
-<p>
-    <h4>📌 2. flex-grow: 0;</h4>
+      <p class="muted">
+        Se uma caixa tiver <strong>flex-shrink: 0</strong>, ela “resiste” e as outras encolhem mais para caber.
+      </p>
+    </div>
 
-Significado: indica se o item pode crescer para ocupar espaço extra dentro do container. <br>
+    <div class="card">
+      <h3>Para valores maiores: <strong>flex-grow</strong></h3>
 
-O valor 0 significa que ele não cresce nunca, mesmo que sobre espaço. <br>
+      <h4>📌 flex-grow: 0;</h4>
+      <p>
+        Indica se o item pode crescer para ocupar espaço extra dentro do container.
+        O valor <strong>0</strong> não cresce. O valor <strong>1</strong> cresce proporcionalmente.
+      </p>
 
-O valor 1 significa que ele cresce proporcionalmente para ocupar o espaço livre. <br><br>
+      <div class="code">
+Exemplo mental rápido:
+- Sobrou espaço no container?
+  grow 0 = não ocupa
+  grow 1 = ocupa proporcionalmente
+      </div>
+    </div>
 
-✅ Exemplo prático <br><br>
-Se um container tiver 800px e você colocar duas caixas de 200px cada (total 400px): <br>
+    <hr>
 
-Com flex-grow: 0, elas continuam com 200px e o espaço sobrando fica vazio. <br>
+    <h2>Configuração Padrão</h2>
+    <p class="muted">Aqui ninguém cresce e ninguém encolhe (grow 0 / shrink 0).</p>
 
-Com flex-grow: 1, elas crescem para ocupar igualmente os 400px restantes(ficando com 400px cada). <br>
-</p>
-<hr>
-        <h2>Configuração Padrão</h2>
-        <div class="container">
-            <div class="item" id="cxa">A</div>
-            <div class="item" id="cxb">B</div>
-            <div class="item" id="cxc">C</div>
-        </div>
-        <hr>
-        <h2>Alterando proporção: flex-grow: 9;</h2>
-        <div class="container1">
-            <div class="item1" id="cxa1">A</div>
-            <div class="item1" id="cxb1">B</div>
-            <div class="item1" id="cxc1">C</div>
-        </div>
-        <hr>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
-        </div>
-            <br>
-            <br>
-    </main>
+    <div class="container">
+      <div class="item" id="cxa">A</div>
+      <div class="item" id="cxb">B</div>
+      <div class="item" id="cxc">C</div>
+    </div>
+
+    <hr>
+
+    <h2>Alterando proporção (flex-grow)</h2>
+    <p class="muted">B cresce 3x e C cresce 9x em relação ao espaço livre.</p>
+
+    <div class="container1">
+      <div class="item1" id="cxa1">A</div>
+      <div class="item1" id="cxb1">B</div>
+      <div class="item1" id="cxc1">C</div>
+    </div>
+
+    <hr>
+  </main>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

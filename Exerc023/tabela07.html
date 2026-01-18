@@ -1,235 +1,343 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header>p{
-            text-align: center;
-        }
-        header>h1{
-            text-align: center;
-        }
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        p{
-            text-align: justify;
-            line-height:1.8;
-            text-indent: 30px;
-            padding: 5px;
-            padding: 15px;
-        }
-        table{
-            border-collapse:collapse;
-        }
-        caption{
-            font-size: 1.2em;
-            font-weight: bolder;
-            padding: 20px;
-            text-align: auto;
-            padding: 10px;
-        }
-        th,td{
-            border: 1px solid black;
-            padding: 10px;
-        }
-        tr:nth-child(even){
-            background-color: lightgray;
-        }
-        /* Aqui vemos a mágica acontecer!*/
-        div#container{
-            overflow-x: auto; 
-            max-width: 800px;
-            min-width: 300px;
-            width: auto;
-        }
-    </style>
-    <title>Tabelas_Responsivas</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tabelas Responsivas | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Tabela responsiva com overflow-x e efeito zebrado usando :nth-child(even), com layout profissional e alto contraste." />
+
+  <style>
+    /* ===== Aula: tabelas responsivas (overflow-x + zebra) ===== */
+    .table-card{
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .table-wrap{
+      width: 100%;
+      overflow-x: auto; /* a “mágica” */
+      padding-bottom: 4px;
+    }
+
+    table{
+      width: 100%;
+      min-width: 860px; /* meses + produto */
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      color: #111;
+    }
+
+    caption{
+      caption-side: top;
+      padding: 12px 10px;
+      font-weight: 900;
+      font-size: 1.15rem;
+      text-align: left;
+      color: #111;
+    }
+
+    thead th{
+      background: #111;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 12px;
+      text-align: left;
+      font-weight: 900;
+      white-space: nowrap;
+      position: sticky; /* bônus: cabeçalho “gruda” no scroll horizontal */
+      left: 0;
+    }
+
+    /* Deixa só o primeiro cabeçalho grudado (Produto) */
+    thead th:not(:first-child){
+      position: static;
+    }
+
+    td{
+      border: 1px solid rgba(0,0,0,0.22);
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+      color: #111;
+      white-space: nowrap;
+    }
+
+    /* Primeira coluna (Produto) alinhada à esquerda e levemente destacada */
+    tbody td:first-child{
+      text-align: left;
+      font-weight: 900;
+    }
+
+    /* Zebra apenas no tbody */
+    tbody tr:nth-child(even) td{
+      background: rgba(0,0,0,0.03);
+    }
+
+    .prose{
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: #111;
+    }
+
+    .prose strong{
+      font-weight: 900;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Overflor</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <caption>Tabelas responsivas</caption>
-            <thead>
-                <div id="container">
-                    <table>
-                        <tr>
-                            <th>Produto</th>
-                            <th>Janeiro</th>
-                            <th>Fevereiro</th>
-                            <th>Março</th>
-                            <th>Abril</th>
-                            <th>Maio</th>
-                            <th>Junho</th>
-                            <th>Julho</th>
-                            <th>Agosto</th>
-                            <th>Setembro</th>
-                            <th>Outubro</th>
-                            <th>Novembro</th>
-                            <th>Dezembro</th>
-                        </tr>
-                            </thead>
-                    <tbody>
-                    <tr>
-                        <td>TV'40</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Home Theater</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Samsung Galaxy S20</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Ipad Mini</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Playstation5</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Lava louças</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Amazon Echo</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Forno Micro-ondas</td>
-                        <td>01</td>
-                        <td>03</td>
-                        <td>07</td>
-                        <td>08</td>
-                        <td>09</td>
-                        <td>09</td>
-                        <td>15</td>
-                        <td>06</td>
-                        <td>08</td>
-                        <td>07</td>
-                        <td>12</td>
-                        <td>11</td>
-                    </tr>
-                    </tbody>
-                        </table>
-                    </div>
-    <p>
-        Ao envelopar uma tabela com uma Div, você pode criar uma ID de nome container. Isso vai te proporcionar o uso do seletor <strong>(overflor)</strong>:
-    </p>
-    <p>
-                ➡️ Ele controla o que acontece quando o conteúdo ultrapassa a largura do elemento (no eixo horizontal, ou seja, no “x”). <br><br>
-                <strong>overflow-x</strong> → cuida do transbordamento na horizontal.
-                <strong>auto</strong> → faz com que apareça uma barra de rolagem horizontal somente se for necessário. <br>
-                <br>📌 Em resumo:
-                <strong>Se o conteúdo for maior</strong> que a largura do container, o navegador mostra uma scrollbar horizontal automaticamente.
-            </p>
-            <br>
-        
-        
-        <br><br>
-        <h1>Pseudoclasse:</h1>
-            <br><p>
-                👉 Ele é um pseudoclass selector do CSS, usado para aplicar estilos a elementos com base em sua posição entre os irmãos no DOM. <br><br>
-                tr → seleciona todas as linhas da tabela.
-                <strong>:nth-child(even)</strong>
-                <br><br> → seleciona apenas os filhos pares <strong>(even = par)</strong>.
-                <br><br>Ou seja:
-                Esse comando aplica o estilo somente às linhas pares de uma tabela. <br><br>
-                📌 Exemplo prático (efeito "zebrado" em tabelas):
-            </p>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
-    
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Tabelas Responsivas</h1>
+          <p class="muted">Como usar <code>overflow-x</code> para rolagem horizontal e <code>:nth-child(even)</code> para efeito “zebrado”.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <button class="btn btn-primary" data-open-modal type="button">Quero um site profissional</button>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Exemplo: Vendas por mês</h2>
+
+            <div class="card soft">
+              <div class="alert">
+                <strong>Objetivo:</strong> quando a tabela “estoura” no mobile, você coloca ela dentro de um container com <code>overflow-x: auto</code>.
+              </div>
+
+              <div class="table-card" style="margin-top: 12px;">
+                <div class="table-wrap" aria-label="Tabela responsiva de vendas por mês">
+                  <table>
+                    <caption>Tabelas responsivas</caption>
+
+                    <thead>
+                      <tr>
+                        <th scope="col">Produto</th>
+                        <th scope="col">Janeiro</th>
+                        <th scope="col">Fevereiro</th>
+                        <th scope="col">Março</th>
+                        <th scope="col">Abril</th>
+                        <th scope="col">Maio</th>
+                        <th scope="col">Junho</th>
+                        <th scope="col">Julho</th>
+                        <th scope="col">Agosto</th>
+                        <th scope="col">Setembro</th>
+                        <th scope="col">Outubro</th>
+                        <th scope="col">Novembro</th>
+                        <th scope="col">Dezembro</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>TV 40"</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                      <tr>
+                        <td>Home Theater</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                      <tr>
+                        <td>Samsung Galaxy S20</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                      <tr>
+                        <td>iPad Mini</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                      <tr>
+                        <td>PlayStation 5</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                      <tr>
+                        <td>Lava-louças</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                      <tr>
+                        <td>Amazon Echo</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                      <tr>
+                        <td>Forno micro-ondas</td>
+                        <td>01</td><td>03</td><td>07</td><td>08</td><td>09</td><td>09</td><td>15</td><td>06</td><td>08</td><td>07</td><td>12</td><td>11</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div style="margin-top: 14px;">
+                <h2 class="lesson-title" style="margin-bottom: 8px;">Por que <code>overflow-x</code> funciona?</h2>
+                <div class="card">
+                  <p class="prose">
+                    Ao envolver a tabela com uma <strong>div</strong> (um “envelope”) e aplicar <strong><code>overflow-x: auto</code></strong>,
+                    você controla o que acontece quando o conteúdo ultrapassa a largura do elemento no eixo horizontal.
+                    <br><br>
+                    <strong><code>overflow-x</code></strong> cuida do transbordamento na horizontal e <strong><code>auto</code></strong> faz aparecer a barra
+                    de rolagem <strong>somente quando necessário</strong>. Resultado: no mobile a tabela não quebra o layout, ela “vira uma prancheta rolável”.
+                  </p>
+                </div>
+              </div>
+
+              <div style="margin-top: 14px;">
+                <h2 class="lesson-title" style="margin-bottom: 8px;">Pseudoclasse: <code>:nth-child(even)</code></h2>
+                <div class="card">
+                  <p class="prose">
+                    <code>:nth-child(even)</code> é um seletor de pseudoclasse que aplica estilo com base na posição do elemento entre os irmãos.
+                    <br><br>
+                    No caso das tabelas:
+                    <br>
+                    <strong><code>tbody tr:nth-child(even)</code></strong> seleciona as linhas pares do corpo da tabela
+                    (even = par) e cria o efeito “zebrado”, melhorando a leitura linha a linha.
+                  </p>
+                </div>
+              </div>
+
+              <div class="lesson-actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+              </div>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Envelopou com <code>overflow-x: auto</code></li>
+                <li>Usou <code>thead</code> e <code>tbody</code></li>
+                <li>Zebra com <code>:nth-child(even)</code></li>
+                <li>Texto legível e contraste ok</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="hero-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../estudos.html">Voltar para Estudos</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label for="nome">Seu nome</label>
+            <input id="nome" name="nome" type="text" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="negocio">Seu negócio / segmento</label>
+            <input id="negocio" name="negocio" type="text" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label for="tipo">Tipo de site</label>
+            <select id="tipo" name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo" name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="prazo">Prazo</label>
+            <input id="prazo" name="prazo" type="text" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label for="detalhes">Detalhes (opcional)</label>
+            <textarea id="detalhes" name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

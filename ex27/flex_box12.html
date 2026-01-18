@@ -1,43 +1,184 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="mobile.css" media="screen and (max-width:580px)">
-    <title>Menu Flexbox</title>
-</head>
-<body>
-    <header>
-        <h1>Site Flexbox</h1>
-        <nav>
-            <a href="#">Opção 01</a>
-            <a href="#">Opção 02</a>
-            <a href="#">Opção 03</a>
-            <a href="#">Opção 04</a>
-            <a href="#">Opção 05</a>
-            <a href="../html.html">Voltar</a>
-        </nav>
-    </header>
-    
-    <main>
-        <h2>Em Mobile.css:</h2>
-        <p><strong>header, header > nav:</strong> Isso significa : selecione o elemento <mark>"header"</mark> e, separadamente, selecione o elemento <mark>"nav"</mark> que é um filho direto do <mark>"header"</mark>. É como se você estivesse apontando para duas coisas: o cabeçalho inteiro e a barra de navegação que está dentro dele.</p>
-        <br>
-        <strong>flex-flow:</strong> Essa é uma propriedade abreviada que combina duas outras: flex-direction e flex-wrap.
-        <br><br>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Flexbox | Ailton A. Nakata</title>
 
-        <strong>
-            <mark>column</mark>
-        </strong>: Esta parte do comando (<strong>flex-direction: column</strong>) diz que os elementos dentro do contêiner flexível devem ser organizados em uma coluna, de cima para baixo. Em vez de ficarem lado a lado (<mark>que é o padrão do flex-direction: row</mark>), eles vão se empilhar.
-        <br>
-        <br>
-        <b>nowrap</b>: Esta parte (<mark>flex-wrap: nowrap</mark>) diz que os elementos não devem quebrar para a próxima linha. <i><b>Se eles excederem o espaço disponível, eles simplesmente vão "transbordar"</b></i> ou ficar comprimidos, mas não passarão para uma nova linha.
-        </p>
-        <br>
-        <h2>Em style.css:</h2>
-        <br>
-        <pre>
+  <!-- Padrão do site -->
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css">
+  <script src="../../site.js" defer></script>
+
+  <!-- CSS do seu exercício (mantidos) -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css" media="screen and (max-width:580px)">
+
+  <style>
+    /* ===== Base escura profissional (sem brigar com seu exercício) ===== */
+    *{ box-sizing: border-box; }
+
+    body{
+      background: radial-gradient(900px 360px at 15% 10%, rgba(59,130,246,.14), transparent 55%),
+                  radial-gradient(860px 320px at 80% 20%, rgba(20,184,166,.10), transparent 60%),
+                  #0b1220;
+      color: rgba(255,255,255,.92);
+    }
+
+    /* Botões acima do título */
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin: 14px auto 10px;
+      max-width: 1100px;
+      padding: 0 14px;
+    }
+
+    /* neutraliza hover “global” caso algum css local tente girar link */
+    a:hover{
+      transform:none !important;
+      animation:none !important;
+    }
+
+    /* Envolvimento padrão da lição (pra ficar alinhado ao seu site) */
+    .stage{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 14px 18px;
+    }
+
+    .page-head{
+      padding: 10px 0 6px;
+    }
+
+    .page-head h1{
+      margin: 0;
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+      color: rgba(255,255,255,.96);
+    }
+
+    .page-head p{
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.72);
+    }
+
+    /* Card do conteúdo (explicações + códigos) */
+    .lesson-card{
+      margin-top: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .lesson-card h2{
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+      color: rgba(255,255,255,.95);
+    }
+
+    .lesson-card p{
+      margin: 10px 0;
+      line-height: 1.8;
+      color: rgba(255,255,255,.82);
+      text-align: justify;
+    }
+
+    /* Pre/código legível e sem quebrar layout */
+    pre{
+      margin: 12px 0 0;
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 14px;
+      overflow:auto;
+      color: rgba(255,255,255,.92);
+      line-height: 1.7;
+      white-space: pre;
+    }
+
+    /* marcação (mark) mais elegante em dark */
+    mark{
+      background: rgba(59,130,246,.22);
+      color: rgba(255,255,255,.92);
+      padding: 0 .25em;
+      border-radius: 6px;
+    }
+
+    /* Dá um respiro entre header do exercício e card */
+    header{
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    /* Em telas pequenas, melhora leitura */
+    @media (max-width: 600px){
+      .lesson-card{ padding: 14px; }
+      pre{ padding: 12px; border-radius: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ✅ Botões padrão acima do título -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <div class="stage">
+    <div class="page-head">
+      <h1>Menu Flexbox</h1>
+      <p class="muted">Exercício de layout com Flexbox + ajuste via <code>mobile.css</code>.</p>
+    </div>
+
+    <!-- ✅ Seu exercício: mantido (header + nav com links) -->
+    <header>
+      <h1>Site Flexbox</h1>
+      <nav>
+        <a href="#">Opção 01</a>
+        <a href="#">Opção 02</a>
+        <a href="#">Opção 03</a>
+        <a href="#">Opção 04</a>
+        <a href="#">Opção 05</a>
+        <a href="../html.html">Voltar</a>
+      </nav>
+    </header>
+
+    <!-- ✅ Conteúdo/explicação em layout profissional -->
+    <main class="lesson-card">
+      <h2>Em mobile.css</h2>
+
+      <p>
+        <strong>header, header &gt; nav:</strong>
+        Isso significa: selecione o elemento <mark>header</mark> e, separadamente, selecione o <mark>nav</mark>
+        que é filho direto do <mark>header</mark>.
+      </p>
+
+      <p>
+        <strong>flex-flow:</strong> é uma propriedade abreviada que combina <strong>flex-direction</strong> e
+        <strong>flex-wrap</strong>.
+      </p>
+
+      <p>
+        <strong><mark>column</mark></strong>: organiza os itens de cima para baixo
+        (equivale a <strong>flex-direction: column</strong>).
+      </p>
+
+      <p>
+        <strong>nowrap</strong>: não permite quebra de linha
+        (equivale a <mark>flex-wrap: nowrap</mark>).
+        Se exceder o espaço, pode “espremir” ou transbordar, mas não quebra.
+      </p>
+
+      <hr style="border:0;border-top:1px solid rgba(255,255,255,.12);margin:14px 0;">
+
+      <h2>Em style.css</h2>
+      <pre>
 @charset "UTF-8";
 *{
     margin: 0px;
@@ -88,10 +229,9 @@ header > nav > a:hover{
 
 header > nav{
     /*border: 1px dotted black;*/
-
     display: flex;
     flex-flow: row wrap;
-    justify-content: flex-end; 
+    justify-content: flex-end;
 }
 
 main{
@@ -104,13 +244,10 @@ main{
     padding: 20px;
     box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.548);
 }
+      </pre>
 
-
-        </pre>
-        <br>
-        <h2>Em mobile.css:</h2>
-        <br>
-        <pre>
+      <h2 style="margin-top:16px;">Em mobile.css</h2>
+      <pre>
 @charset "UTF-8";
 
 header, header > nav{
@@ -124,7 +261,71 @@ header > h1{
 header > nav > a{
     width:90vw
 }
-        </pre>
+      </pre>
     </main>
+  </div>
+
+  <!-- ✅ Modal padrão do seu site -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions" style="margin:12px 0 0; padding:0;">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

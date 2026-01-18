@@ -1,171 +1,333 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exemplo de Media Queries</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        *{
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
-        #voltar {
-            text-align: center;
-        }
-        #voltar a:hover {
-            background-color: rgba(99, 108, 243, 0.747);
-            padding: 10px;
-            font-weight: bolder;
-            border-radius: 10px;
-            transform: scale(1.1);
-            transition-duration: 0.5s;
-        }
-        /* Estilos Padrão para telas grandes (Desktop) */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-            color: #333;
-            transition: background-color 0.5s ease;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Media Queries | Layout Responsivo II - Ailton A. Nakata</title>
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        
+  <meta name="description" content="Exemplo de Media Queries para desktop, tablet, celular e impressão, com área de demonstração que muda ao redimensionar a tela." />
 
-        p {
-            line-height: 1.6;
-        }
+  <style>
+    /* Área de demonstração: aqui a gente pode brincar com cores sem brigar com o tema do site */
+    .demo-stage{
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
 
-        .info-box {
-            background-color: #3498db;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            margin-top: 20px;
-        }
+    .demo-stage h2{
+      margin-top: 0;
+    }
 
-        /* ------------------------------------------- */
-        /* Media Query para Telas de Tablets */
-        /* Quando a largura da tela for entre 601px e 900px */
-        @media screen and (min-width: 601px) and (max-width: 900px) {
-            body {
-                background-color: #d1d8e0;
-            }
-            .container {
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            h1 {
-                font-size: 2em;
-            }
-            .info-box {
-                background-color: #e67e22; /* Laranja */
-            }
-        }
+    .demo-box{
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      text-align: center;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
 
-        /* ------------------------------------------- */
-        /* Media Query para Telas de Celulares */
-        /* Quando a largura da tela for até 600px */
-        @media screen and (max-width: 600px) {
-            body {
-                padding: 10px;
-                background-color: #a4b0be;
-            }
-            .container {
-                padding: 15px;
-                border-radius: 0;
-            }
-            h1 {
-                font-size: 1.5em;
-                text-align: center;
-            }
-            .info-box {
-                background-color: #4568f5; /* Vermelho */
-                font-size: 0.9em;
-            }
-        }
+    .demo-width{
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
 
-        /* ------------------------------------------- */
-        /* Media Query para Impressão */
-        /* O navegador aplica essas regras apenas ao imprimir a página */
-        @media print {
-            /* Altera a cor de fundo e do texto para otimizar para impressão */
-            body {
-                background-color: white;
-                color: black;
-            }
+    .pill{
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      font-weight: 900;
+      min-width: 72px;
+      text-align: center;
+    }
 
-            /* Esconde os elementos que não são importantes para a versão impressa */
-            .info-box, .tamanho-tela {
-                display: none;
-            }
-            
-            /* Remove a sombra para economizar tinta da impressora */
-            .container {
-                box-shadow: none;
-            }
-            
-            /* Garante que o texto seja legível, mesmo que a cor da fonte padrão mude */
-            p, h1 {
-                color: black !important;
-            }
-        }
-    </style>
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+    .prose ul{
+      margin: 10px 0 0 18px;
+      line-height: 1.8;
+    }
+
+    /* ===============================
+       MEDIA QUERIES DA DEMONSTRAÇÃO
+       (não alteram o layout do site inteiro,
+       só mudam a demo)
+       =============================== */
+
+    /* Desktop (padrão) */
+    .demo-stage{
+      background: rgba(255,255,255,.03);
+    }
+    .demo-box{
+      background: rgba(255,255,255,.05);
+    }
+
+    /* Tablet: 601 a 900 */
+    @media screen and (min-width: 601px) and (max-width: 900px){
+      .demo-stage{
+        background: rgba(230, 126, 34, .10);
+      }
+      .demo-box{
+        background: rgba(230, 126, 34, .22);
+      }
+    }
+
+    /* Celular: até 600 */
+    @media screen and (max-width: 600px){
+      .demo-stage{
+        padding: 14px;
+        border-radius: 14px;
+        background: rgba(69, 104, 245, .12);
+      }
+      .demo-box{
+        background: rgba(69, 104, 245, .22);
+        font-size: .95em;
+      }
+    }
+
+    /* Impressão: esconde elementos de “brincadeira” */
+    @media print{
+      .demo-box,
+      .demo-width,
+      .wa-float,
+      .modal-overlay,
+      .nav,
+      .hero-actions,
+      .lesson-aside{
+        display: none !important;
+      }
+
+      .site-header, .site-footer{
+        display: none !important;
+      }
+
+      body{
+        color: #000 !important;
+        background: #fff !important;
+      }
+    }
+  </style>
 </head>
-<body>
-<header>
-    <h1>Layout Responsivo II</h1>
-    <p>por: Ailton A. Nakata</p>
-</header>
-    <div class="container">
-        <h1 id="titulo">Layout Responsivo com Media Queries</h1>
-        <p>
-            Este é um exemplo de como usar **Media Queries** para adaptar o design de um site a diferentes tamanhos de tela.
-            Tente redimensionar a janela do navegador para ver as mudanças acontecerem em tempo real.
-        </p>
-        <div class="info-box">
-            A cor de fundo e o estilo deste bloco vão mudar!
-        </div>
-        <p>
-            Quando a tela for:
-            <ul>
-                <li>**Grande:** A cor de fundo será cinza claro.</li>
-                <li>**De Tablet (601px a 900px):** A cor de fundo mudará para um cinza médio e o bloco de informação ficará laranja.</li>
-                <li>**De Celular (até 600px):** A cor de fundo ficará mais escura e o bloco de informação se tornará vermelho.</li>
-            </ul>
-        </p>
-        <p>Você pode usar Media Queries para controlar não apenas cores, mas também layouts, tamanhos de fonte, e até mesmo a visibilidade de elementos.</p>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
-        </div>
-        <br><br>
-    </div>
 
-    <div class="info-box tamanho-tela">
-        Largura da tela: <span id="largura-tela"></span> px
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Layout Responsivo II</h1>
+          <p class="muted">Exemplo prático de <strong>Media Queries</strong> (desktop, tablet, celular e impressão).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Media Queries na prática</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>
+                Este exemplo mostra como usar <strong>Media Queries</strong> para adaptar o design a diferentes larguras de tela.
+                Redimensione a janela do navegador (ou teste no celular) para ver a área de demonstração mudar.
+              </p>
+
+              <ul>
+                <li><strong>Desktop (padrão):</strong> estilo neutro.</li>
+                <li><strong>Tablet (601px a 900px):</strong> a demo muda para laranja.</li>
+                <li><strong>Celular (até 600px):</strong> a demo muda para azul.</li>
+                <li><strong>Impressão (print):</strong> esconde elementos não essenciais.</li>
+              </ul>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <div class="demo-stage" aria-label="Área de demonstração das media queries">
+                <h2 style="margin-bottom: 6px;">Área de demonstração</h2>
+                <p class="muted" style="margin: 0;">
+                  O estilo aqui muda conforme a largura da tela (sem alterar o tema do site inteiro).
+                </p>
+
+                <div class="demo-box">
+                  A cor e o estilo deste bloco mudam com as Media Queries!
+                </div>
+
+                <div class="demo-width" aria-live="polite">
+                  <span class="muted">Largura da tela</span>
+                  <span class="pill"><span id="largura-tela">0</span> px</span>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> use media queries para layout, tipografia e espaçamentos. Para “temas inteiros”,
+                prefira classes e variáveis CSS (fica mais controlável).
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu <strong>max-width</strong> e <strong>min-width</strong></li>
+                <li>Testou desktop, tablet e celular</li>
+                <li>Viu como funciona <strong>@media print</strong></li>
+                <li>Separou “demo” do layout do site</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
 
     <script>
-        // Este script apenas mostra a largura da tela em tempo real
+      (function () {
         const larguraTelaSpan = document.getElementById('largura-tela');
+        if (!larguraTelaSpan) return;
+
         function atualizarLargura() {
-            larguraTelaSpan.textContent = window.innerWidth;
+          larguraTelaSpan.textContent = String(window.innerWidth);
         }
-        window.addEventListener('resize', atualizarLargura);
+
+        window.addEventListener('resize', atualizarLargura, { passive: true });
         atualizarLargura();
+      })();
     </script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

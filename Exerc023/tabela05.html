@@ -1,131 +1,342 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Tabela_Completa</title>
-    <style>
- 
-        caption{
-            font-size: 2em;
-            font-weight: bold;
-            padding: 15px;
-            margin: auto;
-        }
-        table{
-            
-            border-collapse: collapse;
-            width: 90%;
-            text-align: center;
-            margin: auto;
-        }
-        th,td{
-            border: 1px solid black;
-            padding: 5px;
-            margin: none;
-            
-            
-        }
-        pre{
-    
-            white-space: pre-wrap;
-            text-align: justify;
-            text-indent: 15px;
-            line-height: 1.8;
-            font-size: 1.2em;
-            padding: 10px;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scope em Tabelas | HTML - Ailton A. Nakata</title>
 
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-    </style>
+  <meta name="description" content="Tabela completa com thead, tbody, tfoot e uso correto do atributo scope em tabelas HTML, com alto contraste e layout responsivo." />
+
+  <style>
+    /* ===== Aula: tabela completa (alto contraste + responsivo) ===== */
+    .table-card{
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .table-wrap{
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    table{
+      width: 100%;
+      min-width: 640px; /* garante leitura sem esmagar colunas */
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      color: #111;
+    }
+
+    caption{
+      caption-side: top;
+      padding: 12px 10px;
+      font-weight: 900;
+      font-size: 1.15rem;
+      text-align: left;
+      color: #111;
+    }
+
+    thead th,
+    tfoot th{
+      background: #111;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 12px;
+      text-align: center;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    tbody th{
+      background: rgba(0,0,0,0.06);
+      color: #111;
+      border: 1px solid rgba(0,0,0,0.25);
+      padding: 12px;
+      text-align: center;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    td{
+      border: 1px solid rgba(0,0,0,0.25);
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+      color: #111;
+      white-space: nowrap;
+    }
+
+    tbody tr:nth-child(odd) td{
+      background: rgba(0,0,0,0.03);
+    }
+
+    .prose{
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: #111;
+      white-space: pre-wrap;
+    }
+
+    .prose code{
+      font-weight: 800;
+    }
+
+    @media (max-width: 420px){
+      caption{ font-size: 1.05rem; }
+      .prose{ font-size: 1rem; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Scope (col) e (row)</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-        <main>
-            <table>
-                <caption>
-                    Filmes Favoritos
-                </caption>
-                 <thead>
-                    <th scope="col">Grupos</th>
-                    <th scope="col">Nomes</th>
-                    <th colspan="3" scope="colgroup">Filmes</th>
-                 </thead>
-                 <tbody>
-                    <tr>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Scope (col) e (row)</h1>
+          <p class="muted">Tabela completa com <code>thead</code>, <code>tbody</code>, <code>tfoot</code> e uso correto do atributo <code>scope</code>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <button class="btn btn-primary" data-open-modal type="button">Quero um site profissional</button>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Tabela: Filmes Favoritos</h2>
+
+            <div class="card soft">
+              <div class="alert">
+                <strong>Objetivo:</strong> treinar cabeçalhos semânticos com <code>scope</code> e mesclagem de colunas com <code>colspan</code>.
+              </div>
+
+              <div class="table-card" style="margin-top: 12px;">
+                <div class="table-wrap" aria-label="Tabela de filmes favoritos por grupo e nome">
+                  <table>
+                    <caption>Filmes Favoritos</caption>
+
+                    <thead>
+                      <tr>
+                        <th scope="col">Grupos</th>
+                        <th scope="col">Nomes</th>
+                        <th colspan="3" scope="colgroup">Filmes</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
                         <th rowspan="3" scope="rowgroup">Mulheres</th>
                         <td>Ana Maria Santos</td>
                         <td>Alien</td>
                         <td>Rambo</td>
                         <td>Vingadores</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td>Beatriz Souza</td>
                         <td>Hulk</td>
-                        <td>Inseption</td>
+                        <td>Inception</td>
                         <td>Batman</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td>Claudia Melo</td>
-                        <td>Oblivio</td>
+                        <td>Oblivion</td>
                         <td>Matrix</td>
                         <td>Big Hero</td>
-                    </tr>
-                    <tr>
+                      </tr>
+
+                      <tr>
                         <th rowspan="3" scope="rowgroup">Homens</th>
                         <td>Bruno Mendonça</td>
                         <td>Intocáveis</td>
                         <td>Amnésia</td>
                         <td>Gladiador</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td>Daniel Lourenço</td>
                         <td>Wall-E</td>
                         <td>Oldboy</td>
                         <td>Dangal</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td>Fabiano Motta</td>
                         <td>Star Wars V</td>
                         <td>Taxi Driver</td>
                         <td>Toy Story</td>
-                    </tr>
-                 </tbody>
-                 <tfoot>
-                    <tr>
+                      </tr>
+                    </tbody>
+
+                    <tfoot>
+                      <tr>
                         <th colspan="4" scope="row">Total</th>
                         <td>1000</td>
-                    </tr>
-                 </tfoot>
-            </table>
-            <br><br>
-            <h1>SCOPE</h1>
-            <pre>
-                
-O atributo scope em HTML é usado dentro de tabelas (&lt;table&gt;) para indicar a que células de dados (&lt;td&gt;) um cabeçalho (&lt;th&gt;) está associado.
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
 
-👉 Ele melhora a acessibilidade, ajudando leitores de tela a entenderem a estrutura da tabela.
+              <div style="margin-top: 14px;">
+                <h2 class="lesson-title" style="margin-bottom: 8px;">Entendendo o <code>scope</code></h2>
+
+                <div class="card">
+                  <div class="prose">
+O atributo <code>scope</code> em HTML é usado dentro de tabelas (<code>&lt;table&gt;</code>) para indicar a quais células de dados (<code>&lt;td&gt;</code>) um cabeçalho (<code>&lt;th&gt;</code>) está associado.
+
+Ele melhora a acessibilidade, ajudando leitores de tela a entenderem a estrutura da tabela.
 
 Valores principais:
 
-scope="col" → o &lt;th&gt; vale para toda a coluna.
-scope="row" → o &lt;th&gt; vale para toda a linha.
-scope="colgroup" → o &lt;th&gt; vale para um grupo de colunas.
+• <code>scope="col"</code> → o <code>&lt;th&gt;</code> vale para toda a coluna.
+• <code>scope="row"</code> → o <code>&lt;th&gt;</code> vale para toda a linha.
+• <code>scope="colgroup"</code> → o <code>&lt;th&gt;</code> vale para um grupo de colunas.
+• <code>scope="rowgroup"</code> → o <code>&lt;th&gt;</code> vale para um grupo de linhas.
+                  </div>
+                </div>
+              </div>
 
-scope="rowgroup" → o &lt;th&gt; vale para um grupo de linhas.
-                
-            </pre>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+              <div class="lesson-actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+              </div>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>thead</code>, <code>tbody</code> e <code>tfoot</code></li>
+                <li>Aplicou <code>scope</code> corretamente</li>
+                <li>Teve <code>colspan</code> em grupo de colunas</li>
+                <li>Layout responsivo e com contraste</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
         </div>
-        <br>
-        <br>
-        </main>
+
+        <div class="hero-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../estudos.html">Voltar para Estudos</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label for="nome">Seu nome</label>
+            <input id="nome" name="nome" type="text" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="negocio">Seu negócio / segmento</label>
+            <input id="negocio" name="negocio" type="text" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label for="tipo">Tipo de site</label>
+            <select id="tipo" name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo" name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="prazo">Prazo</label>
+            <input id="prazo" name="prazo" type="text" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label for="detalhes">Detalhes (opcional)</label>
+            <textarea id="detalhes" name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

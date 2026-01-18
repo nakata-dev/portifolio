@@ -1,57 +1,313 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Formulário</title>
-    <style>
-        #voltar{
-            a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário | Radio e Checkbox - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Exemplo de formulário com radio (sexo) e checkbox (esportes favoritos), adaptado ao template padrão e responsivo." />
+
+  <style>
+    /* Ajustes locais */
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    .mini-form{
+      max-width: 760px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-form fieldset{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .mini-form legend{
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
+    .options{
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* Em telas maiores, opções em 2 colunas */
+    @media (min-width: 720px){
+      .options.cols-2{
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .opt{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+
+    .opt input{
+      transform: translateY(1px);
+    }
+
+    .opt label{
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .hint{
+      margin-top: 10px;
+      font-size: .92em;
+      opacity: .85;
+    }
+
+    .inline-code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+      padding: .1em .35em;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      white-space: nowrap;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Exemplo de Formulário</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <form action="cadastro.php" method="post" autocomplete="on">
-            <fieldset>
-                <!--Radio só é possível marcar um desde que o name seja igual nos casos apresentados-->
-                <legend>Sexo</legend>
-                <input type="radio" name="sexo" id="imasculino" checked value="M"> <label for="imasculino">Masculino </label> <br>
-                <input type="radio" name="sexo" id="ifeminino" value="F"><label for="ifeminino" valu>Feminino</label> <br>
-            </fieldset>
-            <br>
-            <!-- Em checkbox é possível se selecionar mais de uma opção-->
-            <fieldset>
-            <legend>Esportes Favoritos</legend>
-            <input type="checkbox" name="esfut" id="iesfut"> <label for="iesfut">Futebol</label> <br>
-            <input type="checkbox" name="esbas" id="iesbas"> <label for="iesbas">Basquete</label> <br>
-            <input type="checkbox" name="esnat" id="iesnat"> <label for="iesnat">Natação</label> <br>
-            <input type="checkbox" name="esten" id="iesten"> <label for="iesten">Tênis</label> <br>
-        
-            </fieldset>
-            <br>
-                <div>
-                    <input type="submit" value="Enviar">
-                    <input type="reset" value="Limpar">
-                </div>
-        </form>
-        <br><br>
-        <div id="voltar" style="text-align: center;">
-            <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Exemplo de formulário</h1>
+          <p class="muted">Radio (sexo) e checkbox (esportes favoritos) com layout responsivo.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Radio e Checkbox</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>
+                <strong>Radio</strong>: você escolhe apenas <strong>uma opção</strong> quando o atributo
+                <span class="inline-code">name</span> é o mesmo (ex.: <span class="inline-code">name="sexo"</span>).
+              </p>
+              <p>
+                <strong>Checkbox</strong>: você pode marcar <strong>várias opções</strong> ao mesmo tempo.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="post" autocomplete="on">
+
+                <fieldset>
+                  <legend>Sexo</legend>
+
+                  <div class="options cols-2" role="radiogroup" aria-label="Escolha o sexo">
+                    <div class="opt">
+                      <input type="radio" name="sexo" id="imasculino" value="M" checked />
+                      <label for="imasculino">Masculino</label>
+                    </div>
+
+                    <div class="opt">
+                      <input type="radio" name="sexo" id="ifeminino" value="F" />
+                      <label for="ifeminino">Feminino</label>
+                    </div>
+                  </div>
+
+                  <p class="hint muted">Só dá para escolher 1 porque o <span class="inline-code">name</span> é o mesmo.</p>
+                </fieldset>
+
+                <fieldset>
+                  <legend>Esportes favoritos</legend>
+
+                  <div class="options cols-2" aria-label="Selecione os esportes favoritos">
+                    <div class="opt">
+                      <input type="checkbox" name="esfut" id="iesfut" />
+                      <label for="iesfut">Futebol</label>
+                    </div>
+
+                    <div class="opt">
+                      <input type="checkbox" name="esbas" id="iesbas" />
+                      <label for="iesbas">Basquete</label>
+                    </div>
+
+                    <div class="opt">
+                      <input type="checkbox" name="esnat" id="iesnat" />
+                      <label for="iesnat">Natação</label>
+                    </div>
+
+                    <div class="opt">
+                      <input type="checkbox" name="esten" id="iesten" />
+                      <label for="iesten">Tênis</label>
+                    </div>
+                  </div>
+
+                  <p class="hint muted">Aqui você pode marcar mais de 1 (checkbox).</p>
+                </fieldset>
+
+                <div class="hero-actions" style="margin-top: 6px;">
+                  <button class="btn btn-primary" type="submit">Enviar</button>
+                  <button class="btn btn-ghost" type="reset">Limpar</button>
+                </div>
+              </form>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> para enviar múltiplos esportes de um jeito mais organizado para o servidor,
+                dá pra usar <span class="inline-code">name="esportes[]"</span>. Se quiser, eu te mostro na próxima.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Radio com <strong>name</strong> igual (um por vez)</li>
+                <li>Checkbox permite múltiplas escolhas</li>
+                <li><strong>label for</strong> aponta para o <strong>id</strong></li>
+                <li>Layout sem <strong>&lt;br&gt;</strong> para espaçamento</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

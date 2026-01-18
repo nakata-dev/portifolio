@@ -1,69 +1,237 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Efeito:Hover</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header{
-            padding: 0px;
-            margin: 0px;
-        }
-        header>p{
-            padding: 0px;
-            margin: 0px;
-            
-        }
-        
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Efeito Hover | HTML - Ailton A. Nakata</title>
 
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.5;
-            text-align: center;
-        }
-        div > p{    /* parágrafos que estão dentro de div não quero mexer */
-            display: none;
-        }
-        div > p{
-            text-align: center;
-            display: block;
-            margin: auto;
-            color: white;
-            background-color: #1e90ff; 
-            padding: 10px;
-            width: 200px;
-            border-bottom-left-radius: 7px;
-            border-top-right-radius: 7px;
-        }
-        div :hover {
-            color:#1e90ff;
-        }
-        
-    </style>
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aula de efeito hover: como mostrar e esconder texto usando CSS (:hover) com layout responsivo e padrão do site." />
+
+  <style>
+    /* Estilos específicos da aula (escopo) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+
+    .hover-demo{
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      text-align: center;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.02);
+    }
+
+    .hover-area{
+      width: 100%;
+      max-width: 360px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px dashed rgba(0,0,0,0.18);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .hover-area:hover{
+      background: rgba(30,144,255,0.08);
+      transform: translateY(-1px);
+    }
+
+    /* Texto escondido por padrão */
+    .hover-area p{
+      display: none;
+      margin: 12px auto 0;
+      color: #fff;
+      background: #1e90ff;
+      padding: 10px 12px;
+      width: fit-content;
+      max-width: 100%;
+      border-bottom-left-radius: 10px;
+      border-top-right-radius: 10px;
+      font-weight: 800;
+    }
+
+    /* Quando passar o mouse na área, MOSTRA o texto */
+    .hover-area:hover p{
+      display: block;
+    }
+
+    /* Uma dica visual no texto principal */
+    .hint{
+      font-weight: 800;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Efeito Hover</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        
-        Passe o mouse aqui
-        <br>
-        <br>
-        <div>
-        <p>Esconder Texto</p>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Efeito Hover</h1>
+          <p class="muted">Como esconder e mostrar texto usando <code>:hover</code> no CSS.</p>
         </div>
-        <br>
-        <br>
-    </main>
-    
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow">
+              <div class="hover-demo">
+                <p class="muted" style="margin:0;">
+                  Passe o mouse para revelar o conteúdo:
+                </p>
+
+                <div class="hover-area" aria-label="Área com hover">
+                  <span class="hint">Passe o mouse aqui 👇</span>
+                  <p>Texto escondido ✅</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Regra:</strong> para mostrar algo quando passar o mouse, use:
+              <code>.elemento:hover .filho</code>.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Escondeu texto com <code>display:none</code></li>
+                <li>Mostrou com <code>:hover</code></li>
+                <li>Entendeu seletor <code>.pai:hover .filho</code></li>
+                <li>Layout responsivo sem <code>&lt;br&gt;</code></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

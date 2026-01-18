@@ -1,77 +1,341 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        * {
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1;
-        }
-        #voltar {
-            text-align: center;
-        }
-        #voltar a:hover {
-            background-color: rgba(99, 108, 243, 0.747);
-            padding: 10px;
-            font-weight: bolder;
-            border-radius: 10px;
-            transform: scale(1.1);
-            transition-duration: 0.5s;
-        }
-        h1,p{
-            padding: 10px;
-        }
-    </style>
-    <title>Formulário</title>
-</head>
-<body>
-    <header>
-        <h1>if e else</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <p>
-            <label for="iano">Em que ano você nasceu?</label>
-            <input type="number" name="ano" id="iano" min="1900" max="2025" value="1980" oninput="calcIdade()">
-        </p>
-        <p>
-            <label for="iidade">Sua idade é: </label>
-            <output id="iidade">0</output>
-        </p>
-        <p>
-            <input type="submit" value="Enviar">
-            <input type="reset" value="Limpar">
-        </p>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
-        </div>
-        <br>
-        <br>
-    </main>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>If e Else | HTML + JS - Ailton A. Nakata</title>
 
-    <script>
-    function calcIdade() {
-        // Pega o ano atual do sistema (exemplo: 2025)
-        let atual = new Date().getFullYear();
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        // Pega o valor digitado no campo de entrada (ano de nascimento)
-        let ano = document.getElementById("iano").value;
+  <meta name="description" content="Exemplo de if/else em JavaScript: calcula idade a partir do ano de nascimento com validação e output, responsivo e no template padrão." />
 
-        // Seleciona o elemento <output> onde vamos mostrar a idade
-        let saida = document.getElementById("iidade");
-
-        // Verifica se o ano digitado está dentro do intervalo válido
-        if (ano >= 1900 && ano <= atual) {
-            // Calcula a idade e mostra no <output>
-            saida.innerHTML = atual - ano;
-        } else {
-            // Se o ano for inválido (ex.: futuro ou menor que 1900), mostra aviso
-            saida.innerHTML = "Ano inválido";
-        }
+  <style>
+    /* Form / layout */
+    .mini-form{
+      max-width: 760px;
+      display: grid;
+      gap: 12px;
     }
-</script>
 
+    .mini-form fieldset{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .mini-form legend{
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
+    .row{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 720px){
+      .row{
+        grid-template-columns: 220px 1fr;
+        align-items: center;
+      }
+    }
+
+    label{
+      font-weight: 800;
+    }
+
+    input[type="number"]{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: inherit;
+      outline: none;
+    }
+    input[type="number"]:focus{
+      border-color: rgba(255,255,255,.28);
+    }
+
+    .result{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+
+    .pill{
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      font-weight: 900;
+      min-width: 58px;
+      text-align: center;
+    }
+
+    /* Estado de erro/sucesso */
+    .pill.is-error{
+      border-color: rgba(255, 80, 80, .35);
+      background: rgba(255, 80, 80, .12);
+    }
+
+    .muted-mini{
+      font-size: .92em;
+      opacity: .85;
+      margin: 0;
+    }
+
+    pre.codebox{
+      margin: 0;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow: auto;
+      line-height: 1.7;
+      white-space: pre;
+    }
+
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>If e Else</h1>
+          <p class="muted">Digite seu ano de nascimento e veja a idade aparecer automaticamente usando JavaScript.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Calculadora de idade</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                A lógica funciona assim: se o ano estiver dentro do intervalo válido, calcula idade.
+                Senão, mostra “Ano inválido”.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="get" autocomplete="on">
+                <fieldset>
+                  <legend>Teste de idade</legend>
+
+                  <div class="row">
+                    <label for="iano">Em que ano você nasceu?</label>
+                    <input type="number" name="ano" id="iano" min="1900" value="1980" />
+                  </div>
+
+                  <div class="row">
+                    <label for="iidade">Sua idade é:</label>
+                    <div class="result">
+                      <output id="iidade" class="pill">0</output>
+                      <p class="muted-mini">Atualiza em tempo real.</p>
+                    </div>
+                  </div>
+
+                  <div class="hero-actions" style="margin-top: 14px;">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                    <button class="btn btn-ghost" type="reset">Limpar</button>
+                  </div>
+                </fieldset>
+              </form>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> repare como usamos <strong>if/else</strong> para validar antes de calcular.
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Trecho principal (if/else)</h3>
+              <pre class="codebox"><code>if (ano &gt;= 1900 &amp;&amp; ano &lt;= atual) {
+  saida.innerHTML = atual - ano;
+} else {
+  saida.innerHTML = "Ano inválido";
+}</code></pre>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>new Date().getFullYear()</strong></li>
+                <li>Validou intervalo com <strong>if/else</strong></li>
+                <li>Mostrou resultado com <strong>output</strong></li>
+                <li>Removeu <strong>oninput</strong> do HTML e usou JS</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- JS local (mais profissional: sem inline oninput) -->
+    <script>
+      (function () {
+        const anoEl = document.getElementById("iano");
+        const saida = document.getElementById("iidade");
+        const form = anoEl?.closest("form");
+
+        if (!anoEl || !saida) return;
+
+        const atual = new Date().getFullYear();
+
+        // deixa o max atualizado automaticamente
+        anoEl.max = String(atual);
+
+        function calcIdade() {
+          const ano = Number(anoEl.value);
+
+          if (ano >= 1900 && ano <= atual) {
+            saida.textContent = String(atual - ano);
+            saida.classList.remove("is-error");
+          } else {
+            saida.textContent = "Ano inválido";
+            saida.classList.add("is-error");
+          }
+        }
+
+        anoEl.addEventListener("input", calcIdade);
+
+        form?.addEventListener("reset", () => {
+          setTimeout(calcIdade, 0);
+        });
+
+        calcIdade();
+      })();
+    </script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,279 +1,337 @@
-/* 
-  Variáveis para cores:
-  --fundo-principal
-  --texto
-  --texto-inverso
-  --destaque
-  --destaque-inverso
-  --fundo-card
-*/
+/*1º Etapa de construção do Site*/
+@charset "UTF-8";
 
 *{
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-:root{
-  --fundo-principal:#f5f5f5;
-  --texto:#222222;
-  --texto-inverso:#ffffff;
-  --destaque:#0077ff;
-  --destaque-inverso:#66bbff;
-  --fundo-card: #ffffff;
-}
-
-
-body{
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  line-height: 1.5em;
-  background-color:var(--fundo-principal);
-  color: var(--texto);
-}
 
 header{
-  background-color: var(--destaque);
-  color: var(--texto);
-  padding: 10px;
-  display: flex; /*torna o header flexível*/
-  justify-content: flex-end; /*colar menu a direita*/
-  align-content: center; /*centraliza o conteúdo*/
+    background-color: var(--destaque);    
+    color: var(--texto);
+    padding: 10px;
+    display: flex;/*Torna a caixa do Header flexível*/
+    justify-content: flex-end;/*Manda o conteúdo para o final da caixa, que no caso seria à direita*/
+    align-content: center;/*Torna o conteúdo centralizado dentro de cada caixa indivídualmente*/
+    
+    /*7º Estapa do desenvolvimento do site - fixa o Menu no Topo*/
+    position: sticky; /*O comando position: sticky; no CSS é usado para criar elementos que “grudam” (ficam fixos) em uma posição enquanto o usuário rola a página, mas somente dentro do seu contêiner pai.*/
+    top: 0; /*“Deixe o elemento rolar normalmente até chegar no topo da tela.
+    Quando encostar no topo (top: 0), mantenha ele fixo ali.”*/
+    z-index: 1; /*Coloca header acima da primeira camada do site que seria a camada 0*/
 }
 
 nav#menu ul{
-  list-style-type: none;
-  display: flex;
-  gap: 10px;
+    list-style: none; /*Tira as bolinhas do indice*/
+    display: flex; /*Torna flexivel para encaixar*/
+    gap: 10px; /*Distância entre um menu e outro*/
 }
 
 nav#menu a{
-  text-decoration: none;
-  color: var(--texto-inverso);
-  font-weight: 600;
-  padding: 12px 15px;
-  border-radius: 5px;
-  transition: background-color .7s, color .7s;
+    text-decoration: none;/*Retira o sublinhado de cada palavra*/
+    color: var(--texto-inverso);
+    font-weight: 600;/*Deixa a letra mais gordinha*/
+    padding: 12px 15px;/*Deixa com espaço de 12px em cima e embaixo e 15px na esquerda e direita*/
+    border-radius: 5px;/*Cria uma borda redonda de 5 pixels*/
+    transition: background-color 0.5s, color 0.5s;/*Cria-se uma transição de 0.5s para a cor de fundo e da letra gerando um efeito mais suave e profissional*/
 }
 
-nav#menu a:hover{
-  background-color: var(--texto-inverso);
-  color: var(--destaque);
+nav#menu a:hover{ /*Quando passar o mouse por cima do menu, vai gerar um certo efeito desta configuração:*/
+    background-color: var(--destaque-inverso);
+    color: var(--destaque);
+    
 }
-
+:root{ /* As cores são opcionais */
+    --fundo-principal:#f5f5f5;
+    --texto: #222222;
+    --texto-inverso:#ffffff;
+    --destaque:#0077ff;
+    --destaque-inverso:#66bbff;
+    --fundo-card:#ffffff;
+}
+/* Ultima etapa - crie um seletor body.escuro e altere as variáveis para o modo escuro. fazendo essas alterações o site já vai funcionar no modo claro e escuro. */
+body.escuro{
+    --fundo-principal:#222222;
+    --texto: #e0e0e0;
+    --texto-inverso:#333333;
+    --destaque:#ff3c00;
+    --destaque-inverso:#a73917;
+    --fundo-card:#444444;
+    a {
+        color: white;
+    }
+}
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    line-height: 1.5em; /*distância entre as linhas*/
+    background-color: var(--fundo-principal);
+    color: var(--texto);
+    transition: background-color 1s, color 1s; /*Por fim foi acrescentado essa transição para suavizar a troca de tema*/
+}
+/*2º Etapa de construção do Site*/
 main{
-  display: grid;
-  grid-template-columns: auto 90vw auto; /*separa em três colunas*/
-  gap: 20px; /*define uma distância de 20px entre as colunas*/
-  margin-top: 20px;
+   display: grid; /*tranforma o main em grades*/
+   grid-template-columns: auto 90vw auto;
+   gap: 20px;
+   margin-top: 20px;/*cria uma margin de 20px na parte superior do main*/
 }
-
-section#ficha {
-  background-color: var(--fundo-card);
-  padding: 20px;
-  border-radius: 8px;
-  grid-column: 2; /*determina onde sua section ficha vai ficar*/
+section#ficha{
+    background-color: var(--fundo-card);
+    padding: 20px;
+    border-radius: 10px;
+    grid-column: 2; /*a seção ficha vai ocupar a coluna 2 para ficar no centro*/
+}
+main p{
+    text-align: justify;
+    text-indent: 20px;
+    line-height: 1.8;
+    padding: 15px;
 }
 
 section#ficha img.foto{
-  width: 200px;
-  aspect-ratio: 1/1; /*deixa a imagem quadradinha*/
-  object-fit: cover; /*deixa a imagem adaptada*/
-  overflow: hidden; /*se sobrar algo para fora, ele fica escondido*/
-  border-radius: 50%;
-  border: 5px solid var(--fundo-card); /*borda interna*/
-  outline: 5px solid var(--destaque); /*borda externa*/
-  display: block;
-  margin: auto;
-  margin-bottom: 15px;
+    width: 200px;
+    aspect-ratio:1/1;
+    object-fit: cover; /*preenche o espaço com foto*/
+    overflow: hidden; /*caso não fique certo, use overflow:hidden;*/
+    border-radius: 50%;
+    border: 5px solid var(--fundo-card);/*borda interna*/
+    outline: 5px solid var(--destaque);/*borda externa*/
+    display: block;
+    margin: auto;
+    margin-bottom: 15px;
 }
 
-h1{
-  color: var(--destaque);
-  margin: 15px 0;
-  font-size: 1.5em;
-  text-align: center;
+section#ficha h1{
+    color: var(--destaque);
+    font-size: 1.5em;
+    text-align: center;
+    padding: 15px;
 }
 
-div#social {
-  display: flex; /*deixa flexivel*/
-  justify-content: center; /*alinhamento horizontal*/
-  align-items: center; /*alinhamento vertical*/
-  font-size: 1.6em;
-  gap: 1em;
-  margin: 15px;
+div#social{
+    display: flex; /*faz os  icônes ocuparem o mínimo de espaço*/
+    justify-content: center;/*centraliza o conteúdo na horizontal*/
+    align-items: center;/*centraliza o conteúdo na vertical*/
+    font-size: 1.7em;
+    gap: 2em;
+    margin-top: 15px;
 
 }
 
+/*Alterando a cor e o hover do link das redes*/
 div#social a{
-  color: var(--destaque);
-  transition: color 0.5s;
+    color: var(--destaque);
+    transition: color 0.5s;
 }
 
 div#social a:hover{
-  color: var(--destaque-inverso);
+    color: var(--destaque-inverso);
 }
+
+/*3º Etapa da construção do Site*/
 
 section#detalhes {
-  grid-column: 2;
+    grid-column: 2;/*Faz com #detalhes ocupe a posição 2, ou seja, abaixo do #ficha*/
 }
 
-article{
-  background-color: var(--fundo-card);
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
+article{ /*configuração apra todo article*/
+    background-color: var(--fundo-card);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
 }
-
+/*Para configura a posição e proporção do vídeo*/
 article h2{
-  color: var(--destaque);
-  margin: 10px;
+    color: var(--destaque);
+    margin-bottom: 20px;
 }
 
 .video-container{
-  position: relative; /*pois a posição/proporção vão mudar*/
-  width: 100%; /*vai ocupar o tamanho da section 2*/
-  margin: auto; /*centraliza o conteúdo*/
-  aspect-ratio: 16/9; /*é o aspecto do formato do youtube*/
+    position:relative; /*A posição vai mudar*/
+    width: 90%; /*a largura dever preencher 90% do espaço*/
+    margin: auto; /*a margin dever levar o vídeo para o centro da tela*/
+    aspect-ratio: 16/9; /*O aspecto do vídeo é de 16:9 que é o formato de vídeo do YouTube*/
 }
-
+/*Para torna o vídeo adaptável ao retângulo do article*/
 .video-container iframe{
-  position: absolute; /*fixa o vídeo em sua posição*/
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
 }
 
-/*configurando Skills*/
-
+/*4º Etapa da construção do Site*/
 #skill-container{
-  display: grid;
-  grid-template-columns: 1fr; /*oculpa a largura toda*/
-  gap: 30px;
-  
-}
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
 
-/*tudo que for skill-container .info*/
+}
 #skill-container .info{
-  display: flex;
-  justify-content: space-between;
-  justify-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
 #skill-container .nome{
-  font-weight: bold;
-  color: var(--texto);
+    font-weight: bold;
+    color:var(--texto);
 }
 #skill-container .porcent{
-  font-weight: bold;
-  color: var(--destaque);
+    font-weight: bold;
+    color: var(--destaque);
 }
+/*Adicionando estrutura da Barra*/
 #skill-container .barra{
-  width: 100%;
-  height: 8px;
-  background-color: var(--fundo-principal);
-  border-radius: 5px;
+    width: 100%; /*Ocupa 100% da largura*/
+    height: 8px; /*altura da barrinha*/
+    background-color: var(--fundo-principal);
+    border-radius: 4px;
 }
-
+/*Adicionando Barra de progresso*/
 #skill-container .progresso{
-  border-radius: 5px;
-  height: 100%;
-  background-color: var(--destaque-inverso);
+    height: 100%;
+    background-color: var(--destaque-inverso);
+    border-radius: 4px;
 }
-
-/*Formação*/
-#formacao-container{
-   display: flex;
-   flex-direction: column-reverse;
-   gap: 20px;
+/*5º Etapa do desenvolvimento do site*/
+#formacao-container{ /*configurando o foramção*/
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 20px;
 }
 #formacao-container .curso{
-  background-color: var(--fundo-principal);
-  border-radius: 5px;
-  border-left: 5px solid var(--destaque-inverso);
-  padding-left: 15px;
-  transition: border-width 0.5s, border-color 0.5s; /*atente-se quanto ao uso de ":"*/
+    background-color: var(--fundo-principal);
+    padding-left: 30px;
+    border-radius: 8px;
+    border-left: 5px solid var(--destaque-inverso);
+    border-right: 10px solid var(--destaque-inverso);
+    transition: border-width 0.5s, boder-color 0.5s; /*Cria uma transição animada mais suave e profissional*/
 }
-
-#formacao-container .curso:hover{
-  border-left-width: 15px;
-  border-color: var(--destaque);
-  cursor: pointer; /*muda o ponteiro para mão */
+#formacao-container .curso:hover{ /*Quando passar o mouse por cima*/
+    border-left-width: 15px;
+    border-right-width: 0px;
+    cursor: pointer; /*Ponteiro do mouse vira uma mão*/
+    border-color: var(--destaque);
+    .periodo{
+        color: var(--destaque);
+    }
+    .titulacao{
+        color: var(--destaque);
+    }
 }
-
+#formacao-container h3{
+    line-height: 0.3em;
+}
+#formacao-container h3:hover{
+    line-height: 0.3em;
+    font-weight: bolder;
+    color: var(--destaque);
+}
 #formacao-container .periodo{
-  font-size: 0.8em;
-  font-weight: bold;
-  color: var(--texto);
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--texto);
+}
+#formacao-container .instituicao{
+    color: var(--destaque-inverso);
+    font-size: 1.1em;
 }
 
-#formacao-container .instituicao{
-  color: var(--destaque-inverso);
-  font-size: 1.1em;
-  
-}
+/*6ºEtapa do Desenvolvimento do Site*/
 
 #projeto-container{
-  display: flex;
-  flex-direction: column-reverse; /*Aqui define que o de cima mais ver o mais novo e o debaixo vai ser o mais velho */
-  gap: 20px;
+    display: flex;
+    flex-direction: column-reverse; /*Comando que mostra do novo para o mais antigo, pois reverte a direção de apresentação das colunas*/
+    gap: 20px;
 }
 
 #projeto-container .projeto{
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: var(--fundo-principal);
-  padding: 10px;
-  border-radius: 8px;
-  border-left: 5px solid var(--destaque-inverso);
-  transition: border-color 0.5s, border-width 0.5s;
-}
-#projeto-container .projeto:hover{
-  border-color: var(--destaque);
-  border-left-width: 15px;
-  cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: var(--fundo-principal);
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 5px solid var(--destaque-inverso);
+    border-right: 5px solid var(--destaque-inverso);
+    transition: border-width 0.5s, border-color 0.5s; /*Atenção para não escrever errados esses comandos!*/
 }
 
+#projeto-container .projeto:hover{
+    border-left-width: 10px;
+    border-right-width: 0px;
+    border-color: var(--destaque);
+    cursor: pointer;
+}
 #projeto-container .foto{
-  width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: hover;
-  overflow: hidden;
-  border-radius: 8px;
+    width: 100%;
+    aspect-ratio:16/9;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
 footer{
-  background-color: var(--destaque);
-  color: var(--texto-inverso);
-  text-align: center;
-  padding: 15px;
+    background-color: var(--destaque);
+    padding: 15px;
+    text-align: center;
+    color: var(--texto-inverso);
+
 }
 footer a{
-  color: var(--texto-inverso);
-  text-decoration: none;
-  font-weight: bolder;
-  
-}
-/*separando em duas colunas para melhor visualização*/
+    color: var(--texto-inverso);
+    text-decoration: none;
+    font-weight: bold;
 
-@media screen and (min-width:768px) {
-  #skill-container{
-    grid-template-columns:1fr 1fr;
-  }
-  #projeto-container .projeto{
-    flex-direction: row-reverse;
-    justify-content: space-between;
-  }
-  #projeto-container .projeto-info{
-    max-width: 80%;
-
-  }
-  #projeto-container .foto{
-    aspect-ratio: 1/1;
-    max-width: 20%;
-    max-height: 200px;
-  }
 }
+/*7º vá para o Seletor Header, deixando o menu fixo*/
+
+
+
+/*Responsividade da tela com Media Query (Faz parte da 4º Etapa)*/
+@media screen and (min-width: 768px) {
+    #skill-container{ 
+        grid-template-columns: 1fr 1fr; /*Aqui é indicado que as colunas vão se dividir em duas frações se caso a tela for maior que 768px*/
+    }
+    #projeto-container .projeto{
+        flex-direction: row-reverse; /*o vídeo vai ficar ao lado do conteúdo, conforme a tela aumenta de tamanho*/
+        justify-content: space-between;
+        
+    }
+    #projeto-container .info{
+        max-width: 80%;
+        
+    }
+    #projeto-container .foto{
+        aspect-ratio: 1/1; /*O aspecto da foto vai ser quadrado*/
+        max-width: 20%; /*a largura máxima da foto vai ser 20%*/
+        max-height: 200px; /*A altura máxima da foto vai ser 200px*/
+    }
+    /*8º Etapa : Deixando o site responsivo para telas 
+    maiores*/
+    main{
+        grid-template-columns: auto 300px 1fr auto;
+    }
+    section#ficha{
+        grid-column: 2 / 3; /*A ficha vai ficar do 2 até o 3*/
+        /*Na parte da ficha eu não quero que role, fique fixa, então use os seguintes seletores*/
+        height: fit-content;
+        position: sticky;
+        top: 65px;
+    }
+
+    section#detalhes{
+        grid-column: 3 / 4; /*A ficha vai ficar do 3 até o 4*/
+    }
+    /*Se esta div não for bem separada, o gap*(espaço entre os icônes) pode ficar largo demais*/
+    div#social{
+    gap: 0.5em;
+    margin-top: 15px;
+
+}
+}
+

@@ -1,126 +1,335 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
-    <title>Grouping Tags</title>
-    <style>
-       
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: rgb(255, 255, 255);
-            margin: 10px;
-        }
-        header{
-            background-color: aliceblue;
-            padding: 5px;
-            margin: 5px;
-            min-width: 300px;
-            max-width: 800px;
-        }
-        main{
-            background-color: white;
-            padding: 5px;
-            margin: 5px;
-            border-radius: 20px 0px; /* Deixa a borda arredondada*/
-            min-width:300px;
-            max-width:800px;
-            height: auto;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grouping Tags | HTML - Ailton A. Nakata</title>
 
-        }
-        article{
-            background-color: lightgray;
-            padding: 5px;
-        }
-        article > aside{
-            background-color: rgb(165, 165, 165);
-            padding: 5px;
-        }
-        nav{        /* Aplicando Sombras */
-            background-color: rgb(117, 115, 115);
-            padding: 3px;
-            box-shadow: 2px 4px 8px black;
-            padding: 5px;
-        }
-        nav > a{
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            margin-right: 30px;
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-    div#voltar{
-        text-align: center;    
+  <meta name="description" content="Aula sobre Grouping Tags: estrutura semântica com header, nav, main, section, article, aside e footer." />
+
+  <style>
+    /* Escopo da aula (não afeta o site inteiro) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+
+    .demo-shell{
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.02);
+      border-radius: 16px;
+      overflow: hidden;
     }
-    div#voltar a:hover{
-        padding: 10px;
-         background-color: rgba(125, 208, 235, 0.637);
-         font-weight: bolder;
-         transition-duration: 0.5s;
-         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-         border-radius: 5px;
-         border: none;
+
+    .demo-header{
+      background: aliceblue;
+      padding: 14px;
     }
-        footer{
-            background-color:rgb(117, 115, 115);
-            color: white;
-            text-align: center;
-            padding: 4px;
-            margin: 0px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.527);
-        }
-        footer > p{
-            margin: 0px;
-        }
-        div#bola{
-            height: 100px;
-            width: 100px;
-            margin: 10px;
-            background-color: white;
-            border-radius: 50%;        
-            margin: auto;    
-        }
-    </style>
+
+    .demo-nav{
+      background: rgb(117, 115, 115);
+      padding: 10px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      border-radius: 12px;
+    }
+
+    .demo-nav a{
+      text-decoration: none;
+      color: white;
+      font-weight: 800;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .demo-nav a:hover{
+      background: rgba(255,255,255,0.18);
+    }
+
+    .demo-main{
+      background: white;
+      padding: 14px;
+      border-radius: 20px 0px;
+    }
+
+    .demo-article{
+      background: lightgray;
+      padding: 12px;
+      border-radius: 14px;
+    }
+
+    .demo-aside{
+      background: rgb(165, 165, 165);
+      padding: 10px;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+
+    .demo-footer{
+      background: rgb(117, 115, 115);
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .ball-wrap{
+      display: grid;
+      justify-items: center;
+      margin-top: 12px;
+    }
+
+    .ball{
+      height: 110px;
+      width: 110px;
+      background: white;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.10);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+    }
+
+    .code-block{
+      background:#0f1724;
+      color:#e6edf3;
+      padding:12px;
+      border-radius:12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:0.92rem;
+      overflow:auto;
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: left;
+    }
+
+    .code-block pre{
+      margin:0;
+      white-space:pre;
+      line-height:1.7;
+    }
+
+    @media (max-width: 520px){
+      .code-block{ font-size: 0.86rem; }
+      .ball{ height: 96px; width: 96px; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>    <!--Cabeçalho-->
-        <h1>Título do Site</h1>
-        <nav>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
-            <a href="#">Link</a>
-            
-        </nav>
-    </header>
-    <main>      <!--Conteúdo principal-->
-        <section id="assuntos">
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
 
-        </section>
-        <section id="noticias">
-
-        </section>
-        <article> <!-- Artigo-->
-            <h2>Aula 06 - Vértices Arredondados</h2>
-            <p>Nesta aula aprendemos a usar o seletor border-radius que arredonda os cantos de um retângulo.</p>
-            <aside>
-                <p>Artigo escrito por Ailton Nakata</p>
-            </aside>
-        </article>
-    </main>
-    <br>
-    <br>
-    <div id="bola"></div>
-    <br>
-    <br>
-    <div id="voltar">
-        <a href="../html.html">Voltar</a>
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <br>
-    <br>
-    <footer>    <!--Rodapé-->
-        <p>Desenvolvido pelo Cursoemvideo</p>
-    </footer>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Grouping Tags</h1>
+          <p class="muted">Estrutura semântica: <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>article</code>, <code>aside</code> e <code>footer</code>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow">
+              <div class="demo-shell">
+                <div class="demo-header">
+                  <h2 style="margin:0;">Título do Site</h2>
+
+                  <nav class="demo-nav" aria-label="Navegação do exemplo">
+                    <a href="#">Link</a>
+                    <a href="#">Link</a>
+                    <a href="#">Link</a>
+                    <a href="#">Link</a>
+                  </nav>
+                </div>
+
+                <div class="demo-main">
+                  <section id="assuntos" aria-label="Assuntos do exemplo" style="min-height: 8px;"></section>
+                  <section id="noticias" aria-label="Notícias do exemplo" style="min-height: 8px;"></section>
+
+                  <article class="demo-article">
+                    <h3 style="margin:0 0 8px;">Aula 06 - Vértices Arredondados</h3>
+                    <p class="muted" style="margin:0;">
+                      Nesta aula aprendemos a usar o seletor <strong>border-radius</strong> que arredonda os cantos de um retângulo.
+                    </p>
+
+                    <aside class="demo-aside">
+                      <p style="margin:0;"><strong>Artigo escrito por:</strong> Ailton Nakata</p>
+                    </aside>
+                  </article>
+                </div>
+
+                <footer class="demo-footer">
+                  <p style="margin:0;">Desenvolvido pelo Curso em Vídeo</p>
+                </footer>
+              </div>
+
+              <div class="ball-wrap">
+                <div class="ball" aria-label="Exemplo de círculo com border-radius 50%"></div>
+                <p class="muted" style="margin:10px 0 0;">
+                  A “bola” acima é um <code>div</code> com <code>border-radius: 50%</code>.
+                </p>
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">HTML base (estrutura)</h2>
+
+            <div class="card soft content-narrow">
+              <div class="code-block">
+                <pre><code>&lt;header&gt;
+  &lt;h1&gt;Título do Site&lt;/h1&gt;
+  &lt;nav&gt;...links...&lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;section id="assuntos"&gt;&lt;/section&gt;
+  &lt;section id="noticias"&gt;&lt;/section&gt;
+
+  &lt;article&gt;
+    &lt;h2&gt;Título do artigo&lt;/h2&gt;
+    &lt;p&gt;Texto do artigo...&lt;/p&gt;
+    &lt;aside&gt;Autor / info extra&lt;/aside&gt;
+  &lt;/article&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;Rodapé&lt;/footer&gt;</code></pre>
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou tags semânticas</li>
+                <li>Separou header/nav</li>
+                <li>Entendeu article/aside</li>
+                <li>Viu footer</li>
+                <li>Aplicou border-radius</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

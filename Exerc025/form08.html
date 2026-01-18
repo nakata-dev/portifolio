@@ -1,61 +1,249 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        *{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        #voltar{
-            text-align: center;
-        }
-        #voltar{
-            a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-             
-            }
-        }
-        p{
-            line-height: 1.8;
-        }
-    </style>
-    <title>Formulário</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste de Soma | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Teste de soma com dois inputs number e output, atualizado em tempo real com JavaScript simples, responsivo e no template padrão." />
+
+  <style>
+    .mini-form{
+      max-width: 760px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-form fieldset{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .mini-form legend{
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
+    .row{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 720px){
+      .row{
+        grid-template-columns: 160px 1fr;
+        align-items: center;
+      }
+    }
+
+    label{
+      font-weight: 700;
+    }
+
+    input[type="number"]{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: inherit;
+      outline: none;
+    }
+
+    input[type="number"]:focus{
+      border-color: rgba(255,255,255,.28);
+    }
+
+    .result{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+
+    .pill{
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      font-weight: 900;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .muted-mini{
+      font-size: .92em;
+      opacity: .85;
+      margin: 0;
+    }
+  </style>
 </head>
+
 <body>
-    <header><h1>Teste de Soma I</h1>
-    <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <p>
-            <label for="in1">número 1</label>
-            <input type="number" name="n1" id="in1" min="0" max="50" required oninput="isoma.innerHTML = Number(in1.value)+Number(in2.value)">
-        </p>
-        <p>
-            <label for="in2">número 2</label>
-            <input type="number" name="n2" id="in2" min="0" max="50" required oninput="isoma.innerHTML = Number(in1.value)+Number(in2.value)">
-        </p>
-        <p>
-            <label for="isoma">Soma</label>
-            <output name="soma" id="isoma">0</output>
-        </p>
-        <p>
-            <input type="submit" value="Enviar">
-            <input type="reset" value="Limpar">
-        </p>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
-</body>
-</html>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Teste de Soma I</h1>
+          <p class="muted">Dois números, um resultado. Atualiza em tempo real com JS simples.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Somando ao vivo</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Preencha os dois campos. A soma aparece automaticamente no <strong>output</strong>.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="get" autocomplete="on">
+                <fieldset>
+                  <legend>Calculadora de soma</legend>
+
+                  <div class="row">
+                    <label for="in1">Número 1</label>
+                    <input type="number" name="n1" id="in1" min="0" max="50" required placeholder="0 a 50" />
+                  </div>
+
+                  <div class="row">
+                    <label for="in2">Número 2</label>
+                    <input type="number" name="n2" id="in2" min="0" max="50" required placeholder="0 a 50" />
+                  </div>
+
+                  <div class="row">
+                    <label for="isoma">Soma</label>
+                    <div class="result">
+                      <output name="soma" id="isoma" class="pill">0</output>
+                      <p class="muted-mini">Atualiza enquanto você digita.</p>
+                    </div>
+                  </div>
+
+                  <div class="hero-actions" style="margin-top: 14px;">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                    <button class="btn btn-ghost" type="reset">Limpar</button>
+                  </div>
+                </fieldset>
+              </form>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> colocar JS fora do HTML (sem <code>oninput</code>) deixa o código mais limpo e profissional.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Inputs com <strong>min</strong> e <strong>max</strong></li>
+                <li>Usou <strong>output</strong> para resultado</li>
+                <li>Atualizou com <strong>JS</strong> (sem inline)</li>
+                <li>Submit e reset dentro do form</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- JS local: soma em tempo real -->
+    <script>
+      (function () {
+        const n1 = document.getElementById('in1');
+        const n2 = document.getElementById('in2');
+        const out = document.getElementById('isoma');
+        const form = n1?.closest('form');
+
+        if (!n1 || !n2 || !out) return;
+
+        const toNum = (v) => {
+          const x = Number(v);
+          return Number.isFinite(x) ? x : 0;
+        };
+
+        const update = () => {
+          out.textContent = String(toNum(n1.value) + toNum(n2.value));
+        };
+
+        n1.addEventListener('input', update);
+        n2.addEventListener('input', update);
+
+        // Ao limpar o formulário, volta para 0
+        form?.addEventListener('reset', () => {
+          // espera o reset aplicar nos inputs
+          setTimeout(update, 0);
+        });
+
+        update();
+      })();
+    </script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="moda

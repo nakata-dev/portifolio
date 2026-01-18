@@ -1,37 +1,218 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site de exemplo</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        main{
-            width: 50%;
-            height: auto;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Site Básico | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Exemplo de site básico com layout padronizado: títulos, seções e leitura confortável, responsivo." />
+
+  <style>
+    /* Estilos específicos da aula (sem mexer no layout global) */
+    .content-narrow { max-width: 72ch; margin-inline: auto; }
+    .text-justify { text-align: justify; }
+
+    /* Um “mini-site” dentro do template: seções bem separadas */
+    .section-block + .section-block { margin-top: 12px; }
+
+    @media (max-width: 520px){
+      .content-narrow { max-width: 100%; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Site Básico</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Título 01</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum earum reiciendis magni sequi sint maxime assumenda repudiandae ducimus aut officia. Quis, explicabo. Nostrum, rem? Cum saepe blanditiis officia atque ipsam.</p>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima id, voluptatibus dolore nesciunt magni atque. Nulla dolorem excepturi blanditiis beatae accusantium. Dolore amet voluptatum repellendus officiis consequuntur voluptates temporibus iure.</p>
-        <h2>Título 02</h2>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quia, nihil. Commodi id tempora laudantium fugit voluptate quam, doloremque sed minima eaque quia debitis itaque voluptatibus iusto molestiae ea rem in!</p>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam est omnis fugit optio molestiae reiciendis ipsam excepturi voluptate iure explicabo aut, sapiente odio delectus tempora eos eligendi cum. Magnam, explicabo.</p>
-        <h2>Título 03</h2>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus qui animi provident recusandae aperiam, veniam praesentium dignissimos perspiciatis fuga delectus sequi voluptatem excepturi modi, consectetur minus, libero est explicabo repellendus.</p>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis illo accusamus pariatur magnam exercitationem? Quae ratione qui animi suscipit ipsa in, exercitationem iste illo impedit temporibus id? Atque, mollitia a.</p>
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Site Básico</h1>
+          <p class="muted">Exercício de estrutura: títulos, parágrafos e seções com leitura agradável.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Conteúdo</h2>
+
+            <div class="card soft content-narrow section-block">
+              <h3 style="margin:0 0 10px;">Título 01</h3>
+              <p class="text-justify" style="margin-top:0;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum earum reiciendis magni sequi sint maxime
+                assumenda repudiandae ducimus aut officia. Quis, explicabo. Nostrum, rem? Cum saepe blanditiis officia atque ipsam.
+              </p>
+              <p class="text-justify" style="margin:0;">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima id, voluptatibus dolore nesciunt magni atque.
+                Nulla dolorem excepturi blanditiis beatae accusantium. Dolore amet voluptatum repellendus officiis consequuntur
+                voluptates temporibus iure.
+              </p>
+            </div>
+
+            <div class="card soft content-narrow section-block">
+              <h3 style="margin:0 0 10px;">Título 02</h3>
+              <p class="text-justify" style="margin-top:0;">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quia, nihil. Commodi id tempora laudantium fugit voluptate quam,
+                doloremque sed minima eaque quia debitis itaque voluptatibus iusto molestiae ea rem in!
+              </p>
+              <p class="text-justify" style="margin:0;">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam est omnis fugit optio molestiae reiciendis ipsam excepturi
+                voluptate iure explicabo aut, sapiente odio delectus tempora eos eligendi cum. Magnam, explicabo.
+              </p>
+            </div>
+
+            <div class="card soft content-narrow section-block">
+              <h3 style="margin:0 0 10px;">Título 03</h3>
+              <p class="text-justify" style="margin-top:0;">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus qui animi provident recusandae aperiam, veniam
+                praesentium dignissimos perspiciatis fuga delectus sequi voluptatem excepturi modi, consectetur minus, libero est explicabo repellendus.
+              </p>
+              <p class="text-justify" style="margin:0;">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Debitis illo accusamus pariatur magnam exercitationem?
+                Quae ratione qui animi suscipit ipsa in, exercitationem iste illo impedit temporibus id? Atque, mollitia a.
+              </p>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Dica:</strong> em vez de controlar “largura” com <code>width: 50%</code>, use <code>max-width</code> (ex.: 72ch)
+              para uma leitura confortável em qualquer tela.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos títulos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Seções separadas em blocos</li>
+                <li>Texto com largura confortável</li>
+                <li>Sem <code>&lt;br&gt;</code> para espaçamento</li>
+                <li>Layout responsivo</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

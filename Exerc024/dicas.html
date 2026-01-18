@@ -1,46 +1,258 @@
 <!DOCTYPE html>
-<html lang="pt-rb">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Iframe Externos</title>
-    <style>
-        header h1{
-            padding: 0;
-            margin-bottom: -35px;
-        }
-        p{
-            text-align: justify;
-            text-indent: 30px;
-            line-height: 1.8;
-            padding: 20px;
-            padding-bottom: 5px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iframe Externos | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Aprenda a incorporar vídeos (YouTube/Vimeo) e mapas do Google usando iframe, com exemplos responsivos para celular e desktop." />
+
+  <style>
+    /* Ajustes locais (pontuais) */
+    .prose p{
+      text-align: justify;
+      text-indent: 30px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    /* Wrapper responsivo para iframes (16:9 por padrão) */
+    .embed{
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .embed.ratio-16x9{ aspect-ratio: 16 / 9; }
+    .embed.ratio-4x3{ aspect-ratio: 4 / 3; }
+    .embed.ratio-map{ aspect-ratio: 16 / 10; min-height: 320px; }
+
+    .embed iframe{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Pequena melhoria de leitura em telas grandes */
+    @media (min-width: 900px){
+      .embed.ratio-map{ min-height: 420px; }
+    }
+
+    /* Código inline destacado */
+    .inline-code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+      padding: .1em .35em;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      white-space: nowrap;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Incorporar Vídeos</h1>
-        <p>por:Ailton A. Nakata</p>
-    </header>
-    <main>
-        <p>Muito comum em sites que querem mostrar vídeos do YouTube, Vimeo, etc.</p>
-        <p>O provedor gera um código &lt;iframe&gt; pronto para você colar no site:</p>
-        <br>
-        <br>
-        <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/252383841?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Animações Quem Sou Eu"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
-        <br>
-        <h1>Mapas do Google:</h1>
-        <br>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3659.307006380523!2d-51.79768649999999!3d-23.485448999999985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecc588fb2df349%3A0x394fb9f5780e6d67!2sKikoxinha%20casa%20salgados!5e0!3m2!1spt-BR!2sbr!4v1756805287261!5m2!1spt-BR!2sbr" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Iframe externos</h1>
+          <p class="muted">Como incorporar vídeos e mapas no seu site usando <span class="inline-code">&lt;iframe&gt;</span> (com layout responsivo).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Incorporar vídeos</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>Muito comum em sites que querem mostrar vídeos do YouTube, Vimeo etc.</p>
+              <p>O provedor gera um código <span class="inline-code">&lt;iframe&gt;</span> pronto para você colar no site. A dica profissional é: colocar o iframe dentro de um <strong>wrapper responsivo</strong>, assim ele se adapta ao celular sem distorcer.</p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Exemplo: Vimeo (responsivo)</h3>
+
+              <div class="embed ratio-16x9" aria-label="Vídeo incorporado do Vimeo">
+                <iframe
+                  src="https://player.vimeo.com/video/252383841?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  title="Animações Quem Sou Eu"
+                  loading="lazy"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <p class="muted" style="margin: 10px 0 0;">
+                Se precisar do script da API do Vimeo, mantenha no final da página (como o provedor fornece).
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Mapas do Google (responsivo)</h3>
+
+              <div class="embed ratio-map" aria-label="Mapa incorporado do Google">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3659.307006380523!2d-51.79768649999999!3d-23.485448999999985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecc588fb2df349%3A0x394fb9f5780e6d67!2sKikoxinha%20casa%20salgados!5e0!3m2!1spt-BR!2sbr!4v1756805287261!5m2!1spt-BR!2sbr"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  title="Mapa do Google incorporado"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> evite usar altura fixa no iframe. Com o wrapper de <em>aspect-ratio</em>, o mapa fica proporcional em qualquer tela.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>&lt;iframe&gt;</strong> corretamente</li>
+                <li>Colocou iframe em um wrapper responsivo</li>
+                <li>Usou <strong>loading="lazy"</strong> (melhora performance)</li>
+                <li>Testou no celular e no desktop</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Script do Vimeo (fornecido pelo provedor) -->
+    <script src="https://player.vimeo.com/api/player.js"></script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

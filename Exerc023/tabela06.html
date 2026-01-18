@@ -1,115 +1,310 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Tabela de Base</title>
-    <style>
-        body{
-            font-family:Arial, Helvetica, sans-serif;
-        }
-        table{
-            max-width: 800px;
-            min-width: 280px;
-            border-collapse: collapse;
-            margin: auto;
-        }
-        caption{
-            font-size: 1.3em;
-            font-weight: bolder;
-            padding: 8px;
-        }
-        th,td{
-            border: 1px solid black;
-            padding: 8px;
-        }
-        .cnome{
-            background-color: azure;
-        }
-        .csexo{
-            background-color: rgb(84, 134, 240);
-        }
-        .cidade{
-            background-color: rgb(54, 111, 218);
-        }
-        .cprofissao{
-            background-color: rgb(14, 14, 226);
-        }
-     
-        </style>
-    </head>
-    
-    <body>
-        <header>
-            <h1>Col e Row</h1>
-            <p>por: Ailton A. Nakata</p>
-    </header>
-        <main>
-            <table>
-                <colgroup>
-                    <col class="cnome">
-                    <col class="csexo">
-                    <col class="cidade">
-                    <col class="cprofissao">
-                </colgroup>
-                <caption>Cadastro</caption>
-                <tr>
-                    <th>Nome</th>
-                    <th>Sexo</th>
-                    <th>Idade</th>
-                    <th>Profissão</th>
-                </tr>
-                <tr>
-                    <td>Ana Maria</td>
-                    <td>F</td>
-                    <td>25</td>
-                    <td>Jornalisa</td>
-                </tr>
-                <tr>
-                    <td>Ana Maria</td>
-                    <td>F</td>
-                    <td>25</td>
-                    <td>Jornalisa</td>
-                </tr>
-                <tr>
-                    <td>Claúdio</td>
-                    <td>M</td>
-                    <td>28</td>
-                    <td>Programador</td>
-                </tr>
-                <tr>
-                    <td>Gustavo</td>
-                    <td>M</td>
-                    <td>42</td>
-                    <td>Professor</td>
-                </tr>
-                <tr>
-                    <td>Hélio Augusto</td>
-                    <td>M</td>
-                    <td>19</td>
-                    <td>Vendedor</td>
-                </tr>
-                <tr>
-                    <td>Jessica</td>
-                    <td>F</td>
-                    <td>28</td>
-                    <td>Médica</td>
-                </tr>
-                <tr>
-                    <td>Otávio Marconi</td>
-                    <td>M</td>
-                    <td>55</td>
-                    <td>Nutricionista</td>
-                </tr>
-            </table>
-            <br>
-            <br>
-            <div id="voltar">
-                <a href="../html.html">Voltar</a>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Colgroup | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Exemplo de tabela HTML com colgroup para estilizar colunas, com alto contraste e layout responsivo." />
+
+  <style>
+    /* ===== Aula: colgroup (alto contraste + responsivo) ===== */
+    .table-card{
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .table-wrap{
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    table{
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      color: #111;
+    }
+
+    caption{
+      caption-side: top;
+      padding: 12px 10px;
+      font-weight: 900;
+      font-size: 1.15rem;
+      text-align: left;
+      color: #111;
+    }
+
+    thead th{
+      background: #111;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 12px;
+      text-align: left;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    tbody td{
+      border: 1px solid rgba(0,0,0,0.22);
+      padding: 12px;
+      text-align: left;
+      font-weight: 700;
+      color: #111;
+      white-space: nowrap;
+      background: transparent; /* mantém efeito do colgroup */
+    }
+
+    tbody tr:nth-child(odd) td{
+      background: rgba(0,0,0,0.02);
+    }
+
+    /* Colgroup: cores suaves, mantendo legibilidade */
+    col.cnome{ background: rgba(0,0,0,0.02); }
+    col.csexo{ background: rgba(0,0,0,0.04); }
+    col.cidade{ background: rgba(0,0,0,0.06); }
+    col.cprofissao{ background: rgba(0,0,0,0.08); }
+
+    /* Ajuste de alinhamento por coluna (opcional e didático) */
+    tbody td:nth-child(2),
+    tbody td:nth-child(3){
+      text-align: center;
+    }
+
+    @media (max-width: 420px){
+      caption{ font-size: 1.05rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Col e Row com <code>colgroup</code></h1>
+          <p class="muted">Exemplo de tabela usando <code>&lt;colgroup&gt;</code> para estilizar colunas inteiras.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <button class="btn btn-primary" data-open-modal type="button">Quero um site profissional</button>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Tabela base: Cadastro</h2>
+
+            <div class="card soft">
+              <div class="alert">
+                <strong>Objetivo:</strong> aplicar <code>colgroup</code> para dar estilo por coluna sem mexer em cada célula.
+              </div>
+
+              <div class="table-card" style="margin-top: 12px;">
+                <div class="table-wrap" aria-label="Tabela de cadastro com colgroup">
+                  <table>
+                    <colgroup>
+                      <col class="cnome">
+                      <col class="csexo">
+                      <col class="cidade">
+                      <col class="cprofissao">
+                    </colgroup>
+
+                    <caption>Cadastro</caption>
+
+                    <thead>
+                      <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Idade</th>
+                        <th scope="col">Profissão</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>Ana Maria</td>
+                        <td>F</td>
+                        <td>25</td>
+                        <td>Jornalista</td>
+                      </tr>
+                      <tr>
+                        <td>Cláudio</td>
+                        <td>M</td>
+                        <td>28</td>
+                        <td>Programador</td>
+                      </tr>
+                      <tr>
+                        <td>Gustavo</td>
+                        <td>M</td>
+                        <td>42</td>
+                        <td>Professor</td>
+                      </tr>
+                      <tr>
+                        <td>Hélio Augusto</td>
+                        <td>M</td>
+                        <td>19</td>
+                        <td>Vendedor</td>
+                      </tr>
+                      <tr>
+                        <td>Jéssica</td>
+                        <td>F</td>
+                        <td>28</td>
+                        <td>Médica</td>
+                      </tr>
+                      <tr>
+                        <td>Otávio Marconi</td>
+                        <td>M</td>
+                        <td>55</td>
+                        <td>Nutricionista</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="lesson-actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+              </div>
             </div>
-            <br><br>
-        </main>
-    
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Dica rápida</h3>
+              <ul class="list">
+                <li><code>colgroup</code> estiliza a coluna inteira</li>
+                <li>Ótimo para “destacar” campos sem repetir CSS</li>
+                <li>Use cores suaves para manter legibilidade</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="hero-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../estudos.html">Voltar para Estudos</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label for="nome">Seu nome</label>
+            <input id="nome" name="nome" type="text" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="negocio">Seu negócio / segmento</label>
+            <input id="negocio" name="negocio" type="text" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label for="tipo">Tipo de site</label>
+            <select id="tipo" name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo" name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="prazo">Prazo</label>
+            <input id="prazo" name="prazo" type="text" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label for="detalhes">Detalhes (opcional)</label>
+            <textarea id="detalhes" name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

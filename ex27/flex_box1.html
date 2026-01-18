@@ -1,62 +1,236 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flexbox 01 | Introdução - Ailton A. Nakata</title>
 
-    <style>
-        .container{
-            display: flex; /*pai da adaptação*/
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-            background-color: lightsalmon;
+  <meta name="description" content="Aula 01 de Flexbox: container flex e itens adaptáveis, encaixado no template padrão responsivo." />
 
-        }
+  <style>
+    /* =========================
+       PÁGINA (padrão escuro)
+       ========================= */
+    body.flex-page{
+      background: #0b1220;
+      color: rgba(255,255,255,.92);
+    }
 
-        .item{
-            flex: auto; /*aqui o flex auto ajuda a adaptar as pequenas caixas ao display container*/
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
+    body.flex-page main,
+    body.flex-page .section{
+      background: transparent !important;
+    }
 
-            border: 1px solid black;
-        }
+    body.flex-page .section::before,
+    body.flex-page .section::after,
+    body.flex-page main::before,
+    body.flex-page main::after{
+      content: none !important;
+      background: transparent !important;
+    }
 
-        #voltar>a{
-             color: white;
-        }
-        #voltar{
-            font-family: Arial, Helvetica, sans-serif;
-            
-            background-color: lightsalmon;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: rgb(211, 166, 149);;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
-    </style>
-    <title>Flex_box1</title>
+    body.flex-page .site-footer{
+      background: #0b1220 !important;
+    }
+
+    /* =========================
+       NÃO QUEBRA O TEMPLATE
+       (seu .container conflita com o .container do site)
+       ========================= */
+    .flex-demo{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* === SEU DESIGN CENTRAL (mantido) ===
+       Só renomeei .container para .flex-container (mesma lógica)
+    */
+    .flex-container{
+      display: flex;           /* pai da adaptação */
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .flex-item{
+      flex: auto;              /* mantém sua ideia de adaptação */
+      background: rgba(59,130,246,.16);
+      text-align: center;
+      padding: 10px;
+      border-right: 1px solid rgba(255,255,255,.10);
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+
+    .flex-item:last-child{
+      border-right: 0;
+    }
+
+    /* Responsivo: se apertar muito, quebra linha sem virar bagunça */
+    @media (max-width: 560px){
+      .flex-container{
+        flex-wrap: wrap;
+      }
+      .flex-item{
+        flex: 1 1 25%;
+        border-right: 1px solid rgba(255,255,255,.10);
+        border-bottom: 1px solid rgba(255,255,255,.10);
+      }
+    }
+
+    /* =========================
+       Remover hover global problemático
+       ========================= */
+    a:hover{
+      transform: none !important;
+      animation: none !important;
+    }
+  </style>
 </head>
-<body>
-    <h1>Aula 01 – Introdução ao Flexbox</h1>
-    <hr>
-    <div class="container">
-        <div class="item">A</div>
-        <div class="item">B</div>
-        <div class="item">C</div>
-        <div class="item">D</div>
-        <div class="item">E</div>
-        <div class="item">F</div>
-        <div class="item">G</div>
+
+<body class="flex-page">
+  <!-- HEADER PADRÃO -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <hr>
-    <div id="voltar">
-        <a href="../html.html">Voltar</a>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Aula 01: Introdução ao Flexbox</h1>
+          <p class="muted">Um container flex (pai) e itens adaptáveis (filhos) usando <strong>flex: auto</strong>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <!-- ✅ SEU CONTEÚDO CENTRAL (sem desvirtuar) -->
+        <div class="flex-demo">
+          <div class="flex-container" aria-label="Demonstração Flexbox">
+            <div class="flex-item">A</div>
+            <div class="flex-item">B</div>
+            <div class="flex-item">C</div>
+            <div class="flex-item">D</div>
+            <div class="flex-item">E</div>
+            <div class="flex-item">F</div>
+            <div class="flex-item">G</div>
+          </div>
+        </div>
+
+        <div class="lesson-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+          <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER PADRÃO -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
     </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- MODAL PADRÃO -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -4,265 +4,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="estilos/style.css">
-    <link rel="shortcut icon" href="favicon.svg" type="image/svg">
+    <!--1º Etapa do Desenvolvimento do Site-->
+
+    <link rel="stylesheet" href="estilos/style.css"> <!--Linka com o arquivo Style-->
+
+    <link rel="shortcut icon" href="favicon.svg" type="image/svg"> <!--Inserindo o Favicon-->
+    <!--Icones:https://fontawesome.com/icons-->
+
     <script src="https://kit.fontawesome.com/d322381ebe.js" crossorigin="anonymous"></script>
-    <title>Portifólio Ailton Nakata</title>
+    <!--O link acima você encontra no menu Your kits-->
+    <style>
+        section #paragrafo{
+            text-align: center;
+            margin-top: -20px;
+            font-size: 0.8em;
+            padding: 10px;
+        }
+    </style>
+    <title>Ailton A. Nakata</title>
 </head>
 
-<body>
-    <header>
-        <nav id="menu">
-            <ul>
-                <li><a href="#"><i class="fa-solid fa-house-user"></i></a></li>
-                <li><a href="#"><i class="fa-solid fa-brain"></i></a></li>
-                <li><a href="#"><i class="fa-solid fa-graduation-cap"></i></a></li>
-                <li><a href="#"><i class="fa-solid fa-trowel-bricks"></i></a></li>
-                <li><a href="#"><i class="fa-solid fa-moon"></i></a></li>
-            </ul>
-
-        </nav>
-    </header>
-
-    <main>
-        <section id="ficha">
-            <img src="imagens/guanabara-perfil.jpg " alt="Gustavo Guanabara" class="foto">
-            <h1>Gustavo Guanabara</h1>
-            <p>Formado em Ciência da computação, com especialização em docência superior, desenvolvimento web e
-                inteligência artificial. Apaixonado por tecnologia e sempre em busca de novos desafios. Atualmente atuo
-                como professor e desenvolvedor, compartilhando conhecimento através de cursos online e projetos de
-                código aberto.</p>
+<!--<body class="escuro">-->
+    <!--Não é necessário usar essa classe, pois o professor só mostrou o que acontreceria se colocasse uma classe escuro sem as configurações do css > body.escuro -->
+    <body>
+        <header>
+            <nav id="menu">
+                <ul>
+                    <abbr title="Portifólio">
+                        <li>
+                            <a href="../index.html"><i class="fa-solid fa-spell-check" class="link"></i></a> <!--Ultima etapa do processo antes de acessar o JS, adicione class="link" no final do "a href" de cada "li" para poder tirar aquele volta ao menu quando você clicava lá da skill ou de qualquer parte do site.-->
+                        </li>
+                    </abbr>
+                    <abbr title="HomePage">
+                        <li><a href="#video" class="link"><i class="fa-solid fa-house-chimney-user"></i></a></li>
+                    </abbr>
+                    <abbr title="Habilidades">
+                        <li><a href="#skills" class="link"><i class="fa-solid fa-brain"></i></a></li>
+                    </abbr>
+                    <abbr title="Formação">
+                        <li><a href="#formacao" class="link"><i class="fa-solid fa-graduation-cap"></i></a></li>
+                    </abbr>
+                    <abbr title="Projetos">
+                        <li><a href="#projetos" class="link" ><i class="fa-solid fa-trowel-bricks" class="link"></i></a></li>
+                    </abbr>
+                    <abbr title="Modo Escuro">
+                        <li><a href="#" id="botao-tema" class="link"><i class="fa-solid fa-moon"></i></a></li>
+                    </abbr>
+                </ul>
+            </nav>
+        </header>
+        <!--2º Etapa de Desenvolvimento do Site-->
+        <main>
+            <section id="ficha">
+                <img src="imagens/Perfil - Foto.png" alt="Foto_Nakata_dev" class="foto">
+                <h1>Ailton A. Nakata</h1>
+            <p id="paragrafo">
+                <em>Sites de Internet</em>
+            </p>
+        <br>
             <div id="social">
-                <a href="https://www.linkedin.com/in/guanabara/?originalSubdomain=br" target="_blank" rel="nofollow"><i
-                        class="fa-brands fa-linkedin"></i></a>
+<abbr title="Linkedin"><a href="https://www.linkedin.com/in/ailton-a-nakata-51205a327/" target="_blank" rel="nofollow"><i
+class="fa-brands fa-linkedin"></i></a></abbr>
 
-                <a href="https://github.com/gustavoguanabara " target="_blank" rel="nofollow"><i
-                        class="fa-brands fa-github"></i></a>
+<abbr title="GitHub">
+<a href="https://github.com/nakata-dev/html-css" target="_blank" rel="nofollow"><i class="fa-brands fa-square-github"></i></a></abbr>
 
-                <a href="https://www.youtube.com/c/CursoemV%C3%ADdeo" target="_blank" rel="nofollow"><i
-                        class="fa-brands fa-square-youtube"></i></a>
+<abbr title="YouTube">
+<a href="https://www.youtube.com/@Akioartes" target="_blank" rel="nofollow"><i class="fa-brands fa-youtube"></i></a></abbr>
 
-                <a href="https://www.instagram.com/gustavoguanabara/" target="_blank" rel="nofollow"><i
-                        class="fa-brands fa-square-instagram"></i></a>
+<abbr title="instagram">
+<a href="https://www.instagram.com/nakata_dev/" target="_blank" rel="nofollow"><i class="fa-brands fa-instagram"></i></a></abbr>
 
-                <a href="https://www.cursoemvideo.com/" target="_blank" rel="nofollow"><i
-                        class="fa-solid fa-globe"></i></a>
-            </div>
-
+<abbr title="IkigaiWeb">
+<a href="https://ikigaiweb.com.br/" target="_blank" rel="nofollow"><i class="fa-solid fa-house"></i></a></abbr></div>
         </section>
-
+        <!--3º Etapa do Desenvolvimento do Site-->
         <section id="detalhes">
             <article id="video">
                 <h2><i class="fa-solid fa-handshake"></i> Deixe-me apresentar</h2>
-                <div class="video-container">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/VdWfSfWA_BQ?si=DpaX6xNLadAXLvZR"
+                <div class="video-container"><!--Position: Relative-->
+                    <!--Position:Absolute-->
+                    <!--<iframe width="560" height="315" src="https://www.youtube.com/embed/VdWfSfWA_BQ?si=DpaX6xNLadAXLvZR"
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
-            </article> <!--Fim article#video-->
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
 
+                        <p>
+                            Sou <strong>Ailton A. Nakata</strong>, desenvolvedor especializado na criação de sites modernos, rápidos e estratégicos que destacam marcas no ambiente digital. Na <a href="https://ikigaiweb.com.br/" target="_blank">IkigaiWeb</a>, transformo ideias em soluções que transmitem credibilidade, performance e profissionalismo, unindo design funcional, tecnologia atual e foco total em resultados reais. Se você busca um site que atrai, engaja e gera valor para o seu negócio, estou pronto para ajudar sua marca a crescer online.
+                        </p>
+                        <p>
+                            Minha jornada no <strong>desenvolvimento web</strong> começou em <strong>junho de 2024</strong>, impulsionada pelo desejo de criar não apenas sites, mas experiências digitais capazes de transformar negócios. Desde então, tenho evoluído dia após dia — estudando novas tecnologias, aprimorando métodos de design, desenvolvendo processos mais eficientes e criando soluções cada vez mais estratégicas para atender às necessidades reais dos meus clientes.
+                        </p>
+
+                        <p>O que começou como curiosidade rapidamente se tornou um propósito. Cada projeto passou a ser uma oportunidade de aprender, refinar e elevar meu nível técnico. Minha evolução constante é guiada pela busca por desempenho, estética, clareza e resultados. E essa combinação de paixão + disciplina é o que moldou a essência da IkigaiWeb.</p>
+
+                        <p>
+                        🎌 O Significado de <STRONG>“Ikigai”</STRONG> e a Origem da <STRONG>IkigaiWeb</STRONG>
+                            <br>
+                            <br>
+A palavra japonesa <strong>Ikigai (生き甲斐)</strong> representa o <strong>propósito de vida</strong> — o ponto de encontro entre:
+<br>
+o que você ama
+<br>
+o que sabe fazer
+<br>
+o que o mundo precisa
+<br>
+e o que pode gerar valor
+<br>
+<br>
+É um conceito que une paixão, missão, vocação e profissão em um só caminho.
+<br>
+Quando escolhi o nome <strong>IkigaiWeb</strong>, foi porque percebi que o desenvolvimento de sites reúne exatamente esses quatro pilares na minha vida:
+<br>
+<br>
+<em>🔸 
+    Eu amo criar — transformar ideias em telas, layouts e experiências reais.
+    <br>
+    🔸 Eu sei fazer — estudo e aprimoro continuamente minhas habilidades técnicas.
+    <br>
+    🔸 O mundo precisa — empresas hoje precisam existir digitalmente, com presença sólida e profissional.
+    <br>
+    🔸 Gera valor — porque um site bem construído atrai clientes, fortalece marcas e impulsiona negócios.
+</em>
+<br>
+                        </p>
+            </article><!--Fim Article vídeo-->
+            <!--4º Etapa do Desenvolvimento do Site-->
             <article id="skills">
-                <h2><i class="fa-solid fa-brain"></i> Minhas Skills</h2>
+                <h2><i class="fa-solid fa-brain"></i> Minhas skills</h2>
 
                 <div id="skill-container">
-
                     <div class="item">
                         <div class="info">
                             <span class="nome">
-                                <i class="fa-brands fa-html5"></i> HTML5
+                                <i class="fa-brands fa-wordpress"></i></i> WordPress
                             </span>
-                            <span class="porcent">
-                                90%
-                            </span>
-                        </div>
-                        <div class="barra">
-                            <div class="progresso" style="width:90%;"></div>
-                        </div>
-                    </div>
 
-                    <div class="item">
-                        <div class="info">
-                            <span class="nome">
-                                <i class="fa-brands fa-css3-alt"></i> CSS
-                            </span>
                             <span class="porcent">
                                 80%
                             </span>
-                        </div>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
                         <div class="barra">
-                            <div class="progresso" style="width:80%;"></div>
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 80%;"></div>
+                            <!--barra do conhecimento-->
                         </div>
                     </div>
-
+                
                     <div class="item">
                         <div class="info">
                             <span class="nome">
-                                <i class="fa-brands fa-js"></i> JavaScript
+                                <i class="fa-solid fa-arrows-spin"></i> Marketing Digital
                             </span>
+
+                            <span class="porcent">
+                                65%
+                            </span>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
+                        <div class="barra">
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 65%;"></div>
+                            <!--barra do conhecimento-->
+                        </div>
+                    </div>
+                
+                    <div class="item">
+                        <div class="info">
+                            <span class="nome">
+                                <i class="fa-brands fa-html5"></i></i> HTML5
+                            </span>
+
+                            <span class="porcent">
+                                90%
+                            </span>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
+                        <div class="barra">
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 90%;"></div>
+                            <!--barra do conhecimento-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="info">
+                            <span class="nome">
+                                <i class="fa-brands fa-css3-alt"></i> CSS3
+                            </span>
+
                             <span class="porcent">
                                 75%
                             </span>
-                        </div>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
                         <div class="barra">
-                            <div class="progresso" style="width:75%;"></div>
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 75%;"></div>
+                            <!--barra do conhecimento-->
                         </div>
                     </div>
 
                     <div class="item">
                         <div class="info">
                             <span class="nome">
-                                <i class="fa-solid fa-people-arrows"></i> Comunicação
+                                <i class="fa-brands fa-js"></i>JavaScrip
                             </span>
+
                             <span class="porcent">
-                                95%
+                                60%
                             </span>
-                        </div>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
                         <div class="barra">
-                            <div class="progresso" style="width:95%;"></div>
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 60%;"></div>
+                            <!--barra do conhecimento-->
                         </div>
                     </div>
+                    <div class="item">
+                        <div class="info">
+                            <span class="nome">
+                                <i class="fa-solid fa-database"></i> MySQL
+                            </span>
 
+                            <span class="porcent">
+                                50%
+                            </span>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
+                        <div class="barra">
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 50%;"></div>
+                            <!--barra do conhecimento-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="info">
+                            <span class="nome">
+                                <i class="fa-solid fa-comments"></i> Comunicação
+                            </span>
+
+                            <span class="porcent">
+                                100%
+                            </span>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
+                        <div class="barra">
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 100%;"></div>
+                            <!--barra do conhecimento-->
+                        </div>
+                    </div>
                     <div class="item">
                         <div class="info">
                             <span class="nome">
                                 <i class="fa-solid fa-people-group"></i> Trabalho em Equipe
                             </span>
+
+                            <span class="porcent">
+                                80%
+                            </span>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
+                        <div class="barra">
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 80%;"></div>
+                            <!--barra do conhecimento-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="info">
+                            <span class="nome">
+                                <i class="fa-solid fa-dumbbell"></i> Adaptabilidade
+                            </span>
+
+                            <span class="porcent">
+                                85%
+                            </span>
+                        </div><!--Feche esta div para poder separar lidernome/porcent da barra inferior de progresso-->
+                        <div class="barra">
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 85%;"></div>
+                            <!--barra do conhecimento-->
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="info">
+                            <span class="nome">
+                                <i class="fa-solid fa-people-roof"></i> Liderança
+                            </span>
+
                             <span class="porcent">
                                 90%
                             </span>
-                        </div>
+                        </div><!--Feche esta div para poder separar nome/porcent da barra inferior de progresso-->
                         <div class="barra">
-                            <div class="progresso" style="width:90%;"></div>
+                            <!--barra do conhecimento-->
+                            <div class="progresso" style="width: 90%;"></div>
+                            <!--barra do conhecimento-->
                         </div>
                     </div>
                 </div>
-            </article> <!--Fim article#skills-->
+            </article><!--Fim Article skills-->
 
+            <!--5º Etapa de Desenvolvimento do Site-->
             <article id="formacao">
                 <h2><i class="fa-solid fa-graduation-cap"></i> Formação</h2>
-
                 <div id="formacao-container">
                     <div class="curso">
-                        <p class="periodo">1991 - 1994</p>
-                        <h3 class="instituicao">Escola Técnica Carioca</h3>
-                        <p class="titulacao">Técnico em Informática</p>
+                        <p class="periodo">Jan/2004 - Jun/2004</p>
+                        <h3 class="instituicao">Ponto C - Marketing e Comunicação</h3>
+                        <p class="titulacao">Designer</p>
                     </div>
+
                     <div class="curso">
-                        <p class="periodo">1998 - 2000</p>
-                        <h3 class="instituicao">Instituto Superior de Tecnologia</h3>
-                        <p class="titulacao">Bacharelado em Ciência da Computação</p>
+                        <p class="periodo">Jan/2004 - Jun/2007</p>
+                        <h3 class="instituicao">UniCesumar</h3>
+                        <p class="titulacao">Artes Visuais</p>
                     </div>
+
                     <div class="curso">
-                        <p class="periodo">1998 - 2000</p>
-                        <h3 class="instituicao">Centro de Graduação de Professores</h3>
-                        <p class="titulacao">Licenciatura em Informática</p>
+                        <p class="periodo">Ago/2010 - Out/2010</p>
+                        <h3 class="instituicao">Sergio Yamada Computação</h3>
+                        <p class="titulacao">Hardware</p>
+                    </div>
+
+                    <div class="curso">
+                        <p class="periodo">Jun/2025 - Jul/2025</p>
+                        <h3 class="instituicao">Curso em Vídeo</h3>
+                        <p class="titulacao">HTML5 e CSS3(Módulo 01)</p>
+                    </div>
+
+                    <div class="curso">
+                        <p class="periodo">Jul/2025 - Ago/2025</p>
+                        <h3 class="instituicao">Curso em Vídeo</h3>
+                        <p class="titulacao">HTML5 e CSS3(Módulo 02)</p>
+                    </div>
+
+                    <div class="curso">
+                        <p class="periodo">Ago/2025 - Ago/2025</p>
+                        <h3 class="instituicao">Curso em Vídeo</h3>
+                        <p class="titulacao">HTML5 e CSS3(Módulo 03)</p>
+                    </div>
+
+                    <div class="curso">
+                        <p class="periodo">Ago/2025 - Set/2025</p>
+                        <h3 class="instituicao">Curso em Vídeo</h3>
+                        <p class="titulacao">HTML5 e CSS3(Módulo 04)</p>
+                    </div>
+                    
+                    <div class="curso">
+                        <p class="periodo">Out/2024 - Set/2025</p>
+                        <h3 class="instituicao">Grau Técnico</h3>
+                        <p class="titulacao">Programador</p>
+                    </div>
+                    
+                    <div class="curso">
+                        <p class="periodo">Out/2025 - Dez/2025</p>
+                        <h3 class="instituicao">Curso em Vídeo</h3>
+                        <p class="titulacao">Desenvolvimento de Sites de Internet</p>
+                    </div>
+
+                    <div class="curso">
+                        <p class="periodo">Out/2025 - Nov/2025</p>
+                        <h3 class="instituicao">Curso em Vídeo</h3>
+                        <p class="titulacao">HTML5 e CSS3(Módulo 05)</p>
                     </div>
                 </div>
-
-            </article> <!--Fim article#formacao-->
+            </article><!--Fim Article formacao-->
 
             <article id="projetos">
                 <h2><i class="fa-solid fa-trowel-bricks"></i> Projetos</h2>
                 <div id="projeto-container">
                     <div class="projeto"> <!--Projeto 01-->
-                        <img src="imagens/projeto-01-videos.jpg" alt="Projeto 01" class="foto">
+                        <img src="imagens/projeto-01-videos.jpg" alt="Projeto_Vídeo" class="foto">
                         <div class="projeto-info">
-                            <p class="periodo">2021</p>
+                            <p class="periodo">2025</p>
                             <h3 class="titulo">Projeto de Vídeos</h3>
-                            <p>Projeto construido para treinar a inserção de vídeos em nosso site.</p>
-                            <details class="descriao">
-                                <summary>saiba mais...
+                            <p>Projeto desenvolvido junto ao professor Gustavo Guanabara. Onde aprendi a organizar thumbnails.</p>
+                            <details class="descricao">
+                                <summary>
+                                    Saiba mais...
                                 </summary>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis temporibus perspiciatis vitae voluptatem dolor iste consectetur, nemo nisi tempora labore culpa in aut itaque aliquid delectus at ducimus quibusdam excepturi!</p>
+                                <p>Muitas vezes, o cliente tem a necessidade de inserir alguns vídeos dentro de seu site. Então a melhor estratégia é sempre enviar para o YouTube e usá-lo como servidor de vídeos.</p>
                             </details>
                         </div>
                     </div>
 
                     <div class="projeto"> <!--Projeto 02-->
-                        <img src="imagens/projeto-02-cordel.jpg" alt="Projeto 01" class="foto">
+                        <a href="https://nakata-dev.github.io/portifolio/Cordel/index.html" target="_blank"><img src="imagens/projeto-02-cordel.jpg" alt="Projeto_Vídeo" class="foto"></a>
                         <div class="projeto-info">
-                            <p class="periodo">2022</p>
-                            <h3 class="titulo">Projeto Cordel</h3>
-                            <p>Projeto construido para treinar efeito paralax em imagens.</p>
-                            <details class="descriao">
-                                <summary>saiba mais...
+                            <p class="periodo">2025</p>
+                            <h3 class="titulo">Projeto de Vídeos</h3>
+                            <p>Projeto construido para treinar o efeito PARALAX nosso site.</p>
+                            <details class="descricao">
+                                <summary>
+                                    Saiba mais...
                                 </summary>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis temporibus perspiciatis vitae voluptatem dolor iste consectetur, nemo nisi tempora labore culpa in aut itaque aliquid delectus at ducimus quibusdam excepturi!</p>
+                                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non dicta iure beatae
+                                    minus, laboriosam, veniam voluptates aut provident, expedita vel tenetur incidunt
+                                    amet laborum quasi nam quisquam commodi corporis. Vel?</p>
                             </details>
                         </div>
                     </div>
-
                     <div class="projeto"> <!--Projeto 03-->
-                        <img src="imagens/projeto-03-android.jpg" alt="Projeto 01" class="foto">
+                        <a href="https://nakata-dev.github.io/portifolio/Android/home.html" target="_blank"><img src="imagens/projeto-03-android.jpg" alt="Projeto_Vídeo" class="foto"></a>
                         <div class="projeto-info">
-                            <p class="periodo">2023</p>
-                            <h3 class="titulo">Projeto Android</h3>
-                            <p>Projeto construido para treinar imagens dinâmicas.</p>
-                            <details class="descriao">
-                                <summary>saiba mais...
+                            <p class="periodo">2025</p>
+                            <h3 class="titulo">Projeto de Android</h3>
+                            <p>Projeto construido para treinar imagens dinâmicas no site.</p>
+                            <details class="descricao">
+                                <summary>
+                                    Saiba mais...
                                 </summary>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis temporibus perspiciatis vitae voluptatem dolor iste consectetur, nemo nisi tempora labore culpa in aut itaque aliquid delectus at ducimus quibusdam excepturi!</p>
+                                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non dicta iure beatae
+                                    minus, laboriosam, veniam voluptates aut provident, expedita vel tenetur incidunt
+                                    amet laborum quasi nam quisquam commodi corporis. Vel?</p>
                             </details>
                         </div>
                     </div>
-
                     <div class="projeto"> <!--Projeto 04-->
-                        <img src="imagens/projeto-04-links.jpg" alt="Projeto 01" class="foto">
+                        <a href="https://nakata-dev.github.io/portifolio/projeto-social_02/index.html" target="_blank"><img src="imagens/projeto-04-links.jpg" alt="Projeto_Vídeo" class="foto"></a>
                         <div class="projeto-info">
-                            <p class="periodo">2024</p>
-                            <h3 class="titulo">Projeto Social</h3>
-                            <p>Projeto construido para treinar formatação de imagens e links.</p>
-                            <details class="descriao">
-                                <summary>saiba mais...
+                            <p class="periodo">2025</p>
+                            <h3 class="titulo">Projeto de Rede Social</h3>
+                            <p>Projeto construido para treinar um tipo de layout diferente.</p>
+                            <details class="descricao">
+                                <summary>
+                                    Saiba mais...
                                 </summary>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis temporibus perspiciatis vitae voluptatem dolor iste consectetur, nemo nisi tempora labore culpa in aut itaque aliquid delectus at ducimus quibusdam excepturi!</p>
+                                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non dicta iure beatae
+                                    minus, laboriosam, veniam voluptates aut provident, expedita vel tenetur incidunt
+                                    amet laborum quasi nam quisquam commodi corporis. Vel?</p>
                             </details>
                         </div>
                     </div>
-
                     <div class="projeto"> <!--Projeto 05-->
-                        <img src="imagens/projeto-05-login.jpg" alt="Projeto 01" class="foto">
+                        <a href="https://nakata-dev.github.io/portifolio/Login/index.html" target="_blank"><img src="imagens/projeto-05-login.jpg" alt="Projeto_Vídeo" class="foto"></a>
                         <div class="projeto-info">
                             <p class="periodo">2025</p>
-                            <h3 class="titulo">Projeto Login</h3>
-                            <p>Projeto construido para treinar o design de uma caixa de login e senha.</p>
-                            <details class="descriao">
-                                <summary>saiba mais...
+                            <h3 class="titulo">Projeto Login e Senha</h3>
+                            <p>Projeto construido para treinar o desenvolvimento de tela de login e senha.</p>
+                            <details class="descricao">
+                                <summary>
+                                    Saiba mais...
                                 </summary>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis temporibus perspiciatis vitae voluptatem dolor iste consectetur, nemo nisi tempora labore culpa in aut itaque aliquid delectus at ducimus quibusdam excepturi!</p>
+                                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non dicta iure beatae
+                                    minus, laboriosam, veniam voluptates aut provident, expedita vel tenetur incidunt
+                                    amet laborum quasi nam quisquam commodi corporis. Vel?</p>
                             </details>
                         </div>
                     </div>
-
                     <div class="projeto"> <!--Projeto 06-->
-                        <img src="imagens/projeto-06-album.jpg" alt="Projeto 01" class="foto">
+                        <a href="https://nakata-dev.github.io/portifolio/album/index.html" target="_blank"><img src="imagens/projeto-06-album.jpg" alt="Projeto_Vídeo" class="foto"></a>
                         <div class="projeto-info">
                             <p class="periodo">2025</p>
-                            <h3 class="titulo">Projeto Albúm</h3>
-                            <p>Projeto construido para treinar o layout de um albúm online.</p>
-                            <details class="descriao">
-                                <summary>saiba mais...
+                            <h3 class="titulo">Projeto Album de Fotos</h3>
+                            <p>Projeto construido para treinar responsividade de fotos no site.</p>
+                            <details class="descricao">
+                                <summary>
+                                    Saiba mais...
                                 </summary>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis temporibus perspiciatis vitae voluptatem dolor iste consectetur, nemo nisi tempora labore culpa in aut itaque aliquid delectus at ducimus quibusdam excepturi!</p>
+                                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non dicta iure beatae
+                                    minus, laboriosam, veniam voluptates aut provident, expedita vel tenetur incidunt
+                                    amet laborum quasi nam quisquam commodi corporis. Vel?</p>
                             </details>
                         </div>
                     </div>
                 </div>
 
-            </article> <!--Fim article#projetos-->
+            </article><!--Fim Article projetos-->
         </section>
     </main>
 
     <footer>
-        Portifólio desenvolvido por <a href="https://www.cursoemvideo.com/" target="_blank" rel="nofollow">Curso em Vídeo</a> em 2025
+    Portifólio de <a href="https://ikigaiweb.com.br/" target="_blank">Ailton Akio Nakata</a> - 2025
     </footer>
-
-    <script src="scripts/script.js">
-
-    </script>
-
-
+    <!--Ultima etapa: Abra o arquivo script.js e altere alguns dados para que o Botão no modo escuro passe a funcionar.-->
+    <script src="scripts/script.js"></script> <!--Linka com o arquivo do JS-->
 </body>
 
 </html>

@@ -1,74 +1,295 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário + Iframe Sandbox | HTML - Ailton A. Nakata</title>
 
-    <style>
-        header{
-            height: 80px;
-        }
-        .justificado{
-        white-space: pre-wrap;
-        text-align: justify;
-        line-height: 1.5;
-        font-size: 1.2em;
-        padding: 10px;
-        font-weight: bolder;
-        text-indent: 15px;
-        }
-        
-    </style>
-    <title>Formulário</title>
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Exemplo de formulário e estudo das 3 situações de iframe com sandbox e referrerpolicy, com explicação e códigos prontos para copiar." />
+
+  <style>
+    /* Ajustes locais */
+    .prose p{
+      text-align: justify;
+      text-indent: 22px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    /* Formulário simples, alinhado ao visual do site */
+    .mini-form{
+      display: grid;
+      gap: 12px;
+      max-width: 520px;
+    }
+    .mini-form .row{
+      display: grid;
+      gap: 8px;
+    }
+    .mini-form label{
+      font-weight: 700;
+    }
+    .mini-form input[type="text"]{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: inherit;
+      outline: none;
+    }
+    .mini-form input[type="text"]:focus{
+      border-color: rgba(255,255,255,.28);
+    }
+
+    /* Bloco de código mais legível */
+    pre.codebox{
+      margin: 0;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow: auto;
+      line-height: 1.7;
+      white-space: pre;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+    }
+
+    .tag{
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size: .85em;
+      margin-right: 8px;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>As três Situações</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>        
-        <form action="cadastro.php" method="post" autocomplete="off">
-            <fieldset>
-            <legend>Cadastro</legend>
-            <label for="cadastro.php">Nome</label>
-            <input type="text" name="nome" id="nome">
-            <input type="submit" value="Cadastrar">
-            </fieldset>
-        </form>
-        <br>
-
-        <h2>Três Situações</h2>
-        <pre class="justificado">        
-<h3>primeira situação:</h3>
-
-&lt;iframe src="formulario.html" sandbox="sandbox"&gt;
-Seu navegador não é compativel com isso!&lt;/iframe&gt; 
-    
-<h3>segunda situação:</h3>
-    
-&lt;iframe src="formulario.html" sandbox="sandbox" 
-referrerpolicy="no-referrer""&gt;Seu navegador não é 
-compativel com isso!&lt;/iframe&gt;
-
-<h3>terceira situação:</h3>
-
-&lt;iframe src="formulario.html" sandbox="allow-same-origin allow-forms allow-script" 
-referrerpolicy="no-referrer"&gt;Seu navegador não é 
-compativel com isso!&lt;/iframe&gt;  
-        </pre>
-
-
-        <br>
-        <br>
-        <div id="voltar">
-        <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
-    </main>
-    
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Formulário e as 3 situações</h1>
+          <p class="muted">Entenda como <strong>sandbox</strong> e <strong>referrerpolicy</strong> mudam o comportamento de um iframe.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Cadastro (exemplo simples)</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>Este formulário é um exemplo básico para você entender a estrutura. Em aulas futuras, a gente melhora validação, mensagens e estilo com CSS.</p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="post" autocomplete="off">
+                <div class="row">
+                  <label for="nome">Nome</label>
+                  <input type="text" name="nome" id="nome" placeholder="Ex: Ailton" />
+                </div>
+
+                <div class="hero-actions" style="margin-top: 4px;">
+                  <button class="btn btn-primary" type="submit">Cadastrar</button>
+                  <button class="btn btn-ghost" type="reset">Limpar</button>
+                </div>
+              </form>
+
+              <p class="tiny muted" style="margin: 10px 0 0;">
+                Observação: como é uma página de estudo, o <span class="tag">cadastro.php</span> é só o “destino” do formulário.
+              </p>
+            </div>
+
+            <h2 style="margin-top: 18px;">Três situações com iframe</h2>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>Quando você usa <strong>sandbox</strong>, o iframe fica “preso numa caixa”. Você vai liberando permissões aos poucos com tokens como <strong>allow-forms</strong>, <strong>allow-scripts</strong> e <strong>allow-same-origin</strong>.</p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">1) Sandbox total (mais restrito)</h3>
+              <pre class="codebox"><code>&lt;iframe src="formulario.html" sandbox&gt;
+  Seu navegador não é compatível com isso!
+&lt;/iframe&gt;</code></pre>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>O que acontece:</strong> bloqueia quase tudo (scripts, formulários, popups etc.).
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">2) Sandbox + referrerpolicy</h3>
+              <pre class="codebox"><code>&lt;iframe
+  src="formulario.html"
+  sandbox
+  referrerpolicy="no-referrer"&gt;
+  Seu navegador não é compatível com isso!
+&lt;/iframe&gt;</code></pre>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>O que muda:</strong> o navegador não envia informações de referência (referrer) para a página carregada no iframe.
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">3) Sandbox com permissões específicas</h3>
+              <pre class="codebox"><code>&lt;iframe
+  src="formulario.html"
+  sandbox="allow-same-origin allow-forms allow-scripts"
+  referrerpolicy="no-referrer"&gt;
+  Seu navegador não é compatível com isso!
+&lt;/iframe&gt;</code></pre>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>O que libera:</strong> formulário pode enviar, scripts podem rodar e o conteúdo pode se comportar como mesma origem (dependendo do caso).
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>label for</strong> apontando para o <strong>id</strong> correto</li>
+                <li>Entendeu o que o <strong>sandbox</strong> bloqueia</li>
+                <li>Viu como liberar permissões com <strong>allow-*</strong></li>
+                <li>Aprendeu o papel do <strong>referrerpolicy</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,65 +1,192 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Importando Fontes</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Importando Fontes | HTML - Ailton A. Nakata</title>
 
-        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        @import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');
-        body{
-            font-family: "Work Sans", sans-serif;
-            font-optical-sizing: auto;
-            font-weight: <weight>;
-            font-style: normal;
-        }
-        h1#destaque{
-            font-family: 'kaushan script', sans-serif;
-            font-size: 2.2em;
-            font-style: normal;
-            
-        }
-        header>h1{
-            padding: 0px;
-            margin: 0px;
-            padding-top: 0px;
-        }
-        header{
-            padding: 0px;
-            height: 100px;
-        }
-        header>p{
-            padding: 0px;
-            margin: 0px;
-        }
-        h2 {
-            font-family: "Fredericka the Great", serif;
-            font-weight: 400;
-            font-style: normal;
-        }
-    </style>
+  <meta name="description" content="Aula sobre importação de fontes no CSS: Google Fonts via @import, combinando famílias (título e subtítulos) com boa leitura." />
+
+  <style>
+    /* Imports (aula) */
+    @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');
+
+    /* Escopo da aula (não afeta o site inteiro) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+    .text-justify{ text-align: justify; }
+    .text-indent{ text-indent: 30px; }
+
+    .font-import-demo{
+      font-family: "Work Sans", Arial, Helvetica, sans-serif;
+      font-optical-sizing: auto;
+      font-weight: 400; /* corrigido: era <weight> */
+      font-style: normal;
+    }
+
+    .font-import-demo .title-script{
+      font-family: "Kaushan Script", cursive;
+      font-size: 2.2em;
+      font-style: normal;
+      margin: 0 0 8px;
+      line-height: 1.1;
+    }
+
+    .font-import-demo h3{
+      font-family: "Fredericka the Great", serif;
+      font-weight: 400;
+      font-style: normal;
+      margin: 16px 0 10px;
+    }
+
+    .code-note{
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    @media (max-width: 520px){
+      .content-narrow{ max-width: 100%; }
+      .text-indent{ text-indent: 18px; }
+      .font-import-demo .title-script{ font-size: 1.9em; }
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <h1 id="destaque">Importando Fontes</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    
-    <main>
-    <h2>Subtitulo</h2>
 
-        <p style="text-align: justify; text-indent: 30px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores asperiores ea aspernatur doloremque quaerat a animi impedit repellendus. Neque deserunt ea fugiat amet quo. Eligendi asperiores odio doloremque corrupti maiores.</p>
-        <h2>Subtitulo</h2>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque reprehenderit veniam ratione error. Magni accusantium blanditiis placeat ipsam! Cumque dignissimos ut alias vero, quas incidunt odit tenetur excepturi magni odio!</p>
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+<body>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-</body>
-</html>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Importando Fontes</h1>
+          <p class="muted">Como usar Google Fonts com <code>@import</code> e combinar famílias (título + subtítulo + texto).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow font-import-demo">
+              <h2 class="title-script">Importando Fontes</h2>
+              <p class="muted" style="margin:0;">por: Ailton A. Nakata</p>
+
+              <h3>Subtítulo</h3>
+              <p class="text-justify text-indent" style="margin-top:0;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores asperiores ea aspernatur doloremque
+                quaerat a animi impedit repellendus. Neque deserunt ea fugiat amet quo. Eligendi asperiores odio
+                doloremque corrupti maiores.
+              </p>
+
+              <h3>Subtítulo</h3>
+              <p class="text-justify text-indent" style="margin-top:0;">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Atque reprehenderit veniam ratione error.
+                Magni accusantium blanditiis placeat ipsam! Cumque dignissimos ut alias vero, quas incidunt odit tenetur
+                excepturi magni odio!
+              </p>
+            </div>
+
+            <div class="card soft content-narrow" style="margin-top: 12px;">
+              <div class="code-note">
+                <p class="muted" style="margin:0 0 8px;">
+                  Exemplo de import (Google Fonts):
+                </p>
+                <pre style="margin:0; white-space:pre-wrap; line-height:1.7;"><code>@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');</code></pre>
+              </div>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Boa prática:</strong> em projetos reais, prefira carregar fontes via <code>&lt;link&gt;</code> no <code>&lt;head&gt;</code>
+              para melhor performance. Para aula, <code>@import</code> é ok.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Importou fontes via <code>@import</code></li>
+                <li>Aplicou fonte base no texto</li>
+                <li>Usou fonte diferente no título</li>
+                <li>Usou fonte diferente no subtítulo</li>
+                <li>Corrigiu <code>font-weight</code> inválido</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu mo

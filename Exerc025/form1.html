@@ -1,68 +1,275 @@
 <!DOCTYPE html>
-<html lang="prt-br">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário</title>
-    <style>
-        *{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        h1,h2,h3{
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form - Básico | HTML - Ailton A. Nakata</title>
 
-        p{
-            
-            text-indent: 30px;
-            font-family: Arial, Helvetica, sans-serif;
-            
-        }
-        p{
-            padding: 2px;
-            text-align: justify;
-        }
-        #voltar{
-            a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-            }
-        }
-    </style>
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Formulário básico com fieldset/legend/label e explicação da estrutura do form, no template padrão do site." />
+
+  <style>
+    /* Ajustes locais */
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    .mini-form{
+      display: grid;
+      gap: 12px;
+      max-width: 640px;
+    }
+
+    .mini-form fieldset{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .mini-form legend{
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
+    .mini-form .row{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .mini-form label{
+      font-weight: 700;
+    }
+
+    .mini-form input[type="text"]{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: inherit;
+      outline: none;
+    }
+    .mini-form input[type="text"]:focus{
+      border-color: rgba(255,255,255,.28);
+    }
+
+    /* Bloco de código */
+    pre.codebox{
+      margin: 0;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow: auto;
+      line-height: 1.7;
+      white-space: pre;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+    }
+
+    .inline-code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+      padding: .1em .35em;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      white-space: nowrap;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Form - Básico</h1>
-    <!--O method pode variar entre post e get-->
-    <form action="cadastro.php" method="post" autocomplete="off">
-        <!--Label serve para tornar a área de seleção do campo maior. Neste caso, você o nome também faz parte da seleção do campo.-->
-        <fieldset>
-            <legend>Nome</legend>
-            <p><label for="inome">nome:</label>
-            
-                <input type="text" name="nome" id="inome" ></p>
-            <p><label for="isobrenome">sobrenome:</label>            
-                <input type="text" name="sobrenome" id="isobrenome"></p>
-            <p><input type="submit" value="Enviar"></p>
-        </fieldset>
-    </form>
-    <h2>Estrutura de um form</h2>
-
-    
-    <p>
-    &lt;form="cadastro.php"method="post"autocomplete="off"&gt;</p>
-    <p>
-        &lt;/form&gt;
-    </p>
-    
-
-        <br><br>
-        <div id="voltar" style="text-align: center;">
-        <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Formulário básico</h1>
+          <p class="muted">Entenda <span class="inline-code">form</span>, <span class="inline-code">fieldset</span>, <span class="inline-code">legend</span> e <span class="inline-code">label</span> na prática.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Form - Básico</h2>
+
+            <div class="card prose">
+              <p>O atributo <strong>method</strong> costuma variar entre <strong>GET</strong> e <strong>POST</strong>. Aqui estamos usando <strong>POST</strong>. O <strong>label</strong> ajuda a tornar a área de seleção do campo maior (clicar no texto também foca o input).</p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="post" autocomplete="off">
+                <fieldset>
+                  <legend>Nome</legend>
+
+                  <div class="row">
+                    <label for="inome">Nome:</label>
+                    <input type="text" name="nome" id="inome" placeholder="Ex: Ailton" />
+                  </div>
+
+                  <div class="row">
+                    <label for="isobrenome">Sobrenome:</label>
+                    <input type="text" name="sobrenome" id="isobrenome" placeholder="Ex: Nakata" />
+                  </div>
+
+                  <div class="hero-actions" style="margin-top: 14px;">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                    <button class="btn btn-ghost" type="reset">Limpar</button>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Estrutura de um form</h3>
+              <pre class="codebox"><code>&lt;form action="cadastro.php" method="post" autocomplete="off"&gt;
+  ...
+&lt;/form&gt;</code></pre>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> no começo, foque em estrutura e semântica. Estilização vem depois com CSS (e fica mais consistente).
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>action</strong> e <strong>method</strong> no form</li>
+                <li>Usou <strong>label for</strong> apontando para o <strong>id</strong></li>
+                <li>Organizou com <strong>fieldset</strong> e <strong>legend</strong></li>
+                <li>Testou “clicar no texto” do label</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

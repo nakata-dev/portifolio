@@ -1,70 +1,285 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body{
-            height: auto; /*importante*/
-            background-color: black;
-            background-image:url('imagens/wallpaper002.jpg');
-            background-position: center top;
-            background-repeat:no-repeat; 
-            background-size: auto; /*função 'contain' - 100% exibida / 'cover' - corta a imagem*/
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Background-size | HTML - Ailton A. Nakata</title>
 
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        main{
-            background-color:white;
-            max-width: 400px;
-            min-width: 200px;
-            height: auto;
-            padding: 10px;
-            margin:auto;
-            border: 1px solid darkblue;
-            border-radius: 15px;
-            
-        }
-        p{
-            text-align: justify;
-            text-indent: 30px;
-        }
-        h1{
-            text-align: center;
-        }
-        div#voltar{
-        display: flex;
-        
-        align-items: center;
-        justify-content: center;
-        
+  <meta name="description" content="Aula prática de background-size: auto, contain e cover com demo interativa e layout responsivo." />
+
+  <style>
+    /* Escopo da aula */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+
+    .stage{
+      min-height: 68svh;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.10);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+
+      /* Fundo da aula */
+      background-color: #000;
+      background-image:url('imagens/wallpaper002.jpg');
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-size: auto; /* controlado via JS */
+      padding: 18px;
+
+      display: grid;
+      place-items: center;
     }
-         div#voltar a:hover{
-         padding: 10px;
-         background-color: rgba(125, 208, 235, 0.637);
-         font-weight: bolder;
-         transition-duration: 0.5s;
-         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-         border-radius: 5px;
-         border: none;
+
+    .card-main{
+      width: min(620px, 100%);
+      background: rgba(119, 119, 119, 0.86);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 16px;
+      backdrop-filter: blur(6px);
     }
-    </style>
-    <title>Background Size</title>
+
+    .card-main h2{
+      margin: 0 0 8px;
+      text-align: center;
+    }
+
+    .card-main p{
+      margin: 0 0 12px;
+      text-align: justify;
+      text-indent: 22px;
+      line-height: 1.75;
+    }
+
+    .controls{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .mini{
+      font-size: 0.9rem;
+      opacity: 0.8;
+      text-align: center;
+      margin: 10px 0 0;
+    }
+
+    .code{
+      margin-top: 12px;
+      background:#0f1724;
+      color:#e6edf3;
+      padding:12px;
+      border-radius:12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:0.92rem;
+      overflow:auto;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .code pre{ margin:0; white-space:pre-wrap; line-height:1.7; }
+
+    @media (max-width: 520px){
+      .stage{ min-height: 62svh; padding: 14px; }
+      .code{ font-size: 0.86rem; }
+    }
+  </style>
 </head>
+
 <body>
-    <main>
-        <h1>Teste de Imagem de Fundo</h1>
-        <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum soluta eveniet, excepturi saepe amet at voluptate fugit quae magni dolorum tenetur rem numquam ex vel deserunt. Porro necessitatibus totam veniam!
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam excepturi aliquam id laboriosam quia. Natus mollitia sit nemo, sed ad odit est aliquid accusantium harum, aperiam minus similique quos optio?
-        </p>
-        <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odio modi dolor, excepturi ex cupiditate nostrum eveniet facilis quidem, cum laboriosam quo sed ratione nobis ab ipsum dolorum earum et. Placeat.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta est tenetur odit aperiam necessitatibus iure blanditiis asperiores, atque reprehenderit facere maxime tempore quia. Harum odit, voluptatibus sed inventore sapiente reprehenderit!
-        </p>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Background-size</h1>
+          <p class="muted">Troque entre <code>auto</code>, <code>contain</code> e <code>cover</code> e veja a diferença no fundo.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração interativa</h2>
+
+            <div class="card soft content-narrow">
+              <div class="stage" id="stage" aria-label="Área com imagem de fundo para testar background-size">
+                <div class="card-main">
+                  <h2>Teste de Imagem de Fundo</h2>
+
+                  <p>
+                    Aqui o objetivo é entender como <strong>background-size</strong> altera a forma que a imagem “encaixa”
+                    no container: <strong>auto</strong> mantém o tamanho original, <strong>contain</strong> mostra a imagem inteira,
+                    e <strong>cover</strong> preenche cortando o excesso.
+                  </p>
+
+                  <div class="controls">
+                    <button class="btn btn-secondary" type="button" data-size="auto">auto</button>
+                    <button class="btn btn-secondary" type="button" data-size="contain">contain</button>
+                    <button class="btn btn-secondary" type="button" data-size="cover">cover</button>
+                  </div>
+
+                  <p class="mini muted">CSS atual:</p>
+                  <div class="code">
+                    <pre><code id="css-out">background-size: auto;</code></pre>
+                  </div>
+
+                  <div class="lesson-actions" style="margin-top: 12px; justify-content:center;">
+                    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Regra prática:</strong> <code>cover</code> é o “padrão de hero/banner”; <code>contain</code> é ótimo para logos e imagens que não podem cortar.
+              </div>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Testou <code>auto</code></li>
+                <li>Testou <code>contain</code></li>
+                <li>Testou <code>cover</code></li>
+                <li>Entendeu corte vs encaixe</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS simples da aula -->
+  <script>
+    (function(){
+      const stage = document.getElementById('stage');
+      const out = document.getElementById('css-out');
+      document.querySelectorAll('[data-size]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const size = btn.getAttribute('data-size');
+          stage.style.backgroundSize = size;
+          out.textContent = `background-size: ${size};`;
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

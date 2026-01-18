@@ -1,334 +1,560 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;     
-        }
-        
-        table{
-            border-collapse: collapse;
-            width: 300px;
-            margin: auto;
-                 
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Colspan e Rowspan | HTML - Ailton A. Nakata</title>
 
-        td{
-            border: 1px solid black;
-            padding: 10px;
-            text-align: center;
-        }
-        h1, h3{
-            text-align: center;
-        }
-        .direcao{
-            display: flex;
-            flex-direction: column-reverse;
-        }
-    </style>
-    <title>Tabela</title>
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Exercícios de tabelas com colspan e rowspan (HTML): exemplos práticos, responsivos e com alto contraste." />
+
+  <style>
+    /* ===== Aula: tabelas (layout + contraste) ===== */
+    .tables-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 860px){
+      .tables-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .table-card{
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .table-wrap{
+      width: 100%;
+      overflow-x: auto; /* mobile safe */
+      padding-bottom: 4px;
+    }
+
+    .mini-title{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 10px;
+    }
+
+    .mini-title strong{
+      font-size: 1rem;
+    }
+
+    .mini-title span{
+      font-size: 0.85rem;
+      opacity: 0.75;
+      white-space: nowrap;
+    }
+
+    table{
+      width: 100%;
+      min-width: 280px;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      color: #111; /* texto escuro */
+    }
+
+    td{
+      border: 1px solid rgba(0,0,0,0.25);
+      padding: 12px;
+      text-align: center;
+      font-weight: 800;
+      color: #111; /* garante contraste */
+    }
+
+    /* Suave: ajuda a “ler” grupos, sem apagar texto */
+    tr:nth-child(odd) td{
+      background: rgba(0,0,0,0.03);
+    }
+
+    /* Em telas muito pequenas, diminui um pouco as células */
+    @media (max-width: 380px){
+      td{
+        padding: 10px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>colspan e rowspan</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-        <main>
-            <div id="voltar">
-            <a href="../html.html">Voltar</a>
-            </div>
-            <br>
-            <div class="direcao">
-                <table>
-                    <tr>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Colspan e Rowspan</h1>
+          <p class="muted">Treino prático de mesclagem de células em tabelas HTML.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <button class="btn btn-primary" data-open-modal type="button">Quero um site profissional</button>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Exercícios</h2>
+
+            <div class="card soft">
+              <div class="alert">
+                <strong>Objetivo:</strong> entender quando usar <code>colspan</code> (mescla colunas) e <code>rowspan</code> (mescla linhas).
+              </div>
+
+              <div class="tables-grid" style="margin-top: 12px;">
+                <!-- 01 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 01</strong>
+                    <span>colspan + rowspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td>A</td>
                         <td colspan="2">B</td>
-                
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td rowspan="3">D</td>
                         <td>E</td>
                         <td rowspan="3">F</td>
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
                         <td>H</td>
-                
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
                         <td>K</td>
-                
-                    </tr>
-                </table>
-                <br>
-                <table>
-                    <tr>
-                        <td>A</td>
-                        <td>B</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td>E</td>
-                        <td rowspan="2">F</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                        <td>H</td>
-                
-                    </tr>
-                    <tr>
-                        <td>J</td>
-                        <td>K</td>
-                        <td>L</td>
-                    </tr>
-                </table>
-                <br>
-                <table>
-                    <tr>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 02 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 02</strong>
+                    <span>rowspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
+                        <td>A</td><td>B</td><td>C</td>
+                      </tr>
+                      <tr>
+                        <td>D</td><td>E</td><td rowspan="2">F</td>
+                      </tr>
+                      <tr>
+                        <td>G</td><td>H</td>
+                      </tr>
+                      <tr>
+                        <td>J</td><td>K</td><td>L</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 03 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 03</strong>
+                    <span>rowspan + colspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td rowspan="4">A</td>
                         <td>B</td>
                         <td>C</td>
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
                         <td colspan="2">E</td>
-                
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
                         <td>H</td>
                         <td>I</td>
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
                         <td>K</td>
                         <td>L</td>
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 04 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 04</strong>
+                    <span>colspan + rowspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td colspan="3">A</td>
-                
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td>D</td>
                         <td rowspan="3">E</td>
                         <td>F</td>
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
                         <td>H</td>
                         <td>I</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td>J</td>
-                
                         <td>L</td>
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 05 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 05</strong>
+                    <span>rowspan + colspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td>A</td>
                         <td rowspan="2">B</td>
                         <td>C</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td>D</td>
-                
                         <td>F</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                        <td>H</td>
-                        <td>I</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
+                        <td>G</td><td>H</td><td>I</td>
+                      </tr>
+                      <tr>
                         <td colspan="3">J</td>
-                
-                    </tr>
-                </table>
-                <br>
-                  
-                <table>
-                    <tr>
-                        <td colspan="2">A</td>
-                        <td>B</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td colspan="2">E</td>
-                        <td rowspan="3">F</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                        <td>H</td>
-                        <td>I</td>
-                    </tr>
-                    <tr>
-                        <td>J</td>
-                        <td>K</td>
-                        <td>L</td>
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 06 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 06</strong>
+                    <span>colspan + rowspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
+                        <td colspan="2">A</td><td>B</td><td>C</td>
+                      </tr>
+                      <tr>
+                        <td>D</td><td colspan="2">E</td><td rowspan="3">F</td>
+                      </tr>
+                      <tr>
+                        <td>G</td><td>H</td><td>I</td>
+                      </tr>
+                      <tr>
+                        <td>J</td><td>K</td><td>L</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 07 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 07</strong>
+                    <span>colspan + rowspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td colspan="3">A</td>
                         <td rowspan="3">B</td>
                         <td rowspan="3">C</td>
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td>E</td>
-                        <td>F</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                        <td>H</td>
-                        <td>I</td>
-                    </tr>
-                    <tr>
-                        <td>J</td>
-                        <td>K</td>
-                        <td colspan="3">L</td>
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
-                        <td>A</td>
-                        <td>B</td>
-                        <td>C</td>
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td>E</td>
-                        <td rowspan="2">F</td>
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
+                        <td>D</td><td>E</td><td>F</td>
+                      </tr>
+                      <tr>
+                        <td>G</td><td>H</td><td>I</td>
+                      </tr>
+                      <tr>
+                        <td>J</td><td>K</td><td colspan="3">L</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 08 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 08</strong>
+                    <span>rowspan + colspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
+                        <td>A</td><td>B</td><td>C</td>
+                      </tr>
+                      <tr>
+                        <td>D</td><td>E</td><td rowspan="2">F</td>
+                      </tr>
+                      <tr>
                         <td colspan="2">H</td>
-                
-                    </tr>
-                    <tr>
-                        <td>J</td>
-                        <td>K</td>
-                        <td>L</td>
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
+                      </tr>
+                      <tr>
+                        <td>J</td><td>K</td><td>L</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 09 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 09</strong>
+                    <span>colspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td colspan="3">A</td>
-                
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td>E</td>
-                        <td>F</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                        <td>H</td>
-                        <td>I</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
+                        <td>D</td><td>E</td><td>F</td>
+                      </tr>
+                      <tr>
+                        <td>G</td><td>H</td><td>I</td>
+                      </tr>
+                      <tr>
                         <td colspan="3">J</td>
-                
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 10 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 10</strong>
+                    <span>rowspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td colspan="3">A</td>
-                
-                    </tr>
-                    <tr>
-                        <td>D</td>
-                        <td rowspan="3">E</td>
-                        <td>F</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                
-                        <td>I</td>
-                    </tr>
-                    <tr>
-                        <td>J</td>
-                
-                        <td>L</td>
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
+                      </tr>
+                      <tr>
+                        <td>D</td><td rowspan="3">E</td><td>F</td>
+                      </tr>
+                      <tr>
+                        <td>G</td><td>I</td>
+                      </tr>
+                      <tr>
+                        <td>J</td><td>L</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 11 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 11</strong>
+                    <span>rowspan + colspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td rowspan="4">A</td>
                         <td colspan="2">B</td>
-                
-                    </tr>
-                    <tr>
-                
-                        <td>E</td>
-                        <td>F</td>
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
+                        <td>E</td><td>F</td>
+                      </tr>
+                      <tr>
                         <td colspan="2">H</td>
-                
-                    </tr>
-                    <tr>
-                
-                        <td>K</td>
-                        <td>L</td>
-                    </tr>
-                </table>
-                <br>
-                    
-                <table>
-                    <tr>
+                      </tr>
+                      <tr>
+                        <td>K</td><td>L</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 12 -->
+                <div class="table-card">
+                  <div class="mini-title">
+                    <strong>Tabela 12</strong>
+                    <span>colspan + rowspan</span>
+                  </div>
+                  <div class="table-wrap">
+                    <table>
+                      <tr>
                         <td colspan="2">A</td>
-                
                         <td>C</td>
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td colspan="3">D</td>
-                
-                    </tr>
-                    <tr>
+                      </tr>
+                      <tr>
                         <td rowspan="2">G</td>
                         <td>H</td>
                         <td>I</td>
-                    </tr>
-                    <tr>
-                
+                      </tr>
+                      <tr>
                         <td colspan="2">K</td>
-                
-                    </tr>
-                </table>
-            </div>            
-            <br>
-            <br>
-            <div id="voltar">
-                <a href="../estudos.html">Voltar</a>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lesson-actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+              </div>
             </div>
-            <br>
-            <br>
-        </main>
-    
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu <code>colspan</code></li>
+                <li>Entendeu <code>rowspan</code></li>
+                <li>Viu casos diferentes</li>
+                <li>Layout responsivo ok</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="hero-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../estudos.html">Voltar para Estudos</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

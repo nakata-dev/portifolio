@@ -1,32 +1,287 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uso das cores</title>
-    <link rel="stylesheet" href="../style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Uso das Cores | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aula sobre uso de cores no HTML: RGB, HEX, HSL e transparência (HSLA), com exemplos visuais e código limpo." />
+
+  <style>
+    /* Estilos específicos da aula (não sobrescreve o layout do site.css) */
+    .content-narrow { max-width: 72ch; }
+    .text-justify { text-align: justify; }
+
+    .color-demo{
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-sizing: border-box;
+      overflow-wrap: anywhere;
+    }
+
+    .color-meta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.08);
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+
+    .dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.35);
+    }
+
+    .code-inline{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size: 0.9rem;
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    @media (max-width: 520px){
+      .content-narrow { max-width: 100%; }
+      .color-demo { padding: 12px; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Uso das Cores</h1> <!--Representação de cores por Nome de cada cor-->
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <p style="background-color: rgb(96, 157, 159); color: rgb(00,00,00);">A representação por cores o aluno(a) será capaz de inserir as cores usando as configurações no parâmetro style através do background color, color, font color etc...Aqui o nome da cor é a base para se encontrar um código Hexadecimal.</h1>
-        
-        <h2>Representação_Cores através de Hexadecimal (AA00BB)</h2>    <!--Representação de cores por Hexadecimal RGB (000000)-->
-        <p style="background-color: #609d9f;color: #000000;">Neste caso em específico o aluno(a) será capaz de inserir uma cor usando um aplicativou ou programa como o Gimp para poder pesquisar e inserir as cores através de seus código em formato de RGB. Sedo que para cada cor, vamos precisar a reconfiguração de duas casa decimais. Exemplo: R(00)G(22)B(AA)</p>
-        
-        <h2>Representação_Cores por HSL(%)</h2>
-        <p style="background-color: hsl(182, 25%, 50%); color: hsl(0, 0%, 0%);">Neste ultimo caso, o aluno(a) será capaz de inserir a cor através de HSL (hue, saturation, luminousity) que comumente encontramos também em porcentagens(%)</p>
-        <h2>Representação_Cores_Transparência</h2>
-        <p style="background-color: hsla(182, 25%, 50%, 0.493); color: hsl(0, 0%, 0%);">Neste caso, por mais que aparente estar mais claro o fundo, a cor é a mesma das de cima. Foi alterada 50% de transparência somente. Um resculso útil para quem deseja mostrar algum tipo de imagem quando estiver trabalhando com cores de fundo em seus textos.</p>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Uso das Cores 🎨</h1>
+          <p class="muted">RGB, HEX, HSL e transparência (HSLA) com exemplos visuais.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">1) Cores por RGB</h2>
+
+            <div class="card soft content-narrow">
+              <div class="color-demo" style="background-color: rgb(96, 157, 159); color: rgb(0, 0, 0);">
+                <div class="color-meta">
+                  <span class="chip"><span class="dot" aria-hidden="true"></span>Exemplo (RGB)</span>
+                  <span class="code-inline">rgb(96, 157, 159)</span>
+                </div>
+
+                <p class="text-justify" style="margin:0;">
+                  O aluno(a) será capaz de inserir cores usando o parâmetro <span class="code-inline">style</span> com
+                  <span class="code-inline">background-color</span> e <span class="code-inline">color</span>.
+                  Aqui usamos RGB (Red, Green, Blue) com valores de 0 a 255.
+                </p>
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">2) Cores por HEX</h2>
+
+            <div class="card soft content-narrow">
+              <div class="color-demo" style="background-color: #609d9f; color: #000000;">
+                <div class="color-meta">
+                  <span class="chip"><span class="dot" aria-hidden="true"></span>Exemplo (HEX)</span>
+                  <span class="code-inline">#609d9f</span>
+                </div>
+
+                <p class="text-justify" style="margin:0;">
+                  No formato hexadecimal, cada par representa um canal:
+                  <span class="code-inline">#RRGGBB</span>.
+                  Exemplo: <span class="code-inline">R(00) G(22) B(AA)</span>.
+                </p>
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">3) Cores por HSL</h2>
+
+            <div class="card soft content-narrow">
+              <div class="color-demo" style="background-color: hsl(182, 25%, 50%); color: hsl(0, 0%, 0%);">
+                <div class="color-meta">
+                  <span class="chip"><span class="dot" aria-hidden="true"></span>Exemplo (HSL)</span>
+                  <span class="code-inline">hsl(182, 25%, 50%)</span>
+                </div>
+
+                <p class="text-justify" style="margin:0;">
+                  HSL significa <strong>Hue</strong> (matiz), <strong>Saturation</strong> (saturação) e <strong>Lightness</strong> (luminosidade).
+                  É bem comum ver saturação e luminosidade em porcentagem.
+                </p>
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">4) Transparência (HSLA)</h2>
+
+            <div class="card soft content-narrow">
+              <div class="color-demo" style="background-color: hsla(182, 25%, 50%, 0.493); color: hsl(0, 0%, 0%);">
+                <div class="color-meta">
+                  <span class="chip"><span class="dot" aria-hidden="true"></span>Exemplo (HSLA)</span>
+                  <span class="code-inline">hsla(182, 25%, 50%, 0.493)</span>
+                </div>
+
+                <p class="text-justify" style="margin:0;">
+                  Aqui a cor é a mesma do exemplo anterior, mas com <strong>alpha</strong> (transparência).
+                  O valor vai de <span class="code-inline">0</span> (totalmente transparente) até <span class="code-inline">1</span> (opaco).
+                </p>
+              </div>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Dica:</strong> para projetos reais, prefira declarar cores no CSS (variáveis) e evitar repetir valores em vários lugares.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Viu RGB e entendeu 0–255</li>
+                <li>Entendeu HEX (#RRGGBB)</li>
+                <li>Conheceu HSL (%, %) </li>
+                <li>Entendeu alpha (HSLA)</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

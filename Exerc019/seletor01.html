@@ -1,88 +1,317 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Seletor ID</title>
-    <style>
-        main>p {
-            text-align: justify;
-            line-height: 1.5;
-            padding: 20px;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Seletor ID | HTML - Ailton A. Nakata</title>
 
-        h2,
-        h3 {
-            padding-left: 20px;
-        }
-        pre{
-            font-size: 1.1em;
-            line-height: 1.5;
-            font-weight: bolder;
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        }
-    </style>
+  <meta name="description" content="Aula sobre seletor ID: como usar id no HTML, como selecionar com # no CSS, exemplos e diferenças entre id e class." />
+
+  <style>
+    /* Estilos específicos da aula (escopados) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+    .text-justify{ text-align: justify; }
+    .lh-16{ line-height: 1.6; }
+
+    .code-block{
+      background:#0f1724;
+      color:#e6edf3;
+      padding:12px;
+      border-radius:12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:0.92rem;
+      overflow:auto; /* evita estouro no mobile */
+      position:relative;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .code-block pre{
+      margin:0;
+      white-space:pre;
+    }
+
+    .copy-btn{
+      position:absolute;
+      right:10px;
+      top:10px;
+      background: rgba(255,255,255,0.10);
+      color:#fff;
+      border:none;
+      padding:6px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:0.8rem;
+    }
+
+    @media (max-width: 520px){
+      .content-narrow{ max-width: 100%; }
+      .code-block{ font-size:0.86rem; }
+      .copy-btn{ padding:6px 8px; }
+    }
+  </style>
 </head>
 
 <body>
-    <header>
-        <h1 id="principal">Seletor ID</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>HTML básico</h2>
-        <p>Ao se criar uma 'id' dentro do HTML você deve ficar atento a construção do parâmetro.</p>
-        <p>Vou dar aqui um parâmetro de como ficaria o uso de um 'id':identidade dentro de um arquivo HTML: <br>
-            &lt p id="principal"&gt <br>
-            &lt p id="texto01"&gt <br>
-            &lt h1 id="primeiro_h1"&gt <br>
-        </p>
-
-        <h2>Parâmetro para CSS</h2>
-        <p>Este parâmetro usado dentro da folha de estilo é necessário:<strong>"@charset "utf-8"</strong>; "Usado quando você vai usar
-            palavras com <strong>caracteres especiais dentro das CSS</strong>, algo que dificilmente ocorre. </p>
-        <p>Outro detalhe importante a se lembrar aqui é que: 'Tudo que em <strong>HTMl é id</strong>, em <strong>CSS</strong> vai ser <strong>#(cerquilha)</strong></p>
-
-        <h2>CSS básico</h2>
-        <p>Obrserve aqui como fica a configuração na folha de STYLE/ESTILO:
-        <pre>
-    body{
-        background-color: rgb(205,255,203);
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    h1{
-        color: rgb(4, 109, 0);
-    }
-    
-    #principal{
-        text-align: center;
-        background-color:rgb(4, 109, 0);
-        color: white;
-    }
-
-    h2{
-        color: rgb(73, 109, 71);
-    }
-
-    p{
-        text-align: justify;
-        text-indent: 30px;
-    }
-            </pre>
-        <h2>Diferença entre "id" e "class"</h2>
-        <p>O id por mais funcional que pareça, ele é um parâmetro usado somente para um tipo de tag, como por exemplo:
-            &lt p id="titulo"&gt, e não pode ser usado em outras tags como: <br>
-            <br>
-            &lt h2 id="titulo"&gt
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-</body>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Seletor ID</h1>
+          <p class="muted">Como usar <code>id</code> no HTML e selecionar com <code>#</code> no CSS (com exemplos práticos).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">HTML básico</h2>
+
+            <div class="card soft content-narrow">
+              <p class="text-justify lh-16" style="margin:0;">
+                Ao criar uma <strong>id</strong> no HTML, você deve prestar atenção no nome (sem espaços e preferencialmente
+                sem acentos). A ideia da <strong>id</strong> é identificar um elemento de forma única na página.
+              </p>
+            </div>
+
+            <div class="card soft content-narrow" style="margin-top: 12px;">
+              <p class="muted" style="margin-top:0;">Exemplos de uso de <code>id</code> no HTML:</p>
+
+              <div class="code-block">
+                <button class="copy-btn" type="button" data-copy-target="code-html-id">Copiar</button>
+                <pre><code id="code-html-id">&lt;p id="principal"&gt;...&lt;/p&gt;
+&lt;p id="texto01"&gt;...&lt;/p&gt;
+&lt;h1 id="primeiro_h1"&gt;...&lt;/h1&gt;</code></pre>
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Parâmetro para CSS</h2>
+
+            <div class="card soft content-narrow">
+              <p class="text-justify lh-16" style="margin:0;">
+                No CSS, tudo que é <strong>id</strong> no HTML é selecionado com <strong>#</strong> (cerquilha).
+                Exemplo: <code>#principal</code>.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Observação:</strong> <code>@charset "utf-8";</code> pode ser usado no início do CSS, mas hoje é raro ser necessário
+                se o arquivo já estiver em UTF-8 (o comum).
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">CSS básico</h2>
+
+            <div class="card soft content-narrow">
+              <p class="muted" style="margin-top:0;">Exemplo de configuração com <code>#principal</code> no CSS:</p>
+
+              <div class="code-block">
+                <button class="copy-btn" type="button" data-copy-target="code-css-id">Copiar</button>
+                <pre><code id="code-css-id">body{
+  background-color: rgb(205, 255, 203);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1{
+  color: rgb(4, 109, 0);
+}
+
+#principal{
+  text-align: center;
+  background-color: rgb(4, 109, 0);
+  color: white;
+}
+
+h2{
+  color: rgb(73, 109, 71);
+}
+
+p{
+  text-align: justify;
+  text-indent: 30px;
+}</code></pre>
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Diferença entre <code>id</code> e <code>class</code></h2>
+
+            <div class="card soft content-narrow">
+              <p class="text-justify lh-16" style="margin:0;">
+                <strong>id</strong> deve ser <strong>único</strong> na página (um elemento).
+                Já <strong>class</strong> pode se repetir em vários elementos (vários itens com o mesmo estilo).
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Regra prática:</strong> use <code>class</code> para estilo reutilizável e <code>id</code> para algo único
+                (ou para ancoragem/JS, quando fizer sentido).
+              </div>
+
+              <p class="muted" style="margin:12px 0 0;">
+                Exemplo (não recomendado repetir a mesma <code>id</code>):
+              </p>
+
+              <div class="code-block" style="margin-top: 10px;">
+                <pre><code>&lt;p id="titulo"&gt;...&lt;/p&gt;
+&lt;!-- Evite fazer isso: --&gt;
+&lt;h2 id="titulo"&gt;...&lt;/h2&gt;</code></pre>
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu o que é <code>id</code></li>
+                <li>Aprendeu o seletor <code>#</code></li>
+                <li>Viu exemplos em HTML e CSS</li>
+                <li>Entendeu diferença entre <code>id</code> e <code>class</code></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script simples para copiar (caso seu site.js não tenha) -->
+  <script>
+    // Se seu site.js já faz isso, pode remover este bloco.
+    document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-copy-target');
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const text = el.textContent.trim();
+        try {
+          await navigator.clipboard.writeText(text);
+          const old = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(() => (btn.textContent = old), 1200);
+        } catch (e) {
+          alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+        }
+      });
+    });
+  </script>
+</body>
 </html>

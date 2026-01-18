@@ -1,58 +1,252 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alinhamentos</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        body{
-            font: normal 16px arial, verdana, serif;
-            text-align: left;
-        }
-        header h1{
-            text-align: center;
-        }
-        header p{
-            text-align: center;
-            padding-top: 0px;
-        }
-        h1{
-            text-align: center;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        }
-        h2{
-            text-align: left;
-            padding-left: 15px;
-        }
-        p{
-            text-align: justify;
-            text-indent: 30px;
-            line-height: 1.8;
-            padding: 15px;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alinhamentos | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aula sobre alinhamento de textos em CSS: center, left, justify, indent, line-height e boas práticas de leitura." />
+
+  <style>
+    /* Estilos específicos da aula (não afeta o site inteiro) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+
+    .align-demo{
+      font: normal 16px Arial, Verdana, serif;
+      text-align: left;
+    }
+
+    .align-demo .title-center{
+      text-align: center;
+      font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+      margin: 0 0 12px;
+    }
+
+    .align-demo h3{
+      text-align: left;
+      padding-left: 15px;
+      margin: 0 0 10px;
+    }
+
+    .align-demo p{
+      text-align: justify;
+      text-indent: 30px;
+      line-height: 1.8;
+      margin: 0 0 12px;
+    }
+
+    .note{
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    @media (max-width: 520px){
+      .content-narrow{ max-width: 100%; }
+      .align-demo p{ text-indent: 18px; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Formatação de Textos</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h1>Alinhamento de textos</h1>
-        <h2>Subtitulo</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit debitis delectus nam! Pariatur eveniet earum tempore sed molestias omnis corporis impedit odit iure enim. Corrupti velit pariatur nostrum tempore tempora?
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque reiciendis debitis consequatur sint id necessitatibus recusandae assumenda, suscipit impedit maiores illo tempore quod, ipsam natus eum placeat est adipisci ratione.
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident incidunt rerum rem sit, cupiditate eum voluptas a minus, voluptatum reprehenderit dolorem accusantium! Doloribus soluta iste blanditiis voluptatum odit vel autem?
-        </p>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quos, minus facilis sed cum et voluptatum quia adipisci ex quo neque dolores fugiat odit enim ducimus reprehenderit veniam pariatur? Iure, ex.</p>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.<strong> Sunt sed cum</strong> repudiandae non aspernatur aperiam doloribus? Sed in aperiam maiores, repellendus dignissimos illo laudantium perferendis quibusdam quos, tempore, explicabo incidunt!</p>
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-    
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Alinhamento de textos</h1>
+          <p class="muted">Aprendendo <code>text-align</code>, <code>text-indent</code> e <code>line-height</code> com leitura confortável.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow align-demo">
+              <h2 class="title-center">Formatação de Textos</h2>
+
+              <h3>Subtítulo</h3>
+
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit debitis delectus nam! Pariatur eveniet earum
+                tempore sed molestias omnis corporis impedit odit iure enim. Corrupti velit pariatur nostrum tempore tempora?
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque reiciendis debitis consequatur sint id necessitatibus
+                recusandae assumenda, suscipit impedit maiores illo tempore quod, ipsam natus eum placeat est adipisci ratione.
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Provident incidunt rerum rem sit, cupiditate eum voluptas
+                a minus, voluptatum reprehenderit dolorem accusantium! Doloribus soluta iste blanditiis voluptatum odit vel autem?
+              </p>
+
+              <p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quos, minus facilis sed cum et voluptatum quia adipisci
+                ex quo neque dolores fugiat odit enim ducimus reprehenderit veniam pariatur? Iure, ex.
+              </p>
+
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. <strong>Sunt sed cum</strong> repudiandae non aspernatur
+                aperiam doloribus? Sed in aperiam maiores, repellendus dignissimos illo laudantium perferendis quibusdam quos, tempore,
+                explicabo incidunt!
+              </p>
+            </div>
+
+            <div class="card soft content-narrow" style="margin-top: 12px;">
+              <div class="note">
+                <p class="muted" style="margin:0 0 8px;">
+                  Regras usadas nesta aula:
+                </p>
+
+                <pre style="margin:0; white-space:pre-wrap; line-height:1.7;"><code>h1 { text-align: center; }
+h2 { text-align: left; }
+
+p  {
+  text-align: justify;
+  text-indent: 30px;
+  line-height: 1.8;
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Dica:</strong> evite colocar estilos globais em <code>body</code> nas páginas do curso.
+              Prefira aplicar tudo dentro de uma classe (ex.: <code>.align-demo</code>) para não afetar o site inteiro.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>text-align</code></li>
+                <li>Aplicou <code>text-indent</code></li>
+                <li>Melhorou legibilidade com <code>line-height</code></li>
+                <li>Estilo aplicado só na demonstração</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

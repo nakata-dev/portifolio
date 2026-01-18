@@ -1,122 +1,219 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        #voltar>a{
-             color: white;
-        }
-        #voltar{
-            font-family: Arial, Helvetica, sans-serif;
-            
-            background-color: lightsalmon;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: rgb(211, 166, 149);;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
-/*---------------------------------------*/
-        .container{
-            display: flex; 
-            flex-direction: row;
-            flex-wrap: wrap;
+  <title>Flex_box1</title>
 
-            background-color: lightsalmon;
+  <!-- Padrão do site para os botões -->
+  <link rel="stylesheet" href="../../site.css">
+  <script src="../../site.js" defer></script>
 
-        }
+  <style>
+    /* ===== Só o fundo da página (profissional escuro) ===== */
+    body{
+      background: #0b1220;
+      color: rgba(255,255,255,.92);
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 16px;
+    }
 
-        .item{
-            /*flex: auto;*/
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
+    /* ===== Barra de ações acima do título ===== */
+    .top-actions{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
 
-            border: 1px solid black;
-        }
-/*---------------------------------------*/
-        .container1{
-            display: flex; 
-            flex-direction: row-reverse;
-            flex-wrap: wrap-reverse;
+    /* ===== NÃO deixar hover girar tudo (isso quebra o padrão do site) ===== */
+    a:hover{
+      transform: none !important;
+      animation: none !important;
+    }
 
-            background-color: lightsalmon;
+    /* ===== Seus estilos originais (mantidos) ===== */
+    #voltar > a{
+      color: white;
+    }
+    #voltar{
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: transparent; /* não usamos mais a barra antiga */
+      padding: 0;
+      text-align: center;
+      margin: 0;
+    }
 
-        }
+    /*---------------------------------------*/
+    .container{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      background-color: #111a2e; /* era lightsalmon */
+      border: 1px solid rgba(255,255,255,.10);
+    }
 
-        .item1{
-            /*flex: auto;*/
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
+    .item{
+      background-color: #0f2a44; /* era lightblue */
+      color: rgba(255,255,255,.92);
+      text-align: center;
+      padding: 5px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
 
-            border: 1px solid black;
-        }
-/*---------------------------------------*/
-        .container2{
-            display: flex; 
-            flex-flow: row wrap;
+    /*---------------------------------------*/
+    .container1{
+      display: flex;
+      flex-direction: row-reverse;
+      flex-wrap: wrap-reverse;
+      background-color: #111a2e; /* era lightsalmon */
+      border: 1px solid rgba(255,255,255,.10);
+    }
 
-            background-color: lightsalmon;
+    .item1{
+      background-color: #0f2a44; /* era lightblue */
+      color: rgba(255,255,255,.92);
+      text-align: center;
+      padding: 5px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
 
-        }
+    /*---------------------------------------*/
+    .container2{
+      display: flex;
+      flex-flow: row wrap;
+      background-color: #111a2e; /* era lightsalmon */
+      border: 1px solid rgba(255,255,255,.10);
+    }
 
-        .item2{
-            flex: auto;
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-
-            border: 1px solid black;
-        }
-    </style>
-    <title>Flex_box1</title>
+    .item2{
+      flex: auto;
+      background-color: #0f2a44; /* era lightblue */
+      color: rgba(255,255,255,.92);
+      text-align: center;
+      padding: 5px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Aula 3 – Empacotamento e fluxo</h1>
-<hr>
-<div id="voltar">
-    <a href="../html.html">Voltar</a>
-</div>
-<hr>
-    <h2>Fluxo padrão</h2>
-    <div class="container">
-        <div class="item">Exemplo de bloco B</div>
-        <div class="item">Exemplo de bloco A</div>
-        <div class="item">Exemplo de bloco C</div>
-        <div class="item">Exemplo de bloco D</div>
-        <div class="item">Exemplo de bloco E</div>
-        <div class="item">Exemplo de bloco F</div>
-        <div class="item">Exemplo de bloco G</div>
+  <!-- ✅ Botões necessários acima do título (padrão do site) -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <h1>Aula 3 – Empacotamento e fluxo</h1>
+  <hr>
+
+  <!-- (mantive o seu voltar, mas agora ele não atrapalha; pode apagar se quiser) -->
+  <div id="voltar">
+    <a href="../html.html"></a>
+  </div>
+
+  <h2>Fluxo padrão</h2>
+  <div class="container">
+    <div class="item">Exemplo de bloco B</div>
+    <div class="item">Exemplo de bloco A</div>
+    <div class="item">Exemplo de bloco C</div>
+    <div class="item">Exemplo de bloco D</div>
+    <div class="item">Exemplo de bloco E</div>
+    <div class="item">Exemplo de bloco F</div>
+    <div class="item">Exemplo de bloco G</div>
+  </div>
+
+  <hr>
+
+  <h2>Fluxo reverso</h2>
+  <div class="container1">
+    <div class="item1">Exemplo de bloco B</div>
+    <div class="item1">Exemplo de bloco A</div>
+    <div class="item1">Exemplo de bloco C</div>
+    <div class="item1">Exemplo de bloco D</div>
+    <div class="item1">Exemplo de bloco E</div>
+    <div class="item1">Exemplo de bloco F</div>
+    <div class="item1">Exemplo de bloco G</div>
+  </div>
+
+  <hr>
+
+  <h2>Fluxo Perfeito</h2>
+  <div class="container2">
+    <div class="item2">Exemplo de bloco B</div>
+    <div class="item2">Exemplo de bloco A</div>
+    <div class="item2">Exemplo de bloco C</div>
+    <div class="item2">Exemplo de bloco D</div>
+    <div class="item2">Exemplo de bloco E</div>
+    <div class="item2">Exemplo de bloco F</div>
+    <div class="item2">Exemplo de bloco G</div>
+  </div>
+
+  <!-- Modal padrão (se seu site.js já controla) -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
     </div>
-<hr>
-    <h2>Fluxo reverso</h2>
-    <div class="container1">
-        <div class="item1">Exemplo de bloco B</div>
-        <div class="item1">Exemplo de bloco A</div>
-        <div class="item1">Exemplo de bloco C</div>
-        <div class="item1">Exemplo de bloco D</div>
-        <div class="item1">Exemplo de bloco E</div>
-        <div class="item1">Exemplo de bloco F</div>
-        <div class="item1">Exemplo de bloco G</div>
-    </div>
-<hr>
-    <h2>Fluxo Perfeito</h2>
-    <div class="container2">
-        <div class="item2">Exemplo de bloco B</div>
-        <div class="item2">Exemplo de bloco A</div>
-        <div class="item2">Exemplo de bloco C</div>
-        <div class="item2">Exemplo de bloco D</div>
-        <div class="item2">Exemplo de bloco E</div>
-        <div class="item2">Exemplo de bloco F</div>
-        <div class="item2">Exemplo de bloco G</div>
-    </div>
+  </div>
+
 </body>
 </html>

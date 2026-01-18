@@ -1,85 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flex Box 5</title>
-    <style>
-        #voltar>a{
-             color: white;
-        }
-        #voltar{
-            font-family: Arial, Helvetica, sans-serif;
-            
-            background-color: #069937;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: #40e09d8e;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flex Box 05 | Centralização - Ailton A. Nakata</title>
 
+  <!-- Botões padrão do seu site -->
+  <link rel="stylesheet" href="../../site.css">
+  <script src="../../site.js" defer></script>
 
-        *{
-            margin: 0px;
-            padding: 0px;
-            box-sizing: border-box;
-        }
+  <style>
+    /* ===== Reset básico ===== */
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body{
-            background-color: bisque;
-        }
+    /* ===== Fundo da página (profissional escuro) ===== */
+    body{
+      background: #0b1220;
+      color: rgba(255,255,255,.92);
+      font-family: Arial, Helvetica, sans-serif;
+      padding: 16px;
+    }
 
-        main{ /*Pai*/
-            background-color: rgb(0, 54, 0);
-            padding: 10px;
-            height: 90vh;
-            width: 100vw;
+    /* ===== Botões acima do título ===== */
+    .top-actions{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
 
-            display: flex;
-            flex: row nowrap;
-            justify-content: center;
-            align-items: center;
-            
-            section{
-                background-color: rgb(71, 158, 71);
-                height: 300px;
-                width: 300px;
-                border-radius: 15px;
-                padding: 10px;
+    /* Remove hover global antigo que girava tudo */
+    a:hover{
+      transform: none !important;
+      animation: none !important;
+    }
 
+    hr{
+      border: 0;
+      border-top: 1px solid rgba(255,255,255,.12);
+      margin: 14px 0;
+    }
 
-                h1,h3{
-                    padding-top: 15px;
-                    text-align: center;
-                }
-            }
-        }
-    </style>
+    /* =========================================================
+       ✅ DESIGN CENTRAL (mantido)
+       Centralização com Flexbox
+       ========================================================= */
+    main{
+      background: #08111f;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+
+      padding: 10px;
+      height: 78vh; /* centralizado e com respiro (sem colar no voltar) */
+      width: 100%;
+
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    main section{
+      background: rgba(59, 130, 246, .14);
+      border: 1px solid rgba(255,255,255,.12);
+      width: min(360px, 92vw);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    main section h1,
+    main section h3{
+      text-align: center;
+      padding-top: 10px;
+    }
+
+    main section pre{
+      margin-top: 14px;
+      white-space: pre-wrap;
+      line-height: 1.8;
+
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 12px;
+
+      color: rgba(255,255,255,.90);
+      overflow: auto;
+    }
+
+    /* Voltar antigo: não precisamos, mas se existir não pode estragar a página */
+    #voltar{
+      display: none;
+    }
+  </style>
 </head>
+
 <body>
-    <main>
-        <section>
-            <h1>Teste de Centralização</h1>
-            <br>
-            <h3>Conf. Necessárias:</h3>
-            <br>
-            <br>
-            <pre>
-         display: flex;
-         flex: row nowrap;
-         justify-content: center;
-         align-items: center;
-            </pre>
-        </section>
-    </main>
-    <div id="voltar">
-        <a href="../html.html">Voltar</a>
+
+  <!-- ✅ Botões necessários acima do título -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <h1>Aula 05 – Centralização com Flexbox</h1>
+  <hr>
+
+  <!-- ✅ CENTRALIZAÇÃO (MIOLO ORIGINAL MANTIDO) -->
+  <main>
+    <section>
+      <h1>Teste de Centralização</h1>
+      <br>
+      <h3>Conf. Necessárias:</h3>
+
+      <pre>
+display: flex;
+flex-flow: row nowrap;
+justify-content: center;
+align-items: center;
+      </pre>
+    </section>
+  </main>
+
+  <!-- Modal padrão (se seu site.js já controla) -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+
 </body>
 </html>

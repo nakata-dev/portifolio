@@ -1,62 +1,309 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        *{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        #voltar{
-            a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-            }
-        }
-        fieldset{
-            padding: 10px;
-            line-height: 1.8;
-        }
-    </style>
-    <title>Formulário</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário III | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Exemplo de formulário com inputs color, range e file, adaptado ao template padrão e responsivo." />
+
+  <style>
+    /* Ajustes locais */
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    .mini-form{
+      max-width: 760px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-form fieldset{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .mini-form legend{
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
+    .row{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 720px){
+      .row{
+        grid-template-columns: 190px 1fr;
+        align-items: center;
+      }
+    }
+
+    label{
+      font-weight: 700;
+    }
+
+    input[type="color"],
+    input[type="range"],
+    input[type="file"]{
+      width: 100%;
+    }
+
+    input[type="file"]{
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: inherit;
+    }
+
+    .range-wrap{
+      display: grid;
+      gap: 8px;
+    }
+
+    .range-meta{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: .92em;
+      opacity: .85;
+    }
+
+    .pill{
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-weight: 800;
+      min-width: 38px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Exemplo de Formulário III</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <fieldset>
-            <legend>Formulário</legend>
-            <form action="cadastro.php" method="post" autocomplete="on">
-                
-                <label for="icor">Cor:</label>
-                <input type="color" name="cor" id="icor">
-                <p>
-                    <label for="inivel">Nível de Satisfação</label>
-                    <input type="range" name="nivel" id="inivel" min="1" max="5" value="5">
-                </p>
-                <p>
-                    <label for="ifoto">Foto do perfil:</label>
-                    <input type="file" name="Foto" id="ifoto">
-                </p>
-                    <input type="submit" value="Enviar">
-                    <input type="reset" value="Limpar">
-                </p>
-        </fieldset>
-        </form>
-        <br><br>
-        <div id="voltar" style="text-align: center;">
-            <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Exemplo de Formulário III</h1>
+          <p class="muted">Inputs: cor, range (satisfação) e upload de arquivo.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Color, Range e File</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>
+                Aqui você vê três tipos de input que deixam o formulário mais rico:
+                <strong>cor</strong> (picker), <strong>range</strong> (barra) e <strong>file</strong> (upload).
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="post" autocomplete="on" enctype="multipart/form-data">
+                <fieldset>
+                  <legend>Formulário</legend>
+
+                  <div class="row">
+                    <label for="icor">Cor:</label>
+                    <input type="color" name="cor" id="icor" />
+                  </div>
+
+                  <div class="row">
+                    <label for="inivel">Nível de satisfação</label>
+                    <div class="range-wrap">
+                      <input type="range" name="nivel" id="inivel" min="1" max="5" value="5" />
+                      <div class="range-meta">
+                        <span class="muted">1 (baixo)</span>
+                        <span class="pill" id="nivelValor" aria-live="polite">5</span>
+                        <span class="muted">5 (alto)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <label for="ifoto">Foto do perfil:</label>
+                    <input type="file" name="foto" id="ifoto" accept="image/*" />
+                  </div>
+
+                  <div class="hero-actions" style="margin-top: 14px;">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                    <button class="btn btn-ghost" type="reset">Limpar</button>
+                  </div>
+                </fieldset>
+              </form>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> para upload funcionar certinho, use <strong>enctype="multipart/form-data"</strong>.
+                E com <strong>accept="image/*"</strong>, você sugere que o usuário envie apenas imagens.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>type="color"</strong></li>
+                <li>Usou <strong>type="range"</strong> com min/max</li>
+                <li>Mostrou o valor do range na tela</li>
+                <li>Usou <strong>type="file"</strong> + <strong>enctype</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- JS local: atualizar valor do range (bem simples) -->
+    <script>
+      (function () {
+        const range = document.getElementById('inivel');
+        const out = document.getElementById('nivelValor');
+        if (!range || !out) return;
+
+        const sync = () => (out.textContent = range.value);
+        range.addEventListener('input', sync);
+        sync();
+      })();
+    </script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

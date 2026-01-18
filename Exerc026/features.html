@@ -1,38 +1,263 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" media="all">
-    <link rel="stylesheet" href="retrato.css" media="screen and (orientation: portrait)">
-    <link rel="stylesheet" href="paisagem.css" media="screen and (orientation: landscape)">
-    <title>Media Features</title>
-    <style>
-         #voltar{
-            text-align: center;
-            color: white;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        #voltar{
-            a:hover{
-             background-color: rgba(255, 255, 255, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-             
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Media Features | Orientation - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <!-- Seus CSS (aula sobre orientation) -->
+  <link rel="stylesheet" href="style.css" media="all">
+  <link rel="stylesheet" href="retrato.css" media="screen and (orientation: portrait)">
+  <link rel="stylesheet" href="paisagem.css" media="screen and (orientation: landscape)">
+
+  <meta name="description" content="Exemplo de Media Features com orientation: portrait e landscape em CSS, adaptado ao template padrão do site." />
+
+  <style>
+    /* Demonstração: evita que os CSS de aula baguncem o site todo */
+    .demo-stage{
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      text-align: center;
+    }
+
+    .demo-stage h2{
+      margin: 0 0 6px 0;
+    }
+
+    .demo-pill{
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      font-weight: 900;
+    }
+
+    /* Indicador usando SOMENTE CSS (sem JS) */
+    .mode::before{
+      content: "Desktop / não detectado";
+    }
+
+    /* Portrait */
+    @media screen and (orientation: portrait){
+      .mode::before{
+        content: "Portrait (retrato) 📱";
+      }
+    }
+
+    /* Landscape */
+    @media screen and (orientation: landscape){
+      .mode::before{
+        content: "Landscape (paisagem) 📱";
+      }
+    }
+
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    pre.codebox{
+      margin: 0;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow: auto;
+      line-height: 1.7;
+      white-space: pre;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Mude a Orientação do celular</h1>
-    <br>
-    <br>
-    <br>
-    <div id="voltar">
-        <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Media Features</h1>
+          <p class="muted">CSS diferente para <strong>retrato</strong> e <strong>paisagem</strong> usando <code>orientation</code>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Mude a orientação do celular</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>
+                Aqui você está usando <strong>Media Features</strong> para aplicar CSS dependendo da orientação do dispositivo:
+                <strong>portrait</strong> (em pé) e <strong>landscape</strong> (deitado).
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <div class="demo-stage">
+                <h2>Gire o celular 📱</h2>
+                <p class="muted" style="margin: 0;">A orientação atual detectada pelo CSS é:</p>
+                <span class="demo-pill mode"></span>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> Isso é perfeito para ajustar layout, tamanhos e posicionamentos em telas mobile.
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Links CSS usados</h3>
+              <pre class="codebox"><code>&lt;link rel="stylesheet" href="style.css" media="all"&gt;
+&lt;link rel="stylesheet" href="retrato.css" media="screen and (orientation: portrait)"&gt;
+&lt;link rel="stylesheet" href="paisagem.css" media="screen and (orientation: landscape)"&gt;</code></pre>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu <strong>media="all"</strong></li>
+                <li>Usou <strong>(orientation: portrait)</strong></li>
+                <li>Usou <strong>(orientation: landscape)</strong></li>
+                <li>Testou girando o celular</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,45 +1,253 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Querie</title>
-    <link rel="stylesheet" href="estilos/style.css" media="all">
-    <link rel="stylesheet" href="estilos/media_query.css">
-    <style>
-         #voltar {
-            text-align: center;
-        }
-        a{
-        font-weight: bolder;
-        color: rgb(255, 255, 255);
-        font-family: Arial, Helvetica, sans-serif;
-        text-shadow: 5px 5px 10px black;
-        }
-        #voltar a:hover {
-            background-color: rgba(25, 47, 247, 0.637);
-            padding: 10px;
-            font-weight: bolder;
-            border-radius: 10px;
-            transform: scale(1.1);
-            transition-duration: 0.5s;
-        }
-    </style>
-</head>
-<body>
-    <main>
-        <h1>Mobile First</h1>
-        <img id="phone" src="img2/icon-phone.png" alt="Acessando via Smartphone">
-        <img id="tablet" src="img2/icon-tablet.png" alt="Acessando pelo tablet">
-        <img id="print" src="img2/icon-print.png" alt="Versão para Impressão">
-        <img id="pc" src="img2/icon-pc.png" alt="Versão para Desktop">
-        <img id="tv" src="img2/icon-tv.png" alt="Versão para TV">
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
-        </div>
-        <br><br>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile First | Media Queries - Ailton A. Nakata</title>
 
-    </main>
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <!-- Seus estilos da aula -->
+  <link rel="stylesheet" href="estilos/style.css" media="all">
+  <link rel="stylesheet" href="estilos/media_query.css">
+
+  <meta name="description" content="Exemplo Mobile First com media queries: ícones mudam conforme o dispositivo (phone, tablet, print, pc e tv), no template padrão." />
+
+  <style>
+    /* Layout da demo (não briga com seu CSS externo) */
+    .demo-stage{
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      text-align: center;
+    }
+
+    .icons{
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      align-items: center;
+      justify-items: center;
+    }
+
+    @media (min-width: 720px){
+      .icons{
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    .icons img{
+      width: min(120px, 100%);
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,.22));
+    }
+
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    .inline-code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+      padding: .1em .35em;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Mobile First</h1>
+          <p class="muted">Exemplo de Media Queries: um ícone “ativo” aparece conforme o tamanho da tela.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Media Query (Mobile First)</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>
+                A ideia do <strong>Mobile First</strong> é começar o CSS pensando no celular, e ir “liberando” melhorias
+                conforme a tela cresce usando <span class="inline-code">@media</span>.
+              </p>
+              <p>
+                Neste exemplo, cada ícone (phone/tablet/print/pc/tv) pode ser exibido/ocultado pelas regras do seu
+                <span class="inline-code">media_query.css</span>.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <div class="demo-stage" aria-label="Área de demonstração de mobile first">
+                <p class="muted" style="margin: 0;">
+                  Redimensione a tela ou teste no celular para ver qual ícone fica visível 👇
+                </p>
+
+                <div class="icons">
+                  <img id="phone" src="img2/icon-phone.png" alt="Acessando via Smartphone">
+                  <img id="tablet" src="img2/icon-tablet.png" alt="Acessando pelo tablet">
+                  <img id="print" src="img2/icon-print.png" alt="Versão para Impressão">
+                  <img id="pc" src="img2/icon-pc.png" alt="Versão para Desktop">
+                  <img id="tv" src="img2/icon-tv.png" alt="Versão para TV">
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> normalmente o CSS faz algo assim:
+                <span class="inline-code">#phone { display:block }</span> e os outros ficam <span class="inline-code">display:none</span>,
+                depois cada media query troca qual aparece.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu o conceito de <strong>Mobile First</strong></li>
+                <li>Usou <strong>@media</strong> para “evoluir” o layout</li>
+                <li>Testou no desktop e no celular</li>
+                <li>Conseguiu mostrar/ocultar ícones por breakpoint</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

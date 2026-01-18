@@ -1,201 +1,361 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-      tr{
-        text-align: center;
-      }
-        td{
-            border: 1px solid rgb(27, 0, 0);
-            padding: 8px;
-        }
-        table{
-            width: 300px;
-            border-collapse: collapse; /*solda as linhas da borda*/
-            margin: auto;
-            display: inside;
-        }
-        tr.linha01{
-            background-color: rgba(0, 68, 255, 0.555);
-        }
-        td.col02{
-            background-color: rgba(107, 61, 1, 0.534);
-        }
-        td.col05{
-            background-color: rgba(244, 248, 8, 0.534);
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tabelas | HTML - Ailton A. Nakata</title>
 
-        pre{
-            white-space: pre-wrap;
-            text-align: justify;
-            line-height: 1.3;
-            font-size: 1.2em;
-            
-            padding: 10px;
-        }
-        #direcao{
-            display: flex;
-            flex-direction: column-reverse;
-        }
-    </style>
-    <title>Tabelas</title>
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Treinamento de tabelas em HTML: exemplos práticos com estilo, legenda e responsividade." />
+
+  <style>
+    /* Escopo da aula */
+    .tables-grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 860px){
+      .tables-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .table-card{
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(0,0,0,0.02);
+    }
+
+    .table-wrap{
+      width: 100%;
+      overflow-x: auto; /* salva o mobile */
+      padding-bottom: 4px;
+    }
+
+    table{
+      width: 100%;
+      min-width: 280px;
+      border-collapse: collapse;
+      background: #e6e3e3;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      color: rgb(131, 131, 131);
+    }
+
+    caption{
+      caption-side: top;
+      padding: 10px 8px;
+      font-weight: 900;
+      text-align: left;
+    }
+
+    td{
+      border: 1px solid rgba(27,0,0,0.35);
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    /* Destaques (mantendo sua ideia) */
+    .linha01 td{
+      background-color: rgba(0, 68, 255, 0.18);
+    }
+    .col02{
+      background-color: rgba(107, 61, 1, 0.20);
+    }
+    .col05{
+      background-color: rgba(244, 248, 8, 0.22);
+    }
+
+    .hint{
+      margin-top: 10px;
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+  </style>
 </head>
+
 <body>
-    
-        <header>
-            <h1>Treinamento - Tabelas</h1>
-            <p>por: Ailton A. Nakata</p>
-        </header>
-        <main>
-            <h2>
-                Mão na massa:
-            </h2>
-                <div id="direcao">
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Treinamento: Tabelas</h1>
+          <p class="muted">Exemplos práticos para treinar estrutura e estilo de tabelas em HTML.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Mão na massa</h2>
+
+            <div class="card soft">
+              <div class="tables-grid">
+                <!-- Tabela 001 -->
+                <div class="table-card">
+                  <div class="table-wrap">
                     <table>
-                        <caption>Tabela 001</caption>
-                                <tr class="linha01"> <!--primeira linha-->
-                    <td>A1</td>
-                    <td>B1</td>
-                    <td>C1</td>
-                                </tr>
-                                <tr> <!--segunda linha-->
-                    <td>A2</td>
-                    <td class="col02">B2</td>
-                    <td>C2</td>
-                                </tr>
-                                <tr><!--terceira linha-->
-                    <td>A3</td>
-                    <td class="col02">B3</td>
-                    <td>C3</td>
-                                </tr>
-                                <tr><!--quarta linha-->
-                    <td>A4</td>
-                    <td class="col02">B4</td>
-                    <td>C4</td>
-                                </tr>
-                    </table>
-                    <br>
-                    <table>
-                        <caption>Tabela 002</caption>
+                      <caption>Tabela 001</caption>
+                      <tbody>
                         <tr class="linha01">
-                            <td>A</td>
-                            <td>B</td>
-                            <td>C</td>
-                            <td>D</td>
+                          <td>A1</td><td>B1</td><td>C1</td>
                         </tr>
                         <tr>
-                            <td>E</td>
-                            <td class="col02">F</td>
-                            <td>G</td>
+                          <td>A2</td><td class="col02">B2</td><td>C2</td>
                         </tr>
                         <tr>
-                            <td>H</td>
-                            <td class="col02">I</td>
+                          <td>A3</td><td class="col02">B3</td><td>C3</td>
                         </tr>
                         <tr>
-                            <td>J</td>
+                          <td>A4</td><td class="col02">B4</td><td>C4</td>
                         </tr>
+                      </tbody>
                     </table>
-                    <br>
-                    <table>
-                        <caption>Tabela 003</caption>
-                        <tr class="linha01">
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td class="col02">7</td>
-                            <td>8</td>
-                            <td>9</td>
-                            <td class="col05">10</td>
-                        </tr>
-                        <tr>
-                            <td>11</td>
-                            <td class="col02">12</td>
-                            <td>13</td>
-                            <td>14</td>
-                            <td class="col05">15</td>
-                        </tr>
-                        <tr>
-                            <td>16</td>
-                            <td class="col02">17</td>
-                            <td>18</td>
-                            <td>19</td>
-                            <td class="col05">20</td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table>
-                        <caption>Tabela 004</caption>
-                        <tr class="linha01">
-                            <td>A1</td>
-                            <td>B1</td>
-                        </tr>
-                        <tr>
-                            <td>C2</td>
-                            <td class="col02">D2</td>
-                        </tr>
-                        <tr>
-                            <td>E3</td>
-                            <td class="col02">F3</td>
-                        </tr>
-                        <tr>
-                            <td>G3</td>
-                            <td class="col02">H3</td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table>
-                        <caption>Tabela 005</caption>
-                        <tr class="linha01">
-                            <td>!</td>
-                            <td>/</td>
-                            <td>*</td>
-                            <td>@</td>
-                            <td>#</td>
-                            <td>$</td>
-                        </tr>
-                        <tr>
-                            <td>%</td>
-                            <td class="col02">¨</td>
-                            <td>&</td>
-                            <td>**</td>
-                            <td>()</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>=</td>
-                            <td class="col02">+</td>
-                            <td>||</td>
-                            <td>&lt;</td>
-                            <td>&gt;</td>
-                            <td>:</td>
-                        </tr>
-                        <tr>
-                            <td>´</td>
-                            <td class="col02">`</td>
-                            <td>{}</td>
-                            <td>[</td>
-                            <td>]</td>
-                            <td>?</td>
-                        </tr>
-                    </table>
+                  </div>
+                  <p class="hint muted">Destaque: primeira linha e coluna B.</p>
                 </div>
-                
-                <br>
-                <br>
-            <div id="voltar">
-                <a href="../html.html">Voltar</a>
+
+                <!-- Tabela 002 -->
+                <div class="table-card">
+                  <div class="table-wrap">
+                    <table>
+                      <caption>Tabela 002</caption>
+                      <tbody>
+                        <tr class="linha01">
+                          <td>A</td><td>B</td><td>C</td><td>D</td>
+                        </tr>
+                        <tr>
+                          <td>E</td><td class="col02">F</td><td>G</td>
+                        </tr>
+                        <tr>
+                          <td>H</td><td class="col02">I</td>
+                        </tr>
+                        <tr>
+                          <td>J</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="hint muted">Boa para treinar células “faltando” (estrutura irregular).</p>
+                </div>
+
+                <!-- Tabela 003 -->
+                <div class="table-card">
+                  <div class="table-wrap">
+                    <table>
+                      <caption>Tabela 003</caption>
+                      <tbody>
+                        <tr class="linha01">
+                          <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
+                        </tr>
+                        <tr>
+                          <td>6</td><td class="col02">7</td><td>8</td><td>9</td><td class="col05">10</td>
+                        </tr>
+                        <tr>
+                          <td>11</td><td class="col02">12</td><td>13</td><td>14</td><td class="col05">15</td>
+                        </tr>
+                        <tr>
+                          <td>16</td><td class="col02">17</td><td>18</td><td>19</td><td class="col05">20</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="hint muted">Destaque: coluna B e coluna E (10/15/20).</p>
+                </div>
+
+                <!-- Tabela 004 -->
+                <div class="table-card">
+                  <div class="table-wrap">
+                    <table>
+                      <caption>Tabela 004</caption>
+                      <tbody>
+                        <tr class="linha01">
+                          <td>A1</td><td>B1</td>
+                        </tr>
+                        <tr>
+                          <td>C2</td><td class="col02">D2</td>
+                        </tr>
+                        <tr>
+                          <td>E3</td><td class="col02">F3</td>
+                        </tr>
+                        <tr>
+                          <td>G3</td><td class="col02">H3</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="hint muted">Boa para treinar tabelas pequenas (2 colunas).</p>
+                </div>
+
+                <!-- Tabela 005 -->
+                <div class="table-card" style="grid-column: 1 / -1;">
+                  <div class="table-wrap">
+                    <table>
+                      <caption>Tabela 005</caption>
+                      <tbody>
+                        <tr class="linha01">
+                          <td>!</td><td>/</td><td>*</td><td>@</td><td>#</td><td>$</td>
+                        </tr>
+                        <tr>
+                          <td>%</td><td class="col02">¨</td><td>&amp;</td><td>**</td><td>()</td><td>-</td>
+                        </tr>
+                        <tr>
+                          <td>=</td><td class="col02">+</td><td>||</td><td>&lt;</td><td>&gt;</td><td>:</td>
+                        </tr>
+                        <tr>
+                          <td>´</td><td class="col02">`</td><td>{}</td><td>[</td><td>]</td><td>?</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="hint muted">Essa é ótima para treinar escape de caracteres HTML.</p>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica pro mundo real:</strong> para tabelas “de verdade”, use <code>&lt;th&gt;</code>, <code>&lt;thead&gt;</code> e <code>&lt;tbody&gt;</code> para acessibilidade e semântica.
+              </div>
+
+              <div class="lesson-actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+              </div>
             </div>
-            <br>
-            <br>
-        </main>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Tabelas com <code>caption</code></li>
+                <li>Sem <code>&lt;br&gt;</code> pra espaçamento</li>
+                <li>Responsivo com <code>overflow-x</code></li>
+                <li>Estilos consistentes</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

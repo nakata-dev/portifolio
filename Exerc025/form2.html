@@ -1,104 +1,342 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário 2</title>
-    <style>
-        *{
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        h1,h2,h3{
-            text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário 2 | HTML - Ailton A. Nakata</title>
 
-        p{
-            text-align: justify;
-            text-indent: 30px;
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.8;
-            padding: 20px;
-        }
-        pre{
-            white-space: pre-wrap;
-            text-align: justify;
-            text-indent: 30px;
-            padding: 10px;
-        }
-        div.center>p{
-            text-align: justify;
-        }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        #voltar{
-            a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-            }
-        }
-    </style>
+  <meta name="description" content="Formulário com usuário e senha (required, minlength, maxlength), explicação de fieldset/legend/input e exemplos de inputs e label." />
+
+  <style>
+    /* Texto bem legível (prosa) */
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    /* Form básico responsivo */
+    .mini-form{
+      max-width: 720px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-form fieldset{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .mini-form legend{
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
+    .mini-form .row{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* Em telas maiores, alinhamos label e input em duas colunas */
+    @media (min-width: 720px){
+      .mini-form .row{
+        grid-template-columns: 140px 1fr;
+        align-items: center;
+      }
+    }
+
+    .mini-form label{
+      font-weight: 700;
+    }
+
+    .mini-form input[type="text"],
+    .mini-form input[type="password"]{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: inherit;
+      outline: none;
+    }
+
+    .mini-form input[type="text"]:focus,
+    .mini-form input[type="password"]:focus{
+      border-color: rgba(255,255,255,.28);
+    }
+
+    /* Código */
+    pre.codebox{
+      margin: 0;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow: auto;
+      line-height: 1.7;
+      white-space: pre;
+    }
+
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+    }
+
+    .inline-code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+      padding: .1em .35em;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      white-space: nowrap;
+    }
+  </style>
 </head>
+
 <body>
-    <fieldset>
-        <legend>Usuário</legend>
-        <h1>Teste - Form02</h1>
-        <form action="cadastro.php" method="post">
-            <p>
-                <label for="iusuario">Usuário:</label><input type="text" name="usuario" id="iusuario" required minlength="5" maxlength="15" size="10" placeholder="nome do usuário" autocomplete="on"> <!--Requer nome-->
-            </p>
-            <!--Pedindo senha-->
-            <p>
-                <label for="isen">Senha:</label>
-            <input type="password" name="sen" id="isen" required minlength="5" maxlength="20" size="8" placeholder="senha" autocomplete="on"> <!--Required = Requer senha-->
-            </p>
-            <p>
-                <input type="submit" value="Enviar">
-                <input type="reset" value="Limpar">
-            </p>
-    </fieldset>
-    </form>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
 
-<p>
-&lt;fieldset&gt; - Retângulo
-<br>
-&lt;legend&gt; - Legenda
-<br>
-&lt;input&gt; - é usada para criar campos interativos
-</p>
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
-<h3>Exemplo de inputs</h3>
-<pre>
-    
-    &lt;input type="text" placeholder="Digite seu nome"&gt;
-    <br><br>
-    &lt;input type="email" placeholder="Digite seu e-mail"&gt;
-    <br><br>
-    &lt;input type="password" placeholder="Digite sua senha"&gt;
-    <br><br>
-    &lt;input type="checkbox"&gt; <strong>Aceito os termos</strong>
-    <br><br>
-    &lt;label&gt;: serve para associar um texto descritivo a um campo de formulário
-    
-    
-    <h3>Exemplo de Label</h3>
-    
-    &lt;label for="nome"&gt;Nome:
-    <br><br>
-    &lt;/label&gt;
-    <br><br>
-    &lt;input type="text" id="nome" name="nome"&gt;
-    <br><br>
-    <strong>Se o atributo for do &lt;label&gt; aponta para o id do &lt;input&gt;.</strong>
-    
-    Assim, se você clicar no texto “Nome:”, o cursor vai direto para o campo de texto.
-</pre>
-            <br><br>
-            <div id="voltar" style="text-align: center;">
-            <a href="../html.html">Voltar</a>
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Formulário 2</h1>
+          <p class="muted">Usuário e senha + validação com <span class="inline-code">required</span>, <span class="inline-code">minlength</span> e <span class="inline-code">maxlength</span>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Teste - Form02</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
             </div>
-            <br><br>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>
+                Aqui você já está avançando: além do <span class="inline-code">label</span> e <span class="inline-code">input</span>,
+                agora tem validações nativas do HTML, o que deixa seu formulário mais profissional.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="post" autocomplete="on">
+                <fieldset>
+                  <legend>Usuário</legend>
+
+                  <div class="row">
+                    <label for="iusuario">Usuário:</label>
+                    <input
+                      type="text"
+                      name="usuario"
+                      id="iusuario"
+                      required
+                      minlength="5"
+                      maxlength="15"
+                      placeholder="nome do usuário"
+                      autocomplete="username"
+                    />
+                  </div>
+
+                  <div class="row">
+                    <label for="isen">Senha:</label>
+                    <input
+                      type="password"
+                      name="sen"
+                      id="isen"
+                      required
+                      minlength="5"
+                      maxlength="20"
+                      placeholder="senha"
+                      autocomplete="current-password"
+                    />
+                  </div>
+
+                  <div class="hero-actions" style="margin-top: 14px;">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                    <button class="btn btn-ghost" type="reset">Limpar</button>
+                  </div>
+                </fieldset>
+              </form>
+
+              <p class="tiny muted" style="margin: 10px 0 0;">
+                Observação: como é página de estudo, <span class="inline-code">cadastro.php</span> é apenas o destino do form.
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p><span class="inline-code">&lt;fieldset&gt;</span> cria um “retângulo/grupo” de campos.</p>
+              <p><span class="inline-code">&lt;legend&gt;</span> cria o título do grupo.</p>
+              <p><span class="inline-code">&lt;input&gt;</span> cria campos interativos (texto, email, senha, checkbox...).</p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Exemplos de inputs</h3>
+
+              <pre class="codebox"><code>&lt;input type="text" placeholder="Digite seu nome"&gt;
+
+&lt;input type="email" placeholder="Digite seu e-mail"&gt;
+
+&lt;input type="password" placeholder="Digite sua senha"&gt;
+
+&lt;input type="checkbox"&gt; Aceito os termos
+
+&lt;!-- label associa um texto descritivo a um campo --&gt;</code></pre>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Exemplo de label</h3>
+
+              <pre class="codebox"><code>&lt;label for="nome"&gt;Nome:&lt;/label&gt;
+&lt;input type="text" id="nome" name="nome"&gt;
+
+&lt;!-- Se o atributo for do label aponta para o id do input,
+     clicar em "Nome:" coloca o cursor direto no campo. --&gt;</code></pre>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> isso melhora muito a experiência no celular (o clique fica mais fácil).
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>required</strong> corretamente</li>
+                <li>Entendeu <strong>minlength</strong> e <strong>maxlength</strong></li>
+                <li>Ligou <strong>label</strong> com <strong>id</strong></li>
+                <li>Organizou com <strong>fieldset</strong> e <strong>legend</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

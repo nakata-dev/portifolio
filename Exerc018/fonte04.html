@@ -1,55 +1,277 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capturando Fontes</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        img {
-            width: 65%;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Capturando Fontes | HTML - Ailton A. Nakata</title>
 
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        main>p {
-            text-align: justify;
-            padding: 15px;
-            line-height: 1.5;
-        }
+  <meta name="description" content="Como capturar/identificar fontes em sites e imagens: extensão Fonts Ninja e ferramentas como MyFonts WhatTheFont e WhatFontIs." />
 
-        a {
-            padding: 10px;
-            line-height: 1.5;
-        }
-    </style>
+  <style>
+    /* Estilos específicos da aula (escopados) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+    .text-justify{ text-align: justify; }
+    .lh-16{ line-height: 1.6; }
+
+    .media{
+      display: grid;
+      gap: 12px;
+    }
+
+    .thumb{
+      width: 100%;
+      max-width: 560px;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .link-list{
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .link-item a{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.02);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .link-item a:focus{
+      outline: 2px solid rgba(0,0,0,0.25);
+      outline-offset: 3px;
+    }
+
+    .step{
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    @media (max-width: 520px){
+      .content-narrow{ max-width: 100%; }
+    }
+  </style>
 </head>
 
 <body>
-    <header>
-        <h1>Captura de Fontes</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-
-    <main>
-        <h2>Como Capturar Fontes?</h2>
-        <p>1º Acesse o site do <a href="https://chromewebstore.google.com/"><abbr title="Chrome Web Store ">Google Fonts</abbr></a></p>
-        <p>2º Adicione a extensão: <strong>fonts ninja</strong></p>
-        <p><abbr title="Click para visitar o Site"><a href="https://chromewebstore.google.com/detail/fonts-ninja/eljapbgkmlngdpckoiiibecpemleclhh" target="_blank"><img src="fontes_ninja.jpg" alt="icone_fonts_ninja"></abbr></a></p>
-        <p>Em seguida ative a fonte e reconheça todos os tipos de fontes
-            usados no site em que estiver visitando.</p>
-
-        <h2>Como capturar fontes da internet</h2>
-        <a href="https://www.myfonts.com/pages/whatthefont">MyFonts</a><br>
-        <a href="https://www.whatfontis.com/">whatfontis</a>
-        <br><br>
-        <p>Use os dois sites acima para identificar fontes em imagens</p>
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-</body>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Captura de Fontes</h1>
+          <p class="muted">Como identificar fontes usadas em sites e em imagens, com ferramentas simples.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Como capturar fontes em sites</h2>
+
+            <div class="card soft content-narrow">
+              <ol class="step">
+                <li class="lh-16">
+                  Acesse a <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener noreferrer">
+                    <abbr title="Chrome Web Store">Chrome Web Store</abbr>
+                  </a>.
+                </li>
+                <li class="lh-16">
+                  Procure e adicione a extensão <strong>Fonts Ninja</strong>.
+                </li>
+                <li class="lh-16">
+                  Ative a extensão e passe o mouse sobre textos de um site para ver as fontes usadas.
+                </li>
+              </ol>
+            </div>
+
+            <div class="card soft content-narrow" style="margin-top: 12px;">
+              <div class="media" style="justify-items:center;">
+                <a
+                  href="https://chromewebstore.google.com/detail/fonts-ninja/eljapbgkmlngdpckoiiibecpemleclhh"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Abrir a extensão Fonts Ninja na Chrome Web Store"
+                >
+                  <img class="thumb" src="fontes_ninja.jpg" alt="Página da extensão Fonts Ninja na Chrome Web Store" loading="lazy">
+                </a>
+                <p class="muted" style="margin:0; text-align:center;">
+                  Clique na imagem para abrir a extensão.
+                </p>
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Como capturar fontes em imagens</h2>
+
+            <div class="card soft content-narrow">
+              <p class="text-justify lh-16" style="margin-top:0;">
+                Use os sites abaixo para identificar fontes a partir de uma imagem (ex.: print, logo, banner).
+              </p>
+
+              <ul class="link-list">
+                <li class="link-item">
+                  <a href="https://www.myfonts.com/pages/whatthefont" target="_blank" rel="noopener noreferrer">
+                    MyFonts: WhatTheFont <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+                <li class="link-item">
+                  <a href="https://www.whatfontis.com/" target="_blank" rel="noopener noreferrer">
+                    WhatFontIs <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> recorte a imagem deixando só o texto e aumente o contraste antes de enviar.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Encontrou a extensão Fonts Ninja</li>
+                <li>Testou em um site real</li>
+                <li>Usou ferramentas para imagens</li>
+                <li>Aprendeu a recortar para melhorar resultado</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
 </html>

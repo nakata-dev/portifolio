@@ -1,241 +1,281 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../style.css">
-        <style>
-        #voltar>a{
-             color: white;
-        }
-        #voltar{
-            font-family: Arial, Helvetica, sans-serif;
-            
-            background-color: lightsalmon;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: rgb(211, 166, 149);;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
-        .container{
-            display: flex;
-            flex-flow: row nowrap;
-            background-color: lightsalmon;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flex | Shorthand (flex) - Ailton A. Nakata</title>
 
-        }
+  <!-- Padrão do seu site (botões + modal, etc) -->
+  <link rel="stylesheet" href="../../site.css">
+  <script src="../../site.js" defer></script>
 
-        .item{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-           
-            border: 1px solid black;
-        }
-        /*flex-shrink serve para menores que 100px*/
-        /*flex-grow serve para maiores que 100px*/
-        
-        #cxa{
-            /*flex-grow: 0;
-            flex-shrink: 1;
-            flex-basis: 100px;*/
-            flex: 0 1 100px;
-        }
-        #cxb{
-            /*flex-grow: 3;
-            flex-shrink: 1;
-            flex-basis: 100px;*/
-            flex: 3 1 100px;
-        }
-        #cxc{
-            /*flex-grow: 9;
-            flex-shrink: 1;
-            flex-basis: 100px;*/
-            flex: 9 1 100px;
-        }
-        .container2{
-            display: flex;
-            flex-flow: row nowrap;
-            background-color: lightsalmon;
+  <style>
+    /* ===== Base escura profissional ===== */
+    *{ margin:0; padding:0; box-sizing:border-box; }
 
-        }
+    body{
+      background:#0b1220;
+      color:rgba(255,255,255,.92);
+      font-family: Arial, Helvetica, sans-serif;
+      padding:16px;
+    }
 
-        .item2{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-           
-            border: 1px solid black;
-        }
-      
-        
-        #cxa2{
-            
-            flex: 0 1 auto;
-        }
-        #cxb2{
-         
-            flex: 0 1 auto;
-        }
-        #cxc2{
-            
-            flex: 0 1 auto;
-        }
-        .container3{
-            display: flex;
-            flex-flow: row nowrap;
-            background-color: lightsalmon;
+    main{
+      max-width: 980px;
+      margin: 0 auto;
+    }
 
-        }
+    /* Botões acima do título */
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
 
-        .item3{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-           
-            border: 1px solid black;
-        }
-      
-        
-        #cxa3{
-            
-            flex: 0 0 auto;
-        }
-        #cxb3{
-         
-            flex: 0 0 auto;
-        }
-        #cxc3{
-            
-            flex: 0 0 auto;
-        }
-        .container4{
-            display: flex;
-            flex-flow: row nowrap;
-            background-color: lightsalmon;
+    /* remove hover antigo que girava tudo */
+    a:hover{
+      transform:none !important;
+      animation:none !important;
+    }
 
-        }
+    header h1{ margin: 8px 0 6px; }
+    header p{ color: rgba(255,255,255,.72); margin-bottom: 10px; }
 
-        .item4{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-           
-            border: 1px solid black;
-        }
-      
-        
-        #cxa4{
-            
-            flex: 1 1 auto;
-        }
-        #cxb4{
-         
-            flex: 1 1 auto;
-        }
-        #cxc4{
-            
-            flex: 1 1 auto;
-        }
-        .container5{
-            display: flex;
-            flex-flow: row nowrap;
-            background-color: lightsalmon;
+    h2{ margin: 16px 0 8px; }
+    h3{ margin: 10px 0 6px; color: rgba(255,255,255,.86); }
 
-        }
+    .muted{ color: rgba(255,255,255,.72); }
 
-        .item5{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 5px;
-           
-            border: 1px solid black;
-        }
-      
-        
-        #cxa5{
-            
-            flex: 3 1 auto;
-        }
-        #cxb5{
-         
-            flex: 3 1 auto;
-        }
-        #cxc5{
-            
-            flex: 3 1 auto;
-        }
-    </style>
-    <title>Flex</title>
+    hr{
+      border:0;
+      border-top:1px solid rgba(255,255,255,.12);
+      margin:14px 0;
+    }
+
+    /* Esconde o voltar antigo */
+    #voltar{ display:none; }
+
+    /* ===== Visual dos blocos (sem mexer na lógica do flex) ===== */
+    .box{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 14px;
+      margin: 12px 0;
+    }
+
+    .container,
+    .container2,
+    .container3,
+    .container4,
+    .container5{
+      display:flex;
+      flex-flow: row nowrap;          /* mantido */
+      background-color:#111a2e;       /* era lightsalmon */
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      padding:10px;
+      gap:10px;
+      overflow:hidden;
+    }
+
+    .item,
+    .item2,
+    .item3,
+    .item4,
+    .item5{
+      flex: auto;                    /* mantém seu estilo geral */
+      background-color:#0f2a44;      /* era lightblue */
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:10px;
+      color: rgba(255,255,255,.92);
+      text-align:center;
+      padding:14px 10px;
+      font-weight: 900;
+      min-width: 0;
+    }
+
+    /* =========================================================
+       EXEMPLO 1: flex-grow flex-shrink flex-basis (shorthand)
+       flex: grow shrink basis;
+       ========================================================= */
+    #cxa{ flex: 0 1 100px; }
+    #cxb{ flex: 3 1 100px; }
+    #cxc{ flex: 9 1 100px; }
+
+    /* EXEMPLO 2: padrão (initial) */
+    #cxa2{ flex: 0 1 auto; }
+    #cxb2{ flex: 0 1 auto; }
+    #cxc2{ flex: 0 1 auto; }
+
+    /* EXEMPLO 3: none (sem flexibilidade) */
+    #cxa3{ flex: 0 0 auto; }
+    #cxb3{ flex: 0 0 auto; }
+    #cxc3{ flex: 0 0 auto; }
+
+    /* EXEMPLO 4: auto (máxima flexibilidade comum) */
+    #cxa4{ flex: 1 1 auto; }
+    #cxb4{ flex: 1 1 auto; }
+    #cxc4{ flex: 1 1 auto; }
+
+    /* EXEMPLO 5: flex: 3 (um número) => 3 1 0 (basis 0) */
+    #cxa5{ flex: 3; }
+    #cxb5{ flex: 3; }
+    #cxc5{ flex: 3; }
+
+    /* pequeno bloco de “código” */
+    .code{
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 12px;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: rgba(255,255,255,.92);
+      overflow:auto;
+      margin-top: 8px;
+    }
+  </style>
 </head>
-<body>
-    <header>
 
-        
-        <h1>Simplificando</h1>
-        <p>por: Ailton A. Nakata</p>
+<body>
+  <!-- ✅ Botões no topo (padrão) -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <main>
+    <header>
+      <h1>Simplificando o <span class="muted">flex</span></h1>
+      <p class="muted">por: Ailton A. Nakata</p>
     </header>
-    <main>
-                <h3>Ordem = Flex-grow + Flex-shrink + Flex-basis</h3>
-                <h3>Flex: 9 1 100px;</h3>
-                <hr>
-                <h2>Configurado para alterar</h2>
-                <div class="container">
-            <div class="item" id="cxa">A</div>
-            <div class="item" id="cxb">B</div>
-            <div class="item" id="cxc">C</div>       
-                </div>
-                <hr>
-                <h2>Configuração Padrão</h2>
-                <h3>flex: 0 1 auto;</h3>
-                <h3>flex: 0 1 initial;</h3>
-                <div class="container2">
-            <div class="item2" id="cxa2">A</div>
-            <div class="item2" id="cxb2">B</div>
-            <div class="item2" id="cxc2">C</div>       
-                </div>
-                <hr>
-                <h2>Sem Flexibilidade</h2>
-                <h3>flex: 0 0 auto;</h3>
-                <h3>flex: none;</h3>
-                <div class="container3">
-            <div class="item3" id="cxa3">A</div>
-            <div class="item3" id="cxb3">B</div>
-            <div class="item3" id="cxc3">C</div>       
-                </div>
-                <hr>
-                <h2>Máximo de Flexibilidade</h2>
-                <h3>flex: 1 1 auto;</h3>
-                <h3>flex: auto;</h3>
-                <div class="container4">
-            <div class="item4" id="cxa4">A</div>
-            <div class="item4" id="cxb4">B</div>
-            <div class="item4" id="cxc4">C</div>       
-                </div>
-                <hr>
-                <h2>Flex: um número;</h2>
-                <h3>flex: 3;</h3>
-                <h3>flex: 3 1 animation-duration;</h3>
-                <div class="container5">
-            <div class="item5" id="cxa5">A</div>
-            <div class="item5" id="cxb5">B</div>
-            <div class="item5" id="cxc5">C</div>       
-                </div>
-                <hr>
-                <div id="voltar">
-            <a href="../html.html">Voltar</a>
-                </div>
-                <br>
-        </main>
+
+    <div class="box">
+      <h3>Ordem do shorthand</h3>
+      <div class="code">flex: flex-grow flex-shrink flex-basis;</div>
+      <p class="muted">Ex.: <strong>flex: 9 1 100px;</strong> = cresce 9x, encolhe 1x, base 100px.</p>
+    </div>
+
+    <hr>
+
+    <h2>Configurado para alterar</h2>
+    <p class="muted">A: 0 1 100px | B: 3 1 100px | C: 9 1 100px</p>
+    <div class="container">
+      <div class="item" id="cxa">A</div>
+      <div class="item" id="cxb">B</div>
+      <div class="item" id="cxc">C</div>
+    </div>
+
+    <hr>
+
+    <h2>Configuração padrão</h2>
+    <p class="muted">initial: <strong>flex: 0 1 auto;</strong></p>
+    <div class="container2">
+      <div class="item2" id="cxa2">A</div>
+      <div class="item2" id="cxb2">B</div>
+      <div class="item2" id="cxc2">C</div>
+    </div>
+
+    <hr>
+
+    <h2>Sem flexibilidade</h2>
+    <p class="muted">none: <strong>flex: 0 0 auto;</strong> (equivale a <strong>flex: none</strong>)</p>
+    <div class="container3">
+      <div class="item3" id="cxa3">A</div>
+      <div class="item3" id="cxb3">B</div>
+      <div class="item3" id="cxc3">C</div>
+    </div>
+
+    <hr>
+
+    <h2>Máximo de flexibilidade comum</h2>
+    <p class="muted">auto: <strong>flex: 1 1 auto;</strong> (equivale a <strong>flex: auto</strong>)</p>
+    <div class="container4">
+      <div class="item4" id="cxa4">A</div>
+      <div class="item4" id="cxb4">B</div>
+      <div class="item4" id="cxc4">C</div>
+    </div>
+
+    <hr>
+
+    <h2>Flex: um número</h2>
+    <p class="muted">
+      <strong>flex: 3;</strong> equivale a <strong>flex: 3 1 0;</strong>
+      (ou seja, basis 0, cresce bastante).
+    </p>
+    <div class="container5">
+      <div class="item5" id="cxa5">A</div>
+      <div class="item5" id="cxb5">B</div>
+      <div class="item5" id="cxc5">C</div>
+    </div>
+
+    <hr>
+  </main>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

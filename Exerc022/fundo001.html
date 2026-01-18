@@ -1,187 +1,385 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Teste de Fundos</title>
-    <style>
-        header{
-            width: 100vw;
-        }
-        body>main{
-            background-image: url('imagens/pattern004.png');
-        }
-        div.quadrado{
-            display: flex;
-            margin: auto;
-            
-            border: 2px solid black;
-            border-radius: 10px;
-            background-color: lightgray;
-            width: 250px;
-            height: 250px;
-            
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teste de Fundos | HTML - Ailton A. Nakata</title>
 
-        div#q1{
-            background-image: linear-gradient(to left, rgb(0, 0, 2), rgb(16, 1, 153),rgb(94, 56, 233),white);
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        div#q2{
-            background-image: linear-gradient(to bottom, red, yellow);
-        }
+  <meta name="description" content="Laboratório de background-image: gradients, patterns, posições e tamanhos com exemplos visuais em grid responsivo." />
 
-        div#q3{
-            background-image: url('imagens/pattern001.png');
-        }
-        div#q4{
-            background-image: linear-gradient(45deg,#535ACE,#BB3492,#F2534F,#F2762E,#FEC963);
-        }
-        div#q5{
-            background-image: linear-gradient(90deg,black, white);
-        }
-        div#q6{
-            background-image: url('imagens/pattern002.png');
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        div#q7{
-            background-image:url('imagens/pattern003.png')
-        }
-        div#q8{
-            background-image: url('imagens/goku.png');
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        div#q9{
-            background-image: url('imagens/target001.png');
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            background-position: center center;
-        }
-        div#q10{
-            background-image: url('imagens/wallpaper002.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: left left;
-        }
-        div#q11{
-            background-image: url('imagens/wallpaper003.jpg');
-            background-position: top left;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        div#q12{
-            background-image: url('imagens/wallpaper005.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        div#q13{
-            background-image: radial-gradient(rgb(238, 255, 2), rgb(145, 170, 0), rgb(62, 63, 0),rgb(42, 43, 0),rgb(22, 22, 0));
-        }
-        div#q14{
-            background-image: repeating-linear-gradient(#535ACE,#BB3492,#F2534F,#FEC963);
-        }
-        div#q15{
-            background-image: url('imagens/icone.png');
-            background-size: cover;
-            
-        }
-        div#q16{
-            background-image: url('imagens/esfera\ 1.png');
-            background-size: cover;
-        }
-        div#q17{
-            background-image: url('imagens/Capa.jpg');
-            background-size: cover;
-            background-position: bottom right;
-        }
-        div#q17{
-            background-image: url('imagens/Capa.jpg');
-            background-size: cover;
-            background-position: center center;
-        }
-        div#q18{
-            background-image: url('imagens/Feen\ e\ Jack.jpg');
-            background-size: cover;
-        }
-        div#q19{
-            background-image: url('imagens/coragem_coração.png');
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        div#q20{
-            background-image: url('imagens/coragem.png');
-            background-size: 200px;
-            background-repeat: no-repeat;
-            background-position: center center;
-        }
-        div#q21{
-            background-image: url('imagens/Rick\ and\ Morty.jpg');
-            background-size: 250px;
-            background-repeat: no-repeat;
-            background-position: center center;
+  <style>
+    /* Escopo da aula */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
 
-        }
-    </style>
+    /* Fundo do main (pattern) */
+    .bg-lab{
+      background-image: url('imagens/pattern004.png');
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* Grid responsivo */
+    .grid{
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 560px){
+      .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 980px){
+      .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    /* Card de cada exemplo */
+    .tile{
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+    }
+
+    .swatch{
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      background-color: lightgray;
+    }
+
+    .cap{
+      padding: 10px 12px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .cap strong{ font-size: 0.95rem; }
+    .cap .muted{ margin:0; }
+
+    /* Helpers de background (evita repetir) */
+    .cover{ background-size: cover; background-repeat: no-repeat; background-position: center; }
+    .no-repeat{ background-repeat: no-repeat; }
+    .center{ background-position: center center; }
+    .fill{ background-size: 100% 100%; }
+    .pos-tl{ background-position: top left; }
+    .pos-bl{ background-position: bottom right; }
+    .pos-ll{ background-position: left left; }
+
+    /* Exemplos */
+    #q1{ background-image: linear-gradient(to left, rgb(0,0,2), rgb(16,1,153), rgb(94,56,233), white); }
+    #q2{ background-image: linear-gradient(to bottom, red, yellow); }
+    #q3{ background-image: url('imagens/pattern001.png'); }
+    #q4{ background-image: linear-gradient(45deg,#535ACE,#BB3492,#F2534F,#F2762E,#FEC963); }
+    #q5{ background-image: linear-gradient(90deg, black, white); }
+
+    #q6{ background-image: url('imagens/pattern002.png'); }
+    #q7{ background-image: url('imagens/pattern003.png'); }
+    #q8{ background-image: url('imagens/goku.png'); }
+
+    #q9{ background-image: url('imagens/target001.png'); }
+    #q10{ background-image: url('imagens/wallpaper002.jpg'); }
+    #q11{ background-image: url('imagens/wallpaper003.jpg'); }
+    #q12{ background-image: url('imagens/wallpaper005.jpg'); }
+
+    #q13{ background-image: radial-gradient(rgb(238,255,2), rgb(145,170,0), rgb(62,63,0), rgb(42,43,0), rgb(22,22,0)); }
+    #q14{ background-image: repeating-linear-gradient(#535ACE,#BB3492,#F2534F,#FEC963); }
+
+    #q15{ background-image: url('imagens/icone.png'); }
+
+    /* Atenção: caminhos com espaço funcionam com %20 melhor que barra invertida */
+    #q16{ background-image: url('imagens/esfera%201.png'); }
+    #q17{ background-image: url('imagens/Capa.jpg'); }
+    #q18{ background-image: url('imagens/Feen%20e%20Jack.jpg'); }
+
+    #q19{ background-image: url('imagens/coragem_coração.png'); }
+    #q20{ background-image: url('imagens/coragem.png'); }
+    #q21{ background-image: url('imagens/Rick%20and%20Morty.jpg'); }
+
+    /* Ajustes específicos */
+    .q6{ background-size: cover; background-repeat: no-repeat; }
+    .q8{ background-size: cover; background-repeat: no-repeat; background-position: center; }
+    .q9{ background-size: 100% 100%; background-repeat: no-repeat; background-position: center; }
+    .q10{ background-size: cover; background-repeat: no-repeat; background-position: left left; }
+    .q11{ background-size: cover; background-repeat: no-repeat; background-position: top left; }
+    .q12{ background-size: cover; background-repeat: no-repeat; background-position: center; }
+    .q15{ background-size: cover; background-repeat: no-repeat; background-position: center; }
+    .q16{ background-size: cover; background-repeat: no-repeat; background-position: center; }
+    .q17{ background-size: cover; background-repeat: no-repeat; background-position: center center; }
+    .q18{ background-size: cover; background-repeat: no-repeat; background-position: center; }
+    .q19{ background-size: cover; background-repeat: no-repeat; background-position: center; }
+    .q20{ background-repeat: no-repeat; background-size: 200px; background-position: center center; }
+    .q21{ background-repeat: no-repeat; background-size: 250px; background-position: center center; }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>
-            Background-image
-        </h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <div class="quadrado" id="q1"></div>
-        <br>
-        <div class="quadrado" id="q2"></div>
-        <br>
-        <div class="quadrado" id="q3"></div>
-        <br>
-        <div class="quadrado" id="q4"></div>
-        <br>
-        <div class="quadrado" id="q5"></div>
-        <br>
-        <div class="quadrado" id="q6"></div>
-        <br>
-        <div class="quadrado" id="q7"></div>
-        <br>
-        <div class="quadrado" id="q8"></div>
-        <br>
-        <div class="quadrado" id="q9"></div>
-        <br>
-        <div class="quadrado" id="q10"></div>
-        <br>
-        <div class="quadrado" id="q11"></div>
-        <br>
-        <div class="quadrado" id="q12"></div>
-        <br>
-        <div class="quadrado" id="q13"></div>
-        <br>
-        <div class="quadrado" id="q14"></div>
-        <br>
-        <div class="quadrado" id="q15"></div>
-        <br>
-        <div class="quadrado" id="q16"></div>
-        <br>
-        <div class="quadrado" id="q17"></div>
-        <br>
-        <div class="quadrado" id="q18"></div>
-        <br>
-        <div class="quadrado" id="q19"></div>
-        <br>
-        <div class="quadrado" id="q20"></div>
-        <br>
-        <div class="quadrado" id="q21"></div>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Background-image</h1>
+          <p class="muted">21 exemplos: gradients, patterns, position e size em uma grade responsiva.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Galeria de fundos</h2>
+
+            <div class="card soft bg-lab">
+              <div class="grid">
+                <div class="tile">
+                  <div class="swatch" id="q1"></div>
+                  <div class="cap"><strong>Q1</strong><p class="muted">Linear gradient (to left)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch" id="q2"></div>
+                  <div class="cap"><strong>Q2</strong><p class="muted">Linear gradient (to bottom)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch" id="q3"></div>
+                  <div class="cap"><strong>Q3</strong><p class="muted">Pattern (repeat padrão)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch" id="q4"></div>
+                  <div class="cap"><strong>Q4</strong><p class="muted">Gradient 45deg (multi)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch" id="q5"></div>
+                  <div class="cap"><strong>Q5</strong><p class="muted">Gradient 90deg (PB)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q6" id="q6"></div>
+                  <div class="cap"><strong>Q6</strong><p class="muted">Pattern cover (no-repeat)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch" id="q7"></div>
+                  <div class="cap"><strong>Q7</strong><p class="muted">Pattern</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q8" id="q8"></div>
+                  <div class="cap"><strong>Q8</strong><p class="muted">Imagem cover</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q9" id="q9"></div>
+                  <div class="cap"><strong>Q9</strong><p class="muted">Target (100% 100%)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q10" id="q10"></div>
+                  <div class="cap"><strong>Q10</strong><p class="muted">Wallpaper cover (left)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q11" id="q11"></div>
+                  <div class="cap"><strong>Q11</strong><p class="muted">Wallpaper cover (top-left)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q12" id="q12"></div>
+                  <div class="cap"><strong>Q12</strong><p class="muted">Wallpaper cover</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch" id="q13"></div>
+                  <div class="cap"><strong>Q13</strong><p class="muted">Radial gradient</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch" id="q14"></div>
+                  <div class="cap"><strong>Q14</strong><p class="muted">Repeating linear</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q15" id="q15"></div>
+                  <div class="cap"><strong>Q15</strong><p class="muted">Ícone (cover)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q16" id="q16"></div>
+                  <div class="cap"><strong>Q16</strong><p class="muted">Arquivo com espaço (URL %20)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q17" id="q17"></div>
+                  <div class="cap"><strong>Q17</strong><p class="muted">Capa cover (center)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q18" id="q18"></div>
+                  <div class="cap"><strong>Q18</strong><p class="muted">Imagem cover</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q19" id="q19"></div>
+                  <div class="cap"><strong>Q19</strong><p class="muted">Imagem cover (no-repeat)</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q20" id="q20"></div>
+                  <div class="cap"><strong>Q20</strong><p class="muted">Imagem 200px central</p></div>
+                </div>
+
+                <div class="tile">
+                  <div class="swatch q21" id="q21"></div>
+                  <div class="cap"><strong>Q21</strong><p class="muted">Imagem 250px central</p></div>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica pro projeto:</strong> evite espaços em nomes de arquivos (ex: <code>Rick_and_Morty.jpg</code>).
+                Se já tiver espaço, use <code>%20</code> no caminho.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Viu gradients (linear/radial)</li>
+                <li>Testou patterns (repeat/cover)</li>
+                <li>Entendeu <code>background-position</code></li>
+                <li>Entendeu <code>background-size</code></li>
+                <li>Grade responsiva</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

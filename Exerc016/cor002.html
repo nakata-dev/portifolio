@@ -1,39 +1,228 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradientes em CSS</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>   
-        body{
-            background-image: linear-gradient(75deg, #BB3492,#535ACE,#FEC963, #F2762E,#F2534F);
-            background-attachment: fixed;
-        }
-        #compacto{
-            width: 50%;
-            height: auto;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gradientes em CSS | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aprenda gradientes em CSS com exemplos e layout responsivo: linear-gradient, ângulo e boas práticas de leitura." />
+
+  <style>
+    /* Fundo em gradiente (aula) */
+    body{
+      background-image: linear-gradient(75deg, #BB3492, #535ACE, #FEC963, #F2762E, #F2534F);
+      background-attachment: fixed;
+    }
+
+    /* Caixa de leitura (responsiva) */
+    .content-narrow{
+      max-width: 72ch;
+      margin-inline: auto;
+    }
+
+    .text-justify{ text-align: justify; }
+    .text-indent{ text-indent: 30px; }
+
+    /* Card com leve transparência para legibilidade no gradiente */
+    .glass{
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+      backdrop-filter: blur(6px);
+    }
+
+    @media (max-width: 520px){
+      .text-indent{ text-indent: 18px; }
+      .glass{ background: rgba(255,255,255,0.95); }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Gradiente</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main id="compacto">
-        <h2>Título</h2>
-        <p style="text-align: justify; text-indent: 30px; word-spacing: normal;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, officia enim repellat dolorum rem non. Quos voluptatibus similique praesentium corrupti deserunt, possimus esse laboriosam sapiente excepturi voluptates animi dicta! Temporibus?</p>
-        <br>
-        <h2>Título 02</h2>
-        <p style="text-align: justify; text-indent: 30px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam veritatis dolore officiis culpa minima soluta exercitationem, quibusdam provident, similique repudiandae sapiente aut fugiat hic suscipit molestias nihil libero quaerat dicta!</p>
-        <br>
-        <p style="text-align: justify; text-indent: 30px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero ipsa voluptatibus sit quae eos. Sit sequi officiis, tenetur sunt amet corrupti pariatur, eligendi sapiente minima, iusto vitae corporis earum ea!</p>
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Gradientes em CSS</h1>
+          <p class="muted">Como usar <code>linear-gradient()</code> com ângulo e manter a leitura perfeita por cima do fundo.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Exemplo</h2>
+
+            <div class="card soft glass content-narrow">
+              <h3 style="margin:0 0 10px;">Título</h3>
+              <p class="text-justify text-indent" style="margin-top:0;">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, officia enim repellat dolorum rem non.
+                Quos voluptatibus similique praesentium corrupti deserunt, possimus esse laboriosam sapiente excepturi
+                voluptates animi dicta! Temporibus?
+              </p>
+
+              <h3 style="margin:18px 0 10px;">Título 02</h3>
+              <p class="text-justify text-indent" style="margin-top:0;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam veritatis dolore officiis culpa minima
+                soluta exercitationem, quibusdam provident, similique repudiandae sapiente aut fugiat hic suscipit
+                molestias nihil libero quaerat dicta!
+              </p>
+
+              <p class="text-justify text-indent" style="margin:14px 0 0;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero ipsa voluptatibus sit quae eos.
+                Sit sequi officiis, tenetur sunt amet corrupti pariatur, eligendi sapiente minima, iusto vitae corporis earum ea!
+              </p>
+            </div>
+
+            <div class="card soft glass content-narrow" style="margin-top: 12px;">
+              <p class="muted" style="margin:0 0 10px;">
+                Snippet do fundo (coloque no CSS):
+              </p>
+              <pre style="margin:0; white-space:pre-wrap; line-height:1.7;"><code>body{
+  background-image: linear-gradient(75deg, #BB3492, #535ACE, #FEC963, #F2762E, #F2534F);
+  background-attachment: fixed;
+}</code></pre>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Dica de UI:</strong> quando o fundo é “forte”, use um card claro (tipo “glass”) para garantir contraste e leitura.
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card glass">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card glass">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Aplicou <code>linear-gradient()</code></li>
+                <li>Usou ângulo (ex.: 75deg)</li>
+                <li>Ativou <code>background-attachment: fixed</code></li>
+                <li>Garantiu contraste com um card claro</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

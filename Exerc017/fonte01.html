@@ -1,62 +1,239 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Fontes</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-        body{
-            font-family: 'work sans',Arial, Helvetica, sans-serif;
-            /*
-            Medidas absolutas
-            cm, mm, in, px, pt, pc
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fontes | HTML - Ailton A. Nakata</title>
 
-            Medidas relativas
-            em, ex, rem, vw, vg, %
-            Use 16px = 1 em que seria o tamanho padrão para sites de navegação
-            */
-            font-size: 16px;
-            font-weight: normal ; 
-            /*peso da fonte: lighter; normal; bold; bolder; */
-        }
-        h2,h3 {
-            
-            /* shorthand font
-            - font style --> font weight --> font size --> font family
-            ao invés de escrever tudo isso:
-            font-family:'work sans', 'Times New Roman', Times, serif;
-            font-weight: 100;
-            font-size: 3em;
-            font-style: italic;
-            basta você acrescentar como na linha de baixo.
-            */
-            font: italic bolder 3em 'work sans', sans-serif;
-        }
-    </style>
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aula sobre fontes em CSS: import do Google Fonts, pesos, tamanhos, medidas e shorthand font, com layout responsivo." />
+
+  <style>
+    /* Importa a fonte (aula) */
+    @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+    /* Estilos específicos da aula (aplicados SOMENTE dentro do conteúdo) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+    .text-justify{ text-align: justify; }
+    .text-indent{ text-indent: 30px; }
+
+    .font-demo{
+      font-family: "Work Sans", Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .font-demo h2, .font-demo h3{
+      /* shorthand font: font-style font-weight font-size font-family */
+      font: italic 800 2.2rem "Work Sans", sans-serif;
+      margin: 0 0 10px;
+      line-height: 1.15;
+    }
+
+    .note{
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    @media (max-width: 520px){
+      .content-narrow{ max-width: 100%; }
+      .text-indent{ text-indent: 18px; }
+      .font-demo h2, .font-demo h3{ font-size: 1.6rem; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Formatação Básica</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-                <h2>Fonte Básica I</h2>
-                <p style="text-align: justify; text-indent: 30px;">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fuga asperiores, distinctio laudantium cupiditate similique doloremque aliquid voluptatibus placeat officiis facere nesciunt eos! Iure quibusdam incidunt inventore ab ipsum ipsa laborum. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit sapiente quae doloribus accusamus a dolore animi odit, error officia voluptatem exercitationem laboriosam consectetur, ut recusandae illo placeat. Inventore, corrupti porro.</p>
-                <h2>Fonte Básica II</h2>
-                <p style="text-align: justify; text-indent: 30px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis soluta possimus molestias numquam deleniti, dignissimos non sed natus error pariatur ea doloribus animi neque sit architecto provident vel velit recusandae?</p>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
 
-                <br>
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
-                <p style="text-align: justify; text-indent: 30px;">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit possimus amet mollitia excepturi dolor. A non libero est! Minima fugit nemo quasi reiciendis accusamus, nulla pariatur nesciunt asperiores corporis quae.
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Fontes (Tipografia)</h1>
+          <p class="muted">Google Fonts, pesos, tamanhos e shorthand <code>font</code>, sem bagunçar o CSS global do site.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow font-demo">
+              <h2>Fonte Básica I</h2>
+              <p class="text-justify text-indent" style="margin-top:0;">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fuga asperiores, distinctio laudantium cupiditate
+                similique doloremque aliquid voluptatibus placeat officiis facere nesciunt eos! Iure quibusdam incidunt inventore
+                ab ipsum ipsa laborum. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit sapiente quae doloribus
+                accusamus a dolore animi odit, error officia voluptatem exercitationem laboriosam consectetur, ut recusandae illo
+                placeat. Inventore, corrupti porro.
+              </p>
+
+              <h2 style="margin-top:18px;">Fonte Básica II</h2>
+              <p class="text-justify text-indent" style="margin-top:0;">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis soluta possimus molestias numquam deleniti,
+                dignissimos non sed natus error pariatur ea doloribus animi neque sit architecto provident vel velit recusandae?
+              </p>
+
+              <p class="text-justify text-indent" style="margin:14px 0 0;">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Impedit possimus amet mollitia excepturi dolor.
+                A non libero est! Minima fugit nemo quasi reiciendis accusamus, nulla pariatur nesciunt asperiores corporis quae.
+              </p>
+            </div>
+
+            <div class="card soft content-narrow" style="margin-top: 12px;">
+              <div class="note">
+                <p class="muted" style="margin:0 0 8px;">
+                  Medidas comuns (resumo):
                 </p>
-                <br><br>
-                <div id="voltar">
-                    <a href="../html.html">Voltar</a>
-                </div>
-                <br><br>
-        </main>
+                <ul class="list" style="margin:0;">
+                  <li><strong>Absolutas:</strong> cm, mm, in, px, pt, pc</li>
+                  <li><strong>Relativas:</strong> em, rem, vw, vh, %</li>
+                  <li><strong>Dica:</strong> 16px geralmente equivale a 1em (base do navegador)</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Boa prática:</strong> em sites reais, defina a fonte global no CSS do projeto.
+              Em aulas, aplique a fonte só no bloco de demonstração (como fizemos com <code>.font-demo</code>).
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Importou Google Fonts</li>
+                <li>Entendeu peso e tamanho</li>
+                <li>Viu shorthand <code>font</code></li>
+                <li>Aplicou fonte sem afetar o site todo</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

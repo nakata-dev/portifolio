@@ -1,99 +1,293 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <style>
-        #voltar{
-            text-align: center;
-        }
-        .justificado{
-        white-space: pre-wrap;
-        text-align: justify;
-        line-height: 1.8;
-        font-size: 1.1em;
-        padding: 20px;
-        font-weight: bolder;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>iFrame | HTML - Ailton A. Nakata</title>
 
-        iframe{
-        display: block;
-        margin: auto;
-        width:300px;
-        height: 200px;
-        border: 1px dashed black;
-        }
-        
-        #voltar>a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-        }
-        h1,h2,h3{
-            text-align: center;
-            
-        }
-    </style>
-    <title>Iframe</title>
-</head>
-<body>
-    <header>
-    
-        <h1>Teste de Iframe</h1>
-        <h3>por: Ailton A. Nakata</h3>
-        
-    </header> 
-    <main>
-    <h2>Iframe:</h2>    
-    <iframe src="iframe4.html" frameborder="0">Portifolio</iframe>
-    <br> 
-    <h2>Como usar o Iframe?</h2>
-    <pre class="justificado">
-Iframe: É um frame inserido em uma linha, para que você consiga acessar um site dentro deste pequeno retângulo sem sair do site em questão.
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-Veja aqui a estrutura do iframe para maior compreensão e fixação do conteúdo em si:
+  <meta name="description" content="Aula prática de iFrame: como inserir páginas dentro de uma página, com exemplos e boas práticas." />
 
-<strong>
-&lt;iframe src="http://nakata-dev.github.io/portifolio"frameborder="0"&gt;
-Mensagem Opicional / link Opicional
-&lt;/iframe&gt;
-</strong>
+  <style>
+    /* ===== Aula: iFrame (layout + acessibilidade) ===== */
+    .iframe-card{
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 14px;
+    }
 
-O tamanho padrão de um iframe é de: <strong>300x150 pixels</strong>
-
-<strong>Situação 2</strong>: Na parte de edição de uma 'Mensagem Opicional' é possível se colocar um link de acesso.
-
-por Exemplo:
-
-&lt;iframe src="http://nakata-dev.github.io/portifolio"frameborder="0"&gt;
-<strong>&lt;a href="http://nakata-dev.github.io/portifolio"frameborder="0" target="_blank"&gt;</strong>
-&lt;/iframe&gt;
-
-<strong>Situação 3</strong>:
-
-Na CSS você pode configurar o iframe para que ele altere a altura, largura, borda etc.
-
-<strong>por exemplo:</strong>
+    .iframe-wrap{
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
 
     iframe{
-        width:400px;
-        heitght:auto;
-        border: 1px dashed black;
+      display: block;
+      width: min(720px, 100%);
+      height: 340px;
+      border: 1px dashed rgba(0,0,0,0.45);
+      border-radius: 14px;
+      background: #fff;
     }
-            
-        </pre>
-        <br>
-        <br>
-        <div id="voltar">
-        <a href="../html.html">Voltar</a>
+
+    .prose{
+      white-space: pre-wrap; /* mantém estilo de “apostila” */
+      text-align: justify;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      color: #b3b3b3;
+    }
+
+    .prose strong{
+      font-weight: 900;
+    }
+
+    .code-sample{
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 14px;
+      padding: 12px;
+      overflow-x: auto;
+      color: #b8b8b8;
+    }
+
+    .code-sample code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.95rem;
+      font-weight: 800;
+      white-space: pre;
+      display: block;
+    }
+
+    .hint{
+      font-size: 0.95rem;
+      color: rgba(0,0,0,0.72);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
-    
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Teste de iFrame</h1>
+          <p class="muted">Aprenda a embutir uma página dentro de outra usando <code>&lt;iframe&gt;</code>, com boas práticas.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <button class="btn btn-primary" data-open-modal type="button">Quero um site profissional</button>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Exemplo de iFrame</h2>
+
+            <div class="card soft">
+              <div class="alert">
+                <strong>Objetivo:</strong> ver um conteúdo carregando dentro do “retângulo” do iFrame, sem sair da página.
+              </div>
+
+              <div class="iframe-card" style="margin-top: 12px;">
+                <div class="iframe-wrap">
+                  <iframe
+                    src="iframe4.html"
+                    title="Exemplo de página carregada em iFrame"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                    aria-label="Conteúdo incorporado via iFrame"
+                  >
+                    <p class="hint">
+                      Seu navegador não suportou iFrame. Abra em uma nova aba:
+                      <a href="iframe4.html" target="_blank" rel="noopener noreferrer">Ver conteúdo</a>
+                    </p>
+                  </iframe>
+
+                  <p class="hint">
+                    Dica: no mobile, você pode rolar dentro do iFrame e também rolar a página.
+                  </p>
+                </div>
+              </div>
+
+              <div style="margin-top: 14px;">
+                <h2 class="lesson-title" style="margin-bottom: 8px;">Como usar o iFrame?</h2>
+
+                <div class="card">
+                  <p class="prose">
+iFrame: é um “quadro” que permite incorporar uma página dentro de outra, como uma janela embutida.
+
+Estrutura básica:
+
+                  </p>
+
+                  <div class="code-sample" aria-label="Exemplo de código HTML de iframe">
+                    <code>&lt;iframe src="https://nakata-dev.github.io/portifolio"&gt;
+  Seu navegador não suporta iFrame.
+  &lt;a href="https://nakata-dev.github.io/portifolio" target="_blank" rel="noopener noreferrer"&gt;
+    Abrir em nova aba
+  &lt;/a&gt;
+&lt;/iframe&gt;</code>
+                  </div>
+
+                  <p class="prose">
+O tamanho padrão de um iFrame é aproximadamente <strong>300×150 pixels</strong> (pode variar conforme CSS do navegador).
+
+Situação 2: dentro do iFrame você pode colocar uma <strong>mensagem opcional</strong> ou até um <strong>link opcional</strong> (fallback), para abrir o conteúdo em nova aba.
+
+Situação 3: no CSS você controla altura, largura, borda, raio e responsividade.
+Exemplo:
+                  </p>
+
+                  <div class="code-sample" aria-label="Exemplo de CSS para iframe">
+                    <code>iframe{
+  width: 100%;
+  max-width: 720px;
+  height: 340px;
+  border: 1px dashed rgba(0,0,0,0.45);
+  border-radius: 14px;
+}</code>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lesson-actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+              </div>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>title</code> no iFrame</li>
+                <li>Adicionou fallback com link</li>
+                <li>Estilizou via CSS (sem <code>frameborder</code>)</li>
+                <li>Deixou responsivo com <code>width: 100%</code></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="hero-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../estudos.html">Voltar para Estudos</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label for="nome">Seu nome</label>
+            <input id="nome" name="nome" type="text" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="negocio">Seu negócio / segmento</label>
+            <input id="negocio" name="negocio" type="text" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label for="tipo">Tipo de site</label>
+            <select id="tipo" name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo" name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="prazo">Prazo</label>
+            <input id="prazo" name="prazo" type="text" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label for="detalhes">Detalhes (opcional)</label>
+            <textarea id="detalhes" name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

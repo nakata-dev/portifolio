@@ -1,3 +1,5 @@
+//Configurações em JS
+
 const botao = document.getElementById('botao-tema');
 const body = document.body;
 

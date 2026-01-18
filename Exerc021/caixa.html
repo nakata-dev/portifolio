@@ -1,137 +1,320 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Modelo de caixas</title>
-    <style>
-        h2{ /* box level */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: lightgray;
-            height: 300px;
-            width: 300px;
-            border-width: 10px;
-            border-style: solid;
-            border-color: darkslategray;
-            
-            padding-top: 10px;
-            padding-right: 10px;
-            padding-bottom: 10px;
-            padding-left: 10px;
-            margin: auto;
-        }
-        a{ /* inline */
-            /* border-width: 4px;
-            border-style: solid;   
-            border-color: darkslategray;*/
-            /* Shorthand */
-            borde: 4px solid darkslategray;
-            
-            /*padding-top: 10px;
-            padding-right: 10px;
-            padding-bottom: 10px;
-            padding-left: 10px; */
-            /* Shorthand */
-            padding: 10px 10px 10px 10px; 
-            
-            margin-top: 10px;  /* Se quiser cetralizar a caixa no meior use margin: auto; */
-            /*margin-left: 10px;
-            margin-bottom: 10px;
-            margin-left: 10px;*/
-            margin: 10px auto 10px auto;
-            
-            outline-width: 7px;
-            outline-style: dashed;
-            outline-color: rgba(250, 128, 114, 0.664);
-            outline: 5px dashed rgba(250, 128, 114, 0.603);
-        }
-        pre{
-            white-space: pre-wrap;
-            text-align: justify;
-            padding: 10px;
-            line-height: 1.8;
-            font-size: 1em;
-            font-weight: bold;
-        }
-        main > p{
-            text-align: justify;
-            padding: 15px;
-            line-height: 1.5;
-        }
-        h3{
-            outline: 5px dashed rgba(250, 128, 114, 0.603);
-        }
-        </style>
-    </head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Modelo de Caixas | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Aula sobre Box Model: box-level vs inline, border, padding, margin e outline com exemplo visual e código copiável." />
+
+  <style>
+    /* Estilos específicos da aula (escopo) */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+    .text-justify{ text-align: justify; }
+    .lh-16{ line-height: 1.6; }
+
+    .demo-wrap{
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    /* Box-level (um bloco) */
+    .box-level{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: lightgray;
+
+      width: min(320px, 100%);
+      aspect-ratio: 1 / 1;     /* quadrado responsivo */
+      border: 10px solid darkslategray;
+
+      padding: 10px;
+      border-radius: 16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+    }
+
+    /* Link inline com estilo de "caixa" */
+    .inline-box{
+      display: inline-block; /* ainda é "inline", mas vira bloco dentro da linha */
+      border: 4px solid darkslategray;
+      padding: 8px 10px;
+      border-radius: 12px;
+
+      outline: 5px dashed rgba(250, 128, 114, 0.60);
+      outline-offset: 4px;
+
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .inline-box:hover{
+      background: rgba(0,0,0,0.06);
+    }
+
+    /* Código */
+    .code-block{
+      background:#0f1724;
+      color:#e6edf3;
+      padding:12px;
+      border-radius:12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:0.92rem;
+      overflow:auto;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: left;
+    }
+
+    .code-block pre{
+      margin:0;
+      white-space:pre;
+      line-height:1.7;
+    }
+
+    .copy-btn{
+      position:absolute;
+      right:10px;
+      top:10px;
+      background: rgba(255,255,255,0.10);
+      color:#fff;
+      border:none;
+      padding:6px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:0.8rem;
+    }
+
+    @media (max-width: 520px){
+      .content-narrow{ max-width: 100%; }
+      .code-block{ font-size: 0.86rem; }
+      .copy-btn{ padding: 6px 8px; }
+    }
+  </style>
+</head>
 
 <body>
-    <header>
-        <h1>Box-Level</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <h2>Box-level</h2>
-        <p>Parágrafos são exemplo de box level, mas, os <a href="#">links são exemplos de caixas inline</a>. Vamos ver como tudo isso funciona.</p>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
-            <br>
-            <br>
+  <!-- Header padrão do site -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <h3>CSS:</h3>
-    <pre>
-        <p>
-h2{ 
-display: flex;
-justify-content: center;
-align-items: center;
-background-color: lightgray;
-height: 300px;
-width: 300px;
-border-width: 10px;
-border-style: solid;
-border-color: darkslategray;
+      </a>
 
-padding-top: 10px;
-padding-right: 10px;
-padding-bottom: 10px;
-padding-left: 10px;
-margin: auto;
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Modelo de Caixas</h1>
+          <p class="muted">Box-level vs inline: <code>border</code>, <code>padding</code>, <code>margin</code> e <code>outline</code>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow">
+              <div class="demo-wrap">
+                <div class="box-level">Box-level</div>
+
+                <p class="text-justify lh-16" style="margin:0;">
+                  Parágrafos e títulos são exemplos de <strong>box-level</strong> (ocupam a largura inteira).
+                  Já os <a class="inline-box" href="#" aria-label="Exemplo de link inline">links são inline</a> por padrão
+                  (ficam “na linha”), mas podem receber borda/padding e virar uma “caixa” visual.
+                </p>
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Regra:</strong> <code>border</code> fica entre o conteúdo e o exterior.
+                <code>padding</code> é “acolchoamento” interno.
+                <code>margin</code> é o espaço externo.
+                <code>outline</code> não ocupa espaço (fica por fora).
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">CSS (exemplo)</h2>
+
+            <div class="card soft content-narrow">
+              <div class="code-block">
+                <button class="copy-btn" type="button" data-copy-target="code-box">Copiar</button>
+                <pre><code id="code-box">.box-level{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: min(320px, 100%);
+  aspect-ratio: 1 / 1;
+
+  background-color: lightgray;
+  border: 10px solid darkslategray;
+  padding: 10px;
+  margin: auto;
 }
-a{ 
-border-width: 4px;
-border-style: solid;   
-border-color: darkslategray;
-borde: 4px solid darkslategray;
 
-padding-top: 10px;
-padding-right: 10px;
-padding-bottom: 10px;
-padding-left: 10px;
-padding: 10px 10px 10px 10px; 
+.inline-box{
+  display: inline-block;
+  border: 4px solid darkslategray;
+  padding: 8px 10px;
 
-margin-top: 10px; auto; 
-margin-left: 10px;
-margin-bottom: 10px;
-margin-left: 10px;
-margin: 10px auto 10px auto;
+  outline: 5px dashed rgba(250, 128, 114, 0.60);
+  outline-offset: 4px;
+}</code></pre>
+              </div>
+            </div>
 
-outline-width: 10px;
-outline-style: dashed;
-outline-color: salmon;
-outline: 5px dashed salmon;
-}
-        </p>
-    </pre>  
-    <div id="voltar">
-    <a href="../estudos.html">Voltar</a>
-    <br>
-    <br>
-    <br><br>
-    </main>
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu box-level vs inline</li>
+                <li>Viu <code>border</code>, <code>padding</code>, <code>margin</code></li>
+                <li>Entendeu <code>outline</code> + <code>outline-offset</code></li>
+                <li>Exemplo responsivo</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copy (se seu site.js já tiver, pode remover este bloco) -->
+  <script>
+    document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-copy-target');
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const text = el.textContent.trim();
+        try {
+          await navigator.clipboard.writeText(text);
+          const old = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(() => (btn.textContent = old), 1200);
+        } catch (e) {
+          alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

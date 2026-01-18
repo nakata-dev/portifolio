@@ -1,35 +1,197 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criando Layout</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Criando Layout | Ailton A. Nakata</title>
+
+  <!-- Padrão do site -->
+  <link rel="shortcut icon" href="../../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../../site.css">
+  <script src="../../../site.js" defer></script>
+
+  <!-- Seu CSS original (mantém o layout central igual) -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ========= PADRÃO PROFISSIONAL (SEM MEXER NO GRID CENTRAL) ========= */
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      padding:16px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(255,255,255,.92);
+      background:
+        radial-gradient(900px 360px at 15% 10%, rgba(59,130,246,.14), transparent 55%),
+        radial-gradient(860px 320px at 80% 20%, rgba(20,184,166,.10), transparent 60%),
+        #0b1220;
+    }
+
+    /* Botões acima do conteúdo */
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      max-width: 980px;
+      margin: 0 auto 14px;
+      padding: 0 4px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Remove hover amador (rotação etc) */
+    a:hover{
+      transform:none !important;
+      animation:none !important;
+    }
+
+    /* Palco (não muda o conteúdo, só “encaixa”) */
+    main{
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .card{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    h1{
+      text-align:center;
+      margin: 8px 0 12px;
+      color: rgba(255,255,255,.96);
+    }
+
+    p.muted{
+      text-align:center;
+      margin: 0 0 14px;
+      color: rgba(255,255,255,.70);
+    }
+
+    /* Remove o voltar de dentro do topo (agora é botão acima) */
+    #voltar{
+      display:none !important;
+    }
+
+    /* Garante que seu layout central não estoure a largura */
+    .container{
+      max-width: 100%;
+    }
+
+    @media (max-width: 520px){
+      body{ padding: 12px; }
+      .card{ padding: 12px; }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
+  <!-- ✅ Botões necessários acima do título -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../../../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <main>
+    <h1>Criando Layout</h1>
+    <p class="muted">Estrutura completa com Grid (Topo, Menu, Principal, Secundário e Rodapé).</p>
+
+    <div class="card">
+      <!-- ✅ Layout original (não alterei estrutura nem posições) -->
+      <div class="container">
         <header class="caixa" id="topo">
-            topo
-            <div id="voltar">
-                <a href="../../../html.html">Voltar</a>
-            </div>
+          topo
+          <div id="voltar">
+            <a href="../../../html.html">Voltar</a>
+          </div>
         </header>
 
         <nav class="caixa" id="menu">
-            Menu
+          Menu
         </nav>
 
         <main class="caixa" id="principal">
-            Principal
+          Principal
         </main>
 
         <aside class="caixa" id="secundario">
-            Secundário
+          Secundário
         </aside>
-        
+
         <footer class="caixa" id="rodape">
-            Rodapé
+          Rodapé
         </footer>
+      </div>
     </div>
+  </main>
+
+  <!-- Modal padrão do site -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions" style="margin:12px 0 0; padding:0;">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

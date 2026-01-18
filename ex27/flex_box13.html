@@ -1,77 +1,292 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conteúdo_Adaptável</title>
-    <link rel="stylesheet" href="estilo/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conteúdo Adaptável | Ailton A. Nakata</title>
 
-    <style>
-        #voltar>a{
-             color: rgb(3, 0, 0);
-        }
-        #voltar{
-            font-family: Arial, Helvetica, sans-serif;
-            
-            background-color: gray;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: rgb(255, 255, 255);;
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
-    </style>
+  <!-- Padrão do site -->
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css">
+  <script src="../../site.js" defer></script>
+
+  <!-- Seu CSS do exercício (mantido) -->
+  <link rel="stylesheet" href="estilo/style.css" />
+
+  <style>
+    /* ===== Base escura profissional ===== */
+    body{
+      background: radial-gradient(900px 360px at 15% 10%, rgba(59,130,246,.14), transparent 55%),
+                  radial-gradient(860px 320px at 80% 20%, rgba(20,184,166,.10), transparent 60%),
+                  #0b1220;
+      color: rgba(255,255,255,.92);
+    }
+
+    /* Botões acima do título (padrão) */
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin: 14px auto 10px;
+      max-width: 1100px;
+      padding: 0 14px;
+    }
+
+    /* Neutraliza hover antigo que girava links */
+    a:hover{
+      transform:none !important;
+      animation:none !important;
+    }
+
+    /* Palco central (somente para “encaixar” no padrão) */
+    .stage{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 14px 18px;
+    }
+
+    /* Cabeçalho do seu exercício (sem mudar HTML) */
+    header.normal{
+      margin-top: 10px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    header.normal h1{
+      margin: 0 0 8px;
+      color: rgba(255,255,255,.96);
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+    }
+
+    header.normal p{
+      color: rgba(255,255,255,.82);
+      line-height: 1.8;
+      margin: 8px 0 0;
+      text-align: justify;
+    }
+
+    /* remove o bloco antigo de voltar (agora é botão no topo) */
+    #voltar{
+      display:none !important;
+    }
+
+    /* Cards para o conteúdo “flex-content” sem quebrar seu layout */
+    .flex-content{
+      margin-top: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    /* deixa cada article com cara de seção profissional */
+    .media-text,
+    .text-media{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    /* melhora legibilidade dentro dos textos */
+    .text h2{
+      margin: 0 0 10px;
+      color: rgba(255,255,255,.95);
+    }
+
+    .text p{
+      color: rgba(255,255,255,.82);
+      line-height: 1.8;
+      text-align: justify;
+      margin: 10px 0;
+    }
+
+    /* ✅ Responsivo real para mídia */
+    .media img{
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    /* iframe responsivo sem estourar */
+    .media iframe{
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      display: block;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    /* Conteúdo Normal (Section normal) */
+    section.normal{
+      margin-top: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    section.normal h2{
+      margin: 0 0 8px;
+      color: rgba(255,255,255,.95);
+    }
+
+    section.normal p{
+      color: rgba(255,255,255,.82);
+      line-height: 1.8;
+      text-align: justify;
+      margin: 10px 0 0;
+    }
+
+    /* Pequena melhora em telas menores */
+    @media (max-width: 600px){
+      header.normal,
+      .media-text,
+      .text-media,
+      section.normal{
+        padding: 14px;
+        border-radius: 14px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <!-- ✅ Botões necessários acima do título -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <div class="stage">
+    <!-- Seu header original (mantido) -->
     <header class="normal">
-        <h1>Conteúdo Flexível</h1>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
-        </div>
+      <h1>Conteúdo Flexível</h1>
 
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Impedit aliquam eveniet voluptate voluptatum perspiciatis consectetur, in corporis magnam, quidem dignissimos natus odio sed nam, fugit nostrum sequi quas? Nam, iste?</p>
+      <div id="voltar">
+        <a href="../html.html">Voltar</a>
+      </div>
 
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Impedit aliquam eveniet voluptate voluptatum
+        perspiciatis consectetur, in corporis magnam, quidem dignissimos natus odio sed nam, fugit nostrum sequi quas?
+        Nam, iste?
+      </p>
     </header>
 
+    <!-- Seu main original (mantido) -->
     <main>
-        <section class="flex-content">
-            <article class="media-text">
-                <div class="text">
-                    <h2>Elemento Media -> Text</h2>
-                    <br>
+      <section class="flex-content">
+        <article class="media-text">
+          <div class="text">
+            <h2>Elemento Media → Text</h2>
 
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas placeat, qui consequatur tempora mollitia ex quos suscipit veniam atque ipsam, dolorum amet delectus possimus accusantium odit id alias? Deleniti, eum. </p>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Non culpa ad odio voluptas veniam repudiandae cumque consequuntur possimus error corporis quaerat, alias placeat veritatis fuga voluptatum vel cum neque molestiae.</p>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque optio possimus libero minus eveniet tenetur vel non saepe pariatur recusandae exercitationem facere eum, qui quos quae magnam accusantium excepturi ratione?</p>
-                </div>
-                <div class="media">
-                    <img src="img/foto002.jpg" alt="foto_folha">
-                </div>
-            </article>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas placeat, qui consequatur tempora mollitia ex quos suscipit veniam atque ipsam, dolorum amet delectus possimus accusantium odit id alias? Deleniti, eum.</p>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Non culpa ad odio voluptas veniam repudiandae cumque consequuntur possimus error corporis quaerat, alias placeat veritatis fuga voluptatum vel cum neque molestiae.</p>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque optio possimus libero minus eveniet tenetur vel non saepe pariatur recusandae exercitationem facere eum, qui quos quae magnam accusantium excepturi ratione?</p>
+          </div>
 
-            <article class="text-media">
-                <div class="text">
-                    <h2>Elemento Texto -> Media</h2>
+          <div class="media">
+            <img src="img/foto002.jpg" alt="foto_folha">
+          </div>
+        </article>
 
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, placeat? Delectus ducimus dolorum ad, repudiandae, doloribus libero minus suscipit ullam adipisci molestias totam corrupti voluptates fugit culpa distinctio necessitatibus pariatur! Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore autem illum corrupti minima commodi itaque ab perferendis at mollitia deserunt vitae aliquam, ratione voluptatem soluta voluptatibus, ut sapiente earum ea. </p>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem aliquid harum nihil odit, delectus ratione omnis architecto quam rem ea nam voluptatibus culpa facilis dolore corrupti aperiam beatae, quia laboriosam.</p>
-                </div>
-                <div class="media">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Ejkb_YpuHWs?si=YDhZexvuoIOb6cmd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
-            </article>
-        </section>
-        <Section class="normal">
-            <h2>Conteúdo Normal</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo odit, ullam officiis ipsum accusamus adipisci natus nemo possimus debitis. Cupiditate tempore qui numquam sequi voluptatibus similique eligendi odit culpa incidunt? Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae soluta mollitia ut, rerum vitae, debitis fuga cumque provident atque ipsam culpa quae quis dolorem quia omnis voluptatum ratione necessitatibus. Fuga.</p>
-        </Section>
+        <article class="text-media">
+          <div class="text">
+            <h2>Elemento Texto → Media</h2>
+
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, placeat? Delectus ducimus dolorum ad, repudiandae, doloribus libero minus suscipit ullam adipisci molestias totam corrupti voluptates fugit culpa distinctio necessitatibus pariatur! Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore autem illum corrupti minima commodi itaque ab perferendis at mollitia deserunt vitae aliquam, ratione voluptatem soluta voluptatibus, ut sapiente earum ea.</p>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem aliquid harum nihil odit, delectus ratione omnis architecto quam rem ea nam voluptatibus culpa facilis dolore corrupti aperiam beatae, quia laboriosam.</p>
+          </div>
+
+          <div class="media">
+            <iframe
+              src="https://www.youtube.com/embed/Ejkb_YpuHWs?si=YDhZexvuoIOb6cmd"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </article>
+      </section>
+
+      <section class="normal">
+        <h2>Conteúdo Normal</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo odit, ullam officiis ipsum accusamus adipisci natus nemo possimus debitis. Cupiditate tempore qui numquam sequi voluptatibus similique eligendi odit culpa incidunt? Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae soluta mollitia ut, rerum vitae, debitis fuga cumque provident atque ipsam culpa quae quis dolorem quia omnis voluptatum ratione necessitatibus. Fuga.</p>
+      </section>
     </main>
+  </div>
 
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions" style="margin:12px 0 0; padding:0;">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

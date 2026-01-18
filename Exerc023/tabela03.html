@@ -1,288 +1,344 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Minha terceira tabela em HTML5</title>
-    <style>
-        body{
-            background-color: rgb(255, 255, 255);
-            color: rgb(0, 0, 0);
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        h1{
-            text-align: center;
-        }
-        caption{
-            font-size: 1.5em;
-            font-weight: bold;
-            padding: 10px;
-            background-color: lightgray;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Estrutura de Tabelas | HTML - Ailton A. Nakata</title>
 
-        table{
-            position: relative; /*adicionado*/
-            border-collapse: collapse;
-            height: 20px;
-            width: 300px;
-            margin: auto;
-        }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        thead > tr > th{    /*adicionado*/
-            position: sticky; /*adicionado*/
-            top: -1px;  /*adicionado*/
-            background-color: rgb(119, 119, 119); /*adicionado*/ 
-        }
+  <meta name="description" content="Estrutura de tabelas em HTML (caption, thead, tbody, tfoot), scope, efeito zebrado e cabeçalho sticky com exemplo prático." />
 
-        td,th{
-           border: 1px solid rgb(31, 0, 0);
-           padding: 10px;
-           text-align: left;
-           vertical-align: middle;
-        }
+  <style>
+    /* Escopo da aula */
+    .content-narrow{ max-width: 78ch; margin-inline: auto; }
 
-        tbody > tr:nth-child(odd){
-            background-color: lightgray;
-        }
-        .num{
-            text-align: right;
-        }
-        thead, tfoot, .numf{
-            background-color: rgb(119, 119, 119);
-            color: rgb(48, 0, 0);
-        }
+    .note-pre{
+      white-space: pre-wrap;
+      text-align: left;
+      line-height: 1.6;
+      font-size: 1rem;
+      margin: 0;
+    }
 
-        .paragrafo{
-            padding-left: 40px;
-        }
-        
-        .justificado{
-            white-space: pre-wrap;
-            text-align: justify;
-            padding: 10px;
-            font-size: 1.2em;
-            
-        }
+    .table-wrap{
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.10);
+      background: #414040;
+    }
 
-    </style>
+    table.data{
+      width: 100%;
+      min-width: 520px; /* garante layout bom e ativa scroll no mobile */
+      border-collapse: collapse;
+    }
+
+    table.data caption{
+      caption-side: top;
+      text-align: left;
+      padding: 12px 12px;
+      font-weight: 900;
+      background: rgba(0,0,0,0.03);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    table.data th,
+    table.data td{
+      border: 1px solid rgba(31, 0, 0, 0.18);
+      padding: 10px 12px;
+      vertical-align: middle;
+    }
+
+    table.data thead th{
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: rgb(119, 119, 119);
+      color: #fff;
+    }
+
+    table.data tbody tr:nth-child(odd){
+      background: rgba(0,0,0,0.04);
+    }
+
+    table.data td.num{
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    table.data tfoot th,
+    table.data tfoot td{
+      background: rgb(119, 119, 119);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .callout{
+      margin-top: 12px;
+    }
+
+    @media (max-width: 520px){
+      table.data{ min-width: 460px; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Estrutura de Tabela</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-        <main>
-    <div id="voltar">
-    <a href="../html.html">Voltar</a>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <pre class="justificado">
-                
-    Anatomia de tabelas:
+  </header>
 
-    1º CAPITION - (DADO)
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Estrutura de Tabela</h1>
+          <p class="muted">Anatomia, <code>scope</code>, efeito zebrado e cabeçalho fixo (sticky).</p>
+        </div>
 
-    2º TABLE - (TABELA)
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
 
-    3º THEAD - (CABEÇA)
-    tr, td e th
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Anatomia de tabelas</h2>
 
-    4º TBODY - (CORPO)
-    tr, td e th
+            <div class="card soft content-narrow">
+              <pre class="note-pre"><code>Anatomia de tabelas:
 
-    5º TFOOT - (RODAPÉ)
-    tr, td e th
-                
-    </pre>
-            
+1) CAPTION  - (título/legenda)
+2) TABLE    - (tabela)
+3) THEAD    - (cabeçalho)
+4) TBODY    - (corpo)
+5) TFOOT    - (rodapé)
 
-    <h2 style="text-align: center;">O uso de scope - para que serve?</h2>
-            
-    <p>Em tabelas HTML, as células de cabeçalho (th) são usadas para rotular colunas e linhas.</p>
+Obs.: Dentro deles usamos tr, td e th.</code></pre>
+            </div>
 
-    <br>
-    <p>Em resumo: scope="col" é uma ferramenta importante para tornar as tabelas HTML mais acessíveis, garantindo que o conteúdo seja compreensível mesmo para usuários que não podem visualizar a tabela de forma visual.</p>
-    <br>
-            
-                <table>
-            <caption>
-                População das Unidade Federativas
-            </caption>
-                <thead>
-            <tr>
-                <th scope="col" style="text-align: center;">Estado</th>
-                <th scope="col" style="width: 50px;">População</th>
-            </tr>
-                </thead>
-            <tbody>
-                <tr>
-                    <td>São Paulo</td>
-                    <td class="num">45,973,190</td>
-                </tr>
-                <tr>
-                    <td>Minas Gerais</td>
-                    <td class="num">21,322,692</td>
-                </tr>
-                <tr>
-                    <td>Rio Grande do Sul</td>
-                    <td class="num">11,229,915</td>
-                </tr>
-                <tr>
-                    <td>Bahia</td>
-                    <td class="num">14,850,513</td>
-                </tr>
-                <tr>
-                    <td>Paraná</td>
-                    <td class="num">11,824,665</td>
-                </tr>
-                <tr>
-                    <td>Santa Catarina</td>
-                    <td class="num">8,058,447</td>
-                </tr>
-                <tr>
-                    <td>Goiás</td>
-                    <td class="num">7,350,483</td>
-                </tr>
-                <tr>
-                    <td>Piaí</td>
-                    <td class="num">3,375,646</td>
-                </tr>
-                <tr>
-                    <td>Paraíba</td>
-                    <td class="num">4,145,040</td>
-                </tr>
-                <tr>
-                    <td>Maranhã</td>
-                    <td class="num">7,010,960</td>
-                </tr>
-                <tr>
-                    <td>Pernanbuco</td>
-                    <td class="num">9,539,029</td>
-                </tr>
-                <tr>
-                    <td>Ceará</td>
-                    <td class="num">9,233,656</td>
-                </tr>
-                <tr>
-                    <td>Rio Grande do Norte</td>
-                    <td class="num">3,446,071</td>
-                </tr>
-                <tr>
-                    <td>Pará</td>
-                    <td class="num">8,664,306</td>
-                </tr>
-                <tr>
-                    <td>Mato Grosso</td>
-                    <td class="num">3,836,399</td>
-                </tr>
-                <tr>
-                    <td>Tocantins</td>
-                    <td class="num">1,577,342</td>
-                </tr>
-                <tr>
-                    <td>Alagoas</td>
-                    <td class="num">3,220,104</td>
-                </tr>
-                <tr>
-                    <td>Rio de Janeiro</td>
-                    <td class="num">17,219,679</td>
-                </tr>
-                <tr>
-                    <td>Mato Grosso do Sul</td>
-                    <td class="num">2,901,895</td>
-                </tr>
-                <tr>
-                    <td>Espírito Santo</td>
-                    <td class="num">4,102,129</td>
-                </tr>
-                <tr>
-                    <td>Sergipe</td>
-                    <td class="num">2,291,077</td>
-                </tr>
-                <tr>
-                    <td>Amazonas</td>
-                    <td class="num">4,281,209</td>
-                </tr>
-                <tr>
-                    <td>Rondônia</td>
-                    <td class="num">1,746,227</td>
-                </tr>
-                <tr>
-                    <td>Acre</td>
-                    <td class="num">880,631</td>
-                </tr>
-                <tr>
-                    <td>Amapá</td>
-                    <td class="num">802,837</td>
-                </tr>
-                <tr>
-                    <td>Roraima</td>
-                    <td class="num">716,793</td>
-                </tr>
-            </tbody>
-                <tfoot>
+            <h2 class="lesson-title" style="margin-top: 18px;">O uso de scope</h2>
+            <div class="card soft content-narrow">
+              <p style="margin:0;">
+                Em tabelas HTML, as células de cabeçalho (<code>&lt;th&gt;</code>) rotulam colunas e linhas.
+                O atributo <code>scope="col"</code> indica que aquele cabeçalho se aplica a uma coluna inteira.
+              </p>
+
+              <div class="alert callout">
+                <strong>Em resumo:</strong> <code>scope</code> melhora acessibilidade e ajuda leitores de tela a entenderem a relação entre dados e cabeçalhos.
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">Exemplo prático</h2>
+            <div class="card content-narrow">
+              <div class="table-wrap" role="region" aria-label="Tabela de população por estado (rolagem horizontal no mobile)" tabindex="0">
+                <table class="data">
+                  <caption>População das Unidades Federativas</caption>
+                  <thead>
                     <tr>
-                        <th scope="row">Total da População</th>
-                        <td class="numf"><strong>212,583,720</strong></td>
+                      <th scope="col" style="text-align:center;">Estado</th>
+                      <th scope="col" style="width: 140px;">População</th>
                     </tr>
-                </tfoot>
-                
+                  </thead>
+                  <tbody>
+                    <tr><td>São Paulo</td><td class="num">45,973,190</td></tr>
+                    <tr><td>Minas Gerais</td><td class="num">21,322,692</td></tr>
+                    <tr><td>Rio Grande do Sul</td><td class="num">11,229,915</td></tr>
+                    <tr><td>Bahia</td><td class="num">14,850,513</td></tr>
+                    <tr><td>Paraná</td><td class="num">11,824,665</td></tr>
+                    <tr><td>Santa Catarina</td><td class="num">8,058,447</td></tr>
+                    <tr><td>Goiás</td><td class="num">7,350,483</td></tr>
+                    <tr><td>Piauí</td><td class="num">3,375,646</td></tr>
+                    <tr><td>Paraíba</td><td class="num">4,145,040</td></tr>
+                    <tr><td>Maranhão</td><td class="num">7,010,960</td></tr>
+                    <tr><td>Pernambuco</td><td class="num">9,539,029</td></tr>
+                    <tr><td>Ceará</td><td class="num">9,233,656</td></tr>
+                    <tr><td>Rio Grande do Norte</td><td class="num">3,446,071</td></tr>
+                    <tr><td>Pará</td><td class="num">8,664,306</td></tr>
+                    <tr><td>Mato Grosso</td><td class="num">3,836,399</td></tr>
+                    <tr><td>Tocantins</td><td class="num">1,577,342</td></tr>
+                    <tr><td>Alagoas</td><td class="num">3,220,104</td></tr>
+                    <tr><td>Rio de Janeiro</td><td class="num">17,219,679</td></tr>
+                    <tr><td>Mato Grosso do Sul</td><td class="num">2,901,895</td></tr>
+                    <tr><td>Espírito Santo</td><td class="num">4,102,129</td></tr>
+                    <tr><td>Sergipe</td><td class="num">2,291,077</td></tr>
+                    <tr><td>Amazonas</td><td class="num">4,281,209</td></tr>
+                    <tr><td>Rondônia</td><td class="num">1,746,227</td></tr>
+                    <tr><td>Acre</td><td class="num">880,631</td></tr>
+                    <tr><td>Amapá</td><td class="num">802,837</td></tr>
+                    <tr><td>Roraima</td><td class="num">716,793</td></tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th scope="row">Total da População</th>
+                      <td class="num"><strong>212,583,720</strong></td>
+                    </tr>
+                  </tfoot>
                 </table>
-                <br>
-    <h2 style="text-align: center;">Efeito Zebrado</h2>
-                
-    <p>
-        Este recurso em CSS ajuda a configurar um efeito de preenchimento
-        tbody > tr:nth-child(2n){
-    </p>
-    <pre class="justificado">
+              </div>
 
-    background-color: lightgray;
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Responsivo:</strong> no celular, a tabela ganha rolagem horizontal (sem quebrar o layout).
+              </div>
+            </div>
 
-    }
+            <h2 class="lesson-title" style="margin-top: 18px;">Efeito zebrado</h2>
+            <div class="card soft content-narrow">
+              <p style="margin:0 0 10px;">
+                O efeito zebrado melhora leitura, principalmente em tabelas longas.
+              </p>
+              <pre class="note-pre"><code>tbody > tr:nth-child(odd){
+  background-color: lightgray;
+}</code></pre>
+            </div>
 
-    tbody > tr:nth-child(odd){  
-        
-    background-color: lightgray;
-    
-    }
-            
-                </pre>
-                
-    <h2>Título da Tabela Fixo</h2>               
-            
-    <p>Elemento sticky - É um elemento que se comporta como 'position relative'. Mas, quando o usuário rola a página e o elemento atinge um limite definido pelo top, left, right ou bottom, ele passa a se comportar como fixed, "grudando" nessa posição.</p>
-            
-                
-                <h2>O que foi acrescentado para ser criar o Efeito?</h2>
-                <pre class="justificado">
-            <p>
-    table{
+            <h2 class="lesson-title" style="margin-top: 18px;">Cabeçalho fixo (sticky)</h2>
+            <div class="card soft content-narrow">
+              <p style="margin:0 0 10px;">
+                <code>position: sticky</code> se comporta como <code>relative</code> até atingir o limite do <code>top</code>.
+                Ao rolar, ele “gruda” no topo.
+              </p>
 
-        position: relative; 
-        border-collapse: collapse;
-        height: 20px;
-        width: 300px;
-        margin: auto;
+              <pre class="note-pre"><code>table{
+  position: relative;
+}
 
-    }
+thead th{
+  position: sticky;
+  top: 0;
+  background-color: rgb(119, 119, 119);
+}</code></pre>
+            </div>
 
-    thead > tr > th{  
+            <div class="lesson-actions" style="margin-top: 14px;">
+              <a class="btn btn-secondary" href="../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
 
-        position: sticky; 
-        top: -1px;        
-        background-color: rgb(119, 119, 119);
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
 
-    }
-            </p>
-                </pre>
-    <br>
-    <br>
-    <div id="voltar">
-        <a href="../estudos.html">Voltar</a>
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>caption</code></li>
+                <li>Separou <code>thead/tbody/tfoot</code></li>
+                <li>Aplicou <code>scope</code></li>
+                <li>Zebra com <code>nth-child</code></li>
+                <li>Sticky header funcionando</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
     </div>
-    <br>
-    <br>
-        </main>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

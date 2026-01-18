@@ -1,62 +1,315 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
-    <title>Formulário</title>
-    <style>
-        #voltar{
-            a:hover{
-             background-color: rgba(99, 108, 243, 0.747);
-             padding: 10px;
-             font-weight: bolder;
-             border-radius: 10px;
-             transform: scale(1.1);
-             transition-duration: 0.5s;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Formulário com nome, email e telefone (validação com pattern), adaptado ao template padrão e responsivo." />
+
+  <style>
+    /* Texto */
+    .prose p{
+      text-align: justify;
+      text-indent: 24px;
+      line-height: 1.85;
+      margin: 0 0 12px 0;
+    }
+
+    /* Form responsivo */
+    .mini-form{
+      max-width: 760px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-form fieldset{
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .mini-form legend{
+      padding: 0 10px;
+      font-weight: 800;
+    }
+
+    .mini-form .row{
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 720px){
+      .mini-form .row{
+        grid-template-columns: 160px 1fr;
+        align-items: center;
+      }
+    }
+
+    .mini-form label{
+      font-weight: 700;
+    }
+
+    .mini-form input{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: inherit;
+      outline: none;
+    }
+
+    .mini-form input:focus{
+      border-color: rgba(255,255,255,.28);
+    }
+
+    .hint{
+      margin-top: 6px;
+      font-size: .92em;
+      opacity: .82;
+    }
+
+    .inline-code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .95em;
+      padding: .1em .35em;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      white-space: nowrap;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>Teste de Formulário</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-    <main>
-        <form action="cadastro.php" method="get" autocomplete="on">
-                <fieldset>
-                    <legend>Dados pessoais</legend>
-                <h1>Exemplo de Formulário</h1>
-                <div>
-                    <label for="inome">Nome</label>
-                    <input type="text" name="nome" id="inome" minlength="5" maxlength="20" required>
-                </div>
-                <br>
-                <div>
-                    <label for="iemail">Email</label>
-                    <input type="email" name="email" id="iemail" required>
-                </div>
-                <br>
-                <!--Estudar sobre RegEx(Expressões Regulares)-->
-                <div>
-                    <label for="itel">Telefone  </label>
-                    <input type="tel" name="tel" id="itel" autocomplete="on"  pattern="^\(\d{2}\)d{4,5}-{4}$" required placeholder="(xx)xxxx-xxxx">
-                </div>
-                <br>
-                <div>
-                    <input type="submit" value="Enviar">
-                    <input type="reset" value="Limpar">
-                </div>
-            </fieldset>
-            </form>
-            <br>
-            <br>
-        <div id="voltar">
-        <a href="../html.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-        
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Teste de formulário</h1>
+          <p class="muted">Nome, email e telefone com validação nativa (incluindo <span class="inline-code">pattern</span>).</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Exemplo de formulário</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                <strong>Autor:</strong> Ailton A. Nakata
+              </p>
+            </div>
+
+            <div class="card prose" style="margin-top: 12px;">
+              <p>
+                Este exemplo usa <strong>GET</strong>, então os dados aparecem na URL ao enviar.
+                O campo de telefone usa <span class="inline-code">pattern</span> para exigir um formato específico.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <form class="mini-form" action="cadastro.php" method="get" autocomplete="on">
+                <fieldset>
+                  <legend>Dados pessoais</legend>
+
+                  <div class="row">
+                    <label for="inome">Nome</label>
+                    <div>
+                      <input
+                        type="text"
+                        name="nome"
+                        id="inome"
+                        minlength="5"
+                        maxlength="20"
+                        required
+                        autocomplete="name"
+                        placeholder="Seu nome completo"
+                      />
+                      <p class="hint muted">Mínimo 5 e máximo 20 caracteres.</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <label for="iemail">Email</label>
+                    <div>
+                      <input
+                        type="email"
+                        name="email"
+                        id="iemail"
+                        required
+                        autocomplete="email"
+                        placeholder="seuemail@exemplo.com"
+                      />
+                      <p class="hint muted">Use um email válido.</p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <label for="itel">Telefone</label>
+                    <div>
+                      <input
+                        type="tel"
+                        name="tel"
+                        id="itel"
+                        required
+                        autocomplete="tel"
+                        pattern="^\(\d{2}\)\d{4,5}-\d{4}$"
+                        placeholder="(xx)xxxxx-xxxx"
+                      />
+                      <p class="hint muted">Formato: (11)91234-5678 ou (11)1234-5678</p>
+                    </div>
+                  </div>
+
+                  <div class="hero-actions" style="margin-top: 14px;">
+                    <button class="btn btn-primary" type="submit">Enviar</button>
+                    <button class="btn btn-ghost" type="reset">Limpar</button>
+                  </div>
+                </fieldset>
+              </form>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> se você quiser permitir vários formatos de telefone (com espaço, sem hífen etc.),
+                dá pra ajustar o <span class="inline-code">pattern</span>.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>type="email"</strong> para validação</li>
+                <li>Usou <strong>type="tel"</strong> + <strong>pattern</strong></li>
+                <li>Testou o formato: <strong>(11)91234-5678</strong></li>
+                <li>Entendeu que GET aparece na URL</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,142 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exerc004 - Tamanho de Imagens</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f6f9;
-      color: #333;
-      line-height: 1.6;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exerc004 - Tamanho de Imagens | HTML - Ailton A. Nakata</title>
 
-    header {
-      background: linear-gradient(135deg, #228B22, #32CD32);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      border-bottom-left-radius: 25px;
-      border-bottom-right-radius: 25px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-
-    header p {
-      font-style: italic;
-      margin-top: 5px;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #228B22;
-      margin-top: 30px;
-    }
-
-    .caixa {
-      background: #f0fff0;
-      border-left: 6px solid #228B22;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px 0;
-    }
-
-    .imagem-bloco {
-      text-align: center;
-      margin: 30px 0;
-    }
-
-    .imagem-bloco img {
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-
-    .imagem-bloco img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-    }
-
-    /* Botão voltar */
-    #voltar {
-      text-align: center;
-      margin-top: 40px;
-    }
-
-    #voltar a {
-      background: #228B22;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 25px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: background 0.3s ease;
-    }
-
-    #voltar a:hover {
-      background: #145214;
-    }
-  </style>
+  <meta name="description" content="Exercício HTML sobre tamanhos de imagens: reduzida, média e original, com boas práticas e responsividade." />
 </head>
+
 <body>
-  <header>
-    <h1>🌄 Tamanho de Imagens</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <div class="imagem-bloco">
-      <h2>📍 Imagem Reduzida (650px)</h2>
-      <img src="paisagem-650.jpeg" alt="Paisagem 650px" width="150">
-      <div class="caixa">
-        ✅ Esta imagem foi redimensionada para <strong>650px</strong> de largura no programa de edição.  
-        Usada em sites quando queremos carregar imagens mais leves.  
-        <br><code>&lt;img src="paisagem-650.jpeg"&gt;</code>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>🌄 Tamanho de Imagens</h1>
+          <p class="muted">Comparando versões de uma mesma imagem (650px, 1200px e original) e quando usar cada uma.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">📍 Imagem reduzida (650px)</h2>
+
+            <figure class="media">
+              <img src="paisagem-650.jpeg" alt="Paisagem 650px" loading="lazy">
+            </figure>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                ✅ Esta imagem foi redimensionada para <strong>650px</strong> de largura no programa de edição.
+                Ideal para carregar mais rápido (principalmente em mobile).
+              </p>
+              <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="paisagem-650.jpeg" alt="Paisagem 650px"&gt;</code></pre>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">📍 Imagem média (1200px)</h2>
+
+            <figure class="media">
+              <img src="paisagem-1200.jpeg" alt="Paisagem 1200px" loading="lazy">
+            </figure>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                ✅ Versão com <strong>1200px</strong> de largura.
+                Boa quando você precisa de mais qualidade visual sem pesar demais.
+              </p>
+              <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="paisagem-1200.jpeg" alt="Paisagem 1200px"&gt;</code></pre>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top: 18px;">📍 Imagem original (full)</h2>
+
+            <figure class="media">
+              <img src="paisagem-full.jpeg" alt="Paisagem original (tamanho completo)" loading="lazy">
+            </figure>
+
+            <div class="alert">
+              <strong>Dica prática:</strong> em sites reais, evite usar a imagem original enorme.
+              Prefira uma versão otimizada (ex: 1200px ou 1600px), para não travar o carregamento.
+            </div>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                ✅ Aqui está a imagem no tamanho <strong>original</strong>.
+                Geralmente usada para impressão ou quando é necessário muito detalhe.
+              </p>
+              <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="paisagem-full.jpeg" alt="Paisagem original"&gt;</code></pre>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>alt</code> descritivo</li>
+                <li>Aplicou <code>loading="lazy"</code></li>
+                <li>Entendeu quando usar 650px</li>
+                <li>Entendeu quando usar 1200px</li>
+                <li>Evita imagem full em site real</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
       </div>
-    </div>
-
-    <hr>
-
-    <div class="imagem-bloco">
-      <h2>📍 Imagem Média (1200px)</h2>
-      <img src="paisagem-1200.jpeg" alt="Paisagem 1200px" width="225">
-      <div class="caixa">
-        ✅ Esta versão foi salva com <strong>1200px</strong> de largura.  
-        Útil quando precisamos de imagens um pouco maiores, mas ainda sem pesar muito no site.  
-        <br><code>&lt;img src="paisagem-1200.jpeg" width="1200"&gt;</code>
-      </div>
-    </div>
-
-    <hr>
-
-    <div class="imagem-bloco">
-      <h2>📍 Imagem Original (Full)</h2>
-      <img src="paisagem-full.jpeg" alt="Paisagem Original" width="300">
-      <div class="caixa">
-        ✅ Aqui está a imagem no tamanho <strong>original</strong>, sem redimensionamento.  
-        Geralmente usada para impressões ou quando é necessário muito detalhe.  
-        <br><code>&lt;img src="paisagem-full.jpeg"&gt;</code>
-      </div>
-    </div>
-
-    <div id="voltar">
-      <a href="../html.html">Voltar</a>
-    </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ajustes finos de responsividade (somente se seu site.css ainda não tiver isso) -->
+  <style>
+    /* evita imagens estourando */
+    .media img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+    }
+
+    /* evita código forçando scroll lateral */
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      max-width: 100%;
+    }
+
+    /* botões empilhados no mobile */
+    @media (max-width: 520px) {
+      .hero-actions .btn,
+      .lesson-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </body>
 </html>

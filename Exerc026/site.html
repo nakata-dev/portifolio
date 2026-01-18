@@ -1,70 +1,522 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Responsivo</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <link rel="stylesheet" href="estilos/estilos_02/style.css">
-    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu Responsivo Premium | Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Seu CSS externo (opcional) -->
+  <link rel="stylesheet" href="estilos/estilos_02/style.css">
+
+  <meta name="description" content="Menu responsivo com animações suaves, acessibilidade e interações premium (clique fora, ESC, teclado), no template padrão." />
+
+  <style>
+  /* Paleta profissional (funciona em fundo claro) */
+  :root{
+    --ink: #0f172a;        /* texto principal */
+    --muted: #475569;      /* texto secundário */
+    --line: #e5e7eb;       /* bordas */
+    --card: #ffffff;       /* fundo dos cards */
+    --soft: #f8fafc;       /* fundo suave */
+    --shadow: 0 12px 28px rgba(15, 23, 42, .10);
+    --shadow2: 0 8px 18px rgba(15, 23, 42, .08);
+    --accent: #2563eb;     /* azul elegante */
+    --accent2: #0ea5e9;    /* variação */
+  }
+
+  /* Só para esta página: garante contraste do conteúdo */
+  main, .section, .container, .lesson{
+    color: var(--ink);
+  }
+  .muted{ color: var(--muted) !important; }
+
+  /* DEMO */
+  .demo-shell{
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    background: var(--soft);
+    overflow: clip;
+  }
+
+  .prose p{
+    text-align: justify;
+    text-indent: 24px;
+    line-height: 1.85;
+    margin: 0 0 12px 0;
+    color: var(--ink);
+  }
+
+  /* Header premium da demo */
+  .demo-topbar{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    box-shadow: var(--shadow);
+  }
+
+  .demo-brand{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .demo-logo{
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: var(--shadow2);
+    user-select: none;
+  }
+
+  .demo-brand-text{ min-width: 0; }
+  .demo-brand-text strong{
+    display: block;
+    line-height: 1.1;
+    letter-spacing: .2px;
+    color: var(--ink);
+  }
+  .demo-brand-text span{
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: .92em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Botão hamburguer premium */
+  .burger{
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    color: var(--ink);
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    box-shadow: var(--shadow2);
+  }
+
+  .burger:hover{
+    transform: translateY(-1px);
+    border-color: #cbd5e1;
+    box-shadow: var(--shadow);
+  }
+
+  .burger:active{ transform: translateY(0px) scale(.98); }
+
+  .burger:focus{
+    outline: 3px solid rgba(37, 99, 235, .25);
+    outline-offset: 2px;
+  }
+
+  .burger .material-icons{ font-size: 26px; }
+
+  /* Menu com animação */
+  .nav-panel{
+    margin-top: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    overflow: hidden;
+
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: max-height .28s ease, opacity .22s ease, transform .22s ease;
+  }
+
+  .nav-panel.is-open{
+    max-height: 420px;
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+  .nav-list{
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .nav-link{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 12px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: var(--ink);
+
+    border: 1px solid var(--line);
+    background: #ffffff;
+    transition: transform .18s ease, background .18s ease, border-color .18s ease;
+  }
+
+  .nav-link:hover{
+    transform: translateY(-1px);
+    border-color: #cbd5e1;
+    background: #f8fafc;
+  }
+
+  .nav-link:focus{
+    outline: 3px solid rgba(37, 99, 235, .25);
+    outline-offset: 2px;
+  }
+
+  .nav-link small{
+    color: var(--muted);
+    font-weight: 800;
+  }
+
+  /* Overlay */
+  .menu-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .35);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease;
+    z-index: 40;
+  }
+  .menu-overlay.is-open{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Desktop: menu horizontal */
+  @media (min-width: 768px){
+    .burger{ display: none; }
+
+    .nav-panel{
+      margin-top: 0;
+      max-height: none;
+      opacity: 1;
+      transform: none;
+      background: transparent;
+      border: none;
+    }
+
+    .nav-list{
+      padding: 0;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .nav-link{
+      justify-content: center;
+      padding: 10px 10px;
+      background: #ffffff;
+    }
+
+    .nav-link small{ display: none; }
+  }
+
+  .demo-content{
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    box-shadow: var(--shadow2);
+  }
+  .demo-content h3{ margin-top: 0; color: var(--ink); }
+</style>
+
 </head>
-<body onresize="mudouTamanho()">
-    <header>
-         <!--Ativando Icone - Menu-->
-         <h1>Meu Site</h1>
-         <i id="burguer" class="material-icons"onclick="clickMenu()">menu</i>
-        <menu id="itens">
-            <i class="fa-solid fa-bars"></i>
-            <ul>                
-                <li><a href="#">Opção 1</a></li>
-                <li><a href="#">Opção 2</a></li>
-                <li><a href="#">Opção 3</a></li>
-                <li><a href="#">Opção 4</a></li>
-                <li><a href="../html.html">Voltar</a></li>
-            </ul>
-        </menu>
-    </header>
-    <br>
-    <main>
-        <article>
-            <h1>Testando Media Queries</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, voluptate. Fuga, quaerat tempore neque deleniti repellendus quis unde magni veniam odit repudiandae reiciendis consectetur cum fugit nulla necessitatibus numquam voluptatem?</p>   
-            
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut, quam! Non aut cum voluptatibus ipsum eligendi neque eos minus suscipit natus dolorem quod fugit molestiae minima rem, fuga impedit ad!</p>
 
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi modi tempore nisi tempora. Voluptatibus, sint rerum. Fugit corporis earum dolore accusantium ducimus quibusdam unde explicabo inventore itaque impedit. Quisquam, dicta?</p>
-
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel ipsam vero quo? Doloribus veniam deleniti voluptatem illo facere molestias voluptate nemo aliquam odit rem, repudiandae ratione, quasi quae eligendi quidem!</p>
-
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dicta esse ipsum at nesciunt mollitia voluptas doloribus. Sit deserunt autem tempore a! Unde necessitatibus molestiae temporibus architecto quisquam sapiente cumque atque!</p>
-        </article>
-        <br><br>
-        <div id="voltar">
-            <a href="../html.html">Voltar</a>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
-    </main>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Menu Responsivo Premium</h1>
+          <p class="muted">Animações suaves, clique fora, tecla ESC, foco bonito e navegação por teclado.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft prose">
+              <p class="muted" style="margin: 0; text-indent: 0;">
+                Esse menu foi pensado para passar sensação de qualidade: espaçamento, bordas suaves, sombras discretas,
+                e microinterações.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <div class="demo-shell" id="menuRoot">
+                <div class="demo-topbar">
+                  <div class="demo-brand">
+                    <div class="demo-logo" aria-hidden="true">MS</div>
+                    <div class="demo-brand-text">
+                      <strong>Meu Site</strong>
+                      <span>Menu responsivo com cara de produto</span>
+                    </div>
+                  </div>
+
+                  <button
+                    class="burger"
+                    id="burgerBtn"
+                    type="button"
+                    aria-label="Abrir menu"
+                    aria-controls="navPanel"
+                    aria-expanded="false"
+                  >
+                    <span class="material-icons" aria-hidden="true">menu</span>
+                  </button>
+                </div>
+
+                <nav id="navPanel" class="nav-panel" aria-label="Menu de navegação">
+                  <ul class="nav-list">
+                    <li><a class="nav-link" href="#"><span>Opção 1</span><small>Serviços</small></a></li>
+                    <li><a class="nav-link" href="#"><span>Opção 2</span><small>Portfólio</small></a></li>
+                    <li><a class="nav-link" href="#"><span>Opção 3</span><small>Sobre</small></a></li>
+                    <li><a class="nav-link" href="#"><span>Opção 4</span><small>Contato</small></a></li>
+                    <li><a class="nav-link" href="../../html.html"><span>Voltar</span><small>Estudos</small></a></li>
+                  </ul>
+                </nav>
+
+                <div class="demo-content">
+                  <h3>Texto de teste</h3>
+                  <p class="muted" style="margin:0;">
+                    Redimensione a tela: no mobile, o menu abre/fecha; no desktop, ele fica sempre visível.
+                    Clique fora para fechar, ou aperte <strong>Esc</strong>.
+                  </p>
+                </div>
+
+                <div class="alert" style="margin-top: 14px;">
+                  <strong>UX:</strong> quando o menu abre, o foco vai para o primeiro link (bom para teclado e acessibilidade).
+                </div>
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist premium</h3>
+              <ul class="list">
+                <li>Animação suave (sem “pulo”)</li>
+                <li>Fecha ao clicar fora</li>
+                <li>Fecha com tecla <strong>Esc</strong></li>
+                <li>Foco e teclado bem tratados</li>
+                <li>Acessível com <strong>aria-expanded</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overlay para clique fora -->
+    <div class="menu-overlay" id="menuOverlay" aria-hidden="true"></div>
 
     <script>
-        function clickMenu() {
-    if (itens.style.display == 'block') {
-        itens.style.display = 'none';
-    } else {
-        itens.style.display = 'block';
-    }
-}
-        function mudouTamanho() {
-    // Se a tela for maior que 768px, exibe o menu e esconde o ícone
-    if (window.innerWidth >= 768) {
-        itens.style.display = 'block';
-    } else {
-        // Se for menor, esconde o menu
-        itens.style.display = 'none';
-    }
-}  
+      (function () {
+        const root = document.getElementById('menuRoot');
+        const btn = document.getElementById('burgerBtn');
+        const panel = document.getElementById('navPanel');
+        const overlay = document.getElementById('menuOverlay');
 
+        if (!root || !btn || !panel || !overlay) return;
+
+        const mqDesktop = window.matchMedia('(min-width: 768px)');
+        const firstLink = () => panel.querySelector('a');
+
+        function setOpen(open) {
+          // Desktop: sempre aberto, sem overlay
+          if (mqDesktop.matches) {
+            panel.classList.remove('is-open');
+            overlay.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+            return;
+          }
+
+          panel.classList.toggle('is-open', open);
+          overlay.classList.toggle('is-open', open);
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+          // Quando abre, joga foco no primeiro link (teclado)
+          if (open) {
+            setTimeout(() => firstLink()?.focus(), 80);
+          } else {
+            // quando fecha, devolve foco pro botão
+            btn.focus();
+          }
+        }
+
+        function isOpen() {
+          return panel.classList.contains('is-open');
+        }
+
+        // Clique no botão
+        btn.addEventListener('click', () => setOpen(!isOpen()));
+
+        // Clique fora (overlay)
+        overlay.addEventListener('click', () => setOpen(false));
+
+        // ESC para fechar
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && isOpen()) setOpen(false);
+        });
+
+        // Fecha ao clicar fora (caso overlay não cubra por algum motivo)
+        document.addEventListener('click', (e) => {
+          if (!isOpen()) return;
+          const clickInside = root.contains(e.target);
+          if (!clickInside) setOpen(false);
+        });
+
+        // Resize: ao virar desktop, “normaliza”
+        mqDesktop.addEventListener?.('change', () => setOpen(false));
+        window.addEventListener('resize', () => setOpen(false), { passive: true });
+
+        // Estado inicial
+        setOpen(false);
+      })();
     </script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

@@ -1,37 +1,207 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posicionamento</title>
-    <style>
-        body{
-            height: 98vh; /*Sem o height você não consegue adaptar a altura ao tamanho da tela*/
-            background-image: url('imagens/wallpaper003.jpg');
-            background-position: center center;
-             
-        }
-        div#voltar{
-        display: flex;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-        font-weight: bolder;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Posicionamento de Fundo | HTML - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <meta name="description" content="Exemplo simples de background-position com imagem de fundo centralizada e layout responsivo." />
+
+  <style>
+    /* Escopo da aula */
+    .content-narrow{ max-width: 72ch; margin-inline: auto; }
+
+    .stage{
+      min-height: 72svh; /* melhor que vh em mobile */
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.10);
+      overflow: hidden;
+
+      background-image: url('imagens/wallpaper003.jpg');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
     }
-         div#voltar a:hover{
-         padding: 10px;
-         background-color: rgba(125, 208, 235, 0.637);
-         font-weight: lighter;
-         transition-duration: 0.5s;
-         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-         border-radius: 5px;
-         border: none;
+
+    .overlay{
+      width: min(560px, 100%);
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      backdrop-filter: blur(6px);
     }
-    </style>
+
+    .overlay code{
+      font-weight: 900;
+    }
+
+    @media (max-width: 520px){
+      .stage{ min-height: 66svh; }
+    }
+  </style>
 </head>
+
 <body>
-    <div id="voltar">
-        <a href="../html.html">Voltar</a>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Posicionamento de Fundo</h1>
+          <p class="muted">Página minimalista: fundo com <code>background-position</code> centralizado.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Demonstração</h2>
+
+            <div class="card soft content-narrow">
+              <div class="stage" aria-label="Área com imagem de fundo centralizada">
+              </div>
+
+              <div class="alert" style="margin-top: 14px;">
+                <strong>Dica:</strong> em telas grandes, use <code>cover</code> para a imagem preencher o container sem repetir.
+              </div>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Centralizou o fundo</li>
+                <li>Usou <code>no-repeat</code></li>
+                <li>Usou <code>cover</code></li>
+                <li>Sem <code>vh</code> problemático no mobile</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer padrão -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal padrão -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

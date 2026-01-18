@@ -1,125 +1,362 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Segurança em iFrames | HTML - Ailton A. Nakata</title>
 
-    <style>
-        h1,h2,h3{
-            text-align: center;
-        }
-        header>p{
-            text-align: center;
-        }
-        .justificado{
-        white-space: pre-wrap;
-        text-align: justify;
-        line-height: 1.8;
-        font-size: 1em;
-        padding: 20px;
-        font-weight: bolder;
-        }
-        iframe{
-            display: block;
-            width: 90%;
-            height: 200px;
-            margin: auto;
-        }
-        #voltar>a:hover{
-            background-color: rgba(99, 108, 243, 0.747);
-            padding: 10px;
-            font-weight: bolder;
-            border-radius: 10px;
-            transform: scale(1.1);
-            transition-duration: 0.5s;
-        }
-        p{
-            text-align: justify;
-            text-indent: 30px;
-            line-height:1.8;
-            padding: 20px;
+  <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
 
-        }
-        #voltar{
-            text-align: center;
-        }
-    </style>
-    <title>Iframe</title>
+  <meta name="description" content="Aula prática sobre segurança em iFrames: sandbox, permissões (allow-*) e referrerpolicy com exemplos." />
+
+  <style>
+    /* ===== Aula: iFrame seguro (sandbox + referrerpolicy) ===== */
+    .iframe-card{
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .iframe{
+      display: block;
+      width: 100%;
+      height: 280px;
+      border: 1px solid rgba(0,0,0,0.28);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .iframe.small{
+      height: 220px;
+    }
+
+    .prose{
+      text-align: justify;
+      text-indent: 22px;
+      line-height: 1.8;
+      color: #111;
+    }
+
+    .hint{
+      font-size: 0.95rem;
+      color: rgba(0,0,0,0.72);
+    }
+
+    .code-sample{
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 14px;
+      padding: 12px;
+      overflow-x: auto;
+      color: #111;
+    }
+
+    .code-sample code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.95rem;
+      font-weight: 800;
+      white-space: pre;
+      display: block;
+    }
+
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(0,0,0,0.03);
+      font-weight: 900;
+      font-size: 0.9rem;
+      color: #111;
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-    
-        <h1>Comando de Segurança</h1>
-        <p>por: Ailton A. Nakata</p>
-        
-    </header> 
-    <main>
-        
-        <h1>Comandos de Seguraça:</h1>
-       
-        <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quas, tempore labore accusantium beatae voluptatem dolore qui quo itaque incidunt iste quis deserunt eaque, esse a ab obcaecati totam voluptas commodi!
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat quod ipsa eaque veniam iste doloremque libero, illum accusantium dolor, consequatur vel nulla, dolorem deserunt eos ex. Eligendi labore odit minus.
-        </p>
-        <br>
-        <iframe src="formulario.html" sandbox="sandbox">Seu navegador não é compativel com isso!</iframe>
-        <br>
-        <br>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio, voluptates quasi placeat, consectetur praesentium illum corrupti nobis minima itaque quaerat quibusdam ipsum quisquam voluptatibus ut pariatur fugiat dicta alias officiis.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt maxime, beatae tempora inventore unde accusamus nam. A modi, iusto ipsa error eaque sunt fuga ullam vitae et mollitia sed ipsum?
-        </p>
-        <br>
-        <h1>Comandos uteis de segurança:</h1>
-        <pre class="justificado">
-    primeira situação:
-
-    &lt;iframe src="formulario.html" <strong>sandbox="sandbox</strong>"&gt;Seu navegador não é compativel com isso!&lt;/iframe&gt; 
-    
-    segunda situação:
-    
-    &lt;iframe src="formulario.html" sandbox="sandbox" <strong>referrerpolicy="no-referrer"</strong>"&gt;Seu navegador não é compativel com isso!&lt;/iframe&gt;  
-
-    terceira situação:
-    
-    &lt;iframe src="formulario.html" <strong>sandbox="allow-same-origin allow-forms allow-script</strong>" referrerpolicy="no-referrer"&gt;Seu navegador não é compativel com isso!&lt;/iframe&gt;  
-    </pre>
-
-    <h1>Usando JavaScript:</h1>
-        <br>
-        <br>
-        <p>
-        Aqui também foram usados os mesmos comando acima citados. O iframe buscar o arquivo iframe5.html e em seguida, configurei os comandos que tornam o script de outros sites mais seguros.
-        </p>
-        <br>
-        <iframe src="iframe5.html" sandbox="allow-scripts" referrerpolicy="no-referrer">Seu navegador não é compativel com isso!</iframe>
-        <br>
-        <p>Analise a linha de comando e pratique o uso da mesma, é importante tornar o seu site um pouco mais seguro.
-            <br>
-            linha de comando: 
-            <br><br>
-            &lt;iframe src="formulario.html" <strong>sandbox="allow-script</strong>" referrerpolicy="no-referrer"&gt;
-            <br><br>
-            <strong>allow-script</strong>: Serve para permitir script.
-            <br><br>
-            <strong>referrerpolicy</strong>="no-referrer": Serve para não capturar dados de ninguém.
-
-        </p>
-        <br>
-            
-            
-
-
-        <br>
-        <br>
-        <div id="voltar">
-        <a href="../html.html">Voltar</a>
+  <!-- Header padrão -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br>
-        <br>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../index.html">Início</a>
+        <a href="../projetos.html">Projetos</a>
+        <a href="../estudos.html">Estudos</a>
+        <a href="../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
-    </main>
-    
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Comandos de Segurança em iFrames</h1>
+          <p class="muted">Protegendo embeds com <code>sandbox</code> e <code>referrerpolicy</code>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
+          <button class="btn btn-primary" data-open-modal type="button">Quero um site profissional</button>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">O que é o <code>sandbox</code>?</h2>
+
+            <div class="card soft">
+              <div class="alert">
+                <strong>Ideia:</strong> <code>sandbox</code> “tranca” o iFrame. Você só libera o que for necessário (com <code>allow-*</code>).
+              </div>
+
+              <p class="prose">
+                Quando você incorpora uma página em um iFrame, ela pode tentar executar scripts, enviar formulários,
+                abrir popups, acessar recursos, etc. O atributo <strong><code>sandbox</code></strong> reduz esses riscos
+                aplicando restrições por padrão.
+              </p>
+
+              <div class="iframe-card" style="margin-top: 12px;">
+                <div class="badge">Exemplo 1: sandbox total (mais restrito)</div>
+
+                <div style="margin-top: 10px;">
+                  <iframe
+                    class="iframe small"
+                    src="formulario.html"
+                    title="Exemplo de iFrame com sandbox total"
+                    loading="lazy"
+                    sandbox
+                  >
+                    <p class="hint">
+                      Seu navegador não suporta iFrame.
+                      <a href="formulario.html" target="_blank" rel="noopener noreferrer">Abrir em nova aba</a>
+                    </p>
+                  </iframe>
+                </div>
+
+                <div class="code-sample" style="margin-top: 10px;">
+                  <code>&lt;iframe src="formulario.html" sandbox&gt;
+  Seu navegador não é compatível com isso!
+&lt;/iframe&gt;</code>
+                </div>
+
+                <p class="hint" style="margin-top: 10px;">
+                  Aqui o iFrame fica bem “travado”. Ideal quando você só quer exibir algo simples e estático.
+                </p>
+              </div>
+
+              <div class="iframe-card" style="margin-top: 14px;">
+                <div class="badge">Exemplo 2: sem referrer (privacidade)</div>
+
+                <div style="margin-top: 10px;">
+                  <iframe
+                    class="iframe small"
+                    src="formulario.html"
+                    title="Exemplo de iFrame com referrerpolicy no-referrer"
+                    loading="lazy"
+                    sandbox
+                    referrerpolicy="no-referrer"
+                  >
+                    <p class="hint">
+                      Seu navegador não suporta iFrame.
+                      <a href="formulario.html" target="_blank" rel="noopener noreferrer">Abrir em nova aba</a>
+                    </p>
+                  </iframe>
+                </div>
+
+                <div class="code-sample" style="margin-top: 10px;">
+                  <code>&lt;iframe src="formulario.html"
+  sandbox
+  referrerpolicy="no-referrer"&gt;
+&lt;/iframe&gt;</code>
+                </div>
+
+                <p class="hint" style="margin-top: 10px;">
+                  <code>referrerpolicy="no-referrer"</code> evita que o destino receba informações de “de onde você veio”.
+                </p>
+              </div>
+
+              <div class="iframe-card" style="margin-top: 14px;">
+                <div class="badge">Exemplo 3: liberando o mínimo necessário</div>
+
+                <p class="prose" style="margin-top: 10px;">
+                  Se você precisa de formulário e scripts (por exemplo, validação), libere só o que for necessário.
+                  Atenção: <strong><code>allow-same-origin</code></strong> torna o conteúdo do iFrame menos isolado,
+                  então use com consciência.
+                </p>
+
+                <div class="code-sample" style="margin-top: 10px;">
+                  <code>&lt;iframe src="formulario.html"
+  sandbox="allow-forms allow-scripts"
+  referrerpolicy="no-referrer"&gt;
+&lt;/iframe&gt;</code>
+                </div>
+
+                <p class="hint" style="margin-top: 10px;">
+                  Dica: se não precisar, evite <code>allow-same-origin</code>. Libere só forms/scripts quando realmente necessário.
+                </p>
+              </div>
+
+              <div style="margin-top: 14px;">
+                <h2 class="lesson-title">Usando JavaScript com mais segurança</h2>
+
+                <p class="prose">
+                  Abaixo, carregamos <code>iframe5.html</code> permitindo scripts. Isso é útil quando você controla o conteúdo incorporado,
+                  mas ainda quer manter algumas barreiras.
+                </p>
+
+                <div class="iframe-card" style="margin-top: 12px;">
+                  <iframe
+                    class="iframe"
+                    src="iframe5.html"
+                    title="iFrame com scripts permitidos (allow-scripts)"
+                    loading="lazy"
+                    sandbox="allow-scripts"
+                    referrerpolicy="no-referrer"
+                  >
+                    <p class="hint">
+                      Seu navegador não suporta iFrame.
+                      <a href="iframe5.html" target="_blank" rel="noopener noreferrer">Abrir em nova aba</a>
+                    </p>
+                  </iframe>
+
+                  <div class="code-sample" style="margin-top: 10px;">
+                    <code>&lt;iframe src="iframe5.html"
+  sandbox="allow-scripts"
+  referrerpolicy="no-referrer"&gt;
+&lt;/iframe&gt;</code>
+                  </div>
+
+                  <p class="prose" style="margin-top: 10px;">
+                    <strong>allow-scripts</strong>: permite execução de JavaScript dentro do iFrame.
+                    <br>
+                    <strong>referrerpolicy="no-referrer"</strong>: não envia dados de referência para o destino.
+                  </p>
+                </div>
+              </div>
+
+              <div class="lesson-actions" style="margin-top: 14px;">
+                <a class="btn btn-secondary" href="../html.html">Voltar</a>
+                <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+              </div>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <code>sandbox</code> (restrição)</li>
+                <li>Liberou permissões com <code>allow-*</code> (mínimo necessário)</li>
+                <li>Adicionou <code>referrerpolicy="no-referrer"</code></li>
+                <li>Colocou <code>title</code> e fallback</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="hero-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../estudos.html">Voltar para Estudos</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- Modal de orçamento -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label for="nome">Seu nome</label>
+            <input id="nome" name="nome" type="text" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="negocio">Seu negócio / segmento</label>
+            <input id="negocio" name="negocio" type="text" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label for="tipo">Tipo de site</label>
+            <select id="tipo" name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo" name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="prazo">Prazo</label>
+            <input id="prazo" name="prazo" type="text" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label for="detalhes">Detalhes (opcional)</label>
+            <textarea id="detalhes" name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

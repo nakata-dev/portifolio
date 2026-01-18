@@ -1,228 +1,235 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox 06 | Alinhamento Empacotado - Ailton A. Nakata</title>
 
-    <style>
-        #voltar>a{
-             color: white;
-        }
-        #voltar{
-            font-family: Arial, Helvetica, sans-serif;
-            
-            background-color: lightsalmon;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: rgb(211, 166, 149);;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
+  <!-- Botões padrão do seu site -->
+  <link rel="stylesheet" href="../../site.css">
+  <script src="../../site.js" defer></script>
 
-/*--------------------------------*/
+  <style>
+    /* ===== Base escura profissional (não mexe no flex) ===== */
+    *{ margin:0; padding:0; box-sizing:border-box; }
 
-        .container{
-            display: flex; 
+    body{
+      background:#0b1220;
+      color:rgba(255,255,255,.92);
+      font-family: Arial, Helvetica, sans-serif;
+      padding:16px;
+    }
 
-            background-color: lightsalmon;
-            
-            height: 400px;
-            align-items: flex-start;
-            flex-flow: row wrap;
+    /* Botões acima do título */
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
 
-        }
+    /* Mata o hover giratório global */
+    a:hover{
+      transform:none !important;
+      animation:none !important;
+    }
 
-        .item{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 40px;
+    h1{ margin: 8px 0 10px; }
+    h2{ margin: 16px 0 10px; font-size: 1.05em; }
 
-            border: 1px solid black;
-        }
-/*--------------------------------*/
+    hr{
+      border:0;
+      border-top:1px solid rgba(255,255,255,.12);
+      margin:14px 0;
+    }
 
-        .container1{
-            display: flex; 
+    /* Esconde os "voltar" antigos (mantém no HTML, mas não atrapalha) */
+    #voltar{ display:none; }
 
-            background-color: lightsalmon;
-            
-            height: 400px;
-            flex-flow: row wrap;
-            align-content: stretch;
-            
+    /* ===== Só troca de tons + bordas (sem alterar o comportamento) ===== */
+    .container,
+    .container1,
+    .container2,
+    .container3,
+    .container4{
+      background-color:#111a2e;             /* era lightsalmon */
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:12px;
+      padding:8px;
+      overflow:hidden;
+    }
 
-        }
+    .item,
+    .item1,
+    .item2,
+    .item3,
+    .item4{
+      background-color:#0f2a44;             /* era lightblue */
+      color:rgba(255,255,255,.92);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:10px;
+      text-align:center;
+      padding:40px;                         /* mantém seu tamanho didático */
+    }
 
-        .item1{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 40px;
+    /* =========================================================
+       SEU CSS ORIGINAL (mantido, sem mudar comportamento)
+       ========================================================= */
 
-            border: 1px solid black;
-        }
-/*--------------------------------*/
+    .container{
+      display:flex;
+      height:400px;
+      align-items:flex-start;
+      flex-flow:row wrap;
+    }
+    .item{ flex:auto; }
 
-        .container2{
-            display: flex; 
+    .container1{
+      display:flex;
+      height:400px;
+      flex-flow:row wrap;
+      align-content:stretch;
+    }
+    .item1{ flex:auto; }
 
-            background-color: lightsalmon;
-            
-            height: 400px;
-            flex-flow: row wrap;
-            align-content: space-between;
-            
+    .container2{
+      display:flex;
+      height:400px;
+      flex-flow:row wrap;
+      align-content:space-between;
+    }
+    .item2{ flex:auto; }
 
-        }
+    .container3{
+      display:flex;
+      height:400px;
+      flex-flow:row wrap;
+      align-content:space-around;
+    }
+    .item3{ flex:auto; }
 
-        .item2{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 40px;
-
-            border: 1px solid black;
-        }
-/*--------------------------------*/
-
-        .container3{
-            display: flex; 
-
-            background-color: lightsalmon;
-            
-            height: 400px;
-            flex-flow: row wrap;
-            align-content: space-around;
-            
-
-        }
-
-        .item3{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 40px;
-
-            border: 1px solid black;
-        }
-/*--------------------------------*/
-
-        .container4{
-            display: flex; 
-
-            background-color: lightsalmon;
-            
-            height: 400px;
-            flex-flow: row wrap;
-            align-content: space-around;
-            
-
-        }
-
-        .item4{
-            flex: auto; 
-            background-color: lightblue;
-            text-align: center;
-            padding: 40px;
-
-            border: 1px solid black;
-        }
-
-        
-    </style>
-    <title>Flex_box1</title>
+    .container4{
+      display:flex;
+      height:400px;
+      flex-flow:row wrap;
+      align-content:space-evenly;
+    }
+    .item4{ flex:auto; }
+  </style>
 </head>
+
 <body>
-    <hr>
-    <h1>Aula 6 – Alinhamento empacotado</h1>
-    <hr>
-    <div id="voltar"><a href="../html.html">Voltar</a></div>
-    <h2>align-items: flex-start;</h2>
-    <div class="container">
-        <div class="item">A</div>
-        <div class="item">B</div>
-        <div class="item">C</div>
-        <div class="item">D</div>
-        <div class="item">E</div>
-        <div class="item">F</div>
-        <div class="item">G</div>
-        <div class="item">H</div>
-        <div class="item">I</div>
-        <div class="item">J</div>
-        <div class="item">L</div>
+  <!-- ✅ Botões necessários acima do título -->
+  <div class="top-actions">
+    <a class="btn btn-secondary" href="../html.html">Voltar</a>
+    <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+    <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+  </div>
+
+  <hr>
+  <h1>Aula 6 – Alinhamento empacotado</h1>
+  <hr>
+
+  <!-- (mantido no HTML por compatibilidade, mas escondido) -->
+  <div id="voltar"><a href="../html.html">Voltar</a></div>
+
+  <h2>align-items: flex-start;</h2>
+  <div class="container">
+    <div class="item">A</div><div class="item">B</div><div class="item">C</div><div class="item">D</div><div class="item">E</div><div class="item">F</div><div class="item">G</div><div class="item">H</div><div class="item">I</div><div class="item">J</div><div class="item">L</div>
+  </div>
+
+  <hr>
+
+  <h2>align-content: stretch;</h2>
+  <div class="container1">
+    <div class="item1">A</div><div class="item1">B</div><div class="item1">C</div><div class="item1">D</div><div class="item1">E</div><div class="item1">F</div><div class="item1">G</div><div class="item1">H</div><div class="item1">I</div><div class="item1">J</div><div class="item1">L</div>
+  </div>
+
+  <hr><hr>
+
+  <h2>align-content: space-between;</h2>
+  <div class="container2">
+    <div class="item2">A</div><div class="item2">B</div><div class="item2">C</div><div class="item2">D</div><div class="item2">E</div><div class="item2">F</div><div class="item2">G</div><div class="item2">H</div><div class="item2">I</div><div class="item2">J</div><div class="item2">L</div>
+  </div>
+
+  <hr><hr>
+
+  <h2>align-content: space-around;</h2>
+  <div class="container3">
+    <div class="item3">A</div><div class="item3">B</div><div class="item3">C</div><div class="item3">D</div><div class="item3">E</div><div class="item3">F</div><div class="item3">G</div><div class="item3">H</div><div class="item3">I</div><div class="item3">J</div><div class="item3">L</div>
+  </div>
+
+  <hr><hr>
+
+  <h2>align-content: space-evenly;</h2>
+  <div class="container4">
+    <div class="item4">A</div><div class="item4">B</div><div class="item4">C</div><div class="item4">D</div><div class="item4">E</div><div class="item4">F</div><div class="item4">G</div><div class="item4">H</div><div class="item4">I</div><div class="item4">J</div><div class="item4">L</div>
+  </div>
+
+  <hr>
+
+  <!-- Modal padrão (se seu site.js já controla) -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="top-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <hr>
-    <h2>align-content: stretch;</h2>
-    <div class="container1">
-        <div class="item1">A</div>
-        <div class="item1">B</div>
-        <div class="item1">C</div>
-        <div class="item1">D</div>
-        <div class="item1">E</div>
-        <div class="item1">F</div>
-        <div class="item1">G</div>
-        <div class="item1">H</div>
-        <div class="item1">I</div>
-        <div class="item1">J</div>
-        <div class="item1">L</div>
-    </div>
-    <hr>
-    <hr>
-    <h2>align-content: space-between;</h2>
-    <div class="container2">
-        <div class="item2">A</div>
-        <div class="item2">B</div>
-        <div class="item2">C</div>
-        <div class="item2">D</div>
-        <div class="item2">E</div>
-        <div class="item2">F</div>
-        <div class="item2">G</div>
-        <div class="item2">H</div>
-        <div class="item2">I</div>
-        <div class="item2">J</div>
-        <div class="item2">L</div>
-    </div>
-    <hr>
-    <hr>
-    <h2>align-content: space-around;</h2>
-    <div class="container3">
-        <div class="item3">A</div>
-        <div class="item3">B</div>
-        <div class="item3">C</div>
-        <div class="item3">D</div>
-        <div class="item3">E</div>
-        <div class="item3">F</div>
-        <div class="item3">G</div>
-        <div class="item3">H</div>
-        <div class="item3">I</div>
-        <div class="item3">J</div>
-        <div class="item3">L</div>
-    </div>
-    <hr>
-    <hr>
-    <h2>align-content: space-evenly;</h2>
-    <div class="container4">
-        <div class="item4">A</div>
-        <div class="item4">B</div>
-        <div class="item4">C</div>
-        <div class="item4">D</div>
-        <div class="item4">E</div>
-        <div class="item4">F</div>
-        <div class="item4">G</div>
-        <div class="item4">H</div>
-        <div class="item4">I</div>
-        <div class="item4">J</div>
-        <div class="item4">L</div>
-    </div>
-    <hr>
-    <div id="voltar">
-        <a href="../html.html">Voltar</a>
-    </div>
+  </div>
+
 </body>
 </html>

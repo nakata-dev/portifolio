@@ -1,166 +1,279 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        <style>
-            #voltar>a{
-             color: white;
-        }
-        #voltar{
-            font-family: Arial, Helvetica, sans-serif;
-            
-            background-color: lightsalmon;
-            padding: 10px;
-            text-align: center;
-        }
-        a:hover{
-            background-color: rgb(211, 166, 149);;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bolder;
-            transform: rotate(30deg);
-            animation-duration: 0.5s;
-        }
-            .container{
-                display: flex; 
-                flex-direction: row;
-                
-                background-color: lightsalmon;
-                
-            }
-            
-            .item{
-                
-                background-color: lightblue;
-                text-align: center;
-                padding: 5px;
-                
-                border: 1px solid black;
-            }
-            .container1{
-                display: flex; 
-                flex-direction: row-reverse;
-                
-                background-color: lightsalmon;
-                
-            }
-            
-            .item1{
-                
-                background-color: lightblue;
-                text-align: center;
-                padding: 5px;
-                
-                border: 1px solid black;
-            }
-            .container2{
-                display: flex; 
-                flex-direction: column;
-                
-                background-color: lightsalmon;
-                
-            }
-            
-            .item2{
-                
-                background-color: lightblue;
-                text-align: center;
-                padding: 5px;
-                
-                border: 1px solid black;
-            }
-            .container3{
-                display: flex; 
-                flex-direction: column-reverse;
-                
-                background-color: lightsalmon;
-                
-            }
-            
-            .item3{
-                
-                background-color: lightblue;
-                text-align: center;
-                padding: 5px;
-                
-                border: 1px solid black;
-            }
-            </style>
-    <title>Flex_box1</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flexbox 02 | Direções e Eixos - Ailton A. Nakata</title>
+
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
+
+  <meta name="description" content="Aula 02 de Flexbox: flex-direction (row, row-reverse, column e column-reverse) com demonstrações visuais, no template padrão responsivo." />
+
+  <style>
+    /* =========================
+       PÁGINA (padrão escuro)
+       ========================= */
+    body.flex-page{
+      background: #0b1220;
+      color: rgba(255,255,255,.92);
+    }
+    body.flex-page main,
+    body.flex-page .section{ background: transparent !important; }
+    body.flex-page .section::before,
+    body.flex-page .section::after,
+    body.flex-page main::before,
+    body.flex-page main::after{ content: none !important; background: transparent !important; }
+    body.flex-page .site-footer{ background: #0b1220 !important; }
+
+    /* Neutraliza hover global antigo (sem girar tudo) */
+    body.flex-page a:hover{
+      transform: none !important;
+      animation: none !important;
+    }
+
+    /* =========================
+       Área da aula (card)
+       ========================= */
+    .fx-stage{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+
+    .fx-block{
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      margin-bottom: 14px;
+    }
+
+    .fx-block h2{
+      margin: 0 0 6px 0;
+      font-size: 1.1em;
+    }
+
+    .fx-code{
+      margin: 0 0 12px 0;
+      color: rgba(255,255,255,.72);
+    }
+
+    /* =========================
+       DEMOS FLEX (conteúdo central)
+       ========================= */
+    .fx-demo{
+      display: flex;
+      gap: 6px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+    }
+
+    .fx-item{
+      background: rgba(59,130,246,.16);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-width: 42px;
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+
+    /* Direções */
+    .fx-row{ flex-direction: row; }
+    .fx-row-rev{ flex-direction: row-reverse; }
+    .fx-col{
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .fx-col-rev{
+      flex-direction: column-reverse;
+      align-items: flex-start;
+    }
+
+    /* Em telas pequenas, row e row-reverse podem “quebrar linha” */
+    @media (max-width: 560px){
+      .fx-row, .fx-row-rev{
+        flex-wrap: wrap;
+      }
+      .fx-item{
+        flex: 1 1 22%;
+      }
+    }
+  </style>
 </head>
-<body>
-    <h1>Aula 02 - Direções e eixos</h1>
-    <div id="voltar">
-        <a href="../html.html">Voltar</a>
+
+<body class="flex-page">
+  <!-- HEADER PADRÃO -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
     </div>
-    <h1>
-    <div class="container">
-        <div class="item">A</div>
-        <div class="item">B</div>
-        <div class="item">C</div>
-        <div class="item">D</div>
-        <div class="item">E</div>
-        <div class="item">F</div>
-        <div class="item">G</div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Aula 02: Direções e Eixos (Flexbox)</h1>
+          <p class="muted">Comparando <strong>row</strong>, <strong>row-reverse</strong>, <strong>column</strong> e <strong>column-reverse</strong>.</p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar para HTML</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="fx-stage">
+          <!-- ROW -->
+          <div class="fx-block">
+            <h2>Direção padrão (horizontal)</h2>
+            <p class="fx-code"><strong>flex-direction:</strong> row</p>
+            <div class="fx-demo fx-row" aria-label="Flex direction row">
+              <div class="fx-item">A</div><div class="fx-item">B</div><div class="fx-item">C</div>
+              <div class="fx-item">D</div><div class="fx-item">E</div><div class="fx-item">F</div><div class="fx-item">G</div>
+            </div>
+          </div>
+
+          <!-- ROW REVERSE -->
+          <div class="fx-block">
+            <h2>Direção reversa (horizontal)</h2>
+            <p class="fx-code"><strong>flex-direction:</strong> row-reverse</p>
+            <div class="fx-demo fx-row-rev" aria-label="Flex direction row-reverse">
+              <div class="fx-item">A</div><div class="fx-item">B</div><div class="fx-item">C</div>
+              <div class="fx-item">D</div><div class="fx-item">E</div><div class="fx-item">F</div><div class="fx-item">G</div>
+            </div>
+          </div>
+
+          <!-- COLUMN -->
+          <div class="fx-block">
+            <h2>Direção em coluna</h2>
+            <p class="fx-code"><strong>flex-direction:</strong> column</p>
+            <div class="fx-demo fx-col" aria-label="Flex direction column">
+              <div class="fx-item">A</div><div class="fx-item">B</div><div class="fx-item">C</div>
+              <div class="fx-item">D</div><div class="fx-item">E</div><div class="fx-item">F</div><div class="fx-item">G</div>
+            </div>
+          </div>
+
+          <!-- COLUMN REVERSE -->
+          <div class="fx-block" style="margin-bottom: 0;">
+            <h2>Direção em coluna reversa</h2>
+            <p class="fx-code"><strong>flex-direction:</strong> column-reverse</p>
+            <div class="fx-demo fx-col-rev" aria-label="Flex direction column-reverse">
+              <div class="fx-item">A</div><div class="fx-item">B</div><div class="fx-item">C</div>
+              <div class="fx-item">D</div><div class="fx-item">E</div><div class="fx-item">F</div><div class="fx-item">G</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-actions" style="margin-top: 14px;">
+          <a class="btn btn-secondary" href="../../html.html">Voltar</a>
+          <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER PADRÃO -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
     </div>
-    <hr>
-    <h1>Direção reversa horizontal:</h1>
-    <h1>
-        <p>flex-direction: row-reverse</p>
-    <div class="container1">
-        <div class="item1">A</div>
-        <div class="item1">B</div>
-        <div class="item1">C</div>
-        <div class="item1">D</div>
-        <div class="item1">E</div>
-        <div class="item1">F</div>
-        <div class="item1">G</div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <!-- MODAL PADRÃO -->
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <hr>
-    <hr>
-    <h1>Direção em coluna:</h1>
-    <h1>
-        <p>flex-direction: row-reverse</p>
-    <div class="container2">
-        <div class="item2">A</div>
-        <div class="item2">B</div>
-        <div class="item2">C</div>
-        <div class="item2">D</div>
-        <div class="item2">E</div>
-        <div class="item2">F</div>
-        <div class="item2">G</div>
-    </div>
-    <hr>
-    <hr>
-    <h1>Direção reversa horizontal:</h1>
-    <h1>
-        <p>flex-direction: column</p>
-    <div class="container1">
-        <div class="item1">A</div>
-        <div class="item1">B</div>
-        <div class="item1">C</div>
-        <div class="item1">D</div>
-        <div class="item1">E</div>
-        <div class="item1">F</div>
-        <div class="item1">G</div>
-    </div>
-    <hr>
-    <hr>
-    <h1>Direção em coluna reversa:</h1>
-    <h1>
-        <p>flex-direction: column-reverse</p>
-    <div class="container3">
-        <div class="item3">A</div>
-        <div class="item3">B</div>
-        <div class="item3">C</div>
-        <div class="item3">D</div>
-        <div class="item3">E</div>
-        <div class="item3">F</div>
-        <div class="item3">G</div>
-    </div>
-    <hr>
+  </div>
 </body>
 </html>
-    

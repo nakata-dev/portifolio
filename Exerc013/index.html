@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Estilos Inline | HTML & CSS - Ailton A. Nakata</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Estilos Inline | HTML &amp; CSS - Ailton A. Nakata</title>
 
   <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
   <link rel="stylesheet" href="../site.css" />
@@ -12,7 +12,13 @@
   <meta name="description" content="Entenda estilos inline no HTML, quando evitar e como migrar para CSS com classes para manter o código limpo." />
 
   <style>
-    /* Apenas o que é específico desta aula (o resto fica no site.css) */
+    /* Estilos APENAS da aula (não sobrescreve o layout do site.css) */
+    .list-tight{
+      margin:0;
+      padding-left:18px;
+    }
+    .list-tight li{ margin: 6px 0; }
+
     .demo-title-1{ color: lightslategrey; }
     .demo-title-2{ color: blue; }
     .demo-title-3{ color: rgb(1, 71, 71); }
@@ -24,36 +30,49 @@
     .code-block{
       background:#0f1724;
       color:#e6edf3;
-      padding:12px;
-      border-radius:10px;
+      padding:14px;
+      border-radius:12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-      font-size:0.9rem;
+      font-size:0.95rem;
       overflow:auto;
       position:relative;
+    }
+    .code-block pre{
+      margin:0;
+      white-space:pre;
+      overflow-x:auto;
+      padding-right: 86px; /* espaço para o botão não cobrir o texto */
     }
     .copy-btn{
       position:absolute;
       right:10px;
       top:10px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.10);
       color:#fff;
-      border:none;
-      padding:6px 8px;
-      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.14);
+      padding:7px 10px;
+      border-radius:10px;
       cursor:pointer;
-      font-size:0.8rem;
+      font-size:0.82rem;
+      line-height: 1;
     }
-    .card.soft {
-      width: 90%;
-      padding: 16px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      margin-bottom: 16px;
+    .copy-btn:focus{
+      outline: 2px solid rgba(255,255,255,0.35);
+      outline-offset: 2px;
+    }
+
+    /* Responsividade específica da aula */
+    @media (max-width: 520px){
+      .demo-p-2{ font-size: 18px; }
+      .code-block{ font-size:0.88rem; padding:12px; }
+      .copy-btn{ font-size:0.78rem; padding:7px 9px; }
+      .code-block pre{ padding-right: 0; padding-top: 34px; } /* botão vai “flutuar” sem cobrir */
     }
   </style>
 </head>
 
 <body>
+  <!-- Header padrão do site -->
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="../index.html" aria-label="Voltar ao início">
@@ -78,87 +97,90 @@
     <section class="section">
       <div class="container">
         <div class="section-head">
-          <h1>Estilos Inline</h1>
-          <p class="muted">O famoso <code>style=""</code> dentro das tags: útil em testes rápidos, perigoso em projetos reais.</p>
+          <h1>🧩 Estilos Inline</h1>
+          <p class="muted">Entenda o <code>style=""</code>, quando evitar e como migrar para classes no CSS.</p>
         </div>
 
-        <div class="hero-actions" style="margin-bottom: 14px;">
+        <div class="hero-actions" style="margin-bottom:14px;">
           <a class="btn btn-secondary" href="../html.html">Voltar para HTML</a>
           <a class="btn btn-ghost" href="../contato.html">Contato</a>
         </div>
 
         <div class="lesson-grid">
           <article class="lesson">
-            <h2 class="lesson-title">O que é estilo inline?</h2>
-
+            <h2 class="lesson-title">📌 Estilos Inline</h2>
             <div class="card soft">
-              <ul class="list">
+              <p style="margin:0;">
+                O famoso <code>style=""</code> dentro das tags: útil em testes rápidos, perigoso em projetos reais.
+              </p>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top:18px;">📍 O que é estilo inline?</h2>
+            <div class="card soft">
+              <ul class="list-tight">
                 <li><strong>Inline</strong> é quando você coloca CSS direto na tag: <code>&lt;h2 style="color: blue"&gt;</code></li>
                 <li><strong>Vantagem:</strong> rápido para testar.</li>
-                <li><strong>Desvantagem:</strong> vira bagunça, repete muito, dificulta manutenção e padronização.</li>
+                <li><strong>Desvantagem:</strong> repete muito, dificulta manutenção e padronização.</li>
               </ul>
             </div>
 
-            <div class="alert alert-warn">
-              <strong>Regra prática:</strong> se você repetiu um mesmo <code>style</code> duas vezes, já era hora de virar <strong>classe</strong>.
+            <div class="alert" style="margin-top:14px;">
+              <strong>Regra prática:</strong> se você está repetindo o mesmo <code>style=""</code> mais de 2 vezes, já merece virar classe.
             </div>
 
-            <h2 class="lesson-title" style="margin-top: 18px;">Exemplo visual (sem inline)</h2>
-
+            <h2 class="lesson-title" style="margin-top:18px;">📍 Exemplo visual (sem inline)</h2>
             <div class="card soft">
-              <h2 class="demo-title-1">Capítulo 1.1</h2>
-              <p class="demo-p-1">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quis, inventore? Minima eligendi animi totam a,
-                velit dolorum unde corporis quas facilis nulla reprehenderit pariatur dignissimos distinctio, provident dolores et! Provident!
-              </p>
+              <div style="text-align:left;">
+                <h3 class="demo-title-1" style="margin:0 0 10px;">Capítulo 1.1</h3>
+                <p class="demo-p-1" style="margin:0;">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quis, inventore? Minima eligendi animi totam a,
+                  velit dolorum unde corporis quas facilis nulla reprehenderit pariatur dignissimos distinctio, provident dolores et! Provident!
+                </p>
 
-              <h2 class="demo-title-2">Capítulo 1.2</h2>
-              <p class="demo-p-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aperiam non, culpa eligendi, saepe perferendis,
-                modi ut eius placeat laborum nemo facere odio nostrum natus distinctio id illo. Minus, aut.
-              </p>
+                <h3 class="demo-title-2" style="margin:18px 0 10px;">Capítulo 1.2</h3>
+                <p class="demo-p-2" style="margin:0;">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aperiam non, culpa eligendi, saepe perferendis,
+                  modi ut eius placeat laborum nemo facere odio nostrum natus distinctio id illo. Minus, aut.
+                </p>
 
-              <h2 class="demo-title-3">Capítulo 2</h2>
-              <h3 class="muted" style="margin: 0 0 8px;">Capítulo 2.1</h3>
-              <p class="demo-p-3">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil soluta eius quos amet perferendis maxime pariatur
-                consequuntur, sequi, repellendus recusandae modi. Sit enim perspiciatis consectetur vero fuga officiis, possimus impedit.
-              </p>
+                <h3 class="demo-title-3" style="margin:18px 0 10px;">Capítulo 2</h3>
+                <h4 style="margin:0 0 8px; color:#666;">Capítulo 2.1</h4>
+                <p class="demo-p-3" style="margin:0;">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil soluta eius quos amet perferendis maxime pariatur
+                  consequuntur, sequi, repellendus recusandae modi. Sit enim perspiciatis consectetur vero fuga officiis, possimus impedit.
+                </p>
+              </div>
             </div>
 
-            <h2 class="lesson-title" style="margin-top: 18px;">Como fica no HTML (limpo)</h2>
-
+            <h2 class="lesson-title" style="margin-top:18px;">📍 Como fica no HTML (limpo)</h2>
             <div class="code-block">
-              <button class="copy-btn" data-copy="#code-html">Copiar</button>
-              <pre id="code-html" style="margin:0;">
-&lt;h2 class="demo-title-1"&gt;Capítulo 1.1&lt;/h2&gt;
+              <button class="copy-btn" data-copy="#code-html" type="button" aria-label="Copiar código HTML">Copiar</button>
+              <pre id="code-html">&lt;h2 class="demo-title-1"&gt;Capítulo 1.1&lt;/h2&gt;
 &lt;p class="demo-p-1"&gt;...&lt;/p&gt;
 
 &lt;h2 class="demo-title-2"&gt;Capítulo 1.2&lt;/h2&gt;
 &lt;p class="demo-p-2"&gt;...&lt;/p&gt;
 
 &lt;h2 class="demo-title-3"&gt;Capítulo 2&lt;/h2&gt;
-&lt;p class="demo-p-3"&gt;...&lt;/p&gt;
-              </pre>
+&lt;p class="demo-p-3"&gt;...&lt;/p&gt;</pre>
             </div>
 
-            <h2 class="lesson-title" style="margin-top: 18px;">E no CSS (reutilizável)</h2>
-
+            <h2 class="lesson-title" style="margin-top:18px;">📍 E no CSS (reutilizável)</h2>
             <div class="code-block">
-              <button class="copy-btn" data-copy="#code-css">Copiar</button>
-              <pre id="code-css" style="margin:0;">
-.demo-title-1 { color: lightslategrey; }
+              <button class="copy-btn" data-copy="#code-css" type="button" aria-label="Copiar código CSS">Copiar</button>
+              <pre id="code-css">.demo-title-1 { color: lightslategrey; }
 .demo-title-2 { color: blue; }
 .demo-title-3 { color: rgb(1, 71, 71); }
 
 .demo-p-1 { font-family: cursive, "Arial Narrow", Arial, sans-serif; }
 .demo-p-2 { font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif; font-size: 20px; }
-.demo-p-3 { font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; }
-              </pre>
+.demo-p-3 { font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; }</pre>
             </div>
 
-            <div class="alert">
-              <strong>Dica final:</strong> seu “eu do futuro” vai agradecer quando você precisar trocar uma cor e fizer isso em <strong>1 lugar</strong> (CSS), não em 17 tags 😄
+            <div class="card soft" style="margin-top:12px;">
+              <p class="muted" style="margin:0;">
+                <strong>Dica final:</strong> quando você precisar trocar uma cor, faça isso em <strong>1 lugar</strong> (CSS), não em várias tags 😄
+              </p>
             </div>
 
             <div class="lesson-actions">
@@ -175,12 +197,12 @@
             </div>
 
             <div class="card">
-              <h3>Checklist</h3>
+              <h3>Checklist rápido</h3>
               <ul class="list">
-                <li>Evitar <code>style=""</code> no projeto</li>
-                <li>Criar classes reutilizáveis</li>
-                <li>Manter CSS no arquivo principal</li>
-                <li>Padronizar tipografia</li>
+                <li>Entendeu o que é inline</li>
+                <li>Viu vantagens e desvantagens</li>
+                <li>Comparou HTML limpo vs CSS</li>
+                <li>Testou copiar código</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
             </div>
@@ -190,6 +212,7 @@
     </section>
   </main>
 
+  <!-- Footer padrão -->
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
@@ -206,6 +229,7 @@
 
   <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <!-- Modal padrão -->
   <div class="modal-overlay" data-modal-overlay>
     <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
       <div class="modal-head">
@@ -271,19 +295,20 @@
   <script>
     // Copiar blocos de código (simples e reutilizável)
     document.querySelectorAll('[data-copy]').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const sel = btn.getAttribute('data-copy');
         const el = document.querySelector(sel);
         if (!el) return;
 
         const text = el.textContent.trim();
-        navigator.clipboard?.writeText(text).then(() => {
+        try{
+          await navigator.clipboard.writeText(text);
           const old = btn.textContent;
           btn.textContent = 'Copiado!';
           setTimeout(() => btn.textContent = old, 1200);
-        }).catch(() => {
+        }catch(e){
           alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
-        });
+        }
       });
     });
   </script>
