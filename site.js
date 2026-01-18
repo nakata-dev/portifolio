@@ -239,3 +239,15 @@ document.addEventListener("DOMContentLoaded", () => {
   setupMobileNav();
   setupGlobalEsc();
 });
+
+// WhatsApp Float: ativa atenção depois de 3s
+(() => {
+  const waBtn = document.querySelector('[data-wa-float]');
+  if (!waBtn) return;
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      waBtn.classList.add('is-attention');
+    }, 3000);
+  });
+})();
