@@ -47,11 +47,17 @@ function setupYear() {
 
 /* =========================
    WhatsApp Float
+   - Aparece após 5s
+   - Ativa pulso + borda gradiente (Animated Border Gradient)
 ========================= */
 function setupWhatsAppFloat() {
   const btn = document.querySelector("[data-wa-float]");
   if (!btn) return;
 
+  // Estado inicial: garante oculto (CSS controla visual, aqui é reforço)
+  btn.classList.remove("is-visible", "is-attention");
+
+  // Click: abre WhatsApp e (opcional) para a animação depois do 1º clique
   btn.addEventListener("click", () => {
     const msg =
       "Olá Ailton! Quero um site profissional para meu negócio.\n" +
@@ -59,6 +65,17 @@ function setupWhatsAppFloat() {
       "Objetivo: (vender / WhatsApp / orçamento) ____\n" +
       "Prazo: ____\n";
     openWhatsApp(msg);
+
+    // opcional: depois do clique, para de pulsar pra não “gritar” demais
+    btn.classList.remove("is-attention");
+  });
+
+  // Mostra e ativa após 5s do carregamento completo
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      btn.classList.add("is-visible");   // surge
+      btn.classList.add("is-attention"); // pulsa + borda gira
+    }, 5000);
   });
 }
 
@@ -158,10 +175,6 @@ function setupTOC() {
 
 /* =========================
    BURGER MENU (MOBILE)
-   Requer:
-   - botão: .nav-toggle [data-nav-toggle]
-   - menu: .nav [data-nav]
-   - JS alterna: .nav.is-open
 ========================= */
 function setupMobileNav() {
   const btn = document.querySelector("[data-nav-toggle]") || document.querySelector(".nav-toggle");
@@ -189,23 +202,19 @@ function setupMobileNav() {
     isOpen ? closeNav() : openNav();
   });
 
-  // fecha ao clicar num link do menu (no mobile)
   nav.addEventListener("click", (e) => {
     if (e.target.closest("a")) closeNav();
   });
 
-  // fecha ao clicar fora
   document.addEventListener("click", (e) => {
     const clickedInside = nav.contains(e.target) || btn.contains(e.target);
     if (!clickedInside) closeNav();
   });
 
-  // fecha com ESC (também fecha modal/certificados via handlers abaixo)
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeNav();
   });
 
-  // ao ir para desktop, garante fechado
   window.addEventListener("resize", () => {
     if (window.innerWidth > 860) closeNav();
   });
@@ -213,14 +222,11 @@ function setupMobileNav() {
 
 /* =========================
    Handlers globais de ESC
-   (Modal + Certificados)
 ========================= */
 function setupGlobalEsc() {
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
-    // fecha modal
     closeModal();
-    // fecha preview de certificado
     const cert = document.querySelector("[data-cert-overlay]");
     if (cert) cert.classList.remove("open");
   });
@@ -239,15 +245,3 @@ document.addEventListener("DOMContentLoaded", () => {
   setupMobileNav();
   setupGlobalEsc();
 });
-
-// WhatsApp Float: ativa atenção depois de 3s
-(() => {
-  const waBtn = document.querySelector('[data-wa-float]');
-  if (!waBtn) return;
-
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      waBtn.classList.add('is-attention');
-    }, 3000);
-  });
-})();
