@@ -1,226 +1,783 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math Brain</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matemática Turbo</title>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif
+    }
 
-body{
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:#fff;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+    :root {
+      --bg1: #0b0f14;
+      --bg2: #0f1a24;
+      --panel: #0f1216;
+      --card: #141a20;
+      --card2: #10161c;
+      --text: #eaf2ff;
+      --muted: rgba(234, 242, 255, .75);
+      --stroke: rgba(255, 255, 255, .10);
+      --shadow: 0 20px 50px rgba(0, 0, 0, .60);
+    }
 
-.app{
-  width:100%;
-  max-width:420px;
-  background:#111;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,.6);
-}
+    body {
+      background: radial-gradient(1200px 600px at 20% 0%, #182235 0%, transparent 55%),
+        radial-gradient(1000px 600px at 80% 10%, #1b2a24 0%, transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+    }
 
-header{
-  text-align:center;
-  margin-bottom:15px;
-}
+    .app {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(8, 10, 14, .72);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
 
-header h1{
-  font-size:1.6rem;
-}
+    /* HEADER */
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
 
-.info{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
-  font-size:.9rem;
-  opacity:.9;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-.problem{
-  background:#1e1e1e;
-  border-radius:15px;
-  padding:25px;
-  font-size:2rem;
-  text-align:center;
-  margin:20px 0;
-}
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .06));
+      border: 1px solid rgba(255, 255, 255, .10);
+      font-size: 20px;
+    }
 
-input{
-  width:100%;
-  padding:15px;
-  font-size:1.4rem;
-  border:none;
-  border-radius:12px;
-  text-align:center;
-  outline:none;
-}
+    .brand h1 {
+      font-size: 1.15rem;
+      line-height: 1.1;
+    }
 
-button{
-  width:100%;
-  margin-top:15px;
-  padding:15px;
-  font-size:1rem;
-  background:#00c6ff;
-  border:none;
-  border-radius:12px;
-  font-weight:bold;
-  cursor:pointer;
-}
+    .sub {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
 
-button:active{
-  transform:scale(.97);
-}
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 18px;
+    }
 
-.feedback{
-  text-align:center;
-  margin-top:10px;
-  font-size:.95rem;
-  min-height:22px;
-}
+    .icon-btn:active {
+      transform: scale(.98)
+    }
 
-.progress{
-  height:6px;
-  background:#222;
-  border-radius:5px;
-  overflow:hidden;
-  margin-top:15px;
-}
+    /* HUD */
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
 
-.bar{
-  height:100%;
-  width:100%;
-  background:#00ff99;
-  transition:width .2s linear;
-}
-</style>
+    /* padrão: não deixa quebrar */
+    .pill .value {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* EXCEÇÃO: no pill do Nível, pode quebrar linha */
+    .pill.level-pill .value {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: initial;
+      line-height: 1.15;
+    }
+
+
+
+    .pill {
+      padding: 10px 10px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .08);
+      min-height: 54px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .pill .label {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .70);
+    }
+
+    .pill .value {
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* GAME */
+    .game {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .problem-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      opacity: .25;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, .40) 0 2px, transparent 3px),
+        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, .30) 0 1.6px, transparent 3px),
+        radial-gradient(circle at 30% 80%, rgba(255, 255, 255, .25) 0 1.4px, transparent 3px),
+        radial-gradient(circle at 70% 75%, rgba(255, 255, 255, .20) 0 1.2px, transparent 3px);
+      filter: blur(.2px);
+    }
+
+    .problem {
+      font-size: 2.05rem;
+      text-align: center;
+      letter-spacing: .5px;
+      padding: 16px 0 10px;
+      font-weight: 800;
+    }
+
+    .problem .op {
+      opacity: .85;
+      margin: 0 6px
+    }
+
+    .problem .q {
+      opacity: .9
+    }
+
+    .feedback {
+      text-align: center;
+      min-height: 24px;
+      margin-top: 8px;
+      font-size: .95rem;
+      color: rgba(234, 242, 255, .92);
+    }
+
+    .progress {
+      height: 8px;
+      background: rgba(255, 255, 255, .08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .bar {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, rgba(0, 255, 153, .95), rgba(0, 198, 255, .95));
+      transition: width .18s linear;
+    }
+
+    /* ANSWERS */
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .choice {
+      padding: 14px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+    }
+
+    .choice:active {
+      transform: scale(.985)
+    }
+
+    .choice[disabled] {
+      opacity: .65;
+      cursor: not-allowed
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text);
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .btn:active {
+      transform: scale(.985)
+    }
+
+    .btn.ghost {
+      background: rgba(255, 255, 255, .05)
+    }
+
+    .btn.danger {
+      background: rgba(255, 80, 80, .12);
+      border-color: rgba(255, 80, 80, .22)
+    }
+
+    footer {
+      margin-top: 12px;
+      text-align: center;
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .60);
+    }
+
+    @media (max-width: 420px) {
+      .hud {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="app">
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">🧠</div>
+        <div>
+          <h1>Matemática Turbo</h1>
+          <p class="sub">Treino do básico ao avançado, no ritmo do seu cérebro ⚡</p>
+        </div>
+      </div>
 
-<header>
-<h1>🧠 Calculando</h1>
-</header>
+      <button id="soundBtn" class="icon-btn" type="button" aria-label="Som ligado/desligado" title="Som">🔊</button>
+    </header>
 
-<div class="info">
-<span>Nível: <b id="level">1</b></span>
-<span>⏱ <b id="time">10</b>s</span>
-</div>
+    <section class="hud">
+      <div class="pill level-pill">
+        <span class="label">Nível</span>
+        <span class="value">Etapa <b id="stage">Básico</b> • <b id="level">1</b>/30</span>
+      </div>
 
-<div class="problem" id="problem">0 + 0</div>
 
-<input type="number" id="answer" placeholder="Resposta">
+      <div class="pill">
+        <span class="label">Tempo</span>
+        <span class="value">⏱ <b id="time">10</b>s</span>
+      </div>
 
-<button onclick="check()">Confirmar</button>
+      <div class="pill">
+        <span class="label">Sequência</span>
+        <span class="value">🔥 <b id="streak">0</b></span>
+      </div>
 
-<div class="feedback" id="feedback"></div>
+      <div class="pill">
+        <span class="label">Moedas</span>
+        <span class="value">🪙 <b id="coins">0</b></span>
+      </div>
+    </section>
 
-<div class="progress">
-  <div class="bar" id="bar"></div>
-</div>
+    <main class="game">
+      <section class="card problem-card">
+        <div class="stars" aria-hidden="true"></div>
 
-</div>
+        <div class="problem" id="problem">
+          <span id="ptext">0 + 0</span> <span class="op">=</span> <span class="q">?</span>
+        </div>
 
-<script>
-let level=1,time=10,timer,solution;
-const maxLevel=10;
+        <div class="progress" aria-label="Barra de tempo">
+          <div class="bar" id="bar"></div>
+        </div>
 
-const config=[
-{ops:["+"],max:10},
-{ops:["+","-"],max:20},
-{ops:["+","-"],max:50},
-{ops:["+","-","*"],max:10},
-{ops:["*"],max:20},
-{ops:["+","-","*"],max:50},
-{ops:["/"],max:100},
-{ops:["+","-","*","/"],max:100},
-{ops:["+","-","*","/"],max:200},
-{ops:["+","-","*","/"],max:500},
-];
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+      </section>
 
-function rand(n){return Math.floor(Math.random()*n)}
+      <section class="card answers-card">
+        <div class="answers" id="answers" aria-label="Alternativas"></div>
 
-function generate(){
-  const cfg=config[level-1];
-  let a=rand(cfg.max)+1;
-  let b=rand(cfg.max)+1;
-  const op=cfg.ops[rand(cfg.ops.length)];
+        <div class="actions">
+          <button class="btn ghost" id="btnHint" type="button">💡 Dica (−2🪙)</button>
+          <button class="btn danger" id="btnReset" type="button">🔁 Recomeçar</button>
+        </div>
+      </section>
+    </main>
 
-  if(op==="/"){
-    solution=a;
-    b=rand(10)+1;
-    a=a*b;
-  }else if(op==="*"){
-    solution=a*b;
-  }else if(op==="+"){
-    solution=a+b;
-  }else{
-    solution=a-b;
-  }
+    <footer>
+      Copyright @ 2026 - Ailton A. Nakata
+    </footer>
+  </div>
 
-  document.getElementById("problem").textContent=`${a} ${op} ${b}`;
-  document.getElementById("answer").value="";
-  startTimer();
-}
+  <script>
+    // =========================
+    //  CONFIG + ESTADO
+    // =========================
+    let level = 1;           // 1..30
+    let streak = 0;
+    let coins = 0;
+    let time = 10;
+    let timer = null;
 
-function startTimer(){
-  clearInterval(timer);
-  time=Math.max(11-level,6);
-  document.getElementById("time").textContent=time;
-  updateBar();
+    let soundOn = true;
 
-  timer=setInterval(()=>{
-    time--;
-    document.getElementById("time").textContent=time;
-    updateBar();
-    if(time<=0) fail();
-  },1000);
-}
+    let current = {
+      text: "",
+      solution: 0,
+      hint: "",
+      choices: []
+    };
 
-function updateBar(){
-  document.getElementById("bar").style.width=(time/(11-level))*100+"%";
-}
+    // Timer por etapa (um pouco mais generoso no avançado por ser lógica)
+    function timeForLevel(lv) {
+      if (lv <= 10) return 9;          // básico rápido
+      if (lv <= 20) return 10;         // intermediário
+      return 12;                       // avançado
+    }
 
-function check(){
-  const val=Number(document.getElementById("answer").value);
-  if(val===solution){
-    success();
-  }else{
-    document.getElementById("feedback").textContent="❌ Errado!";
-  }
-}
+    function stageName(lv) {
+      if (lv <= 10) return "Básico";
+      if (lv <= 20) return "Intermediário";
+      return "Avançado";
+    }
 
-function success(){
-  clearInterval(timer);
-  document.getElementById("feedback").textContent="✅ Correto!";
-  if(level<maxLevel){
-    level++;
-    setTimeout(next,800);
-  }else{
-    document.getElementById("problem").textContent="🏆 Parabéns!";
-  }
-}
+    // =========================
+    //  UTIL
+    // =========================
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
-function fail(){
-  clearInterval(timer);
-  document.getElementById("feedback").textContent="⏳ Tempo esgotado!";
-  setTimeout(generate,1000);
-}
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
-function next(){
-  document.getElementById("level").textContent=level;
-  document.getElementById("feedback").textContent="";
-  generate();
-}
+    function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
-generate();
-</script>
+    function setText(id, v) { document.getElementById(id).textContent = v; }
+
+    function beep(type = "ok") {
+      if (!soundOn) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+        const freq = type === "ok" ? 660 : 220;
+
+        o.frequency.setValueAtTime(freq, now);
+        o.type = "sine";
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(0.12, now + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+        o.start(now);
+        o.stop(now + 0.2);
+        setTimeout(() => ctx.close(), 300);
+      } catch (e) { }
+    }
+
+    function resetFeedback() {
+      setText("feedback", "");
+    }
+
+    // =========================
+    //  GERADORES POR ETAPA
+    // =========================
+
+    // Distratores: próximos, erro de sinal, erro comum de tabuada, etc.
+    function buildChoices(correct) {
+      const set = new Set([correct]);
+
+      const near = [
+        correct + 1, correct - 1,
+        correct + 2, correct - 2,
+        correct + 5, correct - 5,
+        correct * 2, Math.floor(correct / 2)
+      ];
+
+      for (const v of near) {
+        if (set.size >= 4) break;
+        if (Number.isFinite(v) && Math.abs(v) <= 100000 && v !== correct) {
+          set.add(v);
+        }
+      }
+
+      // Se ainda faltar, completa com aleatórios coerentes
+      while (set.size < 4) {
+        const jitter = randInt(-10, 10);
+        set.add(correct + jitter);
+      }
+
+      const arr = Array.from(set).slice(0, 4);
+      return shuffle(arr);
+    }
+
+    // NÍVEIS 1..10: tabuada + somas simples
+    function genBasic(lv) {
+      // alterna entre tabuada e soma de 2-3 dígitos
+      const mode = (lv <= 5) ? "tabuada" : (Math.random() < 0.55 ? "tabuada" : "soma");
+
+      if (mode === "tabuada") {
+        const a = randInt(1, 10);
+        const b = randInt(1, 10);
+        const sol = a * b;
+        const hint = `Dica: quebre em partes. Ex: ${a}×${b} = ${a}×( ${Math.floor(b / 2)} + ${b - Math.floor(b / 2)} ).`;
+        return {
+          text: `${a} × ${b}`,
+          solution: sol,
+          hint
+        };
+      } else {
+        // soma 2-3 dígitos
+        const a = randInt(10, 999);
+        const b = randInt(10, 999);
+        const sol = a + b;
+        const hint = `Dica: some por partes (centenas + dezenas + unidades).`;
+        return {
+          text: `${a} + ${b}`,
+          solution: sol,
+          hint
+        };
+      }
+    }
+
+    // NÍVEIS 11..20: operações mistas
+    function genIntermediate(lv) {
+      const ops = ["+", "-", "*", "/"];
+      let op = ops[randInt(0, ops.length - 1)];
+
+      // Ajusta para gerar contas "justas"
+      let a, b, sol, hint;
+
+      if (op === "/") {
+        // divisão exata
+        b = randInt(2, 12);
+        sol = randInt(2, 30);
+        a = b * sol;
+        hint = `Dica: divisão exata. Pense: qual número × ${b} dá ${a}?`;
+      } else if (op === "*") {
+        a = randInt(2, 20);
+        b = randInt(2, 20);
+        sol = a * b;
+        hint = `Dica: use decomposição. Ex: ${a}×${b} = ${a}×(${b - 1}) + ${a}.`;
+      } else if (op === "+") {
+        a = randInt(20, 400);
+        b = randInt(20, 400);
+        sol = a + b;
+        hint = `Dica: arredonde e compense (ex: +100 − resto).`;
+      } else {
+        a = randInt(20, 500);
+        b = randInt(10, 450);
+        sol = a - b;
+        hint = `Dica: faça ${a} − ${b} por etapas (tira centenas, depois dezenas...).`;
+      }
+
+      // Em níveis mais altos do intermediário, às vezes vira expressão simples
+      if (lv >= 16 && Math.random() < 0.35) {
+        const x = randInt(2, 20);
+        const y = randInt(2, 20);
+        const z = randInt(2, 50);
+        const pick = Math.random() < 0.5;
+
+        if (pick) {
+          // (x*y)+z
+          sol = (x * y) + z;
+          hint = `Dica: primeiro multiplica, depois soma.`;
+          return { text: `(${x} × ${y}) + ${z}`, solution: sol, hint };
+        } else {
+          // z + (x*y)
+          sol = z + (x * y);
+          hint = `Dica: prioridade: × antes de +.`;
+          return { text: `${z} + (${x} × ${y})`, solution: sol, hint };
+        }
+      }
+
+      return { text: `${a} ${op} ${b}`, solution: sol, hint };
+    }
+
+    // NÍVEIS 21..30: PA, PG, Fibonacci, padrões
+    function genAdvanced(lv) {
+      // rota por subtemas
+      const idx = lv - 21; // 0..9
+      const theme = ["PA", "PG", "FIB", "PA", "PG", "FIB", "LOG", "LOG", "PA", "PG"][idx];
+
+      if (theme === "PA") {
+        // sequência com 4 termos, pedir o próximo
+        const a1 = randInt(1, 20);
+        const r = randInt(2, 12);
+        const seq = [a1, a1 + r, a1 + 2 * r, a1 + 3 * r];
+        const sol = a1 + 4 * r;
+        const hint = `Dica: PA soma sempre a mesma razão (+${r}).`;
+        return { text: `${seq.join(", ")} , ?`, solution: sol, hint };
+      }
+
+      if (theme === "PG") {
+        // sequência com 4 termos, pedir o próximo
+        const a1 = randInt(1, 8);
+        const q = randInt(2, 5);
+        const seq = [a1, a1 * q, a1 * q * q, a1 * q * q * q];
+        const sol = a1 * q * q * q * q;
+        const hint = `Dica: PG multiplica sempre pela mesma razão (×${q}).`;
+        return { text: `${seq.join(", ")} , ?`, solution: sol, hint };
+      }
+
+      if (theme === "FIB") {
+        // Fibonacci custom (começo variado)
+        const x = randInt(1, 9);
+        const y = randInt(1, 9);
+        const s3 = x + y;
+        const s4 = y + s3;
+        const s5 = s3 + s4;
+        const sol = s4 + s5;
+        const hint = `Dica: Fibonacci: próximo = soma dos 2 anteriores.`;
+        return { text: `${x}, ${y}, ${s3}, ${s4}, ${s5}, ?`, solution: sol, hint };
+      }
+
+      // LOG: padrões simples-médios
+      // ex: +2, +4, +6...
+      const type = Math.random() < 0.5 ? "pares" : "dobroMaisUm";
+      if (type === "pares") {
+        const start = randInt(1, 10);
+        const seq = [start, start + 2, start + 6, start + 12]; // +2 +4 +6
+        const sol = start + 20; // +8 agora
+        const hint = `Dica: os saltos aumentam: +2, +4, +6... então vem +8.`;
+        return { text: `${seq.join(", ")} , ?`, solution: sol, hint };
+      } else {
+        // n = n*2 + 1
+        const start = randInt(1, 6);
+        const s2 = start * 2 + 1;
+        const s3 = s2 * 2 + 1;
+        const s4 = s3 * 2 + 1;
+        const sol = s4 * 2 + 1;
+        const hint = `Dica: cada termo = (anterior × 2) + 1.`;
+        return { text: `${start}, ${s2}, ${s3}, ${s4}, ?`, solution: sol, hint };
+      }
+    }
+
+    function generateProblem() {
+      let p;
+      if (level <= 10) p = genBasic(level);
+      else if (level <= 20) p = genIntermediate(level);
+      else p = genAdvanced(level);
+
+      current.text = p.text;
+      current.solution = p.solution;
+      current.hint = p.hint;
+      current.choices = buildChoices(current.solution);
+
+      // render
+      setText("ptext", current.text);
+      setText("stage", stageName(level));
+      setText("level", level);
+      setText("streak", streak);
+      setText("coins", coins);
+      resetFeedback();
+
+      renderChoices();
+      startTimer();
+    }
+
+    function renderChoices() {
+      const wrap = document.getElementById("answers");
+      wrap.innerHTML = "";
+
+      current.choices.forEach(val => {
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.type = "button";
+        btn.textContent = val;
+        btn.addEventListener("click", () => choose(val, btn));
+        wrap.appendChild(btn);
+      });
+    }
+
+    function lockChoices(lock = true) {
+      document.querySelectorAll(".choice").forEach(b => {
+        b.disabled = lock;
+      });
+    }
+
+    // =========================
+    //  TIMER
+    // =========================
+    function startTimer() {
+      clearInterval(timer);
+      time = timeForLevel(level);
+      setText("time", time);
+
+      const total = time;
+      updateBar(total);
+
+      timer = setInterval(() => {
+        time--;
+        setText("time", time);
+        updateBar(total);
+
+        if (time <= 0) {
+          fail();
+        }
+      }, 1000);
+    }
+
+    function updateBar(total) {
+      const pct = clamp((time / total) * 100, 0, 100);
+      document.getElementById("bar").style.width = pct + "%";
+    }
+
+    // =========================
+    //  GAME FLOW
+    // =========================
+    function choose(val, btn) {
+      if (btn.disabled) return;
+
+      if (val === current.solution) {
+        success();
+      } else {
+        wrong();
+      }
+    }
+
+    function success() {
+      clearInterval(timer);
+      lockChoices(true);
+
+      streak++;
+      coins += (level <= 10 ? 1 : level <= 20 ? 2 : 3);
+
+      setText("streak", streak);
+      setText("coins", coins);
+
+      setText("feedback", "✅ Correto! +moedas e streak 🔥");
+      beep("ok");
+
+      if (level < 30) {
+        level++;
+        setTimeout(generateProblem, 700);
+      } else {
+        setText("ptext", "🏆 Você zerou o treino!");
+        setText("feedback", "Agora repete e tenta bater seu recorde de sequência 😄");
+        document.getElementById("answers").innerHTML = "";
+        document.getElementById("bar").style.width = "100%";
+      }
+    }
+
+    function wrong() {
+      streak = 0;
+      setText("streak", streak);
+      setText("feedback", "❌ Errado! Respira e tenta de novo.");
+      beep("nope");
+    }
+
+    function fail() {
+      clearInterval(timer);
+      lockChoices(true);
+      streak = 0;
+      setText("streak", streak);
+      setText("feedback", "⏳ Tempo esgotado! Nova rodada...");
+      beep("nope");
+      setTimeout(generateProblem, 900);
+    }
+
+    // =========================
+    //  AÇÕES
+    // =========================
+    function showHint() {
+      if (coins < 2) {
+        setText("feedback", "🪙 Você precisa de 2 moedas pra usar dica.");
+        return;
+      }
+      coins -= 2;
+      setText("coins", coins);
+      setText("feedback", "💡 " + current.hint);
+    }
+
+    function resetGame() {
+      clearInterval(timer);
+      level = 1;
+      streak = 0;
+      coins = 0;
+      setText("stage", stageName(level));
+      setText("level", level);
+      setText("streak", streak);
+      setText("coins", coins);
+      setText("feedback", "🔁 Recomeçando... bora!");
+      setTimeout(generateProblem, 500);
+    }
+
+    // =========================
+    //  SOM
+    // =========================
+    document.getElementById("soundBtn").addEventListener("click", () => {
+      soundOn = !soundOn;
+      document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+    });
+
+    document.getElementById("btnHint").addEventListener("click", showHint);
+    document.getElementById("btnReset").addEventListener("click", resetGame);
+
+    // Start
+    generateProblem();
+  </script>
 </body>
+
 </html>

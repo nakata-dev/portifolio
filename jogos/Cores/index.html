@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batalha dos Copos Turbo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+
+    <header class="top">
+      <div class="brand">
+        <div class="logo">🟦</div>
+        <div class="brand-text">
+          <h1>Batalha dos Copos Turbo</h1>
+          <p id="subline">Olhe por alguns segundos. Depois é só memória 👀</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" id="rulesBtn" type="button" title="Regras">📜</button>
+        <button class="icon-btn" id="soundBtn" type="button" title="Som">🔊</button>
+      </div>
+    </header>
+
+    <!-- HUD (mais limpo) -->
+    <section class="hud">
+      <div class="hud-card">
+        <div class="hud-title">Vez</div>
+        <div class="hud-main">
+          <span class="hud-badge" id="turnBadge">J1</span>
+          <span class="hud-strong" id="turnText">Jogador 1</span>
+        </div>
+        <div class="hud-sub" id="phaseHint">Preparando…</div>
+        <div class="hud-meta">
+          <span>Round <b id="round">1</b></span>
+          <span>Lv <b id="level">1</b></span>
+          <span>Mem <b id="memBase">5</b>s</span>
+        </div>
+      </div>
+
+      <div class="hud-card score-card" id="scoreCard">
+        <div class="hud-title">Placar</div>
+
+        <div class="score-row">
+          <div class="score-chip" id="chipJ1">
+            <span class="chip-emoji" id="emojiJ1">🙂</span>
+            <span class="chip-label">J1</span>
+            <b class="chip-score" id="p1">0</b>
+          </div>
+
+          <div class="score-vs">×</div>
+
+          <div class="score-chip" id="chipJ2">
+            <span class="chip-emoji" id="emojiJ2">🙂</span>
+            <span class="chip-label">J2</span>
+            <b class="chip-score" id="p2">0</b>
+          </div>
+        </div>
+
+        <div class="hud-sub" id="leaderHint">🤝 Empate</div>
+      </div>
+    </section>
+
+    <main class="main">
+      <!-- Carta -->
+      <section class="card challenge-card">
+        <div class="cardTitle">
+          <h2>🎴 Carta do Desafio</h2>
+          <span class="mini">Horizontal • <b id="memLeft">-</b>s</span>
+        </div>
+
+        <div class="challengeBox" id="challengeBox" aria-label="Carta">
+          <div class="seq" id="targetSeq"></div>
+          <div class="placeholders" id="placeholders" aria-hidden="true"></div>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+      </section>
+
+      <!-- Jogo -->
+      <section class="card play-card">
+        <div class="cardTitle">
+          <h2>🧩 Sua sequência</h2>
+          <span class="mini">toque para montar</span>
+        </div>
+
+        <!-- Montagem FIXA e bem visível -->
+        <div class="build-fixed" aria-label="Sequência montada">
+          <div class="build" id="build"></div>
+          <div class="hint-line" id="buildHint">
+            Toque nas cores abaixo para preencher. Toque em um slot para remover.
+          </div>
+        </div>
+
+        <!-- Paleta sempre visível (menor, limpa) -->
+        <div class="palette" id="palette" aria-label="Cores"></div>
+
+        <div class="actions">
+          <button class="btn big" id="bellBtn" type="button">🔔 Confirmar</button>
+          <button class="btn" id="undoBtn" type="button">↩️ Desfazer</button>
+          <button class="btn danger" id="clearBtn" type="button">🧼 Limpar</button>
+          <button class="btn" id="newMatchBtn" type="button">🆕 Nova Partida</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">2026 • Ailton A. Nakata</footer>
+  </div>
+
+  <!-- Overlay (Round + 3..2..1 + memorizar) -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="overlayCard">
+      <div class="overlayTitle" id="overlayTitle">Round 1</div>
+      <div class="overlayBig" id="overlayBig">3</div>
+      <div class="overlaySub" id="overlaySub">Prepare-se!</div>
+    </div>
+  </div>
+
+  <!-- Modal Regras (mais objetivo) -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modalCard">
+      <h3>📜 Regras Claras</h3>
+      <ol>
+        <li>Começa com <b>Round</b> e contagem <b>3..2..1</b>.</li>
+        <li>A carta aparece por alguns segundos: <b>memorize a ordem</b>.</li>
+        <li>Depois ela some: <b>monte sua sequência</b> tocando nas cores.</li>
+        <li>Toque 🔔 <b>Confirmar</b>. Acertou: +1 ponto. Errou: passa a vez.</li>
+        <li>Conforme os acertos aumentam, o <b>nível sobe</b> e o tempo para olhar <b>diminuí</b>.</li>
+      </ol>
+      <button class="btn big" id="closeModal" type="button">Fechar ✅</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

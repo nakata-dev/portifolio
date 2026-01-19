@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Speed Cups Pro - Edição Memorização</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="scoreboard">
+            <div class="score-card" id="p1-card">
+                <span class="player-name">JOGADOR 1</span>
+                <div class="points" id="p1-points">0</div>
+            </div>
+            
+            <div class="game-info">
+                <div class="round-title">CARTA <span id="round-val">1</span></div>
+                <div class="timer-box">⏱ <span id="time-val">0</span>s</div>
+            </div>
+
+            <div class="score-card" id="p2-card">
+                <span class="player-name">JOGADOR 2</span>
+                <div class="points" id="p2-points">0</div>
+            </div>
+        </header>
+
+        <div class="game-subtitle">
+            Quem fizer <span class="highlight-text">10 pontos</span> primeiro Ganha!
+        </div>
+
+        <section class="challenge-section">
+            <div class="instruction" id="msg-text">Prepare-se...</div>
+            <div class="challenge-grid" id="challenge-grid">
+                </div>
+        </section>
+
+        <main class="player-section">
+            <div class="build-area" id="player-build">
+                </div>
+
+            <div class="color-palette" id="palette">
+                </div>
+
+            <div class="action-grid">
+                <button class="btn btn-undo" id="btn-undo">↩ Desfazer</button>
+                <button class="btn btn-confirm" id="btn-bell">🔔 CONFIRMAR</button>
+                <button class="btn btn-clear" id="btn-clear">🧼 Limpar</button>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            Copyright &copy; 2026 - Ailton A. Nakata
+        </footer>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="overlay-content">
+            <h1 id="overlay-title">VEZ DO JOGADOR 1</h1>
+            <p id="overlay-desc">Memorize a sequência em 5 segundos!</p>
+            <button class="btn-start" id="btn-start">ESTOU PRONTO!</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

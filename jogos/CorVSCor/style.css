@@ -1,0 +1,194 @@
+/* CONFIGURAÇÕES GERAIS */
+:root {
+    --bg-dark: #0f172a;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --accent: #00E59B;
+    --error: #FF3D5C;
+    --text: #f8fafc;
+    /* Tamanho fixo para simetria entre botões e desafio */
+    --size-unit: 60px; 
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+body { 
+    background-color: var(--bg-dark); 
+    color: var(--text);
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    /* O gap já cuida do espaçamento dos novos elementos */
+    gap: 15px; 
+}
+
+/* PLACAR */
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+}
+
+.score-card {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 15px;
+    background: var(--card-bg);
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.score-card.active {
+    border-color: var(--accent);
+    background: rgba(0, 229, 155, 0.1);
+}
+
+.player-name { font-size: 0.7rem; font-weight: bold; opacity: 0.7; }
+.points { font-size: 1.8rem; font-weight: 900; }
+
+.game-info { flex: 1.5; text-align: center; }
+.round-title { font-size: 0.8rem; font-weight: bold; }
+.timer-box { font-size: 1.2rem; color: var(--accent); margin-top: 5px; }
+
+/* DESAFIO (HORIZONTAL E QUADRADO) */
+.challenge-section {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.instruction { margin-bottom: 15px; font-weight: bold; font-size: 0.9rem; }
+
+.challenge-grid {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    min-height: var(--size-unit);
+}
+
+/* Estilo do Quadrado de Cor (Desafio e Montagem) */
+.color-square {
+    width: var(--size-unit);
+    height: var(--size-unit);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.hidden-square {
+    background: #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: rgba(255,255,255,0.2);
+}
+
+/* ÁREA DE MONTAGEM */
+.build-area {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    height: 80px;
+    align-items: center;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    margin-bottom: 10px;
+}
+
+/* PALETA DE CORES */
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.color-btn {
+    width: 100%;
+    aspect-ratio: 1/1; /* Mantém sempre quadrado */
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.color-btn:active { transform: scale(0.9); }
+
+/* BOTÕES DE AÇÃO */
+.action-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 10px;
+}
+
+.btn {
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    padding: 15px 5px;
+}
+
+.btn-confirm { background: var(--accent); color: #000; font-size: 0.9rem; }
+.btn-undo, .btn-clear { background: #334155; font-size: 0.7rem; }
+
+/* OVERLAY */
+.overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.95);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; text-align: center;
+}
+
+.overlay.show { display: flex; }
+.btn-start {
+    padding: 15px 40px;
+    background: var(--accent);
+    border: none; border-radius: 12px;
+    font-weight: bold; margin-top: 20px; cursor: pointer;
+}
+
+/* --- NOVOS ESTILOS --- */
+
+/* Subtítulo de Vitória */
+.game-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    /* Zera a margem pois o gap do container já cuida disso */
+    margin: 0; 
+}
+
+.highlight-text {
+    color: var(--accent);
+    font-weight: 900;
+}
+
+/* Footer Discreto */
+.app-footer {
+    text-align: center;
+    font-size: 0.75rem; /* Fonte pequena */
+    color: rgba(255, 255, 255, 0.3); /* Cor bem transparente */
+    margin-top: auto; /* Empurra para o final se sobrar espaço */
+    padding-top: 5px;
+}
+
+/* AJUSTES PARA TELAS PEQUENAS */
+@media (max-height: 700px) {
+    :root { --size-unit: 80px; }
+    .scoreboard { height: 80px; }
+    /* Reduz um pouco o gap em telas pequenas */
+    .app-container { gap: 10px; }
+}
