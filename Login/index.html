@@ -18,135 +18,184 @@
 
   <style>
     /* =========================================================
-       1) FUNDO PADRÃO ESCURO (SEM ROXO)
-       ========================================================= */
-    body.login-page{
-      background: #0b1220 !important;
-      color: rgba(255,255,255,.92);
-    }
+   CAIXA LOGIN (CORRIGIDA IGUAL À IMAGEM)
+   Só afeta a tela de login dentro do template
+========================================================= */
 
-    /* =========================================================
-       2) REMOVE QUALQUER FAIXA/GRADIENTE DO TEMPLATE SÓ AQUI
-       (muito comum: .section ou main ter fundo/pseudo-elemento)
-       ========================================================= */
-    body.login-page main,
-    body.login-page .section{
-      background: transparent !important;
-    }
+body.login-page .login-stage{
+  padding: 0 !important;            /* tira “borda extra” do palco */
+  background: transparent !important;
+  border: none !important;
+}
 
-    body.login-page .section::before,
-    body.login-page .section::after,
-    body.login-page main::before,
-    body.login-page main::after{
-      content: none !important;
-      background: transparent !important;
-    }
+/* Card principal */
+body.login-page #login{
+  width: min(920px, 100%);
+  margin: 0 auto !important;
 
-    /* Footer: se for translúcido no tema, evita “vazar cor” */
-    body.login-page .site-footer{
-      background: #0b1220 !important;
-    }
+  display: grid !important;
+  grid-template-columns: 380px 1fr; /* form menor / imagem maior */
+  gap: 0 !important;
 
-    /* =========================================================
-       3) EVITA SOBREPOSIÇÃO: ORGANIZA O FLUXO DO LAYOUT
-       ========================================================= */
-    body.login-page .section-head{
-      margin-bottom: 14px;
-    }
+  border-radius: 18px;
+  overflow: hidden;
 
-    body.login-page .hero-actions{
-      position: relative;
-      z-index: 5;
-      margin-bottom: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
 
-    /* “palco” que segura o miolo sem alterar o design dele */
-    body.login-page .login-stage{
-      position: relative;
-      z-index: 1;
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      overflow: hidden; /* mata vazamento visual */
-    }
+/* Lado da imagem */
+body.login-page #imagem{
+  position: relative;
+  min-height: 330px;
 
-    /* =========================================================
-       4) ANTI-OVERLAP PARA O MIOLO (SEM REDESENHAR)
-       ========================================================= */
-    body.login-page #login{
-      margin: 0 !important;
-      position: relative !important;
-      overflow: hidden;
-      max-width: 100%;
+  background-image: url("imagens/predio.jpg"); /* ✅ SUA IMAGEM */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
-      /* garante que imagem e formulário nunca se sobreponham */
-      display: grid !important;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      align-items: stretch;
-    }
+/* Faixa azul separadora (igual sua imagem) */
+body.login-page #imagem::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  height: 100%;
+  background: #1976d2;
+}
 
-    @media (min-width: 860px){
-      body.login-page #login{
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-      }
-    }
+/* Lado do formulário */
+body.login-page #formulario{
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-    body.login-page #login > #imagem,
-    body.login-page #login > #formulario{
-      min-width: 0;
-      max-width: 100%;
-    }
+  background: #ffffff;
+}
 
-    /* limita a altura da imagem caso o CSS original force algo exagerado */
-    body.login-page #imagem{
-      max-height: 420px;
-      border-radius: 16px;
-      overflow: hidden;
-    }
+/* Título e texto centralizados como na imagem */
+body.login-page #formulario h1{
+  text-align: center;
+  font-size: 1.35rem;
+  margin-bottom: 8px;
+  color: #111;
+}
 
-    @media (max-width: 420px){
-      body.login-page #imagem{
-        max-height: 260px;
-      }
-    }
+body.login-page #formulario p{
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  margin-bottom: 14px;
+  color: #3a3a3a;
+}
 
-    /* =========================================================
-       5) REMOVE “VOLTA” ANTIGO E HOVER GLOBAL PROBLEMÁTICO
-       ========================================================= */
-    body.login-page #voltar{
-      display: none !important;
-    }
+/* Campos */
+body.login-page #formulario form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-    body.login-page a:hover{
-      transform: none !important;
-      animation: none !important;
-    }
+body.login-page .campo{
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-    /* =========================================================
-       6) LEGIBILIDADE (título/sub) NO FUNDO ESCURO
-       ========================================================= */
-    body.login-page .section-head h1{
-      color: rgba(255,255,255,.96);
-    }
+  border: 1px solid rgba(0,0,0,0.15);
+  background: #f5f7fb;
+  padding: 9px 10px;
+  border-radius: 10px;
+}
 
-    body.login-page .section-head .muted{
-      color: rgba(255,255,255,.72) !important;
-    }
+/* Ícones */
+body.login-page .campo i{
+  font-size: 18px;
+  color: #6a59d1;  /* roxinho igual destaque da imagem */
+  opacity: 0.95;
+}
 
-    body.login-page .lesson-actions{
-      margin-top: 16px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+/* Inputs */
+body.login-page .campo input{
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.92rem;
+  color: #111;
+}
+
+/* Remove label “ocupando espaço” (porque você usa placeholder) */
+body.login-page .campo label{
+  display: none;
+}
+
+/* Botão entrar */
+body.login-page input[type="submit"]{
+  width: 100%;
+  border: none;
+  cursor: pointer;
+
+  padding: 10px;
+  border-radius: 10px;
+
+  font-weight: 700;
+  color: #fff;
+  background: #2fa3a0; /* verde/azulado igual sua imagem */
+  transition: 0.2s ease;
+}
+
+body.login-page input[type="submit"]:hover{
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+/* Botão esqueci senha */
+body.login-page a.botao{
+  width: 100%;
+  text-align: center;
+
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  color: #2b2b2b;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.12);
+  transition: 0.2s ease;
+}
+
+body.login-page a.botao:hover{
+  background: #f2f2f2;
+}
+
+/* =========================================================
+   RESPONSIVO (CELULAR)
+========================================================= */
+@media (max-width: 760px){
+  body.login-page #login{
+    grid-template-columns: 1fr;
+  }
+  
+  body.login-page #imagem{
+    padding: 10px;
+    min-height: 180px;
+  }
+  
+  body.login-page #imagem::before{
+    width: 100%;
+    height: 10px;
+    top: auto;
+    bottom: 0;
+    
+  }
+}
+
   </style>
 </head>
 
