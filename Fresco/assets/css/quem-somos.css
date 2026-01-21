@@ -1,0 +1,274 @@
+/* =========================
+   PÁGINA: QUEM SOMOS
+   Agora com ícones do Google Icons (Material Symbols)
+========================= */
+
+:root{
+  /* Nota minha: aqui eu troco a imagem do hero da página Quem Somos */
+  --img-hero-quem: url("../img/hero-quem.jpg");
+}
+
+/* =========================
+   HERO QUEM SOMOS (igual ao print)
+========================= */
+.hero-quem{
+  position: relative;
+  height: 56vh;
+  min-height: 380px;
+  background-image: var(--img-hero-quem);
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  align-items: end;
+}
+
+.hero-quem__overlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.52);
+}
+
+.hero-quem__conteudo{
+  position: relative;
+  padding: 60px 0 40px;
+}
+
+.hero-quem__titulo{
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: clamp(70px, 6vw, 120px);
+  color: #fff;
+}
+
+.hero-quem__ornamento{
+  width: 240px;
+  height: 18px;
+  margin-top: 10px;
+  border-bottom: 2px solid rgba(255,255,255,.65);
+  border-radius: 999px;
+}
+
+/* =========================
+   BLOCO TEXTO + IMAGEM
+========================= */
+.pagina-quem{
+  background: var(--fundo-claro);
+}
+
+.bloco-quem__grid{
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 50px;
+  align-items: center;
+}
+
+/* ✅ Ícone do topo (eco/folha) via Google Icons */
+.bloco-quem__icone{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--laranja);
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+/* Título grande (igual print) */
+.bloco-quem__titulo{
+  margin: 0;
+  font-size: clamp(26px, 2.8vw, 44px);
+  line-height: 1.2;
+  font-weight: 600;
+  color: #222;
+}
+
+.bloco-quem__descricao{
+  margin: 18px 0 0;
+  font-size: 14px;
+  line-height: 1.9;
+  color: #444;
+}
+
+/* Foto grande arredondada */
+.foto-grande{
+  width: 100%;
+  height: 420px;
+  border-radius: 22px;
+  overflow: hidden;
+  background-image: var(--img);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--sombra);
+  position: relative;
+}
+
+.foto-grande--mais-alta{
+  height: 520px;
+}
+
+.foto-grande__aviso{
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  background: rgba(255,255,255,.9);
+  color: #111;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+}
+
+/* =========================
+   COMODIDADE (Google Icons)
+========================= */
+.comodidade{
+  text-align: center;
+}
+
+.comodidade__titulo{
+  margin: 0 0 26px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+}
+
+.comodidade__lista{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 34px;
+}
+
+.comodidade__item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.comodidade__icone{
+  color: var(--laranja);
+  font-size: 30px; /* ✅ tamanho fiel ao print */
+  line-height: 1;
+}
+
+/* =========================
+   RECOMENDADO POR (carrossel)
+========================= */
+.recomendado{
+  text-align: center;
+}
+
+.recomendado__titulo{
+  margin: 0 0 26px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+}
+
+.carrossel{
+  display: grid;
+  grid-template-columns: 60px 1fr 60px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.carrossel__janela{
+  overflow: hidden;
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+
+.carrossel__trilho{
+  display: flex;
+  transition: transform .45s ease;
+}
+
+.slide{
+  min-width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 20px 0;
+}
+
+.slide__logo{
+  width: min(200px, 50%);
+  height: auto;
+  opacity: .95;
+}
+
+/* ✅ Setas usando Google Icons */
+.carrossel__seta{
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--laranja);
+  display: grid;
+  place-items: center;
+}
+
+.carrossel__seta .material-symbols-rounded{
+  font-size: 44px;
+  line-height: 1;
+}
+
+.carrossel__seta:hover{
+  filter: brightness(.95);
+  transform: translateY(-1px);
+}
+
+/* bolinhas */
+.bolinhas{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.bolinha{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: rgba(240,124,34,.35);
+}
+
+.bolinha.ativa{
+  background: var(--laranja);
+}
+
+/* =========================
+   RESERVA (telefone Google Icons)
+========================= */
+.reserva__icone{
+  color: var(--laranja);
+  font-size: 44px; /* ✅ tamanho parecido com o print */
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 900px){
+  .bloco-quem__grid{
+    grid-template-columns: 1fr;
+  }
+
+  .foto-grande{
+    height: 320px;
+  }
+
+  .foto-grande--mais-alta{
+    height: 360px;
+  }
+
+  .carrossel{
+    grid-template-columns: 46px 1fr 46px;
+  }
+}

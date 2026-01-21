@@ -571,6 +571,77 @@ body{
   text-decoration: none;
 }
 
+
+
+
+/* =========================
+   SEÇÃO RESERVA (fundo com imagem + overlay)
+   Nota minha: aqui eu deixo igual ao Fresco
+========================= */
+
+.reserva{
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+
+  /* ✅ IMAGEM DE FUNDO (o cinza some quando a imagem carrega) */
+  background-image: url("../img/fundo-reserva.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.reserva__overlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55); /* ✅ escurece igual Fresco */
+}
+
+.reserva__conteudo{
+  position: relative;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.reserva__icone{
+  color: var(--laranja); /* ✅ telefone laranja (igual print) */
+  font-size: 44px;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.reserva__titulo{
+  margin: 0;
+  font-size: 26px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.reserva__numero{
+  margin: 14px 0 0;
+  font-size: clamp(46px, 6vw, 74px);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+/* ✅ Mobile (fica bem próximo do Fresco) */
+@media (max-width: 600px){
+  .reserva{
+    min-height: 320px;
+  }
+
+  .reserva__titulo{
+    font-size: 20px;
+  }
+
+  .reserva__numero{
+    font-size: 46px;
+  }
+}
+
 /* =========================
    RESERVA (foto fundo + overlay)
 ========================= */
@@ -615,12 +686,12 @@ body{
 }
 
 /* =========================
-   RODAPÉ
+   RODAPÉ (igual Fresco)
 ========================= */
+
 .rodape{
-  background: rgba(0,0,0,.65);
-  color: #fff;
-  padding: 18px 0;
+  background: #3a3a3a;
+  padding: 20px 0;
 }
 
 .rodape__linha{
@@ -630,35 +701,68 @@ body{
 
 .rodape__texto{
   margin: 0;
+  color: #fff;
   font-size: 14px;
-  opacity: .92;
 }
+
 .rodape__destaque{
   color: var(--laranja);
   font-weight: 600;
 }
 
+
 /* =========================
    BOTÃO TOPO (círculo laranja)
 ========================= */
+/* =========================
+   BOTÃO TOPO (igual Fresco)
+========================= */
+
 .botao-topo{
   position: fixed;
   right: 18px;
   bottom: 18px;
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
   background: var(--laranja);
   color: #fff;
   font-size: 18px;
-  box-shadow: var(--sombra);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 22px rgba(0,0,0,.25);
+  z-index: 9999;
 }
+
 .botao-topo:hover{
   background: var(--laranja-escuro);
   transform: translateY(-1px);
 }
+
+/* =========================
+   Botão voltar ao topo: aparece só quando eu desço
+========================= */
+
+.botao-topo{
+  transition: .25s ease;
+}
+
+/* escondido */
+.botao-topo.sumir{
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+/* visível */
+.botao-topo.aparecer{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 
 /* =========================
    RESPONSIVO

@@ -1,0 +1,168 @@
+/* =========================
+   PÁGINA: NOTÍCIAS
+   Eu fiz bem fiel ao layout do Fresco:
+   - hero com título central
+   - 3 cards altos com fundo e camada branca translúcida
+========================= */
+
+:root {
+    /* Nota minha: eu troco a imagem do topo por aqui */
+    --img-hero-noticias: url("../img/hero-noticias.jpg");
+}
+
+/* =========================
+   HERO NOTÍCIAS
+========================= */
+.hero-noticias {
+    position: relative;
+    height: 56vh;
+    min-height: 380px;
+    background-image: var(--img-hero-noticias);
+    background-size: cover;
+    background-position: center;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+.hero-noticias__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+}
+
+.hero-noticias__conteudo {
+    position: relative;
+    padding: 80px 0 60px;
+}
+
+.hero-noticias__titulo {
+    margin: 0;
+    font-family: var(--fonte-titulo);
+    font-weight: 400;
+    font-size: clamp(70px, 6vw, 120px);
+    color: #fff;
+}
+
+.hero-noticias__ornamento {
+    width: 260px;
+    height: 18px;
+    margin: 8px auto 0;
+    border-bottom: 2px solid rgba(255, 255, 255, .75);
+    border-radius: 999px;
+}
+
+/* =========================
+   LISTA DE NOTÍCIAS (3 colunas altas)
+========================= */
+.pagina-noticias {
+    background: var(--fundo-claro);
+}
+
+.grade-noticias {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 34px;
+    padding: 60px 0 10px;
+}
+
+/* Card alto com imagem no fundo */
+.card-noticia {
+    position: relative;
+    height: 520px;
+    /* ✅ bem alto igual print */
+    background-image: var(--img);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+/* Camada branca translúcida por cima (igual o print) */
+.card-noticia__filtro {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, .78);
+}
+
+/* Conteúdo por cima do filtro */
+.card-noticia__conteudo {
+    position: relative;
+    height: 100%;
+    padding: 36px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+}
+
+/* Título com Berkshire Swash */
+.card-noticia__titulo {
+    margin: 0;
+    font-family: var(--fonte-titulo);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.05;
+    color: #1f1f1f;
+}
+
+/* Meta pequena (DATA + COMENTÁRIO) */
+.card-noticia__meta {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #222;
+    opacity: .85;
+}
+
+/* Texto */
+.card-noticia__texto {
+    margin-top: 18px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #2b2b2b;
+    max-width: 22ch;
+    /* ✅ deixa estreito igual print */
+}
+
+/* Link invisível no card todo (pra clicar no card inteiro) */
+.card-noticia__link {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+}
+
+/* Hover suave */
+.card-noticia:hover {
+    filter: brightness(.98);
+    transform: translateY(-2px);
+    transition: .25s ease;
+}
+
+/* Nota central */
+.nota--central {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* =========================
+   Responsivo
+========================= */
+@media (max-width: 1000px) {
+    .grade-noticias {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .card-noticia {
+        height: 460px;
+    }
+
+    .card-noticia__texto {
+        max-width: 34ch;
+    }
+}

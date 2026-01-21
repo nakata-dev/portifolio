@@ -51,3 +51,38 @@
     if(e.key === "Escape") fecharMenuMobile();
   });
 })();
+
+// =========================
+// BOTÃO VOLTAR AO TOPO
+// Nota minha: ele só aparece quando eu desço a página
+// =========================
+
+(function () {
+  const botaoTopo = document.getElementById("botaoTopo");
+  if (!botaoTopo) return;
+
+  // ✅ começa escondido
+  botaoTopo.classList.add("sumir");
+
+  function controlarVisibilidade() {
+    // Nota minha: a partir de 300px descendo eu mostro o botão
+    if (window.scrollY > 300) {
+      botaoTopo.classList.remove("sumir");
+      botaoTopo.classList.add("aparecer");
+    } else {
+      botaoTopo.classList.remove("aparecer");
+      botaoTopo.classList.add("sumir");
+    }
+  }
+
+  // ✅ sobe suave ao clicar
+  botaoTopo.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // ✅ verifica sempre que eu rolar
+  window.addEventListener("scroll", controlarVisibilidade);
+
+  // ✅ roda uma vez ao abrir a página
+  controlarVisibilidade();
+})();

@@ -1,128 +1,211 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fresco | Notícias</title>
+
+  <title>Notícias | Fresco</title>
+
+  <!-- ✅ Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- ✅ Google Icons (padrão do seu projeto) -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,1,0" />
+
+  <!-- ✅ CSS principal -->
   <link rel="stylesheet" href="../assets/css/estilos.css" />
+
+  <!-- ✅ CSS da página Notícias -->
+  <link rel="stylesheet" href="../assets/css/noticias.css" />
 </head>
 
 <body>
-  <a class="pular-conteudo" href="#conteudo">Ir para o conteúdo</a>
 
-  <header class="cabecalho">
+  <!-- =========================
+       HEADER (igual Home)
+       Notícias ativo
+  ========================== -->
+  <header class="cabecalho" id="cabecalho">
     <div class="container cabecalho__linha">
-      <a class="logo" href="../index.html"><span class="logo__texto">Fresco</span></a>
+
+      <a class="logo" href="../index.html" aria-label="Ir para Home">
+        <img class="logo__imagem" src="../assets/img/logo-chef.png" alt="Logo da Fresco" />
+        <span class="logo__texto">fresco</span>
+      </a>
 
       <nav class="menu" aria-label="Menu principal">
         <a class="menu__link" href="../index.html">Home</a>
         <a class="menu__link" href="../cardapio/index.html">Cardápio</a>
         <a class="menu__link" href="../quem-somos/index.html">Quem somos</a>
         <a class="menu__link ativo" href="index.html">Notícias</a>
-        <a class="botao botao--destaque" href="../index.html#contato">Contato</a>
+
+        <a class="botao botao--contato" href="#contato" data-trocar-link="LINK_CONTATO_AQUI">
+          Contato
+        </a>
       </nav>
 
+      <!-- MENU MOBILE -->
       <button class="botao-menu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
-        <span class="botao-menu__linha"></span>
-        <span class="botao-menu__linha"></span>
-        <span class="botao-menu__linha"></span>
+        <span></span><span></span><span></span>
       </button>
     </div>
 
+    <!-- MENU MOBILE -->
     <div class="menu-mobile" id="menuMobile" aria-hidden="true">
       <div class="menu-mobile__conteudo">
         <button class="menu-mobile__fechar" id="fecharMenu" aria-label="Fechar menu">✕</button>
+
         <a class="menu-mobile__link" href="../index.html">Home</a>
         <a class="menu-mobile__link" href="../cardapio/index.html">Cardápio</a>
         <a class="menu-mobile__link" href="../quem-somos/index.html">Quem somos</a>
         <a class="menu-mobile__link" href="index.html">Notícias</a>
-        <a class="botao botao--destaque botao--largo" href="../index.html#contato">Contato</a>
+
+        <a class="botao botao--contato botao--largo" href="#contato">
+          Contato
+        </a>
+
+        <p class="nota">
+          <strong>Nota minha:</strong> depois eu ajusto os links finais quando todas as páginas estiverem prontas.
+        </p>
       </div>
     </div>
   </header>
 
-  <main id="conteudo">
-    <section class="pagina-topo">
+  <!-- =========================
+       HERO NOTÍCIAS (igual print)
+  ========================== -->
+  <section class="hero-noticias">
+    <div class="hero-noticias__overlay"></div>
+
+    <div class="container hero-noticias__conteudo">
+      <h1 class="hero-noticias__titulo">Notícias</h1>
+      <div class="hero-noticias__ornamento" aria-hidden="true"></div>
+
+      <p class="nota nota--transparente">
+        <strong>Nota minha:</strong> eu troco a imagem do topo no CSS, na variável <code>--img-hero-noticias</code>.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================
+       LISTA DE POSTS (3 colunas altas)
+  ========================== -->
+  <main class="pagina-noticias">
+    <section class="secao secao--clara">
       <div class="container">
-        <h1 class="pagina-topo__titulo">Notícias</h1>
-        <p class="pagina-topo__linha"></p>
-      </div>
-    </section>
 
-    <section class="secao">
-      <div class="container">
+        <div class="grade-noticias">
 
-        <!-- Eu deixei no formato “lista de posts” bem parecido -->
-        <div class="lista-posts">
-
-          <article class="card-noticia">
-            <div class="card-noticia__imagem imagem-placeholder imagem-placeholder--media" data-trocar="../assets/img/noticia-1.jpg">
-              <p><strong>IMAGEM</strong></p>
-              <p class="mini">Trocar por: <code>assets/img/noticia-1.jpg</code></p>
-            </div>
+          <!-- CARD 1 -->
+          <article class="card-noticia" style="--img: url('../assets/img/noticia-1.jpg');">
+            <div class="card-noticia__filtro"></div>
 
             <div class="card-noticia__conteudo">
-              <h2 class="card-noticia__titulo">
-                <a href="#" data-trocar-link="LINK_DA_NOTICIA_1_AQUI">Almoço Executivo</a>
-              </h2>
-              <p class="card-noticia__meta">22 de fevereiro de 2021 • Nenhum comentário</p>
+              <h2 class="card-noticia__titulo">Almoço Executivo</h2>
+
+              <div class="card-noticia__meta">
+                <span>22 de fevereiro de 2021</span>
+                <span>nenhum comentário</span>
+              </div>
+
               <p class="card-noticia__texto">
-                Conheça mais sobre o nosso excelente almoço executivo, disponível de segunda a sexta, a partir das 11:30h até 15h.
+                Conheça mais sobre o nosso excelente almoço executivo, disponível de segunda a sexta,
+                a partir das 11:30h até 15h.
               </p>
+
+              <a class="card-noticia__link" href="#" data-trocar-link="LINK_DA_NOTICIA_1_AQUI">
+                <!-- Nota minha: aqui é o link para a notícia completa -->
+              </a>
             </div>
           </article>
 
-          <article class="card-noticia">
-            <div class="card-noticia__imagem imagem-placeholder imagem-placeholder--media" data-trocar="../assets/img/noticia-2.jpg">
-              <p><strong>IMAGEM</strong></p>
-              <p class="mini">Trocar por: <code>assets/img/noticia-2.jpg</code></p>
-            </div>
+          <!-- CARD 2 -->
+          <article class="card-noticia" style="--img: url('../assets/img/noticia-2.jpg');">
+            <div class="card-noticia__filtro"></div>
 
             <div class="card-noticia__conteudo">
-              <h2 class="card-noticia__titulo">
-                <a href="#" data-trocar-link="LINK_DA_NOTICIA_2_AQUI">Receita de spaghetti a Carbonara</a>
-              </h2>
-              <p class="card-noticia__meta">22 de fevereiro de 2021 • Nenhum comentário</p>
+              <h2 class="card-noticia__titulo">Receita de<br>spaghetti a<br>Carbonara</h2>
+
+              <div class="card-noticia__meta">
+                <span>22 de fevereiro de 2021</span>
+                <span>nenhum comentário</span>
+              </div>
+
               <p class="card-noticia__texto">
-                Nullam eleifend, risus at venenatis condimentum, quam ante suscipit nisl, vitae accumsan orci velit egestas dolor...
+                Nullam eleifend, risus at venenatis condimentum, quam ante suscipit nisl,
+                vitae accumsan orci velit egestas dolor. In mollis, sem nec rutrum malesuada,
+                odio ipsum luctus augue, nec ornare...
               </p>
+
+              <a class="card-noticia__link" href="#" data-trocar-link="LINK_DA_NOTICIA_2_AQUI"></a>
             </div>
           </article>
 
-          <article class="card-noticia">
-            <div class="card-noticia__imagem imagem-placeholder imagem-placeholder--media" data-trocar="../assets/img/noticia-3.jpg">
-              <p><strong>IMAGEM</strong></p>
-              <p class="mini">Trocar por: <code>assets/img/noticia-3.jpg</code></p>
-            </div>
+          <!-- CARD 3 -->
+          <article class="card-noticia" style="--img: url('../assets/img/noticia-3.jpg');">
+            <div class="card-noticia__filtro"></div>
 
             <div class="card-noticia__conteudo">
-              <h2 class="card-noticia__titulo">
-                <a href="#" data-trocar-link="LINK_DA_NOTICIA_3_AQUI">Cardápio Fit</a>
-              </h2>
-              <p class="card-noticia__meta">22 de fevereiro de 2021 • Nenhum comentário</p>
+              <h2 class="card-noticia__titulo">Cardápio Fit</h2>
+
+              <div class="card-noticia__meta">
+                <span>22 de fevereiro de 2021</span>
+                <span>nenhum comentário</span>
+              </div>
+
               <p class="card-noticia__texto">
-                Nullam eleifend, risus at venenatis condimentum, quam ante suscipit nisl, vitae accumsan orci velit egestas dolor...
+                Nullam eleifend, risus at venenatis condimentum, quam ante suscipit nisl,
+                vitae accumsan orci velit egestas dolor. In mollis, sem nec rutrum malesuada,
+                odio ipsum luctus augue, nec ornare...
               </p>
+
+              <a class="card-noticia__link" href="#" data-trocar-link="LINK_DA_NOTICIA_3_AQUI"></a>
             </div>
           </article>
 
         </div>
 
-        <p class="nota">
-          <strong>Nota minha:</strong> se eu quiser criar páginas de notícia separadas, eu faço um <code>noticias/post.html</code> e replico o layout.
+        <p class="nota nota--central">
+          <strong>Nota minha:</strong> eu troco as imagens aqui:
+          <code>assets/img/noticia-1.jpg</code>, <code>noticia-2.jpg</code>, <code>noticia-3.jpg</code>
         </p>
 
       </div>
     </section>
+
+    <!-- =========================
+         RESERVA (igual Home)
+    ========================== -->
+    <section class="reserva" id="contato">
+      <div class="reserva__overlay"></div>
+
+      <div class="container reserva__conteudo">
+        <span class="material-symbols-outlined">
+          arrow_circle_up
+        </span>
+        <h2 class="reserva__titulo">Ligue e faça sua reserva</h2>
+        <p class="reserva__numero">3004-8660</p>
+      </div>
+    </section>
+
   </main>
 
   <footer class="rodape">
     <div class="container rodape__linha">
-      <p class="rodape__texto">Fresco © 2021 | <span class="mini">Clone feito por mim</span></p>
-      <button class="botao-topo" id="botaoTopo" aria-label="Voltar ao topo">↑</button>
+      <p class="rodape__texto">
+        Fresco © 2026 | Criado por <span class="rodape__destaque">Ailton A. Nakata</span>
+      </p>
     </div>
   </footer>
 
+  <button class="botao-topo" id="botaoTopo" aria-label="Voltar ao topo">↑</button>
+
   <script src="../assets/js/script.js"></script>
 </body>
+
 </html>
