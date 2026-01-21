@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fresco | Notícias</title>
+  <link rel="stylesheet" href="../assets/css/estilos.css" />
+</head>
+
+<body>
+  <a class="pular-conteudo" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="cabecalho">
+    <div class="container cabecalho__linha">
+      <a class="logo" href="../index.html"><span class="logo__texto">Fresco</span></a>
+
+      <nav class="menu" aria-label="Menu principal">
+        <a class="menu__link" href="../index.html">Home</a>
+        <a class="menu__link" href="../cardapio/index.html">Cardápio</a>
+        <a class="menu__link" href="../quem-somos/index.html">Quem somos</a>
+        <a class="menu__link ativo" href="index.html">Notícias</a>
+        <a class="botao botao--destaque" href="../index.html#contato">Contato</a>
+      </nav>
+
+      <button class="botao-menu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span class="botao-menu__linha"></span>
+        <span class="botao-menu__linha"></span>
+        <span class="botao-menu__linha"></span>
+      </button>
+    </div>
+
+    <div class="menu-mobile" id="menuMobile" aria-hidden="true">
+      <div class="menu-mobile__conteudo">
+        <button class="menu-mobile__fechar" id="fecharMenu" aria-label="Fechar menu">✕</button>
+        <a class="menu-mobile__link" href="../index.html">Home</a>
+        <a class="menu-mobile__link" href="../cardapio/index.html">Cardápio</a>
+        <a class="menu-mobile__link" href="../quem-somos/index.html">Quem somos</a>
+        <a class="menu-mobile__link" href="index.html">Notícias</a>
+        <a class="botao botao--destaque botao--largo" href="../index.html#contato">Contato</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="pagina-topo">
+      <div class="container">
+        <h1 class="pagina-topo__titulo">Notícias</h1>
+        <p class="pagina-topo__linha"></p>
+      </div>
+    </section>
+
+    <section class="secao">
+      <div class="container">
+
+        <!-- Eu deixei no formato “lista de posts” bem parecido -->
+        <div class="lista-posts">
+
+          <article class="card-noticia">
+            <div class="card-noticia__imagem imagem-placeholder imagem-placeholder--media" data-trocar="../assets/img/noticia-1.jpg">
+              <p><strong>IMAGEM</strong></p>
+              <p class="mini">Trocar por: <code>assets/img/noticia-1.jpg</code></p>
+            </div>
+
+            <div class="card-noticia__conteudo">
+              <h2 class="card-noticia__titulo">
+                <a href="#" data-trocar-link="LINK_DA_NOTICIA_1_AQUI">Almoço Executivo</a>
+              </h2>
+              <p class="card-noticia__meta">22 de fevereiro de 2021 • Nenhum comentário</p>
+              <p class="card-noticia__texto">
+                Conheça mais sobre o nosso excelente almoço executivo, disponível de segunda a sexta, a partir das 11:30h até 15h.
+              </p>
+            </div>
+          </article>
+
+          <article class="card-noticia">
+            <div class="card-noticia__imagem imagem-placeholder imagem-placeholder--media" data-trocar="../assets/img/noticia-2.jpg">
+              <p><strong>IMAGEM</strong></p>
+              <p class="mini">Trocar por: <code>assets/img/noticia-2.jpg</code></p>
+            </div>
+
+            <div class="card-noticia__conteudo">
+              <h2 class="card-noticia__titulo">
+                <a href="#" data-trocar-link="LINK_DA_NOTICIA_2_AQUI">Receita de spaghetti a Carbonara</a>
+              </h2>
+              <p class="card-noticia__meta">22 de fevereiro de 2021 • Nenhum comentário</p>
+              <p class="card-noticia__texto">
+                Nullam eleifend, risus at venenatis condimentum, quam ante suscipit nisl, vitae accumsan orci velit egestas dolor...
+              </p>
+            </div>
+          </article>
+
+          <article class="card-noticia">
+            <div class="card-noticia__imagem imagem-placeholder imagem-placeholder--media" data-trocar="../assets/img/noticia-3.jpg">
+              <p><strong>IMAGEM</strong></p>
+              <p class="mini">Trocar por: <code>assets/img/noticia-3.jpg</code></p>
+            </div>
+
+            <div class="card-noticia__conteudo">
+              <h2 class="card-noticia__titulo">
+                <a href="#" data-trocar-link="LINK_DA_NOTICIA_3_AQUI">Cardápio Fit</a>
+              </h2>
+              <p class="card-noticia__meta">22 de fevereiro de 2021 • Nenhum comentário</p>
+              <p class="card-noticia__texto">
+                Nullam eleifend, risus at venenatis condimentum, quam ante suscipit nisl, vitae accumsan orci velit egestas dolor...
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="nota">
+          <strong>Nota minha:</strong> se eu quiser criar páginas de notícia separadas, eu faço um <code>noticias/post.html</code> e replico o layout.
+        </p>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape__linha">
+      <p class="rodape__texto">Fresco © 2021 | <span class="mini">Clone feito por mim</span></p>
+      <button class="botao-topo" id="botaoTopo" aria-label="Voltar ao topo">↑</button>
+    </div>
+  </footer>
+
+  <script src="../assets/js/script.js"></script>
+</body>
+</html>

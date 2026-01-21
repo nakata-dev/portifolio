@@ -1,115 +1,252 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modelo Relacional</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modelo Relacional | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Aula sobre Modelo Relacional: DER (Diagrama Entidade-Relacionamento) e relacionamentos 1:1, 1:N e N:N com exemplos e regras." />
 </head>
 
 <body>
-  <header>
-    <h1>Modelo Relacional</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
-  <main>    
-<h2>Diagrama, Entidade, Relacionamento ou DER :</h2>
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Modelo Relacional</h1>
+          <p class="muted">
+            Entenda o <strong>DER</strong> (Diagrama Entidade-Relacionamento) e os principais tipos de relacionamento:
+            <strong>1:1</strong>, <strong>1:N</strong> e <strong>N:N</strong>.
+          </p>
+        </div>
 
-<img src="img/Modelo_Relacional.png" alt="Modelo_Relacional">
-<h2>Diagrama E - R ou DER:</h2>
-<img src="img/Relacionamento.png" alt="Relacionamento_duplo">
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
 
-<img src="img/DER.png" alt="Modelo_Relacional">
-<h2>Relacionamento de 1 para 1:</h2>
-<img src="img/Relacionamento_um_pra_um.png" alt="Relacionamento_um_pra_um">
-<p>Atenção: O lado dominante sempre recebe a chave estrangeira</p>
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">DER: entidades, relacionamentos e regras</h2>
 
-<h2>Relacionamento de 1 para muitos:</h2>
-<img src="img/Relacionamento_um_para_muitos.png" alt="Relacionamento_um_para_muitos">
-<p>Atenção: Pega a chave de 1 e envia para o Muitos. Que no caso aqui, um funcionários pode ter muitos dependentes.</p>
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                O DER é como um “mapa do banco” 🗺️  
+                Ele mostra as entidades (tabelas) e como elas se conectam.
+              </p>
+            </div>
 
-<h2>Relacionamento de muitos para muitos:</h2>
-<img src="img/Relacionamento_muitos_para_muitos.png" alt="Relacionamento_muitos_para_muitos">
-<p>Atenção: Aqui neste caso você envia de 1 para n que no caso é a relação entre cliente > compra e produto > compra.</p>
+            <!-- DER -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Diagrama, Entidade, Relacionamento (DER)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                É a representação visual do seu banco, com tabelas e conexões.
+              </p>
 
-<br>
-<br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+              <img
+                src="img/Modelo_Relacional.png"
+                alt="Modelo Relacional"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- Diagrama E-R -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Diagrama E-R (DER)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Visualizando as relações entre as entidades.
+              </p>
+
+              <img
+                src="img/Relacionamento.png"
+                alt="Relacionamento duplo"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <img
+                src="img/DER.png"
+                alt="DER completo"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- 1:1 -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Relacionamento 1 para 1 (1:1)</h3>
+              <img
+                src="img/Relacionamento_um_pra_um.png"
+                alt="Relacionamento um para um"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Atenção:</strong> o lado dominante sempre recebe a <strong>chave estrangeira</strong>.
+              </div>
+            </div>
+
+            <!-- 1:N -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Relacionamento 1 para muitos (1:N)</h3>
+              <img
+                src="img/Relacionamento_um_para_muitos.png"
+                alt="Relacionamento um para muitos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Atenção:</strong> você pega a chave do lado <strong>1</strong> e envia para o lado <strong>muitos</strong>.
+                <br>
+                Exemplo: um funcionário pode ter muitos dependentes.
+              </div>
+            </div>
+
+            <!-- N:N -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Relacionamento muitos para muitos (N:N)</h3>
+              <img
+                src="img/Relacionamento_muitos_para_muitos.png"
+                alt="Relacionamento muitos para muitos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Atenção:</strong> nesse caso normalmente existe uma tabela intermediária.
+                <br>
+                Exemplo: cliente → compra ← produto.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu o que é <strong>DER</strong></li>
+                <li>Viu entidades e relacionamentos</li>
+                <li>Aprendeu <strong>1:1</strong></li>
+                <li>Aprendeu <strong>1:N</strong></li>
+                <li>Aprendeu <strong>N:N</strong></li>
+                <li>Entendeu a ideia da tabela intermediária</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>

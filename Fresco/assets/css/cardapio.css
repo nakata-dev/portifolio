@@ -1,0 +1,242 @@
+/* =========================
+   PÁGINA: CARDÁPIO
+   Eu deixei este CSS separado pra não bagunçar a Home
+   e pra eu conseguir manter consistência visual no projeto
+========================= */
+
+:root{
+  /* Nota minha: aqui eu controlo a foto do topo do Cardápio */
+  --img-hero-cardapio: url("../img/hero-cardapio.jpg");
+}
+
+/* =========================
+   HERO DO CARDÁPIO (Menu)
+========================= */
+.hero-cardapio{
+  position: relative;
+  height: 56vh;
+  min-height: 380px;
+  background-image: var(--img-hero-cardapio);
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  align-items: end;
+}
+
+.hero-cardapio__overlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+}
+
+.hero-cardapio__conteudo{
+  position: relative;
+  padding: 60px 0 40px;
+}
+
+.hero-cardapio__titulo{
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: clamp(70px, 6vw, 120px);
+  color: #fff;
+  letter-spacing: .5px;
+}
+
+/* Ornamento debaixo do Menu (parecido com o print) */
+.hero-cardapio__ornamento{
+  width: 220px;
+  height: 20px;
+  margin-top: 10px;
+  opacity: .95;
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: contain;
+
+  /* Eu simulei o ornamento com CSS simples */
+  border-bottom: 2px solid rgba(255,255,255,.65);
+  border-radius: 999px;
+}
+
+/* =========================
+   BASE DA PÁGINA
+========================= */
+.pagina-cardapio{
+  background: var(--fundo-claro);
+}
+
+/* =========================
+   BLOCOS ALTERNADOS
+   (imagem + texto)
+========================= */
+.bloco-cardapio{
+  padding: 70px 0;
+  position: relative;
+}
+
+/* Fundo com leve “desenho fantasma” (bem parecido com o Fresco) */
+.bloco-cardapio::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 85% 50%, rgba(197,106,26,.06), transparent 40%);
+  pointer-events: none;
+}
+
+/* Grid principal */
+.bloco-cardapio__grid{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+/* Alternância do layout */
+.bloco-cardapio--imagem-esquerda .bloco-cardapio__imagem{ order: 1; }
+.bloco-cardapio--imagem-esquerda .bloco-cardapio__conteudo{ order: 2; }
+
+.bloco-cardapio--imagem-direita .bloco-cardapio__conteudo{ order: 1; }
+.bloco-cardapio--imagem-direita .bloco-cardapio__imagem{ order: 2; }
+
+/* =========================
+   IMAGEM GRANDE COM “PLACA PRETA”
+========================= */
+.bloco-cardapio__imagem{
+  position: relative;
+}
+
+/* A “placa preta” atrás da imagem (efeito igual ao print) */
+.bloco-cardapio__imagem::before{
+  content: "";
+  position: absolute;
+  width: 82%;
+  height: 82%;
+  background: #000;
+  opacity: .92;
+  border-radius: 18px;
+  z-index: 0;
+
+  /* Nota minha: esse deslocamento dá o estilo “descolado” */
+  left: 18%;
+  top: 14%;
+}
+
+/* Foto com canto arredondado e sombra */
+.foto-cardapio{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 430px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-image: var(--img);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--sombra);
+}
+
+/* Aviso de troca de imagem (bem didático) */
+.foto-cardapio__aviso{
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  background: rgba(255,255,255,.9);
+  color: #111;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+}
+
+/* =========================
+   CONTEÚDO DO CARDÁPIO
+========================= */
+.bloco-cardapio__conteudo{
+  padding: 6px 0;
+}
+
+.titulo-cardapio{
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  font-size: clamp(38px, 4vw, 64px);
+  color: #c56a1a;
+}
+
+/* Ornamento sob o título (estilo Fresco) */
+.ornamento-cardapio{
+  width: 160px;
+  height: 18px;
+  margin: 8px 0 20px;
+  border-bottom: 2px solid rgba(0,0,0,.25);
+  border-radius: 999px;
+}
+
+/* Item do cardápio */
+.item-cardapio{
+  padding: 6px 0;
+}
+
+.item-cardapio__cabecalho{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.item-cardapio__cabecalho h3{
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Preço laranja bem forte (como nas imagens) */
+.preco{
+  font-weight: 700;
+  color: var(--laranja);
+  font-size: 22px;
+}
+
+/* Descrição em itálico (idêntico ao print) */
+.descricao{
+  margin: 8px 0 0;
+  color: #333;
+  font-style: italic;
+  line-height: 1.85;
+  font-size: 14px;
+  max-width: 620px;
+}
+
+/* Linha divisória pontilhada leve */
+.linha-cardapio{
+  border: none;
+  border-top: 1px dashed rgba(0,0,0,.22);
+  margin: 18px 0;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 900px){
+  .bloco-cardapio__grid{
+    grid-template-columns: 1fr;
+  }
+
+  .bloco-cardapio__imagem::before{
+    display: none;
+  }
+
+  .foto-cardapio{
+    height: 320px;
+  }
+
+  .item-cardapio__cabecalho h3{
+    font-size: 22px;
+  }
+
+  .preco{
+    font-size: 18px;
+  }
+}

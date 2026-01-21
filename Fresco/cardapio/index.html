@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cardápio | Fresco</title>
+
+  <!-- ✅ Fontes do seu projeto (Home + Berkshire) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ✅ CSS principal (o mesmo da Home) -->
+  <link rel="stylesheet" href="../assets/css/estilos.css" />
+
+  <!-- ✅ CSS específico do Cardápio (novo) -->
+  <link rel="stylesheet" href="../assets/css/cardapio.css" />
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER (igual Home)
+       só deixei "Cardápio" ativo
+  ========================== -->
+  <header class="cabecalho" id="cabecalho">
+    <div class="container cabecalho__linha">
+
+      <a class="logo" href="../index.html" aria-label="Ir para Home">
+        <img class="logo__imagem" src="../assets/img/logo-chef.png" alt="Logo da Fresco" />
+        <span class="logo__texto">fresco</span>
+      </a>
+
+      <nav class="menu" aria-label="Menu principal">
+        <a class="menu__link" href="../index.html">Home</a>
+        <a class="menu__link ativo" href="index.html">Cardápio</a>
+        <a class="menu__link" href="../quem-somos/index.html" data-trocar-link="LINK_QUEM_SOMOS_AQUI">Quem somos</a>
+        <a class="menu__link" href="../noticias/index.html" data-trocar-link="LINK_NOTICIAS_AQUI">Notícias</a>
+
+        <a class="botao botao--contato" href="#contato" data-trocar-link="LINK_CONTATO_AQUI">
+          Contato
+        </a>
+      </nav>
+
+      <!-- MENU MOBILE -->
+      <button class="botao-menu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- MENU MOBILE -->
+    <div class="menu-mobile" id="menuMobile" aria-hidden="true">
+      <div class="menu-mobile__conteudo">
+        <button class="menu-mobile__fechar" id="fecharMenu" aria-label="Fechar menu">✕</button>
+
+        <a class="menu-mobile__link" href="../index.html">Home</a>
+        <a class="menu-mobile__link" href="index.html">Cardápio</a>
+        <a class="menu-mobile__link" href="../quem-somos/index.html">Quem somos</a>
+        <a class="menu-mobile__link" href="../noticias/index.html">Notícias</a>
+
+        <a class="botao botao--contato botao--largo" href="#contato">
+          Contato
+        </a>
+
+        <p class="nota">
+          <strong>Nota minha:</strong> eu troco esses links depois, quando criar as páginas finais.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================
+       HERO DO CARDÁPIO (igual imagens)
+  ========================== -->
+  <section class="hero-cardapio">
+    <div class="hero-cardapio__overlay"></div>
+
+    <div class="container hero-cardapio__conteudo">
+      <h1 class="hero-cardapio__titulo">Menu</h1>
+      <div class="hero-cardapio__ornamento" aria-hidden="true"></div>
+
+      <p class="nota nota--transparente">
+        <strong>Nota minha:</strong> eu troco a foto do topo aqui em:
+        <code>assets/css/cardapio.css</code> (variável <code>--img-hero-cardapio</code>)
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================
+       CONTEÚDO DO CARDÁPIO
+       Blocos alternados (imagem de um lado e texto do outro)
+  ========================== -->
+  <main class="pagina-cardapio">
+
+    <!-- PETISCOS -->
+    <section class="bloco-cardapio bloco-cardapio--imagem-esquerda" id="petiscos">
+      <div class="container bloco-cardapio__grid">
+
+        <div class="bloco-cardapio__imagem">
+          <div class="foto-cardapio" style="--img:url('../assets/img/cardapio-petiscos.jpg');">
+            <div class="foto-cardapio__aviso">
+              <strong>TROCAR IMAGEM</strong><br>
+              Eu coloco aqui: <code>assets/img/cardapio-petiscos.jpg</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloco-cardapio__conteudo">
+          <h2 class="titulo-cardapio">Petiscos</h2>
+          <div class="ornamento-cardapio" aria-hidden="true"></div>
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Olive ascolane</h3>
+              <span class="preco">R$14</span>
+            </div>
+            <p class="descricao">
+              Azeitonas enormes, recheadas com linguiça, carne moída e panceta, tudo isso empanado em farinha de rosca e frito!
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Panzerotti alla abruzzese</h3>
+              <span class="preco">R$7</span>
+            </div>
+            <p class="descricao">
+              Um calzone típico com recheio de queijo, linguiça seca e carne.
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Arancini</h3>
+              <span class="preco">R$27</span>
+            </div>
+            <p class="descricao">
+              Bolinho de arroz com recheio de filé mignon, pimenta-do-reino preta e azeite de oliva a gosto.
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Supplì</h3>
+              <span class="preco">R$38</span>
+            </div>
+            <p class="descricao">
+              Bolinho de arroz tradicional feito com carne moída, mussarela, pimenta-do-reino e funghi porcini seco.
+            </p>
+          </article>
+
+          <p class="nota">
+            <strong>Nota minha:</strong> eu só preciso duplicar um <code>.item-cardapio</code> pra adicionar mais pratos.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PIZZAS (invertido: texto à esquerda e imagem à direita) -->
+    <section class="bloco-cardapio bloco-cardapio--imagem-direita" id="pizzas">
+      <div class="container bloco-cardapio__grid">
+
+        <div class="bloco-cardapio__conteudo">
+          <h2 class="titulo-cardapio">Pizzas</h2>
+          <div class="ornamento-cardapio" aria-hidden="true"></div>
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Capricciosa</h3>
+              <span class="preco">R$22</span>
+            </div>
+            <p class="descricao">
+              Alcachofra, funghi, azeitonas pretas e presunto cru.
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Parmiggiana</h3>
+              <span class="preco">R$25</span>
+            </div>
+            <p class="descricao">
+              Molho de tomate, queijo parmesão, berinjela, mussarela e manjericão.
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Stagioni</h3>
+              <span class="preco">R$30</span>
+            </div>
+            <p class="descricao">
+              Molho de tomate e mussarela, azeitonas pretas, presunto, alcachofra e cogumelos.
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Marinara</h3>
+              <span class="preco">R$19</span>
+            </div>
+            <p class="descricao">
+              Molho de tomate, alho, orégano e azeite de oliva.
+            </p>
+          </article>
+
+          <p class="nota">
+            <strong>Nota minha:</strong> o preço fica alinhado sempre na direita usando o <code>display:flex</code>.
+          </p>
+        </div>
+
+        <div class="bloco-cardapio__imagem">
+          <div class="foto-cardapio" style="--img:url('../assets/img/cardapio-pizzas.jpg');">
+            <div class="foto-cardapio__aviso">
+              <strong>TROCAR IMAGEM</strong><br>
+              Eu coloco aqui: <code>assets/img/cardapio-pizzas.jpg</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MASSAS -->
+    <section class="bloco-cardapio bloco-cardapio--imagem-esquerda" id="massas">
+      <div class="container bloco-cardapio__grid">
+
+        <div class="bloco-cardapio__imagem">
+          <div class="foto-cardapio" style="--img:url('../assets/img/cardapio-massas.jpg');">
+            <div class="foto-cardapio__aviso">
+              <strong>TROCAR IMAGEM</strong><br>
+              Eu coloco aqui: <code>assets/img/cardapio-massas.jpg</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloco-cardapio__conteudo">
+          <h2 class="titulo-cardapio">Massas</h2>
+          <div class="ornamento-cardapio" aria-hidden="true"></div>
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Lasannia</h3>
+              <span class="preco">R$22</span>
+            </div>
+            <p class="descricao">
+              Preparado no forno, a receita original leva camadas alternadas de massa, queijo e molho de carne.
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Spaghetti a Carbonara</h3>
+              <span class="preco">R$27</span>
+            </div>
+            <p class="descricao">
+              Ovos, queijo parmesão, queijo pecorino romano, pimenta preta e azeite ou manteiga.
+            </p>
+          </article>
+
+          <hr class="linha-cardapio">
+
+          <article class="item-cardapio">
+            <div class="item-cardapio__cabecalho">
+              <h3>Tortellini</h3>
+              <span class="preco">R$38</span>
+            </div>
+            <p class="descricao">
+              Pequenos pastéis de massa com gemas de ovos estendidas, recheio de lombo de porco e presunto.
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTATO / RESERVA (mantém consistência com Home) -->
+    <section class="reserva" id="contato">
+      <div class="reserva__overlay"></div>
+
+      <div class="container reserva__conteudo">
+        <p class="reserva__icone" aria-hidden="true">📞</p>
+
+        <h2 class="reserva__titulo">Ligue e faça sua reserva</h2>
+        <p class="reserva__numero">3004-8660</p>
+
+        <p class="nota nota--transparente">
+          <strong>Nota minha:</strong> eu troco esse número quando eu colocar um telefone real.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape__linha">
+      <p class="rodape__texto">
+        Fresco © 2021 | Criado por <span class="rodape__destaque">Meu Nome Aqui</span>
+      </p>
+    </div>
+  </footer>
+
+  <button class="botao-topo" id="botaoTopo" aria-label="Voltar ao topo">↑</button>
+
+  <script src="../assets/js/script.js"></script>
+</body>
+</html>

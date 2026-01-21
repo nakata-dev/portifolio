@@ -1,240 +1,495 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chaves Estrangeiras e JOIN</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chaves Estrangeiras e JOIN | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Aula prática de Chaves Estrangeiras (FOREIGN KEY), Integridade Referencial e JOINs no MySQL (INNER, LEFT e RIGHT JOIN)." />
 </head>
 
 <body>
-  <header>
-    <h1>🧠 Modelo Relacional</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
-  <main>    
-<h2>🧠 ENGINE que suportam chave estrangeiras:</h2>
-<pre>
-    <code>
-Engine compativeis com chave estrangeiras:
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Chaves Estrangeiras e JOIN</h1>
+          <p class="muted">
+            Aqui você vai conectar tabelas de verdade: <strong>FOREIGN KEY</strong>, <strong>Integridade Referencial</strong>
+            e consultas com <strong>INNER JOIN</strong>, <strong>LEFT JOIN</strong> e <strong>RIGHT JOIN</strong>.
+          </p>
+        </div>
 
-- MySAM
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Relacionando tabelas no MySQL</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Se o banco fosse uma cidade, as <strong>chaves estrangeiras</strong> seriam as pontes 🌉
+                que fazem as tabelas “conversarem”.
+              </p>
+            </div>
+
+            <!-- ENGINE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Engines compatíveis com chave estrangeira</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoEngine">Engines compatíveis com chave estrangeira:
+
+- MyISAM
 - InnoDB
-- XtraDB
-    </code>
-</pre>
-<h2>🧠 ACID: As quatro principais regras de atomicidade</h2>
-<img src="img/ACID.png" alt="ACID">
+- XtraDB</code>
+              </pre>
 
-<h2>🧠 Modelo de Relacionamento de 1 para n(muitos)</h2>
-<img src="img/Modelo_de_relacionamento.png" alt="Modelo_de_relacionamento">
-<h2>🧠 Adicionando cursopreferido</h2>
-<pre>
-    <code>
-use cadastro;
-describe cadastro;
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoEngine">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Recomendação:</strong> no dia a dia, a mais usada é a <strong>InnoDB</strong> ✅
+              </div>
+            </div>
+
+            <!-- ACID -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">ACID</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Conjunto de regras que garantem segurança e consistência em transações.
+              </p>
+
+              <img
+                src="img/ACID.png"
+                alt="ACID"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- RELACIONAMENTO 1:N -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Relacionamento 1 para muitos (1:N)</h3>
+
+              <img
+                src="img/Modelo_de_relacionamento.png"
+                alt="Modelo de relacionamento 1 para muitos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- ADD CURSOPREFERIDO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Adicionando o campo cursopreferido</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Vamos criar a coluna que vai receber o ID do curso preferido do gafanhoto.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoAddCampo">use cadastro;
+
+desc gafanhotos;
 
 alter table gafanhotos
-add column cursopreferido int;
-    </code>
-</pre>
-<img src="img/Add_CursoPreferido.png" alt="Add_CursoPreferido">
+add column cursopreferido int;</code>
+              </pre>
 
-<h2>🧠 Informando que o campo "cursopreferido" é uma chave estrangeira.</h2>
-<pre>
-    <code>
-alter table gafanhotos
-add foreing key(cursopreferido)
-referece cursos(idcursos);
-    </code>
-</pre>
-<h2>🧠 Inserindo uma chave:</h2>
-<pre>
-    <code>
-alter table gafanhotos
-<strong>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoAddCampo">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Add_CursoPreferido.png"
+                alt="Adicionando cursopreferido"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- ADD FOREIGN KEY -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Transformando em chave estrangeira</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você informa ao MySQL que esse campo aponta para a tabela <strong>cursos</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoFK">alter table gafanhotos
 add foreign key (cursopreferido)
 references cursos(idcurso);
-</strong>
-desc gafanhotos;        
-    </code>
-</pre>
-<img src="img/Relacionando_Chave_Estrangeira.png" alt="Relacionando_Chave_Estrangeira">
-<h2>🧠 Leitura em liguagem natural:</h2>
-<pre>
-    <code>
-update gafanhotos set cursopreferido = 6 where id = 1;        
-    </code>
-</pre>
-<br>
-<p>
-<strong>
-<i>“Atualize a tabela gafanhotos,e dentro dela, mude o valor da coluna cursopreferido para 6, mas somente para o registro onde o campo id é igual a 1.”</i>
-</strong></p>
-<br>
-<pre>
-    <code>
-update gafanhotos set cursopreferido = 6 where id = 1;    
 
-inserir gafanhotos se cursopreferido for igual a 6 enquanto id for 1
+desc gafanhotos;</code>
+              </pre>
 
-É possível fazer manualmente usando a tabela que fica abaixo de sua área de comandos do workbench
-</code>
-</pre>
-<h2>🧠 Integridade referencial:</h2>
-<pre>
-    <code>
-É quando você não consegue deletar um campo que se relaciona outro.
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoFK">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
 
-Como por exemplo:
+              <img
+                src="img/Relacionando_Chave_Estrangeira.png"
+                alt="Relacionando chave estrangeira"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
 
-<strong>delete from cursos where idcurso = 6;</strong>
+            <!-- UPDATE NATURAL LANGUAGE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Leitura em linguagem natural</h3>
 
-Neste caso o curso de idcurso = 6 não vai ser apagado, pois ele já possui relação com cursofavorito
-    </code>
-</pre>
-<h2>🧠 Mensagem de erro aparece</h2>
-<img src="img/Tentando_Deletar_uma_linha_relacionada.png" alt="Tentando_Deletar_uma_linha_relacionada">
-<h2>Agora se escolhermos um campo que não tem relacionamento:</h2>
-<img src="img/Idcurso_sem_relacionamento_com_cursopreferido.png" alt="Idcurso_sem_relacionamento_com_cursopreferido">
-<h2>
-    🧠 Vamos usar novamente o comando:
-</h2>
-<pre>
-    <code>
-delete from cursos where idcurso = 28;
-select*from cursos;        
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoUpdateFK">update gafanhotos
+set cursopreferido = 6
+where id = 1;</code>
+              </pre>
 
-neste caso escolhi o 28, pois o 9 já estava preenchido no cursopreferido da tabela gafanhotos
-    </code>
-</pre>
-<h2>🧠 Join e On</h2>
-<pre>
-    <code>
-Select gafanhotos.nome, cursos.nome, cursos.ano
-from gafanhotos <strong>join</strong> cursos
-on cursos.idcurso = gafanhotos.cursopreferido;
-    </code>
-</pre>
-<br>
-<p>O que isso significa: Você vai selecionar a tabela gafanhotos do campo nome, tabela cursos do campo nome, e tabela cursos do campo ano.</p>
-<br>
-<p>(ON) fazer uma relação entre cursos.idcurso com gafanhotos campo cursopreferido.</p>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoUpdateFK">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
 
-<h2>🧠 Abreviando e criando relações entre as tabelas com Inner Join:</h2>
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Tradução:</strong>
+                “Atualize a tabela gafanhotos, mude o valor de cursopreferido para 6,
+                mas somente no registro onde o id é igual a 1.”
+              </div>
 
-<pre>
-    <code>
-select g.nome, c.nome, c.ano
-<strong>from gafanhotos</strong> as g inner join cursos as c
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin: 0;">
+                  Também dá pra fazer isso manualmente pelo grid do Workbench (embaixo da área de comandos).
+                </p>
+              </div>
+            </div>
+
+            <!-- INTEGRIDADE REFERENCIAL -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Integridade referencial</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Se um curso está sendo usado por alguém, você não pode apagar ele do nada.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoIntegridade">-- Tentando deletar um curso que está relacionado:
+delete from cursos
+where idcurso = 6;
+
+-- Esse delete pode falhar se existir gafanhoto com cursopreferido = 6</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoIntegridade">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Tentando_Deletar_uma_linha_relacionada.png"
+                alt="Tentando deletar uma linha relacionada"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- DELETE SEM RELAÇÃO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Apagando um curso sem relacionamento</h3>
+
+              <img
+                src="img/Idcurso_sem_relacionamento_com_cursopreferido.png"
+                alt="ID curso sem relacionamento com cursopreferido"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoDeleteOk">delete from cursos
+where idcurso = 28;
+
+select * from cursos;
+
+-- Exemplo: escolhi 28 porque ele não estava ligado em cursopreferido</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoDeleteOk">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- JOIN -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">JOIN e ON</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você “cola” uma tabela na outra usando a chave estrangeira como ponte.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoJoin">select gafanhotos.nome, cursos.curso, cursos.ano
+from gafanhotos join cursos
+on cursos.idcurso = gafanhotos.cursopreferido;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoJoin">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>O que significa:</strong> selecione o nome do gafanhoto, o nome do curso e o ano,
+                criando a relação com <strong>ON</strong>.
+              </div>
+            </div>
+
+            <!-- INNER JOIN -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">INNER JOIN com abreviações</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Abreviações ajudam bastante em consultas grandes.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoInner">select g.nome, c.curso, c.ano
+from gafanhotos as g
+inner join cursos as c
 on c.idcurso = g.cursopreferido
-order by g.nome;        
+order by g.nome;</code>
+              </pre>
 
-única parter que não pode ser abreviada é o que fica <strong>depois do from</strong> e as palavras que ficam <strong>após o ponto</strong>.
-    </code>
-</pre>
-<img src="img/Relações_Inner_Join.png" alt="Relações_Inner_Join">
-<h2>🧠 Mostrando a tabela do lado Left (Gafanhotos)</h2>
-<pre>
-    <code>
-        select g.nome, c.nome, c.ano
-        from <strong>gafanhotos as g left outer join</strong> cursos as c
-        on c.idcurso = g.cursopreferido
-        order by g.nome;              
-    </code>
-</pre>
-<img src="img/Filtrando_com_base_na_tabela_da_esquerda.png" alt="Filtrando_com_base_na_tabela_da_esquerda">
-<h2>🧠 Mostrando a tabela do lado Right (Cursos)</h2>
-<pre>
-    <code>
-select g.nome, c.nome, c.ano
-from gafanhotos as g <strong>right outer join cursos</strong> as c
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoInner">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Observação:</strong> o que vem depois do ponto não pode ser abreviado. Ex: <code>c.idcurso</code> ✅
+              </div>
+
+              <img
+                src="img/Relações_Inner_Join.png"
+                alt="Relações com Inner Join"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- LEFT JOIN -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">LEFT OUTER JOIN (prioriza a tabela da esquerda)</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoLeft">select g.nome, c.curso, c.ano
+from gafanhotos as g
+left outer join cursos as c
 on c.idcurso = g.cursopreferido
-order by g.nome;          
-    </code>
-</pre>
-<img src="img/Filtrando_com_base_na_tabela_da_direita.png" alt="Filtrando_com_base_na_tabela_da_direita">
-<br>
-<h2>🧠 Exemplo de uso das junções:</h2>
-<img src="img/Exemplo_Left_Right_Join.png" alt="Exemplo_Left_Right_Join">
-<br>
-<br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+order by g.nome;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoLeft">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Filtrando_com_base_na_tabela_da_esquerda.png"
+                alt="Filtrando com base na tabela da esquerda"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- RIGHT JOIN -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">RIGHT OUTER JOIN (prioriza a tabela da direita)</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoRight">select g.nome, c.curso, c.ano
+from gafanhotos as g
+right outer join cursos as c
+on c.idcurso = g.cursopreferido
+order by g.nome;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoRight">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Filtrando_com_base_na_tabela_da_direita.png"
+                alt="Filtrando com base na tabela da direita"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- EXEMPLO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Exemplo visual (Left x Right)</h3>
+              <img
+                src="img/Exemplo_Left_Right_Join.png"
+                alt="Exemplo Left Join e Right Join"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu Engines compatíveis</li>
+                <li>Viu o conceito de <strong>ACID</strong></li>
+                <li>Adicionou a coluna <strong>cursopreferido</strong></li>
+                <li>Aplicou <strong>FOREIGN KEY</strong></li>
+                <li>Entendeu <strong>Integridade Referencial</strong></li>
+                <li>Fez <strong>JOIN + ON</strong></li>
+                <li>Testou <strong>INNER JOIN</strong></li>
+                <li>Testou <strong>LEFT</strong> e <strong>RIGHT</strong> JOIN</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

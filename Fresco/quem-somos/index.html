@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fresco | Quem somos</title>
+  <link rel="stylesheet" href="../assets/css/estilos.css" />
+</head>
+
+<body>
+  <a class="pular-conteudo" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="cabecalho">
+    <div class="container cabecalho__linha">
+      <a class="logo" href="../index.html"><span class="logo__texto">Fresco</span></a>
+
+      <nav class="menu" aria-label="Menu principal">
+        <a class="menu__link" href="../index.html">Home</a>
+        <a class="menu__link" href="../cardapio/index.html">Cardápio</a>
+        <a class="menu__link ativo" href="index.html">Quem somos</a>
+        <a class="menu__link" href="../noticias/index.html">Notícias</a>
+        <a class="botao botao--destaque" href="../index.html#contato">Contato</a>
+      </nav>
+
+      <button class="botao-menu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span class="botao-menu__linha"></span>
+        <span class="botao-menu__linha"></span>
+        <span class="botao-menu__linha"></span>
+      </button>
+    </div>
+
+    <div class="menu-mobile" id="menuMobile" aria-hidden="true">
+      <div class="menu-mobile__conteudo">
+        <button class="menu-mobile__fechar" id="fecharMenu" aria-label="Fechar menu">✕</button>
+        <a class="menu-mobile__link" href="../index.html">Home</a>
+        <a class="menu-mobile__link" href="../cardapio/index.html">Cardápio</a>
+        <a class="menu-mobile__link" href="index.html">Quem somos</a>
+        <a class="menu-mobile__link" href="../noticias/index.html">Notícias</a>
+        <a class="botao botao--destaque botao--largo" href="../index.html#contato">Contato</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="pagina-topo">
+      <div class="container">
+        <h1 class="pagina-topo__titulo">Quem somos</h1>
+        <p class="pagina-topo__linha"></p>
+      </div>
+    </section>
+
+    <section class="secao">
+      <div class="container secao__grid">
+        
+        <div class="secao__midia">
+          <div class="imagem-placeholder" data-trocar="../assets/img/ingrediente.jpg">
+            <p><strong>IMAGEM - INGREDIENTE</strong></p>
+            <p>Substituir por: <code>assets/img/ingrediente.jpg</code></p>
+          </div>
+        </div>
+
+        <div class="secao__texto">
+          <h2 class="secao__titulo">
+            Nosso restaurante é um coletivo de gente apaixonada criando os melhores pratos da culinária italiana
+          </h2>
+
+          <p class="secao__descricao">
+            Lorem ipsum condimentum bibendum aenean imperdiet interdum curabitur pharetra sed, venenatis senectus eleifend auctor magna...
+          </p>
+
+          <h3 class="subtitulo">Comodidade</h3>
+          <ul class="lista-simples">
+            <li>Wifi</li>
+            <li>Espaço infantil</li>
+            <li>Música ao vivo</li>
+            <li>Estacionamento</li>
+          </ul>
+
+          <h3 class="subtitulo">Recomendado por</h3>
+          <div class="grade-logos">
+            <div class="logo-empresa" data-trocar="../assets/img/empresa-1.png">Logo 1</div>
+            <div class="logo-empresa" data-trocar="../assets/img/empresa-2.png">Logo 2</div>
+            <div class="logo-empresa" data-trocar="../assets/img/empresa-3.png">Logo 3</div>
+            <div class="logo-empresa" data-trocar="../assets/img/empresa-4.png">Logo 4</div>
+          </div>
+
+          <p class="nota mini">
+            <strong>Nota minha:</strong> eu troco as logos em <code>assets/img/empresa-*.png</code>.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="secao secao--escura">
+      <div class="container centralizar">
+        <h2 class="secao__titulo">Ligue e faça sua reserva</h2>
+        <p class="telefone">3004-8660</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape__linha">
+      <p class="rodape__texto">Fresco © 2021 | <span class="mini">Clone feito por mim</span></p>
+      <button class="botao-topo" id="botaoTopo" aria-label="Voltar ao topo">↑</button>
+    </div>
+  </footer>
+
+  <script src="../assets/js/script.js"></script>
+</body>
+</html>

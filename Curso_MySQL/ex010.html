@@ -1,148 +1,362 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Select III</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select III | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Aula Select III no MySQL: DISTINCT, GROUP BY, HAVING, COUNT e AVG com exemplos práticos e exercícios." />
 </head>
 
 <body>
-  <header>
-    <h1>Select III</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h2>DISTINCT e do GROUP BY com HAVING.:</h2>
-    <img src="img/Agrupar.png" alt="Agrupando_pessoas_por_idade">
-<pre>
-    <code>
-select carga from cursos
-group by carga;
-    </code>
-</pre>
-<h2>Resultado:</h2>
-<img src="img/Carga_horaria.png" alt="Carga_horaria" style="width: 15%;">
-<h2>Agregando e Agrupando</h2>
-<pre>
-    <code>
-select aulas, count(*) from cursos
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Select III</h1>
+          <p class="muted">
+            Agora você vai aprender a <strong>agrupar</strong> resultados com <strong>GROUP BY</strong>,
+            filtrar grupos com <strong>HAVING</strong>, e usar agregações como <strong>COUNT</strong> e <strong>AVG</strong>.
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">DISTINCT, GROUP BY e HAVING</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Pense no <strong>GROUP BY</strong> como “juntar em pacotes”.
+                E o <strong>HAVING</strong> como “filtrar esses pacotes” ✅
+              </p>
+            </div>
+
+            <!-- AGRUPAR -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Agrupar dados (GROUP BY)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Exemplo: agrupar cursos pela carga horária.
+              </p>
+
+              <img
+                src="img/Agrupar.png"
+                alt="Agrupando pessoas por idade (exemplo visual de agrupamento)"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoGroup1">select carga
+from cursos
+group by carga;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoGroup1">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>O que acontece:</strong> o resultado mostra apenas as <em>cargas únicas</em> existentes ✅
+              </div>
+            </div>
+
+            <!-- RESULTADO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Resultado (exemplo)</h3>
+              <img
+                src="img/Carga_horaria.png"
+                alt="Resultado agrupando carga horária"
+                style="width: 100%; max-width: 320px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <!-- AGREGANDO E AGRUPANDO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Agregando + Agrupando (COUNT + GROUP BY)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você descobre quantos cursos possuem a mesma quantidade de aulas.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoCountGroup">select aulas, count(*) as total
+from cursos
 group by aulas
 order by aulas;
 
-select*from aulas where aulas = 30;
-    </code>
-</pre>
-<h2>Having (quem tem):</h2>
-<pre>
-    <code>
-select ano, count(*) from cursos
-where ano > 30
-group by ano
-<strong>having ano > 2020</strong>
-order by count(*) asc;        
-    </code>
-</pre>
+-- Exemplo: ver quais cursos têm 30 aulas
+select * from cursos
+where aulas = 30;</code>
+              </pre>
 
-<h2>Revisando AVG (Média):</h2>
-<pre>
-    <code>
-select avg (carga) from cursos;
-    </code>
-</pre>
-<h2>Agrupando por carga e contando(count):</h2>
-<pre>
-    <code>
-select carga, count(*) from cursos
-where ano>2020
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoCountGroup">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> <code>count(*)</code> conta quantas linhas existem em cada grupo ✅
+              </div>
+            </div>
+
+            <!-- HAVING -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">HAVING (filtrar grupos)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>WHERE</strong> filtra linhas antes de agrupar.
+                O <strong>HAVING</strong> filtra depois de agrupar.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoHaving">select ano, count(*) as total
+from cursos
+group by ano
+having ano > 2020
+order by total asc;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoHaving">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Tradução:</strong> “mostre apenas os anos acima de 2020” ✅
+              </div>
+            </div>
+
+            <!-- AVG -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Revisando AVG (média)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Para descobrir a média de carga horária de todos os cursos:
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoAvg">select avg(carga) as media_carga
+from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoAvg">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- HAVING com subselect -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Agrupando e filtrando acima da média</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Esse aqui é forte: você filtra os grupos comparando com o resultado de outro SELECT.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoSubselect">select carga, count(*) as total
+from cursos
+where ano > 2020
 group by carga
-having carga > (select avg(carga) from cursos);        
-    </code>
-</pre>
-<h2>Selecione, Filtrei, Agrupei e Mostrei o resultado somente quem está acima do resultado de outro select.</h2>
-<h2>Exercitando:</h2>
-<h3>"1 - Quero uma lista com as profissões dos gafanhotos e seus respectivos quantitativos"</h3>
-<h3>"2 - Quantos gafanhotos homens e quantas mulheres nasceram após 01/Jan/2005?"</h3>
-<h3>"3 - Uma lista com os gafanhotos que nasceram fora do Brasil, mostrando o país de origem e o total de pessoas nascidas lá.Só nos interessam os países que tiverem mais de 2 gafanhotos com essa nacionaldiade"</h3>
-<h3>"4 - Uma lista agrupada pela altura dos gafanhotos, mostrando quantas pessoas pesam mais de 100 kg e que estão acima da média de altura de todos no cadastro"</h3>
-<br>
-<br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+having carga > (select avg(carga) from cursos);</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoSubselect">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Resumo:</strong> selecionei + filtrei + agrupei + mostrei só o que ficou acima da média ✅
+              </div>
+            </div>
+
+            <!-- EXERCÍCIOS -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Exercitando</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Agora é sua vez! Faça essas consultas usando <strong>GROUP BY</strong> e <strong>HAVING</strong>.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>1)</strong> Quero uma lista com as profissões dos gafanhotos e seus respectivos quantitativos.
+              </div>
+
+              <div class="alert" style="margin-top: 10px;">
+                <strong>2)</strong> Quantos gafanhotos homens e quantas mulheres nasceram após 01/Jan/2005?
+              </div>
+
+              <div class="alert" style="margin-top: 10px;">
+                <strong>3)</strong> Uma lista com os gafanhotos que nasceram fora do Brasil, mostrando o país de origem e o total de pessoas nascidas lá.
+                <br>
+                Só nos interessam os países com <strong>mais de 2</strong> gafanhotos.
+              </div>
+
+              <div class="alert" style="margin-top: 10px;">
+                <strong>4)</strong> Uma lista agrupada pela altura dos gafanhotos, mostrando quantas pessoas pesam mais de 100kg
+                e que estão acima da média de altura do cadastro.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>GROUP BY</strong> para agrupar</li>
+                <li>Contou resultados com <strong>COUNT</strong></li>
+                <li>Ordenou grupos com <strong>ORDER BY</strong></li>
+                <li>Filtrou grupos com <strong>HAVING</strong></li>
+                <li>Revisou <strong>AVG</strong> (média)</li>
+                <li>Usou <strong>subselect</strong> dentro do HAVING</li>
+                <li>Praticou com exercícios reais</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

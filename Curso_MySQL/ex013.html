@@ -1,190 +1,369 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>INNER JOIN</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INNER JOIN | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Aula prática de INNER JOIN no MySQL com relacionamento muitos-para-muitos e tabela associativa (gafanhoto_assiste_curso)." />
 </head>
 
 <body>
-  <header>
-    <h1>🧠 INNER JOIN</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
-  <main>    
-<h2>🧠 Criando tabela extra:</h2>
-<pre>
-    <code>
-use cadastro;
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>INNER JOIN</h1>
+          <p class="muted">
+            Aqui você vai entender como funciona o relacionamento <strong>muitos para muitos</strong>,
+            criando uma <strong>tabela associativa</strong> e conectando tudo com <strong>JOIN</strong>.
+          </p>
+        </div>
 
-create table gafanhoto_assite_curso(
-id int not null auto_increment,
-data date,
-idgafanhoto int,
-idcurso int,
-primary key(id),
-<b>
-foreign key(idgafanhoto) references gafanhotos(id),
-foreign key(idcurso) references cusos(idcurso)
-</b>
-) default charset = utf8;
-    </code>
-</pre>
-<h2>🧠 O que significa “foreign key”?</h2>
-<pre>
-    <code>
-Foreign Key (chave estrangeira) é um tipo especial de coluna que liga uma tabela a outra.
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
 
-Ela serve para garantir integridade entre os dados — ou seja, evita que existam registros “sem conexão” entre as tabelas
-    </code>
-</pre>
-<h2>📘 Tradução em português simples:</h2>
-<pre>
-    <code>
-“A coluna <strong>idgafanhoto</strong> desta tabela está ligada à coluna <strong>id</strong> da tabela <strong>gafanhotos</strong>.”
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Relação muitos-para-muitos na prática</h2>
 
-“A coluna <strong>idcurso</strong> desta tabela está ligada à coluna <strong>idcurso</strong> da tabela <strong>cursos</strong>.”
-    </code>
-</pre>
-<img src="img/Entendendo_Relação.png" alt="Entendendo_Relação">
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Um aluno pode fazer vários cursos.  
+                E um curso pode ter vários alunos.  
+                Resultado: precisamos de uma <strong>tabela ponte</strong> 🧩
+              </p>
+            </div>
 
-<h2>Inserindo valores na tabela:</h2>
-<pre>
-    <code>
-insert into gafanhoto_assite_curso values
-(default, '2024-03-01', '1','2');
-    </code>
-</pre>
-<h2>Junções:</h2>
-<img src="img/Jumções_Muitos_para_Muitos.png" alt="Jumções_Muitos_para_Muitos">
+            <!-- CRIAR TABELA -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Criando tabela extra (tabela associativa)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Essa tabela guarda quem assistiu qual curso e em qual data.
+              </p>
 
-<h2>Como fica na prática?</h2>
-<pre>
-    <code>
-SELECT g.nome, c.nome
-FROM gafanhotos g
-JOIN gafanhoto_assiste_curso a
-ON g.id = a.idgafanhoto
-JOIN cursos c
-ON c.idcurso = a.idcurso
-ORDER BY g.nome;        
-    </code>
-</pre>
-<br>
-<h1>Explicação final</h1>
-<h2>🧩 Temos 3 tabelas:</h2>
-<pre>
-    <code>
-gafanhotos → onde estão os alunos
-    👉 contém id e nome
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoCreateTabela">use cadastro;
+
+create table gafanhoto_assiste_curso(
+  id int not null auto_increment,
+  data date,
+  idgafanhoto int,
+  idcurso int,
+  primary key(id),
+  foreign key (idgafanhoto) references gafanhotos(id),
+  foreign key (idcurso) references cursos(idcurso)
+) default charset = utf8;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoCreateTabela">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> essa tabela é conhecida como <strong>tabela associativa</strong> ✅
+              </div>
+            </div>
+
+            <!-- O QUE É FOREIGN KEY -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">O que significa “FOREIGN KEY”?</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoFKExplain">Foreign Key (chave estrangeira) é um tipo especial de coluna que liga uma tabela a outra.
+
+Ela serve para garantir integridade entre os dados,
+evitando registros “sem conexão” entre as tabelas.</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoFKExplain">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- TRADUÇÃO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Tradução em português simples</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoTraducao">“A coluna idgafanhoto desta tabela está ligada à coluna id da tabela gafanhotos.”
+
+“A coluna idcurso desta tabela está ligada à coluna idcurso da tabela cursos.”</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoTraducao">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Entendendo_Relação.png"
+                alt="Entendendo a relação entre tabelas"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- INSERT -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Inserindo valores na tabela associativa</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoInsert">insert into gafanhoto_assiste_curso values
+(default, '2024-03-01', 1, 2);</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoInsert">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- JUNÇÕES VISUAL -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Junções (muitos para muitos)</h3>
+              <img
+                src="img/Jumções_Muitos_para_Muitos.png"
+                alt="Junções muitos para muitos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- JOIN TRIPLO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Como fica na prática?</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Agora juntamos as 3 tabelas com um JOIN triplo.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoJoinTriplo">select g.nome, c.curso
+from gafanhotos g
+join gafanhoto_assiste_curso a
+  on g.id = a.idgafanhoto
+join cursos c
+  on c.idcurso = a.idcurso
+order by g.nome;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoJoinTriplo">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Objetivo:</strong> “Quero ver o nome de cada gafanhoto junto com o curso que ele assiste.” ✅
+              </div>
+            </div>
+
+            <!-- EXPLICAÇÃO FINAL -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Explicação final</h3>
+
+              <h4 style="margin: 0 0 8px;">🧩 Temos 3 tabelas:</h4>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoResumoTabelas">gafanhotos → onde estão os alunos
+  👉 contém id e nome
 
 cursos → onde estão os cursos
-    👉 contém idcurso e nome
+  👉 contém idcurso e curso
 
 gafanhoto_assiste_curso → faz a ponte entre os dois
-    👉 contém idgafanhoto e idcurso
-    </code>
-</pre>
+  👉 contém idgafanhoto e idcurso</code>
+              </pre>
 
-<h2>💬 Pensando em linguagem humana:</h2>
-<pre>
-    <code>
-<b>“Quero ver o nome de cada gafanhoto junto com o nome do curso que ele assiste.”</b>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoResumoTabelas">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
 
-Mas como cada aluno pode estar em vários cursos, e cada curso pode ter vários alunos, precisamos ligar as tabelas de forma organizada.
-    </code>
-</pre>
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin: 0;">
+                  Como cada aluno pode estar em vários cursos e cada curso pode ter vários alunos,
+                  usamos a tabela associativa para organizar isso certinho ✅
+                </p>
+              </div>
+            </div>
 
-<h2>🧠 Resultado final (interpretação)</h2>
-<pre>
-    <code>
-gafanhoto	        curso
+            <!-- RESULTADO FINAL -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Resultado final (interpretação)</h3>
 
-Ailton	               MySQL
-Ailton	               PHP
-Bruna	               HTML
-Carlos	               Python        
-    </code>
-</pre>
-<br>
-<br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoResultado">gafanhoto        curso
+
+Ailton           MySQL
+Ailton           PHP
+Bruna            HTML
+Carlos           Python</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoResultado">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Criou tabela associativa</li>
+                <li>Entendeu o que é <strong>FOREIGN KEY</strong></li>
+                <li>Inseriu valores na ponte</li>
+                <li>Fez <strong>JOIN triplo</strong></li>
+                <li>Entendeu relação <strong>N:N</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

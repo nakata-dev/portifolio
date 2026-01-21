@@ -1,4 +1,420 @@
 /* ===== Reset básico ===== */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+:root {
+  --bg: #0b0f17;
+  --panel: #101826;
+  --panel2: #0f1724;
+  --text: #e7edf7;
+  --muted: #a9b4c7;
+  --border: rgba(255, 255, 255, 0.08);
+  --primary: #4f7cff;
+  --primary2: #2e60ff;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --radius: 16px;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(900px 500px at 20% 0%, rgba(79, 124, 255, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(46, 96, 255, 0.12), transparent 55%),
+    var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.container {
+  width: min(1100px, 92%);
+  margin: 0 auto;
+}
+
+a {
+  color: inherit;
+}
+
+/* ===== Botões ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  background: transparent;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+  font-weight: 700;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.btn:active {
+  transform: translateY(0px);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--primary), var(--primary2));
+  border-color: transparent;
+  box-shadow: 0 10px 22px rgba(79, 124, 255, 0.25);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 14px 30px rgba(79, 124, 255, 0.30);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn-ghost {
+  background: transparent;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.center {
+  display: grid;
+  place-items: center;
+}
+
+/* ===== Header/Nav ===== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(11, 15, 23, 0.65);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: relative;
+  /* IMPORTANTE para o dropdown do mobile ancorar */
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.brand-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  font-weight: 900;
+}
+
+.brand-text {
+  display: grid;
+}
+
+.brand-text span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 10px 10px;
+  border-radius: 10px;
+  transition: background .12s ease, color .12s ease;
+}
+
+.nav a:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+/* ===== Burger Menu (Mobile) ===== */
+/* Botão do menu: só aparece no mobile. */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  flex: 0 0 auto;
+}
+
+.nav-toggle:hover {
+  background: rgba(79, 124, 255, 0.10);
+  border-color: rgba(79, 124, 255, 0.25);
+}
+
+.nav-toggle:active {
+  transform: scale(0.98);
+}
+
+/* Ícone Google (Material Symbols) se você usar */
+.material-symbols-outlined {
+  font-variation-settings: "wght" 400;
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* Estilo mobile: menu vira dropdown, abre via .is-open */
+@media (max-width: 860px) {
+
+  /* mostra o botão */
+  .nav-toggle {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  /* menu fechado por padrão */
+  .nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 10px);
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(10, 14, 25, 0.96);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    z-index: 120;
+  }
+
+  /* abre quando JS adicionar is-open */
+  .nav.is-open {
+    display: flex;
+  }
+
+  /* links e botões ocupam largura total */
+  .nav a,
+  .nav .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* melhora espaçamento no mobile */
+  .nav a {
+    padding: 12px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+  }
+
+  .nav a:hover {
+    background: rgba(79, 124, 255, 0.10);
+    color: var(--text);
+  }
+}
+
+/* ===== Fim Burger Menu ===== */
+
+
+/* ===== Seções ===== */
+.section {
+  padding: 56px 0;
+}
+
+.section.alt {
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.section-head {
+  margin-bottom: 18px;
+}
+
+.section-head h1,
+.section-head h2 {
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.section-head p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.lead {
+  color: var(--muted);
+  font-size: 1.06rem;
+}
+
+/* ===== Hero (home) ===== */
+.hero {
+  padding: 64px 0 20px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.pill {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+}
+
+.trust {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: var(--muted);
+}
+
+.trust li {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+
+.hero-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.hero-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.stat {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.stat strong {
+  font-size: 1.2rem;
+  display: block;
+}
+
+.stat span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ===== Cards / grid ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.card h3 {
+  margin: 0 0 6px;
+}
+
+.list {
+  margin: 12px 0 14px;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+/* ===== Projetos (cards com imagem) ===== */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.project {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+/* ===== Reset básico ===== */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 img { max-width: 100%; display: block; }
@@ -79,7 +495,7 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  position: relative; /* IMPORTANTE para o dropdown do mobile ancorar */
+  position: relative;
 }
 
 .brand{
@@ -89,6 +505,7 @@ a { color: inherit; }
   text-decoration: none;
   color: var(--text);
 }
+
 .brand-avatar{
   width: 40px;
   height: 40px;
@@ -98,7 +515,18 @@ a { color: inherit; }
   background: rgba(255,255,255,0.06);
   border: 1px solid var(--border);
   font-weight: 900;
+  overflow: hidden;
 }
+
+/* ✅ FIX do avatar com imagem */
+.brand-avatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+
 .brand-text{ display: grid; }
 .brand-text span{ color: var(--muted); font-size: 0.92rem; }
 
@@ -121,7 +549,6 @@ a { color: inherit; }
 }
 
 /* ===== Burger Menu (Mobile) ===== */
-/* Botão do menu: só aparece no mobile. */
 .nav-toggle{
   display: none;
   align-items: center;
@@ -144,22 +571,18 @@ a { color: inherit; }
   transform: scale(0.98);
 }
 
-/* Ícone Google (Material Symbols) se você usar */
 .material-symbols-outlined{
   font-variation-settings: "wght" 400;
   font-size: 26px;
   line-height: 1;
 }
 
-/* Estilo mobile: menu vira dropdown, abre via .is-open */
 @media (max-width: 860px){
-  /* mostra o botão */
   .nav-toggle{
     display: inline-flex;
     margin-left: auto;
   }
 
-  /* menu fechado por padrão */
   .nav{
     position: absolute;
     left: 0;
@@ -177,12 +600,10 @@ a { color: inherit; }
     z-index: 120;
   }
 
-  /* abre quando JS adicionar is-open */
   .nav.is-open{
     display: flex;
   }
 
-  /* links e botões ocupam largura total */
   .nav a,
   .nav .btn{
     width: 100%;
@@ -190,7 +611,6 @@ a { color: inherit; }
     text-align: center;
   }
 
-  /* melhora espaçamento no mobile */
   .nav a{
     padding: 12px 12px;
     background: rgba(255,255,255,0.02);
@@ -201,8 +621,6 @@ a { color: inherit; }
     color: var(--text);
   }
 }
-/* ===== Fim Burger Menu ===== */
-
 
 /* ===== Seções ===== */
 .section{ padding: 56px 0; }
@@ -330,6 +748,10 @@ h1{
   width: 100%;
   height: 170px;
   object-fit: cover;
+
+  /* ✅ CORREÇÃO: foco da imagem no topo e central */
+  object-position: top center;
+
   border-bottom: 1px solid var(--border);
 }
 .project-body{ padding: 14px; }
@@ -469,17 +891,16 @@ textarea{ min-height: 120px; resize: vertical; }
 
 /* ===== FIX: Modal com scroll (botão não some) ===== */
 .modal{
-  max-height: 90vh;              /* cabe na tela */
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
 }
 
 .modal-body{
-  overflow: auto;                /* scroll interno */
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* se quiser, dá um respiro no final do form */
 .modal-body .form{
   padding-bottom: 6px;
 }
@@ -490,13 +911,11 @@ select{
   background: rgba(255,255,255,0.03);
 }
 
-/* options em geral: melhor garantir contraste */
 select option{
-  color: #111;                   /* texto escuro */
-  background: #fff;              /* fundo claro */
+  color: #111;
+  background: #fff;
 }
 
-/* quando o select está aberto/selecionado no Chrome/Edge */
 select:focus{
   border-color: rgba(79,124,255,0.65);
   box-shadow: 0 0 0 4px rgba(79,124,255,0.18);
@@ -573,7 +992,6 @@ select:focus{
 @media (max-width: 900px){
   .gallery-grid{ grid-template-columns: 1fr; }
 }
-
 
 /* ===== Pages: Lesson / Tutorial (WordPress) ===== */
 .lesson-grid{
@@ -677,7 +1095,6 @@ select:focus{
   background: rgba(79,124,255,0.10);
 }
 
-/* Responsivo */
 @media (max-width: 900px){
   .lesson-grid{
     grid-template-columns: 1fr;
@@ -707,7 +1124,6 @@ select:focus{
   border-radius: 0;
   font-size: 0.95rem;
 }
-
 
 /* Alertas e componentes usados nas aulas */
 .alert{
@@ -822,10 +1238,8 @@ footer{
 
 /* =========================
    WhatsApp: borda gradiente animada (Google-like) + pulsar + surge após 5s
-   Técnica: background-clip (sem máscara) => não vira “hélice”
    ========================= */
 
-/* Permite animar o ângulo do conic-gradient de forma suave (Chromium/Safari atuais) */
 @property --wa-angle{
   syntax: "<angle>";
   inherits: false;
@@ -842,10 +1256,8 @@ footer{
   padding: 14px 16px;
   border-radius: 999px;
 
-  /* Borda “real” transparente pra receber o gradiente */
   border: 2px solid transparent;
 
-  /* Fundo sólido no miolo + conic-gradient só na borda */
   background:
     linear-gradient(#25D366, #25D366) padding-box,
     conic-gradient(
@@ -864,7 +1276,6 @@ footer{
   box-shadow: 0 16px 35px rgba(0,0,0,0.35);
   isolation: isolate;
 
-  /* Surge após 5s (controlado por .is-visible via JS) */
   --wa-y: 12px;
   opacity: 0;
   visibility: hidden;
@@ -882,7 +1293,6 @@ footer{
   transition: opacity .35s ease, transform .35s ease, visibility 0s;
 }
 
-/* Glow suave atrás (opcional, fica bonito e não “entorta”) */
 .wa-float::after{
   content: "";
   position: absolute;
@@ -912,20 +1322,711 @@ footer{
   opacity: .75;
 }
 
-/* gira o gradiente (não gira o botão, só o ângulo do conic) */
 @keyframes waSpin{
   to{ --wa-angle: 360deg; }
 }
 
-/* pulsar sem brigar com a entrada */
 @keyframes waBreathe{
   0%, 100% { transform: translateY(var(--wa-y)) scale(1); }
   50% { transform: translateY(var(--wa-y)) scale(1.06); }
 }
 
-/* Acessibilidade */
 @media (prefers-reduced-motion: reduce){
   .wa-float.is-attention{ animation: none; }
   .wa-float::after{ opacity: .45; }
 }
 
+.project img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+
+  /* ✅ Mostra mais a parte de cima da imagem */
+  object-position: top center;
+}
+
+.project-body {
+  padding: 14px;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.project-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* ===== Formulários ===== */
+.form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+label {
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  outline: none;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.help {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* ===== FAQ ===== */
+.faq {
+  display: grid;
+  gap: 10px;
+}
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px 14px;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.faq-item p {
+  margin: 10px 0 0;
+}
+
+/* ===== CTA box ===== */
+.cta-box {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(79, 124, 255, 0.18), rgba(255, 255, 255, 0.03));
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  padding: 26px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.footer-links {
+  display: block;
+  gap: 20px;
+  text-align: center;
+}
+
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 10px;
+}
+
+.footer-links a:hover {
+  color: var(--text);
+}
+
+.tiny {
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 14px 0 0;
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: none;
+  place-items: center;
+  z-index: 300;
+  padding: 14px;
+}
+
+.modal-overlay.open {
+  display: grid;
+}
+
+.modal {
+  width: min(720px, 96%);
+  background: rgba(16, 24, 38, 0.95);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.modal-head {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-head strong {
+  font-size: 1.05rem;
+}
+
+.modal-close {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
+  }
+}
+
+/* ===== FIX: Modal com scroll (botão não some) ===== */
+.modal {
+  max-height: 90vh;
+  /* cabe na tela */
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  overflow: auto;
+  /* scroll interno */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* se quiser, dá um respiro no final do form */
+.modal-body .form {
+  padding-bottom: 6px;
+}
+
+/* ===== FIX: Select/Options legíveis ===== */
+select {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* options em geral: melhor garantir contraste */
+select option {
+  color: #111;
+  /* texto escuro */
+  background: #fff;
+  /* fundo claro */
+}
+
+/* quando o select está aberto/selecionado no Chrome/Edge */
+select:focus {
+  border-color: rgba(79, 124, 255, 0.65);
+  box-shadow: 0 0 0 4px rgba(79, 124, 255, 0.18);
+}
+
+/* ===== Certificados: galeria bonita ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cert {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.cert button {
+  all: unset;
+  cursor: pointer;
+  display: block;
+}
+
+.cert img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border);
+  transition: transform .18s ease;
+}
+
+.cert:hover img {
+  transform: scale(1.02);
+}
+
+.cert-body {
+  padding: 14px;
+}
+
+.cert-body h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.cert-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ===== Modal de imagem (visualização do certificado) ===== */
+.img-preview {
+  display: grid;
+  gap: 10px;
+}
+
+.img-preview img {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.img-preview .preview-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ===== Pages: Lesson / Tutorial (WordPress) ===== */
+.lesson-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 0.9fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.lesson {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+}
+
+.lesson-title {
+  margin-top: 0;
+}
+
+.lesson p {
+  line-height: 1.65;
+}
+
+.lesson code {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.95em;
+}
+
+.media {
+  margin: 12px 0 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.media figcaption {
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+
+.steps {
+  display: grid;
+  gap: 14px;
+  padding-left: 18px;
+}
+
+.steps>li {
+  padding: 12px 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.steps h3 {
+  margin: 0 0 6px;
+}
+
+.lesson-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.lesson-aside .card {
+  position: sticky;
+  top: 18px;
+}
+
+.toc {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.toc a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.toc a:hover {
+  background: rgba(79, 124, 255, 0.10);
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .lesson-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lesson-aside .card {
+    position: static;
+  }
+}
+
+/* Caixa de código para tutoriais */
+.codebox {
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  overflow: auto;
+}
+
+.codebox pre {
+  margin: 0;
+  white-space: pre;
+}
+
+.codebox code {
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.95rem;
+}
+
+
+/* Alertas e componentes usados nas aulas */
+.alert {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.alert-warn {
+  background: rgba(255, 165, 0, 0.08);
+}
+
+.pill {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(79, 124, 255, 0.10);
+  font-weight: 700;
+}
+
+.card.soft {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.checklist {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.steps .list {
+  margin-top: 8px;
+}
+
+/* Cards de recursos (links com imagem) */
+.resource-grid {
+  margin-top: 12px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.resource-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(79, 124, 255, 0.25);
+  background: rgba(79, 124, 255, 0.06);
+}
+
+.resource-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.resource-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 860px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.code-card {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: auto;
+}
+
+.code-card pre {
+  margin: 0;
+  white-space: pre;
+}
+
+.code-card code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+footer {
+  text-align: center;
+}
+
+.site-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* =========================
+   WhatsApp: borda gradiente animada (Google-like) + pulsar + surge após 5s
+   Técnica: background-clip (sem máscara) => não vira “hélice”
+   ========================= */
+
+/* Permite animar o ângulo do conic-gradient de forma suave (Chromium/Safari atuais) */
+@property --wa-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.wa-float {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 999;
+  cursor: pointer;
+
+  padding: 14px 16px;
+  border-radius: 999px;
+
+  /* Borda “real” transparente pra receber o gradiente */
+  border: 2px solid transparent;
+
+  /* Fundo sólido no miolo + conic-gradient só na borda */
+  background:
+    linear-gradient(#25D366, #25D366) padding-box,
+    conic-gradient(from var(--wa-angle),
+      #00c2ff,
+      #7c3aed,
+      #ff2d55,
+      #ffb000,
+      #00e676,
+      #00c2ff) border-box;
+
+  color: #08150d;
+  font-weight: 900;
+
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.35);
+  isolation: isolate;
+
+  /* Surge após 5s (controlado por .is-visible via JS) */
+  --wa-y: 12px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(var(--wa-y)) scale(0.98);
+  transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;
+}
+
+.wa-float.is-visible {
+  --wa-y: 0px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(var(--wa-y)) scale(1);
+  transition: opacity .35s ease, transform .35s ease, visibility 0s;
+}
+
+/* Glow suave atrás (opcional, fica bonito e não “entorta”) */
+.wa-float::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+
+  background: conic-gradient(from var(--wa-angle),
+      rgba(0, 194, 255, 0),
+      rgba(124, 58, 237, .45),
+      rgba(255, 45, 85, .35),
+      rgba(255, 176, 0, .35),
+      rgba(0, 230, 118, .35),
+      rgba(0, 194, 255, 0));
+  filter: blur(14px);
+}
+
+.wa-float.is-attention {
+  animation: waBreathe 1.35s ease-in-out infinite, waSpin 1.15s linear infinite;
+}
+
+.wa-float.is-attention::after {
+  opacity: .75;
+}
+
+/* gira o gradiente (não gira o botão, só o ângulo do conic) */
+@keyframes waSpin {
+  to {
+    --wa-angle: 360deg;
+  }
+}
+
+/* pulsar sem brigar com a entrada */
+@keyframes waBreathe {
+
+  0%,
+  100% {
+    transform: translateY(var(--wa-y)) scale(1);
+  }
+
+  50% {
+    transform: translateY(var(--wa-y)) scale(1.06);
+  }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .wa-float.is-attention {
+    animation: none;
+  }
+
+  .wa-float::after {
+    opacity: .45;
+  }
+}

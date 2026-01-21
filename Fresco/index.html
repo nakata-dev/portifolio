@@ -1,230 +1,409 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template - Fresco Pizzaria</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style>
-        /* =================================
-        1. RESET E VARIAVEIS GLOBAIS
-        ================================= */
-        :root {
-            --primary-color: #ff9800; /* Laranja do botão Contato */
-            --text-color: #333;
-            --light-bg: #fff;
-            --header-height: 80px;
-            --max-width: 1200px;
-        }
+    <title>Fresco | Culinária Italiana</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+    <!-- Eu puxei fontes parecidas com o estilo do Fresco: título serifado + texto limpo -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
 
-        body {
-            background-color: #f4f4f4;
-            color: var(--text-color);
-        }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
 
-        a {
-            text-decoration: none;
-            color: var(--text-color);
-            transition: color 0.3s;
-        }
-
-        /* Container principal que centraliza o conteúdo */
-        .container {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* =================================
-        2. HEADER & NAVEGAÇÃO
-        ================================= */
-        header {
-            background-color: var(--light-bg);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            height: var(--header-height);
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: var(--header-height);
-        }
-
-        /* LOGO / Nome da Empresa */
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        .logo img {
-            height: 40px; /* Ajuste o tamanho da logo */
-            margin-right: 10px;
-        }
-
-        /* Menu Principal */
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-        .nav-menu a {
-            padding: 5px 0;
-            font-weight: 500;
-        }
-        .nav-menu a:hover {
-            color: var(--primary-color);
-        }
-        
-        /* O botão de "Contato" destacado */
-        .btn-contact {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        .btn-contact:hover {
-            background-color: #e68900; /* Um tom mais escuro */
-        }
-
-        /* Menu de ícones sociais (opcional, como visto na imagem) */
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            margin-left: 20px;
-        }
-        .social-icons a {
-            color: var(--primary-color);
-            font-size: 1.2em;
-        }
-
-
-        /* =================================
-        3. HERO SECTION / CONTEÚDO PRINCIPAL
-        ================================= */
-        .hero-section {
-            background-color: var(--light-bg);
-            padding: 40px 0;
-            margin-top: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            text-align: center;
-        }
-
-        .main-content {
-            padding: 40px 0;
-        }
-
-        .inner-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        /* Estilo para a imagem grande central (como visto na imagem de referência) */
-        .large-image-container {
-            width: 100%;
-            height: 500px; /* Altura padrão, ajuste conforme necessário */
-            background-color: #333; /* Cor para simular o fundo da foto */
-            background-image: url('caminho/para/sua/imagem-principal.jpg'); /* Sua imagem */
-            background-size: cover;
-            background-position: center;
-            border-radius: 5px;
-            margin-bottom: 40px;
-        }
-
-        /* =================================
-        4. MEDIA QUERIES (Responsividade)
-        ================================= */
-        @media (max-width: 900px) {
-            .nav-menu {
-                display: none; /* Esconde o menu principal em telas menores */
-            }
-            .navbar {
-                justify-content: space-around; /* Centraliza logo e botão */
-            }
-            .social-icons {
-                display: none; /* Esconde ícones sociais em mobile */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/estilos.css" />
 </head>
-<body>
 
-    <header>
-        <div class="container navbar">
-            <a href="#" class="logo">
-                Fresco Pizzaria
+<body>
+    <!-- Eu deixo esse atalho escondido pra acessibilidade (boa prática) -->
+    <a class="pular-conteudo" href="#conteudo">Ir para o conteúdo</a>
+
+    <!-- =========================
+       CABEÇALHO FIXO (BRANCO)
+       bem parecido com o Fresco
+  ========================== -->
+    <header class="cabecalho" id="cabecalho">
+        <div class="container cabecalho__linha">
+
+            <!-- LOGO -->
+            <a class="logo" href="index.html" aria-label="Ir para Home">
+                <!-- Eu coloquei a imagem da logo aqui -->
+                <img class="logo__imagem" src="assets/img/logo-chef.png" alt="Logo da Fresco" />
+
+                <!-- Eu deixei o nome do lado pra ficar igual ao estilo do Fresco -->
+                <span class="logo__texto">fresco</span>
+
+                <!-- Nota minha: se eu quiser tirar o texto e deixar só a imagem, é só apagar o span acima -->
             </a>
 
-            <nav>
-                <ul class="nav-menu">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Notícias</a></li>
-                    <li><a href="#">Cardápio</a></li>
-                    <li><a href="#">Quem Somos</a></li>
-                </ul>
+
+            <!-- Nota minha: se eu quiser a logo imagem real:
+             <img src="assets/img/logo.png" alt="Fresco" /> -->
+            </a>
+
+            <!-- MENU DESKTOP -->
+            <nav class="menu" aria-label="Menu principal">
+                <a class="menu__link ativo" href="index.html">Home</a>
+                <a class="menu__link" href="cardapio/index.html">Cardápio</a>
+                <a class="menu__link" href="quem-somos/index.html">Quem somos</a>
+                <a class="menu__link" href="noticias/index.html">Notícias</a>
+
+                <!-- Eu fiz o botão contato no estilo “pill laranja” igual ao original -->
+                <a class="botao botao--contato" href="#contato" data-trocar-link="LINK_CONTATO_AQUI">
+                    Contato
+                </a>
             </nav>
 
-            <div style="display: flex; align-items: center;">
-                <a href="#" class="btn-contact">Contato</a>
-                
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
+            <!-- MENU MOBILE -->
+            <button class="botao-menu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <!-- MENU MOBILE (overlay) -->
+        <div class="menu-mobile" id="menuMobile" aria-hidden="true">
+            <div class="menu-mobile__conteudo">
+                <button class="menu-mobile__fechar" id="fecharMenu" aria-label="Fechar menu">✕</button>
+
+                <a class="menu-mobile__link" href="index.html">Home</a>
+                <a class="menu-mobile__link" href="cardapio/index.html">Cardápio</a>
+                <a class="menu-mobile__link" href="quem-somos/index.html">Quem somos</a>
+                <a class="menu-mobile__link" href="noticias/index.html">Notícias</a>
+
+                <a class="botao botao--contato botao--largo" href="#contato">
+                    Contato
+                </a>
+
+                <p class="nota">
+                    <strong>Nota minha:</strong> eu troco os links do menu aqui quando eu fizer o projeto “real”.
+                </p>
             </div>
-            
         </div>
     </header>
 
-    <main class="main-content">
-        <div class="container">
-            
-            <section class="hero-section">
-                
-                <div class="large-image-container">
+    <main id="conteudo">
+
+        <!-- =========================
+         HERO (FOTO FUNDO + TEXTO CENTRAL)
+         igual seu print
+    ========================== -->
+        <section class="hero">
+            <!-- Eu deixei essa imagem como BACKGROUND no CSS pra ficar igual o Fresco -->
+            <div class="hero__overlay"></div>
+
+            <div class="hero__conteudo">
+                <div class="hero__enfeite" aria-hidden="true"></div>
+
+                <h1 class="hero__titulo">Fresco</h1>
+
+                <p class="hero__subtitulo">ESPECIALIDADES ITALIANAS</p>
+
+                <p class="hero__frase">Comida boa | Bom vinho</p>
+            </div>
+        </section>
+
+        <!-- =========================
+         BEM VINDO (2 COLUNAS)
+         texto à esquerda + foto à direita
+    ========================== -->
+        <section class="secao secao--clara">
+            <div class="container bemvindo__grid">
+
+                <div class="bemvindo__texto">
+                    <p class="bemvindo__mini">O mais amado do bairro</p>
+
+                    <h2 class="titulo-laranja">Bem vindo</h2>
+
+                    <h3 class="bemvindo__titulo">
+                        Reconhecido pela<br>
+                        boa comida e bebida<br>
+                        desde 1978.
+                    </h3>
+
+                    <p class="bemvindo__descricao">
+                        Premiada pelo instituto de qualidade culinária e oferecendo os melhores serviços.
+                        Premiada pelo instituto Curso em Vídeo de qualidade de culinária e oferecendo os melhores
+                        serviços.
+                    </p>
+
+                    <a class="botao botao--escuro" href="quem-somos/index.html">
+                        Mais sobre nós <span aria-hidden="true">→</span>
+                    </a>
+
+                    <p class="nota">
+                        <strong>Nota minha:</strong> esse texto eu posso adaptar pra um restaurante real depois.
+                    </p>
+                </div>
+
+                <div class="bemvindo__imagem">
+                    <!-- Eu deixei imagem com placeholder fácil -->
+                    <div class="imagem-real" style="--img:url('assets/img/pizza-saborosa.jpg');">
+                        <div class="imagem-real__aviso">
+                            <strong>TROCAR IMAGEM</strong><br>
+                            Eu coloco aqui: <code>assets/img/pizza-saborosa.jpg</code>
+                        </div>
                     </div>
-
-                <div class="inner-content">
-                    <h2>ESPECIALIDADES ITALIANAS</h2>
-                    <p>Comida boa | Bom vinho</p>
-                    <p>Reconhecido pela boa comida e bebida desde 1978. Premiada pelo instituto de qualidade culinária e oferecendo os melhores serviços.</p>
-                    <a href="#" class="btn-contact" style="margin-top: 15px; display: inline-block;">Mais sobre nós</a>
-                </div>
-                
-                <div class="inner-content">
-                    <h2>Nosso Cardápio</h2>
-                    <p>Estrutura para itens de menu...</p>
-                    <a href="#" style="color: blue;">CARDÁPIO COMPLETO</a>
                 </div>
 
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- =========================
+         HORÁRIO (2 COLUNAS, clean)
+    ========================== -->
+        <section class="secao secao--bege">
+            <div class="container horario__grid">
+
+                <div class="horario__texto">
+                    <h2 class="titulo-laranja">Horário</h2>
+                    <p class="horario__frase">Todos os dias de 9h até as 23h</p>
+
+                    <p class="nota">
+                        <strong>Nota minha:</strong> eu posso ajustar esse horário depois, isso é só exemplo.
+                    </p>
+                </div>
+
+                <div class="horario__imagem">
+                    <div class="imagem-real" style="--img:url('assets/img/ingrediente.jpg');">
+                        <div class="imagem-real__aviso">
+                            <strong>TROCAR IMAGEM</strong><br>
+                            Eu coloco aqui: <code>assets/img/ingrediente.jpg</code>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =========================
+         CARDÁPIO (FUNDO BEGE + ITENS EM 2 COLUNAS)
+         igual ao print
+    ========================== -->
+        <section class="secao secao--bege" id="cardapio-resumo">
+            <div class="container">
+
+                <div class="titulo-secao">
+                    <p class="titulo-secao__icone" aria-hidden="true">🌿</p>
+                    <h2 class="titulo-laranja centralizado">Nosso Cardápio</h2>
+                    <p class="titulo-secao__sub">
+                        Ingredientes de qualidade, pratos saborosos.
+                    </p>
+                </div>
+
+                <div class="cardapio__grid">
+
+                    <!-- ITEM -->
+                    <article class="item-menu">
+                        <div class="item-menu__img imagem-quadrada"
+                            style="--img:url('assets/img/prato-delicioso.jpg');">
+                            <span class="imagem-quadrada__tag">Trocar: assets/img/prato-delicioso.jpg</span>
+                        </div>
+
+                        <div class="item-menu__info">
+                            <h3 class="item-menu__titulo">Peixe à Vapor</h3>
+                            <p class="item-menu__desc">Acompanha salada e legumes.</p>
+                        </div>
+
+                        <p class="item-menu__preco">R$30</p>
+                    </article>
+
+                    <article class="item-menu">
+                        <div class="item-menu__img imagem-quadrada" style="--img:url('assets/img/macarrao-fino.jpg');">
+                            <span class="imagem-quadrada__tag">Trocar: assets/img/macarrao-fino.jpg</span>
+                        </div>
+
+                        <div class="item-menu__info">
+                            <h3 class="item-menu__titulo">Fettuccine Tradizionale</h3>
+                            <p class="item-menu__desc">Molho branco com manjericão.</p>
+                        </div>
+
+                        <p class="item-menu__preco">R$45</p>
+                    </article>
+
+                    <article class="item-menu">
+                        <div class="item-menu__img imagem-quadrada" style="--img:url('assets/img/espaguete.jpg');">
+                            <span class="imagem-quadrada__tag">Trocar: assets/img/espaguete.jpg</span>
+                        </div>
+
+                        <div class="item-menu__info">
+                            <h3 class="item-menu__titulo">Spaghetti</h3>
+                            <p class="item-menu__desc">Spaghetti a moda da casa.</p>
+                        </div>
+
+                        <p class="item-menu__preco">R$28</p>
+                    </article>
+
+                    <article class="item-menu">
+                        <div class="item-menu__img imagem-quadrada" style="--img:url('assets/img/pizza-azeitona.jpg');">
+                            <span class="imagem-quadrada__tag">Trocar: assets/img/pizza-azeitona.jpg</span>
+                        </div>
+
+                        <div class="item-menu__info">
+                            <h3 class="item-menu__titulo">Pizza Speciale</h3>
+                            <p class="item-menu__desc">Molho de tomate com azeitonas.</p>
+                        </div>
+
+                        <p class="item-menu__preco">R$23</p>
+                    </article>
+
+                </div>
+
+                <div class="centralizar">
+                    <a class="botao botao--laranja-grande" href="cardapio/index.html">
+                        CARDÁPIO COMPLETO <span aria-hidden="true">↑</span>
+                    </a>
+                </div>
+
+                <p class="nota">
+                    <strong>Nota minha:</strong> esse bloco do cardápio eu deixei igual ao print: imagem quadrada, texto
+                    e preço grande na direita.
+                </p>
+
+            </div>
+        </section>
+
+        <!-- =========================
+         HAPPY HOUR (IMAGEM ESQ + TEXTO DIR)
+    ========================== -->
+        <section class="secao secao--clara">
+            <div class="container happy__grid">
+
+                <div class="happy__imagem">
+                    <div class="imagem-real" style="--img:url('assets/img/happy-hour.jpg');">
+                        <div class="imagem-real__aviso">
+                            <strong>TROCAR IMAGEM</strong><br>
+                            Eu coloco aqui: <code>assets/img/happy-hour.jpg</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="happy__texto">
+                    <p class="happy__icone" aria-hidden="true">🍷</p>
+                    <p class="happy__mini">Toda quarta-feira</p>
+
+                    <h2 class="titulo-laranja">Happy Hour</h2>
+
+                    <p class="happy__descricao">
+                        Metade do preço nas garrafas de vinho e seis deliciosos lanches por R$9.
+                    </p>
+
+                    <a class="botao botao--laranja" href="noticias/index.html">
+                        MAIS NOTÍCIAS <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- =========================
+         DEPOIMENTOS (ASPAS GIGANTES + AVATARES)
+    ========================== -->
+        <section class="secao secao--clara depoimentos">
+            <div class="container">
+                <h2 class="titulo-laranja">Depoimentos</h2>
+
+                <div class="depoimentos__grid">
+
+                    <article class="depoimento">
+                        <div class="depoimento__avatar" style="--img:url('assets/img/cliente-1.jpg');"></div>
+
+                        <p class="depoimento__texto">
+                            “A melhor pizza do bairro, e quando pedimos o vinho para acompanhar, temos a dupla perfeita.
+                            Recomendo a todos aqueles que procuram um lugar agradável para jantar.”
+                        </p>
+
+                        <p class="depoimento__nome">Joana L</p>
+                        <p class="depoimento__rede">
+                            <a href="#" data-trocar-link="LINK_FACEBOOK_AQUI">Facebook</a>
+                        </p>
+
+                        <p class="nota mini">
+                            <strong>Nota minha:</strong> eu troco a foto em <code>assets/img/cliente-1.jpg</code>
+                        </p>
+                    </article>
+
+                    <article class="depoimento">
+                        <div class="depoimento__avatar" style="--img:url('assets/img/cliente-2.jpg');"></div>
+
+                        <p class="depoimento__texto">
+                            “A melhor pizza do bairro, e quando pedimos o vinho para acompanhar, temos a dupla perfeita.
+                            Recomendo a todos aqueles que procuram um lugar agradável para jantar.”
+                        </p>
+
+                        <p class="depoimento__nome">Clarissa J</p>
+                        <p class="depoimento__rede">
+                            <a href="#" data-trocar-link="LINK_YOUTUBE_AQUI">YouTube</a>
+                        </p>
+
+                        <p class="nota mini">
+                            <strong>Nota minha:</strong> eu troco a foto em <code>assets/img/cliente-2.jpg</code>
+                        </p>
+                    </article>
+
+                    <article class="depoimento">
+                        <div class="depoimento__avatar" style="--img:url('assets/img/cliente-3.jpg');"></div>
+
+                        <p class="depoimento__texto">
+                            “A melhor pizza do bairro, e quando pedimos o vinho para acompanhar, temos a dupla perfeita.
+                            Recomendo a todos aqueles que procuram um lugar agradável para jantar.”
+                        </p>
+
+                        <p class="depoimento__nome">Juliana P</p>
+                        <p class="depoimento__rede">
+                            <a href="#" data-trocar-link="LINK_GOOGLE_AQUI">Google</a>
+                        </p>
+
+                        <p class="nota mini">
+                            <strong>Nota minha:</strong> eu troco a foto em <code>assets/img/cliente-3.jpg</code>
+                        </p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================
+         CONTATO / RESERVA (FUNDO FOTO + OVERLAY)
+    ========================== -->
+        <section class="reserva" id="contato">
+            <div class="reserva__overlay"></div>
+
+            <div class="container reserva__conteudo">
+                <p class="reserva__icone" aria-hidden="true">📞</p>
+
+                <h2 class="reserva__titulo">Ligue e faça sua reserva</h2>
+                <p class="reserva__numero">3004-8660</p>
+
+                <p class="nota nota--transparente">
+                    <strong>Nota minha:</strong> eu troco esse número quando eu colocar um telefone real.
+                </p>
+            </div>
+        </section>
+
     </main>
 
-    <footer>
-        <div class="container" style="text-align: center; padding: 20px 0; border-top: 1px solid #ddd; margin-top: 30px;">
-            <p>Fresco © 2025 | Desenvolvido por Ailton A. Nakata</p>
+    <!-- =========================
+       RODAPÉ
+  ========================== -->
+    <footer class="rodape">
+        <div class="container rodape__linha">
+            <p class="rodape__texto">
+                Fresco © 2021 | Criado por <span class="rodape__destaque">Meu Nome Aqui</span>
+            </p>
         </div>
     </footer>
-    
+
+    <!-- Botão flutuante subir topo (círculo laranja) -->
+    <button class="botao-topo" id="botaoTopo" aria-label="Voltar ao topo">↑</button>
+
+    <script src="assets/js/script.js"></script>
 </body>
+
 </html>
