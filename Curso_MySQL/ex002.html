@@ -1,114 +1,116 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banco de Dados</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header>p{
-            text-align: center;
-        }
-        * {
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aprimorando o Banco de Dados | Estudos - Ailton A. Nakata</title>
 
-        body {
-            font-family: Arial, sans-serif;
-        }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        input {
-            width: 60px;
-            margin: 5px;
-        }
-
-        #res {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        header {
-            width: 100%;
-            min-height: 80px;
-            text-align: center;
-            padding-top: 10px;
-            background: linear-gradient(135deg, #2626FE, #00bfff);
-            color: white;
-            text-align: center;
-            padding: 30px 15px;
-            font-family: 'Times New Roman', Times, serif;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        footer {
-            width: 100%;
-            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-            font-family: var(--fonte_padrao);
-            padding-bottom: 10px;
-            padding-top: 10px;
-            text-align: center;
-            color: white;
-            font-size: 0.8em;
-        }
-
-        pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            border: 1px solid #ddd;
-        }
-
-        code {
-            font-family: Consolas, monospace;
-            font-size: 0.95em;
-            color: #d6336c;
-        }
-
-        pre {
-            white-space: pre-wrap;
-        }
-        p{
-            padding: 15px;
-            text-indent: 15px;
-            line-height: 1.8;
-            text-align: justify;
-        }
-    </style>
+  <meta name="description" content="Aprimorando o banco de dados no MySQL: criar e apagar banco, constraints, tipos e chave primária para evitar repetição de cadastro." />
 </head>
 
 <body>
-    <header>
-        <h1>Aprimorando o banco de dados</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
 
-    <main>
-        <h2>Apagando banco de dados:</h2>
-<pre>
-<code>
-drop database cadastro;
-</code>
-</pre>
-<br>
-<h2>Criando banco de dados:</h2>
-<br>
-<pre>
-<code>
-create database cadastro;
-</code>
-</pre>
-        <br>
-        <h2>Constraint:</h2>
-        <p>No contexto de banco de dados, uma constraint (ou restrição) é uma regra de integridade que o próprio banco impõe aos dados de uma tabela, para garantir que as informações armazenadas sejam corretas, coerentes e consistentes.</p>
-        <br>
-        <pre>
-        <code>
-create database cadastro
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Aprimorando o banco de dados</h1>
+          <p class="muted">
+            Agora vamos deixar o banco mais profissional: constraints, tipos corretos e chave primária para evitar duplicidade.
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Operações e melhorias no MySQL</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Nesta aula você vai aprender a <strong>apagar e criar</strong> um banco,
+                entender <strong>constraints</strong> e usar <strong>chave primária</strong> para impedir registros repetidos.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Apagando banco de dados</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Use com cuidado. Esse comando apaga o banco inteiro com tudo dentro.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoDropDb">drop database cadastro;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoDropDb">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Criando banco de dados</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O comando abaixo cria um banco simples com o nome <strong>cadastro</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoCreateDb">create database cadastro;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoCreateDb">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Constraint (restrições)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                No contexto de banco de dados, uma <strong>constraint</strong> é uma regra de integridade que o próprio banco
+                impõe aos dados de uma tabela para garantir que as informações sejam <strong>corretas e consistentes</strong>.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Exemplos:</strong> <em>not null</em>, <em>default</em>, <em>enum</em>, <em>primary key</em> ✅
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Criando banco com UTF-8 + tabela com constraints</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você cria o banco com charset e collate corretos, usa o banco e cria a tabela <strong>pessoas</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoConstraints">create database cadastro
 default character set utf8
 default collate utf8_general_ci;
 
@@ -121,48 +123,205 @@ sexo enum ('M','F'),
 peso decimal(5,2),
 altura decimal(3,2),
 nacionalidade varchar(20) default 'Brasil'
-)default chaset = utf8
-            
-        </code>
-    </pre>
-    <p>Acima usamos as constraint: not null(não pode ser nulo) ; date(data) ; enum('M','F') (escolher entre M e F) ; decimal(5,2) (de 5 casas, duas serão após a virgula) ; e varchar(20) default 'Brasil' (váriaveis de caracteres normalizado para 'Brasil').</p>
-    <br>
-    <h2>Para evitar repetição de cadastro:</h2>
-    <img src="img/Evitar_repetições_de_pessoas.png" alt="Usando_o_not_null">
-    <br>
-        <pre>
-        <code>
-create database cadastro
+) default charset = utf8;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoConstraints">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>O que foi usado:</strong> <br>
+                <span class="muted">
+                  <strong>not null</strong> (não pode ser nulo) ·
+                  <strong>date</strong> (data) ·
+                  <strong>enum('M','F')</strong> (escolher entre opções) ·
+                  <strong>decimal(5,2)</strong> (5 casas no total, 2 após a vírgula) ·
+                  <strong>default 'Brasil'</strong> (valor padrão)
+                </span>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Para evitar repetição de cadastro</h3>
+              <p class="muted" style="margin-top: 6px;">
+                A solução profissional é criar um campo <strong>id</strong> com auto incremento e definir como <strong>chave primária</strong>.
+              </p>
+
+              <img
+                src="img/Evitar_repetições_de_pessoas.png"
+                alt="Evitando repetições de pessoas"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoPK">create database cadastro
 default character set utf8
 default collate utf8_general_ci;
 
 use cadastro;
 
 create table pessoas(
-<strong>id int not null auto_increment,</strong>
+id int not null auto_increment,
 nome varchar(30) not null,
 nascimento date,
 sexo enum ('M','F'),
 peso decimal(5,2),
 altura decimal(3,2),
 nacionalidade varchar(20) default 'Brasil',
-<strong>primary key(id)</strong>
-)default chaset = utf8
-            
-        </code>
-    </pre>
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
+primary key(id)
+) default charset = utf8;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoPK">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Resumo rápido:</strong> <br>
+                <span class="muted">
+                  <strong>auto_increment</strong> cria um ID único automaticamente ✅ <br>
+                  <strong>primary key</strong> impede duplicidade e vira o identificador oficial da tabela.
+                </span>
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Apagou o banco usando <strong>drop database</strong></li>
+                <li>Criou o banco usando <strong>create database</strong></li>
+                <li>Entendeu o que é <strong>constraint</strong></li>
+                <li>Criou o banco com <strong>utf8</strong></li>
+                <li>Usou <strong>not null</strong> e <strong>default</strong></li>
+                <li>Criou <strong>id</strong> com <strong>auto_increment</strong></li>
+                <li>Definiu <strong>primary key</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
         </div>
-        <br><br>
-    </main>
-    <footer>
-        &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
-    </footer>
+      </div>
+    </section>
+  </main>
 
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

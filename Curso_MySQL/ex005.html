@@ -1,221 +1,445 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update, Delete e Truncate</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header>p{
-            text-align: center;
-        }
-        * {
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update, Delete e Truncate | Estudos - Ailton A. Nakata</title>
 
-        body {
-            font-family: Arial, sans-serif;
-        }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        input {
-            width: 60px;
-            margin: 5px;
-        }
-
-        #res {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        header {
-            width: 100%;
-            min-height: 80px;
-            text-align: center;
-            padding-top: 10px;
-            background: linear-gradient(135deg, #2626FE, #00bfff);
-            color: white;
-            text-align: center;
-            padding: 30px 15px;
-            font-family: 'Times New Roman', Times, serif;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        footer {
-            width: 100%;
-            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-            font-family: var(--fonte_padrao);
-            padding-bottom: 10px;
-            padding-top: 10px;
-            text-align: center;
-            color: white;
-            font-size: 0.8em;
-        }
-
-        pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            border: 1px solid #ddd;
-        }
-
-        code {
-            font-family: Consolas, monospace;
-            font-size: 0.95em;
-            color: #d6336c;
-        }
-
-        pre {
-            white-space: pre-wrap;
-        }
-        p{
-            padding: 15px;
-            text-indent: 15px;
-            line-height: 1.8;
-            text-align: justify;
-        }
-    </style>
+  <meta name="description" content="Aprenda UPDATE, DELETE e TRUNCATE no MySQL: inserir cursos, alterar registros, deletar linhas com WHERE/LIMIT e limpar tabela com TRUNCATE." />
 </head>
 
 <body>
-    <header>
-        <h1>Update, Delete e Truncate</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-
-    <main>
-        <h2>Inserindo dados:</h2>
-<pre>
-    <code>
-<strong>insert into cursos values</strong>
-
-('1','HTML4','Curso de HTML5', '40','37', '2024'), 
-
-('2','Algoritmos','Lógica de programação','20', '15', '2014'),
-
-('3','Photoshop','Dicas de Photshop CS', '10','8','2014'),
-
-('4','PGP', 'Curso de PHP para iniciantes','40','20','2010'),
-
-('5','Java','Introdução a linguagem JAVA','10','29','2000'),
-
-('6','MySQL','Banco de Dados MySQL','30','15','2016'),
-
-('7','Word','Curso completo de WORD','40','30','2016'),
-
-('8','Sapateado','Dança Ritmicas','40','30','2018'),
-
-('9','Cozinha Árabe','Aprenda a fazer Kibe','40','30','2018'),
-
-('10','YouTuber','Gerar polêmica e ganhar inscritos','5','2','2018');
-
-select*from cursos;
-    </code>
-</pre>
-<br>
-<h2>Veja como fica a tabela:</h2>
-<img src="img/Inserindo_Cursos.png" alt="Inserindo_Cursos">
-<br>
-<h2>Modificando o conteúdo da linha:</h2>
-<img src="img/Modificando_conteudo.png" alt="Modificando_conteudo">
-
-<pre>
-    <code>
-update cursos
-set nome = 'HTML5'
-where idcurso = '1';
-
-select&from cursos;
-    </code>
-</pre>
-<p>Onde era HTML4 é alterado para HTML5</p>
-
-<h2>Outra alteração:</h2>
-<pre>
-    <code>
-update cursos
-set nome = 'php', ano = '2015' 
-where idcurso = '4';
-
-select&from cursos;
-    </code>
-</pre>
-<h2>Alterando configurações de workbench:</h2>
-<pre>
-    <code>
-acesse o menu Edit > Preference > SQL editor
-desmarque <b>safe update(Reject update and deletes with no restrictions)</b>
-</code>
-</pre>
-<img src="img/Alterando_Configuração_WorkBench_Preference.png" alt="Preference">
-
-<h2>Vamos supor que desejamos alterar agora três linhas de uma só vez:</h2>
-<img src="img/Exemplo_Alterações.png" alt="Alteração_ano">
-<h2>Veja como fica no código:</h2>
-<br>
-<pre>
-    <code>
-up date cursos
-set ano = '2050', carga = '800'
-where ano = '2018';
-
-
-select*from cursos;
-</code>
-</pre>
-<p>where ano = '2018' = Enquanto ano for 2018. Isso vai funcionar caso você já tenha feito a alteração na configuração de seguraça do workbench.</p>
-<img src="img/Alterado_Multiplos_dados.png" alt="Alterado_Multiplos_dados">
-<p>Por recomendação do professor Gustavo Guanabara, é importante sempre deixar ligado o sitema de seguraça do workbench.</p>
-
-<h2>Comando para deletar linhas:</h2>
-<pre>
-    <code>
-delete from cursos
-where idcurso='8';       
-
-select*from cursos;
-    </code>
-</pre>
-<h2>Caso queira apagar dois cursos de uma vez, use o comando (limit):</h2>
-<pre>
-    <code>
-delete from cursos
-where ano='2050'
-
-<strong>limit 2;</strong>
-
-select*from cursos;
-    </code>
-</pre>
-<h2>Apagando todas a linhas de uma tabela com o comando (Truncate):</h2>
-<pre>
-    <code>
-<strong>truncate cursos;</strong>
-
-select*from cursos;
-    </code>
-</pre>
-<br>
-<h2>Classificando Update; Delete; Truncate:</h2>
-<img src="img/após_truncate.png" alt="após_truncate">
-<br>
-<img src="img/Classificando.png" alt="Classificando_update_delete_truncate">
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-    <footer>
-        &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
-    </footer>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Update, Delete e Truncate</h1>
+          <p class="muted">
+            Nesta aula você aprende a <strong>atualizar</strong>, <strong>deletar</strong> e <strong>limpar</strong> registros no MySQL
+            com segurança usando <strong>WHERE</strong> e <strong>LIMIT</strong>.
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Manipulando dados na tabela cursos</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Aqui entram os comandos <strong>DML</strong>: <strong>INSERT</strong>, <strong>UPDATE</strong>, <strong>DELETE</strong> e <strong>TRUNCATE</strong>.
+                Eles mexem diretamente nos registros (linhas) da tabela.
+              </p>
+            </div>
+
+            <!-- INSERT -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Inserindo dados</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Vamos popular a tabela <strong>cursos</strong> com vários registros de uma vez.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoInsertCursos">insert into cursos values
+(1, 'HTML4', 'Curso de HTML5', 40, 37, 2024),
+(2, 'Algoritmos', 'Lógica de programação', 20, 15, 2014),
+(3, 'Photoshop', 'Dicas de Photoshop CS', 10, 8, 2014),
+(4, 'PHP', 'Curso de PHP para iniciantes', 40, 20, 2010),
+(5, 'Java', 'Introdução a linguagem JAVA', 10, 29, 2000),
+(6, 'MySQL', 'Banco de Dados MySQL', 30, 15, 2016),
+(7, 'Word', 'Curso completo de WORD', 40, 30, 2016),
+(8, 'Sapateado', 'Dança rítmica', 40, 30, 2018),
+(9, 'Cozinha Árabe', 'Aprenda a fazer Kibe', 40, 30, 2018),
+(10, 'YouTuber', 'Gerar polêmica e ganhar inscritos', 5, 2, 2018);
+
+select * from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoInsertCursos">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> números podem ficar sem aspas (fica mais correto e evita confusão).
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Veja como fica a tabela</h3>
+
+              <img
+                src="img/Inserindo_Cursos.png"
+                alt="Inserindo cursos na tabela"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <!-- UPDATE 1 -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Modificando o conteúdo da linha</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>UPDATE</strong> altera dados existentes. Sempre use <strong>WHERE</strong> para não atualizar tudo sem querer.
+              </p>
+
+              <img
+                src="img/Modificando_conteudo.png"
+                alt="Modificando conteúdo"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoUpdate1">update cursos
+set nome = 'HTML5'
+where idcurso = 1;
+
+select * from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoUpdate1">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Resultado:</strong> onde era <strong>HTML4</strong> será alterado para <strong>HTML5</strong>.
+              </div>
+            </div>
+
+            <!-- UPDATE 2 -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Outra alteração (mais de um campo)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Você pode atualizar vários campos no mesmo update.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoUpdate2">update cursos
+set nome = 'PHP', ano = 2015
+where idcurso = 4;
+
+select * from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoUpdate2">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- SAFE UPDATE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Alterando configurações do Workbench (Safe Updates)</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoWorkbench">Acesse o menu: Edit &gt; Preferences &gt; SQL Editor
+Desmarque: "Safe Updates (Reject updates and deletes with no restrictions)"</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoWorkbench">Copiar texto</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Alterando_Configuração_WorkBench_Preference.png"
+                alt="Alterando configuração do Workbench"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Recomendação:</strong> use isso apenas quando necessário. O Safe Updates ajuda a evitar acidentes 😅
+              </div>
+            </div>
+
+            <!-- UPDATE MULT -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Alterando várias linhas de uma só vez</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Se você usar um WHERE mais amplo (ex: ano = 2018), ele altera várias linhas ao mesmo tempo.
+              </p>
+
+              <img
+                src="img/Exemplo_Alterações.png"
+                alt="Exemplo de alterações"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoUpdateMulti">update cursos
+set ano = 2050, carga = 800
+where ano = 2018;
+
+select * from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoUpdateMulti">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Explicação:</strong> <code>where ano = 2018</code> significa: altere todo registro que estiver com ano 2018.
+              </div>
+
+              <img
+                src="img/Alterado_Multiplos_dados.png"
+                alt="Alterado múltiplos dados"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica do Guanabara:</strong> deixe o Safe Updates ligado na maior parte do tempo ✅
+              </div>
+            </div>
+
+            <!-- DELETE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Comando para deletar linhas (DELETE)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>DELETE</strong> remove registros. Use <strong>WHERE</strong> para deletar apenas o que você quer.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoDelete1">delete from cursos
+where idcurso = 8;
+
+select * from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoDelete1">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- DELETE LIMIT -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Apagando mais de um registro com LIMIT</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Se quiser limitar quantas linhas serão apagadas, use <strong>LIMIT</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoDeleteLimit">delete from cursos
+where ano = 2050
+limit 2;
+
+select * from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoDeleteLimit">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Importante:</strong> LIMIT é útil para evitar apagar “coisa demais” por engano ✅
+              </div>
+            </div>
+
+            <!-- TRUNCATE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Apagando todas as linhas com TRUNCATE</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>TRUNCATE</strong> limpa todos os registros da tabela de uma vez (mais rápido e direto).
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoTruncate">truncate table cursos;
+
+select * from cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoTruncate">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Na prática:</strong> TRUNCATE = “esvaziar a tabela inteira” 🧹
+              </div>
+            </div>
+
+            <!-- CLASSIFICAÇÃO -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Classificando Update, Delete e Truncate</h3>
+
+              <img
+                src="img/após_truncate.png"
+                alt="Após truncate"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <img
+                src="img/Classificando.png"
+                alt="Classificando comandos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Inseriu registros com <strong>INSERT</strong></li>
+                <li>Atualizou com <strong>UPDATE</strong> + <strong>WHERE</strong></li>
+                <li>Entendeu o Safe Updates do Workbench</li>
+                <li>Alterou múltiplas linhas com <strong>WHERE</strong></li>
+                <li>Deletou com <strong>DELETE</strong></li>
+                <li>Usou <strong>LIMIT</strong> com DELETE</li>
+                <li>Limpou com <strong>TRUNCATE</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

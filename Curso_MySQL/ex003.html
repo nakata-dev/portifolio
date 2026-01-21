@@ -1,176 +1,353 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Into</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header>p{
-            text-align: center;
-        }
-        * {
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insert Into | Estudos - Ailton A. Nakata</title>
 
-        body {
-            font-family: Arial, sans-serif;
-        }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        input {
-            width: 60px;
-            margin: 5px;
-        }
-
-        #res {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        header {
-            width: 100%;
-            min-height: 80px;
-            text-align: center;
-            padding-top: 10px;
-            background: linear-gradient(135deg, #2626FE, #00bfff);
-            color: white;
-            text-align: center;
-            padding: 30px 15px;
-            font-family: 'Times New Roman', Times, serif;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        footer {
-            width: 100%;
-            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-            font-family: var(--fonte_padrao);
-            padding-bottom: 10px;
-            padding-top: 10px;
-            text-align: center;
-            color: white;
-            font-size: 0.8em;
-        }
-
-        pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            border: 1px solid #ddd;
-        }
-
-        code {
-            font-family: Consolas, monospace;
-            font-size: 0.95em;
-            color: #d6336c;
-        }
-
-        pre {
-            white-space: pre-wrap;
-        }
-        p{
-            padding: 15px;
-            text-indent: 15px;
-            line-height: 1.8;
-            text-align: justify;
-        }
-    </style>
+  <meta name="description" content="Aprenda INSERT INTO no MySQL: inserção completa, SELECT para visualizar, DEFAULT, simplificação e inserção múltipla." />
 </head>
 
 <body>
-    <header>
-        <h1>Insert Into</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-
-    <main>
-        <h2>Insert into</h2>
-        
-        <h2>Situação I: Criando Orientação</h2>
-<pre>
-<code>
-insert into pessoas
-(id, nome, nascimento, sexo, peso, altura, nacionaldiade)
-value
-('1', 'Goldofredo', '1984-01-02', 'M', '78.5', '1.75', 'Brasil');
-
-</code>
-</pre>
-        <h2>Situação II: Mostrar cadastro de pessoas</h2>
-<pre>
-<code>
-insert into pessoas
-(id, nome, nascimento, sexo, peso, altura, nacionaldiade)
-value
-('1', 'Goldofredo', '1984-01-02', 'M', '78.5', '1.75', 'Brasil');
-
-<strong>select*from pessoas;</strong>
-
-</code>
-</pre>
-    <img src="img/Visualizando_pessoas.png" alt="Visualizando_pessoas">
-<h2>Situação III: Usando o DEFAULT</h2>
-<pre>
-<code>
-insert into pessoas
-(id, nome, nascimento, sexo, peso, altura, nacionaldiade)
-value
-(<strong>default</strong>, 'Goldofredo', '1984-01-02', 'M', '78.5', '1.75', <strong>default</strong>);
-
-select*from pessoas;
-
-</code>
-</pre>
-
-<h2>Situação IV: Como a ordem é exatamente a mesma, simplifique!</h2>
-<pre>
-<code>
-<strong>insert into pessoas value</strong>
-(default, 'Bianca', '2003-11-22', 'F', '78.5', '1.75', 'Inglaterra');
-
-select*from pessoas;
-
-</code>
-</pre>
-
-<h2>Situação V: Simplificando</h2>
-<pre>
-<code>
-insert into pessoas <i>(id, nome, nascimento, sexo, peso, altura, nacionalidade)</i>
-values
-
-(default,'Bianca', '2002-09-22', 'F', '56.1', '1.55', 'Inglaterra'),
-
-(default, 'Eliza', '1995-06-19', 'F', '78.5', '1.75', 'Irlanda'),
-
-(default,'Marcos','1932-10-18','M','71.3', '1.68', 'Japão'),
-
-(default, 'Gisele' '1999-11-10','F','60.8', '1.55', 'America');
-
-<b>select * from pessoas;</b>
-
-</code>
-</pre>
-<h2>Exibindo Dados:</h2>
-<img src="img/Exibindo_dados.png" alt="Exibindo_dados_tabela">
-<h2>DDL e DML</h2>
-<img src="img/Outros_Comandos.png" alt="Insert">
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-    <footer>
-        &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
-    </footer>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Insert Into</h1>
+          <p class="muted">
+            Nesta aula você aprende a inserir dados na tabela usando <strong>INSERT INTO</strong>, visualizar com
+            <strong>SELECT</strong> e usar <strong>DEFAULT</strong> para simplificar.
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Inserindo dados na tabela</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                O comando <strong>INSERT INTO</strong> serve para adicionar novos registros em uma tabela.
+                A estrutura básica é: <strong>tabela + campos + valores</strong>.
+              </p>
+            </div>
+
+            <!-- Situação I -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Situação I: Criando orientação</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Inserção completa informando os campos.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoS1">insert into pessoas
+(id, nome, nascimento, sexo, peso, altura, nacionalidade)
+values
+(1, 'Godofredo', '1984-01-02', 'M', 78.5, 1.75, 'Brasil');</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoS1">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> no MySQL, o comando correto é <strong>values</strong> (no plural) ✅
+              </div>
+            </div>
+
+            <!-- Situação II -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Situação II: Mostrar cadastro de pessoas</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Após inserir, você pode listar com <strong>SELECT</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoS2">insert into pessoas
+(id, nome, nascimento, sexo, peso, altura, nacionalidade)
+values
+(1, 'Godofredo', '1984-01-02', 'M', 78.5, 1.75, 'Brasil');
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoS2">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Visualizando_pessoas.png"
+                alt="Visualizando pessoas na tabela"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- Situação III -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Situação III: Usando o DEFAULT</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Quando um campo tem valor padrão, você pode usar <strong>DEFAULT</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoS3">insert into pessoas
+(id, nome, nascimento, sexo, peso, altura, nacionalidade)
+values
+(default, 'Godofredo', '1984-01-02', 'M', 78.5, 1.75, default);
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoS3">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Exemplo clássico:</strong> usar <strong>default</strong> no ID (auto incremento) e no país (Brasil) ✅
+              </div>
+            </div>
+
+            <!-- Situação IV -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Situação IV: Como a ordem é a mesma, simplifique!</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Se você seguir exatamente a ordem dos campos da tabela, pode inserir sem informar os nomes.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoS4">insert into pessoas values
+(default, 'Bianca', '2003-11-22', 'F', 78.5, 1.75, 'Inglaterra');
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoS4">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Cuidado:</strong> se mudar a estrutura da tabela, essa forma pode dar erro ou inserir no campo errado.
+              </div>
+            </div>
+
+            <!-- Situação V -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Situação V: Inserindo vários registros de uma vez</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Você pode inserir múltiplas pessoas no mesmo comando usando vírgula entre os grupos de valores.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoS5">insert into pessoas (id, nome, nascimento, sexo, peso, altura, nacionalidade)
+values
+(default, 'Bianca', '2002-09-22', 'F', 56.1, 1.55, 'Inglaterra'),
+(default, 'Eliza', '1995-06-19', 'F', 78.5, 1.75, 'Irlanda'),
+(default, 'Marcos', '1932-10-18', 'M', 71.3, 1.68, 'Japão'),
+(default, 'Gisele', '1999-11-10', 'F', 60.8, 1.55, 'America');
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoS5">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> perceba que cada linha termina com <strong>,</strong> e a última termina com <strong>;</strong> ✅
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Exibindo dados</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Depois do INSERT, você pode visualizar o resultado no MySQL.
+              </p>
+
+              <img
+                src="img/Exibindo_dados.png"
+                alt="Exibindo dados da tabela"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">DDL e DML</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Comandos de banco se dividem em categorias, como DDL (estrutura) e DML (dados).
+              </p>
+
+              <img
+                src="img/Outros_Comandos.png"
+                alt="DDL e DML"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>INSERT INTO</strong> com campos</li>
+                <li>Usou <strong>SELECT</strong> para visualizar</li>
+                <li>Entendeu o <strong>DEFAULT</strong></li>
+                <li>Inseriu sem listar campos (ordem da tabela)</li>
+                <li>Inseriu múltiplos registros com vírgulas</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

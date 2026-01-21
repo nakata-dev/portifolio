@@ -1,191 +1,422 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Select II</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select II | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Aula Select II no MySQL: LIKE, NOT LIKE, DISTINCT e funções de agregação (COUNT, MAX, SUM, AVG)." />
 </head>
 
 <body>
-  <header>
-    <h1>Select II</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h2>Operador Like A% :</h2>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Select II</h1>
+          <p class="muted">
+            Aqui você vai dominar <strong>LIKE</strong>, <strong>NOT LIKE</strong>, <strong>DISTINCT</strong> e funções de agregação:
+            <strong>COUNT</strong>, <strong>MAX</strong>, <strong>SUM</strong> e <strong>AVG</strong>.
+          </p>
+        </div>
 
-<pre>
-    <code>
-select*from cursos
-where nome like a%;
-    </code>
-</pre>
-<img src="img/UsodoLike1.png" alt="Uso_do_like">
-<br>
-    <p><strong>like</strong> : significa parecido e (<strong>%</strong>) significa nenhum ou vários caracteres</p>
-<br>
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
 
-<h2>Mudando o %A de lugar:</h2>
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Filtros por texto e agregações</h2>
 
-<pre>
-    <code>
-select*from cursos
-where nome like %a;
-</code>
-</pre>
-<img src="img/UsodoLike.png" alt="Uso_do_like">
-<h2>Like %A%:</h2>
-<pre>
-    <code>    
-select*from cursos
-where nome like %a%;
-    </code>
-</pre>
-<br>
-<p>Vai pegar qualquer coisa que estiver antes do a e depois, e isso inclui o <b>A</b>. Dando preferênci para pegar o <b>A</b> que também se encontra no meio da palavra.</p>
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                O <strong>LIKE</strong> é perfeito para buscar textos parecidos.
+                E as funções de agregação ajudam a <strong>contar</strong>, <strong>somar</strong>, <strong>tirar média</strong> e achar <strong>máximos</strong>.
+              </p>
+            </div>
 
-<h2>Like ph%p%:</h2>
-<pre>
-    <code>
-select*from cursos 
-where curso not like 'ph%p%';        
-    </code>
-</pre>
-<h2>Like %silva%:</h2>
-<pre>
-    <code>
-select*from cursos 
-where nome not like '%silva%';        
-    </code>
-</pre>
-<br>
-<p>Quero um nome que tenha a palavra 'silva' em qualquer lugar do nome.</p>
-<br>
-<h2>Distinguindo:</h2>
-<pre>
-    <code>
-select*from cursos;
+            <!-- LIKE A% -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Operador LIKE: 'A%'</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Significa: começa com <strong>A</strong>. O símbolo <strong>%</strong> vale “nenhum ou vários caracteres”.
+              </p>
 
-select distinct curso from carga
-order by carga;
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoLikeA">select * from cursos
+where curso like 'A%';</code>
+              </pre>
 
-    </code>
-</pre>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoLikeA">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
 
-<h2>Funções de agregações:</h2>
-<pre>
-    <code>
-select(*)from cursos where carga > 40;        
-    </code>
-</pre>
+              <img
+                src="img/UsodoLike1.png"
+                alt="Uso do LIKE A%"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
 
-<h2>Função max(nome)</h2>
-<pre>
-    <code>
-select*from cursos where ano='2020';
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Resumo:</strong> <em>LIKE</em> = parecido | <em>%</em> = vários caracteres ✅
+              </div>
+            </div>
 
-quando quiser saber qual é o curso com maior quantidade de aulas de 2016:
+            <!-- LIKE %a -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Mudando o % de lugar: '%a'</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Agora significa: termina com <strong>a</strong>.
+              </p>
 
-select max(aula) from cursos where ano = '2020'
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoLikeFinalA">select * from cursos
+where curso like '%a';</code>
+              </pre>
 
-    </code>
-</pre>
-<h2>Função sum ou soma:</h2>
-<pre>
-    <code>
-select*from cursos where ano = '2018';        
-select sum(totaulas) from cursos where ano=2018;       
-    </code>
-</pre>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoLikeFinalA">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
 
-<h2>Função avg ou média:</h2>
-<pre>
-    <code>
-select*from cursos where ano = '2019';
-select avg(totaulas) from cursos where ano='2019';
-    </code>
-</pre>
-<br>
-<p><i>A média(avg) total de aulas de 2019 será de 28.7500</i></p>
-<br>
-<br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+              <img
+                src="img/UsodoLike.png"
+                alt="Uso do LIKE %a"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- LIKE %a% -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">LIKE '%a%'</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui ele pega qualquer coisa que tenha a letra <strong>a</strong> em qualquer posição.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoLikeMeioA">select * from cursos
+where curso like '%a%';</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoLikeMeioA">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Entenda:</strong> <code>%a%</code> procura o "a" no começo, meio ou fim ✅
+              </div>
+            </div>
+
+            <!-- NOT LIKE ph%p% -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">NOT LIKE 'ph%p%'</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>NOT LIKE</strong> faz o contrário: ele ignora padrões.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoNotLikePhp">select * from cursos
+where curso not like 'ph%p%';</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoNotLikePhp">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- NOT LIKE %silva% -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">NOT LIKE '%silva%'</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui ele exclui qualquer instrutor que tenha "Silva" no nome.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoNotLikeSilva">select * from cursos
+where instrutor not like '%silva%';</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoNotLikeSilva">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Explicação:</strong> ele remove resultados que contenham a palavra <strong>silva</strong> em qualquer lugar ✅
+              </div>
+            </div>
+
+            <!-- DISTINCT -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">DISTINCT (tirando repetidos)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>DISTINCT</strong> mostra apenas valores únicos (sem repetição).
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoDistinct">select distinct carga
+from cursos
+order by carga;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoDistinct">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- COUNT -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Funções de agregação: COUNT</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>COUNT</strong> conta quantos registros batem com a condição.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoCount">select count(*)
+from cursos
+where carga &gt; 40;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoCount">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- MAX -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">MAX (maior valor)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Exemplo: descobrir o curso com <strong>maior quantidade de aulas</strong> em um ano específico.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoMax">select * from cursos
+where ano = 2020;
+
+-- Maior número de aulas em 2020:
+select max(aulas)
+from cursos
+where ano = 2020;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoMax">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- SUM -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">SUM (soma)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Soma os valores de uma coluna (ex: total de aulas em um ano).
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoSum">select * from cursos
+where ano = 2018;
+
+select sum(aulas)
+from cursos
+where ano = 2018;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoSum">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- AVG -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">AVG (média)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Faz a média dos valores de uma coluna em um filtro.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoAvg">select * from cursos
+where ano = 2019;
+
+select avg(aulas)
+from cursos
+where ano = 2019;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoAvg">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Observação:</strong> o AVG pode retornar casas decimais (ex: 28.7500) ✅
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>LIKE</strong> com <strong>A%</strong>, <strong>%a</strong> e <strong>%a%</strong></li>
+                <li>Praticou <strong>NOT LIKE</strong></li>
+                <li>Entendeu o <strong>DISTINCT</strong></li>
+                <li>Contou registros com <strong>COUNT</strong></li>
+                <li>Achou o maior valor com <strong>MAX</strong></li>
+                <li>Somou com <strong>SUM</strong></li>
+                <li>Calculou média com <strong>AVG</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

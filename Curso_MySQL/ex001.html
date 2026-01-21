@@ -1,129 +1,303 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banco de Dados</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Primeiro Banco de Dados | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Introdução prática a banco de dados com MySQL: tabelas, registros, tipos primitivos e criação da tabela pessoas." />
 </head>
 
 <body>
-  <header>
-    <h1>Primeiro Banco de Dados</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h2>A família do Godofredo:</h2>
-    <img src="img/pessoas.png" alt="Familia_do_Godofredo">
-    <br>
-    <h2>Containers diferentes para características diferentes:</h2>
-    <img src="img/pessoa_jogos.png" alt="Containers_diferentes">
-    <br>
-    <h2>Registros / Tabelas / Banco de Dados</h2>
-    <img src="img/Registro_Tabelas_Dados.png" alt="Registros_Tabelas_Banco_de_dados">
-    <br>
-    <h2>Informações de Tabelas:</h2>
-    <img src="img/Tabela.png" alt="Toda_tabela_tem_campos">
-    <br>
-    <h2>Tipos Primitivos:</h2>
-    <img src="img/Tipos Primitivos - MtSQL.png" alt="Tipos_primitivos">
-    <h2>No seu MySQL crie uma Tabela: </h2>
-    <br>
-    <pre>
-        <code>
-create <strong>table pessoas</strong>(
-Nome <strong>varchar(30)</strong>,
-Idade <strong>tinyint</strong>,
-Sexo <strong>char(1)</strong>,
-peso <strong>float</strong>,
-altura <strong>float</strong>,
-nacionalidade <strong>varchar(20)</strong>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Primeiro Banco de Dados</h1>
+          <p class="muted">
+            Entenda o conceito de tabelas, registros e tipos de dados no MySQL. No final, você cria sua primeira tabela.
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Conceitos essenciais de Banco de Dados</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Pense em um banco de dados como um lugar onde você guarda <strong>informações organizadas</strong>.
+                Ele funciona como um armário com gavetas: cada gaveta tem um tipo de coisa, e tudo fica fácil de encontrar.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">A família do Godofredo</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Um exemplo simples para entender como as informações podem ser agrupadas.
+              </p>
+
+              <img
+                src="img/pessoas.png"
+                alt="Família do Godofredo"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Containers diferentes para características diferentes</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Cada conjunto de dados pode ter um “container” próprio (tabela) dependendo do objetivo.
+              </p>
+
+              <img
+                src="img/pessoa_jogos.png"
+                alt="Containers diferentes"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Registros, Tabelas e Banco de Dados</h3>
+              <p class="muted" style="margin-top: 6px;">
+                A ideia central: um banco guarda tabelas, e tabelas guardam registros (linhas).
+              </p>
+
+              <img
+                src="img/Registro_Tabelas_Dados.png"
+                alt="Registros, Tabelas e Banco de Dados"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Informações dentro de uma tabela</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Toda tabela tem <strong>campos</strong> (colunas) e <strong>registros</strong> (linhas).
+              </p>
+
+              <img
+                src="img/Tabela.png"
+                alt="Tabela e campos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Tipos primitivos no MySQL</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Tipos são como “formatos” que definem o que pode ser guardado (texto, número, data…).
+              </p>
+
+              <img
+                src="img/Tipos Primitivos - MtSQL.png"
+                alt="Tipos primitivos no MySQL"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> escolher o tipo correto economiza espaço e evita erros na hora de cadastrar dados.
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Crie a sua primeira tabela</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Agora sim: no seu MySQL, crie a tabela <strong>pessoas</strong> com os campos abaixo.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoParaCopiar">create table pessoas(
+Nome varchar(30),
+Idade tinyint,
+Sexo char(1),
+peso float,
+altura float,
+nacionalidade varchar(20)
 );
 
-describe pessoas;
-        </code>
-    </pre>
-    <br>
-    <h2>Sem chave primária é possível cadastrar a mesma pessoa várias vezes:</h2>
-    <img src="img/Sem_Chave_primária.png" alt="Vladimir_cadastrado_várias_vezes">
-    <br>
-    <br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+describe pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code>Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Sem chave primária...</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Quando não existe <strong>chave primária</strong>, você pode repetir registros sem controle.
+                Isso gera bagunça no banco.
+              </p>
+
+              <img
+                src="img/Sem_Chave_primária.png"
+                alt="Pessoa cadastrada várias vezes sem chave primária"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Tradução prática:</strong> uma chave primária é como um “RG único” dentro da tabela ✅
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Entendeu o que são <strong>tabelas</strong> e <strong>registros</strong></li>
+                <li>Viu a ideia de <strong>campos</strong> (colunas)</li>
+                <li>Entendeu os <strong>tipos primitivos</strong></li>
+                <li>Criou a tabela <strong>pessoas</strong> no MySQL</li>
+                <li>Entendeu por que precisa de <strong>chave primária</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código -->
+  <script>
+    (function () {
+      const btn = document.querySelector('[data-copy-code]');
+      const codeEl = document.getElementById('codigoParaCopiar');
+      if (!btn || !codeEl) return;
+
+      btn.addEventListener('click', async () => {
+        const codigo = codeEl.textContent.trim();
+
+        try {
+          await navigator.clipboard.writeText(codigo);
+          alert('Código copiado com sucesso!');
+        } catch (err) {
+          console.error('Falha ao copiar o código: ', err);
+          alert('Houve um erro ao copiar o código.');
+        }
+      });
+    })();
+  </script>
 </body>
-
 </html>

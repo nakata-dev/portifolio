@@ -1,154 +1,238 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instalando MySQL e Wamp</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instalando MySQL e Wamp | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-
-    ol{
-      list-style: inside;
-      columns:1;
-      padding: 15px;
-      line-height: 1.8;
-      
-    }
-    a{
-      text-decoration: none;
-    }
-
-    a:hover{ 
-      background-color: rgba(135, 206, 250, 0.631);
-      padding: 10px;
-      border-radius: 8px;
-      font-weight: bolder;
-      transition-duration: 0.5s;
-    }
-  </style>
+  <meta name="description" content="Guia prático para instalar MySQL Workbench e WampServer no Windows, com links de download e passos recomendados." />
 </head>
 
 <body>
-  <header>
-    <h1>Instalando MySQL e Wamp</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h2>No windows, instale um pacote chamado WampServer:</h2>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Instalando MySQL e Wamp</h1>
+          <p class="muted">
+            Passo a passo para preparar seu ambiente no Windows e começar a trabalhar com banco de dados.
+          </p>
+        </div>
 
-    <img src="img/WampServer.png" alt="Wampserver">
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
 
-    <pre>
-        <code>
-Download dos softwares
-        </code>
-    </pre>
-    <br>
-    <h2>1º Passo - Baixe e instale os programas nessa ordem:</h2>
-    <ol>
-      <li>
-        <a href="https://www.microsoft.com/pt-br/download/details.aspx?id=17113" target="_blank">Framework</a>
-      </li>
-      <li>
-        <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2010-vc-100-sp1-no-longer-supported" target="_blank">C++ Visual Studio 2010</a>
-      </li>
-      <li>
-        <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30679" target="_blank">C++ Visual Studio 2012</a>
-      </li>
-      <li><a href="https://downloads.mysql.com/archives/workbench/" target="_blank">MySQL workbench 6.3.6</a>
-      </li>
-    </ol>
-    <h2>2º Passo - Instale o WAMPSERVER</h2>
-    <ol>
-      <li><a href="https://www.wampserver.com/en/" target="_blank">Wampserver</a></li>
-    </ol>
-    <h2>3º Passo - Instale o XAMPP</h2>
-    <ol>
-      <li>
-        <a href="https://www.apachefriends.org/index.html" target="_blank">XAMPP</a>
-      </li>
-    </ol>
-    <pre>
-      <code>
-Atenção: Use o Xampp somente em caso de não conseguir instalar corretamente o Wampserver.
-      </code>
-    </pre>
-    <br>
-    <br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Instalação no Windows (WampServer + MySQL)</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                No Windows, uma forma prática de montar um ambiente local é usar o <strong>WampServer</strong>,
+                que instala de uma vez só o necessário para rodar serviços como Apache e MySQL.
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">WampServer</h3>
+
+              <img
+                src="img/WampServer.png"
+                alt="Tela do WampServer"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Objetivo:</strong> instalar os programas na ordem certa para evitar erros no Wamp.
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">1º Passo - Baixe e instale nessa ordem</h3>
+
+              <ol class="list" style="margin: 0; line-height: 1.9;">
+                <li>
+                  <a href="https://www.microsoft.com/pt-br/download/details.aspx?id=17113" target="_blank" rel="noopener noreferrer">
+                    Framework
+                  </a>
+                </li>
+                <li>
+                  <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2010-vc-100-sp1-no-longer-supported" target="_blank" rel="noopener noreferrer">
+                    C++ Visual Studio 2010
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30679" target="_blank" rel="noopener noreferrer">
+                    C++ Visual Studio 2012
+                  </a>
+                </li>
+                <li>
+                  <a href="https://downloads.mysql.com/archives/workbench/" target="_blank" rel="noopener noreferrer">
+                    MySQL Workbench 6.3.6
+                  </a>
+                </li>
+              </ol>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">2º Passo - Instale o WampServer</h3>
+
+              <ul class="list" style="margin: 0; line-height: 1.9;">
+                <li>
+                  <a href="https://www.wampserver.com/en/" target="_blank" rel="noopener noreferrer">
+                    Download WampServer (site oficial)
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">3º Passo - Instale o XAMPP (somente se precisar)</h3>
+
+              <ul class="list" style="margin: 0; line-height: 1.9;">
+                <li>
+                  <a href="https://www.apachefriends.org/index.html" target="_blank" rel="noopener noreferrer">
+                    Download XAMPP (Apache Friends)
+                  </a>
+                </li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Atenção:</strong> Use o <strong>XAMPP</strong> somente se você não conseguir instalar corretamente o <strong>WampServer</strong>.
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Baixou os programas na ordem correta</li>
+                <li>Instalou o <strong>MySQL Workbench</strong></li>
+                <li>Instalou o <strong>WampServer</strong></li>
+                <li>Deixou o <strong>XAMPP</strong> como plano B</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-
 </html>

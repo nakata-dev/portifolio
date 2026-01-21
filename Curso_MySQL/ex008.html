@@ -1,106 +1,104 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Select I</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select I | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Aula Select I no MySQL: criando banco e tabela, inserindo 50 registros e aprendendo SELECT com ORDER BY, WHERE, BETWEEN, IN e operadores lógicos (AND/OR)." />
 </head>
 
 <body>
-  <header>
-    <h1>Select I</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h2>1º Crie um novo database:</h2>
-    <pre>
-      <code>
-        create database escola_cursos;
-        use escola_cursos;
-        
-        create table cursos (
-          
-          id int auto_increment primary key,
-          nome_do_curso varchar(100),
-          instrutor varchar(100),
-          carga_horaria int,
-          quantidade_aulas int
-          
-          );
-          
-        </code>
-      </pre>
-      <h2>2º Invente os 50 cadastros diferentes:</h2>
-      <pre>
-        <code>
-INSERT INTO cursos (id, curso, nome, carga, aulas, ano) VALUES
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Select I</h1>
+          <p class="muted">
+            Aqui começa a “magia” do banco: filtrar, ordenar e encontrar dados com <strong>SELECT</strong>,
+            usando <strong>WHERE</strong>, <strong>ORDER BY</strong>, <strong>BETWEEN</strong>, <strong>IN</strong> e lógica (<strong>AND/OR</strong>).
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Consultas essenciais no MySQL</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Vamos criar um banco do zero, inserir <strong>50 registros</strong> e praticar consultas como gente grande ✅
+              </p>
+            </div>
+
+            <!-- 1) Criar banco e tabela -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">1º Passo: Criar database e tabela</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Para facilitar suas consultas, vamos criar a tabela com os campos certinhos (curso, instrutor, carga, aulas e ano).
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoCriarBD">create database escola_cursos;
+use escola_cursos;
+
+create table cursos (
+  idcurso int auto_increment primary key,
+  curso varchar(100),
+  instrutor varchar(100),
+  carga int,
+  aulas int,
+  ano year
+);</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoCriarBD">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> eu padronizei os nomes pra bater com o INSERT e com os SELECTs da aula ✅
+              </div>
+            </div>
+
+            <!-- 2) Inserir 50 registros -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">2º Passo: Inserir 50 cadastros diferentes</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você popula a tabela para treinar consultas em “banco grande”.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoInserir50">insert into cursos (idcurso, curso, instrutor, carga, aulas, ano) values
 (1, 'Introdução ao HTML', 'Mariana Silva', 20, 15, 2020),
 (2, 'CSS para Iniciantes', 'João Pedro', 25, 18, 2021),
 (3, 'JavaScript Essencial', 'Carla Menezes', 40, 25, 2021),
@@ -152,107 +150,339 @@ INSERT INTO cursos (id, curso, nome, carga, aulas, ano) VALUES
 (49, 'Vendas e Persuasão', 'Claudio Martins', 30, 18, 2022),
 (50, 'Comunicação e Oratória', 'Eduarda Campos', 35, 20, 2023);
 
-         
-        </code>
-      </pre>
-<h2>Comandos que auxiliam na visualização do conteúdos de banco de dados grandes:</h2>
+select * from cursos;</code>
+              </pre>
 
-<pre>
-  <code>
-SELECT * FROM curso
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoInserir50">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
 
-ORDER BY instrutor DESC;
+            <!-- ORDER BY -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">ORDER BY (organizando resultados)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Em bancos grandes, ordenar faz MUITA diferença para enxergar padrões.
+              </p>
 
-ou
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoOrderBy">select * from cursos
+order by instrutor desc;
 
-order by nome_do_curso desc
-  </code>
-</pre>
+-- ou
 
-<h2>Para Selecionar somente alguns campos para consulta:</h2>
+select * from cursos
+order by curso desc;</code>
+              </pre>
 
-<pre>
-  <code>
-select nome, carga from curso;     
-  </code>
-</pre>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoOrderBy">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
 
-<h2>Selecionando com 'where'(enquanto):</h2>
+            <!-- Selecionar colunas -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Selecionar apenas alguns campos</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Você não precisa puxar tudo. Pode consultar só o que interessa.
+              </p>
 
-<pre>
-  <code>
-select ano, nome from curso
-where ano = 2020 <!--Enquanto ano for igual a 2020-->    
-order by nome asc; <!--Mostrar em ordem do nome ascendente-->
-order by nome desc; <!--Mostrar em ordem do nome descendente-->
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoSomenteCampos">select curso, carga
+from cursos;</code>
+              </pre>
 
-describe nome_do_curso
-  </code>
-</pre>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoSomenteCampos">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
 
-<h2>Selecionando linhas e colunas:</h2>
+            <!-- WHERE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">WHERE (filtrando resultados)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>WHERE</strong> funciona como “enquanto” ou “somente quando”.
+              </p>
 
-<pre>
-  <code>
-select nome, curso, ano from cursos
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoWhere2020">select ano, curso
+from cursos
+where ano = 2020
+order by curso asc;
+
+-- ordem descendente (Z-A)
+select ano, curso
+from cursos
+where ano = 2020
+order by curso desc;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoWhere2020">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> <em>ASC</em> = crescente | <em>DESC</em> = decrescente ✅
+              </div>
+            </div>
+
+            <!-- <= -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Selecionando linhas e colunas (ano &lt;= 2022)</h3>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoMenorIgual">select instrutor, curso, ano
+from cursos
 where ano &lt;= 2022
-order by nome desc;
-  </code>
-</pre>
+order by instrutor desc;</code>
+              </pre>
 
-<h2>Usando Between para selecionar:</h2>
-<pre>
-  <code>
-select nome, ano from cursos
-where ano between 2020 and 2024 <!--Mostre-me o espaço entre o ano 2020 à 2024 de forma descendente-->
-order by ano desc, nome asc; <!--Na ordem descendente do ano-->    
-  </code>
-</pre>
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoMenorIgual">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
 
-<h2>Indicando faixa de valores:</h2>
-<pre>
-  <code>
-select nome, curso, ano from curso
+            <!-- BETWEEN -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">BETWEEN (faixa de valores)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Seleciona tudo que estiver “entre” dois valores.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoBetween">select instrutor, ano
+from cursos
+where ano between 2020 and 2024
+order by ano desc, instrutor asc;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoBetween">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- IN -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">IN (valores específicos)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Perfeito quando você quer “somente estes anos aqui”.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoIn">select instrutor, curso, ano
+from cursos
 where ano in (2019, 2023, 2025)
-order by ano asc;    
-  </code>
-</pre>
+order by ano asc;</code>
+              </pre>
 
-<h2>Selecionando entre um valor e(and) outro:</h2>
-<pre>
-  <code>
-select nome, carga, aulas from cursos
-where carga > 35 <strong>and</strong> aulas < 30;
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoIn">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
 
-describe cursos;
-  </code>
-</pre>
+            <!-- AND -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Operador lógico AND</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>AND</strong> exige que as duas condições sejam verdadeiras.
+              </p>
 
-<h2>Selecionando entre um valor e(or) outro:</h2>
-<pre>
-  <code>
-select nome, carga, aulas from cursos
-where carga > 35 <strong>or</strong> aulas < 30;
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoAnd">select instrutor, carga, aulas
+from cursos
+where carga &gt; 35 and aulas &lt; 30;
 
-describe cursos;    
-  </code>
-</pre>
-<h2>Operadores lógicos:</h2>
-<img src="img/PaulaeQuelly.png" alt="PaulaeQuelly">
-<h2>Classificação:</h2>
-<img src="img/DQL.png" alt="DQL">
-<br>
-    <br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+describe cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoAnd">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- OR -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Operador lógico OR</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>OR</strong> aceita “uma condição ou outra”.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoOr">select instrutor, carga, aulas
+from cursos
+where carga &gt; 35 or aulas &lt; 30;
+
+describe cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoOr">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- Imagens -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Operadores lógicos</h3>
+              <img
+                src="img/PaulaeQuelly.png"
+                alt="Operadores lógicos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Classificação: DQL</h3>
+              <img
+                src="img/DQL.png"
+                alt="DQL"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Criou o banco <strong>escola_cursos</strong></li>
+                <li>Criou a tabela <strong>cursos</strong> com os campos certos</li>
+                <li>Inseriu 50 registros</li>
+                <li>Usou <strong>ORDER BY</strong></li>
+                <li>Selecionou campos específicos</li>
+                <li>Filtrou com <strong>WHERE</strong></li>
+                <li>Usou <strong>&lt;=</strong>, <strong>BETWEEN</strong> e <strong>IN</strong></li>
+                <li>Aplicou lógica com <strong>AND</strong> e <strong>OR</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

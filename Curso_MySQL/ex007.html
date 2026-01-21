@@ -1,170 +1,374 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHPMyAdmin</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    * {
-      padding: 0px;
-      margin: 0px;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PHPMyAdmin | Estudos - Ailton A. Nakata</title>
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-    input {
-      width: 60px;
-      margin: 5px;
-    }
-
-    #res {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    header {
-      width: 100%;
-      min-height: 80px;
-      text-align: center;
-      padding-top: 10px;
-      background: linear-gradient(135deg, #2626FE, #00bfff);
-      color: white;
-      text-align: center;
-      padding: 30px 15px;
-      font-family: 'Times New Roman', Times, serif;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      width: 100%;
-      background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-      font-family: var(--fonte_padrao);
-      padding-bottom: 10px;
-      padding-top: 10px;
-      text-align: center;
-      color: white;
-      font-size: 0.8em;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
-      border: 1px solid #ddd;
-    }
-
-    code {
-      font-family: Consolas, monospace;
-      font-size: 0.95em;
-      color: #d6336c;
-    }
-
-    pre {
-      white-space: pre-wrap;
-    }
-  </style>
+  <meta name="description" content="Aprenda a usar MySQL Console e PHPMyAdmin pelo WampServer: login root, criação de banco, tabelas, campos, edição e exportação." />
 </head>
 
 <body>
-  <header>
-    <h1>PHPMyAdmin</h1>
-    <p>por: Ailton A. Nakata</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h2>MySQL Console:</h2>
-<img src="img/MySQL_Console.png" alt="MySQL_Console">    
-    <pre>
-        <code>
-1º Abra o programa Wampserver64 e em seguida clique em seu icone e busque por MySQL > MySQL console
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>PHPMyAdmin</h1>
+          <p class="muted">
+            Aprenda a trabalhar com banco de dados usando <strong>3 ferramentas</strong>:
+            Workbench, Console e PHPMyAdmin (via WampServer).
+          </p>
+        </div>
 
-2º Ali você vai conseguir executar todos os comando que usou no MySQL Workbench
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
 
-Dica: Busque práticar por todas as três formas de alterações de cadastros. 
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Acessando Console e PHPMyAdmin pelo WampServer</h2>
 
-        </code>
-    </pre>
-    <br>
-    <h2>PHP MyAdmin - parte I</h2>
-<img src="img/Icone_WampServer.png" alt="Wampserver64">
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                O PHPMyAdmin é uma forma visual de administrar o MySQL pelo navegador.
+                Já o MySQL Console é o modo “raiz”: comandos direto no terminal.
+              </p>
+            </div>
 
-<pre>
-    <code>
-3º Click novamente no icône do Wampserver64 > PHPMyAdmin > PHPMyAdmin 5.2.1        
-    </code>
-</pre>
+            <!-- MySQL Console -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">MySQL Console</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você consegue executar os comandos igual no Workbench, mas usando terminal.
+              </p>
 
-<img src="img/PHP_myAdmin.png" alt="" sizes="" srcset="">
+              <img
+                src="img/MySQL_Console.png"
+                alt="MySQL Console"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
 
-<pre>
-    <code>
-4º <b>Use login: root</b> e deixe a <b>senha em branco</b> e o site admin vai abrir para que você possa realizar todas as alterações necessárias em teu banco de dados.        
-    </code>
-</pre>
-<h2>PHP MyAdmin - parte II</h2>
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoConsole">1º Abra o programa WampServer64 e clique no ícone.
+2º Vá em: MySQL > MySQL Console
+3º No Console você pode executar todos os comandos que usou no Workbench.
 
-<pre>
-    <code>
-1º Abra os três programas para trabalhar o seu banco de dados:
-    - MySQL Workbench
-    - MySQL Console        
-    - PHPMyAdmin
+Dica: pratique usando as 3 formas:
+- Workbench
+- Console
+- PHPMyAdmin</code>
+              </pre>
 
-Em console digite: 
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoConsole">Copiar texto</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
 
-    show databases;        
-    </code>
-</pre>
+            <!-- PHPMyAdmin parte I -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">PHPMyAdmin - Parte I (abrindo)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O PHPMyAdmin abre no navegador e permite gerenciar seu banco de forma visual.
+              </p>
 
-<h2>Criando um banco de dados direto pelo PHPMyAdmin</h2>
-<pre>
-    <code>
-Abra o site PHPMyAdmin e crie um banco de dados novo com o nome de exemplo apra práticar.        
+              <img
+                src="img/Icone_WampServer.png"
+                alt="Ícone do WampServer"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
 
-selecione: <strong>utf8mb4_general_ci</strong>
-    </code>
-</pre>
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoPhpmyadmin1">3º Clique no ícone do WampServer64
+4º Vá em: PHPMyAdmin > PHPMyAdmin 5.2.1</code>
+              </pre>
 
-<img src="img/Criando_com_PHPmyAdmin.png" alt="PHPMyAdmin">
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoPhpmyadmin1">Copiar texto</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
 
-<pre>
-    <code>
-Criando um novo Banco de Dados        
-    </code>
-</pre>
-<img src="img/Criando_BD_PHPMyAdmin.png" alt="Criando_BD_PHPMyAdmin">
-<h2>Nome da Tabela e quantidade de Colunas</h2>
-<img src="img/Nome_da_tablea.png" alt="Nome_da_tablea">
-<h2>Criando os campos do Banco de Dados</h2>
-<img src="img/Criando_campos_de_preenchimento.png" alt="Criando_campos_de_preenchimento">
-<h2>Para alterar dados, use esses campos:</h2>
-<img src="img/Alterar_dados_use_estes_camos.png" alt="Alterar_dados_use_estes_campos">
-<h2>Exportando Banco de dados no PHPMyAdmin</h2>
-<pre>
-    <code>
-Atenção: Ao exportar os dados, click primeiro no icone <b>Home</b> que fica do lado esquerdo superior no site. Depois você seleciona o exportar!        
-    </code>
-</pre>
-<img src="img/Exportando_dados_PHPmyAdmin.png" alt="Exportando_dados_PHPmyAdmin">
-    <br>
-    <br>
-    <div id="voltar">
-      <a href="../estudos.html">Voltar</a>
-    </div>
-    <br><br>
+              <img
+                src="img/PHP_myAdmin.png"
+                alt="Tela inicial do PHPMyAdmin"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Login padrão (Wamp):</strong> usuário <strong>root</strong> e <strong>senha em branco</strong> ✅
+              </div>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8; margin-top: 10px;">
+<code id="codigoLogin">Use login: root
+Senha: (em branco)</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoLogin">Copiar</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- PHPMyAdmin parte II -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">PHPMyAdmin - Parte II (trabalhando com as 3 ferramentas)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O ideal é praticar usando as 3 ferramentas ao mesmo tempo para fixar.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigo3Ferramentas">1º Abra os três programas:
+- MySQL Workbench
+- MySQL Console
+- PHPMyAdmin
+
+No console digite:
+show databases;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigo3Ferramentas">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- Criando banco pelo PHPMyAdmin -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Criando um banco direto pelo PHPMyAdmin</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Crie um banco novo para praticar e selecione o collation recomendado.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoCriarBD">Abra o PHPMyAdmin e crie um banco com um nome de exemplo para praticar.
+Selecione: utf8mb4_general_ci</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoCriarBD">Copiar texto</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <img
+                src="img/Criando_com_PHPmyAdmin.png"
+                alt="Criando banco pelo PHPMyAdmin"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <img
+                src="img/Criando_BD_PHPMyAdmin.png"
+                alt="Criando novo banco de dados"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- Tabela e colunas -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Nome da tabela e quantidade de colunas</h3>
+
+              <img
+                src="img/Nome_da_tablea.png"
+                alt="Nome da tabela e quantidade de colunas"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Criando os campos do banco</h3>
+
+              <img
+                src="img/Criando_campos_de_preenchimento.png"
+                alt="Criando campos de preenchimento"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <!-- Alterar dados -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Para alterar dados, use esses campos</h3>
+
+              <img
+                src="img/Alterar_dados_use_estes_camos.png"
+                alt="Alterar dados no PHPMyAdmin"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <!-- Exportar -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Exportando banco de dados no PHPMyAdmin</h3>
+              <div class="alert" style="margin-top: 10px;">
+                <strong>Atenção:</strong> antes de exportar, clique primeiro no ícone <strong>Home</strong> (canto superior esquerdo).
+                Depois selecione <strong>Exportar</strong>.
+              </div>
+
+              <img
+                src="img/Exportando_dados_PHPmyAdmin.png"
+                alt="Exportando dados no PHPMyAdmin"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Abriu o <strong>MySQL Console</strong> pelo Wamp</li>
+                <li>Executou comandos pelo Console</li>
+                <li>Acessou o <strong>PHPMyAdmin</strong></li>
+                <li>Logou com <strong>root</strong> e senha em branco</li>
+                <li>Criou um novo banco (utf8mb4)</li>
+                <li>Criou tabela e colunas</li>
+                <li>Aprendeu onde alterar dados</li>
+                <li>Exportou um banco pelo PHPMyAdmin</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
   </footer>
 
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

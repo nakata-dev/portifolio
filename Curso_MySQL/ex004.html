@@ -1,232 +1,443 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALTER TABLE e DROP TABLE</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header>p{
-            text-align: center;
-        }
-        * {
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALTER TABLE e DROP TABLE | Estudos - Ailton A. Nakata</title>
 
-        body {
-            font-family: Arial, sans-serif;
-        }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        input {
-            width: 60px;
-            margin: 5px;
-        }
-
-        #res {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        header {
-            width: 100%;
-            min-height: 80px;
-            text-align: center;
-            padding-top: 10px;
-            background: linear-gradient(135deg, #2626FE, #00bfff);
-            color: white;
-            text-align: center;
-            padding: 30px 15px;
-            font-family: 'Times New Roman', Times, serif;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        footer {
-            width: 100%;
-            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-            font-family: var(--fonte_padrao);
-            padding-bottom: 10px;
-            padding-top: 10px;
-            text-align: center;
-            color: white;
-            font-size: 0.8em;
-        }
-
-        pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            border: 1px solid #ddd;
-        }
-
-        code {
-            font-family: Consolas, monospace;
-            font-size: 0.95em;
-            color: #d6336c;
-        }
-
-        pre {
-            white-space: pre-wrap;
-        }
-        p{
-            padding: 15px;
-            text-indent: 15px;
-            line-height: 1.8;
-            text-align: justify;
-        }
-    </style>
+  <meta name="description" content="Aprenda ALTER TABLE e DROP TABLE no MySQL: adicionar colunas, mudar posição, modificar, renomear colunas e tabelas, e criar chave primária." />
 </head>
 
 <body>
-    <header>
-        <h1>Alter table e Drop table</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-
-    <main>
-        <h2>ALTER TABLE</h2>
-        <pre>
-            <code>
-desc pessoas;
-<strong>alter tablet pessoas</strong>
-add column profisao varchar(10);
-
-select*from pessoas;
-            </code>
-        </pre>
-<p><i>alter table</i> serve para adicionar uma coluna à tabela</p>
-
-<h2>DROP TABLE</h2>
-        <pre>
-            <code>
-desc pessoas;
-<strong>drop tablet pessoas</strong>
-
-
-select*from pessoas;
-            </code>
-        </pre>
-<p><i>alter table</i> serve para retirar uma coluna da tabela</p>
-
-<h2>Escolha nova posição da coluna (profissao)</h2>
-        <pre>
-            <code>
-desc pessoas;
-alter table pessoas
-<strong>add column profissao varchar(10) after nome;</strong>
-
-
-select*from pessoas;
-            </code>
-        </pre>
-<p><i>add column</i> serve para adicionar uma coluna em uma posição especifica.</p>
-
-<h2>Mais uma alteração (codigo)</h2>
-        <pre>
-            <code>
-desc pessoas;
-alter table pessoas
-<strong>add column codigo int firt;</strong>
-
-
-select*from pessoas;
-            </code>
-        </pre>
-<p>Aqui a coluna codigo vai ser inserida no ínicio.</p>
-
-<h2>E quando eu quero alterar alguma característica da coluna?</h2>
-        <pre>
-            <code>
-desc pessoas;
-alter table pessoas
-<strong>Modify column profissao varchar(20) not null default '';</strong>
-
-
-select*from pessoas;
-            </code>
-        </pre>
-<p>Neste caso o campo profissão vai ficar vazio, pois foi alterado para <i>not null</i> ou seja, <strong>não pode ficar nulo</strong>.</p>
-
-<img src="img/Modify_column.png" alt="Modify_column">
-<p>Note como o campo <b>profissão</b> ficou sem nada ao acrescentarmos o comando (default ' ')</p>
-
-<h2>Comando change:</h2>
-        <pre>
-            <code>
-desc pessoas;
-alter table pessoas
-<strong>change column profissao prof varchar(20);</strong>
-
-select*from pessoas;
-            </code>
-        </pre>
-<p>Aqui o comando <b>change</b> <i>modifica o tipo, constraint e nome da coluna</i>.</p>
-
-<h2>Renomeando a tabela inteira:</h2>
-        <pre>
-            <code>
-desc pessoas;
-alter table pessoas
-<strong>rename to gafanhotos;</strong>
-
-select*from pessoas;
-            </code>
-        </pre>
-<p>Aqui o comando <i><strong>rename to</strong></i> foi responsável para alterar o nome da tabela <b>pessoas</b> para <b>gafanhotos</b></i>.</p>
-
-<h2>Criando uma nova tabela:</h2>
-<pre>
-    <code>
-create table if not exists cursos(
-Nome varchar(30) not null unique,
-descricao text,
-carga int unsigned,
-totalaula int unsigned,
-ano year default '2025'    
-) charset = utf8;   
-
-alter table cursos
-<b>add column idcurso int first</b>;
-
-describe cursos;
-    </code>
-</pre>
-      
-<h2>Alterando a chave primaria:</h2>
-<pre>
-    <code>
-create table if not exists cursos(
-Nome varchar(30) not null unique,
-descricao text,
-carga int unsigned,
-totalaula int unsigned,
-ano year default '2025'    
-) charset = utf8;   
-
-alter table cursos
-<b>add primary key(idcurso)</b>;
-
-describe cursos;
-    </code>
-</pre>
-<h2>After e Drop são classificados como DDL:</h2>
-<img src="img/DDL.png" alt="Tipos_DDL_MDL">
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-    <footer>
-        &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
-    </footer>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>ALTER TABLE e DROP TABLE</h1>
+          <p class="muted">
+            Aprenda como modificar a estrutura de tabelas no MySQL: adicionar colunas, ajustar posição, alterar campos, renomear e apagar tabelas.
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Mudando a estrutura de uma tabela</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                O <strong>ALTER TABLE</strong> altera a estrutura da tabela (colunas, tipos, constraints...).
+                Já o <strong>DROP TABLE</strong> apaga a tabela inteira.
+              </p>
+            </div>
+
+            <!-- ALTER TABLE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">ALTER TABLE (adicionar coluna)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você adiciona a coluna <strong>profissao</strong> na tabela <strong>pessoas</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoAlterAdd">desc pessoas;
+
+alter table pessoas
+add column profissao varchar(10);
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoAlterAdd">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Resumo:</strong> <em>alter table</em> serve para <strong>adicionar</strong> ou <strong>alterar</strong> colunas.
+              </div>
+            </div>
+
+            <!-- DROP TABLE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">DROP TABLE (apagar a tabela)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Esse comando <strong>remove a tabela inteira</strong> (cuidado!).
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoDropTable">desc pessoas;
+
+drop table pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoDropTable">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Atenção:</strong> <em>drop table</em> apaga a tabela e os dados junto. Não tem Ctrl+Z 😅
+              </div>
+            </div>
+
+            <!-- AFTER -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Escolhendo a posição da coluna (AFTER)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Você pode escolher onde a coluna vai aparecer usando <strong>after</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoAfter">desc pessoas;
+
+alter table pessoas
+add column profissao varchar(10) after nome;
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoAfter">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Resumo:</strong> <em>add column</em> + <em>after</em> posiciona a coluna após um campo específico ✅
+              </div>
+            </div>
+
+            <!-- FIRST -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Inserindo no início (FIRST)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Se você quer colocar uma coluna no começo, use <strong>first</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoFirst">desc pessoas;
+
+alter table pessoas
+add column codigo int first;
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoFirst">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- MODIFY -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">MODIFY (alterar características da coluna)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>modify</strong> muda o tipo e as constraints de uma coluna, mantendo o nome.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoModify">desc pessoas;
+
+alter table pessoas
+modify column profissao varchar(20) not null default '';
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoModify">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Entenda:</strong> como a coluna virou <strong>not null</strong>, o banco preenche com o <strong>default ''</strong> (vazio).
+              </div>
+
+              <img
+                src="img/Modify_column.png"
+                alt="Modify column no MySQL"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- CHANGE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">CHANGE (trocar nome + tipo)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                O <strong>change</strong> permite trocar o nome da coluna e também o tipo/constraints.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoChange">desc pessoas;
+
+alter table pessoas
+change column profissao prof varchar(20);
+
+select * from pessoas;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoChange">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Resumo:</strong> <em>change</em> altera <strong>nome</strong> + <strong>tipo</strong> + <strong>regras</strong> da coluna ✅
+              </div>
+            </div>
+
+            <!-- RENAME TABLE -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Renomeando a tabela inteira</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Você pode trocar o nome da tabela com <strong>rename to</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoRenameTable">desc pessoas;
+
+alter table pessoas
+rename to gafanhotos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoRenameTable">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Importante:</strong> depois disso, você acessa a tabela pelo novo nome: <strong>gafanhotos</strong>.
+              </div>
+            </div>
+
+            <!-- Criando tabela cursos -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Criando uma nova tabela: cursos</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Exemplo criando uma tabela do zero e depois adicionando o ID no início.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoCursos">create table if not exists cursos(
+nome varchar(30) not null unique,
+descricao text,
+carga int unsigned,
+totalaulas int unsigned,
+ano year default '2025'
+) default charset = utf8;
+
+alter table cursos
+add column idcurso int first;
+
+describe cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoCursos">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+            </div>
+
+            <!-- Primary Key -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Alterando a chave primária</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Aqui você adiciona a chave primária no campo <strong>idcurso</strong>.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoPKCurso">alter table cursos
+add primary key(idcurso);
+
+describe cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoPKCurso">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> chave primária = identificador único da tabela ✅
+              </div>
+            </div>
+
+            <!-- DDL -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">DDL: comandos de estrutura</h3>
+              <p class="muted" style="margin-top: 6px;">
+                ALTER e DROP entram na categoria <strong>DDL</strong> (Data Definition Language).
+              </p>
+
+              <img
+                src="img/DDL.png"
+                alt="DDL e comandos"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Usou <strong>ALTER TABLE</strong> para adicionar coluna</li>
+                <li>Entendeu o risco do <strong>DROP TABLE</strong></li>
+                <li>Usou <strong>AFTER</strong> e <strong>FIRST</strong></li>
+                <li>Usou <strong>MODIFY</strong> para mudar constraints</li>
+                <li>Usou <strong>CHANGE</strong> para renomear coluna</li>
+                <li>Renomeou tabela com <strong>RENAME TO</strong></li>
+                <li>Criou tabela <strong>cursos</strong> e adicionou chave primária</li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>

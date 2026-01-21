@@ -1,143 +1,321 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backup de Segurança</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        header>p{
-            text-align: center;
-        }
-        * {
-            padding: 0px;
-            margin: 0px;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backup de Segurança | Estudos - Ailton A. Nakata</title>
 
-        body {
-            font-family: Arial, sans-serif;
-        }
+  <link rel="shortcut icon" href="../../img/Soluções.png" type="image/x-icon">
+  <link rel="stylesheet" href="../../site.css" />
+  <script src="../../site.js" defer></script>
 
-        input {
-            width: 60px;
-            margin: 5px;
-        }
-
-        #res {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        header {
-            width: 100%;
-            min-height: 80px;
-            text-align: center;
-            padding-top: 10px;
-            background: linear-gradient(135deg, #2626FE, #00bfff);
-            color: white;
-            text-align: center;
-            padding: 30px 15px;
-            font-family: 'Times New Roman', Times, serif;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        footer {
-            width: 100%;
-            background-image: linear-gradient(to bottom, #1e90ff, #00bfff);
-            font-family: var(--fonte_padrao);
-            padding-bottom: 10px;
-            padding-top: 10px;
-            text-align: center;
-            color: white;
-            font-size: 0.8em;
-        }
-
-        pre {
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            border: 1px solid #ddd;
-        }
-
-        code {
-            font-family: Consolas, monospace;
-            font-size: 0.95em;
-            color: #d6336c;
-        }
-
-        pre {
-            white-space: pre-wrap;
-        }
-        p{
-            padding: 15px;
-            text-indent: 15px;
-            line-height: 1.8;
-            text-align: justify;
-        }
-    </style>
+  <meta name="description" content="Aprenda a fazer backup e restaurar banco MySQL usando o MySQL Workbench (Data Export e Data Import), com passo a passo e testes." />
 </head>
 
 <body>
-    <header>
-        <h1>Fazendo Backup</h1>
-        <p>por: Ailton A. Nakata</p>
-    </header>
-
-    <main>
-        <h2>Gerenciando Cópias de Segurança MySQL:</h2>
-        <p>1º abra o cadastro e selecione o cursos</p>
-<pre>
-    <code>
-use cadastro;
-
-select*from cursos;
-select*from gafanhotos;
-describe gafanhotos;
-desc gafanhotos;
-desc cursos;
-    </code>
-</pre>
-
-<p>2º Click em menu server</p>
-<p>3º Selecione Data Export</p>
-<p>4º Selecione Cadastro</p>
-<p>5º Selecione tudo o que você quer salvar dentro do Schema Objects</p>
-
-<img src="img/Backup.png" alt="Backup">
-<p>6º Click em Dump Structure and Data</p>
-<img src="img/Dump_Export.png" alt="">
-<p>7º Escolha um local onde deseja salvar o arquivo e pressione <b>Start Export</b></p>
-<img src="img/Caminho_dump.png" alt="Caminho_para_salvar_arquivo_dump">
-<p>Não esqueça de marcar a opção Export to Self-contained file, que vai fazer com que todos os dados sejam salvos em um arquivo único.</p>
-<img src="img/Include_create_schema.png" alt="Include_create_schema">
-
-<h2>Agora para ver se funciona, é hora de apagar o cadastro:</h2>
-<pre>
-    <code>
-drop database cadastro;        
-    </code>
-</pre>
-<h2>Para importar seu banco de dados, basta fazer o caminhor reverso:</h2>
-<p>1º server > Data Import</p>
-<img src="img/Import_database.png" alt="Importando_dados">
-<p>2º pressione em Star Import</p>
-
-        <br>
-        <br>
-        <div id="voltar">
-            <a href="../estudos.html">Voltar</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Voltar ao início">
+        <span class="brand-avatar" aria-hidden="true">AN</span>
+        <div class="brand-text">
+          <strong>Ailton A. Nakata</strong>
+          <span>Sites modernos que convertem</span>
         </div>
-        <br><br>
-    </main>
-    <footer>
-        &copy;Todos os direitos reservados - Ailton A. Nakata - 2025
-    </footer>
+      </a>
 
+      <nav class="nav" aria-label="Navegação principal">
+        <a href="../../index.html">Início</a>
+        <a href="../../projetos.html">Projetos</a>
+        <a href="../../estudos.html">Estudos</a>
+        <a href="../../wordpress.html">WordPress</a>
+        <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+      </nav>
+    </div>
+  </header>
 
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h1>Fazendo Backup (MySQL)</h1>
+          <p class="muted">
+            Aprenda a criar uma cópia de segurança do seu banco usando o <strong>MySQL Workbench</strong> (Export)
+            e depois restaurar (Import).
+          </p>
+        </div>
+
+        <div class="hero-actions" style="margin-bottom: 14px;">
+          <a class="btn btn-secondary" href="../../estudos.html">Voltar para Estudos</a>
+          <a class="btn btn-ghost" href="../../contato.html">Contato</a>
+        </div>
+
+        <div class="lesson-grid">
+          <article class="lesson">
+            <h2 class="lesson-title">Gerenciando cópias de segurança no Workbench</h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin: 0;">
+                Backup é o seu “botão de voltar no tempo” 🕒  
+                Se algo der errado, você restaura tudo com poucos cliques.
+              </p>
+            </div>
+
+            <!-- Preparação -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">1º Passo: Preparando o banco</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Abra o banco <strong>cadastro</strong> e verifique as tabelas e registros.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoPreparacao">use cadastro;
+
+select * from cursos;
+select * from gafanhotos;
+
+describe gafanhotos;
+desc cursos;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoPreparacao">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Dica:</strong> <em>DESC</em> e <em>DESCRIBE</em> fazem a mesma coisa ✅
+              </div>
+            </div>
+
+            <!-- Export -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">2º Passo: Exportando o backup</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Agora vamos criar o arquivo de backup usando o menu do Workbench.
+              </p>
+
+              <ol class="list" style="margin: 0; line-height: 1.9;">
+                <li>Clique em <strong>Server</strong></li>
+                <li>Selecione <strong>Data Export</strong></li>
+                <li>Selecione o schema <strong>cadastro</strong></li>
+                <li>Marque tudo que deseja salvar em <strong>Schema Objects</strong></li>
+              </ol>
+
+              <img
+                src="img/Backup.png"
+                alt="Tela de Backup no Workbench"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Escolha recomendada:</strong> marque <em>Dump Structure and Data</em> ✅
+              </div>
+
+              <img
+                src="img/Dump_Export.png"
+                alt="Dump structure and data"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <p class="muted" style="margin-top: 12px;">
+                Escolha um local para salvar o arquivo e pressione <strong>Start Export</strong>.
+              </p>
+
+              <img
+                src="img/Caminho_dump.png"
+                alt="Escolhendo caminho para salvar o dump"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 10px auto;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Não esqueça:</strong> marque <strong>Export to Self-Contained File</strong> para salvar tudo em um único arquivo.
+              </div>
+
+              <img
+                src="img/Include_create_schema.png"
+                alt="Export to Self-contained file e include create schema"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+            </div>
+
+            <!-- Teste -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">3º Passo: Testando se o backup funciona</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Agora vamos apagar o banco (somente para teste) e depois importar novamente.
+              </p>
+
+              <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
+<code id="codigoDrop">drop database cadastro;</code>
+              </pre>
+
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-code="#codigoDrop">Copiar código</button>
+                <a class="btn btn-ghost" href="../../estudos.html">Voltar</a>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Cuidado:</strong> esse comando apaga tudo. Use apenas se estiver seguindo o teste mesmo ✅
+              </div>
+            </div>
+
+            <!-- Import -->
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">4º Passo: Importando o backup (restaurar)</h3>
+              <p class="muted" style="margin-top: 6px;">
+                Agora é o caminho reverso: você escolhe o arquivo exportado e importa para restaurar o banco.
+              </p>
+
+              <ol class="list" style="margin: 0; line-height: 1.9;">
+                <li>Vá em <strong>Server</strong> → <strong>Data Import</strong></li>
+                <li>Selecione o arquivo do backup</li>
+                <li>Clique em <strong>Start Import</strong></li>
+              </ol>
+
+              <img
+                src="img/Import_database.png"
+                alt="Importando dados no Workbench"
+                style="width: 100%; max-width: 760px; border-radius: 14px; display: block; margin: 12px auto 0;"
+              />
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>Sucesso:</strong> se tudo der certo, seu schema e suas tabelas voltam como estavam ✅
+              </div>
+            </div>
+
+            <div class="lesson-actions">
+              <a class="btn btn-secondary" href="../../estudos.html">Voltar</a>
+              <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
+            </div>
+          </article>
+
+          <aside class="lesson-aside">
+            <div class="card">
+              <h3>Sumário</h3>
+              <p class="muted">Navegue rápido pelos tópicos.</p>
+              <div class="toc" data-toc></div>
+            </div>
+
+            <div class="card">
+              <h3>Checklist rápido</h3>
+              <ul class="list">
+                <li>Conferiu tabelas com <strong>SELECT</strong> e <strong>DESC</strong></li>
+                <li>Entrou em <strong>Server → Data Export</strong></li>
+                <li>Marcou <strong>Dump Structure and Data</strong></li>
+                <li>Salvou como <strong>Self-contained file</strong></li>
+                <li>Testou apagando com <strong>DROP DATABASE</strong></li>
+                <li>Restaurou com <strong>Server → Data Import</strong></li>
+              </ul>
+              <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Ailton A. Nakata</strong>
+        <p class="muted">Sites modernos e landing pages focadas em conversão.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/nakata-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/ailton-akio-nakata-51205a327/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <p class="tiny muted">© <span id="year"></span> Todos os direitos reservados.</p>
+  </footer>
+
+  <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
+
+  <div class="modal-overlay" data-modal-overlay>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
+      <div class="modal-head">
+        <strong>Solicitar orçamento</strong>
+        <button class="modal-close" data-close-modal aria-label="Fechar" type="button">X</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="muted">Preencha em 30 segundos. Eu monto a proposta e te respondo.</p>
+
+        <form class="form" data-budget-form autocomplete="on">
+          <div class="field">
+            <label>Seu nome</label>
+            <input name="nome" placeholder="Ex: Ana" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label>Seu negócio / segmento</label>
+            <input name="negocio" placeholder="Ex: Barbearia, pizzaria, clínica..." required />
+          </div>
+
+          <div class="field">
+            <label>Tipo de site</label>
+            <select name="tipo" required>
+              <option value="">Selecione</option>
+              <option>Landing Page</option>
+              <option>Site Institucional</option>
+              <option>WordPress</option>
+              <option>Loja (e-commerce)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Objetivo principal</label>
+            <select name="objetivo" required>
+              <option value="">Selecione</option>
+              <option>Gerar contatos no WhatsApp</option>
+              <option>Vender um serviço/produto</option>
+              <option>Passar credibilidade</option>
+              <option>Captar leads (formulário)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Prazo</label>
+            <input name="prazo" placeholder="Ex: 10 dias" />
+          </div>
+
+          <div class="field">
+            <label>Detalhes (opcional)</label>
+            <textarea name="detalhes" placeholder="Páginas, conteúdo, fotos, logotipo, etc."></textarea>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="submit">Enviar no WhatsApp</button>
+            <button class="btn btn-ghost" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script local: copiar código (com seletor) -->
+  <script>
+    (function () {
+      const copyBtns = document.querySelectorAll('[data-copy-code]');
+      if (!copyBtns.length) return;
+
+      copyBtns.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const target = btn.getAttribute('data-copy-code');
+          const codeEl = target ? document.querySelector(target) : null;
+          if (!codeEl) return;
+
+          const codigo = codeEl.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(codigo);
+            alert('Código copiado com sucesso!');
+          } catch (err) {
+            console.error('Falha ao copiar o código: ', err);
+            alert('Houve um erro ao copiar o código.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
-
 </html>
