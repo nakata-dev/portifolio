@@ -1,484 +1,218 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tabela de Pontuação Responsiva — FIX MOBILE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cacheta TOP | Placar PRO</title>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+  <!-- Fonte leve e profissional -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-        /* -------------------- ESTILO BASE OTIMIZADO -------------------- */
-        :root {
-            --bg-dark: #0d0d0d;
-            --bg-mid: #151515;
-            --bg-light: #1f1f1f;
-            --text-color: #f0f0f0;
-            --border-color: #333;
-            --accent-color: #00bcd4;
-            --sheet-bg: #222222;
-        }
-
-        body {
-            background: var(--bg-dark);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 16px 10px;
-            touch-action: manipulation;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 15px;
-            color: var(--accent-color);
-            font-weight: bolder;
-            font-family: "Josefin Sans", sans-serif;
-        }
-
-        /* Tabela */
-        .tabela-container {
-            overflow-x: auto;
-            width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--bg-mid);
-            min-width: 450px;
-        }
-
-        th,
-        td {
-            border: 1px solid var(--border-color);
-            padding: 6px 4px;
-            text-align: center;
-            min-width: 48px;
-            height: 44px;
-        }
-
-        th {
-            background: var(--bg-light);
-            color: var(--accent-color);
-        }
-
-        /* Fix da coluna Nome */
-        th:first-child,
-        td:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 10;
-            background: var(--bg-mid);
-        }
-
-        /* garante que o ícone seja posicionado em relação à célula */
-        .cell-ponto {
-            position: relative;
-        }
-
-        /* Input */
-        input {
-            width: 90%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #444;
-            color: var(--text-color);
-            padding: 5px 0;
-        }
-
-        .score {
-            font-size: 18px;
-            user-select: none;
-        }
-
-        .icon-symbol {
-            position: absolute;
-            top: 4px;
-            right: 6px;
-            font-size: 15px;
-            pointer-events: none;
-            opacity: 0.95;
-        }
-
-        /* cores por símbolo (apenas para melhor visibilidade) */
-        .icon-symbol[data-symbol="▲"] {
-            color: #ff9800;
-        }
-
-        .icon-symbol[data-symbol="○"] {
-            color: #4caf50;
-        }
-
-        /* Botões */
-        .buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 10px 15px;
-            border-radius: 8px;
-            background: var(--bg-light);
-            border: 1px solid #444;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* -------------------- BOTTOM SHEET -------------------- */
-        #bottomSheetOverlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            z-index: 9998;
-        }
-
-        #bottomSheet {
-            position: fixed;
-            left: 0;
-            bottom: -500px;
-            width: 100%;
-            background: var(--sheet-bg);
-            border-radius: 16px 16px 0 0;
-            padding: 18px;
-            box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.6);
-            transition: bottom 0.28s ease-out;
-            max-height: 80vh;
-            overflow-y: auto;
-            z-index: 9999;
-            touch-action: manipulation;
-        }
-
-        .sheet-title {
-            text-align: center;
-            margin: 10px 0;
-            color: var(--accent-color);
-        }
-
-        .sheet-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-        }
-
-        .sheet-btn {
-            padding: 12px 0;
-            background: #333;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 16px;
-            cursor: pointer;
-            user-select: none;
-            touch-action: manipulation;
-        }
-
-        .sheet-btn:active,
-        .sheet-btn.active-num {
-            background: var(--accent-color) !important;
-        }
-
-        #cancelSheet {
-            background: #444;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* --------------------- LARGURA RESPONSIVA REFINADA --------------------- */
-
-        /* Desktop */
-        th:first-child,
-        td:first-child {
-            min-width: 100px;
-            width: 100px;
-        }
-
-        /* Tablets e celulares deitados */
-        @media (max-width: 900px) {
-
-            th:first-child,
-            td:first-child {
-                min-width: 100px;
-                width: 100px;
-            }
-        }
-
-        /* Celulares padrão */
-        @media (max-width: 600px) {
-
-            th:first-child,
-            td:first-child {
-                min-width: 100px;
-                width: 100px;
-            }
-        }
-
-        /* Celulares muito pequenos */
-        @media (max-width: 380px) {
-
-            th:first-child,
-            td:first-child {
-                min-width: 100px;
-                width: 100px;
-            }
-        }
-
-        /* Nome sempre MAIÚSCULO e centralizado */
-        td:first-child input {
-            text-transform: uppercase;
-            text-align: center;
-        }
-    </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body>
+<body class="theme-cacheta">
+  <header class="header">
+    <div class="header-inner">
 
-    <h2>TABELA DE PONTUAÇÃO</h2>
+      <div class="brand">
+        <img class="logo-img" src="img/logo-cacheta.png" alt="Logo Cacheta TOP" />
 
-    <div class="tabela-container">
-        <table id="tabela">
-            <thead>
-                <tr id="linha-rodadas">
-                    <th>Nome</th>
-                </tr>
-                <tr id="topo-nomes">
-                    <th>—</th>
-                </tr>
-            </thead>
-            <tbody id="jogadores"></tbody>
-        </table>
-    </div>
+        <div class="titles">
+          <h1 id="appTitle">Cacheta TOP <span class="pro">PRO</span></h1>
+          <p id="appSubtitle">Marque quedas no celular sem perder o jogo.</p>
+        </div>
+      </div>
 
-    <div class="buttons">
-        <button id="novoBtn">Novo Jogo</button>
-        <button id="addBtn">Adicionar Jogador</button>
-        <button id="limparBtn">Limpar Nomes</button>
-    </div>
-
-    <div id="bottomSheetOverlay"></div>
-    <div id="bottomSheet">
-        <div class="sheet-title">Selecione a Pontuação</div>
-        <div id="numerosContainer" class="sheet-grid"></div>
-
-        <hr style="margin:15px 0; border-color:#333;">
-
-        <div class="sheet-title">Símbolo</div>
-        <div id="simbolosContainer" class="sheet-grid">
-            <div class="sheet-btn" data-symbol="">Nenhum</div>
-            <div class="sheet-btn" data-symbol="▲" style="color:#ff9800">▲ Obrigado</div>
-            <div class="sheet-btn" data-symbol="○" style="color:#4caf50">○ Vencedor</div>
+      
+      <!-- ✅ BURGER MENU (canto superior direito como na sua marcação) -->
+      <div class="menu-slot">
+          <button class="burger" id="btnBurger" type="button" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false">
+              <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="actions">
+          <button class="pill ghost" id="btnAddPlayer" type="button">+ Jogador</button>
+          <button class="pill ghost" id="btnRemovePlayer" type="button">- Remover</button>
+  
+          <button class="pill" id="btnReset" type="button">♻ Resetar Pontos</button>
+          <button class="pill danger" id="btnNew" type="button">🆕 Nova Partida</button>
         </div>
 
-        <div id="cancelSheet">Cancelar</div>
     </div>
-    <footer>
-        copyright &copy; 2025 - Ailton A. Nakata
-    </footer>
+  </header>
 
-    <script>
-        const rodadas = 10;
-        const maxJogadores = 9;
-        const STORAGE_KEY = "scoreboard_names_v3";
-        let nomes = [];
-        let jogadoresAtuais = 0;
-        let celulaAtual = null;
+  <main class="container">
+    <section class="topbar">
+      <div class="mini-card">
+        <span class="mini-label">Jogadores</span>
+        <strong class="mini-value" id="statPlayers">4</strong>
+      </div>
 
-        function salvarNomes() { localStorage.setItem(STORAGE_KEY, JSON.stringify(nomes)); }
-        function carregarNomes() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return false;
-                const arr = JSON.parse(raw);
-                if (!Array.isArray(arr)) return false;
-                nomes = arr.slice(0, maxJogadores);
-                jogadoresAtuais = nomes.length;
-                return true;
-            } catch { return false; }
-        }
+      <div class="mini-card">
+        <span class="mini-label">Rodadas</span>
+        <strong class="mini-value" id="statRounds">10</strong>
+      </div>
 
-        function gerarTopo() {
-            const topo = document.getElementById("topo-nomes");
-            const linhaRodadas = document.getElementById("linha-rodadas");
-            topo.innerHTML = "<th>—</th>";
-            linhaRodadas.innerHTML = "<th>Nome</th>";
+      <div class="mini-card glow">
+        <span class="mini-label">Líder</span>
+        <strong class="mini-value" id="statLeader">—</strong>
+      </div>
 
-            const opcoes = nomes.map(n => `<option>${(n || '').substring(0, 3).toUpperCase()}</option>`).join("");
-            for (let i = 0; i < rodadas; i++) {
-                linhaRodadas.innerHTML += `<th>${i + 1}</th>`;
-                topo.innerHTML += `<th><select>${opcoes}</select></th>`;
-            }
-        }
+      <label class="rounds">
+        <span>Rodadas</span>
+        <select id="roundsSelect">
+          <option value="8">8</option>
+          <option value="10" selected>10</option>
+          <option value="12">12</option>
+          <option value="15">15</option>
+        </select>
+      </label>
+    </section>
 
-        function gerarTabela() {
-            const tbody = document.getElementById("jogadores");
-            tbody.innerHTML = "";
+    <section class="table-card">
+      <div class="table-container">
+        <table id="scoreTable" aria-label="Tabela de pontuação">
+          <thead>
+            <tr id="roundsRow">
+              <th class="sticky name-col">Jogador</th>
+            </tr>
+          </thead>
 
-            if (jogadoresAtuais === 0) {
-                jogadoresAtuais = 4;
-                nomes = Array(4).fill("");
-                salvarNomes();
-            }
+          <tbody id="playersBody"></tbody>
+        </table>
+      </div>
 
-            for (let i = 0; i < jogadoresAtuais; i++) {
-                const pont = JSON.parse(localStorage.getItem(`pontuacao_${i}`) || "[]");
-                let linha = `<tr><td><input value="${nomes[i] || ''}" placeholder="Jogador ${i + 1}" 
-                     oninput="nomes[${i}] = this.value; salvarNomes(); gerarTopo();"></td>`;
+      <div class="legend">
+        <span class="chip win">○ Vencedor</span>
+        <span class="chip thanks">▲ Obrigado</span>
+        <span class="chip empty">— Sem ponto</span>
+        <small>Toque no quadrado do ponto para marcar rápido. Tudo salva sozinho 💾</small>
+      </div>
+    </section>
+  </main>
 
-                for (let j = 0; j < rodadas; j++) {
-                    const p = pont[j] || { num: "-", simbolo: "" };
-                    const simb = p.simbolo ? `<span class='icon-symbol' data-symbol='${p.simbolo}'>${p.simbolo}</span>` : "";
+  <!-- ✅ Drawer overlay -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
 
-                    linha += `<td class='cell-ponto' data-j='${i}' data-r='${j}' data-num='${p.num}' data-simbolo='${p.simbolo}'>
-                         <span class='score'>${p.num}</span>
-                         ${simb}
-                      </td>`;
-                }
-                linha += "</tr>";
-                tbody.insertAdjacentHTML("beforeend", linha);
-            }
-            gerarTopo();
-        }
+  <!-- ✅ Drawer (menu lateral elegante) -->
+  <aside class="drawer" id="drawer" aria-label="Menu do app">
+    <div class="drawer-head">
+      <div class="drawer-badge">🎴 Placares</div>
+      <button class="icon-btn" id="btnCloseDrawer" type="button" aria-label="Fechar menu">✕</button>
+    </div>
 
-        document.addEventListener("pointerdown", e => {
-            const cel = e.target.closest(".cell-ponto");
-            if (!cel) return;
-            abrirBottomSheet(cel);
-        });
+    <div class="drawer-body">
+      <p class="drawer-title">Selecione o tipo de placar</p>
 
-        const overlay = document.getElementById("bottomSheetOverlay");
-        const sheet = document.getElementById("bottomSheet");
-        const numerosContainer = document.getElementById("numerosContainer");
-        const simbolosContainer = document.getElementById("simbolosContainer");
+      <button class="drawer-item active" data-game="cacheta" type="button">
+        <div class="drawer-item-main">
+          <strong>Cacheta TOP</strong>
+          <span>Quedas rápidas + modo turbo</span>
+        </div>
+        <div class="drawer-pill">Atual</div>
+      </button>
 
-        function abrirBottomSheet(celula) {
-            celulaAtual = celula;
+      <button class="drawer-item" data-game="truco" type="button">
+        <div class="drawer-item-main">
+          <strong>Truco TOP</strong>
+          <span>12 pontos com atalhos inteligentes</span>
+        </div>
+        <div class="drawer-pill">Novo</div>
+      </button>
 
-            // garante que dataset num esteja sincronizado com o texto exibido
-            const scoreSpan = celulaAtual.querySelector(".score");
-            if (scoreSpan) celulaAtual.dataset.num = scoreSpan.textContent;
+      <button class="drawer-item" data-game="buraco" type="button">
+        <div class="drawer-item-main">
+          <strong>Buraco TOP</strong>
+          <span>Botões rápidos para pontuação alta</span>
+        </div>
+        <div class="drawer-pill">Novo</div>
+      </button>
 
-            numerosContainer.innerHTML = "";
-            for (let n = 10; n >= 0; n--) {
-                const btn = document.createElement("div");
-                btn.className = "sheet-btn";
-                btn.textContent = n;
-                btn.dataset.num = n;
+      <div class="drawer-sep"></div>
 
-                btn.addEventListener("click", () => selecionarNumero(n));
+      <!-- ✅ WhatsApp -->
+      <a class="drawer-whats" id="whatsLink" href="#" target="_blank" rel="noopener">
+        <span class="whats-ico">🟢</span>
+        <div class="drawer-item-main">
+          <strong>Falar comigo no WhatsApp</strong>
+          <span>Contato para orçamento e melhorias</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
 
-                numerosContainer.appendChild(btn);
-            }
+      <small class="drawer-note">
+        Dica: cada jogo salva separado. Você pode voltar depois que fica tudo guardado ✅
+      </small>
+    </div>
+  </aside>
 
-            overlay.style.display = "block";
-            setTimeout(() => sheet.style.bottom = "0", 10);
-        }
+  <!-- Bottom Sheet -->
+  <div class="sheet-overlay" id="sheetOverlay" aria-hidden="true"></div>
 
-        function fecharBottomSheet() {
-            sheet.style.bottom = "-500px";
-            setTimeout(() => overlay.style.display = "none", 280);
-        }
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-handle" aria-hidden="true"></div>
 
-        overlay.addEventListener("click", fecharBottomSheet);
-        document.getElementById("cancelSheet").addEventListener("click", fecharBottomSheet);
+    <div class="sheet-head">
+      <div>
+        <h2 id="sheetTitle">Marcar Pontos</h2>
+        <p id="sheetSub">Use o modo turbo ou selecione o valor</p>
+      </div>
 
-        function selecionarNumero(n) {
-            if (!celulaAtual) return;
-            aplicarValor(n, celulaAtual.dataset.simbolo || "");
-        }
+      <button class="icon-btn" id="btnCloseSheet" type="button" aria-label="Fechar">✕</button>
+    </div>
 
-        /* CORREÇÃO: ao escolher símbolo, pega o número mostrado (seguro) e aplica o símbolo */
-        simbolosContainer.addEventListener("click", e => {
-            const btn = e.target.closest(".sheet-btn");
-            if (!btn) return;
+    <div class="sheet-preview">
+      <div class="preview-item">
+        <span>Jogador</span>
+        <strong id="prevPlayer">—</strong>
+      </div>
+      <div class="preview-item">
+        <span>Rodada</span>
+        <strong id="prevRound">—</strong>
+      </div>
 
-            const simbolo = btn.dataset.symbol !== undefined ? btn.dataset.symbol : (btn.getAttribute('data-symbol') || '');
+      <div class="preview-score" id="prevScore">—</div>
+    </div>
 
-            // PEGA O NÚMERO REAL DA CÉLULA — assim nunca gravamos undefined
-            const numeroAtual = (celulaAtual && celulaAtual.querySelector(".score"))
-                ? celulaAtual.querySelector(".score").textContent
-                : '-';
+    <!-- ✅ MODO TURBO DINÂMICO (muda conforme o jogo) -->
+    <div class="turbo">
+      <div class="turbo-title" id="turboTitle">⚡ Modo Turbo</div>
 
-            aplicarValor(numeroAtual, simbolo);
-        });
+      <div class="turbo-row" id="turboRow">
+        <button class="turbo-btn sub" id="turbo1" type="button" data-delta="-1">➖ -1</button>
+        <button class="turbo-btn add" id="turbo2" type="button" data-delta="1">➕ +1</button>
+        <button class="turbo-btn fecho" id="turbo3" type="button" data-delta="2">🔥 +2</button>
+        <button class="turbo-btn bateu" id="turbo4" type="button" data-delta="3">👑 +3</button>
+        <button class="turbo-btn clear" id="turbo5" type="button" data-set="0">🧼 Zerar</button>
+      </div>
 
-        function aplicarValor(numero, simbolo) {
-            const cel = celulaAtual;
-            // segurança: se por acaso cel for nulo, sai
-            if (!cel) return;
+      <small class="turbo-hint">Dica: toque nos botões e finalize em <b>Aplicar ✅</b>.</small>
+    </div>
 
-            cel.dataset.num = numero;
-            cel.dataset.simbolo = simbolo;
-            const scoreEl = cel.querySelector(".score");
-            if (scoreEl) scoreEl.textContent = numero;
+    <!-- Pad de números dinâmico -->
+    <div class="pad" id="padGrid"></div>
 
-            let simb = cel.querySelector(".icon-symbol");
-            if (simb) simb.remove();
-            if (simbolo) {
-                const t = document.createElement("span");
-                t.className = "icon-symbol";
-                t.dataset.symbol = simbolo;        // <--- importante para cor/identificação
-                t.textContent = simbolo;
-                cel.appendChild(t);
-            }
+    <div class="marker-row">
+      <button class="marker-btn none active" data-mark="" type="button">Sem marcador</button>
+      <button class="marker-btn thanks" data-mark="▲" type="button">▲ Obrigado</button>
+      <button class="marker-btn win" data-mark="○" type="button">○ Vencedor</button>
+    </div>
 
-            const j = cel.dataset.j;
-            const r = cel.dataset.r;
-            const key = `pontuacao_${j}`;
-            const arr = JSON.parse(localStorage.getItem(key) || "[]");
-            arr[r] = { num: numero, simbolo: simbolo };
-            localStorage.setItem(key, JSON.stringify(arr));
+    <div class="sheet-actions">
+      <button class="pill ghost" id="btnClearCell" type="button">Limpar</button>
+      <button class="pill" id="btnApply" type="button">Aplicar ✅</button>
+    </div>
+  </section>
 
-            fecharBottomSheet();
-        }
+  <footer class="footer">
+    copyright &copy; 2025 - Ailton A. Nakata
+  </footer>
 
-        document.getElementById("addBtn").addEventListener("click", () => {
-            if (jogadoresAtuais >= maxJogadores) return alert("Máximo de jogadores atingido.");
-            nomes.push("");
-            jogadoresAtuais++;
-            salvarNomes();
-            gerarTabela();
-        });
+  <div class="toast" id="toast"></div>
 
-        document.getElementById("novoBtn").addEventListener("click", () => {
-            if (!confirm("Zerar tudo?")) return;
-            for (let i = 0; i < jogadoresAtuais; i++) localStorage.removeItem(`pontuacao_${i}`);
-            gerarTabela();
-        });
-
-        document.getElementById("limparBtn").addEventListener("click", () => {
-            if (!confirm("Apagar nomes?")) return;
-            localStorage.removeItem(STORAGE_KEY);
-            nomes = [];
-            jogadoresAtuais = 0;
-            gerarTabela();
-        });
-
-        function init() {
-            if (!carregarNomes()) {
-                nomes = Array(4).fill("");
-                jogadoresAtuais = 4;
-                salvarNomes();
-            }
-            gerarTabela();
-        }
-        init();
-    </script>
+  <script src="app.js"></script>
 </body>
-
 </html>

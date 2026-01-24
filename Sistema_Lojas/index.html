@@ -2,531 +2,180 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caderno de Vendas — Simples</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controle de Vendas Versão - PRO</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <!-- CSS separado -->
+    <link rel="stylesheet" href="styles.css" />
 
     <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <style>
-        /* ------------------------- */
-        /*        VARIÁVEIS          */
-        /* ------------------------- */
-        :root {
-            --bg: #f5f6fa;
-            --page-bg: #ffffff;
-            --text: #1a1a1a;
-
-            --input-bg: #ffffff;
-            --input-border: #c5c5c5;
-
-            --btn-primary: #006aff;
-            --btn-primary-hover: #247df8;
-
-            --btn-pdf: #0a5;
-            --btn-pdf-hover: #0c7;
-
-            --btn-clear: #FF3333;
-            --btn-clear-hover: #ff1a1a;
-
-            --table-border: #e1e1e1;
-
-            --shadow: rgba(0, 0, 0, 0.08);
-        }
-
-        /* ------------------------- */
-        /*        MODO ESCURO        */
-        /* ------------------------- */
-        body.dark {
-            --bg: #0f0f0f;
-            --page-bg: #1a1a1a;
-            --text: #eaeaea;
-
-            --input-bg: #2a2a2a;
-            --input-border: #444;
-
-            --btn-primary: #0d6efd;
-            --btn-primary-hover: #3b82f6;
-
-            --btn-pdf: #00994d;
-            --btn-pdf-hover: #00cc66;
-
-            --btn-clear: #FF3333;
-            --btn-clear-hover: #ff3333;
-
-            --table-border: #333;
-
-            --shadow: rgba(255, 255, 255, 0.06);
-        }
-
-        /* ------------------------- */
-        /*         ESTILOS           */
-        /* ------------------------- */
-
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            transition: 0.3s ease;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-
-        /* BOTÃO TEMA */
-        .btn-theme {
-            display: block;
-            margin: 0 auto 20px auto;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            background: var(--btn-primary);
-            color: white;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-
-        .btn-theme:hover {
-            background: var(--btn-primary-hover);
-        }
-
-        .page {
-            background: var(--page-bg);
-            padding: 20px;
-            max-width: 950px;
-            margin: 0 auto;
-            border-radius: 12px;
-            box-shadow: 0 0 12px var(--shadow);
-            transition: 0.3s ease;
-        }
-
-        /* FORM GRID */
-        .form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--table-border);
-        }
-
-        .form input,
-        .form select {
-            padding: 10px;
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 8px;
-            font-size: 15px;
-            width: 90%;
-            color: var(--text);
-        }
-        .form select{
-            width: 100%;
-        }
-        .btn {
-            width: 100%;
-            background: var(--btn-primary);
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 5px;
-        }
-
-        .btn:hover {
-            background: var(--btn-primary-hover);
-        }
-
-        .btn-pdf {
-            width: 100%;
-            background: var(--btn-pdf);
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 5px;
-        }
-
-        .btn-pdf:hover {
-            background: var(--btn-pdf-hover);
-        }
-
-        .btn-clear {
-            width: 100%;
-            background: var(--btn-clear);
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 5px;
-        }
-
-        .btn-clear:hover {
-            background: var(--btn-clear-hover);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: var(--page-bg);
-        }
-
-        table th,
-        table td {
-            border-bottom: 1px solid var(--table-border);
-            padding: 20px;
-            text-align: left;
-            font-size: 15px;
-            color: var(--text);
-        }
-
-        .delete-btn {
-            background: #FF3333;
-            color: white;
-            padding: 6px 10px;
-            font-size: 13px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-        }
-
-        .delete-btn:hover {
-            background: #d62828;
-        }
-
-        .edit-btn {
-            background: var(--btn-primary);
-            color: white;
-            padding: 6px 10px;
-            font-size: 13px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-left: 5px;
-        }
-
-        .edit-btn:hover {
-            background: var(--btn-primary-hover);
-        }
-
-        .totals {
-            text-align: right;
-            margin-top: 20px;
-            font-size: 18px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #777;
-        }
-        #codigo{
-            text-transform: uppercase;
-        }
-        /* RESPONSIVIDADE */
-        @media (max-width: 650px) {
-
-            table thead {
-                display: none;
-            }
-
-            table,
-            table tbody,
-            table tr,
-            table td {
-                display: block;
-                width: 98%;
-            }
-
-            table tr {
-                background: var(--page-bg);
-                margin-bottom: 12px;
-                padding: 12px;
-                border-radius: 10px;
-                box-shadow: 0 2px 6px var(--shadow);
-            }
-
-            table td {
-                border: none;
-                padding: 6px 5px;
-                font-size: 15px;
-                display: flex;
-                justify-content: space-between;
-            }
-
-            table td::before {
-                content: attr(data-label);
-                font-weight: bold;
-            }
-        }
-    </style>
 </head>
 
 <body>
+    <header class="container">
+        <div class="topbar">
+            <div class="brand">
+                <!-- ✅ LOGO (coloque sua imagem em ./img/logo-pro.png) -->
+                <img class="logo" src="./img/Logo" alt="Logo Controle de Vendas"
+                    onerror="this.onerror=null; this.src='https://via.placeholder.com/46?text=PRO';" />
 
-    <h1>Caderno de Vendas</h1>
+                <div class="brand-text">
+                    <strong>Controle de Vendas</strong>
+                    <span>Rápido, inteligente e pronto para o dia a dia</span>
+                </div>
+            </div>
 
-    <!-- Botão Tema -->
-    <button id="toggleTheme" class="btn-theme">🌙 Modo Escuro</button>
+            <div class="top-actions">
+                <button id="btnHoje" class="pill">📅 Hoje</button>
+                <button id="btnCSV" class="pill">⬇️ CSV</button>
+                <button id="toggleTheme" class="pill primary">🌙 Tema</button>
+            </div>
+        </div>
+    </header>
 
-    <div class="page">
+    <main class="container">
+        <div class="page">
+            <!-- DASHBOARD -->
+            <section class="dash">
+                <div class="dash-grid">
+                    <div class="card">
+                        <div class="kpi-top">
+                            <span>HOJE</span>
+                            <div class="mini" id="chipHoje">0 vendas</div>
+                        </div>
+                        <div class="kpi-value" id="kpiHoje">R$ 0,00</div>
+                        <div class="kpi-sub" id="subHoje">Total do dia selecionado</div>
+                    </div>
 
-        <!-- Formulário -->
-        <div class="form">
-            <input type="date" id="data" placeholder="Data">
-            <input type="text" id="produto" placeholder="Nome do Produto">
-            <input type="text" id="codigo" placeholder="Código">
-            <select id="pagamento">
-                <option value="">Pagamento</option>
-                <option>Dinheiro</option>
-                <option>Cartão</option>
-                <option>Pix</option>
-                <option>Fiado</option>
-                <option>Outro</option>
-            </select>
-            <input type="text" id="obs" placeholder="Observação">
-            <input type="number" id="valor" placeholder="Valor (R$)" step="0.01">
+                    <div class="card">
+                        <div class="kpi-top">
+                            <span>SEMANA</span>
+                            <div class="mini" id="chipSemana">0 vendas</div>
+                        </div>
+                        <div class="kpi-value" id="kpiSemana">R$ 0,00</div>
+                        <div class="kpi-sub">Últimos 7 dias (dinâmico)</div>
+                    </div>
 
-            <button class="btn" onclick="adicionarVenda()">Adicionar</button>
-            <button class="btn-pdf" onclick="gerarPDF()">Gerar PDF</button>
-            <button class="btn-clear" onclick="limparMes()">Limpar</button>
+                    <div class="card">
+                        <div class="kpi-top">
+                            <span>MÊS</span>
+                            <div class="mini" id="chipMes">0 vendas</div>
+                        </div>
+                        <div class="kpi-value" id="kpiMes">R$ 0,00</div>
+                        <div class="kpi-sub">Mês atual (pelo calendário)</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="kpi-top">
+                            <span>INSIGHTS</span>
+                            <div class="mini">⚡ PRO</div>
+                        </div>
+                        <div class="kpi-value" id="kpiInsight">—</div>
+                        <div class="kpi-sub" id="subInsight">Média + melhor pagamento</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FORM -->
+            <section class="form" aria-label="Cadastro de venda">
+                <div class="field">
+                    <label>Data</label>
+                    <input type="date" id="data" />
+                </div>
+
+                <div class="field">
+                    <label>Produto</label>
+                    <input type="text" id="produto" placeholder="Ex: Refrigerante 2L" />
+                </div>
+
+                <div class="field">
+                    <label>Código</label>
+                    <input type="text" id="codigo" placeholder="Ex: A1B2" />
+                </div>
+
+                <div class="field">
+                    <label>Pagamento</label>
+                    <select id="pagamento">
+                        <option value="">Selecione</option>
+                        <option>Dinheiro</option>
+                        <option>Cartão</option>
+                        <option>Pix</option>
+                        <option>Fiado</option>
+                        <option>Outro</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Observação</label>
+                    <input type="text" id="obs" placeholder="Ex: Cliente do bairro" />
+                </div>
+
+                <div class="field">
+                    <label>Valor (R$)</label>
+                    <input type="number" id="valor" placeholder="Ex: 12.50" step="0.01" />
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn add" id="btnAdd">Adicionar</button>
+                    <button class="btn pdf" id="btnPDF">Gerar PDF</button>
+                    <button class="btn ghost" id="btnLimparFiltros">Limpar filtros</button>
+                    <button class="btn clear" id="btnLimparMes">Limpar mês</button>
+                </div>
+            </section>
+
+            <!-- FILTERS + SEARCH -->
+            <section class="filters" aria-label="Filtros de visualização">
+                <div class="tabs">
+                    <button class="tab active" data-filter="all">Tudo</button>
+                    <button class="tab" data-filter="today">Hoje</button>
+                    <button class="tab" data-filter="week">Semana</button>
+                    <button class="tab" data-filter="month">Mês</button>
+                </div>
+
+                <div class="search">
+                    <input id="busca" type="text" placeholder="Buscar por produto, código ou observação..." />
+                </div>
+            </section>
+
+            <!-- TABLE -->
+            <section aria-label="Lista de vendas">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Data</th>
+                            <th>Produto</th>
+                            <th>Código</th>
+                            <th>Pagamento</th>
+                            <th>Obs</th>
+                            <th>Valor</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela"></tbody>
+                </table>
+
+                <div id="emptyState" class="empty" style="display:none;">
+                    Nenhuma venda encontrada com esses filtros. ✅<br />
+                    Dica PRO: tente "Tudo" ou limpe a busca.
+                </div>
+            </section>
         </div>
 
-        <!-- Tabela -->
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Data</th>
-                    <th>Produto</th>
-                    <th>Código</th>
-                    <th>Pagamento</th>
-                    <th>Obs</th>
-                    <th>Valor (R$)</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody id="tabela"></tbody>
-        </table>
+        <footer>copyright © 2026 Ailton A. Nakata</footer>
+    </main>
 
-        <div class="totals">
-            <div><strong>Total Diário:</strong> <span id="totalDia">R$ 0,00</span></div>
-            <div><strong>Total Mensal:</strong> <span id="totalMes">R$ 0,00</span></div>
-        </div>
+    <div class="toast" id="toast"></div>
 
-    </div>
-
-    <footer>
-        copyright © 2025 Ailton A. Nakata
-    </footer>
-
-    <script>
-        let vendas = JSON.parse(localStorage.getItem("vendas_diarias") || "[]");
-        let editandoId = null;
-
-        /* --------------------- ADICIONAR OU EDITAR --------------------- */
-        function adicionarVenda() {
-            const data = document.getElementById("data").value;
-            const produto = document.getElementById("produto").value.trim();
-            const codigo = document.getElementById("codigo").value.trim();
-            const pagamento = document.getElementById("pagamento").value;
-            const obs = document.getElementById("obs").value.trim();
-            const valor = parseFloat(document.getElementById("valor").value || 0);
-
-            if (!data || !produto || valor <= 0) {
-                alert("Preencha Data, Produto e Valor corretamente.");
-                return;
-            }
-
-            if (editandoId !== null) {
-                const i = vendas.findIndex(v => v.id === editandoId);
-                vendas[i] = { id: editandoId, data, produto, codigo, pagamento, obs, valor };
-                editandoId = null;
-                document.querySelector(".btn").textContent = "Adicionar";
-            } else {
-                vendas.push({
-                    id: vendas.length + 1,
-                    data,
-                    produto,
-                    codigo,
-                    pagamento,
-                    obs,
-                    valor
-                });
-            }
-
-            salvar();
-            atualizarTabela();
-
-            document.getElementById("produto").value = "";
-            document.getElementById("codigo").value = "";
-            document.getElementById("pagamento").value = "";
-            document.getElementById("obs").value = "";
-            document.getElementById("valor").value = "";
-        }
-
-        /* --------------------- EDITAR --------------------- */
-        function editarVenda(id) {
-            const v = vendas.find(x => x.id === id);
-            if (!v) return;
-
-            document.getElementById("data").value = v.data;
-            document.getElementById("produto").value = v.produto;
-            document.getElementById("codigo").value = v.codigo;
-            document.getElementById("pagamento").value = v.pagamento;
-            document.getElementById("obs").value = v.obs;
-            document.getElementById("valor").value = v.valor;
-
-            editandoId = id;
-            document.querySelector(".btn").textContent = "Salvar Alterações";
-
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-
-        /* --------------------- DELETAR --------------------- */
-        function deletarVenda(id) {
-            if (!confirm("Deseja realmente deletar este item?")) return;
-
-            vendas = vendas.filter(v => v.id !== id);
-            vendas = vendas.map((v, index) => ({ ...v, id: index + 1 }));
-
-            salvar();
-            atualizarTabela();
-        }
-
-        /* --------------------- SALVAR --------------------- */
-        function salvar() {
-            localStorage.setItem("vendas_diarias", JSON.stringify(vendas));
-        }
-
-        /* --------------------- ATUALIZAR TABELA --------------------- */
-        function atualizarTabela() {
-            const tabela = document.getElementById("tabela");
-            tabela.innerHTML = "";
-
-            vendas.forEach(v => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                <td data-label="#">${v.id}</td>
-                <td data-label="Data">${v.data}</td>
-                <td data-label="Produto">${v.produto}</td>
-                <td data-label="Código">${v.codigo}</td>
-                <td data-label="Pagamento">${v.pagamento}</td>
-                <td data-label="Obs">${v.obs}</td>
-                <td data-label="Valor (R$)">R$ ${v.valor.toFixed(2)}</td>
-                <td data-label="Ação">
-                    <button class="delete-btn" onclick="deletarVenda(${v.id})">Apagar 🗑️</button>
-                    <button class="edit-btn" onclick="editarVenda(${v.id})">Editar ✏️</button>
-                </td>
-            `;
-                tabela.appendChild(tr);
-            });
-
-            calcularTotais();
-        }
-
-        /* --------------------- CALCULAR TOTAIS --------------------- */
-        function calcularTotais() {
-            const hoje = document.getElementById("data").value;
-
-            let totalDia = 0;
-            let totalMes = 0;
-
-            vendas.forEach(v => {
-                const mesVenda = v.data.substring(0, 7);
-                const mesAtual = hoje.substring(0, 7);
-
-                if (v.data === hoje) totalDia += v.valor;
-                if (mesVenda === mesAtual) totalMes += v.valor;
-            });
-
-            document.getElementById("totalDia").textContent = "R$ " + totalDia.toFixed(2);
-            document.getElementById("totalMes").textContent = "R$ " + totalMes.toFixed(2);
-        }
-
-        document.getElementById("data").addEventListener("change", calcularTotais);
-
-        /* --------------------- GERAR PDF --------------------- */
-        async function gerarPDF() {
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF();
-
-            pdf.setFontSize(14);
-            pdf.text("Relatório de Vendas", 10, 15);
-
-            pdf.setFontSize(11);
-            let y = 30;
-
-            vendas.forEach(v => {
-                pdf.text(`ID: ${v.id}`, 10, y);
-                pdf.text(`Data: ${v.data}`, 40, y);
-                pdf.text(`Produto: ${v.produto}`, 10, y + 7);
-                pdf.text(`Código: ${v.codigo}`, 10, y + 14);
-                pdf.text(`Pagamento: ${v.pagamento}`, 60, y + 14);
-                pdf.text(`Obs: ${v.obs}`, 10, y + 21);
-                pdf.text(`Valor: R$ ${v.valor.toFixed(2)}`, 10, y + 28);
-
-                y += 38;
-
-                if (y > 270) {
-                    pdf.addPage();
-                    y = 15;
-                }
-            });
-
-            pdf.save("vendas.pdf");
-        }
-
-        /* --------------------- LIMPAR MÊS --------------------- */
-        function limparMes() {
-            if (!confirm("Tem certeza que deseja limpar todas as vendas do mês?")) return;
-
-            vendas = [];
-            salvar();
-            atualizarTabela();
-            alert("Vendas do mês apagadas com sucesso!");
-        }
-
-        /* --------------------- TEMA ESCURO --------------------- */
-        const btnTheme = document.getElementById("toggleTheme");
-
-        btnTheme.addEventListener("click", () => {
-            document.body.classList.toggle("dark");
-
-            const dark = document.body.classList.contains("dark");
-            localStorage.setItem("tema_vendas", dark ? "dark" : "light");
-
-            btnTheme.textContent = dark ? "☀️ Modo Claro" : "🌙 Modo Escuro";
-        });
-
-        // Carrega o tema salvo
-        window.onload = () => {
-            const tema = localStorage.getItem("tema_vendas");
-            if (tema === "dark") {
-                document.body.classList.add("dark");
-                btnTheme.textContent = "☀️ Modo Claro";
-            }
-        };
-
-        atualizarTabela();
-        calcularTotais();
-    </script>
-
+    <!-- JS separado -->
+    <script src="app.js"></script>
 </body>
 
 </html>

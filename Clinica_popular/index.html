@@ -423,27 +423,152 @@
             opacity: 1;
             pointer-events: auto;
         }
+
+        /* ===== MENU DESKTOP + MOBILE ===== */
+
+        .menu-desktop {
+            display: none;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .menu-desktop a {
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: rgba(234, 240, 255, .85);
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .04);
+            transition: .2s;
+        }
+
+        .menu-desktop a:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, .07);
+        }
+
+        /* Ações do header */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Botão burger */
+        .burger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .burger:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Menu mobile escondido */
+        .menu-mobile {
+            display: none;
+            padding: 12px 0 16px;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(11, 18, 32, .85);
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-mobile a {
+            display: block;
+            padding: 14px 16px;
+            border-radius: 14px;
+            margin: 8px auto;
+            width: min(1100px, 92%);
+            border: 1px solid rgba(255, 255, 255, .10);
+            background: rgba(255, 255, 255, .04);
+            color: rgba(234, 240, 255, .90);
+        }
+
+        /* Quando abre */
+        .menu-open .menu-mobile {
+            display: block;
+        }
+
+        /* ===== RESPONSIVO ===== */
+
+        /* Desktop (mostra menu horizontal e esconde burger) */
+        @media (min-width: 900px) {
+            .menu-desktop {
+                display: flex;
+            }
+
+            .burger {
+                display: none;
+            }
+        }
+
+        /* Mobile: mantém seu layout (botão grande) e burger ao lado */
+        @media (max-width: 520px) {
+            .nav-actions {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #openModal {
+                width: 100%;
+            }
+
+            .burger {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
         <div class="container nav">
+
             <div class="logo">
-                <!-- ✅ LOGO REAL (caminho seguro com ./) -->
-                <!-- ⚠️ Confirme se a pasta é "img" e o arquivo é "Exemplo_logo.jpg" exatamente -->
-                <img class="logo-img"
-                    src="./img/Exemplo_logo.jpg"
-                    alt="Clínica Popular"
-                    onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Logo';" />
+                <img class="logo-img" src="./img/Exemplo_logo.jpg" alt="Clínica Popular" />
                 <span>Clínica Popular</span>
             </div>
 
-            <button class="btn btn-primary" id="openModal" type="button">
-                Agendar no WhatsApp
-            </button>
+            <!-- ✅ MENU DESKTOP -->
+            <nav class="menu-desktop" aria-label="Menu principal">
+                <a href="#beneficios">Benefícios</a>
+                <a href="#servicos">Serviços</a>
+                <a href="#depoimentos">Depoimentos</a>
+                <a href="#contato">Contato</a>
+            </nav>
+
+            <!-- ✅ AÇÕES (botão + burger) -->
+            <div class="nav-actions">
+                <button class="btn btn-primary" id="openModal" type="button">
+                    Agendar no WhatsApp
+                </button>
+
+                <!-- ✅ BOTÃO BURGER (mobile) -->
+                <button class="burger" id="burgerBtn" type="button" aria-label="Abrir menu" aria-controls="menuMobile"
+                    aria-expanded="false">
+                    ☰
+                </button>
+            </div>
         </div>
+
+        <!-- ✅ MENU MOBILE -->
+        <nav class="menu-mobile" id="menuMobile" aria-label="Menu mobile">
+            <a href="#beneficios">Benefícios</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#depoimentos">Depoimentos</a>
+            <a href="#contato">Contato</a>
+        </nav>
     </header>
+
 
     <main class="container">
         <section class="hero">
@@ -729,6 +854,31 @@
             closeModal();
             form.reset();
         });
+
+        const burgerBtn = document.getElementById("burgerBtn");
+        const menuMobile = document.getElementById("menuMobile");
+
+        burgerBtn.addEventListener("click", () => {
+            const isOpen = document.body.classList.toggle("menu-open");
+            burgerBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        /* Fecha menu ao clicar em um link */
+        menuMobile.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                document.body.classList.remove("menu-open");
+                burgerBtn.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        /* Fecha menu ao apertar ESC */
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                document.body.classList.remove("menu-open");
+                burgerBtn.setAttribute("aria-expanded", "false");
+            }
+        });
+
     </script>
 </body>
 
