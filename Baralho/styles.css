@@ -17,7 +17,6 @@
   --radius: 18px;
   --shadow: rgba(0,0,0,.55);
 
-  /* ✅ largura fixa da coluna "Jogador" */
   --nameColW: 120px;
 }
 
@@ -35,31 +34,15 @@ body{
   touch-action: manipulation;
 }
 
-/* ✅ Temas por jogo */
-body.theme-cacheta{
-  --accent: #2de2a6;
-  --accent2: #7c4dff;
-}
-body.theme-truco{
-  --accent: #ff4d4d;
-  --accent2: #ffb020;
-}
-body.theme-buraco{
-  --accent: #3b82f6;
-  --accent2: #a855f7;
-}
+/* Temas */
+body.theme-cacheta{ --accent:#2de2a6; --accent2:#7c4dff; }
+body.theme-truco{ --accent:#ff4d4d; --accent2:#ffb020; }
+body.theme-buraco{ --accent:#3b82f6; --accent2:#a855f7; }
 
-.container{
-  width: min(1100px, 96%);
-  margin: 0 auto;
-}
+.container{ width: min(1100px, 96%); margin: 0 auto; }
 
 /* HEADER */
-.header{
-  position: sticky;
-  top: 10px;
-  z-index: 50;
-}
+.header{ position: sticky; top: 10px; z-index: 50; }
 
 .header-inner{
   display:flex;
@@ -81,7 +64,7 @@ body.theme-buraco{
   display:flex;
   align-items:center;
   gap: 10px;
-  min-width: 220px;
+  min-width: 240px;
 }
 
 .logo-img{
@@ -96,12 +79,13 @@ body.theme-buraco{
 }
 
 .titles h1{
-  font-size: 15px;
-  letter-spacing: -0.2px;
-  font-weight: 800;
+  font-size: 18px;            /* ✅ maior para acessibilidade */
+  letter-spacing: -0.25px;
+  font-weight: 900;
   display:flex;
   align-items:center;
   gap: 8px;
+  line-height: 1.1;
 }
 
 .pro{
@@ -115,7 +99,7 @@ body.theme-buraco{
 }
 
 .titles p{
-  margin-top: 2px;
+  margin-top: 3px;
   font-size: 12px;
   color: var(--muted);
 }
@@ -128,7 +112,6 @@ body.theme-buraco{
   width: 100%;
 }
 
-/* ✅ slot do burger no canto direito */
 .menu-slot{
   display:flex;
   align-items:center;
@@ -136,7 +119,7 @@ body.theme-buraco{
   margin-left: auto;
 }
 
-/* ✅ Botão burger elegante */
+/* ✅ Burger com FontAwesome */
 .burger{
   width: 46px;
   height: 46px;
@@ -146,16 +129,18 @@ body.theme-buraco{
   cursor:pointer;
   display:grid;
   place-items:center;
-  gap: 5px;
   transition: .2s;
+  color: rgba(234,240,255,.90);
 }
-.burger:hover{ transform: translateY(-1px); }
-.burger span{
-  width: 18px;
-  height: 2px;
-  border-radius: 999px;
-  background: rgba(234,240,255,.86);
-  display:block;
+
+.burger i{
+  font-size: 18px;
+}
+
+.burger:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 40%, rgba(255,255,255,.14));
+  color: var(--accent);
 }
 
 .pill{
@@ -212,7 +197,7 @@ body.theme-buraco{
   display:block;
   margin-top: 6px;
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: -0.2px;
 }
 
@@ -256,7 +241,6 @@ select{
   box-shadow: 0 18px 70px rgba(0,0,0,.35);
 }
 
-/* ✅ SCROLL HORIZONTAL SÓ AQUI */
 .table-container{
   overflow-x: auto;
   width: 100%;
@@ -289,7 +273,6 @@ th{
   letter-spacing: .3px;
 }
 
-/* ✅ COLUNA FIXA DO JOGADOR */
 .name-col{
   width: var(--nameColW);
   min-width: var(--nameColW);
@@ -390,7 +373,6 @@ th{
   font-size: 12px;
 }
 
-/* BOTTOM SHEET */
 .sheet-overlay{
   position: fixed;
   inset: 0;
@@ -494,7 +476,6 @@ th{
   text-align:center;
 }
 
-/* TURBO */
 .turbo{
   margin-top: 10px;
   padding: 12px;
@@ -527,13 +508,7 @@ th{
   transition: .15s;
   text-align: center;
 }
-
 .turbo-btn:hover{ transform: translateY(-1px); }
-.turbo-btn.sub{ border-color: rgba(255,77,77,.25); }
-.turbo-btn.add{ border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
-.turbo-btn.fecho{ border-color: rgba(255,176,32,.30); }
-.turbo-btn.bateu{ border-color: color-mix(in srgb, var(--accent2) 35%, transparent); }
-.turbo-btn.clear{ border-color: rgba(234,240,255,.18); }
 
 .turbo-hint{
   display:block;
@@ -542,7 +517,6 @@ th{
   font-size: 12px;
 }
 
-/* pad */
 .pad{
   margin-top: 10px;
   display:grid;
@@ -583,10 +557,6 @@ th{
   font-weight: 900;
   font-size: 12px;
 }
-
-.marker-btn.win{ color: var(--win); border-color: rgba(51,226,173,.28); }
-.marker-btn.thanks{ color: var(--thanks); border-color: rgba(255,176,32,.28); }
-.marker-btn.none{ color: rgba(234,240,255,.75); }
 
 .marker-btn.active{
   background: color-mix(in srgb, var(--accent2) 16%, rgba(255,255,255,.02));
@@ -643,9 +613,7 @@ th{
   color: rgba(234,240,255,.85);
 }
 
-.drawer-body{
-  margin-top: 14px;
-}
+.drawer-body{ margin-top: 14px; }
 
 .drawer-title{
   color: var(--muted);
@@ -673,35 +641,6 @@ th{
 .drawer-item:hover{
   transform: translateY(-1px);
   border-color: rgba(255,255,255,.16);
-}
-
-.drawer-item.active{
-  border-color: color-mix(in srgb, var(--accent) 35%, rgba(255,255,255,.14));
-  box-shadow: 0 18px 70px color-mix(in srgb, var(--accent) 10%, rgba(0,0,0,.35));
-}
-
-.drawer-item-main strong{
-  display:block;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.drawer-item-main span{
-  display:block;
-  margin-top: 3px;
-  font-size: 12px;
-  color: rgba(234,240,255,.55);
-  font-weight: 600;
-}
-
-.drawer-pill{
-  font-size: 11px;
-  font-weight: 900;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.12);
-  color: color-mix(in srgb, var(--accent) 70%, rgba(234,240,255,.85));
 }
 
 .drawer-sep{
@@ -740,12 +679,6 @@ th{
   flex-shrink: 0;
 }
 
-.arrow{
-  margin-left: auto;
-  opacity: .75;
-  font-weight: 900;
-}
-
 .drawer-note{
   display:block;
   margin-top: 12px;
@@ -754,7 +687,6 @@ th{
   line-height: 1.35;
 }
 
-/* Toast */
 .toast{
   position: fixed;
   right: 14px;
@@ -773,10 +705,7 @@ th{
   font-weight: 700;
   font-size: 13px;
 }
-.toast.show{
-  opacity: 1;
-  transform: translateY(0);
-}
+.toast.show{ opacity: 1; transform: translateY(0); }
 
 .footer{
   text-align:center;
@@ -785,7 +714,6 @@ th{
   color: rgba(234,240,255,.35);
 }
 
-/* Estados abertos */
 .sheet-open .sheet-overlay{ opacity: 1; pointer-events: auto; }
 .sheet-open .sheet{ bottom: 0; }
 
@@ -799,4 +727,5 @@ th{
   :root{ --nameColW: 160px; }
   table{ min-width: 860px; }
   .turbo-row{ grid-template-columns: repeat(5, 1fr); }
+  .titles h1{ font-size: 20px; } /* ✅ desktop ainda mais visível */
 }

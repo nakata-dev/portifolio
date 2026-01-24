@@ -3,31 +3,35 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cacheta TOP | Placar PRO</title>
+  <title>Truco TOP | Placar PRO</title>
 
-  <!-- Fonte leve e profissional -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- ✅ FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="img/favicon.png">
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="theme-cacheta" data-game="cacheta">
+<body class="theme-truco" data-game="truco">
+  <!-- O HTML é o mesmo layout do index.html (Cacheta) -->
+  <!-- O JS detecta data-game="truco" e entra no Truco automaticamente -->
+
+  <!-- ✅ Cole exatamente o mesmo conteúdo do index.html aqui (igualzinho) -->
+  <!-- Para evitar repetir manualmente, você pode copiar o index.html inteiro e só trocar:
+       title + body class + data-game
+  -->
+
   <header class="header">
     <div class="header-inner">
 
       <div class="brand">
-        <img class="logo-img" src="img/logo-cacheta.png" alt="Logo Cacheta TOP" />
+        <img class="logo-img" src="img/logo-cacheta.png" alt="Logo Truco TOP" />
         <div class="titles">
-          <h1 id="appTitle">Cacheta TOP <span class="pro">PRO</span></h1>
-          <p id="appSubtitle">Marque quedas no celular sem perder o jogo.</p>
+          <h1 id="appTitle">Truco TOP <span class="pro">PRO</span></h1>
+          <p id="appSubtitle">Marcação rápida até 12 pontos (do jeito certo).</p>
         </div>
       </div>
 
@@ -59,7 +63,7 @@
 
       <div class="mini-card">
         <span class="mini-label">Rodadas</span>
-        <strong class="mini-value" id="statRounds">10</strong>
+        <strong class="mini-value" id="statRounds">12</strong>
       </div>
 
       <div class="mini-card glow">
@@ -71,8 +75,8 @@
         <span>Rodadas</span>
         <select id="roundsSelect">
           <option value="8">8</option>
-          <option value="10" selected>10</option>
-          <option value="12">12</option>
+          <option value="10">10</option>
+          <option value="12" selected>12</option>
           <option value="15">15</option>
         </select>
       </label>
@@ -95,15 +99,13 @@
         <span class="chip win">○ Vencedor</span>
         <span class="chip thanks">▲ Obrigado</span>
         <span class="chip empty">— Sem ponto</span>
-        <small>Toque no quadrado do ponto para marcar rápido. Tudo salva sozinho 💾</small>
+        <small>Truco sobe: 1 → 3 → 6 → 9 → 12. Toque na célula e aplique ⚡</small>
       </div>
     </section>
   </main>
 
-  <!-- ✅ Drawer overlay -->
   <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
 
-  <!-- ✅ Drawer -->
   <aside class="drawer" id="drawer" aria-label="Menu do app">
     <div class="drawer-head">
       <div class="drawer-badge">🎴 Placares</div>
@@ -154,7 +156,6 @@
     </div>
   </aside>
 
-  <!-- Bottom Sheet -->
   <div class="sheet-overlay" id="sheetOverlay" aria-hidden="true"></div>
 
   <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
@@ -188,9 +189,9 @@
       <div class="turbo-row" id="turboRow">
         <button class="turbo-btn sub" id="turbo1" type="button" data-delta="-1">➖ -1</button>
         <button class="turbo-btn add" id="turbo2" type="button" data-delta="1">➕ +1</button>
-        <button class="turbo-btn fecho" id="turbo3" type="button" data-delta="2">🔥 +2</button>
-        <button class="turbo-btn bateu" id="turbo4" type="button" data-delta="3">👑 +3</button>
-        <button class="turbo-btn clear" id="turbo5" type="button" data-set="0">🧼 Zerar</button>
+        <button class="turbo-btn fecho" id="turbo3" type="button" data-delta="3">🗣️ +3 TRUCO</button>
+        <button class="turbo-btn bateu" id="turbo4" type="button" data-delta="6">💥 +6 SEIS</button>
+        <button class="turbo-btn clear" id="turbo5" type="button" data-set="12">🏁 +12 FECHOU</button>
       </div>
 
       <small class="turbo-hint">Dica: toque nos botões e finalize em <b>Aplicar ✅</b>.</small>

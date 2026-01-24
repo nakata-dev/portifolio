@@ -3,31 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cacheta TOP | Placar PRO</title>
+  <title>Buraco TOP | Placar PRO</title>
 
-  <!-- Fonte leve e profissional -->
+  <!-- Fonte -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- ✅ FontAwesome -->
+  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="img/favicon.png">
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="theme-cacheta" data-game="cacheta">
+<body class="theme-buraco" data-game="buraco">
   <header class="header">
     <div class="header-inner">
 
       <div class="brand">
-        <img class="logo-img" src="img/logo-cacheta.png" alt="Logo Cacheta TOP" />
+        <!-- você pode trocar essa imagem depois por uma do Buraco -->
+        <img class="logo-img" src="img/logo-cacheta.png" alt="Logo Buraco TOP" />
+
         <div class="titles">
-          <h1 id="appTitle">Cacheta TOP <span class="pro">PRO</span></h1>
-          <p id="appSubtitle">Marque quedas no celular sem perder o jogo.</p>
+          <h1 id="appTitle">Buraco TOP <span class="pro">PRO</span></h1>
+          <p id="appSubtitle">Pontuação alta com atalhos rápidos e práticos.</p>
         </div>
       </div>
 
@@ -47,6 +49,7 @@
         <button class="pill" id="btnReset" type="button">♻ Resetar Pontos</button>
         <button class="pill danger" id="btnNew" type="button">🆕 Nova Partida</button>
       </div>
+
     </div>
   </header>
 
@@ -95,15 +98,15 @@
         <span class="chip win">○ Vencedor</span>
         <span class="chip thanks">▲ Obrigado</span>
         <span class="chip empty">— Sem ponto</span>
-        <small>Toque no quadrado do ponto para marcar rápido. Tudo salva sozinho 💾</small>
+        <small>Buraco: use atalhos (+50, +100, +500) e finalize em Aplicar ✅</small>
       </div>
     </section>
   </main>
 
-  <!-- ✅ Drawer overlay -->
+  <!-- Drawer overlay -->
   <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
 
-  <!-- ✅ Drawer -->
+  <!-- Drawer -->
   <aside class="drawer" id="drawer" aria-label="Menu do app">
     <div class="drawer-head">
       <div class="drawer-badge">🎴 Placares</div>
@@ -186,10 +189,10 @@
       <div class="turbo-title" id="turboTitle">⚡ Modo Turbo</div>
 
       <div class="turbo-row" id="turboRow">
-        <button class="turbo-btn sub" id="turbo1" type="button" data-delta="-1">➖ -1</button>
-        <button class="turbo-btn add" id="turbo2" type="button" data-delta="1">➕ +1</button>
-        <button class="turbo-btn fecho" id="turbo3" type="button" data-delta="2">🔥 +2</button>
-        <button class="turbo-btn bateu" id="turbo4" type="button" data-delta="3">👑 +3</button>
+        <button class="turbo-btn sub" id="turbo1" type="button" data-delta="-50">➖ -50</button>
+        <button class="turbo-btn add" id="turbo2" type="button" data-delta="50">➕ +50</button>
+        <button class="turbo-btn fecho" id="turbo3" type="button" data-delta="100">🔥 +100</button>
+        <button class="turbo-btn bateu" id="turbo4" type="button" data-delta="500">🏆 +500</button>
         <button class="turbo-btn clear" id="turbo5" type="button" data-set="0">🧼 Zerar</button>
       </div>
 

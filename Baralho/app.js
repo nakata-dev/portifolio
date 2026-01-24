@@ -2,10 +2,16 @@
    Cacheta TOP | Placar PRO
    ✅ Burger Menu + 3 jogos (Cacheta / Truco / Buraco)
    ✅ LocalStorage separado por jogo
+   ✅ Páginas separadas: index.html / index1.html / index2.html
 ========================================================= */
 
 const BASE_KEY = "placar_pro_v2";
-let activeGame = localStorage.getItem(`${BASE_KEY}_activeGame`) || "cacheta";
+
+const GAME_PAGES = {
+  cacheta: "index.html",
+  truco: "index1.html",
+  buraco: "index2.html"
+};
 
 const GAMES = {
   cacheta: {
@@ -63,6 +69,33 @@ const GAMES = {
   }
 };
 
+const $ = (s) => document.querySelector(s);
+
+function storageKey(gameKey) {
+  return `${BASE_KEY}_${gameKey}`;
+}
+
+/* ✅ Detecta jogo pelo HTML da página (data-game) */
+function getPagePreferredGame() {
+  const fromBody = document.body?.dataset?.game;
+  if (fromBody && GAMES[fromBody]) return fromBody;
+  return null;
+}
+
+/* ✅ Escolhe jogo ativo: página > localStorage > cacheta */
+function resolveActiveGame() {
+  const pageGame = getPagePreferredGame();
+  if (pageGame) return pageGame;
+
+  const stored = localStorage.getItem(`${BASE_KEY}_activeGame`);
+  if (stored && GAMES[stored]) return stored;
+
+  return "cacheta";
+}
+
+let activeGame = resolveActiveGame();
+localStorage.setItem(`${BASE_KEY}_activeGame`, activeGame);
+
 // estado do placar
 let state = loadState(activeGame) || createDefaultState(activeGame);
 
@@ -73,12 +106,7 @@ let activeCell = null;
 let sheetValue = "—";
 let sheetMark = "";
 
-const $ = (s) => document.querySelector(s);
-
-function storageKey(gameKey) {
-  return `${BASE_KEY}_${gameKey}`;
-}
-
+/* ---------------------- Estado padrão ---------------------- */
 function createDefaultState(gameKey) {
   const cfg = GAMES[gameKey];
   return {
@@ -229,18 +257,14 @@ function sumPlayer(player) {
 function applyGameUI() {
   const cfg = GAMES[activeGame];
 
-  // título/subtitle
   $("#appTitle").innerHTML = `${cfg.title} <span class="pro">PRO</span>`;
   $("#appSubtitle").textContent = cfg.subtitle;
 
-  // tema
   document.body.classList.remove("theme-cacheta", "theme-truco", "theme-buraco");
   document.body.classList.add(cfg.themeClass);
 
-  // rodadas select
   $("#roundsSelect").value = String(state.rounds);
 
-  // turbo
   $("#turboTitle").textContent = cfg.turboTitle;
 
   cfg.turbo.forEach(btn => {
@@ -249,7 +273,6 @@ function applyGameUI() {
 
     el.textContent = btn.label;
 
-    // limpa data attrs antigos
     el.removeAttribute("data-delta");
     el.removeAttribute("data-set");
 
@@ -455,29 +478,34 @@ function updateDrawerActive() {
   });
 }
 
+/* ✅ troca jogo e navega para a página certa */
 function switchGame(gameKey) {
   if (!GAMES[gameKey]) return;
 
-  // salva jogo atual
   saveState();
 
-  // troca jogo ativo
   activeGame = gameKey;
   localStorage.setItem(`${BASE_KEY}_activeGame`, activeGame);
 
-  // carrega estado do jogo (se não tiver, cria)
-  state = loadState(activeGame) || createDefaultState(activeGame);
+  const targetPage = GAME_PAGES[gameKey] || "index.html";
+  const currentPage = location.pathname.split("/").pop() || "index.html";
 
-  closeDrawer();
-  render();
-  toast(`🎴 ${GAMES[activeGame].title} ativado!`);
+  // Se já está na página do jogo, só renderiza
+  if (currentPage === targetPage) {
+    state = loadState(activeGame) || createDefaultState(activeGame);
+    closeDrawer();
+    render();
+    toast(`🎴 ${GAMES[activeGame].title} ativado!`);
+    return;
+  }
+
+  // Se não está, navega para a página correta
+  location.href = targetPage;
 }
 
 /* ---------------------- WhatsApp ---------------------- */
 function setupWhatsAppLink() {
-  // ✅ TROQUE AQUI pelo seu número com DDD +55
-  const phone = "5599999999999";
-
+  const phone = "5544998398116";
   const msg = encodeURIComponent("Olá! Vi seu Placar PRO no portfólio. Podemos conversar?");
   $("#whatsLink").href = `https://wa.me/${phone}?text=${msg}`;
 }
@@ -501,7 +529,6 @@ function escapeHTML(str) {
 
 /* ---------------------- Eventos ---------------------- */
 function bindEvents() {
-  // abrir sheet ao tocar na célula
   $("#playersBody").addEventListener("click", (e) => {
     const cell = e.target.closest(".cell");
     if (!cell) return;
@@ -521,7 +548,6 @@ function bindEvents() {
     setActiveMarker();
   });
 
-  // marcadores
   document.querySelectorAll(".marker-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       sheetMark = btn.dataset.mark;
@@ -529,7 +555,6 @@ function bindEvents() {
     });
   });
 
-  // ✅ TURBO: delta / set
   document.querySelectorAll(".turbo-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const setVal = btn.dataset.set;
@@ -544,7 +569,6 @@ function bindEvents() {
     });
   });
 
-  // Players
   $("#btnAddPlayer").addEventListener("click", addPlayer);
   $("#btnRemovePlayer").addEventListener("click", removePlayer);
   $("#btnReset").addEventListener("click", resetScores);
@@ -552,7 +576,6 @@ function bindEvents() {
 
   $("#roundsSelect").addEventListener("change", (e) => changeRounds(e.target.value));
 
-  // Drawer
   $("#btnBurger").addEventListener("click", toggleDrawer);
   $("#drawerOverlay").addEventListener("click", closeDrawer);
   $("#btnCloseDrawer").addEventListener("click", closeDrawer);
@@ -561,7 +584,6 @@ function bindEvents() {
     btn.addEventListener("click", () => switchGame(btn.dataset.game));
   });
 
-  // teclado
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeSheet();
@@ -572,6 +594,15 @@ function bindEvents() {
 
 /* ---------------------- Init ---------------------- */
 function init() {
+  // ✅ Força activeGame pelo data-game da página
+  const pageGame = getPagePreferredGame();
+  if (pageGame && pageGame !== activeGame) {
+    activeGame = pageGame;
+    localStorage.setItem(`${BASE_KEY}_activeGame`, activeGame);
+  }
+
+  state = loadState(activeGame) || createDefaultState(activeGame);
+
   setupWhatsAppLink();
   bindEvents();
   render();
