@@ -25,7 +25,8 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: radial-gradient(1000px 500px at 20% 0%, rgba(91, 124, 255, .25), transparent 60%),
+            background:
+                radial-gradient(1000px 500px at 20% 0%, rgba(91, 124, 255, .25), transparent 60%),
                 radial-gradient(800px 500px at 80% 20%, rgba(45, 226, 166, .16), transparent 55%),
                 var(--bg);
             color: var(--text);
@@ -66,24 +67,34 @@
             gap: 10px;
             font-weight: 700;
             letter-spacing: .3px;
-            flex-shrink: 0; /*trava o logo para não encolher*/
+
+            /* ✅ impede o bloco do logo de encolher */
+            flex-shrink: 0;
+            min-width: max-content;
         }
 
         /* ✅ LOGO COM IMAGEM ADAPTÁVEL */
-        .logo-img{
+        .logo-img {
             width: 50px;
             height: 50px;
             border-radius: 12px;
-            flex-shrink: 0; /*trava a logo para não encolher*/
+
+            /* ✅ impede a imagem de encolher no flex */
+            flex-shrink: 0;
 
             /* Não distorce e não corta */
             object-fit: contain;
 
             /* Aparência "premium" igual ao layout */
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .10);
 
             box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+        }
+
+        /* ✅ Caso a imagem não carregue, o texto não "empurra" tudo */
+        .logo span {
+            white-space: nowrap;
         }
 
         .btn {
@@ -107,6 +118,19 @@
             border: none;
             background: linear-gradient(135deg, var(--brand), #4FCE5D);
             box-shadow: 0 18px 50px rgba(91, 124, 255, .25);
+        }
+
+        /* ✅ Ajuste do botão no mobile: não estoura e não espreme a logo */
+        @media (max-width: 520px) {
+            .nav {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            #openModal {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         /* HERO */
@@ -406,8 +430,12 @@
     <header>
         <div class="container nav">
             <div class="logo">
-                <!-- ✅ LOGO REAL (imagem adaptável ao tamanho do layout) -->
-                <img class="logo-img" src="img/logo.png" alt="Clinica_popular" />
+                <!-- ✅ LOGO REAL (caminho seguro com ./) -->
+                <!-- ⚠️ Confirme se a pasta é "img" e o arquivo é "Exemplo_logo.jpg" exatamente -->
+                <img class="logo-img"
+                    src="./img/Exemplo_logo.jpg"
+                    alt="Clínica Popular"
+                    onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Logo';" />
                 <span>Clínica Popular</span>
             </div>
 
@@ -637,7 +665,7 @@
 
                 <label>
                     <span>Mensagem</span>
-                    <textarea id="message" rows="4" placeholder="Ex: Quero agendar para amanhã à tarde."
+                    <textarea id="message" rows="4" placeholder="Ex: Quero agendar para amanhã à tarde/entities"
                         required></textarea>
                 </label>
 
@@ -703,4 +731,5 @@
         });
     </script>
 </body>
+
 </html>
