@@ -9,31 +9,134 @@
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
 
-  <meta name="description" content="Aula de links (hiperlinks) em HTML: estrutura de capítulos, leitura confortável e navegação entre páginas." />
+  <meta name="description" content="Aula de links (hiperlinks) em HTML: links internos/externos, downloads, âncoras e boas práticas de navegação." />
 
   <style>
-    /* Estilos específicos da aula (sem mexer no layout do site.css) */
+    /* =========================================================
+       Estilos específicos da aula (sem mexer no layout do site.css)
+       Tema: Links (a) - interno, externo, download e âncora
+       ========================================================= */
+
+    .content-narrow { max-width: 72ch; } /* leitura melhor no desktop */
+
     .text-justify { text-align: justify; }
     .text-indent { text-indent: 30px; }
     .text-right { text-align: right; }
-    .content-narrow { max-width: 72ch; } /* leitura melhor no desktop */
 
+    /* tira repetição de inline style="margin-top:0" */
+    .mt-0 { margin-top: 0 !important; }
+
+    /* Melhorias no justify */
+    .text-justify{
+      hyphens: auto;
+      overflow-wrap: anywhere;
+      line-height: 1.85;
+    }
+
+    /* Cards da aula */
+    .lesson-block-title{
+      margin: 0 0 10px;
+      font-size: 1.02rem;
+      font-weight: 800;
+    }
+
+    /* Link “próxima página” */
     .next-link{
       display: inline-flex;
       align-items: center;
       gap: 8px;
       text-decoration: none;
-      font-weight: 700;
+      font-weight: 800;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.02);
+      transition: transform .12s ease, background .12s ease;
     }
-    .next-link:focus{
-      outline: 2px solid rgba(0,0,0,0.25);
+    .next-link:hover{ transform: translateY(-1px); background: rgba(0,0,0,0.03); }
+    .next-link:active{ transform: translateY(0); }
+    .next-link:focus-visible{
+      outline: 2px solid rgba(0,0,0,0.28);
       outline-offset: 3px;
-      border-radius: 10px;
+    }
+
+    /* “Pílulas” de categoria */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.03);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+    .pill small{ font-weight: 700; opacity: .75; }
+
+    /* Snippets copiáveis */
+    .code-block{
+      background:#0f1724;
+      color:#e6edf3;
+      padding:14px;
+      border-radius:12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:0.95rem;
+      overflow:auto;
+      position:relative;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .code-block pre{
+      margin:0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.7;
+      padding-right: 92px;
+    }
+    .copy-btn{
+      position:absolute;
+      right:10px;
+      top:10px;
+      background: rgba(255,255,255,0.10);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.14);
+      padding:7px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:0.82rem;
+      line-height: 1;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .copy-btn:hover{ background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+    .copy-btn:active{ transform: translateY(0); }
+    .copy-btn:focus-visible{
+      outline: 2px solid rgba(255,255,255,0.35);
+      outline-offset: 2px;
+    }
+
+    /* Lista de exemplos */
+    .examples{
+      display:grid;
+      gap: 10px;
+      margin: 0;
+      padding-left: 18px;
+    }
+    .examples li{ margin: 4px 0; }
+
+    /* âncora visual */
+    .anchor-target{
+      scroll-margin-top: 110px; /* ajuda por causa do header fixo (se existir) */
     }
 
     @media (max-width: 520px){
       .content-narrow { max-width: 100%; }
-      .text-indent { text-indent: 18px; } /* indent menor no mobile */
+      .text-indent { text-indent: 18px; }
+      .text-justify { text-align: left; } /* mobile: leitura melhor sem justify */
+      .code-block{ font-size:0.88rem; padding:12px; }
+      .copy-btn{ font-size:0.78rem; padding:7px 9px; }
+      .code-block pre{ padding-right: 0; padding-top: 34px; }
+      .text-right{ text-align: left; }
+      .next-link{ width: 100%; justify-content: center; }
     }
   </style>
 </head>
@@ -64,8 +167,8 @@
     <section class="section">
       <div class="container">
         <div class="section-head">
-          <h1>Hiperlink</h1>
-          <p class="muted">Como organizar conteúdo e criar navegação entre páginas com links em HTML.</p>
+          <h1>Links no HTML</h1>
+          <p class="muted">Links internos, externos, downloads e âncoras (com boas práticas e snippets para copiar).</p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -75,20 +178,20 @@
 
         <div class="lesson-grid">
           <article class="lesson">
-            <h2 class="lesson-title">Conteúdo</h2>
+            <h2 class="lesson-title">Conteúdo (estrutura por títulos)</h2>
 
             <div class="card soft content-narrow">
               <h3 style="margin:0 0 10px;">Capítulo 1</h3>
 
               <h4 style="margin:14px 0 8px;">Capítulo 1.1</h4>
-              <p class="text-justify text-indent" style="margin-top:0;">
+              <p class="text-justify text-indent mt-0">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quis, inventore? Minima eligendi animi totam a,
                 velit dolorum unde corporis quas facilis nulla reprehenderit pariatur dignissimos distinctio, provident
                 dolores et! Provident!
               </p>
 
               <h4 style="margin:14px 0 8px;">Capítulo 1.2</h4>
-              <p class="text-justify text-indent" style="margin-top:0;">
+              <p class="text-justify text-indent mt-0">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aperiam non, culpa eligendi, saepe perferendis,
                 modi ut eius placeat laborum nemo facere odio nostrum natus distinctio id illo. Minus, aut.
               </p>
@@ -96,28 +199,125 @@
               <h3 style="margin:18px 0 10px;">Capítulo 2</h3>
 
               <h4 style="margin:14px 0 8px;">Capítulo 2.1</h4>
-              <p class="text-justify text-indent" style="margin-top:0;">
+              <p class="text-justify text-indent mt-0">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil soluta eius quos amet perferendis maxime pariatur
                 consequuntur, sequi, repellendus recusandae modi. Sit enim perspiciatis consectetur vero fuga officiis,
                 possimus impedit.
               </p>
             </div>
 
-            <div class="card soft" style="margin-top: 12px;">
-              <p class="muted" style="margin:0 0 10px;">
-                Navegação entre páginas (exemplo):
+            <h2 class="lesson-title" style="margin-top:18px;">Tipos de links (na prática)</h2>
+
+            <div class="card">
+              <p class="muted mt-0">
+                O elemento base é sempre <code>&lt;a href="..."&gt;</code>. O que muda é o destino e alguns atributos.
               </p>
 
-              <div class="text-right">
-                <a class="next-link" href="pagina02.html" target="_self" rel="next">
-                  Próxima página <span aria-hidden="true">→</span>
-                </a>
+              <div class="card soft" style="margin-top:12px;">
+                <p class="lesson-block-title">
+                  <span class="pill">🟢 Interno <small>entre páginas</small></span>
+                </p>
+                <ul class="examples">
+                  <li>
+                    <a href="pagina02.html" rel="next">Ir para a Página 02</a>
+                    <span class="muted tiny">(mesmo site)</span>
+                  </li>
+                </ul>
+
+                <div class="code-block" style="margin-top:10px;">
+                  <button class="copy-btn" data-copy="#code-interno" type="button" aria-label="Copiar link interno">Copiar</button>
+                  <pre id="code-interno">&lt;a href="pagina02.html" rel="next"&gt;Ir para a Página 02&lt;/a&gt;</pre>
+                </div>
+              </div>
+
+              <div class="card soft" style="margin-top:12px;">
+                <p class="lesson-block-title">
+                  <span class="pill">🟣 Externo <small>outro site</small></span>
+                </p>
+                <ul class="examples">
+                  <li>
+                    <a href="https://www.youtube.com/c/CursoemV%C3%ADdeo"
+                       target="_blank" rel="noopener noreferrer">
+                      Abrir Curso em Vídeo no YouTube
+                    </a>
+                  </li>
+                </ul>
+
+                <div class="alert alert-warn" style="margin-top:12px;">
+                  <strong>Boa prática:</strong> quando usar <code>target="_blank"</code>, use também
+                  <code>rel="noopener noreferrer"</code> por segurança.
+                </div>
+
+                <div class="code-block" style="margin-top:10px;">
+                  <button class="copy-btn" data-copy="#code-externo" type="button" aria-label="Copiar link externo">Copiar</button>
+                  <pre id="code-externo">&lt;a href="https://exemplo.com" target="_blank" rel="noopener noreferrer"&gt;
+  Abrir site em nova aba
+&lt;/a&gt;</pre>
+                </div>
+              </div>
+
+              <div class="card soft" style="margin-top:12px;">
+                <p class="lesson-block-title">
+                  <span class="pill">🟠 Download <small>arquivo</small></span>
+                </p>
+                <ul class="examples">
+                  <li>
+                    <a href="download/arquivo.pdf" download type="application/pdf">Baixar arquivo em PDF</a>
+                  </li>
+                </ul>
+
+                <div class="alert" style="margin-top:12px;">
+                  <strong>Nota:</strong> alguns navegadores podem abrir PDF na aba mesmo com <code>download</code>,
+                  dependendo das configurações do usuário.
+                </div>
+
+                <div class="code-block" style="margin-top:10px;">
+                  <button class="copy-btn" data-copy="#code-download" type="button" aria-label="Copiar link de download">Copiar</button>
+                  <pre id="code-download">&lt;a href="download/arquivo.pdf" download type="application/pdf"&gt;
+  Baixar arquivo em PDF
+&lt;/a&gt;</pre>
+                </div>
+              </div>
+
+              <div class="card soft" style="margin-top:12px;">
+                <p class="lesson-block-title">
+                  <span class="pill">🔵 Âncora <small>na mesma página</small></span>
+                </p>
+                <ul class="examples">
+                  <li>
+                    <a href="#secao-dicas">Ir para a seção de dicas (âncora)</a>
+                  </li>
+                </ul>
+
+                <div class="code-block" style="margin-top:10px;">
+                  <button class="copy-btn" data-copy="#code-ancora" type="button" aria-label="Copiar âncora">Copiar</button>
+                  <pre id="code-ancora">&lt;a href="#secao-dicas"&gt;Ir para a seção de dicas&lt;/a&gt;
+
+&lt;!-- ...mais abaixo na página... --&gt;
+&lt;h2 id="secao-dicas"&gt;Dicas&lt;/h2&gt;</pre>
+                </div>
               </div>
             </div>
 
-            <div class="alert" style="margin-top: 14px;">
-              <strong>Dica:</strong> evite repetir <code>style="text-align: justify; text-indent: ..."</code>.
-              Use classes como <code>.text-justify</code> e <code>.text-indent</code>.
+            <h2 id="secao-dicas" class="lesson-title anchor-target" style="margin-top:18px;">Dicas rápidas (que valem ouro)</h2>
+
+            <div class="card soft">
+              <ul class="list" style="margin-bottom:0;">
+                <li><strong>Texto do link:</strong> evite “clique aqui”. Prefira “Baixar PDF”, “Ir para Página 02”, etc.</li>
+                <li><strong>Link externo:</strong> use <code>target="_blank"</code> + <code>rel="noopener noreferrer"</code>.</li>
+                <li><strong>Organização:</strong> se repetir estilos, vire classe (HTML limpo, CSS manda no visual).</li>
+              </ul>
+            </div>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <p class="muted mt-0">
+                Navegação “Próxima página” (exemplo de UI):
+              </p>
+              <div class="text-right">
+                <a class="next-link" href="pagina02.html" rel="next" aria-label="Ir para a próxima página">
+                  Próxima página <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
 
             <div class="lesson-actions">
@@ -136,10 +336,11 @@
             <div class="card">
               <h3>Checklist rápido</h3>
               <ul class="list">
-                <li>Conteúdo organizado por títulos</li>
-                <li>Parágrafos com leitura confortável</li>
-                <li>Link para próxima página funcionando</li>
-                <li>Sem excesso de <code>&lt;br&gt;</code> para espaçamento</li>
+                <li>Entendeu <code>&lt;a href&gt;</code></li>
+                <li>Fez link interno (página 02)</li>
+                <li>Fez link externo com segurança</li>
+                <li>Usou download quando necessário</li>
+                <li>Testou âncora (#id)</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
             </div>
@@ -228,5 +429,26 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Copiar blocos de código (sem depender do site.js)
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const sel = btn.getAttribute('data-copy');
+        const el = document.querySelector(sel);
+        if (!el) return;
+
+        const text = el.textContent.trim();
+        try{
+          await navigator.clipboard.writeText(text);
+          const old = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(() => btn.textContent = old, 1200);
+        }catch(e){
+          alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

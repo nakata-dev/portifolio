@@ -6,8 +6,10 @@
   <title>Favicon | HTML - Ailton A. Nakata</title>
 
   <!-- Favicon inicial (local) — será atualizado dinamicamente após upload -->
+  <!-- Observação didática: este <link> é para o preview desta aula (muda localmente via JS). -->
   <link id="live-favicon" rel="icon" href="favicon_io/favicon.ico" type="image/x-icon">
 
+  <!-- Favicon “padrão do site” (mantido como estava) -->
   <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
@@ -41,7 +43,10 @@
       <div class="container">
         <div class="section-head">
           <h1>Inserindo Favicon</h1>
-          <p class="muted">Guia prático: formatos, tamanhos, snippets e um preview interativo para testar no navegador.</p>
+          <p class="muted">
+            Guia prático: formatos, tamanhos, snippets e um preview interativo para testar no navegador.
+            O objetivo é simples: <strong>seu site ser reconhecido em 1 segundo</strong>, mesmo com 20 abas abertas 😄
+          </p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -88,6 +93,41 @@
                   <button class="btn btn-primary" type="button" data-copy-target="link-snippet">Copiar</button>
                 </div>
               </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <h3 style="margin-top:0;">Básico (para iniciantes)</h3>
+                <p class="muted" style="margin-top:0;">
+                  Você escolhe uma imagem, o navegador cria uma URL temporária (<em>Object URL</em>) e troca o <code>href</code> do favicon.
+                  Isso acontece só no seu navegador. Se você recarregar a página, volta ao favicon original.
+                </p>
+
+                <h3 style="margin-top: 14px;">Intermediário (mais contexto)</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Por que não “salva” no site?</strong> Porque a página não tem permissão para escrever no seu servidor sem backend.</li>
+                  <li><strong>O preview muda o ícone na aba</strong>, mas alguns navegadores podem demorar por causa de cache/atualização de UI.</li>
+                  <li><strong>O snippet abaixo é só exemplo</strong>: em produção, você cria os arquivos no projeto (ex: <code>/favicon.ico</code>).</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Pegadinha:</strong> favicon “parece simples”, mas cada plataforma puxa um tamanho/formato diferente.</li>
+                  <li><strong>Dica prática:</strong> em produção, é comum manter <code>favicon.ico</code> na raiz do site para compatibilidade e “detecção automática”.</li>
+                  <li><strong>Cache:</strong> favicon é um dos campeões de cache agressivo. Às vezes só troca com nome novo (ex: <code>favicon-v2.png</code>).</li>
+                </ul>
+
+                <div class="alert" style="margin-top: 12px;">
+                  <strong>🧠 Por que isso importa?</strong>
+                  Um favicon bem feito melhora reconhecimento (marca) e “aparência de site profissional”,
+                  e ainda evita dor de cabeça com cache e compatibilidade.
+                </div>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p style="margin:0;">
+                    <strong>✅ Dica:</strong> teste seu favicon em <strong>16×16</strong>. Se não der pra reconhecer ali,
+                    ele vai virar um “quadradinho misterioso” na aba do navegador.
+                  </p>
+                </div>
+              </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">O que é um favicon?</h2>
@@ -98,6 +138,51 @@
               </p>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                Pense no favicon como a “mini-logo” do seu site: ele precisa ser legível em tamanho minúsculo.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Onde aparece:</strong> abas, favoritos, histórico e às vezes em resultados (ex.: Google).</li>
+                <li><strong>O que funciona melhor:</strong> símbolo simples, alto contraste, sem detalhes finos.</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Não é “imagem decorativa” qualquer:</strong> é parte da identidade e pode afetar confiança do usuário.</li>
+                <li><strong>Modo escuro:</strong> favicons com bom contraste funcionam melhor em temas claros e escuros.</li>
+                <li><strong>Extra nerd (opcional):</strong> dá pra fazer favicon adaptativo com SVG em alguns cenários (tema claro/escuro).</li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Quando o usuário tem muitas abas abertas, o favicon vira o “GPS visual” do site.
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Favicon = ícone do site (aba/favoritos/atalhos)</li>
+                <li>Símbolo simples e contraste forte ganham</li>
+                <li>Teste sempre em 16×16</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Meu ícone ainda faz sentido em 16×16?</li>
+                <li>Tem contraste suficiente em fundo claro e escuro?</li>
+                <li>Evitei texto pequeno/detalhes finos?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Onde o favicon aparece além da aba do navegador?</li>
+                <li>Qual o maior erro ao criar favicon?</li>
+              </ol>
+            </div>
+
             <div class="alert" style="margin-top: 14px;">
               <strong>Boa prática:</strong> use um símbolo simples, com contraste forte e legível em <strong>16×16</strong>.
             </div>
@@ -105,15 +190,65 @@
             <h2 class="lesson-title" style="margin-top: 18px;">Formatos e tamanhos recomendados</h2>
             <div class="card soft">
               <ul class="list">
-                <li><strong>ICO</strong>: compatibilidade (navegadores antigos).</li>
+                <li><strong>ICO</strong>: compatibilidade (navegadores antigos) e “coringa” clássico.</li>
                 <li><strong>PNG</strong>: comum (16×16, 32×32, 48×48, 96×96).</li>
-                <li><strong>SVG</strong>: vetorial (ótimo para ícones simples, suporte crescente).</li>
+                <li><strong>SVG</strong>: vetorial (ótimo para ícones simples, dá para fazer versões adaptativas).</li>
                 <li><strong>Apple Touch Icon</strong>: 180×180 (iOS).</li>
                 <li><strong>PWA</strong>: 192×192 e 512×512 (manifest).</li>
               </ul>
               <p class="muted" style="margin:10px 0 0;">
                 Regra prática: evite texto pequeno. Se precisar escrever, use iniciais grandes.
               </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                Você não precisa de 40 arquivos para ter um favicon decente.
+                Para a maioria dos sites, um kit mínimo bem feito já resolve.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Kit mínimo moderno (bem comum):</strong> <code>favicon.ico</code> + <code>icon.svg</code> + <code>apple-touch-icon.png</code> + <code>site.webmanifest</code>.</li>
+                <li><strong>PNG 32×32:</strong> é um “tamanho seguro” para várias situações.</li>
+                <li><strong>PWA:</strong> 192 e 512 são os tamanhos mais usados no manifest para atalhos em Android.</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Pegadinha do iOS:</strong> o Apple Touch Icon pode ficar feio se seu desenho encostar demais nas bordas. Deixe “respiro”.</li>
+                <li><strong>Ícone maskable (PWA):</strong> alguns atalhos cortam o ícone em formatos diferentes. Vale testar se você usa PWA.</li>
+                <li><strong>Contraste e legibilidade:</strong> favicon com degradê delicado vira “nada” em 16×16.</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> Comece com um SVG bem simples (um símbolo forte).
+                  Depois gere os PNGs a partir dele. Você evita refazer tudo toda vez.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>ICO = compatibilidade</li>
+                <li>PNG = prático e muito aceito</li>
+                <li>SVG = perfeito para ícones simples e escaláveis</li>
+                <li>Apple/PWA pedem tamanhos específicos</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Tenho pelo menos <code>favicon.ico</code> e um PNG 32×32?</li>
+                <li>Se tiver iOS, tenho <code>apple-touch-icon.png</code> (180×180)?</li>
+                <li>Se tiver PWA, meu manifest tem 192 e 512?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Por que SVG pode ser melhor do que PNG em muitos casos?</li>
+                <li>Quando faz sentido criar manifest?</li>
+              </ol>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Como adicionar (snippets prontos)</h2>
@@ -140,7 +275,61 @@
               </div>
 
               <div class="alert" style="margin-top: 12px;">
-                <strong>Dica:</strong> usar SVG + PNG/ICO normalmente dá o melhor equilíbrio entre qualidade e compatibilidade.
+                <strong>✅ Dica:</strong> usar SVG + PNG/ICO normalmente dá o melhor equilíbrio entre qualidade e compatibilidade.
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <h3 style="margin-top:0;">Básico</h3>
+                <p class="muted" style="margin-top:0;">
+                  O navegador lê as tags <code>&lt;link rel="icon"&gt;</code> dentro do <code>&lt;head&gt;</code>
+                  e escolhe o melhor arquivo para a situação.
+                </p>
+
+                <h3 style="margin-top: 14px;">Intermediário</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Ordem importa:</strong> alguns navegadores priorizam certos formatos. Ter fallback evita surpresa.</li>
+                  <li><strong>Sizes ajuda:</strong> declarar <code>sizes="32x32"</code> deixa explícito o que você está oferecendo.</li>
+                  <li><strong>Compatibilidade:</strong> manter <code>/favicon.ico</code> na raiz ainda ajuda muito em cenários antigos e bots.</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Pegadinha:</strong> mudar o arquivo e “não trocar” no navegador. Quase sempre é cache.</li>
+                  <li><strong>Versão (cache-busting):</strong> renomeie para <code>favicon-v2.ico</code> ou use querystring (nem todos amam, mas funciona).</li>
+                  <li><strong>Sites grandes:</strong> geradores como RealFaviconGenerator criam um kit completo e testável.</li>
+                </ul>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p style="margin:0;">
+                    <strong>🔎 Exemplo (super mínimo e honesto):</strong><br>
+                    “Quero compatibilidade e fim.”
+                  </p>
+                  <pre style="white-space:pre-wrap; margin:10px 0 0; line-height:1.8;"><code id="code-minimo">&lt;link rel="icon" href="/favicon.ico"&gt;
+&lt;link rel="apple-touch-icon" href="/apple-touch-icon.png"&gt;</code></pre>
+                  <div class="hero-actions" style="margin-top: 12px;">
+                    <button class="btn btn-primary" type="button" data-copy-target="code-minimo">Copiar</button>
+                  </div>
+                </div>
+
+                <h3 style="margin-top: 14px;">Resumo final</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li>Coloque os links no <code>&lt;head&gt;</code></li>
+                  <li>Tenha fallback (ICO/PNG) + opcional SVG</li>
+                  <li>Se não atualizar: é cache, quase sempre</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Mini-checklist</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li>Meus arquivos existem nos caminhos que eu declarei?</li>
+                  <li>Eu tenho um fallback (ICO/PNG) além de SVG?</li>
+                  <li>Testei em aba anônima quando “não troca”?</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+                <ol class="list" style="margin-top:0;">
+                  <li>Por que favicon costuma “não atualizar” mesmo quando eu troco o arquivo?</li>
+                  <li>Qual a diferença entre ICO, PNG e SVG para favicon?</li>
+                </ol>
               </div>
             </div>
 
@@ -167,6 +356,53 @@
               <div class="hero-actions" style="margin-top: 12px;">
                 <button class="btn btn-primary" type="button" data-copy-target="code-manifest">Copiar</button>
               </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <h3 style="margin-top:0;">Básico</h3>
+                <p class="muted" style="margin-top:0;">
+                  O <code>manifest</code> é um arquivo que descreve como seu site vira “atalho de app” no celular.
+                  Ele define nome, ícone, cores e o jeito que abre.
+                </p>
+
+                <h3 style="margin-top: 14px;">Intermediário</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Icons:</strong> são as imagens usadas no atalho.</li>
+                  <li><strong>Theme/background:</strong> ajudam a integrar com a UI do sistema.</li>
+                  <li><strong>Display:</strong> <code>standalone</code> faz parecer “app” (sem barra do navegador).</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Pegadinha:</strong> colocar ícones pequenos demais. Em atalhos, 192 e 512 são padrão por um motivo.</li>
+                  <li><strong>Maskable:</strong> alguns launchers recortam o ícone. Se você for PWA “de verdade”, vale criar também um ícone maskable.</li>
+                  <li><strong>DevTools:</strong> você consegue validar o manifest e ver quais ícones estão sendo usados.</li>
+                </ul>
+
+                <div class="alert" style="margin-top: 12px;">
+                  <strong>🧠 Por que isso importa?</strong>
+                  Mesmo que você não seja PWA hoje, um manifest bem feito deixa seus atalhos no celular com cara de produto.
+                </div>
+
+                <h3 style="margin-top: 14px;">Resumo final</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li>Manifest controla aparência do atalho</li>
+                  <li>Use pelo menos 192 e 512</li>
+                  <li>Valide no DevTools (Application → Manifest)</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Mini-checklist</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li>Meu <code>site.webmanifest</code> está acessível no caminho que eu declarei?</li>
+                  <li>Tenho <code>icon-192.png</code> e <code>icon-512.png</code>?</li>
+                  <li>Testei o atalho no celular (ou em emulador)?</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+                <ol class="list" style="margin-top:0;">
+                  <li>O que muda quando eu uso <code>display: "standalone"</code>?</li>
+                  <li>Por que 512×512 é útil se o ícone aparece pequeno?</li>
+                </ol>
+              </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Testar e dicas rápidas</h2>
@@ -178,10 +414,80 @@
               </ul>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                Se o favicon não “troca”, quase sempre é cache. Primeiro teste em aba anônima.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Hard reload:</strong> Ctrl+F5 (Windows) costuma forçar atualização.</li>
+                <li><strong>Cache-busting:</strong> renomear arquivo é o método mais confiável.</li>
+                <li><strong>Teste rápido:</strong> abra o site em outro navegador (Chrome/Firefox/Edge) para comparar.</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Checklist de produção:</strong> confira se os arquivos estão na raiz/pastas corretas e se o servidor está servindo os MIME types certos.</li>
+                <li><strong>SEO/Google:</strong> alguns mecanismos seguem diretrizes específicas para favicon em resultados.</li>
+                <li><strong>Kit pronto:</strong> RealFaviconGenerator gera e ainda oferece um “checker”.</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>🔎 Exemplo (renomeando para vencer o cache):</strong>
+                </p>
+                <pre style="white-space:pre-wrap; margin:10px 0 0; line-height:1.8;"><code id="code-cachebust">&lt;link rel="icon" type="image/png" href="/favicon-v2.png"&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-cachebust">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Não atualizou? pense “cache” primeiro</li>
+                <li>Valide no DevTools (Application)</li>
+                <li>Renomear arquivo geralmente resolve</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Testei em aba anônima?</li>
+                <li>O arquivo existe no caminho declarado?</li>
+                <li>Renomeei o arquivo ao atualizar versão?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual o motivo #1 do favicon “não trocar”?</li>
+                <li>Qual é o caminho mais simples para forçar atualização sem mexer em servidor?</li>
+              </ol>
+            </div>
+
             <div class="card soft" style="margin-top: 12px;">
               <p class="muted" style="margin:0;">
-                Ferramenta útil: <strong>favicon.io</strong> gera ICO/PNG e snippets rapidinho.
+                Ferramentas úteis (geram kit e snippet):
+                <strong>favicon.io</strong> e <strong>RealFaviconGenerator</strong>.
               </p>
+              <ul class="list" style="margin-top:10px;">
+                <li>
+                  <a href="https://favicon.io" target="_blank" rel="noopener noreferrer">favicon.io</a>
+                  <span class="tiny muted"> (rápido e simples)</span>
+                </li>
+                <li>
+                  <a href="https://realfavicongenerator.net/" target="_blank" rel="noopener noreferrer">realfavicongenerator.net</a>
+                  <span class="tiny muted"> (kit completo + checker)</span>
+                </li>
+                <li>
+                  <a href="https://developers.google.com/search/docs/appearance/favicon-in-search" target="_blank" rel="noopener noreferrer">Diretrizes do Google para favicon</a>
+                  <span class="tiny muted"> (resultados de busca)</span>
+                </li>
+                <li>
+                  <a href="https://web.dev/articles/building/an-adaptive-favicon" target="_blank" rel="noopener noreferrer">Favicon adaptativo (web.dev)</a>
+                  <span class="tiny muted"> (extra avançado)</span>
+                </li>
+              </ul>
             </div>
 
             <div class="lesson-actions">
@@ -207,6 +513,16 @@
                 <li>Entendeu manifest (PWA)</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+
+            <div class="card">
+              <h3>Atalho mental</h3>
+              <p class="muted" style="margin-top:0;">
+                <strong>Ícone legível em 16×16</strong> = favicon bom ✅<br>
+                <strong>Não atualiza</strong> = cache 😅<br>
+                <strong>PWA</strong> = manifest + 192/512 📱<br>
+                <strong>Compat</strong> = tenha ICO/PNG de fallback 🧩
+              </p>
             </div>
           </aside>
         </div>

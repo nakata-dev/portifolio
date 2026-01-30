@@ -26,6 +26,21 @@
       margin: 0;
       line-height: 1.8;
     }
+
+    /* Pequenos ajustes didáticos locais (sem mexer no site.css) */
+    .hint-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 860px){
+      .hint-grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .mini-title{
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin: 0 0 8px;
+    }
   </style>
 </head>
 
@@ -66,73 +81,540 @@
         <div class="lesson-grid">
           <article class="lesson demo">
 
+            <!-- ========================================= -->
+            <!-- b vs strong -->
+            <!-- ========================================= -->
             <h2 class="lesson-title">Negrito: <code>&lt;b&gt;</code> vs <code>&lt;strong&gt;</code></h2>
-            <div class="card">
-              <p>Nessa frase temos um <b>termo em negrito</b> usando a tag <strong>B</strong> (não semântica).</p>
-              <p>Já nesta outra frase aqui, temos um <strong>termo em negrito</strong> usando a tag <strong>STRONG</strong> (semântica).</p>
-            </div>
 
-            <h2 class="lesson-title" style="margin-top: 18px;">Itálico: <code>&lt;i&gt;</code> vs <code>&lt;em&gt;</code></h2>
-            <div class="card">
-              <p>Agora, neste outro caso temos um <i>termo em itálico</i> usando a tag <strong>I</strong> (não semântica).</p>
-              <p>Agora, nesta outra frase temos o <em>termo ênfase</em> usando o termo <strong>EM</strong> (semântica).</p>
-            </div>
-
-            <h2 class="lesson-title" style="margin-top: 18px;">Texto marcado: <code>&lt;mark&gt;</code></h2>
-            <div class="card">
-              <p>Podemos criar também um <mark>texto marcado</mark> usando a tag <strong>MARK</strong>.</p>
-              <p>
-                Também podemos usar <span class="code-inline">mark style</span> para trocar a cor:
-                <mark style="background-color: rgb(118, 223, 118);">marcação com outra cor</mark>.
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Aqui vai a ideia central: <code>&lt;strong&gt;</code> tem <strong>significado</strong> (importância/urgência),
+                e <code>&lt;b&gt;</code> é mais “visual” (chamar atenção sem dizer que é importante). Em muitos navegadores os dois ficam em negrito,
+                mas o que muda é o <strong>sentido</strong>. <!-- base: MDN/WHATWG -->
               </p>
             </div>
 
-            <h2 class="lesson-title" style="margin-top: 18px;">Várias marcações com a mesma cor</h2>
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico (para iniciantes)</h3>
+              <div class="hint-grid">
+                <div class="card soft">
+                  <p class="mini-title"><strong>Quando usar <code>&lt;strong&gt;</code> ✅</strong></p>
+                  <p class="muted" style="margin:0;">
+                    Quando o trecho é realmente importante: avisos, riscos, ações críticas, palavras que mudam o entendimento.
+                  </p>
+                </div>
+                <div class="card soft">
+                  <p class="mini-title"><strong>Quando usar <code>&lt;b&gt;</code> ✅</strong></p>
+                  <p class="muted" style="margin:0;">
+                    Quando você quer apenas destacar algo “sem peso semântico”:
+                    nomes de recursos, palavras-chave visuais, labels dentro do texto.
+                  </p>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Leitores de tela e ferramentas de acessibilidade podem dar ênfase diferente para <code>&lt;strong&gt;</code>.
+                Isso melhora a compreensão além do visual.
+              </div>
+
+              <h3 style="margin-top: 16px;">Intermediário (exemplo que parece igual, mas não é)</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  <strong>Exemplo 1 (importância real):</strong>
+                  Ao enviar o formulário, <strong>confira o número do WhatsApp</strong> antes de clicar em “Enviar”.
+                </p>
+                <p style="margin:10px 0 0;">
+                  <strong>Exemplo 2 (só destaque visual):</strong>
+                  Você vai aprender sobre as tags <b>&lt;header&gt;</b>, <b>&lt;main&gt;</b> e <b>&lt;footer&gt;</b>.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Não use <code>&lt;strong&gt;</code> como “estilo”</strong>. Se o objetivo é só deixar em negrito, use CSS (<code>font-weight</code>).</li>
+                <li><strong>Evite exagero</strong>: se tudo é “muito importante”, nada é importante.</li>
+                <li><strong>Para títulos</strong>, use <code>&lt;h1&gt;...&lt;h6&gt;</code>. Para ênfase dentro do texto, aí sim <code>&lt;strong&gt;</code>.</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (HTML para copiar)</strong></p>
+                <pre class="codeblock"><code id="code-b-strong">&lt;p&gt;
+  &lt;strong&gt;Atenção:&lt;/strong&gt; confirme o e-mail antes de enviar.
+&lt;/p&gt;
+
+&lt;p&gt;
+  Tags do layout: &lt;b&gt;&amp;lt;header&amp;gt;&lt;/b&gt;, &lt;b&gt;&amp;lt;main&amp;gt;&lt;/b&gt; e &lt;b&gt;&amp;lt;footer&amp;gt;&lt;/b&gt;.
+&lt;/p&gt;</code></pre>
+
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-b-strong">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;strong&gt;</code> = importância/urgência (semântica)</li>
+                <li><code>&lt;b&gt;</code> = destaque visual sem “peso” (semântica fraca)</li>
+                <li>Para estilo puro, prefira CSS</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Eu estou marcando importância de verdade?</li>
+                <li>Se for só visual, posso fazer com CSS?</li>
+                <li>Estou evitando exagero de destaque?</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual tag você usa para “isso é importante”?</li>
+                <li>Quando <code>&lt;b&gt;</code> faz mais sentido do que <code>&lt;strong&gt;</code>?</li>
+              </ol>
+            </div>
+
+            <!-- ========================================= -->
+            <!-- i vs em -->
+            <!-- ========================================= -->
+            <h2 class="lesson-title" style="margin-top: 18px;">Itálico: <code>&lt;i&gt;</code> vs <code>&lt;em&gt;</code></h2>
+
             <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Os dois podem parecer iguais na tela (itálico), mas:
+                <code>&lt;em&gt;</code> é <strong>ênfase</strong> (stress emphasis) e <code>&lt;i&gt;</code> é texto “separado do fluxo normal”
+                (termo estrangeiro, pensamento, definição, etc). <!-- MDN -->
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  <strong><code>&lt;em&gt;</code>:</strong> muda o sentido da frase, como se você estivesse falando com ênfase.
+                  Ex: Eu <em>não</em> disse isso.
+                </p>
+                <p style="margin:10px 0 0;">
+                  <strong><code>&lt;i&gt;</code>:</strong> é um “tom editorial”, um trecho diferente do resto.
+                  Ex: A palavra <i>hype</i> vem do inglês.
+                </p>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica:</strong> se você conseguir “ler em voz alta” e perceber a ênfase, provavelmente é <code>&lt;em&gt;</code>.
+                Se for “um termo/expressão”, tende a ser <code>&lt;i&gt;</code>.
+              </div>
+
+              <h3 style="margin-top: 16px;">Intermediário (um exemplo divertido e didático)</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  Frase 1: Eu pedi <em>hoje</em>. (ênfase no tempo, muda o foco)
+                </p>
+                <p style="margin:10px 0 0;">
+                  Frase 2: A expressão <i>deadline</i> é comum em equipes de tecnologia. (termo estrangeiro)
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Não use <code>&lt;em&gt;</code> só para “italicar”</strong>. Se for estilo, use CSS.</li>
+                <li><strong><code>&lt;em&gt;</code> pode ser aninhado</strong> para reforçar ênfase (com parcimônia).</li>
+                <li>Se for <strong>título de obra</strong> (livro/filme), considere <code>&lt;cite&gt;</code> em vez de <code>&lt;i&gt;</code> (dependendo do caso).</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (HTML para copiar)</strong></p>
+                <pre class="codeblock"><code id="code-i-em">&lt;p&gt;Eu &lt;em&gt;não&lt;/em&gt; falei isso.&lt;/p&gt;
+&lt;p&gt;A palavra &lt;i&gt;hype&lt;/i&gt; aparece muito em marketing.&lt;/p&gt;</code></pre>
+
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-i-em">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;em&gt;</code> = ênfase que muda o sentido</li>
+                <li><code>&lt;i&gt;</code> = termo/idioma/pensamento/diferente do texto normal</li>
+                <li>Para estilo puro, use CSS</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Isso é ênfase de voz (<code>em</code>) ou um termo editorial (<code>i</code>)?</li>
+                <li>Eu estou usando itálico só por estilo?</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual tag você usa para “stress emphasis”?</li>
+                <li>Dê um exemplo real de uso para <code>&lt;i&gt;</code>.</li>
+              </ol>
+            </div>
+
+            <!-- ========================================= -->
+            <!-- mark -->
+            <!-- ========================================= -->
+            <h2 class="lesson-title" style="margin-top: 18px;">Texto marcado: <code>&lt;mark&gt;</code></h2>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Pense no <code>&lt;mark&gt;</code> como um marca-texto: ele destaca um trecho por ser <strong>relevante naquele contexto</strong>.
+                Um uso clássico é destacar termos em resultados de busca. <!-- MDN -->
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p>Podemos criar um <mark>texto marcado</mark> usando a tag <strong>MARK</strong>.</p>
+              <p>
+                Também podemos usar <span class="code-inline">style</span> para trocar a cor:
+                <mark style="background-color: rgb(118, 223, 118);">marcação com outra cor</mark>.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                “Marcar” não é o mesmo que “dar ênfase”:
+                <code>&lt;em&gt;</code> é voz/ênfase; <code>&lt;mark&gt;</code> é relevância no contexto (ex.: termo encontrado).
+              </div>
+
+              <h3 style="margin-top: 16px;">Intermediário (mini caso real: resultado de busca)</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  Você pesquisou por: <strong>“HTML”</strong>
+                </p>
+                <p style="margin:10px 0 0;">
+                  Resultado: Aprenda <mark>HTML</mark> e <mark>HTML</mark> semântico para criar páginas modernas.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Use com moderação</strong>: se você marca tudo, o destaque perde sentido.</li>
+                <li><strong>Acessibilidade</strong>: marque com contraste decente. Não dependa só de cor para passar significado.</li>
+                <li><strong>Não confunda com “seleção do usuário”</strong>: <code>::selection</code> é outra coisa (CSS).</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (HTML para copiar)</strong></p>
+                <pre class="codeblock"><code id="code-mark">&lt;p&gt;Resultado para: &lt;strong&gt;HTML&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Aprenda &lt;mark&gt;HTML&lt;/mark&gt; semântico e &lt;mark&gt;HTML&lt;/mark&gt; moderno.&lt;/p&gt;</code></pre>
+
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-mark">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;mark&gt;</code> = destaque por relevância no contexto</li>
+                <li>Uso clássico: resultados de busca</li>
+                <li>Evite marcar “o texto inteiro”</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>O trecho marcado é relevante “agora”?</li>
+                <li>O contraste está bom?</li>
+                <li>Eu não marquei coisa demais?</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual diferença de intenção entre <code>&lt;mark&gt;</code> e <code>&lt;em&gt;</code>?</li>
+                <li>Onde você usaria <code>&lt;mark&gt;</code> em um site real?</li>
+              </ol>
+            </div>
+
+            <!-- ========================================= -->
+            <!-- mark same color -->
+            <!-- ========================================= -->
+            <h2 class="lesson-title" style="margin-top: 18px;">Várias marcações com a mesma cor</h2>
+
+            <div class="card soft">
+              <h3 style="margin-top:0;">Básico</h3>
               <p>Primeiro você deixa <mark>todos os textos marcado de amarelo básico</mark>.</p>
               <p>Como eu vou fazer neste <mark>exemplo aqui.</mark></p>
               <p>Em seguida, na cabeça (<strong>HEAD</strong>) crie uma tag <strong>STYLE</strong> e personalize o <code>mark</code>.</p>
             </div>
 
             <div class="card" style="margin-top: 12px;">
-              <pre class="codeblock"><code>&lt;style&gt;
+              <h3 style="margin-top:0;">Intermediário (o jeito “limpo”)</h3>
+              <p class="muted" style="margin-top:0;">
+                Em vez de colocar <span class="code-inline">style</span> em cada <code>&lt;mark&gt;</code>,
+                você define 1 regra no CSS e pronto: todas as marcações ficam consistentes.
+              </p>
+
+              <pre class="codeblock"><code id="code-mark-css">&lt;style&gt;
   mark {
     background-color: limegreen;
   }
 &lt;/style&gt;</code></pre>
 
+              <div class="hero-actions" style="margin-top: 12px;">
+                <button class="btn btn-primary" type="button" data-copy-target="code-mark-css">Copiar</button>
+              </div>
+
               <div class="alert" style="margin-top: 12px;">
-                <em>Assim o texto de todas as marcações ficará</em>
+                <strong>✅ Dica:</strong> consistência dá aparência profissional.
+                Assim o texto de todas as marcações ficará
                 <mark style="background-color: rgb(50, 238, 106);">verde</mark>.
               </div>
+
+              <h3 style="margin-top: 16px;">Avançado (controle por “tema” sem bagunça)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Se o seu site tiver tema escuro/claro, você pode ajustar <code>mark</code> para manter contraste.</li>
+                <li>Evite cores neon em textos longos. Marcação é para trechos pequenos.</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Preferir CSS global/local ao invés de <span class="code-inline">style</span> repetido</li>
+                <li>Marcação boa = contraste + moderação</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Eu padronizei a cor em um só lugar?</li>
+                <li>O contraste está ok no fundo do site?</li>
+              </ul>
             </div>
 
+            <!-- ========================================= -->
+            <!-- big / small -->
+            <!-- ========================================= -->
             <h2 class="lesson-title" style="margin-top: 18px;">Texto grande e pequeno: <code>&lt;big&gt;</code> / <code>&lt;small&gt;</code></h2>
-            <div class="card">
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                Aqui tem uma pegadinha clássica: <code>&lt;big&gt;</code> é <strong>obsoleto</strong> e não deve ser usado.
+                Para aumentar texto, use CSS (<code>font-size</code>). Já <code>&lt;small&gt;</code> ainda existe e é útil para “letras miúdas” e observações. <!-- MDN big -->
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
               <p>Estamos criando um <big>texto grande</big> e um <small>texto pequeno</small>.</p>
+
               <div class="alert alert-warn" style="margin-top: 12px;">
-                <strong>Observação:</strong> <code>&lt;big&gt;</code> é considerado obsoleto.
+                <strong>⚠️ Atenção:</strong> <code>&lt;big&gt;</code> é considerado obsoleto.
                 Para “tamanho”, o ideal é usar CSS (font-size) e manter a semântica com HTML.
               </div>
+
+              <h3 style="margin-top: 16px;">Intermediário (o jeito certo de “aumentar”) </h3>
+              <div class="card soft">
+                <p class="muted" style="margin-top:0;">
+                  Quer texto maior? Faça assim:
+                </p>
+                <pre class="codeblock"><code id="code-big-css">&lt;p&gt;Um texto normal e um &lt;span style="font-size:1.25rem; font-weight:700;"&gt;trecho maior&lt;/span&gt;.&lt;/p&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-big-css">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (quando <code>&lt;small&gt;</code> brilha)</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  Use <code>&lt;small&gt;</code> para observações, detalhes legais ou notas:
+                  <small>Ex.: Valores sujeitos a alteração. Consulte condições.</small>
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;big&gt;</code> = obsoleto (evite)</li>
+                <li>Texto maior = CSS (<code>font-size</code>)</li>
+                <li><code>&lt;small&gt;</code> = notas/observações (“letras miúdas”)</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Eu removi <code>&lt;big&gt;</code> do meu código?</li>
+                <li>Eu usei CSS para tamanho?</li>
+                <li><code>&lt;small&gt;</code> foi usado para nota, não para “deixar fofo”?</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Por que <code>&lt;big&gt;</code> não é recomendado?</li>
+                <li>Qual é a alternativa moderna para aumentar fonte?</li>
+              </ol>
             </div>
 
+            <!-- ========================================= -->
+            <!-- del -->
+            <!-- ========================================= -->
             <h2 class="lesson-title" style="margin-top: 18px;">Texto excluído: <code>&lt;del&gt;</code></h2>
-            <div class="card">
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                <code>&lt;del&gt;</code> representa um trecho que foi <strong>removido</strong> do conteúdo.
+                É perfeito para “antes e depois”, histórico de preço, changelog e revisão de texto. <!-- MDN del -->
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
               <p>Podemos marcar <del>um texto como excluído</del> para indicar que ele deve ser lido, mas não considerado.</p>
+
+              <h3 style="margin-top: 16px;">Intermediário (exemplo real: preço e atualização)</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  Promoção: <del>R$ 199</del> <strong>R$ 149</strong> por tempo limitado.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (boas práticas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Use com <code>&lt;ins&gt;</code></strong> quando quiser mostrar substituição (tipo “controle de alterações”).</li>
+                <li>Você pode usar <code>datetime</code> (quando fizer sentido) para registrar quando a alteração aconteceu.</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (HTML para copiar)</strong></p>
+                <pre class="codeblock"><code id="code-del">&lt;p&gt;Promoção: &lt;del&gt;R$ 199&lt;/del&gt; &lt;strong&gt;R$ 149&lt;/strong&gt;&lt;/p&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-del">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;del&gt;</code> = trecho removido</li>
+                <li>Ótimo para antes/depois e revisão</li>
+                <li>Combina bem com <code>&lt;ins&gt;</code></li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Esse trecho foi realmente “removido” do conteúdo?</li>
+                <li>Preciso mostrar o texto novo com <code>&lt;ins&gt;</code>?</li>
+              </ul>
             </div>
 
+            <!-- ========================================= -->
+            <!-- ins -->
+            <!-- ========================================= -->
             <h2 class="lesson-title" style="margin-top: 18px;">Texto inserido: <code>&lt;ins&gt;</code></h2>
-            <div class="card">
-              <p>Podemos marcar <ins>um texto inserido</ins> para dar ênfase e indicar que ele foi adicionado depois.</p>
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                <code>&lt;ins&gt;</code> marca um trecho que foi <strong>adicionado</strong>.
+                Ele é o “par perfeito” do <code>&lt;del&gt;</code> quando você quer mostrar mudanças. <!-- MDN ins -->
+              </p>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p>Podemos marcar <ins>um texto inserido</ins> para dar ênfase e indicar que ele foi adicionado depois.</p>
+
+              <h3 style="margin-top: 16px;">Intermediário (antes e depois em uma frase)</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  Meu objetivo é <del>aprender</del> <ins>dominar</ins> HTML e CSS.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (boas práticas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Use <code>&lt;ins&gt;</code> quando você quer <strong>representar edição</strong>, não só “sublinhar bonito”.</li>
+                <li>Se for sublinhado por estilo, use CSS em um <code>&lt;span&gt;</code>.</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (HTML para copiar)</strong></p>
+                <pre class="codeblock"><code id="code-del-ins">&lt;p&gt;Meu objetivo é &lt;del&gt;aprender&lt;/del&gt; &lt;ins&gt;dominar&lt;/ins&gt; HTML e CSS.&lt;/p&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-del-ins">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;ins&gt;</code> = trecho adicionado</li>
+                <li>Use junto de <code>&lt;del&gt;</code> para mostrar revisão</li>
+                <li>Não use como “sublinhado decorativo”</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Eu estou representando uma edição real?</li>
+                <li>Se for só estilo, devo usar CSS?</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual tag indica texto removido?</li>
+                <li>Qual tag indica texto adicionado?</li>
+              </ol>
+            </div>
+
+            <!-- ========================================= -->
+            <!-- sup/sub -->
+            <!-- ========================================= -->
             <h2 class="lesson-title" style="margin-top: 18px;">Sobrescrito e Subscrito: <code>&lt;sup&gt;</code> / <code>&lt;sub&gt;</code></h2>
-            <div class="card">
+
+            <div class="card soft">
+              <p class="muted" style="margin:0;">
+                <code>&lt;sup&gt;</code> e <code>&lt;sub&gt;</code> são para motivos tipográficos (ex.: expoentes, notas de rodapé, fórmulas químicas).
+                Eles são “de leve”, mas deixam o texto bem mais profissional. <!-- MDN -->
+              </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
               <h3 style="margin-top:0;">Sobrescrito (SUP)</h3>
-              <p>Exemplo: x<sup>20</sup>+3</p>
+              <p>Exemplo: x<sup>20</sup> + 3</p>
 
               <h3>Subscrito (SUB)</h3>
               <p>Exemplo: H<sub>2</sub>O</p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica:</strong> sup/sub são ótimos para “detalhes pequenos” dentro do fluxo do texto:
+                notas <sup>1</sup>, m², fórmulas e expoentes.
+              </div>
+
+              <h3 style="margin-top: 16px;">Intermediário (exemplo com nota de rodapé)</h3>
+              <div class="card soft">
+                <p style="margin:0;">
+                  Este texto tem uma nota<sup>1</sup>.
+                  <small><br><sup>1</sup> Exemplo didático: em projetos reais, você pode linkar a nota com âncoras.</small>
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (pegadinha comum)</h3>
+              <div class="alert alert-warn" style="margin-top: 12px;">
+                <strong>⚠️ Atenção:</strong> para matemática pesada (frações, integrais, equações grandes), HTML puro fica limitado.
+                Aí entram soluções específicas (ex.: renderização de fórmulas). Para o básico do dia a dia, <code>&lt;sup&gt;</code>/<code>&lt;sub&gt;</code> resolvem muito bem.
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (HTML para copiar)</strong></p>
+                <pre class="codeblock"><code id="code-sup-sub">&lt;p&gt;Expoente: x&lt;sup&gt;2&lt;/sup&gt; + 10&lt;/p&gt;
+&lt;p&gt;Fórmula: H&lt;sub&gt;2&lt;/sub&gt;O&lt;/p&gt;
+&lt;p&gt;Nota de rodapé&lt;sup&gt;1&lt;/sup&gt;&lt;/p&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-sup-sub">Copiar</button>
+                </div>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;sup&gt;</code> = sobrescrito (expoente, nota)</li>
+                <li><code>&lt;sub&gt;</code> = subscrito (fórmula, índice)</li>
+                <li>Use para tipografia, não para “enfeitar” texto</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Estou usando sup/sub por motivo tipográfico real?</li>
+                <li>O texto continua legível em mobile?</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual tag você usaria para “m²”?</li>
+                <li>Qual tag você usaria para “CO₂”?</li>
+              </ol>
             </div>
 
             <div class="lesson-actions">
@@ -151,11 +633,12 @@
             <div class="card">
               <h3>Checklist rápido</h3>
               <ul class="list">
-                <li>Preferiu <code>&lt;strong&gt;</code> ao <code>&lt;b&gt;</code></li>
-                <li>Preferiu <code>&lt;em&gt;</code> ao <code>&lt;i&gt;</code></li>
-                <li>Usou <code>&lt;mark&gt;</code> com consistência</li>
-                <li>Entendeu <code>&lt;del&gt;</code> e <code>&lt;ins&gt;</code></li>
-                <li>Usou <code>&lt;sup&gt;</code> e <code>&lt;sub&gt;</code></li>
+                <li>Preferiu <code>&lt;strong&gt;</code> ao <code>&lt;b&gt;</code> quando é “importância”</li>
+                <li>Preferiu <code>&lt;em&gt;</code> ao <code>&lt;i&gt;</code> quando é “ênfase”</li>
+                <li>Usou <code>&lt;mark&gt;</code> para relevância (ex.: busca)</li>
+                <li>Padronizou <code>&lt;mark&gt;</code> no CSS quando necessário</li>
+                <li>Entendeu <code>&lt;del&gt;</code> e <code>&lt;ins&gt;</code> como revisão</li>
+                <li>Usou <code>&lt;sup&gt;</code> e <code>&lt;sub&gt;</code> em exemplos reais</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
             </div>
@@ -242,5 +725,29 @@
       </div>
     </div>
   </div>
+
+  <!-- Script local: copiar por data-copy-target (mantém padrão das outras aulas) -->
+  <script>
+    (function () {
+      document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-copy-target');
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const text = el.textContent.trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.textContent;
+            btn.textContent = 'Copiado!';
+            setTimeout(() => (btn.textContent = old), 1200);
+          } catch (err) {
+            console.error(err);
+            alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -50,13 +50,20 @@
           <article class="lesson">
 
             <h2 class="lesson-title">Links externos</h2>
+
             <div class="card soft">
+              <h3 style="margin-top:0;">Básico</h3>
               <p class="muted" style="margin-top:0;">
-                Links externos abrem para outro site. Use <code>target="_blank"</code> e também
-                <code>rel="noopener noreferrer"</code> por segurança.
+                Link externo é quando você aponta para <strong>outro site</strong> (fora do seu domínio).
+                Você cria um link com a tag <code>&lt;a&gt;</code> e o destino no <code>href</code>.
               </p>
 
-              <ul class="list">
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong> Links externos passam credibilidade (referências) e guiam o usuário,
+                mas precisam de <strong>boas práticas</strong> para não abrir brechas de segurança.
+              </div>
+
+              <ul class="list" style="margin-top: 12px;">
                 <li>
                   Repositórios do professor:
                   <a href="https://github.com/gustavoguanabara?tab=repositories"
@@ -74,32 +81,140 @@
               </ul>
             </div>
 
-            <div class="alert alert-warn">
-              <strong>Boa prática:</strong> evite <code>rel="external"</code>. Prefira <code>noopener</code> e <code>noreferrer</code>
-              quando usar <code>target="_blank"</code>.
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Intermediário</h3>
+              <p class="muted" style="margin-top:0;">
+                Quando você usa <code>target="_blank"</code>, o link abre em uma nova aba/janela.
+                Isso pode ser bom quando você não quer “tirar” a pessoa do seu site.
+              </p>
+
+              <div class="alert alert-warn" style="margin-top: 12px;">
+                <strong>⚠️ Atenção:</strong> sempre combine <code>target="_blank"</code> com
+                <code>rel="noopener noreferrer"</code>.
+                É uma proteção importante e também melhora performance em alguns casos.
+              </div>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (snippet seguro):</strong></p>
+                <pre style="white-space:pre-wrap; margin:0; line-height:1.8;"><code id="code-external">&lt;a href="https://exemplo.com"
+   target="_blank"
+   rel="noopener noreferrer"&gt;
+  Visitar site externo
+&lt;/a&gt;</code></pre>
+
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-external">Copiar</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>noopener</strong>: impede que a aba aberta controle sua página via <code>window.opener</code> (evita “tabnabbing”).</li>
+                <li><strong>noreferrer</strong>: além do noopener, reduz envio de <em>referrer</em> para o site destino (privacidade).</li>
+                <li><strong>Texto do link</strong>: evite “clique aqui”. Prefira algo que faça sentido fora de contexto (acessibilidade + SEO).</li>
+                <li><strong>Link em ícone</strong>: se o link for só um ícone, adicione <code>aria-label</code> no <code>&lt;a&gt;</code>.</li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica:</strong> se o link aponta para arquivo pesado (ex.: PDF grande), avise no texto:
+                <em>“Baixar catálogo (PDF, 2 MB)”</em>. Isso reduz fricção e aumenta confiança.
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>Perguntas rápidas (fixação)</strong></p>
+                <ol class="list" style="margin-top:0;">
+                  <li>Quando faz sentido abrir um link externo em nova aba?</li>
+                  <li>Qual atributo você <strong>sempre</strong> combina com <code>target="_blank"</code> e por quê?</li>
+                  <li>Por que “clique aqui” é um texto fraco para links?</li>
+                </ol>
+              </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Links locais</h2>
+
             <div class="card soft">
+              <h3 style="margin-top:0;">Básico</h3>
               <p style="margin-top:0;">
-                Você pode navegar entre páginas do seu próprio site:
+                Links locais navegam dentro do <strong>seu próprio projeto</strong> (suas páginas HTML).
+                O segredo é usar <strong>caminhos relativos</strong>: você escreve o caminho a partir da página atual.
               </p>
 
-              <ul class="list">
-                <li>
-                  Ir para a
-                  <a href="pag002.html" rel="next">segunda página do meu site</a>
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo:</strong></p>
+                <ul class="list" style="margin-top:0;">
+                  <li>
+                    Ir para a
+                    <a href="pag002.html" rel="next">segunda página do meu site</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Intermediário</h3>
+              <p class="muted" style="margin-top:0;">
+                Pense em “mapa de pastas”. Se o arquivo está na <strong>mesma pasta</strong>, você só precisa do nome.
+                Se estiver em outra, você escreve o caminho.
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (mesma pasta):</strong></p>
+                <pre style="white-space:pre-wrap; margin:0; line-height:1.8;"><code id="code-local">&lt;a href="pag002.html"&gt;Ir para a página 2&lt;/a&gt;</code></pre>
+
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-local">Copiar</button>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica:</strong> se o link “não funciona”, o motivo mais comum é:
+                <strong>nome do arquivo diferente</strong> (maiúsculas/minúsculas contam em muitos servidores).
+              </div>
+            </div>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Evite espaços</strong> em nomes de arquivos: prefira <code>minha-pagina.html</code>. (Menos dor com URL encoding.)</li>
+                <li><strong>Padronize</strong> tudo em minúsculo: <code>contato.html</code>, <code>projetos.html</code>.</li>
+                <li><strong>Link para seção</strong> (âncora): crie um <code>id</code> e aponte com <code>#</code>:
+                  <code>&lt;a href="#precos"&gt;Ver preços&lt;/a&gt;</code>.
                 </li>
+                <li><strong>Conteúdo do link</strong>: deixe o destino claro. Ex.: “Ver portfólio” é melhor que “aqui”.</li>
               </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>Mini-checklist</strong></p>
+                <ul class="list" style="margin-top:0;">
+                  <li>O arquivo existe com o mesmo nome?</li>
+                  <li>Está na pasta certa?</li>
+                  <li>Não tem erro de maiúsculas/minúsculas?</li>
+                  <li>O texto do link faz sentido sozinho?</li>
+                </ul>
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>Perguntas rápidas (fixação)</strong></p>
+                <ol class="list" style="margin-top:0;">
+                  <li>O que é um caminho relativo?</li>
+                  <li>Qual é o erro mais comum quando um link local quebra?</li>
+                  <li>Como você cria um link para uma parte específica da página?</li>
+                </ol>
+              </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Links em subpastas</h2>
+
             <div class="card soft">
+              <h3 style="margin-top:0;">Básico</h3>
               <p style="margin-top:0;">
-                Para acessar arquivos dentro de subpastas, use o caminho relativo:
+                Se a página destino está dentro de uma <strong>subpasta</strong>, você escreve:
+                <code>nome-da-pasta/arquivo.html</code>.
               </p>
 
-              <ul class="list">
+              <ul class="list" style="margin-top: 12px;">
                 <li>
                   Ir para a
                   <a href="pag003/pag003.html" rel="next">terceira página do meu site</a>
@@ -107,19 +222,63 @@
               </ul>
             </div>
 
-            <div class="alert">
-              <strong>Dica:</strong> caminho relativo é basicamente “onde estou agora” + “para onde quero ir”.
-              Se você subir uma pasta, usa <code>../</code>.
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Intermediário</h3>
+              <p class="muted" style="margin-top:0;">
+                Pense assim: você está em uma “rua” (pasta atual). Para entrar numa “travessa” (subpasta),
+                você escreve o nome da travessa antes do endereço (arquivo).
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (subpasta):</strong></p>
+                <pre style="white-space:pre-wrap; margin:0; line-height:1.8;"><code id="code-subpasta">&lt;a href="pag003/pag003.html"&gt;Abrir página 3&lt;/a&gt;</code></pre>
+
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-subpasta">Copiar</button>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica:</strong> para <strong>voltar uma pasta</strong>, use <code>../</code>.
+                Ex.: <code>../index.html</code> (sobe um nível).
+              </div>
+            </div>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>../</strong> sobe um nível. <strong>../../</strong> sobe dois níveis.</li>
+                <li><strong>./</strong> (pasta atual) quase nunca é necessário, mas pode ajudar a deixar explícito.</li>
+                <li><strong>Cuidado com mover arquivos</strong>: se você muda a pasta de uma página, os caminhos relativos podem quebrar.</li>
+                <li><strong>Organização profissional</strong>: imagens em <code>/img</code>, estilos em <code>/css</code>, scripts em <code>/js</code>.</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (subindo pasta):</strong></p>
+                <pre style="white-space:pre-wrap; margin:0; line-height:1.8;"><code>&lt;!-- Estou em /paginas/servicos.html e quero ir para /index.html --&gt;
+&lt;a href="../index.html"&gt;Voltar para o início&lt;/a&gt;</code></pre>
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>Perguntas rápidas (fixação)</strong></p>
+                <ol class="list" style="margin-top:0;">
+                  <li>O que <code>../</code> faz?</li>
+                  <li>Qual a principal pegadinha quando você move uma página de pasta?</li>
+                  <li>Qual estrutura de pastas deixa o projeto mais organizado?</li>
+                </ol>
+              </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Downloads</h2>
+
             <div class="card soft">
+              <h3 style="margin-top:0;">Básico</h3>
               <p class="muted" style="margin-top:0;">
-                Use o atributo <code>download</code> para sugerir download do arquivo.
-                (Alguns navegadores podem abrir PDF inline dependendo das configurações.)
+                Para sugerir que um arquivo seja baixado, você pode usar o atributo <code>download</code> no link.
+                Ele tenta baixar o arquivo em vez de abrir como página.
               </p>
 
-              <ul class="list">
+              <ul class="list" style="margin-top: 12px;">
                 <li>
                   <a href="download/01%20-%20Hist%C3%B3ria%20da%20Internet.pdf"
                      download
@@ -135,6 +294,56 @@
                   </a>
                 </li>
               </ul>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Intermediário</h3>
+              <p class="muted" style="margin-top:0;">
+                Você também pode definir um <strong>nome sugerido</strong> para o arquivo baixado:
+                <code>download="nome-do-arquivo.pdf"</code>.
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (com nome):</strong></p>
+                <pre style="white-space:pre-wrap; margin:0; line-height:1.8;"><code id="code-download">&lt;a href="/download/catalogo.pdf"
+   download="catalogo-2026.pdf"
+   type="application/pdf"&gt;
+  Baixar catálogo (PDF)
+&lt;/a&gt;</code></pre>
+
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-download">Copiar</button>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica:</strong> seja gentil com o usuário: diga o formato e, se possível, o tamanho.
+                Ex.: “Baixar apostila (PDF, 3 MB)”.
+              </div>
+            </div>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Nem sempre baixa</strong>: alguns navegadores podem abrir PDF direto, dependendo das configurações do usuário.</li>
+                <li><strong>Cross-origin</strong>: por segurança, o <code>download</code> pode ser ignorado em links para <strong>outros domínios</strong>.</li>
+                <li><strong>type</strong> no <code>&lt;a&gt;</code> é “dica” de MIME, mas não substitui a configuração correta do servidor.</li>
+                <li><strong>Profissional</strong>: se você controla o servidor, o jeito mais confiável é ajustar headers (ex.: <code>Content-Disposition</code>).</li>
+              </ul>
+
+              <div class="alert alert-warn" style="margin-top: 12px;">
+                <strong>⚠️ Atenção:</strong> “forçar download” nem sempre é possível só com HTML.
+                Dependendo do navegador e da origem do arquivo, ele pode ignorar o <code>download</code>.
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p class="muted" style="margin-top:0;"><strong>Perguntas rápidas (fixação)</strong></p>
+                <ol class="list" style="margin-top:0;">
+                  <li>Para que serve o atributo <code>download</code>?</li>
+                  <li>O que pode fazer um PDF abrir no navegador mesmo com <code>download</code>?</li>
+                  <li>Por que links para outros domínios podem ignorar <code>download</code>?</li>
+                </ol>
+              </div>
             </div>
 
             <div class="lesson-actions">
@@ -244,5 +453,29 @@
       </div>
     </div>
   </div>
+
+  <!-- Script local: copiar por data-copy-target (mantém padrão das outras aulas) -->
+  <script>
+    (function () {
+      document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-copy-target');
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const text = el.textContent.trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.textContent;
+            btn.textContent = 'Copiado!';
+            setTimeout(() => (btn.textContent = old), 1200);
+          } catch (err) {
+            console.error(err);
+            alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
 
-  <meta name="description" content="Tags obsoletas no HTML: onde consultar a lista oficial, por que evitar e exemplo do marquee (com alternativa moderna)." />
+  <meta name="description" content="Tags obsoletas (deprecated) no HTML: onde consultar lista oficial, por que evitar, exemplos clássicos (marquee/center/font) e alternativas modernas com CSS acessível." />
 </head>
 
 <body>
@@ -38,7 +38,10 @@
       <div class="container">
         <div class="section-head">
           <h1>Tags Obsoletas</h1>
-          <p class="muted">Como identificar recursos antigos (deprecated) e evitar problemas de acessibilidade e compatibilidade.</p>
+          <p class="muted">
+            Como identificar recursos antigos (deprecated), evitar problemas de acessibilidade/compatibilidade
+            e trocar por alternativas modernas (sem “gambiarra”).
+          </p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -52,19 +55,157 @@
 
             <div class="card soft">
               <p style="margin:0;">
-                Você pode ver a lista completa de elementos e atributos <strong>obsoletos</strong> na documentação oficial.
-              </p>
-              <p class="muted" style="margin:10px 0 0;">
-                Link:
-                <a href="https://www.w3.org/TR/2014/REC-html5-20141028/obsolete.html" target="_blank" rel="noopener noreferrer">
-                  W3C (lista de elementos obsoletos)
-                </a>
+                Você pode ver a lista completa de elementos e atributos <strong>obsoletos/deprecated</strong> na documentação oficial.
+                Isso é o “mapa do tesouro” para não usar algo que ainda funciona hoje, mas vira dor de cabeça amanhã.
               </p>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico (para iniciantes)</h3>
+              <p class="muted" style="margin-top:0;">
+                Quando uma tag/atributo é marcado como <strong>deprecated</strong> (ou obsoleto),
+                a regra é simples: <strong>evite usar</strong>. Pode continuar “rodando” em alguns navegadores,
+                mas você perde previsibilidade.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                HTML é uma linguagem “de longo prazo”. Se você aprende o caminho moderno (semântico + CSS),
+                seu código dura mais e dá menos manutenção.
+              </div>
+
+              <h3 style="margin-top: 16px;">Intermediário (onde olhar de verdade)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>
+                  <strong>HTML Living Standard (WHATWG)</strong>:
+                  seção “Obsolete features” (lista viva e atualizada).
+                </li>
+                <li>
+                  <strong>MDN</strong>:
+                  páginas de cada tag avisam quando é deprecated e mostram alternativa.
+                </li>
+                <li>
+                  <strong>W3C (HTML5/HTML 5.2)</strong>:
+                  listas históricas úteis para entender “o que caiu em desuso”.
+                </li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p class="muted" style="margin:0;">
+                  Links úteis (oficiais):
+                </p>
+                <ul class="list" style="margin-top:10px;">
+                  <li>
+                    <strong>WHATWG</strong>:
+                    <a href="https://html.spec.whatwg.org/multipage/obsolete.html" target="_blank" rel="noopener noreferrer">Obsolete features (Living Standard)</a>
+                  </li>
+                  <li>
+                    <strong>W3C (HTML5 - 2014)</strong>:
+                    <a href="https://www.w3.org/TR/2014/REC-html5-20141028/obsolete.html" target="_blank" rel="noopener noreferrer">Obsolete features (referência histórica)</a>
+                  </li>
+                </ul>
+              </div>
+
+              <h3 style="margin-top: 16px;">Avançado (pegadinhas de termos)</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>
+                  <strong>“Deprecated”</strong> normalmente significa: “não recomendo usar, pode sumir/variar, tem alternativa melhor”.
+                </li>
+                <li>
+                  <strong>“Obsolete”</strong> aparece bastante em especificações e listas históricas.
+                  Em muitos lugares (como na própria MDN), essa distinção nem é tão útil no dia a dia:
+                  o que importa é <strong>evitar e substituir</strong>.
+                </li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> achou uma tag “diferentona” em um tutorial antigo?
+                  Joga o nome no MDN antes de copiar. Isso evita pegar “HTML fóssil” por acidente.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 16px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Confira no WHATWG (lista viva)</li>
+                <li>Use MDN para ver avisos e alternativas</li>
+                <li>W3C ajuda como referência histórica</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Eu verifiquei a tag no MDN/WHATWG?</li>
+                <li>Existe alternativa semântica + CSS?</li>
+                <li>Isso pode afetar acessibilidade (movimento, leitura, navegação)?</li>
+              </ul>
+
+              <h3 style="margin-top: 16px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual fonte você consulta para uma lista “viva” de recursos obsoletos?</li>
+                <li>Por que um tutorial antigo pode ser perigoso de copiar?</li>
+              </ol>
+            </div>
+
             <div class="alert alert-warn" style="margin-top: 14px;">
-              <strong>Por que evitar?</strong> Tags/atributos obsoletos podem quebrar em navegadores, atrapalhar leitores de tela
-              e dificultar manutenção do site.
+              <strong>Por que evitar?</strong> Tags/atributos obsoletos podem falhar em navegadores, atrapalhar leitores de tela
+              e dificultar manutenção do site. Trocar por HTML semântico + CSS deixa tudo mais previsível.
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">🔎 “Top 3” de coisas antigas que ainda aparecem por aí</h3>
+              <p class="muted" style="margin-top:0;">
+                Aqui vão exemplos bem comuns em conteúdos antigos, com a alternativa moderna (e mais profissional).
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>1) <code>&lt;center&gt;</code></strong> (centralizar conteúdo)
+                </p>
+                <pre style="white-space:pre-wrap; margin:10px 0 0; line-height:1.8;"><code id="code-center">&lt;!-- Evite (deprecated) --&gt;
+&lt;center&gt;Texto centralizado&lt;/center&gt;
+
+&lt;!-- Prefira (CSS) --&gt;
+&lt;p style="text-align:center;"&gt;Texto centralizado&lt;/p&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-center">Copiar</button>
+                </div>
+              </div>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>2) <code>&lt;font&gt;</code></strong> (cor/tamanho/fonte “na unha”)
+                </p>
+                <pre style="white-space:pre-wrap; margin:10px 0 0; line-height:1.8;"><code id="code-font">&lt;!-- Evite (deprecated) --&gt;
+&lt;font color="red" size="5"&gt;Promoção!&lt;/font&gt;
+
+&lt;!-- Prefira (CSS) --&gt;
+&lt;span style="color:#e11d48; font-size:1.25rem; font-weight:700;"&gt;Promoção!&lt;/span&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-font">Copiar</button>
+                </div>
+              </div>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>3) Atributos de “layout” no HTML</strong> (ex.: <code>bgcolor</code>, <code>width</code>, etc.)
+                </p>
+                <pre style="white-space:pre-wrap; margin:10px 0 0; line-height:1.8;"><code id="code-layout-attrs">&lt;!-- Evite: mistura conteúdo + estilo --&gt;
+&lt;table bgcolor="#000" width="100%"&gt;...&lt;/table&gt;
+
+&lt;!-- Prefira: estilo no CSS --&gt;
+&lt;table class="tabela"&gt;...&lt;/table&gt;
+&lt;style&gt;
+  .tabela{ width:100%; background:#000; }
+&lt;/style&gt;</code></pre>
+                <div class="hero-actions" style="margin-top: 12px;">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-layout-attrs">Copiar</button>
+                </div>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica:</strong> a regra de ouro é: <strong>HTML diz o que é</strong> (estrutura/semântica),
+                e <strong>CSS diz como parece</strong> (estilo).
+              </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Exemplo: a tag <code>&lt;marquee&gt;</code></h2>
@@ -77,16 +218,58 @@
               </div>
 
               <p class="muted" style="margin:12px 0 0;">
-                Apesar de funcionar em alguns navegadores, <code>&lt;marquee&gt;</code> não é recomendado hoje:
-                é obsoleto e prejudica acessibilidade.
+                Apesar de funcionar em alguns navegadores, <code>&lt;marquee&gt;</code> é considerado um recurso obsoleto:
+                é “apresentacional”, foge do controle moderno e pode prejudicar acessibilidade.
               </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                O <code>&lt;marquee&gt;</code> cria um texto rolando automaticamente.
+                Parece divertido, mas é o tipo de coisa que você encontra em código antigo.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><strong>Problema 1:</strong> você tem pouco controle fino (velocidade, pausa, responsividade).</li>
+                <li><strong>Problema 2:</strong> movimento automático pode incomodar usuários sensíveis a animações.</li>
+                <li><strong>Problema 3:</strong> não é o “padrão da web moderna”. Hoje fazemos isso com CSS (ou JS, se necessário).</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado (pegadinha importante)</h3>
+              <div class="alert alert-warn" style="margin-top: 12px;">
+                <strong>⚠️ Atenção:</strong> animações sem respeitar <code>prefers-reduced-motion</code>
+                podem causar desconforto em algumas pessoas. Sempre que possível, ofereça versão sem movimento.
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top:0;">
+                <li><code>&lt;marquee&gt;</code> é legado e não recomendado</li>
+                <li>Use CSS para controlar melhor e ficar consistente</li>
+                <li>Respeite <code>prefers-reduced-motion</code></li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top:0;">
+                <li>Tenho um motivo real para animar?</li>
+                <li>Consigo pausar/desativar o movimento?</li>
+                <li>Respeito <code>prefers-reduced-motion</code>?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top:0;">
+                <li>Qual é a alternativa moderna ao <code>&lt;marquee&gt;</code>?</li>
+                <li>Por que “movimento automático” pode ser um problema de acessibilidade?</li>
+              </ol>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Alternativa moderna (CSS)</h2>
 
             <div class="card">
               <p class="muted" style="margin-top:0;">
-                Em vez de <code>&lt;marquee&gt;</code>, você pode animar com CSS. Exemplo simples:
+                Em vez de <code>&lt;marquee&gt;</code>, você pode animar com CSS.
+                Abaixo vai um exemplo simples, com <strong>pausa no hover</strong> e respeito ao <code>prefers-reduced-motion</code>.
               </p>
 
               <pre style="white-space:pre-wrap; margin:0; line-height:1.8;"><code id="code-css-marquee">&lt;div class="ticker" aria-label="Letreiro animado"&gt;
@@ -104,15 +287,18 @@
   .ticker-track{
     display:inline-block;
     white-space:nowrap;
-    padding-left:100%;
+    will-change: transform;
     animation: ticker 10s linear infinite;
   }
+  .ticker:hover .ticker-track{
+    animation-play-state: paused;
+  }
   @keyframes ticker{
-    from { transform: translateX(0); }
+    from { transform: translateX(100%); }
     to   { transform: translateX(-100%); }
   }
   @media (prefers-reduced-motion: reduce){
-    .ticker-track{ animation:none; padding-left:0; }
+    .ticker-track{ animation:none; }
   }
 &lt;/style&gt;</code></pre>
 
@@ -121,7 +307,49 @@
               </div>
 
               <div class="alert" style="margin-top: 12px;">
-                <strong>Dica:</strong> o trecho <code>prefers-reduced-motion</code> respeita usuários que preferem menos animação.
+                <strong>✅ Dica:</strong> o trecho <code>prefers-reduced-motion</code> respeita usuários que preferem menos animação.
+                E o “pausar no hover” ajuda quem quer ler com calma.
+              </div>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <h3 style="margin-top:0;">Básico</h3>
+                <p class="muted" style="margin-top:0;">
+                  Você cria uma “janela” (<code>.ticker</code>) e move o texto dentro dela (<code>.ticker-track</code>) com <code>@keyframes</code>.
+                </p>
+
+                <h3 style="margin-top: 14px;">Intermediário</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Controle:</strong> velocidade (tempo), direção (keyframes) e pausa.</li>
+                  <li><strong>Responsivo:</strong> funciona melhor com layouts modernos.</li>
+                  <li><strong>Manutenção:</strong> sem depender de tags antigas.</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Avançado (boas práticas)</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li><strong>Respeite preferências do usuário:</strong> <code>prefers-reduced-motion</code> é um cuidado real de acessibilidade.</li>
+                  <li><strong>Evite exagero:</strong> animação deve ter motivo. Se for só “enfeite”, considere não usar.</li>
+                  <li><strong>Performance:</strong> animar <code>transform</code> costuma ser mais suave do que mexer em propriedades de layout.</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Resumo final</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li>CSS substitui marquee com controle total</li>
+                  <li>Inclua pausa e reduced-motion</li>
+                  <li>Priorize leitura e acessibilidade</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Mini-checklist</h3>
+                <ul class="list" style="margin-top:0;">
+                  <li>Tenho <code>@media (prefers-reduced-motion: reduce)</code>?</li>
+                  <li>O usuário consegue ler (pausa/velocidade)?</li>
+                  <li>A animação é necessária?</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+                <ol class="list" style="margin-top:0;">
+                  <li>Qual a vantagem de animar <code>transform</code> em vez de “margins”?</li>
+                  <li>O que o <code>prefers-reduced-motion</code> faz na prática?</li>
+                </ol>
               </div>
             </div>
 
@@ -141,10 +369,12 @@
             <div class="card">
               <h3>Checklist rápido</h3>
               <ul class="list">
-                <li>Consultou a doc oficial</li>
-                <li>Entendeu “obsoleto/deprecated”</li>
+                <li>Consultou doc oficial (WHATWG/MDN/W3C)</li>
+                <li>Entendeu “deprecated/obsoleto”</li>
+                <li>Viu exemplos (center/font/layout attrs)</li>
                 <li>Viu o exemplo do <code>marquee</code></li>
                 <li>Aprendeu alternativa com CSS</li>
+                <li>Respeitou <code>prefers-reduced-motion</code></li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
             </div>

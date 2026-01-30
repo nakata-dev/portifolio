@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
 
-  <meta name="description" content="Exercício HTML sobre tamanhos de imagens: reduzida, média e original, com boas práticas e responsividade." />
+  <meta name="description" content="Exercício HTML sobre tamanhos de imagens: reduzida, média e original, com boas práticas de performance, responsividade e acessibilidade." />
 </head>
 
 <body>
@@ -38,7 +38,10 @@
       <div class="container">
         <div class="section-head">
           <h1>🌄 Tamanho de Imagens</h1>
-          <p class="muted">Comparando versões de uma mesma imagem (650px, 1200px e original) e quando usar cada uma.</p>
+          <p class="muted">
+            Comparando versões de uma mesma imagem (<strong>650px</strong>, <strong>1200px</strong> e <strong>original</strong>) e quando usar cada uma.
+            Aqui você aprende a pensar como dev de site rápido: <strong>qualidade suficiente</strong> + <strong>menos bytes</strong> + <strong>responsivo</strong>.
+          </p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -48,10 +51,11 @@
 
         <div class="lesson-grid">
           <article class="lesson">
+
             <h2 class="lesson-title">📍 Imagem reduzida (650px)</h2>
 
             <figure class="media">
-              <img src="paisagem-650.jpeg" alt="Paisagem 650px" loading="lazy">
+              <img src="paisagem-650.jpeg" alt="Paisagem em versão reduzida (650px de largura)" loading="lazy" decoding="async">
             </figure>
 
             <div class="card soft">
@@ -62,10 +66,80 @@
               <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="paisagem-650.jpeg" alt="Paisagem 650px"&gt;</code></pre>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico (para iniciantes)</h3>
+              <p class="muted" style="margin-top:0;">
+                Regra simples: se a imagem vai aparecer <strong>pequena</strong> na tela, use uma versão menor.
+                Uma imagem de 650px é ótima para: cards, posts, listas, galerias e conteúdo em coluna.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Imagens costumam ser o “peso pesado” do carregamento. Quanto menor o arquivo, mais rápido o site abre,
+                especialmente no 4G. Otimizar imagens é uma das maiores vitórias de performance. <!-- Fonte recomendada nos links ao final -->
+              </div>
+
+              <h3 style="margin-top: 14px;">Intermediário (mais contexto)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Use o tamanho do uso real:</strong> se o espaço máximo do conteúdo é ~650px, não faz sentido mandar 3000px.</li>
+                <li><strong>Lazy loading:</strong> <code>loading="lazy"</code> é perfeito para imagens abaixo da dobra (fora da tela). (Veja referências no fim.)</li>
+                <li><strong>Alt não é enfeite:</strong> descreve o que a imagem representa. Se a imagem for decorativa, use <code>alt=""</code>.</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Pegadinha:</strong> reduzir “no CSS” não reduz o arquivo. Se você usa uma imagem gigante e só mostra pequena, o usuário ainda baixa o arquivo gigante.</li>
+                <li><strong>Versões múltiplas:</strong> o jeito profissional é oferecer tamanhos diferentes e deixar o navegador escolher (<code>srcset</code>/<code>sizes</code>).</li>
+                <li><strong>Evite travadinhas:</strong> <code>decoding="async"</code> pode ajudar o navegador a decodificar sem segurar a renderização em alguns cenários.</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> “Imagem pequena na tela” pede “arquivo pequeno no download”.
+                  Tamanho visual e tamanho do arquivo precisam conversar.
+                </p>
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (responsivo com 650 e 1200):</strong></p>
+                <pre style="white-space:pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;img
+  src="paisagem-650.jpeg"
+  srcset="paisagem-650.jpeg 650w, paisagem-1200.jpeg 1200w"
+  sizes="(max-width: 700px) 650px, 1200px"
+  alt="Paisagem em versão otimizada"
+  loading="lazy"
+  decoding="async"
+&gt;</code></pre>
+                <p class="tiny muted" style="margin-top:10px;">
+                  O navegador escolhe a melhor versão conforme o tamanho da tela.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>650px: ótimo para cards/colunas e mobile</li>
+                <li><code>loading="lazy"</code> ajuda performance quando a imagem está fora da tela</li>
+                <li>Para ficar “profissa”: use <code>srcset</code>/<code>sizes</code> e mande tamanhos corretos</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Eu realmente preciso de mais que 650px nesse lugar?</li>
+                <li>Minha imagem foi redimensionada de verdade (no editor) ou só “encolhida no CSS”?</li>
+                <li>Meu <code>alt</code> descreve a imagem (ou usei <code>alt=""</code> se for decorativa)?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>Qual a diferença entre reduzir no editor e reduzir no CSS?</li>
+                <li>Quando vale usar <code>srcset</code> em vez de só <code>src</code>?</li>
+              </ol>
+            </div>
+
             <h2 class="lesson-title" style="margin-top: 18px;">📍 Imagem média (1200px)</h2>
 
             <figure class="media">
-              <img src="paisagem-1200.jpeg" alt="Paisagem 1200px" loading="lazy">
+              <img src="paisagem-1200.jpeg" alt="Paisagem em tamanho médio (1200px de largura)" loading="lazy" decoding="async">
             </figure>
 
             <div class="card soft">
@@ -76,23 +150,212 @@
               <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="paisagem-1200.jpeg" alt="Paisagem 1200px"&gt;</code></pre>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                1200px costuma ser o “meio-termo campeão”: tem boa definição em desktop e ainda dá para manter leve.
+                É excelente para imagens em destaque no conteúdo e banners de seção.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Pense no espaço real:</strong> se sua área de conteúdo tem ~900px, 1200px sobra um pouco e mantém qualidade.</li>
+                <li><strong>Telas “retina”:</strong> às vezes vale ter 2 versões (ex.: 650 e 1200) para o navegador escolher.</li>
+                <li><strong>Lazy:</strong> se a imagem não está logo no topo, mantenha <code>loading="lazy"</code>.</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> Se a imagem aparece no topo (hero), você pode <strong>não</strong> usar lazy.
+                  Hero é “primeira impressão”; abaixo da dobra é “economia inteligente”.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Formato importa:</strong> para foto, JPEG/WebP/AVIF costumam ser melhores do que PNG (PNG é ótimo para transparência e gráficos simples).</li>
+                <li><strong>Fallback moderno:</strong> use <code>&lt;picture&gt;</code> para servir AVIF/WebP e cair no JPEG quando precisar.</li>
+                <li><strong>Pegadinha:</strong> “qualidade máxima” com arquivo gigante pode matar a performance sem você perceber.</li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Servir a imagem do tamanho certo e no formato certo reduz bytes e melhora a experiência.
+                É performance “sem magia”, só boas escolhas.
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (AVIF/WebP com fallback):</strong></p>
+                <pre style="white-space:pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;picture&gt;
+  &lt;source srcset="paisagem-1200.avif" type="image/avif"&gt;
+  &lt;source srcset="paisagem-1200.webp" type="image/webp"&gt;
+  &lt;img
+    src="paisagem-1200.jpeg"
+    alt="Paisagem em tamanho médio"
+    loading="lazy"
+    decoding="async"
+  &gt;
+&lt;/picture&gt;</code></pre>
+                <p class="tiny muted" style="margin-top:10px;">
+                  O navegador tenta AVIF, depois WebP, e se não der, usa o JPEG.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>1200px: ótimo para imagens em destaque com boa nitidez</li>
+                <li><code>&lt;picture&gt;</code> ajuda a servir formatos modernos com fallback</li>
+                <li>Performance = tamanho certo + formato certo + compressão</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>1200px é necessário aqui ou 650px já resolveria?</li>
+                <li>Considerei usar WebP/AVIF com fallback?</li>
+                <li>Essa imagem está abaixo da dobra (deve ser lazy)?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>Por que “formato” (JPEG/WebP/AVIF) muda tanto o tamanho do arquivo?</li>
+                <li>Quando <code>&lt;picture&gt;</code> é melhor do que só <code>&lt;img&gt;</code>?</li>
+              </ol>
+            </div>
+
             <h2 class="lesson-title" style="margin-top: 18px;">📍 Imagem original (full)</h2>
 
             <figure class="media">
-              <img src="paisagem-full.jpeg" alt="Paisagem original (tamanho completo)" loading="lazy">
+              <img src="paisagem-full.jpeg" alt="Paisagem em tamanho original (arquivo full)" loading="lazy" decoding="async">
             </figure>
 
             <div class="alert">
-              <strong>Dica prática:</strong> em sites reais, evite usar a imagem original enorme.
+              <strong>✅ Dica prática:</strong> em sites reais, evite usar a imagem original enorme.
               Prefira uma versão otimizada (ex: 1200px ou 1600px), para não travar o carregamento.
             </div>
 
             <div class="card soft">
               <p class="muted" style="margin:0;">
                 ✅ Aqui está a imagem no tamanho <strong>original</strong>.
-                Geralmente usada para impressão ou quando é necessário muito detalhe.
+                Geralmente usada para impressão, zoom, ou quando é necessário muito detalhe.
               </p>
               <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="paisagem-full.jpeg" alt="Paisagem original"&gt;</code></pre>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                A imagem “full” é a versão com mais detalhes. O problema é que ela costuma ter <strong>muitos bytes</strong>.
+                Em web, bytes viram segundos.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Use full com intenção:</strong> portfólio de fotografia, zoom, download, impressão.</li>
+                <li><strong>Não sirva full por padrão:</strong> mostre 1200px e ofereça o full como “abrir em nova aba” ou “baixar”.</li>
+                <li><strong>Metadados:</strong> fotos podem carregar EXIF (câmera, data). Em muitos casos, dá para remover para reduzir peso e exposição de info.</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>⚠️ Atenção:</strong> “Imagem gigante” pode deixar a página lenta mesmo com internet boa,
+                  porque o navegador precisa baixar, decodificar e renderizar.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Estratégia de site rápido:</strong> entregue a versão adequada (1200/1600) e só carregue o full quando o usuário pedir.</li>
+                <li><strong>Responsivo de verdade:</strong> combine 650/1200/full com <code>srcset</code> e deixe o navegador escolher o melhor cenário.</li>
+                <li><strong>Pegadinha:</strong> usar full para “parecer mais bonito” pode piorar SEO e conversão (ninguém gosta de site lento).</li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Quando você controla como a imagem é servida, você controla a experiência:
+                rápido no primeiro carregamento e detalhado quando o usuário realmente quer.
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (mostra 1200px e oferece full ao clicar):</strong></p>
+                <pre style="white-space:pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;a href="paisagem-full.jpeg" target="_blank" rel="noopener noreferrer"&gt;
+  &lt;img src="paisagem-1200.jpeg" alt="Paisagem (clique para ver em tamanho completo)" loading="lazy"&gt;
+&lt;/a&gt;</code></pre>
+                <p class="tiny muted" style="margin-top:10px;">
+                  O usuário vê rápido (1200px) e só abre o full se quiser.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Full: use para zoom/impressão/detalhe</li>
+                <li>Para web: prefira versões otimizadas por padrão</li>
+                <li>Ofereça o full sob demanda (abrir/baixar)</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Eu preciso mesmo do full na página ou posso mostrar 1200px?</li>
+                <li>Posso oferecer o full como “clique para abrir”?</li>
+                <li>Minhas imagens estão comprimidas/otimizadas?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>Qual é a desvantagem de usar full por padrão?</li>
+                <li>Como servir “rápido primeiro” e “full depois” em HTML?</li>
+              </ol>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Kit de otimização (passo a passo, sem mistério)</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li><strong>Defina o maior tamanho que a imagem aparece</strong> (ex.: 650px no mobile, 1200px no desktop).</li>
+                <li><strong>Exporte versões</strong> (ex.: 650 e 1200, e deixe o full só para download/zoom).</li>
+                <li><strong>Comprima</strong> (ex.: Squoosh ou TinyPNG) e compare antes/depois.</li>
+                <li><strong>Sirva responsivo</strong> com <code>srcset</code>/<code>sizes</code> (ou <code>&lt;picture&gt;</code> com AVIF/WebP).</li>
+                <li><strong>Use lazy</strong> em imagens fora da tela e mantenha <strong>alt</strong> bem escrito.</li>
+              </ol>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> Um site “rápido” geralmente não tem menos imagens.
+                  Ele tem <strong>imagens melhor servidas</strong>.
+                </p>
+              </div>
+            </div>
+
+            <div class="card soft" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Links recomendados (referência oficial)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>
+                  <strong>Imagens responsivas (srcset/sizes)</strong>:
+                  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images" target="_blank" rel="noopener noreferrer">MDN</a>
+                </li>
+                <li>
+                  <strong>&lt;img&gt; e atributos (alt, decoding, etc.)</strong>:
+                  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img" target="_blank" rel="noopener noreferrer">MDN</a>
+                </li>
+                <li>
+                  <strong>Performance de imagens</strong>:
+                  <a href="https://web.dev/learn/performance/image-performance" target="_blank" rel="noopener noreferrer">web.dev</a>
+                </li>
+                <li>
+                  <strong>Lazy loading nativo</strong>:
+                  <a href="https://web.dev/articles/browser-level-image-lazy-loading" target="_blank" rel="noopener noreferrer">web.dev</a>
+                </li>
+                <li>
+                  <strong>Alt text para acessibilidade (quando usar alt="" )</strong>:
+                  <a href="https://www.w3.org/WAI/tutorials/images/decorative/" target="_blank" rel="noopener noreferrer">WAI (W3C)</a>
+                </li>
+                <li>
+                  <strong>Comprimir imagens no navegador</strong>:
+                  <a href="https://squoosh.app/" target="_blank" rel="noopener noreferrer">Squoosh</a>
+                </li>
+                <li>
+                  <strong>Compressão online</strong>:
+                  <a href="https://tinypng.com/" target="_blank" rel="noopener noreferrer">TinyPNG</a>
+                </li>
+              </ul>
             </div>
 
             <div class="lesson-actions">
@@ -118,6 +381,16 @@
                 <li>Evita imagem full em site real</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+
+            <div class="card">
+              <h3>Atalho mental</h3>
+              <p class="muted" style="margin-top:0;">
+                <strong>650px</strong> = rápido e leve (cards/mobile)<br>
+                <strong>1200px</strong> = destaque com boa qualidade<br>
+                <strong>Full</strong> = só quando precisar (zoom/download)<br>
+                <strong>Responsivo</strong> = <code>srcset</code> / <code>&lt;picture&gt;</code>
+              </p>
             </div>
           </aside>
         </div>

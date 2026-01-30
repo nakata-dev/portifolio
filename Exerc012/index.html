@@ -48,6 +48,15 @@
       height: 100%;
       border: 0;
     }
+
+    /* Bloco de código mais confortável para leitura */
+    pre.codeblock{
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      margin: 0;
+      line-height: 1.8;
+    }
   </style>
 </head>
 
@@ -87,31 +96,181 @@
 
         <div class="lesson-grid">
           <article class="lesson">
+
+            <!-- VISÃO GERAL -->
+            <div class="card soft" style="margin-bottom: 14px;">
+              <h2 class="lesson-title" style="margin-top:0;">Mapa rápido: qual opção escolher?</h2>
+              <ul class="list" style="margin-bottom:0;">
+                <li><strong>Vídeo local</strong>: você controla tudo, mas paga em <em>peso</em> (servidor + banda).</li>
+                <li><strong>YouTube</strong>: fácil, rápido, entrega global. Depende da plataforma.</li>
+                <li><strong>Vimeo</strong>: visual mais “clean”, ótimo para portfólio e embed mais profissional (depende do plano/config).</li>
+              </ul>
+
+              <div class="alert" style="margin-top:12px;">
+                <strong>🧠 Por que isso importa?</strong> Vídeo costuma ser o “chefão do carregamento”.
+                Escolher bem evita site lento e melhora a experiência do usuário.
+              </div>
+            </div>
+
             <h2 class="lesson-title">1) Servidor próprio (HTML5)</h2>
 
             <div class="card soft video-wrap video-card">
               <p class="muted" style="margin:0;">
                 Use <code>&lt;video&gt;</code> com múltiplos <code>&lt;source&gt;</code> para aumentar compatibilidade.
-                Na prática, <strong>mp4</strong> e <strong>webm</strong> já resolvem quase tudo.
+                Na prática, <strong>MP4</strong> + <strong>WebM</strong> resolvem a maioria dos casos. (O navegador escolhe o primeiro formato que ele suportar.)
               </p>
 
-              <video class="video-local" controls preload="metadata">
+              <video class="video-local" controls preload="metadata" playsinline>
                 <source src="midias/Esquilo-mp4.mp4" type="video/mp4">
                 <source src="midias/Esquilo-webm.webm" type="video/webm">
                 <p>Seu navegador não suporta vídeo HTML5.</p>
               </video>
 
               <div class="alert alert-warn" style="margin:0;">
-                <strong>Dica:</strong> vídeo local pesa no seu servidor. Se for conteúdo longo, YouTube/Vimeo costuma ser melhor.
+                <strong>⚠️ Atenção:</strong> vídeo local “puxa” do seu servidor. Se for conteúdo longo, o custo e a lentidão podem subir rápido.
+              </div>
+
+              <!-- BÁSICO / INTERMEDIÁRIO / AVANÇADO -->
+              <div class="card" style="margin-top: 2px;">
+                <h3 style="margin-top:0;">Básico</h3>
+                <p class="muted" style="margin-top:0;">
+                  Você coloca um arquivo de vídeo no projeto e exibe com <code>&lt;video&gt;</code>.
+                  O atributo <code>controls</code> mostra o player padrão do navegador.
+                </p>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (mínimo viável)</strong></p>
+                  <pre class="codeblock"><code id="code-video-basico">&lt;video controls&gt;
+  &lt;source src="midias/video.mp4" type="video/mp4"&gt;
+  &lt;p&gt;Seu navegador não suporta vídeo.&lt;/p&gt;
+&lt;/video&gt;</code></pre>
+                  <div class="hero-actions" style="margin-top: 12px;">
+                    <button class="btn btn-primary" type="button" data-copy-target="code-video-basico">Copiar</button>
+                  </div>
+                </div>
+
+                <h3 style="margin-top: 16px;">Intermediário</h3>
+                <p class="muted" style="margin-top:0;">
+                  Aqui você melhora performance e experiência:
+                </p>
+                <ul class="list">
+                  <li><code>preload="metadata"</code>: carrega só informações básicas primeiro (geralmente deixa a página mais leve).</li>
+                  <li><code>poster="thumb.jpg"</code>: mostra uma capa antes de dar play (fica mais bonito e “profissional”).</li>
+                  <li><code>playsinline</code>: ajuda em mobile para tocar dentro da página (quando suportado).</li>
+                </ul>
+
+                <div class="alert" style="margin-top: 12px;">
+                  <strong>✅ Dica:</strong> se o seu vídeo demora a aparecer, usar <code>poster</code> cria “percepção de velocidade”.
+                </div>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (melhorado)</strong></p>
+                  <pre class="codeblock"><code id="code-video-inter">&lt;video
+  controls
+  preload="metadata"
+  poster="midias/capa-video.jpg"
+  playsinline&gt;
+
+  &lt;source src="midias/video.webm" type="video/webm"&gt;
+  &lt;source src="midias/video.mp4" type="video/mp4"&gt;
+
+  &lt;p&gt;Seu navegador não suporta vídeo HTML5.&lt;/p&gt;
+&lt;/video&gt;</code></pre>
+                  <div class="hero-actions" style="margin-top: 12px;">
+                    <button class="btn btn-primary" type="button" data-copy-target="code-video-inter">Copiar</button>
+                  </div>
+                </div>
+
+                <h3 style="margin-top: 16px;">Avançado</h3>
+                <p class="muted" style="margin-top:0;">
+                  Agora entram boas práticas que “separam amador de profissional”:
+                </p>
+                <ul class="list">
+                  <li><strong>Acessibilidade</strong>: adicione legendas com <code>&lt;track&gt;</code> usando <strong>WebVTT</strong> (arquivo <code>.vtt</code>).</li>
+                  <li><strong>Preferência de movimento</strong>: animações e auto-play podem incomodar. Evite autoplay e respeite o usuário.</li>
+                  <li><strong>Codec/compatibilidade</strong>: o navegador precisa suportar o codec do arquivo, não só a extensão.</li>
+                </ul>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p class="muted" style="margin-top:0;">
+                    <strong>🔎 Exemplo (com legenda)</strong> · A legenda usa <code>&lt;track&gt;</code> e um arquivo <code>.vtt</code>.
+                  </p>
+                  <pre class="codeblock"><code id="code-video-track">&lt;video controls preload="metadata" poster="midias/capa.jpg"&gt;
+  &lt;source src="midias/video.mp4" type="video/mp4"&gt;
+
+  &lt;track
+    kind="captions"
+    src="midias/legendas-pt.vtt"
+    srclang="pt-BR"
+    label="Português (Brasil)"
+    default&gt;
+
+  &lt;p&gt;Seu navegador não suporta vídeo.&lt;/p&gt;
+&lt;/video&gt;
+
+/* Exemplo de conteúdo de um arquivo .vtt (WebVTT)
+WEBVTT
+
+00:00:00.000 --&gt; 00:00:03.000
+Olá! Este é um exemplo de legenda.
+
+00:00:03.000 --&gt; 00:00:06.000
+Ela aparece sincronizada com o vídeo.
+*/</code></pre>
+                  <div class="hero-actions" style="margin-top: 12px;">
+                    <button class="btn btn-primary" type="button" data-copy-target="code-video-track">Copiar</button>
+                  </div>
+                </div>
+
+                <div class="alert alert-warn" style="margin-top: 12px;">
+                  <strong>⚠️ Pegadinha comum:</strong> “funciona no meu PC” não significa “funciona no celular”.
+                  Teste em pelo menos 1 Android e 1 iPhone, se possível.
+                </div>
+
+                <!-- RESUMO + CHECKLIST + PERGUNTAS -->
+                <div class="card soft" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Resumo final</h3>
+                  <ul class="list" style="margin-bottom:0;">
+                    <li><code>&lt;video&gt;</code> exibe o player nativo.</li>
+                    <li><code>&lt;source&gt;</code> deixa o navegador escolher o formato compatível.</li>
+                    <li><code>preload="metadata"</code> costuma ser um bom equilíbrio de performance.</li>
+                    <li><code>&lt;track&gt;</code> + <code>.vtt</code> = legenda acessível.</li>
+                  </ul>
+                </div>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Mini-checklist</h3>
+                  <ul class="list" style="margin-bottom:0;">
+                    <li>Tenho MP4 (e, se possível, WebM).</li>
+                    <li>Usei <code>preload="metadata"</code> (ou <code>none</code> em páginas muito pesadas).</li>
+                    <li>Defini uma capa com <code>poster</code>.</li>
+                    <li>Considerei legendas com <code>&lt;track&gt;</code>.</li>
+                  </ul>
+                </div>
+
+                <div class="card" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Perguntas rápidas (fixação)</h3>
+                  <ol style="margin:0; padding-left: 18px; line-height:1.8;">
+                    <li>Por que usar dois <code>&lt;source&gt;</code> em vez de apenas um?</li>
+                    <li>O que muda ao trocar <code>preload</code> para <code>metadata</code>?</li>
+                    <li>Qual a vantagem de usar <code>poster</code>?</li>
+                  </ol>
+                </div>
               </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">2) Vídeo do YouTube (embed)</h2>
 
             <div class="card soft video-wrap video-card">
+              <p class="muted" style="margin:0;">
+                O YouTube é perfeito quando você quer evitar peso no servidor. Aqui usamos embed responsivo (16:9).
+              </p>
+
               <div class="embed" aria-label="Vídeo do YouTube">
+                <!-- Privacy-enhanced mode (youtube-nocookie) -->
                 <iframe
-                  src="https://www.youtube.com/embed/XUaTdMVMDFo?si=-T5MyzfdDalDqq9C"
+                  loading="lazy"
+                  src="https://www.youtube-nocookie.com/embed/XUaTdMVMDFo?si=-T5MyzfdDalDqq9C"
                   title="YouTube video player"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerpolicy="strict-origin-when-cross-origin"
@@ -120,15 +279,100 @@
               </div>
 
               <div class="alert" style="margin:0;">
-                <strong>Vantagem:</strong> carrega rápido e não pesa no seu servidor. <strong>Desvantagem:</strong> depende da plataforma.
+                <strong>✅ Dica:</strong> o domínio <code>youtube-nocookie.com</code> ativa o modo de privacidade aprimorada no embed.
+              </div>
+
+              <div class="card" style="margin-top: 2px;">
+                <h3 style="margin-top:0;">Básico</h3>
+                <p class="muted" style="margin-top:0;">
+                  Você cola o <code>&lt;iframe&gt;</code> que o YouTube te dá (Compartilhar → Incorporar) e pronto.
+                </p>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (mínimo)</strong></p>
+                  <pre class="codeblock"><code id="code-yt-basic">&lt;iframe
+  src="https://www.youtube.com/embed/VIDEO_ID"
+  title="YouTube video player"
+  allowfullscreen&gt;
+&lt;/iframe&gt;</code></pre>
+                  <div class="hero-actions" style="margin-top: 12px;">
+                    <button class="btn btn-primary" type="button" data-copy-target="code-yt-basic">Copiar</button>
+                  </div>
+                </div>
+
+                <h3 style="margin-top: 16px;">Intermediário</h3>
+                <ul class="list">
+                  <li><code>loading="lazy"</code>: o iframe carrega mais tarde (ótimo para performance).</li>
+                  <li><strong>Responsivo</strong>: envolver em um container com proporção (seu <code>.embed</code> já faz isso).</li>
+                  <li><strong>Privacidade</strong>: usar <code>youtube-nocookie.com</code> (quando fizer sentido).</li>
+                </ul>
+
+                <div class="alert alert-warn" style="margin-top: 12px;">
+                  <strong>⚠️ Atenção:</strong> embeds podem trazer scripts e rastreios de terceiros.
+                  Em sites profissionais, vale considerar banner de cookies/LGPD quando necessário.
+                </div>
+
+                <h3 style="margin-top: 16px;">Avançado</h3>
+                <p class="muted" style="margin-top:0;">
+                  Dá para controlar comportamento com parâmetros do player (ex.: iniciar em um tempo específico, esconder controles, etc.).
+                </p>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (com parâmetros)</strong></p>
+                  <pre class="codeblock"><code id="code-yt-params">&lt;!-- Começar em 30s (start=30), exemplo didático --&gt;
+&lt;iframe
+  loading="lazy"
+  src="https://www.youtube-nocookie.com/embed/VIDEO_ID?start=30"
+  title="Vídeo do YouTube"
+  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen&gt;
+&lt;/iframe&gt;</code></pre>
+                  <div class="hero-actions" style="margin-top: 12px;">
+                    <button class="btn btn-primary" type="button" data-copy-target="code-yt-params">Copiar</button>
+                  </div>
+                </div>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Resumo final</h3>
+                  <ul class="list" style="margin-bottom:0;">
+                    <li>Embed é rápido e não pesa no seu servidor.</li>
+                    <li><code>loading="lazy"</code> melhora performance.</li>
+                    <li><code>youtube-nocookie</code> é uma opção de privacidade aprimorada.</li>
+                    <li>Parâmetros ajustam comportamento do player.</li>
+                  </ul>
+                </div>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Mini-checklist</h3>
+                  <ul class="list" style="margin-bottom:0;">
+                    <li>Usei embed responsivo (16:9).</li>
+                    <li>Coloquei <code>loading="lazy"</code>.</li>
+                    <li>Considerei <code>youtube-nocookie</code> quando fizer sentido.</li>
+                    <li>Dei um <code>title</code> descritivo no iframe.</li>
+                  </ul>
+                </div>
+
+                <div class="card" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Perguntas rápidas</h3>
+                  <ol style="margin:0; padding-left: 18px; line-height:1.8;">
+                    <li>Por que <code>loading="lazy"</code> ajuda?</li>
+                    <li>Qual a diferença de usar <code>youtube.com</code> vs <code>youtube-nocookie.com</code>?</li>
+                  </ol>
+                </div>
               </div>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">3) Vídeo do Vimeo (embed)</h2>
 
             <div class="card soft video-wrap video-card">
+              <p class="muted" style="margin:0;">
+                O Vimeo costuma ser uma boa opção quando você quer um player mais “limpo” para portfólio e apresentações.
+              </p>
+
               <div class="embed" aria-label="Vídeo do Vimeo">
                 <iframe
+                  loading="lazy"
                   src="https://player.vimeo.com/video/172578124?badge=0&autopause=0&player_id=0&app_id=58479"
                   title="Barlavento Reel 2016"
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
@@ -139,6 +383,70 @@
               <p class="tiny muted" style="margin:0;">
                 Observação: o script da API do Vimeo só é necessário se você for controlar o player via JavaScript.
               </p>
+
+              <div class="card" style="margin-top: 2px;">
+                <h3 style="margin-top:0;">Básico</h3>
+                <p class="muted" style="margin-top:0;">
+                  Mesma lógica do YouTube: usar o <code>&lt;iframe&gt;</code> fornecido no “Share/Embed” do Vimeo.
+                </p>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p class="muted" style="margin-top:0;"><strong>🔎 Exemplo (mínimo)</strong></p>
+                  <pre class="codeblock"><code id="code-vimeo-basic">&lt;iframe
+  src="https://player.vimeo.com/video/VIDEO_ID"
+  title="Vídeo do Vimeo"
+  allow="fullscreen; picture-in-picture"
+  allowfullscreen&gt;
+&lt;/iframe&gt;</code></pre>
+                  <div class="hero-actions" style="margin-top: 12px;">
+                    <button class="btn btn-primary" type="button" data-copy-target="code-vimeo-basic">Copiar</button>
+                  </div>
+                </div>
+
+                <h3 style="margin-top: 16px;">Intermediário</h3>
+                <ul class="list">
+                  <li><strong>Responsividade</strong>: seu container <code>.embed</code> mantém proporção em qualquer tela.</li>
+                  <li><code>loading="lazy"</code>: melhora performance em páginas longas.</li>
+                  <li><strong>Privacidade</strong>: o Vimeo permite ajustar onde o vídeo pode ser incorporado (configurações de embed).</li>
+                </ul>
+
+                <div class="alert" style="margin-top: 12px;">
+                  <strong>✅ Dica:</strong> se um embed “não aparece”, confira as permissões de incorporação (embed privacy) do vídeo.
+                </div>
+
+                <h3 style="margin-top: 16px;">Avançado</h3>
+                <p class="muted" style="margin-top:0;">
+                  Se você quiser controlar o player (play/pause, tempo, eventos), aí entra a API/SDK do Vimeo.
+                  Para a maioria dos sites comuns, o iframe simples já resolve.
+                </p>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Resumo final</h3>
+                  <ul class="list" style="margin-bottom:0;">
+                    <li>Vimeo é ótimo para portfólio e apresentações.</li>
+                    <li>Embed responsivo + lazy load é a combinação “site rápido”.</li>
+                    <li>Permissões de incorporação podem bloquear o player.</li>
+                  </ul>
+                </div>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Mini-checklist</h3>
+                  <ul class="list" style="margin-bottom:0;">
+                    <li>Usei container responsivo (16:9).</li>
+                    <li>Ativei <code>loading="lazy"</code>.</li>
+                    <li>Verifiquei permissões de embed no Vimeo.</li>
+                    <li>Coloquei <code>title</code> no iframe.</li>
+                  </ul>
+                </div>
+
+                <div class="card" style="margin-top: 12px;">
+                  <h3 style="margin-top:0;">Perguntas rápidas</h3>
+                  <ol style="margin:0; padding-left: 18px; line-height:1.8;">
+                    <li>Quando Vimeo faz mais sentido que YouTube?</li>
+                    <li>Por que embeds precisam ser responsivos?</li>
+                  </ol>
+                </div>
+              </div>
             </div>
 
             <div class="lesson-actions">
@@ -161,6 +469,7 @@
                 <li><code>preload="metadata"</code> (página mais leve)</li>
                 <li>Embed responsivo (16:9)</li>
                 <li>Fallback texto para compatibilidade</li>
+                <li>Lazy load nos iframes</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
             </div>
@@ -247,5 +556,29 @@
       </div>
     </div>
   </div>
+
+  <!-- Script local: copiar por data-copy-target (mantém a página autocontida) -->
+  <script>
+    (function () {
+      document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-copy-target');
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const text = el.textContent.trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.textContent;
+            btn.textContent = 'Copiado!';
+            setTimeout(() => (btn.textContent = old), 1200);
+          } catch (err) {
+            console.error(err);
+            alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

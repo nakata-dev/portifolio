@@ -38,7 +38,10 @@
       <div class="container">
         <div class="section-head">
           <h1>Olá Mundo!</h1>
-          <p class="muted">Seu primeiro HTML: título, parágrafo e separadores, do jeito mais simples possível.</p>
+          <p class="muted">
+            Seu primeiro HTML: título, parágrafo e separadores, do jeito mais simples possível.
+            Aqui você vai entender <strong>o que cada tag faz</strong>, por que usamos, e como testar no navegador em minutos.
+          </p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -52,13 +55,87 @@
 
             <div class="card soft">
               <p class="muted" style="margin: 0;">
-                Este é o seu “primeiro passo”: um <strong>h1</strong> (título), um <strong>p</strong> (parágrafo),
-                e alguns <strong>hr</strong>/<strong>br</strong> para separar.
+                Este é o seu “primeiro passo”: um <strong>&lt;h1&gt;</strong> (título), um <strong>&lt;p&gt;</strong> (parágrafo),
+                e alguns <strong>&lt;hr&gt;</strong>/<strong>&lt;br&gt;</strong> para separar.
+                Parece simples, e é mesmo, mas aqui você já aprende a lógica do HTML: <strong>marcar significado</strong> e deixar o navegador renderizar.
               </p>
             </div>
 
+            <!-- Conteúdo didático por níveis (padrão consistente) -->
             <div class="card" style="margin-top: 12px;">
-              <h3 style="margin-top: 0;">Exemplo (coloque dentro do &lt;body&gt;)</h3>
+              <h3 style="margin-top: 0;">Entendendo as tags (Básico → Intermediário → Avançado)</h3>
+
+              <h4 style="margin: 14px 0 8px;">Básico (para iniciantes)</h4>
+              <p class="muted" style="margin-top: 0;">
+                HTML é a “estrutura” da página. Você usa tags para dizer ao navegador o que cada parte do conteúdo é:
+                <strong>título</strong>, <strong>texto</strong>, <strong>separador</strong>, etc.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Quando você usa a tag certa (como <strong>&lt;h1&gt;</strong> e <strong>&lt;p&gt;</strong>), seu site fica mais organizado,
+                mais fácil de manter, e também ajuda em <strong>SEO</strong> (Google entende melhor sua página).
+              </div>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin: 0;">
+                  <strong>✅ Dica:</strong> Pense assim: HTML não é “enfeite”. É <strong>significado</strong>.
+                  Visual bonito vem depois com CSS.
+                </p>
+              </div>
+
+              <h4 style="margin: 16px 0 8px;">Intermediário (mais contexto)</h4>
+              <ul class="list" style="margin-top: 0;">
+                <li>
+                  <strong>&lt;h1&gt;</strong> é o título principal da página (normalmente deve existir <strong>apenas 1</strong> por página).
+                </li>
+                <li>
+                  <strong>&lt;p&gt;</strong> é o parágrafo: o lugar certo para texto comum (explicações, descrições).
+                </li>
+                <li>
+                  <strong>&lt;hr&gt;</strong> cria uma linha horizontal e indica uma “quebra de seção” visual (e também semântica).
+                </li>
+                <li>
+                  <strong>&lt;br&gt;</strong> quebra linha dentro do conteúdo (bom para casos pontuais, não para “montar layout”).
+                </li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin: 0;">
+                  <strong>⚠️ Atenção:</strong> Muitas quebras com <strong>&lt;br&gt;</strong> viram bagunça rápido.
+                  Em páginas reais, o espaçamento deve ser feito com <strong>CSS</strong>, porque fica consistente em desktop e mobile.
+                </p>
+              </div>
+
+              <h4 style="margin: 16px 0 8px;">Avançado (boas práticas e pegadinhas)</h4>
+              <ul class="list" style="margin-top: 0;">
+                <li>
+                  <strong>Semântica primeiro:</strong> use headings (<strong>h1 → h2 → h3</strong>) como uma hierarquia lógica, sem “pular níveis”.
+                </li>
+                <li>
+                  <strong>SEO e acessibilidade:</strong> o Google e leitores de tela usam títulos para navegar e entender o conteúdo.
+                </li>
+                <li>
+                  <strong>&lt;hr&gt; não é só decoração:</strong> ele representa uma separação temática. Se for só “linha bonita”, CSS costuma ser melhor.
+                </li>
+                <li>
+                  <strong>Pegadinha comum:</strong> criar vários <strong>&lt;h1&gt;</strong> só para “ficar grande”. Melhor usar CSS para tamanho e manter a semântica correta.
+                </li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>✅ Dica (profissional):</strong> Quando você quiser “espaço”, prefira CSS.
+                Quando quiser “significado”, prefira HTML.
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">🔎 Exemplo (coloque dentro do &lt;body&gt;)</h3>
+
+              <p class="muted" style="margin-top: 0;">
+                Copie o código abaixo, cole dentro do <strong>&lt;body&gt;</strong> e abra o arquivo no navegador.
+                Você vai ver um título, uma linha, um parágrafo e separadores.
+              </p>
 
               <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;">
 <code id="codigoParaCopiar">&lt;h1&gt;Olá Mundo!&lt;/h1&gt;
@@ -76,9 +153,53 @@
               </div>
             </div>
 
+            <div class="card soft" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">✅ Teste rápido (2 minutos)</h3>
+              <ol class="list" style="margin: 0;">
+                <li>Crie um arquivo: <strong>index.html</strong></li>
+                <li>Cole o exemplo dentro do <strong>&lt;body&gt;</strong></li>
+                <li>Salve e dê duplo clique no arquivo (ou “Open with” no navegador)</li>
+                <li>Altere o texto “Olá Mundo!” e recarregue (F5)</li>
+              </ol>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Você treina o ciclo real de programação: <strong>editar → salvar → testar → ajustar</strong>.
+                Isso vira automático e acelera seu aprendizado.
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top: 0;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>&lt;h1&gt;</strong> é o título principal da página</li>
+                <li><strong>&lt;p&gt;</strong> é texto comum em formato de parágrafo</li>
+                <li><strong>&lt;hr&gt;</strong> separa “blocos/temas” com uma linha</li>
+                <li><strong>&lt;br&gt;</strong> quebra linha, mas use com moderação</li>
+                <li>Espaçamento profissional = <strong>CSS</strong> (mais consistente)</li>
+              </ul>
+
+              <h4 style="margin: 16px 0 8px;">Mini-checklist (o que você precisa lembrar)</h4>
+              <ul class="list" style="margin-top: 0;">
+                <li>Use <strong>1 &lt;h1&gt;</strong> por página (na maioria dos casos)</li>
+                <li>Coloque textos em <strong>&lt;p&gt;</strong>, não soltos</li>
+                <li>Use <strong>&lt;br&gt;</strong> só quando for realmente quebra de linha</li>
+                <li>Separe seções com <strong>estrutura</strong> (e depois refine com CSS)</li>
+              </ul>
+
+              <h4 style="margin: 16px 0 8px;">Perguntas rápidas (fixação)</h4>
+              <ol class="list" style="margin-top: 0;">
+                <li>Qual a diferença entre <strong>&lt;p&gt;</strong> e <strong>&lt;br&gt;</strong>?</li>
+                <li>Por que é recomendado ter apenas um <strong>&lt;h1&gt;</strong> por página?</li>
+                <li>Quando vale usar <strong>&lt;hr&gt;</strong> e quando é melhor usar CSS?</li>
+                <li>Qual é o “ciclo” básico de testar HTML no navegador?</li>
+              </ol>
+            </div>
+
             <div class="alert" style="margin-top: 14px;">
-              <strong>Dica:</strong> mais pra frente, a gente vai reduzir o uso de <strong>&lt;br&gt;</strong>
+              <strong>✅ Dica:</strong> mais pra frente, a gente vai reduzir o uso de <strong>&lt;br&gt;</strong>
               e fazer espaçamentos com <strong>CSS</strong> (fica mais profissional e consistente).
+              Por enquanto, use o <strong>&lt;br&gt;</strong> só para sentir o efeito na prática.
             </div>
 
             <div class="lesson-actions">
@@ -103,6 +224,23 @@
                 <li>Copiou e testou no navegador</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+
+            <div class="card">
+              <h3>Atalho de estudo</h3>
+              <p class="muted" style="margin-top: 0;">
+                Se você fizer só uma coisa hoje, faça isso:
+                <strong>mude o texto</strong> do exemplo e veja a diferença no navegador.
+                Aprender HTML é muito mais “mão na massa” do que teoria.
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin: 0;">
+                  <strong>✅ Dica:</strong> Crie uma pasta “Aulas HTML” e salve cada exercício com nome:
+                  <strong>01-ola-mundo.html</strong>, <strong>02-paragrafos.html</strong>...
+                  Depois você vai agradecer (e muito).
+                </p>
+              </div>
             </div>
           </aside>
         </div>

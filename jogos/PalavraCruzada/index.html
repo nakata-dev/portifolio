@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Palavra Cruzada</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="game.js" defer></script>
+</head>
+
+<body>
+  <header class="app-header">
+    <div class="container header-inner">
+      <div class="brand" aria-label="Crossword Elite">
+        <div class="brand-mark" aria-hidden="true">✶</div>
+        <div class="brand-text">
+          <h1 class="brand-title">Palavra Cruzada</h1>
+          <p class="brand-subtitle">Treinando a Mente</p>
+        </div>
+      </div>
+
+      <div class="hud" aria-label="Status do jogo">
+        <div class="hud-pill" aria-live="polite">
+          <span class="muted">Nível</span>
+          <strong id="levelLabel">1</strong>
+          <span class="muted">/</span>
+          <strong id="levelTotal">10</strong>
+        </div>
+
+        <div class="hud-pill" aria-label="Cronômetro">
+          <span class="muted">Tempo</span>
+          <strong id="timeLabel">00:00</strong>
+          <span class="penalty" id="penaltyLabel" aria-label="Penalidade">+0s</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container app-main">
+    <!-- “Folha de atividade” -->
+    <section class="worksheet" aria-label="Atividade de palavras cruzadas">
+      <div class="worksheet-head">
+        <div class="worksheet-title">
+          <h2 id="sheetTitle">Complete a cruzadinha</h2>
+          <p class="muted" id="sheetRule">Clique em uma célula e digite. Tab alterna Horizontal/Vertical.</p>
+        </div>
+
+        <div class="controls" aria-label="Controles">
+          <button class="btn btn-ghost" id="kbdToggle" type="button" aria-pressed="false">Teclado</button>
+          <button class="btn btn-secondary" id="pauseBtn" type="button" aria-pressed="false">Pausar</button>
+          <button class="btn btn-secondary" id="resetBtn" type="button">Resetar</button>
+          <button class="btn btn-primary" id="nextBtn" type="button" disabled>Próximo</button>
+        </div>
+      </div>
+
+      <!-- Spotlight da dica (evita abrir lista toda hora) -->
+      <article class="spotlight" aria-label="Dica atual">
+        <div class="spotlight-top">
+          <div class="spotlight-left">
+            <span class="muted">Selecionado</span>
+            <strong id="activeWordLabel">—</strong>
+          </div>
+
+          <div class="dir-toggle" role="group" aria-label="Direção da palavra">
+            <button class="chip" type="button" id="dirAcrossBtn" aria-pressed="true">Horizontal</button>
+            <button class="chip" type="button" id="dirDownBtn" aria-pressed="false">Vertical</button>
+          </div>
+        </div>
+
+        <p class="spotlight-clue" id="clueText">Clique em uma célula para selecionar uma palavra.</p>
+
+        <div class="hint-row" aria-label="Dicas extras">
+          <button class="btn btn-secondary hint-btn" id="hint1Btn" type="button" disabled>
+            1 letra <span class="hint-cost">(+10s)</span>
+          </button>
+          <button class="btn btn-secondary hint-btn" id="hint2Btn" type="button" disabled>
+            2 letras <span class="hint-cost">(+20s)</span>
+          </button>
+          <button class="btn btn-secondary hint-btn" id="hint3Btn" type="button" disabled>
+            Palavra <span class="hint-cost">(+30s)</span>
+          </button>
+        </div>
+
+        <p class="muted small" id="clueMeta">—</p>
+      </article>
+
+      <!-- Grade + Dicas (organização “atividade”) -->
+      <div class="worksheet-body">
+        <section class="grid-card" aria-label="Grade">
+          <div class="grid-head muted small">
+            Setas navegam. Backspace apaga e volta. Tab alterna direção.
+          </div>
+
+          <div
+            id="grid"
+            class="grid"
+            role="grid"
+            aria-label="Grade de palavras cruzadas"
+            aria-rowcount="9"
+            aria-colcount="9">
+          </div>
+
+          <input
+            id="hiddenInput"
+            class="sr-input"
+            autocomplete="off"
+            autocapitalize="characters"
+            inputmode="text"
+            aria-label="Entrada de letras"
+          />
+        </section>
+
+        <aside class="clues-card" aria-label="Dicas do nível">
+          <!-- Mobile: abre/fecha (sem rolagem infinita). Desktop: pode ficar tudo aberto -->
+          <details class="clues-group" id="acrossDetails" open>
+            <summary>
+              <span>Horizontais</span>
+              <span class="muted small">toque para abrir</span>
+            </summary>
+            <ol class="clue-list" id="acrossList"></ol>
+          </details>
+
+          <details class="clues-group" id="downDetails">
+            <summary>
+              <span>Verticais</span>
+              <span class="muted small">toque para abrir</span>
+            </summary>
+            <ol class="clue-list" id="downList"></ol>
+          </details>
+        </aside>
+      </div>
+
+      <!-- Teclado compacto (mobile) -->
+      <section class="kbd-card" id="kbdCard" aria-label="Teclado compacto" hidden>
+        <div class="kbd-top">
+          <p class="muted small">Toque para inserir letras na célula ativa.</p>
+          <button class="btn btn-ghost" id="kbdClose" type="button">Fechar</button>
+        </div>
+        <div class="kbd" id="kbd"></div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Overlay de pausa -->
+  <div class="overlay" id="pauseOverlay" hidden>
+    <div class="overlay-card" role="dialog" aria-modal="true" aria-label="Jogo pausado">
+      <button class="overlay-close" type="button" id="pauseCloseBtn" aria-label="Fechar pausa">✕</button>
+      <h2>Pausado</h2>
+      <p class="muted">O tempo está congelado. Clique em “Continuar” para voltar.</p>
+      <button class="btn btn-primary" id="resumeBtn" type="button">Continuar</button>
+    </div>
+  </div>
+
+  <!-- Modal de conclusão -->
+  <div class="overlay" id="winOverlay" hidden>
+    <div class="overlay-card" role="dialog" aria-modal="true" aria-label="Nível concluído">
+      <button class="overlay-close" type="button" id="winCloseBtn" aria-label="Fechar modal">✕</button>
+      <h2>Nível concluído ✨</h2>
+      <p class="muted" id="winSummary">—</p>
+      <div class="overlay-actions">
+        <button class="btn btn-secondary" id="winResetBtn" type="button">Rejogar</button>
+        <button class="btn btn-primary" id="winNextBtn" type="button">Próximo nível</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="container footer-inner">
+      <p class="muted small">Copyright © 2026 Ailton A. Nakata</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
 
-  <meta name="description" content="Estudos de HTML e CSS: quebra de linha, hr, símbolos especiais, emojis, e links úteis." />
+  <meta name="description" content="Estudos de HTML e CSS: <br>, <hr>, símbolos especiais, emojis, entidades e links úteis com exemplos e checklist." />
 </head>
 
 <body>
@@ -38,7 +38,10 @@
       <div class="container">
         <div class="section-head">
           <h1>Estudos de HTML & CSS</h1>
-          <p class="muted">Mini guia com tags básicas, símbolos especiais e emojis para seus primeiros projetos.</p>
+          <p class="muted">
+            Mini guia com tags básicas, símbolos especiais e emojis para seus primeiros projetos.
+            A ideia aqui é dominar o “arsenal de utilidade”: pequenas tags e códigos que resolvem problemas reais do dia a dia.
+          </p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -48,21 +51,165 @@
 
         <div class="lesson-grid">
           <article class="lesson">
+
+            <!-- =========================================================
+                 PADRÃO DAS AULAS (conteúdo): Básico / Intermediário / Avançado
+                 + Exemplos + Resumo + Checklist + Perguntas
+                 Mantém layout e classes já existentes.
+            ========================================================== -->
+
             <h2 class="lesson-title">Quebra de linha (<code>&lt;br&gt;</code>)</h2>
 
             <div class="card soft">
               <p class="muted" style="margin:0;">
-                Use <strong>&lt;br&gt;</strong> para quebrar linha em um texto.
-                Mais tarde, a gente substitui isso por CSS (margin/padding), mas para começar é ótimo.
+                Use <strong>&lt;br&gt;</strong> para quebrar linha dentro de um texto.
+                Mais tarde, a gente substitui “espaçamento” por CSS (margin/padding), mas para começar é ótimo.
               </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                O <code>&lt;br&gt;</code> força uma nova linha <strong>no mesmo bloco de texto</strong>.
+                Pense nele como “Enter” dentro de uma frase.
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                O <code>&lt;br&gt;</code> é para quebras que fazem parte do conteúdo (ex.: endereço, poesia, letras de música),
+                e não para “empurrar” elementos na tela. :contentReference[oaicite:0]{index=0}
+              </div>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Use quando a quebra é semântica:</strong> endereço, versos, assinaturas.</li>
+                <li><strong>Evite para espaçamento:</strong> não use vários <code>&lt;br&gt;</code> para “criar distância” entre blocos. :contentReference[oaicite:1]{index=1}</li>
+                <li><strong>Para espaçamento profissional:</strong> use CSS com <code>margin</code> e <code>padding</code> em elementos como <code>&lt;p&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;div&gt;</code>.</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Pegadinha:</strong> muitos <code>&lt;br&gt;</code> viram “gambiarra visual” e quebram fácil no mobile.</li>
+                <li><strong>Semântica:</strong> se você está separando parágrafos, use <code>&lt;p&gt;</code> e CSS, não <code>&lt;br&gt;</code>. :contentReference[oaicite:2]{index=2}</li>
+                <li><strong>Legibilidade:</strong> quando o conteúdo cresce, espaçamento via CSS mantém tudo consistente.</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> Regra de ouro: <strong>&lt;br&gt; quebra linha</strong>. <strong>CSS dá espaço</strong>.
+                </p>
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (quando faz sentido):</strong> endereço</p>
+                <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;p&gt;
+Rua Exemplo, 123&lt;br&gt;
+Centro&lt;br&gt;
+São Paulo - SP
+&lt;/p&gt;</code></pre>
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (o que evitar):</strong> usar &lt;br&gt; como espaçador</p>
+                <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;!-- Evite isso: espaçamento “na marra” --&gt;
+&lt;h2&gt;Título&lt;/h2&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;p&gt;Texto...&lt;/p&gt;
+
+&lt;!-- Prefira: CSS no elemento (margin/padding) --&gt;</code></pre>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><code>&lt;br&gt;</code> quebra linha dentro do conteúdo</li>
+                <li>Não use <code>&lt;br&gt;</code> para criar “espaço” entre blocos :contentReference[oaicite:3]{index=3}</li>
+                <li>Espaçamento consistente = CSS (<code>margin</code>/<code>padding</code>)</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Eu usei <code>&lt;br&gt;</code> só quando a quebra faz parte do conteúdo?</li>
+                <li>Se eu queria “espaço”, eu deixei isso para o CSS?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>Em que caso <code>&lt;br&gt;</code> é melhor do que criar um novo parágrafo?</li>
+                <li>Por que usar vários <code>&lt;br&gt;</code> para espaçar é uma má ideia?</li>
+              </ol>
             </div>
 
             <h2 class="lesson-title" style="margin-top: 18px;">Linha Horizontal (<code>&lt;hr&gt;</code>)</h2>
 
             <div class="card soft">
               <p class="muted" style="margin:0;">
-                A tag <strong>&lt;hr&gt;</strong> cria uma linha divisória para separar sessões no conteúdo.
+                A tag <strong>&lt;hr&gt;</strong> cria uma linha divisória. Mas ela não é só “decoração”:
+                tecnicamente, ela indica uma <strong>quebra temática</strong> (mudança de assunto dentro de uma seção). :contentReference[oaicite:4]{index=4}
               </p>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                Use <code>&lt;hr&gt;</code> quando você quer separar partes do conteúdo com uma linha.
+                Exemplo simples: “antes” e “depois”, “introdução” e “próximos passos”.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <p class="muted" style="margin-top:0;">
+                No HTML moderno, <code>&lt;hr&gt;</code> representa uma <strong>quebra temática entre elementos de nível de parágrafo</strong>.
+                É como trocar de capítulo dentro do mesmo tópico. :contentReference[oaicite:5]{index=5}
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>🧠 Por que isso importa?</strong>
+                  Semântica ajuda na manutenção e na leitura. Se a linha marca uma “mudança de assunto” de verdade,
+                  <code>&lt;hr&gt;</code> é adequado. Se for só estética, CSS costuma ser melhor. :contentReference[oaicite:6]{index=6}
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Pegadinha:</strong> usar <code>&lt;hr&gt;</code> em todo lugar como “linha bonita”. Isso polui o HTML e perde o sentido. :contentReference[oaicite:7]{index=7}</li>
+                <li><strong>Semântica:</strong> se a separação é de “assunto”, ótimo. Se é apenas “estilo”, prefira CSS.</li>
+                <li><strong>Acessibilidade/estrutura:</strong> o navegador e ferramentas podem interpretar a quebra temática.</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (mudança de assunto):</strong></p>
+                <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;p&gt;Agora você já sabe o básico do HTML.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Próximo tema: como organizar títulos (h1, h2, h3).&lt;/p&gt;</code></pre>
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>✅ Dica:</strong> quer uma linha “só visual” com mais controle?</p>
+                <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;!-- Em vez de depender do padrão do &lt;hr&gt;, você pode estilizar com CSS --&gt;
+&lt;hr class="meu-separador"&gt;
+
+/* CSS (exemplo) */
+.meu-separador { opacity: .25; }</code></pre>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><code>&lt;hr&gt;</code> marca uma quebra temática (mudança de assunto) :contentReference[oaicite:8]{index=8}</li>
+                <li>Se for só estética, CSS pode ser melhor</li>
+                <li>Use com intenção, não por hábito</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Essa linha realmente separa assuntos diferentes?</li>
+                <li>Se for só visual, eu poderia resolver com CSS?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>O que significa “quebra temática” no contexto do <code>&lt;hr&gt;</code>?</li>
+                <li>Quando CSS é melhor do que <code>&lt;hr&gt;</code>?</li>
+              </ol>
             </div>
 
             <div class="card" style="margin-top: 12px;">
@@ -82,29 +229,146 @@
               </p>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                Alguns símbolos não aparecem fácil no teclado (ou podem quebrar o HTML se digitados do jeito errado).
+                Para isso existem as <strong>referências de caracteres</strong> (também chamadas “entities”). :contentReference[oaicite:9]{index=9}
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>⚠️ Atenção:</strong>
+                Caracteres reservados do HTML precisam de “escape”. Exemplo clássico:
+                <code>&lt;</code> vira <code>&amp;lt;</code> e <code>&amp;</code> vira <code>&amp;amp;</code>. :contentReference[oaicite:10]{index=10}
+              </div>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Você pode usar <strong>nome</strong> (ex.: <code>&amp;copy;</code>) ou <strong>número</strong> (ex.: <code>&amp;#169;</code>).</li>
+                <li>Também existe o formato <strong>hexadecimal</strong>: (ex.: <code>&amp;#x00A9;</code>). :contentReference[oaicite:11]{index=11}</li>
+                <li>Numeric (decimal/hex) é ótimo quando você não lembra o nome da entidade.</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (3 jeitos de escrever €):</strong></p>
+                <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;p&gt;Euro com nome: &amp;euro;&lt;/p&gt;
+&lt;p&gt;Euro em decimal: &amp;#8364;&lt;/p&gt;
+&lt;p&gt;Euro em hex: &amp;#x20AC;&lt;/p&gt;</code></pre>
+              </div>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Consistência:</strong> escolha um padrão (nome OU numérico) e mantenha no projeto.</li>
+                <li><strong>Legibilidade:</strong> nomes (<code>&amp;copy;</code>) são mais fáceis de ler; numéricos são mais universais. :contentReference[oaicite:12]{index=12}</li>
+                <li><strong>Pegadinha:</strong> esquecer o <strong>;</strong> no fim (ex.: <code>&amp;copy</code>) pode não funcionar em alguns casos.</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> Se você não sabe o código de um símbolo, procure pelo “character reference” e copie a entidade certinha. :contentReference[oaicite:13]{index=13}
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Entities são “atalhos” para representar caracteres no HTML :contentReference[oaicite:14]{index=14}</li>
+                <li>Existem nomes (<code>&amp;copy;</code>) e números (<code>&amp;#169;</code> / <code>&amp;#x00A9;</code>)</li>
+                <li>Caractere reservado (<code>&lt;</code>, <code>&amp;</code>) precisa de escape</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Eu usei <strong>;</strong> no fim da entidade?</li>
+                <li>Eu escapei <code>&lt;</code> e <code>&amp;</code> quando necessário?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>Qual a diferença entre entidade por nome e por número?</li>
+                <li>Por que <code>&lt;</code> não deve ser digitado “cru” dentro de texto HTML?</li>
+              </ol>
+            </div>
+
             <h2 class="lesson-title" style="margin-top: 18px;">Emojis no HTML</h2>
 
             <div class="card soft">
               <p class="muted" style="margin-top:0;">
-                Você pode inserir emojis usando código hexadecimal nesse formato:
-                <code>&amp;#xCODE;</code>
+                Você pode inserir emojis usando <strong>Unicode</strong>.
+                O jeito mais simples é <strong>copiar e colar</strong> o emoji no HTML (já que sua página está em <code>UTF-8</code>).
+                Outra forma é usar referência numérica hexadecimal no formato: <code>&amp;#xCODE;</code> :contentReference[oaicite:15]{index=15}
               </p>
 
               <div class="card" style="margin-top: 12px;">
-                <p style="margin:0; line-height: 2;">
-                  &#x1F596;<br>
-                  &#x1FAC1;<br>
-                  &#x1F444;<br>
-                  &#x1F418;<br>
-                  &#x1F96A;<br>
-                  &#x1F947;<br>
-                  &#x1F6F8;
+                <h3 style="margin-top:0;">Básico</h3>
+                <p class="muted" style="margin-top:0;">
+                  Emoji não é imagem. É caractere. Se o navegador e a fonte suportarem, ele aparece. :contentReference[oaicite:16]{index=16}
                 </p>
+
+                <div class="card soft" style="margin-top: 12px;">
+                  <p style="margin:0;">
+                    <strong>✅ Dica:</strong> Comece pelo mais simples: copie o emoji 😄 e cole dentro do seu <code>&lt;p&gt;</code>.
+                  </p>
+                </div>
+
+                <h3 style="margin-top: 14px;">Intermediário</h3>
+                <p class="muted" style="margin-top:0;">
+                  Quando você usa <code>&amp;#xCODE;</code>, esse <code>CODE</code> é o <strong>código do Unicode</strong> em hexadecimal.
+                  Exemplo: <code>&amp;#x1F680;</code> 🚀 :contentReference[oaicite:17]{index=17}
+                </p>
+
+                <div class="card" style="margin-top: 12px;">
+                  <p style="margin:0; line-height: 2;">
+                    &#x1F596;<br>
+                    &#x1FAC1;<br>
+                    &#x1F444;<br>
+                    &#x1F418;<br>
+                    &#x1F96A;<br>
+                    &#x1F947;<br>
+                    &#x1F6F8;
+                  </p>
+                </div>
+
+                <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+                <ul class="list" style="margin-top: 0;">
+                  <li><strong>Compatibilidade:</strong> alguns emojis são novos e podem aparecer diferentes (ou como “quadrado”) em sistemas antigos. :contentReference[oaicite:18]{index=18}</li>
+                  <li><strong>Consistência visual:</strong> emojis mudam de estilo entre Android/iOS/Windows. Use com intenção.</li>
+                  <li><strong>Fallback:</strong> se o emoji for “decorativo”, ok. Se ele carrega significado importante, inclua texto junto.</li>
+                </ul>
+
+                <div class="alert" style="margin-top: 12px;">
+                  <strong>🧠 Por que isso importa?</strong>
+                  Você ganha velocidade e leveza: usar Unicode evita carregar imagens extras só para “decorar” a interface. :contentReference[oaicite:19]{index=19}
+                </div>
+
+                <div class="card" style="margin-top: 12px;">
+                  <p style="margin-top:0;"><strong>🔎 Exemplo (emoji + texto, mais acessível):</strong></p>
+                  <pre style="white-space: pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;p&gt;✅ Cadastro realizado com sucesso&lt;/p&gt;
+&lt;p&gt;⚠️ Verifique seu e-mail para confirmar&lt;/p&gt;</code></pre>
+                </div>
+
+                <h3 style="margin-top: 14px;">Resumo final</h3>
+                <ul class="list" style="margin-top: 0;">
+                  <li>Emoji é Unicode (caractere), não imagem :contentReference[oaicite:20]{index=20}</li>
+                  <li>Você pode colar direto (UTF-8) ou usar <code>&amp;#xCODE;</code> :contentReference[oaicite:21]{index=21}</li>
+                  <li>Use com consistência e cuide da compatibilidade</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Mini-checklist</h3>
+                <ul class="list" style="margin-top: 0;">
+                  <li>Minha página está em <code>UTF-8</code> (meta charset)?</li>
+                  <li>O emoji é decorativo ou carrega informação? (Se carrega, inclua texto junto.)</li>
+                </ul>
+
+                <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+                <ol class="list" style="margin-top: 0;">
+                  <li>Qual é o jeito mais simples de colocar emoji no HTML?</li>
+                  <li>O que significa o <code>x</code> em <code>&amp;#xCODE;</code>?</li>
+                </ol>
               </div>
             </div>
 
             <div class="alert" style="margin-top: 14px;">
-              <strong>Dica:</strong> quando usar muitos emojis, mantenha consistência (mesmo estilo/tema),
+              <strong>✅ Dica:</strong> quando usar muitos emojis, mantenha consistência (mesmo estilo/tema),
               senão o layout vira carnaval fora de época 😄
             </div>
 
@@ -120,7 +384,35 @@
                   <strong>Favicon</strong> (ícone do site):
                   <a href="https://favicon.io" target="_blank" rel="noopener noreferrer">favicon.io</a>
                 </li>
+                <li>
+                  <strong>MDN: &lt;br&gt;</strong> (uso correto e boas práticas):
+                  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/br" target="_blank" rel="noopener noreferrer">developer.mozilla.org</a>
+                </li>
+                <li>
+                  <strong>MDN: &lt;hr&gt;</strong> (quebra temática e exemplos):
+                  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/hr" target="_blank" rel="noopener noreferrer">developer.mozilla.org</a>
+                </li>
+                <li>
+                  <strong>MDN: Character reference</strong> (entities e escapes):
+                  <a href="https://developer.mozilla.org/en-US/docs/Glossary/Character_reference" target="_blank" rel="noopener noreferrer">developer.mozilla.org</a>
+                </li>
               </ul>
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Desafio rápido (para fixar em 5 minutos)</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>Crie um parágrafo com um endereço usando <code>&lt;br&gt;</code>.</li>
+                <li>Separe “Introdução” e “Próximo assunto” com <code>&lt;hr&gt;</code>.</li>
+                <li>Escreva: <strong>© 2026</strong> usando entidade (não digite o símbolo direto).</li>
+                <li>Coloque um emoji ✅ e outro via <code>&amp;#xCODE;</code> (ex.: <code>&amp;#x1F680;</code>).</li>
+              </ol>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Você treina o ciclo real: <strong>escrever → salvar → abrir no navegador → ajustar</strong>.
+                É assim que o aprendizado “gruda”.
+              </div>
             </div>
 
             <div class="lesson-actions">
@@ -146,6 +438,16 @@
                 <li>Salvou fontes úteis</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+
+            <div class="card">
+              <h3>Atalho mental</h3>
+              <p class="muted" style="margin-top:0;">
+                <strong>&lt;br&gt;</strong> = quebra linha do conteúdo<br>
+                <strong>&lt;hr&gt;</strong> = mudou de assunto<br>
+                <strong>Entities</strong> = símbolos “em código”<br>
+                <strong>Emoji</strong> = Unicode (caractere)
+              </p>
             </div>
           </aside>
         </div>

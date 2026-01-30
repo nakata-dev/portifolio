@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
 
-  <meta name="description" content="Aprenda hierarquia de títulos no HTML (h1 a h6): boas práticas, exemplo prático e snippet para copiar." />
+  <meta name="description" content="Aprenda hierarquia de títulos no HTML (h1 a h6): boas práticas, exemplo prático, acessibilidade e snippets para copiar." />
 </head>
 
 <body>
@@ -38,7 +38,10 @@
       <div class="container">
         <div class="section-head">
           <h1>Hierarquia de Títulos</h1>
-          <p class="muted">Como organizar títulos com <code>&lt;h1&gt;</code> a <code>&lt;h6&gt;</code> para legibilidade e SEO.</p>
+          <p class="muted">
+            Como organizar títulos com <code>&lt;h1&gt;</code> a <code>&lt;h6&gt;</code> para legibilidade, acessibilidade e SEO.
+            Pense nisso como o “índice” do seu conteúdo: quando a hierarquia está boa, o leitor não se perde nem com 50 seções.
+          </p>
         </div>
 
         <div class="hero-actions push-bottom">
@@ -54,13 +57,83 @@
               <p class="no-margin">
                 A hierarquia de títulos no HTML organiza o conteúdo de forma lógica, indo de
                 <code>&lt;h1&gt;</code> até <code>&lt;h6&gt;</code>.
-                Isso melhora a leitura para pessoas e também ajuda buscadores a entenderem a estrutura (SEO).
+                Isso melhora a leitura para pessoas e ajuda buscadores e leitores de tela a entenderem a estrutura.
               </p>
             </div>
 
+            <div class="card push-top">
+              <h3 style="margin-top:0;">Básico (para iniciantes)</h3>
+              <p class="muted no-margin-top">
+                Títulos são como capítulos de um livro:
+                <strong>h1</strong> é o assunto principal, <strong>h2</strong> são as seções, <strong>h3</strong> são subseções… e assim por diante.
+                O segredo é: <strong>nível do título representa importância na estrutura</strong>, não o “tamanho da fonte”.
+              </p>
+
+              <div class="alert push-top-sm">
+                <strong>🧠 Por que isso importa?</strong>
+                Leitores de tela navegam por headings como se fosse um controle remoto: “próximo título”, “títulos da página”, “pular para o h2”.
+                Se a hierarquia estiver bagunçada, a navegação vira labirinto.
+              </div>
+
+              <h3 class="push-top-sm">Intermediário (mais contexto)</h3>
+              <ul class="list">
+                <li><strong>Não pule níveis</strong>: evite ir de <code>h2</code> direto para <code>h4</code>. Isso confunde a estrutura e a acessibilidade.</li>
+                <li><strong>Não use heading para “aumentar texto”</strong>: se você quer um texto maior, use CSS, não <code>h3</code> no lugar de <code>p</code>.</li>
+                <li><strong>Headings ajudam TOC</strong>: navegadores e scripts conseguem montar um sumário automático baseado em títulos.</li>
+              </ul>
+
+              <h3 class="push-top-sm">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list">
+                <li><strong>Pegadinha clássica:</strong> usar <code>h4</code> só porque “ficou com a fonte certa”. Resultado: semântica errada.</li>
+                <li><strong>Seções bem nomeadas</strong>: headings devem ser curtos e descrever o conteúdo abaixo.</li>
+                <li><strong>Um H1 ou vários?</strong> A especificação permite títulos por seção, mas para previsibilidade e consistência, muita gente usa um <code>h1</code> principal por página e organiza o resto em <code>h2/h3</code>.</li>
+              </ul>
+
+              <div class="card soft push-top-sm">
+                <p class="no-margin">
+                  <strong>✅ Dica:</strong> se você quer “visual de h2”, mas precisa ser “semântica de h3”, estilize com CSS.
+                  Semântica manda, visual obedece.
+                </p>
+              </div>
+
+              <h3 class="push-top-sm">🔎 Exemplo curto (estrutura mental)</h3>
+              <pre class="code-block"><code id="code-mental">&lt;h1&gt;Página: Curso de HTML&lt;/h1&gt;
+
+&lt;h2&gt;Aula 1: Introdução&lt;/h2&gt;
+&lt;h3&gt;O que é HTML&lt;/h3&gt;
+&lt;h3&gt;Como o navegador lê&lt;/h3&gt;
+
+&lt;h2&gt;Aula 2: Títulos&lt;/h2&gt;
+&lt;h3&gt;Quando usar h2&lt;/h3&gt;</code></pre>
+
+              <div class="hero-actions push-top-sm">
+                <button class="btn btn-primary" type="button" data-copy-target="code-mental">Copiar</button>
+              </div>
+
+              <h3 class="push-top-sm">Resumo final</h3>
+              <ul class="list">
+                <li>Títulos são estrutura, não estilo</li>
+                <li>Não pule níveis (h2 → h3 → h4…)</li>
+                <li>Boa hierarquia ajuda leitura, SEO e acessibilidade</li>
+              </ul>
+
+              <h3 class="push-top-sm">Mini-checklist</h3>
+              <ul class="list">
+                <li>Meu <code>h1</code> resume a página?</li>
+                <li>Eu usei <code>h2</code> para seções e <code>h3</code> para subseções?</li>
+                <li>Eu evitei pular níveis só por estética?</li>
+              </ul>
+
+              <h3 class="push-top-sm">Perguntas rápidas</h3>
+              <ol class="list">
+                <li>Por que não devo usar <code>h4</code> só para “diminuir” o texto?</li>
+                <li>O que acontece com a navegação do leitor de tela se eu pular níveis?</li>
+              </ol>
+            </div>
+
             <div class="alert push-top">
-              <strong>Dica:</strong> use apenas <strong>um <code>&lt;h1&gt;</code></strong> por página.
-              Os demais (<code>h2</code>…<code>h6</code>) entram como subtítulos.
+              <strong>✅ Dica:</strong> use apenas <strong>um <code>&lt;h1&gt;</code></strong> como título principal da página.
+              Os demais (<code>h2</code>…<code>h6</code>) entram como subtítulos e subseções. Para visual, use CSS.
             </div>
 
             <h2 class="lesson-title push-top-lg">Exemplo prático</h2>
@@ -91,6 +164,53 @@
               </div>
             </div>
 
+            <div class="card push-top">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted no-margin-top">
+                Esse exemplo mostra a “escadinha” de títulos. Na prática, você vai usar mais <code>h1</code>, <code>h2</code> e <code>h3</code>.
+                <code>h4</code> em diante aparece quando o conteúdo realmente é profundo.
+              </p>
+
+              <h3 class="push-top-sm">Intermediário</h3>
+              <ul class="list">
+                <li><strong>Use títulos para “agrupar” conteúdo</strong>: cada heading deve introduzir uma parte do assunto.</li>
+                <li><strong>Parágrafo abaixo</strong>: geralmente, depois de um título, vem um <code>&lt;p&gt;</code> explicando o que a seção entrega.</li>
+                <li><strong>Mesmo nível pode repetir</strong>: vários <code>h2</code> podem existir (várias seções). Vários <code>h3</code> também (várias subseções).</li>
+              </ul>
+
+              <h3 class="push-top-sm">Avançado (pegadinhas comuns)</h3>
+              <ul class="list">
+                <li><strong>Pegadinha:</strong> colocar um heading e “pular” direto para outro assunto sem texto nenhum. O título vira enfeite.</li>
+                <li><strong>Componentes e cards:</strong> se você tem um card dentro de uma seção, ele geralmente começa no próximo nível (ex: seção em <code>h2</code>, cards em <code>h3</code>).</li>
+                <li><strong>CMSs</strong>: WordPress e afins às vezes já colocam um <code>h1</code> no título do post. Aí o seu “h1 extra” vira duplicado.</li>
+              </ul>
+
+              <div class="alert push-top-sm">
+                <strong>⚠️ Atenção:</strong> se você está escolhendo o nível do título “pelo tamanho”,
+                isso é um sinal de que falta CSS no seu projeto, não de que falta <code>h5</code>.
+              </div>
+
+              <h3 class="push-top-sm">Resumo final</h3>
+              <ul class="list">
+                <li>Você vai usar mais h1, h2 e h3 na maioria dos sites</li>
+                <li>Títulos introduzem seções reais (não só “estilo”)</li>
+                <li>Em componentes, respeite o nível dentro da seção</li>
+              </ul>
+
+              <h3 class="push-top-sm">Mini-checklist</h3>
+              <ul class="list">
+                <li>Após cada heading, existe conteúdo relacionado?</li>
+                <li>Os headings descrevem bem a seção?</li>
+                <li>Meus componentes não estão “brigando” com o h1 do CMS?</li>
+              </ul>
+
+              <h3 class="push-top-sm">Perguntas rápidas</h3>
+              <ol class="list">
+                <li>Qual nível você mais usa no dia a dia: h2 ou h5? Por quê?</li>
+                <li>O que pode dar errado ao colocar dois <code>h1</code> em uma página?</li>
+              </ol>
+            </div>
+
             <h2 class="lesson-title push-top-lg">Código em HTML</h2>
 
             <div class="card">
@@ -106,6 +226,95 @@
               <div class="hero-actions push-top-sm">
                 <button class="btn btn-primary" type="button" data-copy-target="code-titulos">Copiar</button>
               </div>
+            </div>
+
+            <div class="card push-top">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted no-margin-top">
+                Use esse snippet para testar no navegador e ver como cada nível aparece por padrão.
+                Depois, você estiliza com CSS, mas a ordem dos níveis continua sendo a “verdade” da estrutura.
+              </p>
+
+              <h3 class="push-top-sm">Intermediário</h3>
+              <p class="muted no-margin-top">
+                O jeito mais comum de organizar páginas é:
+                <strong>1 h1</strong> (título da página) → vários <strong>h2</strong> (seções) → vários <strong>h3</strong> (subseções).
+                Se precisar, você continua descendo.
+              </p>
+
+              <div class="card soft push-top-sm">
+                <p class="no-margin">
+                  <strong>🔎 Exemplo (página real simples):</strong>
+                </p>
+                <pre class="code-block"><code id="code-real">&lt;h1&gt;Guia de Viagem para Tóquio&lt;/h1&gt;
+
+&lt;h2&gt;Quando ir&lt;/h2&gt;
+&lt;p&gt;Clima, preços e eventos.&lt;/p&gt;
+
+&lt;h2&gt;Onde ficar&lt;/h2&gt;
+&lt;h3&gt;Shinjuku&lt;/h3&gt;
+&lt;p&gt;Bom transporte e vida noturna.&lt;/p&gt;
+
+&lt;h3&gt;Asakusa&lt;/h3&gt;
+&lt;p&gt;Clima tradicional e passeios a pé.&lt;/p&gt;</code></pre>
+
+                <div class="hero-actions push-top-sm">
+                  <button class="btn btn-primary" type="button" data-copy-target="code-real">Copiar</button>
+                </div>
+              </div>
+
+              <h3 class="push-top-sm">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list">
+                <li><strong>SEO e intenção:</strong> seu <code>h1</code> deve dizer claramente “sobre o que é a página”.</li>
+                <li><strong>Headings repetidos:</strong> evite vários headings iguais (ex: vários “Introdução”). Nomeie com intenção.</li>
+                <li><strong>Não invente heading</strong>: headings são 1 a 6. Se ficou “sem nível”, provavelmente é hora de reorganizar as seções.</li>
+              </ul>
+
+              <div class="alert push-top-sm">
+                <strong>✅ Dica:</strong> se você quer “um título pequeno”, faça:
+                <code>h3</code> com CSS menor, e não um <code>p</code> fingindo que é título.
+              </div>
+
+              <h3 class="push-top-sm">Resumo final</h3>
+              <ul class="list">
+                <li>O snippet serve para testar e treinar hierarquia</li>
+                <li>Estrutura comum: h1 → h2 → h3</li>
+                <li>CSS resolve visual, headings resolvem semântica</li>
+              </ul>
+
+              <h3 class="push-top-sm">Mini-checklist</h3>
+              <ul class="list">
+                <li>Meu <code>h1</code> é único e descreve a página?</li>
+                <li>Meus <code>h2</code> são seções principais reais?</li>
+                <li>Eu usei CSS para estilo em vez de “forçar nível”?</li>
+              </ul>
+
+              <h3 class="push-top-sm">Perguntas rápidas</h3>
+              <ol class="list">
+                <li>Qual é a diferença entre “semântica” e “estilo” em headings?</li>
+                <li>Qual sequência é mais correta: h2 → h4 ou h2 → h3?</li>
+              </ol>
+            </div>
+
+            <div class="card soft push-top">
+              <h3 style="margin-top:0;">Referências confiáveis (leitura rápida)</h3>
+              <ul class="list">
+                <li>
+                  <strong>MDN: Heading elements (h1…h6)</strong>:
+                  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements" target="_blank" rel="noopener noreferrer">Abrir</a>
+                </li>
+                <li>
+                  <strong>W3C WAI: Headings (Acessibilidade)</strong>:
+                  <a href="https://www.w3.org/WAI/tutorials/page-structure/headings/" target="_blank" rel="noopener noreferrer">Abrir</a>
+                </li>
+                <li>
+                  <strong>WCAG Technique: usar headings para estrutura</strong>:
+                  <a href="https://www.w3.org/WAI/WCAG21/Techniques/html/H42" target="_blank" rel="noopener noreferrer">Abrir</a>
+                </li>
+              </ul>
+              <p class="tiny muted no-margin-top">
+                Essas fontes reforçam as regras que mais te salvam: não pular níveis, headings como estrutura e navegação por leitores de tela.
+              </p>
             </div>
 
             <div class="lesson-actions">
@@ -124,10 +333,11 @@
             <div class="card">
               <h3>Checklist rápido</h3>
               <ul class="list">
-                <li>1 único <code>&lt;h1&gt;</code></li>
+                <li>1 <code>&lt;h1&gt;</code> principal (título da página)</li>
                 <li>Seções com <code>&lt;h2&gt;</code></li>
                 <li>Subseções com <code>&lt;h3&gt;</code></li>
                 <li>Sem pular níveis sem motivo</li>
+                <li>CSS para “tamanho/estilo”, não headings</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
             </div>

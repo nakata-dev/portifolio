@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
 
-  <meta name="description" content="Como inserir imagens no HTML: imagem na mesma pasta, em subpasta e por link externo." />
+  <meta name="description" content="Como inserir imagens no HTML: arquivo na mesma pasta, em subpasta e por link externo — com boas práticas de alt, performance, responsividade e segurança." />
 </head>
 
 <body>
@@ -38,7 +38,11 @@
       <div class="container">
         <div class="section-head">
           <h1>Teste de Imagens</h1>
-          <p class="muted">Como usar <code>&lt;img&gt;</code> com arquivos locais (mesma pasta/subpasta) e com link externo.</p>
+          <p class="muted">
+            Como usar <code>&lt;img&gt;</code> com arquivos locais (mesma pasta/subpasta) e com link externo.
+            Aqui você aprende o básico para “fazer aparecer”, e também o jeito profissional para <strong>carregar rápido</strong>,
+            ficar <strong>responsivo</strong> e não virar refém de links que somem.
+          </p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -51,7 +55,8 @@
             <h2 class="lesson-title">Imagem na mesma pasta</h2>
 
             <figure class="media">
-              <img src="html-5-200.png" alt="Logo HTML5" loading="lazy">
+              <!-- Nota: width/height ajudam a reduzir "pulos" no layout ao carregar (CLS). -->
+              <img src="html-5-200.png" alt="Logo HTML5" loading="lazy" width="200" height="200" decoding="async">
             </figure>
 
             <div class="card soft">
@@ -61,10 +66,81 @@
               <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="html-5-200.png" alt="Logo HTML5"&gt;</code></pre>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico (para iniciantes)</h3>
+              <p class="muted" style="margin-top:0;">
+                A tag <code>&lt;img&gt;</code> precisa de dois itens essenciais:
+                <strong>src</strong> (onde está a imagem) e <strong>alt</strong> (texto alternativo).
+                Se a imagem falhar, o <code>alt</code> salva o recado. :contentReference[oaicite:0]{index=0}
+              </p>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                O <code>alt</code> ajuda em acessibilidade (leitores de tela) e também quando a imagem não carrega.
+                É literalmente um “plano B” do conteúdo. :contentReference[oaicite:1]{index=1}
+              </div>
+
+              <h3 style="margin-top: 14px;">Intermediário (mais contexto)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Use alt descritivo:</strong> descreva o que a imagem comunica, sem enrolar. :contentReference[oaicite:2]{index=2}</li>
+                <li><strong>Se for decorativa:</strong> use <code>alt=""</code> (vazio) ou considere fazer como background no CSS. :contentReference[oaicite:3]{index=3}</li>
+                <li><strong>Performance:</strong> <code>loading="lazy"</code> atrasa o carregamento de imagens fora da tela (sem JS). :contentReference[oaicite:4]{index=4}</li>
+                <li><strong>Evite “pulo” no layout:</strong> definir <code>width</code> e <code>height</code> ajuda o navegador a reservar espaço. :contentReference[oaicite:5]{index=5}</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Pegadinha clássica:</strong> colocar <code>alt="imagem"</code> ou repetir “logo” toda hora. O alt deve ser útil, não genérico. :contentReference[oaicite:6]{index=6}</li>
+                <li><strong>Decoding:</strong> <code>decoding="async"</code> pode ajudar o navegador a decodificar sem travar a renderização em alguns cenários. :contentReference[oaicite:7]{index=7}</li>
+                <li><strong>Hero image:</strong> se a imagem for a principal acima da dobra, você pode usar <code>fetchpriority="high"</code> (e geralmente não usar lazy). :contentReference[oaicite:8]{index=8}</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> Pense no <code>alt</code> como o “texto que ficaria” se a imagem desaparecesse.
+                  Se o conteúdo perder sentido sem a imagem, o alt precisa carregar esse sentido. :contentReference[oaicite:9]{index=9}
+                </p>
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (profissional e leve):</strong></p>
+                <pre style="white-space:pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;img
+  src="html-5-200.png"
+  alt="Logo do HTML5"
+  width="200"
+  height="200"
+  loading="lazy"
+  decoding="async"
+&gt;</code></pre>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><code>src</code> aponta para o arquivo</li>
+                <li><code>alt</code> é obrigatório na prática (acessibilidade + fallback) :contentReference[oaicite:10]{index=10}</li>
+                <li><code>loading="lazy"</code> melhora performance para imagens fora da tela :contentReference[oaicite:11]{index=11}</li>
+                <li><code>width</code> + <code>height</code> ajudam a evitar “layout pulando” :contentReference[oaicite:12]{index=12}</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Meu <code>alt</code> descreve o que a imagem comunica?</li>
+                <li>Se a imagem for decorativa, usei <code>alt=""</code>? :contentReference[oaicite:13]{index=13}</li>
+                <li>Defini <code>width</code> e <code>height</code> quando eu sei o tamanho?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>O que acontece se a imagem não carregar? Como o <code>alt</code> ajuda?</li>
+                <li>Quando faz sentido usar <code>loading="lazy"</code>?</li>
+              </ol>
+            </div>
+
             <h2 class="lesson-title" style="margin-top: 18px;">Imagem em subpasta</h2>
 
             <figure class="media">
-              <img src="imagem/css3-200.png" alt="Logo CSS3" loading="lazy">
+              <!-- Nota: caminho relativo = pasta/arquivo -->
+              <img src="imagem/css3-200.png" alt="Logo CSS3" loading="lazy" width="200" height="200" decoding="async">
             </figure>
 
             <div class="card soft">
@@ -74,6 +150,76 @@
               <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="imagem/css3-200.png" alt="Logo CSS3"&gt;</code></pre>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                Aqui você está usando um <strong>caminho relativo</strong>: o navegador procura a pasta <code>imagem</code>
+                a partir da pasta onde está o seu HTML, e então abre o arquivo <code>css3-200.png</code>.
+              </p>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>✅ Dica:</strong> se a imagem “sumir”, 90% das vezes é <strong>nome errado</strong> ou <strong>pasta errada</strong>.
+                  Confere letra por letra (inclusive maiúsculas/minúsculas).
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Organização real de projeto:</strong> é comum ter <code>img/</code>, <code>assets/</code>, <code>images/</code> e separar por páginas.</li>
+                <li><strong>Padronize nomes:</strong> use nomes simples e consistentes (ex.: <code>logo-css3.png</code>), evitando espaços.</li>
+                <li><strong>Alt continua valendo:</strong> mesmo sendo local, o <code>alt</code> é parte da qualidade do site. :contentReference[oaicite:14]{index=14}</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Pegadinha de servidor:</strong> no Windows, <code>Imagem/</code> e <code>imagem/</code> podem funcionar igual; em muitos servidores (Linux), não. Resultado: “funciona no meu PC, quebra no ar”.</li>
+                <li><strong>Responsividade de verdade:</strong> uma mesma imagem pode ter versões em tamanhos diferentes usando <code>srcset</code> e <code>sizes</code>. :contentReference[oaicite:15]{index=15}</li>
+              </ul>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Organizar imagens em pastas e usar caminhos relativos deixa seu projeto portátil:
+                você pode zipar a pasta e tudo continua funcionando (sem depender da internet).
+              </div>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (responsivo com srcset):</strong></p>
+                <pre style="white-space:pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;img
+  src="imagem/css3-200.png"
+  srcset="imagem/css3-200.png 200w, imagem/css3-400.png 400w, imagem/css3-800.png 800w"
+  sizes="(max-width: 600px) 200px, 400px"
+  alt="Logo CSS3"
+  width="400"
+  height="400"
+  loading="lazy"
+&gt;</code></pre>
+                <p class="tiny muted" style="margin-top: 10px;">
+                  O navegador escolhe a melhor versão conforme tela e densidade de pixels. :contentReference[oaicite:16]{index=16}
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Subpasta = <code>pasta/arquivo.ext</code></li>
+                <li>Padronize nomes e pastas (evita dor de cabeça)</li>
+                <li><code>srcset</code>/<code>sizes</code> ajudam a carregar imagens mais leves em telas menores :contentReference[oaicite:17]{index=17}</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>O nome da pasta e do arquivo estão idênticos ao que existe no projeto?</li>
+                <li>Evitei espaços e caracteres estranhos no nome do arquivo?</li>
+                <li>Se for imagem grande, considerei <code>srcset</code>?</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>O que é caminho relativo?</li>
+                <li>Por que <code>Imagem/</code> e <code>imagem/</code> podem dar problema em servidor?</li>
+              </ol>
+            </div>
+
             <h2 class="lesson-title" style="margin-top: 18px;">Imagem por link externo</h2>
 
             <figure class="media">
@@ -81,6 +227,7 @@
                 src="https://static.vecteezy.com/system/resources/previews/027/127/560/non_2x/javascript-logo-javascript-icon-transparent-free-png.png"
                 alt="Logo JavaScript"
                 loading="lazy"
+                decoding="async"
                 referrerpolicy="no-referrer"
               >
             </figure>
@@ -97,9 +244,87 @@
               <pre style="white-space:pre-wrap; margin: 12px 0 0; line-height: 1.8;"><code>&lt;img src="https://...link-da-imagem.png" alt="Logo JavaScript"&gt;</code></pre>
             </div>
 
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Básico</h3>
+              <p class="muted" style="margin-top:0;">
+                Um link externo funciona igual ao arquivo local: o navegador busca a imagem, só que agora na internet.
+                Se a conexão falhar, o servidor bloquear, ou a URL mudar, a imagem não aparece.
+              </p>
+
+              <h3 style="margin-top: 14px;">Intermediário</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Hotlinking:</strong> alguns sites bloqueiam “puxar” imagem de fora para economizar banda.</li>
+                <li><strong>Privacidade:</strong> ao carregar uma imagem externa, você pode enviar informações de referência (referrer) sem perceber.</li>
+                <li><strong>referrerpolicy:</strong> <code>no-referrer</code> evita enviar o cabeçalho <code>Referer</code> na requisição. :contentReference[oaicite:18]{index=18}</li>
+              </ul>
+
+              <div class="card soft" style="margin-top: 12px;">
+                <p style="margin:0;">
+                  <strong>⚠️ Atenção:</strong> imagem externa “parece prática”, mas você está terceirizando algo crítico do seu layout.
+                  Para sites reais, prefira hospedar no seu projeto/CDN.
+                </p>
+              </div>
+
+              <h3 style="margin-top: 14px;">Avançado (boas práticas e pegadinhas)</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li><strong>Sem controle de cache:</strong> você não decide se a imagem vai ficar rápida para o usuário.</li>
+                <li><strong>CORS e segurança:</strong> dependendo do uso (canvas, manipulação), imagens externas podem exigir <code>crossorigin</code>. :contentReference[oaicite:19]{index=19}</li>
+                <li><strong>Boas práticas:</strong> se for externa mesmo, use <code>referrerpolicy</code> quando fizer sentido para privacidade. :contentReference[oaicite:20]{index=20}</li>
+              </ul>
+
+              <div class="card" style="margin-top: 12px;">
+                <p style="margin-top:0;"><strong>🔎 Exemplo (externa com privacidade):</strong></p>
+                <pre style="white-space:pre-wrap; margin: 0; line-height: 1.8;"><code>&lt;img
+  src="https://exemplo.com/imagem.png"
+  alt="Logo do JavaScript"
+  loading="lazy"
+  referrerpolicy="no-referrer"
+&gt;</code></pre>
+                <p class="tiny muted" style="margin-top: 10px;">
+                  <code>no-referrer</code> não envia o cabeçalho <code>Referer</code> para o outro site. :contentReference[oaicite:21]{index=21}
+                </p>
+              </div>
+
+              <div class="alert" style="margin-top: 12px;">
+                <strong>🧠 Por que isso importa?</strong>
+                Você evita “surpresas” no layout e ganha consistência de performance quando hospeda imagens no próprio projeto.
+                Além disso, controla privacidade e disponibilidade.
+              </div>
+
+              <h3 style="margin-top: 14px;">Resumo final</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>URL externa pode cair ou bloquear hotlink</li>
+                <li><code>referrerpolicy</code> ajuda a controlar privacidade :contentReference[oaicite:22]{index=22}</li>
+                <li>Para projetos reais: prefira imagem local/CDN</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Mini-checklist</h3>
+              <ul class="list" style="margin-top: 0;">
+                <li>Eu realmente preciso que seja externa?</li>
+                <li>Tenho um plano B se a URL quebrar?</li>
+                <li>Usei <code>referrerpolicy</code> quando a imagem vem de terceiros? :contentReference[oaicite:23]{index=23}</li>
+              </ul>
+
+              <h3 style="margin-top: 14px;">Perguntas rápidas</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>O que é hotlinking e por que pode dar problema?</li>
+                <li>O que <code>referrerpolicy="no-referrer"</code> muda na prática?</li>
+              </ol>
+            </div>
+
             <div class="alert" style="margin-top: 14px;">
-              <strong>Dica profissional:</strong> para sites reais, prefira baixar a imagem e colocar no seu projeto.
-              Assim você evita depender de terceiros.
+              <strong>✅ Dica profissional:</strong> para sites reais, prefira baixar a imagem e colocar no seu projeto.
+              Assim você evita depender de terceiros. E quando precisar ser rápido de verdade, use versões responsivas com <code>srcset</code>/<code>sizes</code>. :contentReference[oaicite:24]{index=24}
+            </div>
+
+            <div class="card" style="margin-top: 12px;">
+              <h3 style="margin-top:0;">Desafio rápido (fixação em 7 minutos)</h3>
+              <ol class="list" style="margin-top: 0;">
+                <li>Troque o <code>alt</code> de uma imagem por uma descrição melhor (sem repetir “imagem”). :contentReference[oaicite:25]{index=25}</li>
+                <li>Crie uma subpasta <code>img/</code> e mova uma imagem para lá, ajustando o <code>src</code>.</li>
+                <li>Adicione <code>width</code> e <code>height</code> na imagem local e veja se o layout fica mais estável ao carregar. :contentReference[oaicite:26]{index=26}</li>
+                <li>Crie um exemplo com <code>srcset</code> (200w, 400w, 800w) e teste no DevTools em tamanhos diferentes. :contentReference[oaicite:27]{index=27}</li>
+              </ol>
             </div>
 
             <div class="lesson-actions">
@@ -125,6 +350,16 @@
                 <li>Aplicou <code>loading="lazy"</code></li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
+            </div>
+
+            <div class="card">
+              <h3>Atalho mental</h3>
+              <p class="muted" style="margin-top:0;">
+                <strong>Local</strong> = controle total ✅<br>
+                <strong>Externa</strong> = depende de terceiros ⚠️<br>
+                <strong>alt</strong> = acessibilidade + fallback 🧠 :contentReference[oaicite:28]{index=28}<br>
+                <strong>lazy</strong> = carrega quando precisa 🚀 :contentReference[oaicite:29]{index=29}
+              </p>
             </div>
           </aside>
         </div>

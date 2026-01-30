@@ -3,24 +3,96 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Estilo Interno | HTML - Ailton A. Nakata</title>
+  <title>Estilo Interno | HTML &amp; CSS - Ailton A. Nakata</title>
 
   <link rel="shortcut icon" href="../img/Soluções.png" type="image/x-icon">
   <link rel="stylesheet" href="../site.css" />
   <script src="../site.js" defer></script>
 
-  <meta name="description" content="Exemplo de formatação de texto em HTML: capítulos, títulos e parágrafos com leitura confortável e layout padronizado." />
+  <meta name="description" content="Estilo interno (CSS no &lt;style&gt;): quando usar, quando evitar e exemplo prático com texto e leitura confortável." />
 
   <style>
-    /* Estilos específicos da aula (sem mexer no layout global do site.css) */
-    .text-justify { text-align: justify; }
-    .content-narrow { max-width: 72ch; } /* melhora leitura no desktop */
+    /* =========================================================
+       Estilos específicos da aula (sem mexer no layout global do site.css)
+       Tema: CSS interno (dentro do <style> no head)
+       ========================================================= */
 
-    /* Títulos da aula com espaçamento consistente */
-    .lesson h2 { margin-top: 16px; }
+    /* Melhor leitura no desktop: limite de caracteres por linha */
+    .content-narrow { max-width: 72ch; }
+
+    /* Justify com um toque de “cinto de segurança” */
+    .text-justify { text-align: justify; }
+    .text-justify{
+      hyphens: auto;                /* melhora “buracos” no justify (pt-br) */
+      overflow-wrap: anywhere;
+    }
+
+    /* Espaçamento consistente sem inline */
+    .content-narrow h3{ margin: 0 0 10px; }
+    .content-narrow h4{ margin: 14px 0 8px; }
+    .content-narrow p{ margin: 0; line-height: 1.85; }
+    .block-gap{ margin-top: 18px; }
+
+    /* Badge nível */
+    .level{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.03);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+    .level small{ font-weight: 600; opacity: .75; }
+
+    /* Código copiável (estilo “aula”) */
+    .code-block{
+      background:#0f1724;
+      color:#e6edf3;
+      padding:14px;
+      border-radius:12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:0.95rem;
+      overflow:auto;
+      position:relative;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .code-block pre{
+      margin:0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.7;
+      padding-right: 92px;
+    }
+    .copy-btn{
+      position:absolute;
+      right:10px;
+      top:10px;
+      background: rgba(255,255,255,0.10);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.14);
+      padding:7px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:0.82rem;
+      line-height: 1;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .copy-btn:hover{ background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+    .copy-btn:active{ transform: translateY(0); }
+    .copy-btn:focus{
+      outline: 2px solid rgba(255,255,255,0.35);
+      outline-offset: 2px;
+    }
 
     @media (max-width: 520px){
       .content-narrow { max-width: 100%; }
+      .text-justify { text-align: left; } /* no mobile, leitura costuma ficar melhor sem justify */
+      .code-block{ font-size:0.88rem; padding:12px; }
+      .copy-btn{ font-size:0.78rem; padding:7px 9px; }
+      .code-block pre{ padding-right: 0; padding-top: 34px; }
     }
   </style>
 </head>
@@ -51,8 +123,8 @@
     <section class="section">
       <div class="container">
         <div class="section-head">
-          <h1>Formatação de texto</h1>
-          <p class="muted">Exemplo simples com capítulos, títulos e parágrafos, no padrão do seu site.</p>
+          <h1>🎨 Estilo Interno (CSS no <code>&lt;style&gt;</code>)</h1>
+          <p class="muted">Quando usar, quando evitar e um exemplo prático deixando o HTML mais limpo.</p>
         </div>
 
         <div class="hero-actions" style="margin-bottom: 14px;">
@@ -62,37 +134,106 @@
 
         <div class="lesson-grid">
           <article class="lesson">
-            <h2 class="lesson-title">Conteúdo</h2>
+            <h2 class="lesson-title">O que é estilo interno?</h2>
+
+            <div class="card soft">
+              <p style="margin:0;">
+                Estilo interno é quando você escreve CSS dentro do próprio HTML, usando a tag
+                <code>&lt;style&gt;</code> no <code>&lt;head&gt;</code>.
+                É útil para páginas únicas ou aulas, mas para sites reais o ideal é migrar para um CSS externo.
+              </p>
+            </div>
+
+            <div class="alert" style="margin-top: 14px;">
+              <strong>Regra prática:</strong> se o mesmo estilo vai aparecer em várias páginas, ele quer morar no <strong>site.css</strong>.
+            </div>
+
+            <h2 class="lesson-title" style="margin-top:18px;">
+              <span class="level">🟢 Básico <small>ver funcionando</small></span>
+            </h2>
 
             <div class="card soft content-narrow">
-              <h3 style="margin:0 0 10px;">Capítulo 1</h3>
+              <h3>Capítulo 1</h3>
 
-              <h4 style="margin:14px 0 8px;">Capítulo 1.1</h4>
-              <p class="text-justify" style="margin-top:0;">
+              <h4>Capítulo 1.1</h4>
+              <p class="text-justify">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quis, inventore? Minima eligendi animi totam a,
                 velit dolorum unde corporis quas facilis nulla reprehenderit pariatur dignissimos distinctio, provident
                 dolores et! Provident!
               </p>
 
-              <h4 style="margin:14px 0 8px;">Capítulo 1.2</h4>
-              <p class="text-justify" style="margin-top:0;">
+              <h4>Capítulo 1.2</h4>
+              <p class="text-justify">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit aperiam non, culpa eligendi, saepe perferendis,
                 modi ut eius placeat laborum nemo facere odio nostrum natus distinctio id illo. Minus, aut.
               </p>
 
-              <h3 style="margin:18px 0 10px;">Capítulo 2</h3>
+              <div class="block-gap"></div>
 
-              <h4 style="margin:14px 0 8px;">Capítulo 2.1</h4>
-              <p class="text-justify" style="margin-top:0;">
+              <h3>Capítulo 2</h3>
+
+              <h4>Capítulo 2.1</h4>
+              <p class="text-justify">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil soluta eius quos amet perferendis maxime pariatur
                 consequuntur, sequi, repellendus recusandae modi. Sit enim perspiciatis consectetur vero fuga officiis,
                 possimus impedit.
               </p>
             </div>
 
-            <div class="alert" style="margin-top: 14px;">
-              <strong>Dica:</strong> em vez de repetir <code>style="text-align: justify"</code>, use uma classe
-              como <code>.text-justify</code>. Isso deixa seu HTML mais limpo.
+            <h2 class="lesson-title" style="margin-top:18px;">
+              <span class="level">🟡 Intermediário <small>ruim vs bom</small></span>
+            </h2>
+
+            <div class="card">
+              <p class="muted" style="margin-top:0;">
+                O erro clássico é misturar “um monte de <code>style="..."</code>” no HTML.
+                O correto é criar classes (mesmo que o CSS esteja interno).
+              </p>
+
+              <div class="code-block" style="margin-top:10px;">
+                <button class="copy-btn" data-copy="#code-compare" type="button" aria-label="Copiar comparação">Copiar</button>
+                <pre id="code-compare">&lt;!-- Ruim (inline repetido) --&gt;
+&lt;p style="text-align: justify; line-height: 1.8;"&gt;...&lt;/p&gt;
+&lt;p style="text-align: justify; line-height: 1.8;"&gt;...&lt;/p&gt;
+
+&lt;!-- Bom (classe + CSS interno) --&gt;
+&lt;style&gt;
+  .text-justify{ text-align: justify; line-height: 1.8; }
+&lt;/style&gt;
+
+&lt;p class="text-justify"&gt;...&lt;/p&gt;
+&lt;p class="text-justify"&gt;...&lt;/p&gt;</pre>
+              </div>
+
+              <div class="alert" style="margin-top:12px;">
+                <strong>Resumo:</strong> mesmo usando CSS interno, prefira classes. Seu HTML respira melhor.
+              </div>
+            </div>
+
+            <h2 class="lesson-title" style="margin-top:18px;">
+              <span class="level">🔴 Avançado <small>quando usar e quando evitar</small></span>
+            </h2>
+
+            <div class="card soft">
+              <h3 style="margin-top:0;">Quando faz sentido usar CSS interno</h3>
+              <ul class="list" style="margin-bottom:0;">
+                <li>Página única (ex.: landing isolada, protótipo, exercício).</li>
+                <li>Aula/didática (como esta página).</li>
+                <li>Experimento rápido antes de colocar no CSS global.</li>
+              </ul>
+            </div>
+
+            <div class="card soft" style="margin-top:12px;">
+              <h3 style="margin-top:0;">Quando NÃO usar</h3>
+              <ul class="list" style="margin-bottom:0;">
+                <li>Sites com várias páginas (vira repetição e bagunça).</li>
+                <li>Projetos com manutenção (você vai esquecer onde está o estilo).</li>
+                <li>Quando performance e cache importam (CSS externo é melhor para reaproveitar cache).</li>
+              </ul>
+            </div>
+
+            <div class="alert alert-warn" style="margin-top:12px;">
+              <strong>Dica de performance:</strong> CSS externo permite cache do navegador. CSS interno precisa ser baixado/parseado toda vez.
             </div>
 
             <div class="lesson-actions">
@@ -111,10 +252,11 @@
             <div class="card">
               <h3>Checklist rápido</h3>
               <ul class="list">
-                <li>Usou H1/H2/H3 corretamente</li>
-                <li>Parágrafos com leitura confortável</li>
-                <li>Justify via classe (não inline)</li>
-                <li>Layout padronizado com o site</li>
+                <li>Entendeu CSS interno</li>
+                <li>Usou classes (não inline)</li>
+                <li>Texto com leitura confortável</li>
+                <li>Mobile sem “buracos” no justify</li>
+                <li>Snippet copiável</li>
               </ul>
               <button class="btn btn-secondary" data-open-modal type="button">Quero um site bonito</button>
             </div>
@@ -203,5 +345,26 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Copiar blocos de código (reutilizável)
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const sel = btn.getAttribute('data-copy');
+        const el = document.querySelector(sel);
+        if (!el) return;
+
+        const text = el.textContent.trim();
+        try{
+          await navigator.clipboard.writeText(text);
+          const old = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(() => btn.textContent = old, 1200);
+        }catch(e){
+          alert('Não foi possível copiar automaticamente. Selecione e copie manualmente.');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

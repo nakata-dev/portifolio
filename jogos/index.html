@@ -1,139 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon">
-    <link rel="stylesheet" href="index.css">
-    <!--Site que pucha icones direto do Google-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Jogos Geniais</title>
-    <style>
-        .paragrafo {
-            text-align: justify;
-            text-indent: 30px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/Soluções.png" type="image/x-icon" />
+
+  <!-- Material Symbols Outlined (padrão do seu site) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap">
+
+  <!-- ✅ Padrão visual do site -->
+  <link rel="stylesheet" href="../site.css" />
+  <script src="../site.js" defer></script>
+
+  <title>Jogos Geniais</title>
+
+  <style>
+    /* ===== Ajustes locais, mantendo o layout original ===== */
+
+    /* Evita qualquer rolagem horizontal indevida (principalmente no mobile) */
+    html, body { overflow-x: hidden; }
+
+    /* Texto original */
+    .paragrafo{
+      text-align: justify;
+      text-indent: 30px;
+    }
+
+    /* Header mais “original”, mas usando paleta do site */
+    .jg-header{
+      padding: 22px 0 10px;
+    }
+
+    .jg-header .jg-top{
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      text-align: center;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      box-shadow: var(--shadow);
+    }
+
+    .jg-logo{
+      width: 90px;
+      height: 90px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .jg-logo img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .jg-title{
+      margin: 0;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    }
+
+    .jg-author{
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    /* No desktop, deixa quebrar naturalmente sem estourar */
+    .nav a{
+      white-space: normal;
+      line-height: 1.2;
+    }
+
+    /* ✅ FIX do menu mobile:
+       - força 1 coluna (sem wrap)
+       - scroll somente vertical (sem barra horizontal)
+    */
+    @media (max-width: 860px){
+      .nav{
+        flex-wrap: nowrap;           /* <-- ESSENCIAL: impede virar 2 colunas */
+        max-height: 70vh;            /* menu longo: cabe na tela */
+        overflow-y: auto;            /* scroll vertical */
+        overflow-x: hidden;          /* sem scroll horizontal */
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* garante que cada item ocupa uma linha inteira */
+      .nav a, .nav .btn{
+        width: 100%;
+      }
+    }
+
+    /* Conteúdo principal com respiro, sem mudar a essência */
+    .jg-main .card{
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    /* Footer simples (como o original), mas com classe do site */
+    .jg-footer-note{
+      margin: 0;
+    }
+  </style>
 </head>
 
 <body>
-    <header>
-        <div><img src="img/Eintein.png"></div>
+  <!-- Header padrão do site (sticky + blur) -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Voltar ao menu principal">
+        <span class="brand-avatar" aria-hidden="true">
+          <img src="img/Eintein.png" alt="Einstein">
+        </span>
+        <div class="brand-text">
+          <strong>Jogos Geniais</strong>
+          <span>por: Ailton A. Nakata</span>
+        </div>
+      </a>
 
-        <h1>Jogos Geniais</h1>
-        <p>por: Ailton A. Nakata</p>
+      <!-- Burger padrão -->
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        data-nav-toggle>
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
 
-    </header>
-
-
-    <i id="burguer" class="material-icons" onclick="clickMenu()">menu</i>
-    <menu id="itens">
-        <ul>
-            <li>
-                <a href="CorVSCor/index.html">Batalha das Cores</a>
-            </li>
-            <li>
-                <a href="Matematica/index.html">Matemática</a>
-            </li>
-            <li>
-                <a href="Tabuada/index.html">Tabuada</a>
-            </li>
-            <li>
-                <a href="Forca/index.html">Jogo da Forca</a>
-            </li>
-            <li><a href="Jogo_da_forca/index.html">Adivinhe o Nome</a>
-            </li>
-            <li>
-            <a href="Jogo_das_cores/index.html">Simon Neon</a>
-            </li>
-            <li><a href="Jogo_da_velha/jogodavelha.html">Jogo da Velha</a>
-            </li>
-            <li>
-                <a href="Jogo_Caca_Palavras/Caça_Palavras/index.html">Caça Palavras</a>
-            </li>
-            <li>
-                <a href="Sudoku/index.html">Sudoku</a>
-            </li>
-            <li>
-                <a href="Desenho/index.html">Traço Continuo</a>
-                <li><a href="Jogo_da_Memoria/memoria4X4.html">Jogo da Memória 4x4</a>
-                </li>
-                <li><a href="Jogo_da_Memoria/jogodamemoria.html">Jogo da Memória 6x6</a>
-                </li>
-            </li>
-            <li><a href="../index.html">Menu</a></li>
-        </ul>
-    </menu>
-
-    <main>
-        <section>
-            <h3>Mantenha Sua Mente Jovem e Vibrante</h3>
-            <br>
-            <p class="paragrafo">
-                <strong>A mente é o nosso bem mais precioso</strong>, e assim como o corpo, ela precisa de exercícios
-                regulares para se manter forte e saudável. Em um mundo cada vez mais agitado, onde o cansaço mental e o
-                "esquecimento" parecem ser normais, a prática de jogos que desafiam o cérebro surge como uma ferramenta
-                poderosa e divertida para manter a mente ativa e vibrante. <br><br>
-
-                Os jogos de raciocínio, como caça-palavras, jogo da forca, jogo da velha, xadrez, dama e jogo da
-                memória, vão muito além de um simples passatempo. Eles são verdadeiros aliados no combate ao cansaço
-                mental e à perda de memória, e a razão é simples: eles estimulam as nossas habilidades cognitivas mais
-                importantes. <br><br>
-
-                Eles <strong>exercitam o raciocínio lógico</strong>: Jogos como xadrez e dama exigem que você pense à
-                frente, analise cenários e tome decisões estratégicas. <br><br>
-
-                Melhoram a memória e a concentração: O jogo da memória, por exemplo, força o cérebro a reter informações
-                de curto prazo. O caça-palavras e o jogo da forca aprimoram a concentração e o foco, enquanto você busca
-                por padrões e soluções. <br><br>
-
-                Aumentam a velocidade de processamento: Ao resolver quebra-cabeças e desafios rapidamente, você treina a
-                mente a processar informações de forma mais ágil, melhorando a sua agilidade mental.
-                <br><br>
-
-                Promovem a <strong>neuroplasticidade</strong>: Ou seja, a capacidade do cérebro de se adaptar e criar
-                novas conexões. Ao aprender um novo jogo ou dominar uma nova estratégia, você está literalmente
-                <strong>construindo novas vias neurais</strong>.
-                <br><br>
-                Combatem o estresse: O ato de se envolver em um jogo divertido e desafiador pode ser uma excelente forma
-                de relaxamento, ajudando a desviar o foco de preocupações e reduzindo os níveis de estresse.
-                <br><br>
-                Estimular a mente com esses jogos <strong>é um ato de autocuidado</strong>. É um investimento no seu
-                bem-estar e na sua felicidade. Eles nos lembram que a aprendizagem e o desenvolvimento não têm idade
-                para acabar, e que a <strong>alegria de resolver um bom desafio</strong> é uma das melhores sensações
-                que existem.
-            </p>
-        </section>
-        <br>
-        <br>
-    </main>
-
-    <footer>
-        <p>
-            Todos os direitos reservados à Ailton A. Nakata
-        </p>
-    </footer>
+      <!-- Menu (mesmos links do seu arquivo original) -->
+      <nav class="nav" id="site-nav" aria-label="Navegação de jogos" data-nav>
+        <a href="PalavraCruzada/index.html">Palavra Cruzada</a>
+        <a href="CorVSCor/index.html">Batalha das Cores</a>
+        <a href="Matematica/index.html">Matemática</a>
+        <a href="Tabuada/index.html">Tabuada</a>
+        <a href="Forca/index.html">Jogo da Forca</a>
+        <a href="Jogo_da_forca/index.html">Adivinhe o Nome</a>
+        <a href="Jogo_das_cores/index.html">Simon Neon</a>
+        <a href="Jogo_da_velha/jogodavelha.html">Jogo da Velha</a>
+        <a href="Jogo_Caca_Palavras/Caça_Palavras/index.html">Caça Palavras</a>
+        <a href="Sudoku/index.html">Sudoku</a>
+        <a href="Desenho/index.html">Traço Continuo</a>
+        <a href="Jogo_da_Memoria/memoria4X4.html">Jogo da Memória 4x4</a>
+        <a href="Jogo_da_Memoria/jogodamemoria.html">Jogo da Memória 6x6</a>
+        <a href="../projetos.html">Menu</a>
+      </nav>
     </div>
-    <script>
-        function clickMenu() {
-            if (itens.style.display == 'block') {
-                itens.style.display = 'none';
-            } else {
-                itens.style.display = 'block';
-            }
-        }
-        function mudouTamanho() {
-            // Se a tela for maior que 768px, exibe o menu e esconde o ícone
-            if (window.innerWidth >= 768) {
-                itens.style.display = 'block';
-            } else {
-                // Se for menor, esconde o menu
-                itens.style.display = 'none';
-            }
-        }
+  </header>
 
-    </script>
+  <main class="jg-main">
+    <!-- “Capa” original: imagem + título + autor -->
+    <section class="jg-header">
+      <div class="container">
+        <div class="jg-top">
+          <div class="jg-logo" aria-hidden="true">
+            <img src="img/Eintein.png" alt="">
+          </div>
+
+          <h1 class="jg-title">Jogos Geniais</h1>
+          <p class="jg-author">por: Ailton A. Nakata</p>
+
+          <p class="muted" style="margin:0;">
+            Escolha um jogo no menu acima e divirta-se 😊
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Texto (mantido) -->
+    <section class="section">
+      <div class="container">
+        <article class="card">
+          <h3 style="margin-top:0;">Mantenha Sua Mente Jovem e Vibrante</h3>
+
+          <p class="paragrafo">
+            <strong>A mente é o nosso bem mais precioso</strong>, e assim como o corpo, ela precisa de exercícios
+            regulares para se manter forte e saudável. Em um mundo cada vez mais agitado, onde o cansaço mental e o
+            "esquecimento" parecem ser normais, a prática de jogos que desafiam o cérebro surge como uma ferramenta
+            poderosa e divertida para manter a mente ativa e vibrante. <br><br>
+
+            Os jogos de raciocínio, como caça-palavras, jogo da forca, jogo da velha, xadrez, dama e jogo da
+            memória, vão muito além de um simples passatempo. Eles são verdadeiros aliados no combate ao cansaço
+            mental e à perda de memória, e a razão é simples: eles estimulam as nossas habilidades cognitivas mais
+            importantes. <br><br>
+
+            Eles <strong>exercitam o raciocínio lógico</strong>: Jogos como xadrez e dama exigem que você pense à
+            frente, analise cenários e tome decisões estratégicas. <br><br>
+
+            Melhoram a memória e a concentração: O jogo da memória, por exemplo, força o cérebro a reter informações
+            de curto prazo. O caça-palavras e o jogo da forca aprimoram a concentração e o foco, enquanto você busca
+            por padrões e soluções. <br><br>
+
+            Aumentam a velocidade de processamento: Ao resolver quebra-cabeças e desafios rapidamente, você treina a
+            mente a processar informações de forma mais ágil, melhorando a sua agilidade mental.
+            <br><br>
+
+            Promovem a <strong>neuroplasticidade</strong>: Ou seja, a capacidade do cérebro de se adaptar e criar
+            novas conexões. Ao aprender um novo jogo ou dominar uma nova estratégia, você está literalmente
+            <strong>construindo novas vias neurais</strong>.
+            <br><br>
+
+            Combatem o estresse: O ato de se envolver em um jogo divertido e desafiador pode ser uma excelente forma
+            de relaxamento, ajudando a desviar o foco de preocupações e reduzindo os níveis de estresse.
+            <br><br>
+
+            Estimular a mente com esses jogos <strong>é um ato de autocuidado</strong>. É um investimento no seu
+            bem-estar e na sua felicidade. Eles nos lembram que a aprendizagem e o desenvolvimento não têm idade
+            para acabar, e que a <strong>alegria de resolver um bom desafio</strong> é uma das melhores sensações
+            que existem.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer simples, com padrão do site -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="jg-footer-note muted">
+        © <span id="year"></span> Todos os direitos reservados à Ailton A. Nakata
+      </p>
+    </div>
+  </footer>
 </body>
-
 </html>
