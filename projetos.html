@@ -8,7 +8,7 @@
   <!-- Material Symbols Outlined (Google Icon) -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap">
 
-  <!-- Use o CSS global profissional -->
+  <!-- CSS global -->
   <link rel="stylesheet" href="site.css" />
 
   <title>Projetos | Ailton A. Nakata</title>
@@ -30,7 +30,7 @@
         </div>
       </a>
 
-      <!-- ✅ Burger (mobile) -->
+      <!-- Burger (mobile) -->
       <button
         class="nav-toggle"
         type="button"
@@ -41,10 +41,10 @@
         <span class="material-symbols-outlined" aria-hidden="true">menu</span>
       </button>
 
-      <!-- ✅ Nav com id + data-nav -->
       <nav class="nav" id="site-nav" aria-label="Navegação principal" data-nav>
         <a href="index.html">Início</a>
         <a href="estudos.html">Estudos</a>
+        <a href="projetos.html" aria-current="page">Projetos</a>
         <a href="certificados.html">Certificados</a>
         <a href="contato.html">Contato</a>
         <button class="btn btn-primary" data-open-modal type="button">Solicitar orçamento</button>
@@ -55,25 +55,27 @@
   <main>
     <section class="section">
       <div class="container">
+        <!-- Cabeçalho da página -->
         <div class="section-head">
           <h1>Projetos</h1>
           <p class="muted">Seleção de projetos com foco em UI moderna, responsividade e boa experiência.</p>
         </div>
 
-        <!-- Filtros simples (opcional, só visual por enquanto) -->
+        <!-- Filtros (âncoras) -->
         <div class="hero-actions" style="margin-bottom: 14px;">
           <a class="btn btn-secondary" href="#sites">Sites</a>
           <a class="btn btn-secondary" href="#apps">Apps/JS</a>
           <a class="btn btn-secondary" href="#jogos">Jogos</a>
         </div>
-        
-        <!-- SITES -->
+
+        <!-- ===================== SITES ===================== -->
         <div class="section-head" id="sites" style="margin-top: 10px;">
           <h2>Sites</h2>
-          <p class="muted">Projetos que simulam negócios reais de pessoas autonomas, pequenas, médias e grandes empresas.</p>
+          <p class="muted">Projetos que simulam negócios reais de pessoas autônomas, pequenas, médias e grandes empresas.</p>
         </div>
 
         <div class="projects-grid">
+          <!-- Sistema Loja -->
           <article class="project">
             <img src="img/thumbs/sistema-loja.jpg" alt="Projeto Sistema de Loja" />
             <div class="project-body">
@@ -93,13 +95,12 @@
           </article>
 
           <!-- Clínica Popular -->
-          <div class="projects-grid">
           <article class="project">
             <img src="img/thumbs/clinica.jpg" alt="Projeto Clínica Popular" />
             <div class="project-body">
               <span class="badge">Institucional</span>
               <h3>Site - Clínica Popular</h3>
-              <p class="muted">Layout de site para clínica com foco em credibilidade e contato. Este tipo de site você encontra todas as informações em uma única página(Classe - Clínica Médica).</p>
+              <p class="muted">Layout de site para clínica com foco em credibilidade e contato. Site com informações em uma única página (Classe - Clínica Médica).</p>
               <ul class="list">
                 <li>Seções bem organizadas</li>
                 <li>Boa leitura no mobile</li>
@@ -111,32 +112,6 @@
               </div>
             </div>
           </article>
-          
-          <!-- JOGOS -->
-          <div class="projects-grid">
-          <div class="section-head" id="jogos" style="margin-top: 30px;">
-            <h2>Jogos</h2>
-            <p class="muted">Projetos para praticar lógica e interface.</p>
-          </div>
-          
-          <div class="projects-grid">
-            <article class="project">
-              <img src="img/thumbs/jogos.jpg" alt="Página de Jogos" />
-              <div class="project-body">
-                <span class="badge">Jogos</span>
-                <h3>Meus jogos</h3>
-                <p class="muted">Coleção de projetos interativos.</p>
-                <ul class="list">
-                  <li>Interatividade</li>
-                  <li>Regras e lógica</li>
-                  <li>UI prática</li>
-                </ul>
-                <div class="project-actions">
-                  <a class="btn btn-secondary" href="jogos/index.html" target="_blank" rel="noopener noreferrer">Abrir jogos</a>
-                  <button class="btn btn-primary" data-open-modal type="button">Quero um projeto assim</button>
-                </div>
-              </div>
-            </article>
 
           <!-- Fresco Pizzaria -->
           <article class="project">
@@ -144,7 +119,7 @@
             <div class="project-body">
               <span class="badge">Conversão</span>
               <h3>Site - Fresco Pizzaria</h3>
-              <p class="muted">Projeto com potencial para cardápio + botão WhatsApp(Classe - Restaurantes).</p>
+              <p class="muted">Projeto com potencial para cardápio + botão WhatsApp (Classe - Restaurantes).</p>
               <ul class="list">
                 <li>Visual moderno</li>
                 <li>Boa identidade</li>
@@ -163,7 +138,7 @@
             <div class="project-body">
               <span class="badge">Landing</span>
               <h3>Site - Curiosidade de Tecnologia</h3>
-              <p class="muted">Página temática com estrutura bem clara e organizada. Site que simula homepage com várias páginas vinculadas (Classe - Tecnologia).</p>
+              <p class="muted">Página temática com estrutura clara. Simula homepage com várias páginas vinculadas (Classe - Tecnologia).</p>
               <ul class="list">
                 <li>Boa hierarquia visual</li>
                 <li>Seções objetivas</li>
@@ -195,13 +170,13 @@
             </div>
           </article>
 
-          <!-- Portfólio (antigo) -->
+          <!-- Portfólio -->
           <article class="project">
             <img src="img/thumbs/portfolio.jpg" alt="Site Portfólio Pessoal" />
             <div class="project-body">
               <span class="badge">Pessoal</span>
               <h3>Site - Portfólio Pessoal</h3>
-              <p class="muted">Projeto de portifólio para pessoas autonomas e freelancers (Classe - Portifólio).</p>
+              <p class="muted">Projeto de portfólio para pessoas autônomas e freelancers (Classe - Portfólio).</p>
               <ul class="list">
                 <li>Navegação simples</li>
                 <li>Conteúdo bem separado</li>
@@ -215,13 +190,39 @@
           </article>
         </div>
 
-        <!-- APPS/JS -->
+        <!-- ===================== JOGOS ===================== -->
+        <div class="section-head" id="jogos" style="margin-top: 30px;">
+          <h2>Jogos</h2>
+          <p class="muted">Projetos para praticar lógica e interface.</p>
+        </div>
+
+        <div class="projects-grid">
+          <article class="project">
+            <img src="img/thumbs/jogos.jpg" alt="Página de Jogos" />
+            <div class="project-body">
+              <span class="badge">Jogos</span>
+              <h3>Meus jogos</h3>
+              <p class="muted">Coleção de projetos interativos.</p>
+              <ul class="list">
+                <li>Interatividade</li>
+                <li>Regras e lógica</li>
+                <li>UI prática</li>
+              </ul>
+              <div class="project-actions">
+                <a class="btn btn-secondary" href="jogos/index.html" target="_blank" rel="noopener noreferrer">Abrir jogos</a>
+                <button class="btn btn-primary" data-open-modal type="button">Quero um projeto assim</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- ===================== APPS/JS ===================== -->
         <div class="section-head" id="apps" style="margin-top: 30px;">
           <h2>Apps e JavaScript</h2>
           <p class="muted">Pequenas aplicações e componentes que mostram lógica e interação (Classe - Aplicativos).</p>
         </div>
-        
 
+        <div class="projects-grid">
           <article class="project">
             <img src="img/thumbs/pomodoro.jpg" alt="Projeto Pomodoro" />
             <div class="project-body">
@@ -245,7 +246,7 @@
             <div class="project-body">
               <span class="badge">JS</span>
               <h3>Rastreador de Hábitos</h3>
-              <p class="muted">Projeto que demonstra Layout Sofistiado, com funções de rastreamento de hábitos (Classe - Aplicativos)</p>
+              <p class="muted">Projeto com layout sofisticado e funções de rastreamento de hábitos (Classe - Aplicativos).</p>
               <ul class="list">
                 <li>CRUD simples</li>
                 <li>Interface clara</li>
@@ -257,8 +258,6 @@
               </div>
             </div>
           </article>
-
-
 
           <article class="project">
             <img src="img/thumbs/cacheta.jpg" alt="Projeto Placar Cacheta" />
@@ -279,6 +278,7 @@
           </article>
         </div>
 
+        <!-- CTA final -->
         <div class="cta-box">
           <h2>Quer um site com design moderno e foco em conversão?</h2>
           <p class="muted">Me diga seu segmento e objetivo. Eu respondo com proposta e prazo.</p>
@@ -306,7 +306,7 @@
   <!-- Botão WhatsApp flutuante -->
   <button class="wa-float" data-wa-float aria-label="Falar no WhatsApp" type="button">WhatsApp</button>
 
-  <!-- Modal de orçamento (mesmo padrão do site) -->
+  <!-- Modal de orçamento -->
   <div class="modal-overlay" data-modal-overlay>
     <div class="modal" role="dialog" aria-modal="true" aria-label="Solicitar orçamento">
       <div class="modal-head">
