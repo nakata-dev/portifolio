@@ -55,6 +55,12 @@ body{
   min-width: 0;
 }
 
+.logotipo{
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
+  flex: 0 0 auto;
+}
 .brand{
   display: flex;
   align-items: center;
