@@ -18,8 +18,7 @@
   <header class="app-header">
     <div class="container header-inner">
       <div class="brand" aria-label="Crossword Elite">
-        <img class="logotipo" src="logo/Logo_Palavras_Cruzadas.png" alt="palavra cruzada com lápis" class="brand-logo" />
-        
+        <img class="logotipo" src="logo/Logo_Palavras_Cruzadas.png" alt="palavra cruzada com lápis" />
       </div>
 
       <div class="hud" aria-label="Status do jogo">
@@ -40,28 +39,43 @@
   </header>
 
   <main class="container app-main">
-    <!-- “Folha de atividade” -->
     <section class="worksheet" aria-label="Atividade de palavras cruzadas">
+
+      <!-- Topo minimalista: só título e regra curtinha -->
       <div class="worksheet-head">
         <div class="worksheet-title">
           <h2 id="sheetTitle">Complete a cruzadinha</h2>
-          <p class="muted" id="sheetRule">Clique em uma célula e digite. Tab alterna Horizontal/Vertical.</p>
-        </div>
-
-        <div class="controls" aria-label="Controles">
-          <button class="btn btn-ghost" id="kbdToggle" type="button" aria-pressed="false">Teclado</button>
-          <button class="btn btn-secondary" id="pauseBtn" type="button" aria-pressed="false">Pausar</button>
-          <button class="btn btn-secondary" id="resetBtn" type="button">Resetar</button>
-          <button class="btn btn-primary" id="nextBtn" type="button" disabled>Próximo</button>
+          <p class="muted" id="sheetRule">Toque e digite. Tab alterna direção.</p>
         </div>
       </div>
 
-      <!-- Spotlight da dica (evita abrir lista toda hora) -->
-      <article class="spotlight" aria-label="Dica atual">
-        <div class="spotlight-top">
-          <div class="spotlight-left">
+      <!-- Grade com prioridade -->
+      <section class="grid-card" aria-label="Grade">
+        <div
+          id="grid"
+          class="grid"
+          role="grid"
+          aria-label="Grade de palavras cruzadas"
+          aria-rowcount="9"
+          aria-colcount="9">
+        </div>
+
+        <input
+          id="hiddenInput"
+          class="sr-input"
+          autocomplete="off"
+          autocapitalize="characters"
+          inputmode="text"
+          aria-label="Entrada de letras"
+        />
+      </section>
+
+      <!-- Dock essencial (clue + direção + dicas) -->
+      <article class="dock" aria-label="Painel da dica e ações">
+        <div class="dock-top">
+          <div class="dock-left">
             <span class="muted">Selecionado</span>
-            <strong id="activeWordLabel">—</strong>
+            <strong id="activeWordLabel" class="dock-word">—</strong>
           </div>
 
           <div class="dir-toggle" role="group" aria-label="Direção da palavra">
@@ -70,7 +84,7 @@
           </div>
         </div>
 
-        <p class="spotlight-clue" id="clueText">Clique em uma célula para selecionar uma palavra.</p>
+        <p class="dock-clue" id="clueText">Clique em uma célula para selecionar uma palavra.</p>
 
         <div class="hint-row" aria-label="Dicas extras">
           <button class="btn btn-secondary hint-btn" id="hint1Btn" type="button" disabled>
@@ -84,53 +98,15 @@
           </button>
         </div>
 
-        <p class="muted small" id="clueMeta">—</p>
+        <p class="muted small dock-meta" id="clueMeta">—</p>
       </article>
 
-      <!-- Grade + Dicas (organização “atividade”) -->
-      <div class="worksheet-body">
-        <section class="grid-card" aria-label="Grade">
-          <div class="grid-head muted small">
-            Setas navegam. Backspace apaga e volta. Tab alterna direção.
-          </div>
-
-          <div
-            id="grid"
-            class="grid"
-            role="grid"
-            aria-label="Grade de palavras cruzadas"
-            aria-rowcount="9"
-            aria-colcount="9">
-          </div>
-
-          <input
-            id="hiddenInput"
-            class="sr-input"
-            autocomplete="off"
-            autocapitalize="characters"
-            inputmode="text"
-            aria-label="Entrada de letras"
-          />
-        </section>
-
-        <aside class="clues-card" aria-label="Dicas do nível">
-          <!-- Mobile: abre/fecha (sem rolagem infinita). Desktop: pode ficar tudo aberto -->
-          <details class="clues-group" id="acrossDetails" open>
-            <summary>
-              <span>Horizontais</span>
-              <span class="muted small">toque para abrir</span>
-            </summary>
-            <ol class="clue-list" id="acrossList"></ol>
-          </details>
-
-          <details class="clues-group" id="downDetails">
-            <summary>
-              <span>Verticais</span>
-              <span class="muted small">toque para abrir</span>
-            </summary>
-            <ol class="clue-list" id="downList"></ol>
-          </details>
-        </aside>
+      <!-- ✅ CONTROLES EMBAIXO (sticky dentro do worksheet) -->
+      <div class="bottom-controls" aria-label="Controles do jogo">
+        <button class="btn btn-ghost" id="kbdToggle" type="button" aria-pressed="false">Teclado</button>
+        <button class="btn btn-secondary" id="pauseBtn" type="button" aria-pressed="false">Pausar</button>
+        <button class="btn btn-secondary" id="resetBtn" type="button">Resetar</button>
+        <button class="btn btn-primary" id="nextBtn" type="button" disabled>Próximo</button>
       </div>
 
       <!-- Teclado compacto (mobile) -->
@@ -141,6 +117,7 @@
         </div>
         <div class="kbd" id="kbd"></div>
       </section>
+
     </section>
   </main>
 

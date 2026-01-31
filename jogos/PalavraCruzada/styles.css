@@ -9,10 +9,8 @@
   --shadow: 0 16px 40px rgba(0,0,0,0.35);
   --radius: 18px;
 
-  /* ✅ Controle da grade: largura máxima e gaps fluidos */
   --gridMax: 520px;
   --gridGap: clamp(6px, 1.2vw, 10px);
-
   --focus: 0 0 0 4px rgba(0,188,212,0.22);
 }
 
@@ -37,6 +35,7 @@ body{
 .penalty{ color: rgba(0,188,212,0.95); font-weight: 800; }
 [hidden]{ display: none !important; }
 
+/* HEADER */
 .app-header{
   position: sticky;
   top: 0;
@@ -55,12 +54,6 @@ body{
   min-width: 0;
 }
 
-.logotipo{
-  width: 80px;
-  height: 80px;
-  border-radius: 15px;
-  flex: 0 0 auto;
-}
 .brand{
   display: flex;
   align-items: center;
@@ -68,50 +61,38 @@ body{
   min-width: 0;
 }
 
-.brand-mark{
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: rgba(0,188,212,0.14);
-  border: 1px solid rgba(0,188,212,0.28);
-  color: var(--accent);
-  font-weight: 900;
+.logotipo{
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
   flex: 0 0 auto;
 }
 
-.brand-title{ font-size: clamp(01.5rem, 2.2vw, 1.25rem); }
-.brand-subtitle{ font-size: clamp(0.5rem, 2.0vw, 0.98rem); }
+.brand-text{
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
 
+.brand-title,
+.brand-subtitle{
+  margin: 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .brand-title{
-  margin: 0;
-  
+  font-size: clamp(1rem, 2.2vw, 1.15rem);
   letter-spacing: -0.02em;
-
-  /* 2 linhas no mobile, sem estourar */
-  display: -webkit-box;
-  -webkit-box-orient: horizontal;
-  -webkit-line-clamp: 1;
-
-  overflow: hidden;
-  white-space: normal;
+  font-weight: 800;
 }
 
 .brand-subtitle{
-  margin: 2px 0 0;
-  
+  font-size: clamp(0.88rem, 2vw, 0.98rem);
   color: rgba(224,224,224,0.72);
-
-  display: -webkit-box;
-  -webkit-box-orient: horizontal;
-  -webkit-line-clamp: 1;
-
-  overflow: hidden;
-  white-space: normal;
 }
-
 
 .hud{
   display: flex;
@@ -135,6 +116,7 @@ body{
 
 .app-main{ padding: 14px 0 0; }
 
+/* BOTÕES */
 .btn{
   display: inline-flex;
   align-items: center;
@@ -179,13 +161,14 @@ body{
   min-height: 40px;
   font-weight: 800;
   min-width: 0;
+  max-width: 100%;
 }
-
 .chip[aria-pressed="true"]{
   background: rgba(0,188,212,0.14);
   border-color: rgba(0,188,212,0.30);
 }
 
+/* WORKSHEET */
 .worksheet{
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -195,110 +178,29 @@ body{
   display: grid;
   gap: 12px;
   min-width: 0;
+  position: relative; /* para o sticky interno funcionar bonito */
 }
 
 .worksheet-head{
   display: grid;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
 }
 
-.worksheet-title{ min-width: 0; }
 .worksheet-title h2{
   margin: 0;
   letter-spacing: -0.02em;
-  font-size: 1.2rem;
+  font-size: 1.06rem;
 }
 .worksheet-title p{ margin: 6px 0 0; }
 
-.controls{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  min-width: 0;
-}
-.controls .btn{ width: 100%; }
-
-@media (min-width: 768px){
-  .worksheet-head{
-    grid-template-columns: 1.2fr 0.8fr;
-    align-items: start;
-  }
-  .controls{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
-@media (max-width: 420px){
-  .header-inner{ flex-direction: column; align-items: flex-start; }
-  .hud{ width: 100%; justify-content: flex-start; }
-  .hud-pill{ width: 100%; justify-content: center; }
-  .controls{ grid-template-columns: 1fr; }
-  .btn{ padding: 12px 12px; font-size: 0.98rem; }
-}
-
-.spotlight{
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: rgba(51,51,77,0.38);
-  padding: 12px;
-  min-width: 0;
-}
-
-.spotlight-top{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-  min-width: 0;
-}
-
-.spotlight-left{ min-width: 0; }
-.spotlight-clue{ margin: 10px 0 10px; font-size: 1.02rem; }
-
-.dir-toggle{
-  display: inline-flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  min-width: 0;
-}
-
-@media (max-width: 420px){
-  .spotlight-top{ flex-direction: column; align-items: stretch; }
-  .dir-toggle{ display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .chip{ width: 100%; justify-content: center; }
-}
-
-.hint-row{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 10px;
-  min-width: 0;
-}
-
-@media (max-width: 480px){
-  .hint-row{ grid-template-columns: 1fr; }
-}
-
-.hint-btn{ justify-content: space-between; padding: 10px 12px; }
-.hint-cost{ font-weight: 900; color: rgba(0,188,212,0.95); }
-
-.worksheet-body{
-  display: grid;
-  gap: 12px;
-  min-width: 0;
-}
-
-.grid-card, .clues-card, .kbd-card{
-  border-radius: var(--radius);
-  background: rgba(51,51,77,0.35);
-  min-width: 0;
-}
-
-/* ✅ Card da grade com borda em camada separada */
+/* GRID CARD */
 .grid-card{
   position: relative;
   overflow: hidden;
-  padding: 16px;
+  padding: 12px;
+  border-radius: var(--radius);
+  background: rgba(51,51,77,0.35);
 }
 .grid-card::before{
   content:"";
@@ -309,17 +211,8 @@ body{
   box-shadow: inset 0 0 0 1px var(--border);
   z-index: 0;
 }
-.grid-card > *{
-  position: relative;
-  z-index: 1;
-}
+.grid-card > *{ position: relative; z-index: 1; }
 
-.grid-head{ margin-bottom: 10px; }
-
-/* ✅ FIX DEFINITIVO DO CORTE:
-   - a grade tem largura máxima (var(--gridMax))
-   - no mobile ela encolhe (100%)
-   - colunas usam 1fr, células viram quadrados via aspect-ratio */
 .grid{
   width: min(var(--gridMax), 100%);
   margin: 0 auto;
@@ -331,7 +224,7 @@ body{
   background: rgba(0,0,0,0.06);
 }
 
-/* ✅ Células fluidas: sempre quadradas e nunca estouram */
+/* CÉLULAS */
 .cell{
   position: relative;
   width: 100%;
@@ -347,10 +240,9 @@ body{
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background .12s ease, border-color .12s ease;
+  transition: background .12s ease, border-color .12s ease, box-shadow .12s ease;
   outline: none;
 }
-
 .cell:hover{
   border-color: rgba(0,188,212,0.30);
   background: rgba(0,188,212,0.06);
@@ -359,13 +251,11 @@ body{
   box-shadow: var(--focus);
   border-color: rgba(0,188,212,0.40);
 }
-
 .cell.block{
   background: rgba(0,0,0,0.25);
   border-color: rgba(0,0,0,0.18);
   cursor: default;
 }
-
 .cell.active{
   border-color: rgba(0,188,212,0.55);
   background: rgba(0,188,212,0.14);
@@ -379,7 +269,6 @@ body{
   border-color: rgba(255,90,120,0.35);
   box-shadow: 0 0 0 3px rgba(255,90,120,0.12);
 }
-
 .cell .num{
   position: absolute;
   top: 6px;
@@ -398,98 +287,110 @@ body{
   opacity: 0;
 }
 
-.clues-card{
-  border: 1px solid rgba(224,224,224,0.12);
+/* DOCK ESSENCIAL */
+.dock{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(51,51,77,0.38);
   padding: 12px;
-  display: grid;
-  gap: 10px;
   min-width: 0;
-}
-
-.clues-group{
-  border: 1px solid rgba(224,224,224,0.12);
-  border-radius: 16px;
-  background: rgba(255,255,255,0.03);
   overflow: hidden;
+}
+
+.dock-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
   min-width: 0;
 }
 
-.clues-group summary{
-  list-style: none;
-  cursor: pointer;
-  padding: 12px 12px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-weight: 900;
-  border-bottom: 1px solid rgba(224,224,224,0.10);
-}
-.clues-group summary::-webkit-details-marker{ display:none; }
-
-.clue-list{
-  margin: 0;
-  padding: 10px 14px 12px 22px;
-  max-height: min(38vh, 360px);
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+.dock-left{
+  min-width: 0;
   display: grid;
+  gap: 2px;
+}
+
+.dock-word{
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dir-toggle{
+  display: inline-flex;
   gap: 10px;
+  flex-wrap: wrap;
   min-width: 0;
 }
 
-.clue-item{
+.dock-clue{
+  margin: 10px 0 10px;
+  font-size: 1.02rem;
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.dock-meta{
+  margin: 8px 0 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* hints */
+.hint-row{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
+  min-width: 0;
+}
+.hint-btn{ justify-content: space-between; padding: 10px 12px; min-width: 0; }
+.hint-cost{ font-weight: 900; color: rgba(0,188,212,0.95); white-space: nowrap; }
+
+@media (max-width: 520px){
+  .hint-row{ grid-template-columns: 1fr; }
+  .dir-toggle{ width: 100%; }
+  .chip{ width: 100%; justify-content: center; }
+}
+
+/* ✅ CONTROLES NO RODAPÉ DO WORKSHEET (sticky) */
+.bottom-controls{
+  position: sticky;
+  bottom: 10px;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(26,26,46,0.65);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(224,224,224,0.10);
-  background: rgba(255,255,255,0.03);
-  border-radius: 14px;
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: border-color .12s ease, background .12s ease, transform .12s ease;
-  min-width: 0;
-}
-.clue-item:hover{
-  transform: translateY(-1px);
-  border-color: rgba(0,188,212,0.22);
-  background: rgba(0,188,212,0.06);
-}
-.clue-item.active{
-  border-color: rgba(0,188,212,0.45);
-  background: rgba(0,188,212,0.12);
-}
-.clue-item.done{ opacity: 0.78; }
-.clue-item .status{ color: rgba(0,188,212,0.95); font-weight: 900; }
-
-.clue-line{
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  min-width: 0;
-}
-.clue-text{
-  margin: 6px 0 0;
-  color: rgba(224,224,224,0.72);
-  font-size: 0.92rem;
-  overflow-wrap: anywhere;
 }
 
-@media (min-width: 768px){
-  .worksheet-body{
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-  }
-  .clue-list{
-    columns: 2;
-    column-gap: 12px;
-  }
-  .clue-item{
-    break-inside: avoid;
-    margin-bottom: 10px;
-  }
+.bottom-controls .btn{ width: 100%; }
+
+/* em telas muito pequenas, 2 colunas para não esmagar */
+@media (max-width: 420px){
+  .header-inner{ flex-direction: column; align-items: flex-start; }
+  .hud{ width: 100%; justify-content: flex-start; }
+  .hud-pill{ width: 100%; justify-content: center; }
+  .bottom-controls{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+/* teclado */
 .kbd-card{
   border: 1px solid rgba(224,224,224,0.12);
   padding: 12px;
-  margin-top: 12px;
+  border-radius: var(--radius);
+  background: rgba(51,51,77,0.35);
   min-width: 0;
 }
 
@@ -528,6 +429,7 @@ body{
   transform: translateY(-1px);
 }
 
+/* overlays */
 .overlay{
   position: fixed;
   inset: 0;
@@ -579,6 +481,7 @@ body{
   margin-top: 12px;
 }
 
+/* footer */
 .app-footer{
   border-top: 1px solid var(--border);
   margin-top: 16px;
