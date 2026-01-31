@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
-  <title>Controle Financeiro</title>
-  <link rel="shortcut icon" href="../img/aumentar.png" type="image/x-icon">
 
+  <link rel="shortcut icon" href="img/aumentar.png" type="image/x-icon">
+  <title>Controle de Financeiro</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -22,7 +22,6 @@
           </linearGradient>
         </defs>
 
-        <!-- Badge arredondado -->
         <rect x="4" y="4" width="36" height="36" rx="12" fill="url(#fpGrad)"></rect>
 
         <!-- Grade/planilha -->
@@ -64,7 +63,7 @@
     <a class="navlink" href="#sec-goals"><span>1) Metas de ganhos</span><small>projeções</small></a>
     <a class="navlink" href="#sec-expenses"><span>2) Despesas</span><small>planilha</small></a>
     <a class="navlink" href="#sec-progress"><span>3) Progresso</span><small>alertas</small></a>
-    <a class="navlink" href="#sec-skill"><span>4) Nova Skill</span><small>todo + agenda</small></a>
+    <a class="navlink" href="#sec-skill"><span>4) Nova Skill</span><small>tarefas</small></a>
 
     <div class="divider"></div>
     <h2>Configurações</h2>
@@ -105,6 +104,23 @@
           </div>
         </div>
 
+        <div class="grid grid-2">
+          <div>
+            <label for="setSound">Lembrete sonoro</label>
+            <select id="setSound">
+              <option value="on">Ativado</option>
+              <option value="off">Desativado</option>
+            </select>
+          </div>
+          <div>
+            <label for="setVoice">Lembrete por voz</label>
+            <select id="setVoice">
+              <option value="on">Ativado</option>
+              <option value="off">Desativado</option>
+            </select>
+          </div>
+        </div>
+
         <div class="row row-between">
           <button class="btn secondary" id="btnExport">Exportar backup (JSON)</button>
           <label class="btn secondary" for="fileImport" style="cursor:pointer;">Importar backup</label>
@@ -128,7 +144,7 @@
   <main>
     <section class="section" id="sec-goals">
       <div class="card">
-        <h1 class="h1">1) Objetivo de ganhos</h1>
+        <h1 class="h1">1) Objetivos de ganhos</h1>
         <p class="sub">
           Metas em <strong>BRL</strong>. Abaixo você pode registrar seu salário em qualquer moeda e converter para BRL.
         </p>
@@ -396,12 +412,57 @@
       <div class="card">
         <h1 class="h1">4) Nova Skill + tarefas + agenda</h1>
         <p class="sub">
-          Estilo Todoist: defina uma skill, crie tarefas e programe práticas.
+          Mini Todoist leve: defina uma skill e programe práticas com lembrete.
         </p>
 
-        <p class="sub" style="margin:0;">
-          (Se você quiser, na próxima iteração eu reativo/expando essa área com tarefas + agenda e lembretes sonoros, mantendo o app leve.)
-        </p>
+        <div class="grid grid-2">
+          <div>
+            <label for="skillName">Skill principal</label>
+            <input id="skillName" placeholder="Ex.: Japonês (conversação)" />
+          </div>
+          <div class="row" style="align-items:flex-end; justify-content: space-between;">
+            <span class="pill" id="skillKpi">Próximas: — • Hoje: —</span>
+            <button class="btn secondary" id="btnSaveSkill">Salvar skill</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2 class="h1">Agendar prática</h2>
+        <div class="grid grid-3">
+          <div>
+            <label for="taskTitle">Tarefa / prática</label>
+            <input id="taskTitle" placeholder="Ex.: 30min shadowing" />
+          </div>
+          <div>
+            <label for="taskDate">Data</label>
+            <input id="taskDate" type="date" />
+          </div>
+          <div>
+            <label for="taskTime">Hora</label>
+            <input id="taskTime" type="time" />
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <div>
+            <label for="taskNote">Notas (opcional)</label>
+            <input id="taskNote" placeholder="Ex.: ouvir podcast e repetir frases" />
+          </div>
+          <div class="row" style="align-items:flex-end; justify-content: space-between;">
+            <button class="btn secondary" id="btnTestReminder">Testar lembrete</button>
+            <button class="btn" id="btnAddTask">Adicionar prática</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row" style="justify-content: space-between;">
+          <h2 class="h1" style="margin:0;">Próximas</h2>
+          <button class="btn secondary" id="btnClearDone">Limpar concluídas</button>
+        </div>
+
+        <div class="tasklist" id="taskList" aria-label="Lista de práticas"></div>
       </div>
     </section>
   </main>

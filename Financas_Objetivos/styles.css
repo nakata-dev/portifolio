@@ -114,7 +114,7 @@ header{
 .icon-btn:active{ transform: translateY(1px); }
 
 main{
-  padding: calc(var(--headerH) + 14px) 14px calc(var(--footerH) + 14px);
+  padding: calc(var(--headerH) + 14px) 14px calc(var(--footerH) + 90px);
   max-width: 980px;
   margin: 0 auto;
 }
@@ -140,6 +140,7 @@ footer{
   margin-bottom: 14px;
   scroll-margin-top: calc(var(--headerH) + 10px);
 }
+#sec-skill{ scroll-margin-bottom: calc(var(--footerH) + 20px); }
 
 .card{
   background: var(--surface);
@@ -193,7 +194,6 @@ footer{
   color: var(--text);
 }
 
-/* Score pill */
 .score-pill{
   display:inline-flex;
   align-items:center;
@@ -317,7 +317,6 @@ input, select, textarea{
   text-align:right;
   min-width: 120px;
 }
-
 .tag{
   display:inline-flex;
   align-items:center;
@@ -374,7 +373,6 @@ summary{
   letter-spacing: .2px;
   text-transform: uppercase;
 }
-
 .navlink{
   display:flex;
   align-items:center;
@@ -397,7 +395,7 @@ summary{
 .wa{
   position: fixed;
   right: 14px;
-  bottom: calc(var(--footerH) + 14px);
+  bottom: calc(var(--footerH) + 18px);
   z-index: 60;
   display:flex;
   align-items:center;
@@ -449,6 +447,82 @@ canvas{
   background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
 }
 
+/* ---------- Skill / tarefas (leve) ---------- */
+.tasklist{
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.task{
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
+  padding: 10px;
+  display:flex;
+  gap: 10px;
+  align-items:flex-start;
+  justify-content: space-between;
+}
+.task-left{
+  display:flex;
+  gap: 10px;
+  align-items:flex-start;
+  min-width: 0;
+}
+.chk{
+  width: 22px;
+  height: 22px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  flex: 0 0 auto;
+}
+.chk span{
+  font-weight: 900;
+  font-size: 14px;
+  opacity: .0;
+}
+.task.done .chk span{ opacity: 1; }
+.task.done .task-title{ text-decoration: line-through; opacity: .75; }
+
+.task-main{ min-width:0; }
+.task-title{
+  margin:0;
+  font-weight: 800;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.task-meta{
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.25;
+}
+.task-actions{
+  display:flex;
+  gap: 8px;
+  align-items:center;
+  flex: 0 0 auto;
+}
+.mini{
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  cursor:pointer;
+}
+.mini.danger{
+  background: color-mix(in oklab, var(--danger) 16%, var(--surface) 84%);
+}
+
+/* ---------- Acessibilidade ---------- */
 :focus-visible{
   outline: 3px solid color-mix(in oklab, var(--primary) 65%, transparent 35%);
   outline-offset: 2px;
