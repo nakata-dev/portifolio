@@ -4,29 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
-  <title>Financeiro</title>
-
-  <!-- CSS separado -->
+  <title>FinPalma MVP</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- Header fixo: logo (esquerda) + burger (direita). Sem títulos no header. -->
   <header>
     <div class="logo" aria-label="Logo">
       <div class="logo-badge" aria-hidden="true"></div>
-      <div class="logo-text">Controle Financeiro</div>
+      <div class="logo-text">FinPalma</div>
     </div>
 
     <button class="icon-btn" id="btnMenu" aria-label="Abrir menu">
-      <!-- Ícone burger (SVG leve) -->
       <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
         <path fill="currentColor" d="M3 6h18v2H3V6Zm0 5h18v2H3v-2Zm0 5h18v2H3v-2Z"/>
       </svg>
     </button>
   </header>
 
-  <!-- Drawer -->
   <div class="overlay" id="overlay" aria-hidden="true"></div>
   <aside class="drawer" id="drawer" aria-label="Menu">
     <div class="row" style="justify-content: space-between;">
@@ -73,7 +68,7 @@
 
         <div class="grid grid-2">
           <div>
-            <label for="setDefaultCurrency">Moeda padrão (site)</label>
+            <label for="setDefaultCurrency">Moeda padrão (lançamentos)</label>
             <select id="setDefaultCurrency"></select>
           </div>
           <div>
@@ -84,35 +79,30 @@
 
         <div class="row row-between">
           <button class="btn secondary" id="btnExport">Exportar backup (JSON)</button>
-          <label class="btn secondary" for="fileImport" style="cursor:pointer;">
-            Importar backup
-          </label>
+          <label class="btn secondary" for="fileImport" style="cursor:pointer;">Importar backup</label>
           <input id="fileImport" type="file" accept="application/json" style="display:none;" />
         </div>
 
         <button class="btn danger" id="btnReset">Resetar dados</button>
 
         <p class="sub" style="margin:0;">
-          Otimizado para <strong>360x800</strong> (mobile-first). Navegação por menu burguer e seções compactas para reduzir rolagem.
+          Otimizado para <strong>360x800</strong>. Metas em <strong>BRL</strong>, lançamentos na moeda que você usar (ex.: <strong>JPY</strong>) com conversão para BRL.
         </p>
       </div>
     </div>
   </aside>
 
-  <!-- Toast -->
   <div class="toast" id="toast" role="status" aria-live="polite">
     <strong id="toastTitle">Aviso</strong>
     <p id="toastMsg"></p>
   </div>
 
   <main>
-    <!-- 1) METAS -->
     <section class="section" id="sec-goals">
       <div class="card">
         <h1 class="h1">1) Objetivos de ganhos</h1>
         <p class="sub">
-          Defina metas e uma linha extra com o quanto você está economizando por mês.
-          O sistema calcula projeções e diz se você está no ritmo certo.
+          Metas em <strong>BRL</strong>. Abaixo você pode registrar seu salário em qualquer moeda e converter para BRL.
         </p>
 
         <div class="grid grid-3">
@@ -167,12 +157,12 @@
           </div>
         </div>
 
-        <!-- NOVO BLOCO: Salário / Receita principal -->
         <div class="divider"></div>
 
         <h2 class="h1">Salário / Receita principal</h2>
         <p class="sub">
-          Preencha seu recebimento e suas despesas fixas. O sistema calcula o <strong>líquido</strong> automaticamente e mostra o equivalente em BRL quando a moeda for estrangeira.
+          Ex.: você mora no Japão: lança salário e gastos em <strong>JPY</strong>, mas acompanha metas em <strong>BRL</strong>.
+          O sistema faz a ponte.
         </p>
 
         <div class="grid grid-3">
@@ -189,7 +179,7 @@
           </div>
           <div>
             <label for="salCompany">Empresa</label>
-            <input id="salCompany" placeholder="Ex.: Minha Empresa" />
+            <input id="salCompany" placeholder="Ex.: Empresa X" />
           </div>
         </div>
 
@@ -210,7 +200,7 @@
 
         <div class="grid grid-2" style="margin-top:10px;">
           <div>
-            <label for="salRate">Taxa (1 moeda = ? BRL) | opcional</label>
+            <label id="salRateLabel" for="salRate">Taxa (1 moeda = ? BRL) | opcional</label>
             <input id="salRate" type="number" inputmode="decimal" placeholder="Ex.: 5.12" />
           </div>
           <div class="row" style="align-items:flex-end; justify-content: space-between;">
@@ -233,26 +223,37 @@
             <div class="value" id="salNetBRL">—</div>
           </div>
           <div class="kpi" style="flex:1 1 220px; min-width:220px;">
-            <div class="label">Status</div>
-            <div class="value" style="font-size:13px; font-weight:750;" id="salStatus">—</div>
+            <div class="label">Gasto variável médio (3m)</div>
+            <div class="value" id="avgVar3m">—</div>
+          </div>
+          <div class="kpi" style="flex:1 1 220px; min-width:220px;">
+            <div class="label">Economia sugerida (Auto)</div>
+            <div class="value" id="suggestSaving">—</div>
           </div>
         </div>
 
         <div class="row" style="margin-top:10px;">
           <button class="btn secondary" id="btnUseNetAsSaving">Usar líquido como economia mensal</button>
-          <span class="pill" id="salHint">Dica: defina a taxa para moeda estrangeira 🧭</span>
+          <button class="btn" id="btnAutoSavingHint">Auto (líquido − média de gastos)</button>
+          <button class="btn secondary" id="btnPostSalaryMonth">Lançar salário do mês</button>
+          <span class="pill" id="salHint">Dica: registre seus gastos para o Auto ficar certeiro.</span>
         </div>
       </div>
     </section>
 
-    <!-- 2) DESPESAS -->
     <section class="section" id="sec-expenses">
       <div class="card">
         <h1 class="h1">2) Despesas (estilo planilha)</h1>
         <p class="sub">
-          Registre receitas e gastos com moeda livre. Se for moeda estrangeira, você pode buscar taxa automaticamente ou informar manualmente.
-          A taxa fica salva no lançamento (histórico estável).
+          Lançamentos podem ser na sua moeda do dia a dia (ex.: JPY). A base do sistema é BRL para você comparar com metas.
         </p>
+
+        <div class="row">
+          <span class="pill" id="monthRadar">Radar do mês: —</span>
+          <span class="pill" id="txCurrencyHint">Moeda atual do lançamento: —</span>
+        </div>
+
+        <div class="divider"></div>
 
         <div class="grid grid-3">
           <div>
@@ -268,13 +269,14 @@
           </div>
           <div>
             <label for="txCategory">Categoria</label>
-            <input id="txCategory" placeholder="Ex.: Alimentação" />
+            <input id="txCategory" list="catList" placeholder="Ex.: Alimentação" />
+            <datalist id="catList"></datalist>
           </div>
         </div>
 
         <div class="grid grid-3" style="margin-top:10px;">
           <div>
-            <label for="txAmount">Valor</label>
+            <label id="txAmountLabel" for="txAmount">Valor</label>
             <input id="txAmount" type="number" inputmode="decimal" placeholder="Ex.: 45.90" />
           </div>
           <div>
@@ -282,14 +284,14 @@
             <select id="txCurrency"></select>
           </div>
           <div>
-            <label for="txDesc">Descrição</label>
+            <label id="txDescLabel" for="txDesc">Descrição</label>
             <input id="txDesc" placeholder="Ex.: Mercado" />
           </div>
         </div>
 
         <div class="grid grid-2" style="margin-top:10px;">
           <div>
-            <label for="txRate">Taxa (1 moeda = ? BRL) | opcional</label>
+            <label id="txRateLabel" for="txRate">Taxa (1 moeda = ? BRL) | opcional</label>
             <input id="txRate" type="number" inputmode="decimal" placeholder="Ex.: 5.12" />
           </div>
           <div class="row" style="align-items:flex-end; justify-content: space-between;">
@@ -326,13 +328,11 @@
       </div>
     </section>
 
-    <!-- 3) PROGRESSO -->
     <section class="section" id="sec-progress">
       <div class="card">
         <h1 class="h1">3) Gráfico de progresso</h1>
         <p class="sub">
-          Mostra sua evolução e dispara alertas quando a meta indica que você não vai conseguir cumprir o prazo.
-          (Baseado na economia real calculada pelos lançamentos e/ou pelo “quanto economiza por mês”.)
+          Alerta automático quando o ritmo não bate a meta.
         </p>
 
         <div class="row">
@@ -351,13 +351,11 @@
       </div>
     </section>
 
-    <!-- 4) SKILL + TODO + AGENDA -->
     <section class="section" id="sec-skill">
       <div class="card">
         <h1 class="h1">4) Nova Skill + tarefas + agenda</h1>
         <p class="sub">
-          Estilo Todoist: defina uma skill, crie tarefas e programe práticas no calendário.
-          Alertas sonoros dependem do navegador permitir áudio após alguma interação.
+          Estilo Todoist: defina uma skill, crie tarefas e programe práticas.
         </p>
 
         <div class="grid grid-2">
@@ -422,7 +420,6 @@
     Copyright ©️ 2026 - Ailton A. Nakata
   </footer>
 
-  <!-- JS separado -->
   <script src="app.js"></script>
 </body>
 </html>

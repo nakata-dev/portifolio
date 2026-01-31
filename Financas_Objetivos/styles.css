@@ -1,21 +1,10 @@
-/* =========================================================
-  FinPalma MVP (2026) - Single Page, Mobile-first 360x800
-  - Header/Footer fixos
-  - Paleta Marinha
-  - Modo claro/escuro
-  - Layout compacto (pouca rolagem)
-  - Tipografia com tabular numbers
-========================================================= */
-
 :root{
-  /* Paleta Marinha */
   --sereno:#92A8D1;
   --nevoa:#B1C4D1;
   --cinza:#D1D1D1;
   --gelo:#F0F4F7;
   --marinho:#2C3E50;
 
-  /* Tokens (light) */
   --bg: var(--gelo);
   --surface: #ffffff;
   --surface2: rgba(177,196,209,0.22);
@@ -23,7 +12,6 @@
   --muted: rgba(35,48,60,0.65);
   --border: rgba(44,62,80,0.14);
   --primary: var(--sereno);
-  --primaryText: #0f1a24;
   --danger: #b33a3a;
   --ok: #247a43;
 
@@ -33,7 +21,6 @@
   --headerH: 56px;
   --footerH: 44px;
 
-  /* Font fallback minimalista */
   --font: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -45,7 +32,6 @@ html[data-theme="dark"]{
   --muted: rgba(240,244,247,0.66);
   --border: rgba(240,244,247,0.14);
   --primary: #9fb6e6;
-  --primaryText: #0c141c;
   --shadow: 0 12px 28px rgba(0,0,0,0.35);
 }
 
@@ -58,12 +44,9 @@ body{
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* Tabular numbers para alinhar colunas numéricas quando a fonte suportar */
   font-variant-numeric: tabular-nums;
 }
 
-/* Header fixo */
 header{
   position: fixed;
   top:0; left:0; right:0;
@@ -119,7 +102,6 @@ main{
   margin: 0 auto;
 }
 
-/* Footer fixo */
 footer{
   position: fixed;
   bottom:0; left:0; right:0;
@@ -137,13 +119,11 @@ footer{
   color: var(--muted);
 }
 
-/* Seções */
 .section{
   margin-bottom: 14px;
   scroll-margin-top: calc(var(--headerH) + 10px);
 }
 
-/* Cards */
 .card{
   background: var(--surface);
   border: 1px solid var(--border);
@@ -151,23 +131,15 @@ footer{
   box-shadow: var(--shadow);
   padding: 12px;
 }
-.card + .card{ margin-top: 12px; }
+.card-flat{ box-shadow:none; }
 
-/* Card “flat” (usado no menu) */
-.card-flat{
-  box-shadow:none;
-}
-
-/* Layout helpers */
 .row{
   display:flex;
   gap:10px;
   align-items:center;
   flex-wrap: wrap;
 }
-.row-between{
-  justify-content: space-between;
-}
+.row-between{ justify-content: space-between; }
 
 .grid{
   display:grid;
@@ -179,12 +151,10 @@ footer{
   .grid-3{ grid-template-columns: 1fr 1fr 1fr; }
 }
 
-/* Tipografia */
 .h1{
   font-size: 14px;
   font-weight: 700;
   margin: 0 0 8px;
-  color: var(--text);
   letter-spacing: .2px;
 }
 .sub{
@@ -194,7 +164,6 @@ footer{
   line-height: 1.35;
 }
 
-/* Pílulas / status */
 .pill{
   display:inline-flex;
   align-items:center;
@@ -207,7 +176,6 @@ footer{
   color: var(--text);
 }
 
-/* KPIs */
 .kpi{
   flex: 1 1 150px;
   min-width: 150px;
@@ -243,9 +211,7 @@ input, select, textarea{
   font-size: 13px;
   outline: none;
 }
-textarea{ min-height: 44px; resize: vertical; }
 
-/* Botões */
 .btn{
   appearance:none;
   border: 1px solid var(--border);
@@ -267,10 +233,6 @@ textarea{ min-height: 44px; resize: vertical; }
   background: var(--surface);
   color: var(--text);
 }
-.btn.ghost{
-  background: transparent;
-  color: var(--text);
-}
 .btn.danger{
   background: color-mix(in oklab, var(--danger) 20%, var(--surface) 80%);
   color: var(--text);
@@ -283,7 +245,6 @@ textarea{ min-height: 44px; resize: vertical; }
   margin: 10px 0;
 }
 
-/* Lista compacta estilo “planilha” */
 .list{
   display:flex;
   flex-direction: column;
@@ -317,7 +278,6 @@ textarea{ min-height: 44px; resize: vertical; }
   min-width: 120px;
 }
 
-/* Tags */
 .tag{
   display:inline-flex;
   align-items:center;
@@ -334,7 +294,6 @@ textarea{ min-height: 44px; resize: vertical; }
 .tag.ok{ border-color: color-mix(in oklab, var(--ok) 40%, var(--border) 60%); }
 .tag.bad{ border-color: color-mix(in oklab, var(--danger) 40%, var(--border) 60%); }
 
-/* Details */
 details{ margin-top: 8px; }
 summary{
   cursor:pointer;
@@ -342,7 +301,6 @@ summary{
   color: var(--muted);
 }
 
-/* Drawer / menu burguer */
 .overlay{
   position: fixed;
   inset: 0;
@@ -351,6 +309,7 @@ summary{
   z-index: 80;
 }
 .overlay.show{ display:block; }
+
 .drawer{
   position: fixed;
   top:0;
@@ -395,7 +354,6 @@ summary{
   color: var(--muted);
 }
 
-/* WhatsApp flutuante */
 .wa{
   position: fixed;
   right: 14px;
@@ -425,7 +383,6 @@ summary{
   font-weight: 700;
 }
 
-/* Toast/alert */
 .toast{
   position: fixed;
   left: 14px;
@@ -443,7 +400,6 @@ summary{
 .toast strong{ font-size: 13px; }
 .toast p{ margin: 6px 0 0; font-size: 12px; color: var(--muted); line-height:1.25; }
 
-/* Gráfico (canvas) */
 canvas{
   width: 100%;
   height: 220px;
@@ -453,7 +409,6 @@ canvas{
   background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
 }
 
-/* Acessibilidade */
 :focus-visible{
   outline: 3px solid color-mix(in oklab, var(--primary) 65%, transparent 35%);
   outline-offset: 2px;
