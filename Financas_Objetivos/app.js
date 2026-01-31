@@ -307,13 +307,6 @@ function getReportMonth() {
   return new Date().toISOString().slice(0,7);
 }
 
-function monthLabel(yyyyMm) {
-  const [y, m] = yyyyMm.split("-");
-  const months = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-  const mi = Math.max(1, Math.min(12, Number(m || 1))) - 1;
-  return `${months[mi]}/${y}`;
-}
-
 /* ------------------ Totais ------------------ */
 function getFilteredTransactions() {
   const m = $("#filterMonth").value;
@@ -1061,7 +1054,6 @@ function drawChart(series, requiredPerMonth, monthIdx) {
 }
 
 /* ------------------ PDF mensal (Imprimir -> Salvar como PDF) ------------------ */
-/* (mantive a lógica do seu MVP; se você já está usando, pode continuar igual) */
 function generatePdfForMonth() {
   showToast("PDF", "Seu PDF continua disponível no botão “Gerar PDF do mês” (Imprimir → Salvar como PDF).", 4200);
 }
@@ -1133,11 +1125,10 @@ async function importJSON(file) {
 }
 
 /* ------------------ Skill + tarefas ------------------ */
-/* Anotações:
-   - Lembrete dispara quando chegar na hora marcada (janela de 2min).
-   - Evita spam usando notifiedOn (uma vez por dia por tarefa).
-   - Som: beep via WebAudio (super leve).
-   - Voz: SpeechSynthesis (se ativado).
+/*
+  Ajuste de UX (importante):
+  - Agora o card mostra "Skill • Prática" como título (quando a skill existe),
+    para o usuário sempre entender do que se trata.
 */
 function todayISO() {
   return new Date().toISOString().slice(0,10);
@@ -1252,11 +1243,20 @@ function renderSkill() {
 
   list.innerHTML = "";
 
+  const skill = (state.skill.name || "").trim();
+
   tasks.slice(0, 20).forEach((t) => {
     const el = document.createElement("div");
     el.className = "task" + (t.done ? " done" : "");
 
     const when = `${t.date}${t.time ? " • " + t.time : ""}`;
+
+    // Título mais claro (resolve a sensação de “sumiu o nome”):
+    // se existir skill, aparece como contexto fixo.
+    const titleLine = skill
+      ? `${escapeHtml(skill)} • ${escapeHtml(t.title)}`
+      : `${escapeHtml(t.title)}`;
+
     const note = t.note ? `<div class="task-meta">${escapeHtml(t.note)}</div>` : "";
 
     el.innerHTML = `
@@ -1266,8 +1266,8 @@ function renderSkill() {
         </div>
 
         <div class="task-main">
-          <p class="task-title">${escapeHtml(t.title)}</p>
-          <div class="task-meta">${escapeHtml(when)}${state.skill.name ? ` • ${escapeHtml(state.skill.name)}` : ""}</div>
+          <p class="task-title">${titleLine}</p>
+          <div class="task-meta">${escapeHtml(when)}</div>
           ${note}
         </div>
       </div>
