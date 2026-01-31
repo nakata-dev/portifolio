@@ -10,9 +10,35 @@
 
 <body>
   <header>
-    <div class="logo" aria-label="Logo">
-      <div class="logo-badge" aria-hidden="true"></div>
-      <div class="logo-text">FinPalma</div>
+    <!-- Logo: SVG leve, sem imagem externa -->
+    <div class="logo" aria-label="Logo FinPalma">
+      <svg class="logo-mark" viewBox="0 0 44 44" role="img" aria-label="FinPalma">
+        <defs>
+          <linearGradient id="fpGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#92A8D1"></stop>
+            <stop offset="1" stop-color="#2C3E50"></stop>
+          </linearGradient>
+        </defs>
+
+        <!-- Badge arredondado -->
+        <rect x="4" y="4" width="36" height="36" rx="12" fill="url(#fpGrad)"></rect>
+
+        <!-- Grade/planilha -->
+        <path d="M14 14h16v16H14z" fill="rgba(240,244,247,0.22)"></path>
+        <path d="M14 19h16M14 24h16M14 29h16M19 14v16M24 14v16M29 14v16"
+          stroke="rgba(240,244,247,0.50)" stroke-width="1.2" stroke-linecap="round"></path>
+
+        <!-- Setinha de progresso -->
+        <path d="M16 28l6-6 4 4 6-8" fill="none" stroke="rgba(240,244,247,0.92)"
+          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M32 18h4v4" fill="none" stroke="rgba(240,244,247,0.92)"
+          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+
+      <div class="logo-text">
+        <div class="logo-name">FinPalma</div>
+        <div class="logo-sub">controle em um toque</div>
+      </div>
     </div>
 
     <button class="icon-btn" id="btnMenu" aria-label="Abrir menu">
@@ -245,13 +271,22 @@
       <div class="card">
         <h1 class="h1">2) Despesas (estilo planilha)</h1>
         <p class="sub">
-          Lançamentos podem ser na sua moeda do dia a dia (ex.: JPY). A base do sistema é BRL para você comparar com metas.
+          Lançamentos podem ser na sua moeda do dia a dia (ex.: JPY). A base do sistema é BRL para comparar com metas.
         </p>
 
         <div class="row">
           <span class="pill" id="monthRadar">Radar do mês: —</span>
           <span class="pill" id="txCurrencyHint">Moeda atual do lançamento: —</span>
+
+          <!-- Score de saúde financeira -->
+          <span class="score-pill" id="healthPill" title="Score do mês filtrado (ou mês atual)">
+            <span class="score-dot" aria-hidden="true"></span>
+            <span class="score-label" id="healthLabel">Saúde: —</span>
+            <span class="score-value" id="healthScore">—</span>
+          </span>
         </div>
+
+        <p class="sub" id="healthTip" style="margin:8px 0 0;">—</p>
 
         <div class="divider"></div>
 
@@ -316,9 +351,13 @@
           <div>
             <label>Ações rápidas</label>
             <div class="row row-between">
+              <button class="btn secondary" id="btnPdf">Gerar PDF do mês</button>
               <button class="btn secondary" id="btnClearFilter">Limpar filtro</button>
               <button class="btn secondary" id="btnClearTx">Limpar lançamentos</button>
             </div>
+            <p class="sub" style="margin:8px 0 0;">
+              Dica: no relatório, use “Imprimir” e escolha “Salvar como PDF”.
+            </p>
           </div>
         </div>
 
@@ -358,55 +397,9 @@
           Estilo Todoist: defina uma skill, crie tarefas e programe práticas.
         </p>
 
-        <div class="grid grid-2">
-          <div>
-            <label for="skillName">Nova Skill</label>
-            <input id="skillName" placeholder="Ex.: Inglês" />
-          </div>
-          <div class="row" style="align-items:flex-end; justify-content: space-between;">
-            <button class="btn secondary" id="btnSaveSkill">Salvar</button>
-            <span class="pill" id="skillStatus">—</span>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="grid grid-2">
-          <div>
-            <label for="taskTitle">Nova tarefa</label>
-            <input id="taskTitle" placeholder="Ex.: 20 min de leitura" />
-          </div>
-          <div class="row" style="align-items:flex-end; justify-content: space-between;">
-            <button class="btn" id="btnAddTask">Adicionar</button>
-            <button class="btn secondary" id="btnClearTasks">Limpar tarefas</button>
-          </div>
-        </div>
-
-        <div class="list" id="taskList" style="margin-top:10px;"></div>
-
-        <div class="divider"></div>
-
-        <div class="grid grid-3">
-          <div>
-            <label for="remDate">Dia</label>
-            <input id="remDate" type="date" />
-          </div>
-          <div>
-            <label for="remTime">Hora</label>
-            <input id="remTime" type="time" />
-          </div>
-          <div>
-            <label for="remPractice">Prática do dia</label>
-            <input id="remPractice" placeholder="Ex.: prática de pronúncia" />
-          </div>
-        </div>
-
-        <div class="row" style="margin-top:10px; justify-content: space-between;">
-          <button class="btn" id="btnAddReminder">Agendar prática</button>
-          <button class="btn secondary" id="btnClearReminders">Limpar agenda</button>
-        </div>
-
-        <div class="list" id="remList" style="margin-top:10px;"></div>
+        <p class="sub" style="margin:0;">
+          (Se você quiser, na próxima iteração eu reativo/expando essa área com tarefas + agenda e lembretes sonoros, mantendo o app leve.)
+        </p>
       </div>
     </section>
   </main>

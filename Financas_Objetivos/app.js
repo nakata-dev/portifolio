@@ -1,12 +1,3 @@
-/* =========================================================
-  FinPalma MVP - UX focado em clareza (2026)
-  Principais upgrades:
-  1) "Lançar salário do mês" (receita automática)
-  2) Autocomplete inteligente de categorias (datalist)
-  3) Radar do mês (percentual do líquido comprometido)
-  UX: placeholders e labels mudam conforme Gasto/Receita e moeda selecionada
-========================================================= */
-
 const LS_KEY = "finpalma_mvp_v1";
 
 const WHATSAPP_MESSAGE =
@@ -18,8 +9,8 @@ let state = {
   settings: {
     name: "",
     theme: "light",
-    displayMode: "BOTH",      // BRL | ORIGINAL | BOTH
-    defaultCurrency: "BRL",   // moeda padrão dos lançamentos
+    displayMode: "BOTH",
+    defaultCurrency: "BRL",
     whatsappNumber: ""
   },
   goals: {
@@ -39,11 +30,8 @@ let state = {
     fx: { base: "BRL", rate: 1, date: null, source: "none" }
   },
   transactions: [],
-  skill: { name: "" },
-  tasks: [],
-  reminders: [],
   fxCache: {},
-  categoryCounts: {} // { "Alimentação": 12, ... }
+  categoryCounts: {}
 };
 
 const FALLBACK_CURRENCIES = [
@@ -56,6 +44,8 @@ const asNum = (v) => {
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
 };
+
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
 const uid = () => Math.random().toString(16).slice(2) + Date.now().toString(16);
 
@@ -95,9 +85,6 @@ function load() {
       goals: { ...state.goals, ...(parsed.goals || {}) },
       salary: { ...state.salary, ...(parsed.salary || {}) },
       transactions: Array.isArray(parsed.transactions) ? parsed.transactions : [],
-      skill: { ...state.skill, ...(parsed.skill || {}) },
-      tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
-      reminders: Array.isArray(parsed.reminders) ? parsed.reminders : [],
       fxCache: parsed.fxCache || {},
       categoryCounts: parsed.categoryCounts || {}
     };
@@ -199,11 +186,10 @@ async function fetchFxRate(from, to, dateStr) {
   return rate;
 }
 
-/* ------------------ UX: Tipo (Gasto/Receita) + Moeda ------------------ */
+/* ------------------ UX: Tipo + Moeda ------------------ */
 function updateTxTypeUI() {
   const type = $("#txType").value;
 
-  // Categoria: sugestões diferentes deixam o usuário “ciente do que está fazendo”
   if (type === "income") {
     $("#txCategory").placeholder = "Ex.: Salário, Cliente, Venda, Dividendos";
     $("#txDescLabel").textContent = "Origem / Detalhes";
@@ -226,7 +212,6 @@ function updateTxCurrencyUI() {
       ? "Moeda atual do lançamento: BRL (sem conversão)"
       : `Moeda atual do lançamento: ${cur} (será convertido para BRL)`;
 
-  // Rate: deixa explícito (1 JPY = ? BRL)
   if (cur === "BRL") {
     $("#txRateLabel").textContent = "Taxa (BRL não precisa) | opcional";
     $("#txRate").value = "";
@@ -235,7 +220,6 @@ function updateTxCurrencyUI() {
     $("#txRateLabel").textContent = `Taxa (1 ${cur} = ? BRL)`;
     $("#txRate").placeholder = "Ex.: 0.035";
 
-    // Se tiver cache (latest), tenta preencher automaticamente (sem chamar API)
     const key = fxKey(cur, "BRL", null);
     const cached = state.fxCache[key];
     if (cached && !asNum($("#txRate").value)) {
@@ -263,14 +247,13 @@ async function fillRateFromApi() {
   }
 }
 
-/* ------------------ Categorias: autocomplete inteligente ------------------ */
+/* ------------------ Categorias: autocomplete ------------------ */
 function bumpCategory(cat) {
   if (!cat) return;
   state.categoryCounts[cat] = (state.categoryCounts[cat] || 0) + 1;
 }
 
 function rebuildCategoryCountsFromHistory() {
-  // Caso tenha vindo de backup antigo sem categoryCounts
   const counts = {};
   for (const t of state.transactions) {
     const c = (t.category || "").trim();
@@ -290,7 +273,6 @@ function renderCategoryDatalist() {
     .sort((a,b) => (b[1] || 0) - (a[1] || 0))
     .slice(0, 14);
 
-  // Sugestões mínimas padrão (ajuda o primeiro uso)
   const fallback = ["Alimentação","Transporte","Casa","Saúde","Lazer","Educação","Assinaturas","Salário","Cliente","Venda"];
 
   const set = new Set();
@@ -304,17 +286,25 @@ function renderCategoryDatalist() {
   });
 }
 
-/* ------------------ Transações ------------------ */
+/* ------------------ Utilitários de mês ------------------ */
 function monthKey(dateStr) {
-  return dateStr.slice(0, 7); // YYYY-MM
+  return dateStr.slice(0, 7);
 }
 
-function clearTxFormSoft() {
-  $("#txAmount").value = "";
-  $("#txDesc").value = "";
-  if ($("#txCurrency").value === "BRL") $("#txRate").value = "";
+function getReportMonth() {
+  const m = ($("#filterMonth").value || "").trim();
+  if (m) return m;
+  return new Date().toISOString().slice(0,7);
 }
 
+function monthLabel(yyyyMm) {
+  const [y, m] = yyyyMm.split("-");
+  const months = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+  const mi = Math.max(1, Math.min(12, Number(m || 1))) - 1;
+  return `${months[mi]}/${y}`;
+}
+
+/* ------------------ Totais ------------------ */
 function getFilteredTransactions() {
   const m = $("#filterMonth").value;
   if (!m) return state.transactions;
@@ -329,6 +319,160 @@ function computeTotals(txs) {
     else expenseBRL += v;
   }
   return { incomeBRL, expenseBRL, saved: incomeBRL - expenseBRL };
+}
+
+/* ------------------ Score de saúde financeira ------------------ */
+/*
+  Objetivo: um número simples (0–100) que seja intuitivo.
+  Componentes:
+  - Taxa de economia do mês: saved/income (0..1) => até 60 pontos
+  - Ritmo vs meta anual: saved / (metaAnual/12) (0..1+) => até 40 pontos
+  Se não existir meta anual, o score vira "savings rate" com peso total (100).
+*/
+function computeHealthScoreForMonth(yyyyMm) {
+  const txsMonth = state.transactions.filter(t => monthKey(t.date) === yyyyMm);
+  const totals = computeTotals(txsMonth);
+
+  const income = totals.incomeBRL;
+  const saved = totals.saved;
+
+  if (income <= 0 && totals.expenseBRL <= 0) {
+    return {
+      score: null,
+      label: "Sem dados",
+      level: "none",
+      dot: "neutral",
+      tip: "Adicione lançamentos (receitas e gastos) para calcular sua saúde financeira."
+    };
+  }
+
+  if (income <= 0 && totals.expenseBRL > 0) {
+    return {
+      score: 0,
+      label: "Crítico",
+      level: "critical",
+      dot: "bad",
+      tip: "Você teve gastos, mas nenhuma receita no mês. Registre a receita (ex.: salário) para ter um retrato real."
+    };
+  }
+
+  const savingsRate = clamp(saved / income, 0, 1); // negativo vira 0
+  const base = Math.round(savingsRate * 60);
+
+  const yearlyTarget = asNum(state.goals?.yearly || 0);
+  const requiredPerMonth = yearlyTarget > 0 ? (yearlyTarget / 12) : 0;
+
+  let goalPts = 0;
+  if (requiredPerMonth > 0) {
+    const ratio = clamp(saved / requiredPerMonth, 0, 1); // bateu a meta -> 1
+    goalPts = Math.round(ratio * 40);
+  } else {
+    // sem meta anual: usar só savingsRate como score total
+    return deriveHealthMeta({
+      score: Math.round(savingsRate * 100),
+      savingsRate,
+      hasGoal: false,
+      requiredPerMonth: 0,
+      saved,
+      income
+    });
+  }
+
+  const score = clamp(base + goalPts, 0, 100);
+
+  return deriveHealthMeta({
+    score,
+    savingsRate,
+    hasGoal: true,
+    requiredPerMonth,
+    saved,
+    income
+  });
+}
+
+function deriveHealthMeta({ score, savingsRate, hasGoal, requiredPerMonth, saved, income }) {
+  let label = "Atenção";
+  let level = "warn";
+  let dot = "warn";
+  let tip = "Ajuste gastos ou aumente receita para melhorar seu ritmo.";
+
+  if (score >= 85) {
+    label = "Ótimo";
+    level = "great";
+    dot = "ok";
+    tip = "Seu mês está bem alinhado. Mantenha consistência e evite picos de gastos desnecessários.";
+  } else if (score >= 70) {
+    label = "Bom";
+    level = "good";
+    dot = "ok";
+    tip = "Bom ritmo. Se quiser turbinar, defina um teto por categoria e revise assinaturas.";
+  } else if (score >= 45) {
+    label = "Atenção";
+    level = "warn";
+    dot = "warn";
+    tip = "Você está no meio do caminho. Tente aumentar a taxa de economia e cortar vazamentos pequenos.";
+  } else {
+    label = "Crítico";
+    level = "critical";
+    dot = "bad";
+    tip = "Risco de não bater metas. Priorize reduzir gastos variáveis e registrar receitas corretamente.";
+  }
+
+  // Dicas mais específicas (curtas)
+  if (income > 0 && saved < 0) {
+    tip = "Você gastou mais do que recebeu. Ajuste o mês (cortes) ou aumente a entrada (receitas).";
+  } else if (income > 0 && savingsRate < 0.10) {
+    tip = "Sua economia está baixa (menos de 10%). Se possível, estabeleça um mínimo fixo para economizar.";
+  }
+
+  if (hasGoal && requiredPerMonth > 0) {
+    const ratio = saved / requiredPerMonth;
+    if (ratio < 1) {
+      const falta = Math.max(0, requiredPerMonth - saved);
+      tip = `Para bater sua meta anual, faltou economizar cerca de ${fmt(falta, "BRL")} neste mês.`;
+    } else {
+      tip = "Você atingiu (ou superou) o necessário do mês para a meta anual. Excelente consistência.";
+    }
+  }
+
+  return { score, label, level, dot, tip };
+}
+
+function renderHealthScore() {
+  const m = getReportMonth();
+  const h = computeHealthScoreForMonth(m);
+
+  const scoreEl = $("#healthScore");
+  const labelEl = $("#healthLabel");
+  const dotEl = document.querySelector("#healthPill .score-dot");
+  const tipEl = $("#healthTip");
+
+  if (!scoreEl || !labelEl || !dotEl || !tipEl) return;
+
+  if (h.score === null) {
+    labelEl.textContent = `Saúde: ${h.label}`;
+    scoreEl.textContent = "—";
+    dotEl.style.background = "rgba(44,62,80,0.35)";
+    tipEl.textContent = h.tip;
+    return;
+  }
+
+  labelEl.textContent = `Saúde: ${h.label}`;
+  scoreEl.textContent = `${h.score}/100`;
+
+  // Cor do dot sem “inventar” paleta nova: usa ok/danger e intermediário com marinho
+  if (h.dot === "ok") dotEl.style.background = "rgba(36,122,67,0.85)";
+  else if (h.dot === "bad") dotEl.style.background = "rgba(179,58,58,0.80)";
+  else dotEl.style.background = "rgba(44,62,80,0.55)";
+
+  tipEl.textContent = h.tip;
+}
+
+/* ------------------ Transações ------------------ */
+function clearTxFormSoft() {
+  $("#txAmount").value = "";
+  $("#txDesc").value = "";
+  if ($("#txCurrency").value === "BRL") $("#txRate").value = "";
 }
 
 function addTransaction() {
@@ -353,7 +497,6 @@ function addTransaction() {
     return;
   }
 
-  // Taxa
   let rate = 1;
   const rateInput = asNum($("#txRate").value);
 
@@ -385,7 +528,6 @@ function addTransaction() {
   };
 
   state.transactions.unshift(tx);
-
   bumpCategory(category);
   save();
 
@@ -493,6 +635,7 @@ function saveGoals() {
 
   renderGoals();
   renderProgress();
+  renderHealthScore();
   showToast("Metas salvas", "Projeções atualizadas.");
 }
 
@@ -643,6 +786,7 @@ function saveSalary() {
   save();
   renderSalary();
   renderProgress();
+  renderHealthScore();
   showToast("Salário salvo", `Líquido: ${fmt(net, cur)} (${fmt(cur==="BRL"?net:net*rate, "BRL")})`);
 }
 
@@ -665,7 +809,7 @@ function renderSalary() {
 }
 
 function useNetAsSavingHint() {
-  const { cur, net, rate, netBRL } = computeSalaryNetFromInputs();
+  const { cur, net, netBRL } = computeSalaryNetFromInputs();
   const val = (cur === "BRL") ? net : netBRL;
 
   if (val <= 0) {
@@ -678,6 +822,7 @@ function useNetAsSavingHint() {
   save();
   renderGoals();
   renderProgress();
+  renderHealthScore();
   showToast("Aplicado", "Usei seu líquido como economia mensal (BRL).");
 }
 
@@ -703,6 +848,7 @@ function autoSavingHint() {
 
   renderGoals();
   renderProgress();
+  renderHealthScore();
 
   showToast(
     "Auto aplicado",
@@ -710,9 +856,7 @@ function autoSavingHint() {
   );
 }
 
-/* --------- Upgrade #1: Lançar salário do mês (receita automática) --------- */
 function postSalaryThisMonth() {
-  // Usa salário SALVO (mais confiável do que inputs “meio preenchidos”)
   const s = state.salary;
   const cur = s.currency || "BRL";
   const gross = asNum(s.gross);
@@ -759,10 +903,10 @@ function postSalaryThisMonth() {
   showToast("Salário lançado", `${fmt(amount, cur)} (~${fmt(amountBRL, "BRL")})`);
 }
 
-/* --------- Upgrade #3: Radar do mês (mês apertado) --------- */
+/* --------- Radar do mês --------- */
 function computeRadarThisMonth() {
   const now = new Date();
-  const m = now.toISOString().slice(0, 7); // YYYY-MM
+  const m = now.toISOString().slice(0, 7);
 
   let exp = 0;
   for (const t of state.transactions) {
@@ -771,7 +915,6 @@ function computeRadarThisMonth() {
     exp += (t.amountBRL || 0);
   }
 
-  // Usa líquido do salário salvo como referência (BRL)
   const s = state.salary;
   const cur = s.currency || "BRL";
   const gross = asNum(s.gross);
@@ -781,29 +924,19 @@ function computeRadarThisMonth() {
   const netBRL = cur === "BRL" ? net : (rate > 0 ? net * rate : 0);
 
   if (netBRL <= 0) {
-    return { text: "Radar do mês: salve seu salário para ver % do líquido.", level: "neutral" };
+    return { text: "Radar do mês: salve seu salário para ver % do líquido." };
   }
 
   const pct = Math.min(999, (exp / netBRL) * 100);
-  let level = "ok";
-  if (pct >= 90) level = "danger";
-  else if (pct >= 70) level = "warn";
-
-  const text =
-    `Radar do mês: ${fmt(exp, "BRL")} em gastos (≈ ${pct.toFixed(0)}% do seu líquido)`;
-
-  return { text, level };
+  const text = `Radar do mês: ${fmt(exp, "BRL")} em gastos (≈ ${pct.toFixed(0)}% do seu líquido)`;
+  return { text };
 }
 
 function renderRadar() {
   const el = $("#monthRadar");
   if (!el) return;
-
   const r = computeRadarThisMonth();
   el.textContent = r.text;
-
-  // Sem criar CSS novo: a “cor” fica pela mensagem e pela presença do radar.
-  // (Se quiser, depois a gente colore por data-attr sem pesar.)
 }
 
 /* ------------------ Progresso ------------------ */
@@ -927,6 +1060,413 @@ function drawChart(series, requiredPerMonth, monthIdx) {
   }
 }
 
+/* ------------------ PDF mensal (Imprimir -> Salvar como PDF) ------------------ */
+function escapeHtml(s) {
+  return String(s || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function groupTotalsByCategoryBRL(txs) {
+  const map = new Map();
+  for (const t of txs) {
+    const cat = (t.category || "Geral").trim() || "Geral";
+    const cur = map.get(cat) || { income: 0, expense: 0 };
+    if (t.type === "income") cur.income += (t.amountBRL || 0);
+    else cur.expense += (t.amountBRL || 0);
+    map.set(cat, cur);
+  }
+  const arr = Array.from(map.entries()).map(([cat, v]) => ({
+    cat,
+    income: v.income,
+    expense: v.expense,
+    net: v.income - v.expense
+  }));
+  arr.sort((a,b) => (b.expense - a.expense) || (b.income - a.income));
+  return arr;
+}
+
+function buildMonthlyReportHtml(yyyyMm) {
+  const txs = state.transactions
+    .filter(t => monthKey(t.date) === yyyyMm)
+    .slice()
+    .sort((a,b) => (a.date || "").localeCompare(b.date || ""));
+
+  const totals = computeTotals(txs);
+  const createdAt = new Date().toLocaleString("pt-BR");
+
+  // Score do relatório (mesma lógica da UI)
+  const health = computeHealthScoreForMonth(yyyyMm);
+
+  const s = state.salary || {};
+  const salCur = s.currency || "BRL";
+  const salGross = asNum(s.gross);
+  const salFixed = asNum(s.fixed);
+  const salNet = Math.max(0, salGross - salFixed);
+  const salRate = salCur === "BRL" ? 1 : asNum(s.fx?.rate || 0);
+  const salNetBRL = salCur === "BRL" ? salNet : (salRate > 0 ? salNet * salRate : 0);
+
+  const g = state.goals || {};
+  const yearlyTarget = asNum(g.yearly || 0);
+  const requiredPerMonth = yearlyTarget > 0 ? (yearlyTarget / 12) : 0;
+
+  const cats = groupTotalsByCategoryBRL(txs).slice(0, 10);
+
+  const rows = txs.map(t => {
+    const type = t.type === "income" ? "Receita" : "Gasto";
+    const orig = fmt(t.amount || 0, t.currency || "BRL");
+    const brl = fmt(t.amountBRL || 0, "BRL");
+    return `
+      <tr>
+        <td>${escapeHtml(t.date)}</td>
+        <td>${escapeHtml(type)}</td>
+        <td>${escapeHtml(t.category)}</td>
+        <td>${escapeHtml(t.desc)}</td>
+        <td style="text-align:right; white-space:nowrap;">${escapeHtml(orig)}</td>
+        <td style="text-align:right; white-space:nowrap;">${escapeHtml(brl)}</td>
+      </tr>
+    `;
+  }).join("");
+
+  const catRows = cats.map(c => `
+    <tr>
+      <td>${escapeHtml(c.cat)}</td>
+      <td style="text-align:right; white-space:nowrap;">${escapeHtml(fmt(c.income, "BRL"))}</td>
+      <td style="text-align:right; white-space:nowrap;">${escapeHtml(fmt(c.expense, "BRL"))}</td>
+      <td style="text-align:right; white-space:nowrap;">${escapeHtml(fmt(c.net, "BRL"))}</td>
+    </tr>
+  `).join("");
+
+  const hasSalary = salGross > 0;
+  const salaryBlock = hasSalary ? `
+    <div class="card">
+      <h3>Salário / Receita principal (referência)</h3>
+      <div class="kpis">
+        <div><span class="k">Tipo</span><span class="v">${escapeHtml(s.kind || "—")}</span></div>
+        <div><span class="k">Empresa</span><span class="v">${escapeHtml(s.company || "—")}</span></div>
+        <div><span class="k">Moeda</span><span class="v">${escapeHtml(salCur)}</span></div>
+        <div><span class="k">Bruto</span><span class="v">${escapeHtml(fmt(salGross, salCur))}</span></div>
+        <div><span class="k">Fixos</span><span class="v">${escapeHtml(fmt(salFixed, salCur))}</span></div>
+        <div><span class="k">Líquido</span><span class="v">${escapeHtml(fmt(salNet, salCur))}</span></div>
+        <div><span class="k">Líquido (BRL)</span><span class="v">${escapeHtml(fmt(salNetBRL, "BRL"))}</span></div>
+        <div><span class="k">Taxa usada</span><span class="v">${escapeHtml(salCur === "BRL" ? "—" : `1 ${salCur} = ${Number(salRate || 0).toFixed(6)} BRL`)}</span></div>
+      </div>
+      <p class="note">Observação: este bloco é referência do salário salvo. O relatório do mês se baseia nos lançamentos.</p>
+    </div>
+  ` : `
+    <div class="card">
+      <h3>Salário / Receita principal</h3>
+      <p class="note">Nenhum salário salvo. Você pode salvar na seção “Metas de ganhos”, e lançar o salário do mês como receita.</p>
+    </div>
+  `;
+
+  const goalsBlock = yearlyTarget > 0 ? `
+    <div class="card">
+      <h3>Metas (BRL)</h3>
+      <div class="kpis">
+        <div><span class="k">Meta anual</span><span class="v">${escapeHtml(fmt(yearlyTarget, "BRL"))}</span></div>
+        <div><span class="k">Necessário/mês</span><span class="v">${escapeHtml(fmt(requiredPerMonth, "BRL"))}</span></div>
+      </div>
+      <p class="note">Se “Economia (mês)” estiver abaixo do necessário/mês, é um sinal de alerta para ajuste.</p>
+    </div>
+  ` : `
+    <div class="card">
+      <h3>Metas</h3>
+      <p class="note">Meta anual não definida. Defina para o relatório incluir comparativo de ritmo.</p>
+    </div>
+  `;
+
+  // Score no PDF (badge)
+  let scoreBadge = `<span class="badge neutral">Saúde: sem dados</span>`;
+  if (health.score !== null) {
+    const cls = health.level === "great" || health.level === "good" ? "ok"
+      : health.level === "critical" ? "bad"
+      : "warn";
+    scoreBadge = `<span class="badge ${cls}">Saúde: ${escapeHtml(health.label)} • ${health.score}/100</span>`;
+  }
+
+  return `
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Relatório mensal ${escapeHtml(monthLabel(yyyyMm))}</title>
+<style>
+  :root { color-scheme: light; }
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-variant-numeric: tabular-nums;
+    color:#1b2630;
+    background:#ffffff;
+  }
+  .page{
+    padding: 18px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  header{
+    display:flex;
+    align-items:flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #d9e2ea;
+    margin-bottom: 12px;
+  }
+  .brand{
+    display:flex;
+    gap: 10px;
+    align-items:center;
+  }
+  .mark{
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#92A8D1,#2C3E50);
+    position: relative;
+    overflow:hidden;
+  }
+  .gridlines{
+    position:absolute; inset: 8px;
+    border: 1px solid rgba(240,244,247,0.35);
+    border-radius: 8px;
+  }
+  .gridlines:before, .gridlines:after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      linear-gradient(to right, rgba(240,244,247,0.35) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(240,244,247,0.35) 1px, transparent 1px);
+    background-size: 7px 7px;
+    opacity: .55;
+  }
+  .brand h1{
+    margin:0;
+    font-size: 16px;
+    letter-spacing: .2px;
+  }
+  .brand p{
+    margin:5px 0 0;
+    color:#4a5b6a;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  .right{
+    text-align:right;
+    font-size:12px;
+    color:#4a5b6a;
+    white-space:nowrap;
+  }
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid #d9e2ea;
+    background: #f5f8fb;
+    font-weight: 750;
+    font-size: 12px;
+    margin-top: 8px;
+    justify-content: flex-end;
+  }
+  .badge.ok{ border-color: rgba(36,122,67,0.35); }
+  .badge.bad{ border-color: rgba(179,58,58,0.35); }
+  .badge.warn{ border-color: rgba(44,62,80,0.35); }
+  .badge.neutral{ border-color: #d9e2ea; }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media(min-width: 860px){
+    .grid-2{ grid-template-columns: 1fr 1fr; }
+  }
+  .card{
+    border: 1px solid #d9e2ea;
+    border-radius: 14px;
+    padding: 12px;
+  }
+  h3{
+    margin:0 0 10px;
+    font-size: 13px;
+    color:#22313d;
+    letter-spacing: .2px;
+  }
+  .kpis{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+  }
+  .kpis div{
+    display:flex;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px dashed #e6eef5;
+    padding-bottom: 6px;
+  }
+  .k{ color:#4a5b6a; font-size: 12px; }
+  .v{ font-weight: 700; font-size: 12px; color:#1b2630; }
+  .note{
+    margin:10px 0 0;
+    color:#4a5b6a;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  table{
+    width:100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  th, td{
+    border-bottom: 1px solid #e6eef5;
+    padding: 8px 6px;
+    vertical-align: top;
+  }
+  th{
+    text-align:left;
+    color:#4a5b6a;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .2px;
+  }
+  .sum{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pill{
+    border: 1px solid #d9e2ea;
+    border-radius: 999px;
+    padding: 8px 10px;
+    font-size: 12px;
+    background: #f5f8fb;
+  }
+  .foot{
+    margin-top: 14px;
+    font-size: 11px;
+    color:#4a5b6a;
+    border-top: 1px solid #d9e2ea;
+    padding-top: 10px;
+    text-align:center;
+  }
+  @media print{
+    .page{ padding: 0; }
+    header{ margin-bottom: 8px; }
+    .card{ break-inside: avoid; }
+    table{ break-inside: auto; }
+    tr{ break-inside: avoid; break-after: auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="brand">
+          <div class="mark" aria-hidden="true"><div class="gridlines"></div></div>
+          <div>
+            <h1>FinPalma • Relatório mensal: ${escapeHtml(monthLabel(yyyyMm))}</h1>
+            <p>Base: lançamentos do mês, com conversão em BRL quando aplicável. Metas sempre em BRL.</p>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        Gerado em<br/><strong>${escapeHtml(createdAt)}</strong><br/>
+        ${scoreBadge}
+      </div>
+    </header>
+
+    <div class="card" style="margin-bottom:12px;">
+      <h3>Resumo do mês (BRL)</h3>
+      <div class="sum">
+        <div class="pill"><strong>Receitas:</strong> ${escapeHtml(fmt(totals.incomeBRL, "BRL"))}</div>
+        <div class="pill"><strong>Gastos:</strong> ${escapeHtml(fmt(totals.expenseBRL, "BRL"))}</div>
+        <div class="pill"><strong>Economia:</strong> ${escapeHtml(fmt(totals.saved, "BRL"))}</div>
+        <div class="pill"><strong>Qtd. lançamentos:</strong> ${txs.length}</div>
+      </div>
+      <p class="note">${escapeHtml(health.tip || "")}</p>
+    </div>
+
+    <div class="grid grid-2">
+      ${salaryBlock}
+      ${goalsBlock}
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>Totais por categoria (Top 10, BRL)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Categoria</th>
+            <th style="text-align:right;">Receitas</th>
+            <th style="text-align:right;">Gastos</th>
+            <th style="text-align:right;">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${catRows || `<tr><td colspan="4" style="color:#4a5b6a;">Sem dados de categoria neste mês.</td></tr>`}
+        </tbody>
+      </table>
+      <p class="note">Sugestão: se “Gastos” estiver alto em uma categoria, é um bom lugar para otimizar.</p>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>Lançamentos detalhados</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Tipo</th>
+            <th>Categoria</th>
+            <th>Descrição/Origem</th>
+            <th style="text-align:right;">Valor (moeda)</th>
+            <th style="text-align:right;">Valor (BRL)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows || `<tr><td colspan="6" style="color:#4a5b6a;">Sem lançamentos neste mês.</td></tr>`}
+        </tbody>
+      </table>
+      <p class="note">Os valores em BRL usam a taxa salva no lançamento, para consistência histórica.</p>
+    </div>
+
+    <div class="foot">
+      Copyright ©️ 2026 - Ailton A. Nakata
+    </div>
+  </div>
+
+<script>
+  setTimeout(() => { try { window.print(); } catch(e) {} }, 450);
+</script>
+</body>
+</html>
+  `;
+}
+
+function generatePdfForMonth() {
+  const m = getReportMonth();
+
+  const w = window.open("", "_blank");
+  if (!w) {
+    showToast("PDF", "Seu navegador bloqueou pop-ups. Permita pop-ups para gerar o PDF.");
+    return;
+  }
+
+  const html = buildMonthlyReportHtml(m);
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+
+  showToast("PDF", `Relatório de ${monthLabel(m)} aberto. Use “Imprimir” → “Salvar como PDF”.`, 5200);
+}
+
 /* ------------------ WhatsApp ------------------ */
 function openWhatsApp() {
   const num = (state.settings.whatsappNumber || "").replace(/\D/g, "");
@@ -938,7 +1478,7 @@ function openWhatsApp() {
     return;
   }
 
-  const url = `https://wa.me/${num}?text=${text}`;
+  const url = `https://wa.me/${+5544998398116}?text=${text}`;
   window.open(url, "_blank", "noopener");
 }
 
@@ -972,9 +1512,6 @@ async function importJSON(file) {
       goals: { ...state.goals, ...(data.goals || {}) },
       salary: { ...state.salary, ...(data.salary || {}) },
       transactions: Array.isArray(data.transactions) ? data.transactions : [],
-      skill: { ...(data.skill || state.skill) },
-      tasks: Array.isArray(data.tasks) ? data.tasks : [],
-      reminders: Array.isArray(data.reminders) ? data.reminders : [],
       fxCache: data.fxCache || {},
       categoryCounts: data.categoryCounts || {}
     };
@@ -1027,6 +1564,7 @@ function renderAll() {
   renderTransactions();
   renderRadar();
   renderProgress();
+  renderHealthScore();
 }
 
 /* ------------------ Init ------------------ */
@@ -1035,7 +1573,6 @@ function init() {
 
   const today = new Date().toISOString().slice(0, 10);
   $("#txDate").value = today;
-  $("#remDate").value = today;
 
   $("#btnMenu").addEventListener("click", openDrawer);
   $("#btnCloseMenu").addEventListener("click", closeDrawer);
@@ -1058,6 +1595,7 @@ function init() {
   });
   $("#setName").addEventListener("input", (e) => { state.settings.name = e.target.value; save(); });
   $("#setWhatsapp").addEventListener("input", (e) => { state.settings.whatsappNumber = e.target.value; save(); });
+
   $("#setDefaultCurrency").addEventListener("change", (e) => {
     state.settings.defaultCurrency = e.target.value;
     $("#txCurrency").value = e.target.value;
@@ -1080,9 +1618,6 @@ function init() {
       goals: { monthly: 0, yearly: 0, yearsTarget: 0, yearsCount: 5, monthlySavingHint: 0 },
       salary: { kind:"CLT", name:"", company:"", currency:"BRL", gross:0, fixed:0, fx:{ base:"BRL", rate:1, date:null, source:"none" } },
       transactions: [],
-      skill: { name: "" },
-      tasks: [],
-      reminders: [],
       fxCache: {},
       categoryCounts: {}
     };
@@ -1095,13 +1630,11 @@ function init() {
 
   $("#txType").addEventListener("change", () => {
     updateTxTypeUI();
-    // limpezinha inteligente: força o usuário a notar o contexto novo
     $("#txDesc").value = "";
   });
 
   $("#txCurrency").addEventListener("change", () => {
     updateTxCurrencyUI();
-    // “âncora visual”: limpa taxa para evitar usar taxa errada de outra moeda
     if ($("#txCurrency").value !== "BRL") $("#txRate").value = "";
   });
 
@@ -1115,13 +1648,19 @@ function init() {
     renderAll();
   });
 
-  $("#filterMonth").addEventListener("change", () => renderTransactions());
+  $("#filterMonth").addEventListener("change", () => {
+    renderTransactions();
+    renderHealthScore();
+  });
+
   $("#btnClearFilter").addEventListener("click", () => {
     $("#filterMonth").value = "";
     renderTransactions();
+    renderHealthScore();
   });
 
-  // Salário
+  $("#btnPdf").addEventListener("click", generatePdfForMonth);
+
   $("#btnSalFetchRate").addEventListener("click", fillSalaryRateFromApi);
   $("#btnSaveSalary").addEventListener("click", saveSalary);
   $("#btnUseNetAsSaving").addEventListener("click", useNetAsSavingHint);
@@ -1137,14 +1676,11 @@ function init() {
 
   $("#salCurrency").addEventListener("change", () => {
     updateSalaryPreview();
-    // segurança: se mudar moeda, limpa taxa para evitar confusão
     if ($("#salCurrency").value !== "BRL") $("#salRate").value = "";
   });
 
-  // WhatsApp
   $("#waBtn").addEventListener("click", openWhatsApp);
 
-  // Carrega moedas e renderiza
   loadCurrencies().finally(() => {
     $("#txCurrency").value = state.settings.defaultCurrency || "BRL";
     $("#salCurrency").value = state.salary.currency || "BRL";
@@ -1154,12 +1690,12 @@ function init() {
     renderAll();
   });
 
-  // Radar atualiza periodicamente sem pesar
   setInterval(() => renderRadar(), 20000);
 
   window.addEventListener("focus", () => {
     renderRadar();
     renderProgress();
+    renderHealthScore();
   });
 }
 
