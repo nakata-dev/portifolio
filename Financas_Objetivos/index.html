@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
-  <title>FinPalma MVP</title>
+  <title>Financeiro</title>
 
   <!-- CSS separado -->
   <link rel="stylesheet" href="styles.css" />
@@ -15,7 +15,7 @@
   <header>
     <div class="logo" aria-label="Logo">
       <div class="logo-badge" aria-hidden="true"></div>
-      <div class="logo-text">FinPalma</div>
+      <div class="logo-text">Controle Financeiro</div>
     </div>
 
     <button class="icon-btn" id="btnMenu" aria-label="Abrir menu">
@@ -165,6 +165,82 @@
             <div class="label">Projeção (X anos) com sua economia</div>
             <div class="value" id="projYears">—</div>
           </div>
+        </div>
+
+        <!-- NOVO BLOCO: Salário / Receita principal -->
+        <div class="divider"></div>
+
+        <h2 class="h1">Salário / Receita principal</h2>
+        <p class="sub">
+          Preencha seu recebimento e suas despesas fixas. O sistema calcula o <strong>líquido</strong> automaticamente e mostra o equivalente em BRL quando a moeda for estrangeira.
+        </p>
+
+        <div class="grid grid-3">
+          <div>
+            <label for="salType">Tipo</label>
+            <select id="salType">
+              <option value="CLT">CLT</option>
+              <option value="PJ">PJ</option>
+            </select>
+          </div>
+          <div>
+            <label for="salName">Nome</label>
+            <input id="salName" placeholder="Ex.: Ailton" />
+          </div>
+          <div>
+            <label for="salCompany">Empresa</label>
+            <input id="salCompany" placeholder="Ex.: Minha Empresa" />
+          </div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:10px;">
+          <div>
+            <label for="salCurrency">Moeda</label>
+            <select id="salCurrency"></select>
+          </div>
+          <div>
+            <label for="salGross">Valor bruto recebido</label>
+            <input id="salGross" type="number" inputmode="decimal" min="0" placeholder="Ex.: 8000" />
+          </div>
+          <div>
+            <label for="salFixed">Despesa fixa mensal</label>
+            <input id="salFixed" type="number" inputmode="decimal" min="0" placeholder="Ex.: 2500" />
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <div>
+            <label for="salRate">Taxa (1 moeda = ? BRL) | opcional</label>
+            <input id="salRate" type="number" inputmode="decimal" placeholder="Ex.: 5.12" />
+          </div>
+          <div class="row" style="align-items:flex-end; justify-content: space-between;">
+            <button class="btn secondary" id="btnSalFetchRate" title="Buscar taxa automática (Frankfurter)">
+              Buscar taxa
+            </button>
+            <button class="btn" id="btnSaveSalary">Salvar salário</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <div class="kpi" style="flex:1 1 220px; min-width:220px;">
+            <div class="label">Valor líquido (calculado)</div>
+            <div class="value" id="salNet">—</div>
+          </div>
+          <div class="kpi" style="flex:1 1 220px; min-width:220px;">
+            <div class="label">Equivalente em BRL</div>
+            <div class="value" id="salNetBRL">—</div>
+          </div>
+          <div class="kpi" style="flex:1 1 220px; min-width:220px;">
+            <div class="label">Status</div>
+            <div class="value" style="font-size:13px; font-weight:750;" id="salStatus">—</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn secondary" id="btnUseNetAsSaving">Usar líquido como economia mensal</button>
+          <span class="pill" id="salHint">Dica: defina a taxa para moeda estrangeira 🧭</span>
         </div>
       </div>
     </section>

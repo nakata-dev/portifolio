@@ -5,6 +5,7 @@
   - FX por lançamento (taxa congelada)
   - Progresso/alertas em cima de metas
   - Agenda com alerta sonoro + fala
+  - NOVO: Salário/Receita principal + fixos + líquido calculado
 ========================================================= */
 
 const LS_KEY = "finpalma_mvp_v1";
@@ -32,6 +33,23 @@ let state = {
     yearsCount: 5,
     monthlySavingHint: 0
   },
+
+  // NOVO: salário / receita principal (mensal)
+  salary: {
+    kind: "CLT",          // CLT | PJ
+    name: "",
+    company: "",
+    currency: "BRL",
+    gross: 0,
+    fixed: 0,
+    fx: {
+      base: "BRL",
+      rate: 1,
+      date: null,
+      source: "none"
+    }
+  },
+
   transactions: [],
   skill: { name: "" },
   tasks: [],
@@ -89,12 +107,21 @@ function load() {
         ...parsed,
         settings: { ...state.settings, ...(parsed.settings || {}) },
         goals: { ...state.goals, ...(parsed.goals || {}) },
+
+        // merge seguro do salário
+        salary: { ...state.salary, ...(parsed.salary || {}) },
+        salaryFx: undefined, // compat futura (não usado)
+
         skill: { ...state.skill, ...(parsed.skill || {}) },
         transactions: Array.isArray(parsed.transactions) ? parsed.transactions : [],
         tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
         reminders: Array.isArray(parsed.reminders) ? parsed.reminders : [],
         fxCache: parsed.fxCache || {}
       };
+
+      // Garante defaults internos do salary.fx
+      state.salary.fx = { ...{ base:"BRL", rate:1, date:null, source:"none" }, ...(state.salary.fx || {}) };
+      if (!state.salary.currency) state.salary.currency = "BRL";
     }
   } catch (e) {
     console.warn("Falha ao carregar estado:", e);
@@ -142,8 +169,11 @@ async function loadCurrencies() {
 
   const selTx = $("#txCurrency");
   const selDef = $("#setDefaultCurrency");
+  const selSal = $("#salCurrency");
+
   selTx.innerHTML = "";
   selDef.innerHTML = "";
+  selSal.innerHTML = "";
 
   codes.forEach((code) => {
     const opt1 = document.createElement("option");
@@ -155,14 +185,22 @@ async function loadCurrencies() {
     opt2.value = code;
     opt2.textContent = code;
     selDef.appendChild(opt2);
+
+    const opt3 = document.createElement("option");
+    opt3.value = code;
+    opt3.textContent = code;
+    selSal.appendChild(opt3);
   });
 
   // Defaults
   selDef.value = state.settings.defaultCurrency || "BRL";
   selTx.value = state.settings.defaultCurrency || "BRL";
+
+  // salary default
+  selSal.value = state.salary.currency || "BRL";
 }
 
-// ------------------ FX (taxa congelada por lançamento) ------------------
+// ------------------ FX (taxa congelada) ------------------
 function fxKey(from, to, dateStr) {
   return `${from}->${to}|${dateStr || "latest"}`;
 }
@@ -191,6 +229,7 @@ async function fetchFxRate(from, to, dateStr) {
   return rate;
 }
 
+// ------------------ FX para transações ------------------
 async function fillRateFromApi() {
   const cur = $("#txCurrency").value;
   const date = $("#txDate").value;
@@ -204,6 +243,25 @@ async function fillRateFromApi() {
   try {
     const rate = await fetchFxRate(cur, "BRL", date || null);
     $("#txRate").value = Number(rate).toFixed(6);
+    showToast("Taxa encontrada", `1 ${cur} ≈ ${Number(rate).toFixed(4)} BRL`);
+  } catch {
+    showToast("Não consegui buscar a taxa", "Você pode informar a taxa manualmente.");
+  }
+}
+
+// ------------------ NOVO: FX para salário ------------------
+async function fillSalaryRateFromApi() {
+  const cur = $("#salCurrency").value;
+  // salário é mensal, então para simplificar usamos latest (o usuário pode colar uma taxa manual se quiser congelar diferente)
+  if (!cur || cur === "BRL") {
+    $("#salRate").value = "";
+    showToast("Taxa", "BRL não precisa de taxa.");
+    return;
+  }
+
+  try {
+    const rate = await fetchFxRate(cur, "BRL", null);
+    $("#salRate").value = Number(rate).toFixed(6);
     showToast("Taxa encontrada", `1 ${cur} ≈ ${Number(rate).toFixed(4)} BRL`);
   } catch {
     showToast("Não consegui buscar a taxa", "Você pode informar a taxa manualmente.");
@@ -423,6 +481,114 @@ function renderGoals() {
       : "Ritmo abaixo da meta de 1 ano ⚠️";
   }
   $("#goalsStatus").textContent = status;
+}
+
+// ------------------ NOVO: Salário / Receita principal ------------------
+function computeSalaryNet() {
+  const cur = $("#salCurrency").value || "BRL";
+  const gross = asNum($("#salGross").value);
+  const fixed = asNum($("#salFixed").value);
+  const net = Math.max(0, gross - fixed);
+
+  // FX
+  const rateInput = asNum($("#salRate").value);
+  const rate = (cur === "BRL") ? 1 : (rateInput > 0 ? rateInput : 0);
+  const netBRL = (cur === "BRL") ? net : (rate > 0 ? net * rate : 0);
+
+  return { cur, gross, fixed, net, rate, netBRL };
+}
+
+function updateSalaryPreview() {
+  const { cur, net, rate, netBRL } = computeSalaryNet();
+
+  $("#salNet").textContent = net ? fmt(net, cur) : fmt(0, cur);
+
+  if (cur === "BRL") {
+    $("#salNetBRL").textContent = fmt(net, "BRL");
+    $("#salStatus").textContent = "BRL (sem conversão)";
+    $("#salHint").textContent = "Dica: você pode usar o líquido como base de economia mensal.";
+  } else {
+    if (rate > 0) {
+      $("#salNetBRL").textContent = fmt(netBRL, "BRL");
+      $("#salStatus").textContent = `Convertendo com taxa ${rate.toFixed(6)}`
+      $("#salHint").textContent = "Taxa definida. Histórico fica consistente se você não mudar a taxa.";
+    } else {
+      $("#salNetBRL").textContent = "—";
+      $("#salStatus").textContent = "Defina a taxa para ver BRL";
+      $("#salHint").textContent = "Clique em “Buscar taxa” ou informe a taxa manualmente.";
+    }
+  }
+}
+
+function saveSalary() {
+  const kind = $("#salType").value;
+  const name = ($("#salName").value || "").trim();
+  const company = ($("#salCompany").value || "").trim();
+
+  const { cur, gross, fixed, net, rate } = computeSalaryNet();
+
+  // Se moeda ≠ BRL, exige taxa para salvar (para manter lógica clara)
+  if (cur !== "BRL" && rate <= 0) {
+    showToast("Falta a taxa", "Para moeda estrangeira, busque ou informe a taxa antes de salvar.");
+    return;
+  }
+
+  state.salary.kind = kind;
+  state.salary.name = name;
+  state.salary.company = company;
+  state.salary.currency = cur;
+  state.salary.gross = gross;
+  state.salary.fixed = fixed;
+
+  state.salary.fx = {
+    base: "BRL",
+    rate: cur === "BRL" ? 1 : rate,
+    date: new Date().toISOString().slice(0, 10),
+    source: cur === "BRL" ? "none" : "manual_or_cached"
+  };
+
+  save();
+  renderSalary();
+  showToast("Salário salvo", "Receita principal atualizada.");
+}
+
+function renderSalary() {
+  // Inputs
+  $("#salType").value = state.salary.kind || "CLT";
+  $("#salName").value = state.salary.name || "";
+  $("#salCompany").value = state.salary.company || "";
+  $("#salCurrency").value = state.salary.currency || "BRL";
+  $("#salGross").value = state.salary.gross || "";
+  $("#salFixed").value = state.salary.fixed || "";
+
+  // Taxa (apenas se moeda ≠ BRL)
+  if ((state.salary.currency || "BRL") !== "BRL") {
+    const rate = asNum(state.salary.fx?.rate || 0);
+    $("#salRate").value = rate > 0 ? rate.toFixed(6) : "";
+  } else {
+    $("#salRate").value = "";
+  }
+
+  updateSalaryPreview();
+}
+
+function useNetAsSavingHint() {
+  const { cur, net, rate } = computeSalaryNet();
+  // A meta/projeção trabalha em BRL. Se salário está em outra moeda, converte para BRL usando taxa atual.
+  const netBRL = (cur === "BRL") ? net : (rate > 0 ? net * rate : 0);
+
+  if (cur !== "BRL" && netBRL <= 0) {
+    showToast("Não dá ainda", "Defina a taxa para converter o líquido para BRL.");
+    return;
+  }
+
+  $("#monthlySavingHint").value = (cur === "BRL") ? net.toFixed(2) : netBRL.toFixed(2);
+  state.goals.monthlySavingHint = asNum($("#monthlySavingHint").value);
+  save();
+
+  renderGoals();
+  renderProgress();
+  showToast("Aplicado", "Usei seu líquido como economia mensal (BRL).");
 }
 
 // ------------------ Progresso + Alertas ------------------
@@ -829,12 +995,15 @@ async function importJSON(file) {
       ...data,
       settings: { ...state.settings, ...(data.settings || {}) },
       goals: { ...state.goals, ...(data.goals || {}) },
-      skill: { ...state.skill, ...(data.skill || {}) },
+      salary: { ...state.salary, ...(data.salary || {}) },
       transactions: Array.isArray(data.transactions) ? data.transactions : [],
+      skill: { ...state.skill, ...(data.skill || {}) },
       tasks: Array.isArray(data.tasks) ? data.tasks : [],
       reminders: Array.isArray(data.reminders) ? data.reminders : [],
       fxCache: data.fxCache || {}
     };
+
+    state.salary.fx = { ...{ base:"BRL", rate:1, date:null, source:"none" }, ...(state.salary.fx || {}) };
 
     save();
     renderAll();
@@ -867,6 +1036,10 @@ function renderAll() {
   renderSettings();
   renderGoalsInputs();
   renderGoals();
+
+  // salário
+  renderSalary();
+
   renderTransactions();
   renderProgress();
   renderSkill();
@@ -937,6 +1110,7 @@ function init() {
     state = {
       settings: { name: "", theme: "light", displayMode: "BOTH", defaultCurrency: "BRL", whatsappNumber: "" },
       goals: { monthly: 0, yearly: 0, yearsTarget: 0, yearsCount: 5, monthlySavingHint: 0 },
+      salary: { kind:"CLT", name:"", company:"", currency:"BRL", gross:0, fixed:0, fx:{ base:"BRL", rate:1, date:null, source:"none" } },
       transactions: [],
       skill: { name: "" },
       tasks: [],
@@ -978,6 +1152,19 @@ function init() {
     }
   });
 
+  // NOVO: Salário eventos
+  $("#btnSalFetchRate").addEventListener("click", fillSalaryRateFromApi);
+  $("#btnSaveSalary").addEventListener("click", saveSalary);
+  $("#btnUseNetAsSaving").addEventListener("click", useNetAsSavingHint);
+
+  // Preview em tempo real (sem ficar “pesado”)
+  ["salType","salName","salCompany","salCurrency","salGross","salFixed","salRate"].forEach((id)=>{
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", updateSalaryPreview);
+    el.addEventListener("change", updateSalaryPreview);
+  });
+
   // Skill/Tarefas
   $("#btnSaveSkill").addEventListener("click", saveSkill);
   $("#btnAddTask").addEventListener("click", addTask);
@@ -1001,7 +1188,12 @@ function init() {
   $("#waBtn").addEventListener("click", openWhatsApp);
 
   // Carrega moedas e renderiza
-  loadCurrencies().finally(() => renderAll());
+  loadCurrencies().finally(() => {
+    // Ajusta selects pós-carregamento
+    $("#txCurrency").value = state.settings.defaultCurrency || "BRL";
+    $("#salCurrency").value = state.salary.currency || "BRL";
+    renderAll();
+  });
 
   // Loop dos lembretes (somente enquanto a página estiver aberta)
   setInterval(reminderLoop, 15000);
