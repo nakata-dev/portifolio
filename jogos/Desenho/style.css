@@ -274,10 +274,28 @@ canvas {
 /* Backdrop por cima de tudo */
 .modal {
     z-index: 9999;
-    /* mais alto */
 }
 
 /* Evita clique atravessar */
 .modal-card {
     pointer-events: auto;
 }
+
+/* ===========================
+   EXTENSÕES (para adaptação)
+   =========================== */
+.btn:disabled,
+.icon-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn.active {
+    border-color: rgba(96, 165, 250, .55);
+    background: rgba(96, 165, 250, .12);
+}
+
+.msg[data-tone="ok"] { color: rgba(34, 197, 94, .95); }
+.msg[data-tone="warn"] { color: rgba(255, 213, 106, .95); }
+.msg[data-tone="bad"] { color: rgba(251, 113, 133, .95); }

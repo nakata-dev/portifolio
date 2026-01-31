@@ -16,8 +16,8 @@
       <div class="brand">
         <div class="logo">🧠</div>
         <div>
-          <h1>Traço Único</h1>
-          <p class="sub">Passe por cada linha 1 vez, sem cruzar e sem repetir.</p>
+          <h1>Linha Continua</h1>
+          <p class="sub">Faça o desenho sem passar duas vezes pela mesma linha.</p>
         </div>
       </div>
 
@@ -27,7 +27,7 @@
     <section class="hud card">
       <div class="chip">
         <span class="k">Nível</span>
-        <span class="v"><b id="lvl">1</b>/10</span>
+        <span class="v"><b id="lvl">1</b>/<b id="lvlTotal">60</b></span>
       </div>
       <div class="chip">
         <span class="k">Arestas</span>
@@ -79,9 +79,9 @@
         <li>Você deve passar por <b>todas as linhas</b> (arestas).</li>
         <li>Não pode passar pela <b>mesma linha duas vezes</b>.</li>
         <li>O traço deve ser <b>contínuo</b>, indo de ponto em ponto.</li>
-        <li>Comece por um ponto sugerido (quando existir).</li>
+        <li>Quando houver 2 pontos ímpares, comece no <b>ponto de início</b>.</li>
       </ul>
-      <p class="small">Dica: se existirem 2 pontos “ímpares”, você deve começar em um deles.</p>
+      <p class="small">Dica: níveis válidos seguem Euler (0 ou 2 vértices ímpares, grafo conectado).</p>
     </div>
   </div>
 
