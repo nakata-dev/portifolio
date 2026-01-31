@@ -1,0 +1,461 @@
+/* =========================================================
+  FinPalma MVP (2026) - Single Page, Mobile-first 360x800
+  - Header/Footer fixos
+  - Paleta Marinha
+  - Modo claro/escuro
+  - Layout compacto (pouca rolagem)
+  - Tipografia com tabular numbers
+========================================================= */
+
+:root{
+  /* Paleta Marinha */
+  --sereno:#92A8D1;
+  --nevoa:#B1C4D1;
+  --cinza:#D1D1D1;
+  --gelo:#F0F4F7;
+  --marinho:#2C3E50;
+
+  /* Tokens (light) */
+  --bg: var(--gelo);
+  --surface: #ffffff;
+  --surface2: rgba(177,196,209,0.22);
+  --text: #23303c;
+  --muted: rgba(35,48,60,0.65);
+  --border: rgba(44,62,80,0.14);
+  --primary: var(--sereno);
+  --primaryText: #0f1a24;
+  --danger: #b33a3a;
+  --ok: #247a43;
+
+  --shadow: 0 10px 24px rgba(44,62,80,0.10);
+  --radius: 16px;
+
+  --headerH: 56px;
+  --footerH: 44px;
+
+  /* Font fallback minimalista */
+  --font: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[data-theme="dark"]{
+  --bg: #1b2834;
+  --surface: #20303e;
+  --surface2: rgba(146,168,209,0.10);
+  --text: rgba(240,244,247,0.92);
+  --muted: rgba(240,244,247,0.66);
+  --border: rgba(240,244,247,0.14);
+  --primary: #9fb6e6;
+  --primaryText: #0c141c;
+  --shadow: 0 12px 28px rgba(0,0,0,0.35);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Tabular numbers para alinhar colunas numéricas quando a fonte suportar */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Header fixo */
+header{
+  position: fixed;
+  top:0; left:0; right:0;
+  height: var(--headerH);
+  background: color-mix(in oklab, var(--surface) 88%, var(--nevoa) 12%);
+  border-bottom: 1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  user-select:none;
+}
+.logo-badge{
+  width: 28px; height: 28px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--sereno), var(--marinho));
+  box-shadow: 0 8px 16px rgba(44,62,80,0.18);
+}
+.logo-text{
+  font-weight: 650;
+  letter-spacing: 0.2px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.icon-btn{
+  appearance:none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 12px;
+  height: 40px;
+  width: 44px;
+  display:grid;
+  place-items:center;
+  box-shadow: 0 8px 18px rgba(44,62,80,0.08);
+  cursor:pointer;
+  touch-action: manipulation;
+}
+.icon-btn:active{ transform: translateY(1px); }
+
+main{
+  padding: calc(var(--headerH) + 14px) 14px calc(var(--footerH) + 14px);
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Footer fixo */
+footer{
+  position: fixed;
+  bottom:0; left:0; right:0;
+  height: var(--footerH);
+  background: color-mix(in oklab, var(--surface) 88%, var(--nevoa) 12%);
+  border-top: 1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 0 14px;
+  z-index: 40;
+  backdrop-filter: blur(10px);
+  text-align:center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Seções */
+.section{
+  margin-bottom: 14px;
+  scroll-margin-top: calc(var(--headerH) + 10px);
+}
+
+/* Cards */
+.card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px;
+}
+.card + .card{ margin-top: 12px; }
+
+/* Card “flat” (usado no menu) */
+.card-flat{
+  box-shadow:none;
+}
+
+/* Layout helpers */
+.row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap: wrap;
+}
+.row-between{
+  justify-content: space-between;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media(min-width: 780px){
+  .grid-2{ grid-template-columns: 1fr 1fr; }
+  .grid-3{ grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* Tipografia */
+.h1{
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text);
+  letter-spacing: .2px;
+}
+.sub{
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+/* Pílulas / status */
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface2);
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* KPIs */
+.kpi{
+  flex: 1 1 150px;
+  min-width: 150px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--surface) 88%, var(--nevoa) 12%);
+  padding: 10px;
+}
+.kpi .label{
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.kpi .value{
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: .2px;
+}
+
+label{
+  font-size: 11px;
+  color: var(--muted);
+  display:block;
+  margin: 2px 0 6px;
+}
+input, select, textarea{
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 13px;
+  outline: none;
+}
+textarea{ min-height: 44px; resize: vertical; }
+
+/* Botões */
+.btn{
+  appearance:none;
+  border: 1px solid var(--border);
+  background: var(--primary);
+  color: #0c141c;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor:pointer;
+  touch-action: manipulation;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap: 8px;
+  min-height: 40px;
+}
+.btn.secondary{
+  background: var(--surface);
+  color: var(--text);
+}
+.btn.ghost{
+  background: transparent;
+  color: var(--text);
+}
+.btn.danger{
+  background: color-mix(in oklab, var(--danger) 20%, var(--surface) 80%);
+  color: var(--text);
+}
+.btn:active{ transform: translateY(1px); }
+
+.divider{
+  height: 1px;
+  background: var(--border);
+  margin: 10px 0;
+}
+
+/* Lista compacta estilo “planilha” */
+.list{
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.item{
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
+  padding: 10px;
+}
+.item-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.item-title{
+  font-weight: 700;
+  font-size: 13px;
+  margin:0;
+}
+.item-meta{
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.25;
+}
+.item-amt{
+  text-align:right;
+  min-width: 120px;
+}
+
+/* Tags */
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size: 11px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  margin-top: 6px;
+  justify-content:flex-end;
+}
+.tag.ok{ border-color: color-mix(in oklab, var(--ok) 40%, var(--border) 60%); }
+.tag.bad{ border-color: color-mix(in oklab, var(--danger) 40%, var(--border) 60%); }
+
+/* Details */
+details{ margin-top: 8px; }
+summary{
+  cursor:pointer;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Drawer / menu burguer */
+.overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.30);
+  display:none;
+  z-index: 80;
+}
+.overlay.show{ display:block; }
+.drawer{
+  position: fixed;
+  top:0;
+  right:0;
+  height:100%;
+  width: min(360px, 92vw);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: -20px 0 40px rgba(0,0,0,0.18);
+  transform: translateX(110%);
+  transition: transform 180ms ease;
+  z-index: 90;
+  padding: 14px;
+  overflow:auto;
+}
+.drawer.show{ transform: translateX(0); }
+.drawer h2{
+  font-size: 13px;
+  margin: 6px 0 10px;
+  color: var(--muted);
+  font-weight: 750;
+  letter-spacing: .2px;
+  text-transform: uppercase;
+}
+
+.navlink{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
+  color: var(--text);
+  text-decoration:none;
+  font-size: 13px;
+  font-weight: 650;
+  margin-bottom: 10px;
+}
+.navlink small{
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* WhatsApp flutuante */
+.wa{
+  position: fixed;
+  right: 14px;
+  bottom: calc(var(--footerH) + 14px);
+  z-index: 60;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
+  box-shadow: var(--shadow);
+  cursor:pointer;
+  user-select:none;
+  touch-action: manipulation;
+}
+.wa-dot{
+  width: 14px; height: 14px;
+  border-radius: 999px;
+  background: #25D366;
+  box-shadow: 0 10px 18px rgba(37,211,102,0.24);
+}
+.wa span{
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* Toast/alert */
+.toast{
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  top: calc(var(--headerH) + 14px);
+  z-index: 120;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 10px 12px;
+  display:none;
+}
+.toast.show{ display:block; }
+.toast strong{ font-size: 13px; }
+.toast p{ margin: 6px 0 0; font-size: 12px; color: var(--muted); line-height:1.25; }
+
+/* Gráfico (canvas) */
+canvas{
+  width: 100%;
+  height: 220px;
+  display:block;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 92%, var(--nevoa) 8%);
+}
+
+/* Acessibilidade */
+:focus-visible{
+  outline: 3px solid color-mix(in oklab, var(--primary) 65%, transparent 35%);
+  outline-offset: 2px;
+  border-radius: 14px;
+}

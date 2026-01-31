@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>FinPalma MVP</title>
+
+  <!-- CSS separado -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Header fixo: logo (esquerda) + burger (direita). Sem títulos no header. -->
+  <header>
+    <div class="logo" aria-label="Logo">
+      <div class="logo-badge" aria-hidden="true"></div>
+      <div class="logo-text">FinPalma</div>
+    </div>
+
+    <button class="icon-btn" id="btnMenu" aria-label="Abrir menu">
+      <!-- Ícone burger (SVG leve) -->
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M3 6h18v2H3V6Zm0 5h18v2H3v-2Zm0 5h18v2H3v-2Z"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Drawer -->
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+  <aside class="drawer" id="drawer" aria-label="Menu">
+    <div class="row" style="justify-content: space-between;">
+      <h2 style="margin:0">Navegação</h2>
+      <button class="icon-btn" id="btnCloseMenu" aria-label="Fechar menu" title="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.29 19.71 2.88 18.29 9.17 12 2.88 5.71 4.29 4.29 10.59 10.6l6.3-6.31 1.41 1.42Z"/>
+        </svg>
+      </button>
+    </div>
+
+    <a class="navlink" href="#sec-goals"><span>1) Metas de ganhos</span><small>projeções</small></a>
+    <a class="navlink" href="#sec-expenses"><span>2) Despesas</span><small>planilha</small></a>
+    <a class="navlink" href="#sec-progress"><span>3) Progresso</span><small>alertas</small></a>
+    <a class="navlink" href="#sec-skill"><span>4) Nova Skill</span><small>todo + agenda</small></a>
+
+    <div class="divider"></div>
+    <h2>Configurações</h2>
+
+    <div class="card card-flat">
+      <div class="grid" style="gap:10px;">
+        <div>
+          <label for="setName">Seu nome (para alertas)</label>
+          <input id="setName" placeholder="Ex.: Ailton" autocomplete="name" />
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="setTheme">Tema</label>
+            <select id="setTheme">
+              <option value="light">Claro</option>
+              <option value="dark">Escuro</option>
+            </select>
+          </div>
+          <div>
+            <label for="setDisplayMode">Exibição de valores</label>
+            <select id="setDisplayMode">
+              <option value="BRL">Mostrar em BRL (base)</option>
+              <option value="ORIGINAL">Mostrar na moeda original</option>
+              <option value="BOTH">Mostrar Original + BRL</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="setDefaultCurrency">Moeda padrão (site)</label>
+            <select id="setDefaultCurrency"></select>
+          </div>
+          <div>
+            <label for="setWhatsapp">Seu WhatsApp (com DDI)</label>
+            <input id="setWhatsapp" placeholder="Ex.: 5511999999999" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="row row-between">
+          <button class="btn secondary" id="btnExport">Exportar backup (JSON)</button>
+          <label class="btn secondary" for="fileImport" style="cursor:pointer;">
+            Importar backup
+          </label>
+          <input id="fileImport" type="file" accept="application/json" style="display:none;" />
+        </div>
+
+        <button class="btn danger" id="btnReset">Resetar dados</button>
+
+        <p class="sub" style="margin:0;">
+          Otimizado para <strong>360x800</strong> (mobile-first). Navegação por menu burguer e seções compactas para reduzir rolagem.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong id="toastTitle">Aviso</strong>
+    <p id="toastMsg"></p>
+  </div>
+
+  <main>
+    <!-- 1) METAS -->
+    <section class="section" id="sec-goals">
+      <div class="card">
+        <h1 class="h1">1) Objetivos de ganhos</h1>
+        <p class="sub">
+          Defina metas e uma linha extra com o quanto você está economizando por mês.
+          O sistema calcula projeções e diz se você está no ritmo certo.
+        </p>
+
+        <div class="grid grid-3">
+          <div>
+            <label for="goalMonthly">Meta mensal (BRL)</label>
+            <input id="goalMonthly" type="number" inputmode="decimal" min="0" placeholder="Ex.: 2000" />
+          </div>
+          <div>
+            <label for="goalYearly">Meta de 1 ano (BRL)</label>
+            <input id="goalYearly" type="number" inputmode="decimal" min="0" placeholder="Ex.: 24000" />
+          </div>
+          <div>
+            <label for="goalYears">Meta de X anos (BRL)</label>
+            <input id="goalYears" type="number" inputmode="decimal" min="0" placeholder="Ex.: 120000" />
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <div>
+            <label for="yearsCount">Quantidade de anos (para meta de X anos)</label>
+            <input id="yearsCount" type="number" inputmode="numeric" min="1" placeholder="Ex.: 5" />
+          </div>
+          <div>
+            <label for="monthlySavingHint">Quanto estou economizando por mês (BRL)</label>
+            <input id="monthlySavingHint" type="number" inputmode="decimal" min="0" placeholder="Ex.: 1500" />
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn" id="btnSaveGoals">Salvar metas</button>
+          <span class="pill" id="goalsStatus">Preencha para ver projeções ✨</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row" id="goalsKpis">
+          <div class="kpi">
+            <div class="label">Necessário por mês (1 ano)</div>
+            <div class="value" id="needYear">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Necessário por mês (X anos)</div>
+            <div class="value" id="needYears">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Projeção (1 ano) com sua economia</div>
+            <div class="value" id="projYear">—</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Projeção (X anos) com sua economia</div>
+            <div class="value" id="projYears">—</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2) DESPESAS -->
+    <section class="section" id="sec-expenses">
+      <div class="card">
+        <h1 class="h1">2) Despesas (estilo planilha)</h1>
+        <p class="sub">
+          Registre receitas e gastos com moeda livre. Se for moeda estrangeira, você pode buscar taxa automaticamente ou informar manualmente.
+          A taxa fica salva no lançamento (histórico estável).
+        </p>
+
+        <div class="grid grid-3">
+          <div>
+            <label for="txType">Tipo</label>
+            <select id="txType">
+              <option value="expense">Gasto</option>
+              <option value="income">Receita</option>
+            </select>
+          </div>
+          <div>
+            <label for="txDate">Data</label>
+            <input id="txDate" type="date" />
+          </div>
+          <div>
+            <label for="txCategory">Categoria</label>
+            <input id="txCategory" placeholder="Ex.: Alimentação" />
+          </div>
+        </div>
+
+        <div class="grid grid-3" style="margin-top:10px;">
+          <div>
+            <label for="txAmount">Valor</label>
+            <input id="txAmount" type="number" inputmode="decimal" placeholder="Ex.: 45.90" />
+          </div>
+          <div>
+            <label for="txCurrency">Moeda</label>
+            <select id="txCurrency"></select>
+          </div>
+          <div>
+            <label for="txDesc">Descrição</label>
+            <input id="txDesc" placeholder="Ex.: Mercado" />
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:10px;">
+          <div>
+            <label for="txRate">Taxa (1 moeda = ? BRL) | opcional</label>
+            <input id="txRate" type="number" inputmode="decimal" placeholder="Ex.: 5.12" />
+          </div>
+          <div class="row" style="align-items:flex-end; justify-content: space-between;">
+            <button class="btn secondary" id="btnFetchRate" title="Buscar taxa automática (Frankfurter)">
+              Buscar taxa
+            </button>
+            <button class="btn" id="btnAddTx">Adicionar</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid grid-3">
+          <div>
+            <label for="filterMonth">Filtrar mês</label>
+            <input id="filterMonth" type="month" />
+          </div>
+          <div>
+            <label>Totais (no filtro)</label>
+            <div class="pill" id="totalsPill">—</div>
+          </div>
+          <div>
+            <label>Ações rápidas</label>
+            <div class="row row-between">
+              <button class="btn secondary" id="btnClearFilter">Limpar filtro</button>
+              <button class="btn secondary" id="btnClearTx">Limpar lançamentos</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="list" id="txList" aria-label="Lista de lançamentos"></div>
+      </div>
+    </section>
+
+    <!-- 3) PROGRESSO -->
+    <section class="section" id="sec-progress">
+      <div class="card">
+        <h1 class="h1">3) Gráfico de progresso</h1>
+        <p class="sub">
+          Mostra sua evolução e dispara alertas quando a meta indica que você não vai conseguir cumprir o prazo.
+          (Baseado na economia real calculada pelos lançamentos e/ou pelo “quanto economiza por mês”.)
+        </p>
+
+        <div class="row">
+          <span class="pill" id="progressSummary">Defina metas e registre lançamentos para ver o progresso.</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <canvas id="chart" width="900" height="300" aria-label="Gráfico de progresso"></canvas>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <span class="pill" id="progressAlert">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) SKILL + TODO + AGENDA -->
+    <section class="section" id="sec-skill">
+      <div class="card">
+        <h1 class="h1">4) Nova Skill + tarefas + agenda</h1>
+        <p class="sub">
+          Estilo Todoist: defina uma skill, crie tarefas e programe práticas no calendário.
+          Alertas sonoros dependem do navegador permitir áudio após alguma interação.
+        </p>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="skillName">Nova Skill</label>
+            <input id="skillName" placeholder="Ex.: Inglês" />
+          </div>
+          <div class="row" style="align-items:flex-end; justify-content: space-between;">
+            <button class="btn secondary" id="btnSaveSkill">Salvar</button>
+            <span class="pill" id="skillStatus">—</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="taskTitle">Nova tarefa</label>
+            <input id="taskTitle" placeholder="Ex.: 20 min de leitura" />
+          </div>
+          <div class="row" style="align-items:flex-end; justify-content: space-between;">
+            <button class="btn" id="btnAddTask">Adicionar</button>
+            <button class="btn secondary" id="btnClearTasks">Limpar tarefas</button>
+          </div>
+        </div>
+
+        <div class="list" id="taskList" style="margin-top:10px;"></div>
+
+        <div class="divider"></div>
+
+        <div class="grid grid-3">
+          <div>
+            <label for="remDate">Dia</label>
+            <input id="remDate" type="date" />
+          </div>
+          <div>
+            <label for="remTime">Hora</label>
+            <input id="remTime" type="time" />
+          </div>
+          <div>
+            <label for="remPractice">Prática do dia</label>
+            <input id="remPractice" placeholder="Ex.: prática de pronúncia" />
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px; justify-content: space-between;">
+          <button class="btn" id="btnAddReminder">Agendar prática</button>
+          <button class="btn secondary" id="btnClearReminders">Limpar agenda</button>
+        </div>
+
+        <div class="list" id="remList" style="margin-top:10px;"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="wa" id="waBtn" aria-label="Contato WhatsApp">
+    <div class="wa-dot" aria-hidden="true"></div>
+    <span>Orçamento</span>
+  </div>
+
+  <footer>
+    Copyright ©️ 2026 - Ailton A. Nakata
+  </footer>
+
+  <!-- JS separado -->
+  <script src="app.js"></script>
+</body>
+</html>
