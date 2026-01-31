@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Traço Único • Desafios Lógicos</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Sem Google Fonts: mais leve e mais rápido no 4G fraco -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -21,7 +20,7 @@
         </div>
       </div>
 
-      <button class="icon-btn" id="btnHelp" type="button" title="Regras">❔</button>
+      <button class="icon-btn" id="btnHelp" type="button" title="Regras" aria-label="Abrir regras">❔</button>
     </header>
 
     <section class="hud card">
@@ -51,9 +50,9 @@
 
       <section class="controls card">
         <div class="row">
-          <button class="btn ghost" id="btnPrev" type="button">⬅</button>
+          <button class="btn ghost" id="btnPrev" type="button" aria-label="Nível anterior">⬅</button>
           <button class="btn primary" id="btnReset" type="button">Reiniciar</button>
-          <button class="btn ghost" id="btnNext" type="button">➡</button>
+          <button class="btn ghost" id="btnNext" type="button" aria-label="Próximo nível">➡</button>
         </div>
 
         <div class="row">
@@ -79,9 +78,9 @@
         <li>Você deve passar por <b>todas as linhas</b> (arestas).</li>
         <li>Não pode passar pela <b>mesma linha duas vezes</b>.</li>
         <li>O traço deve ser <b>contínuo</b>, indo de ponto em ponto.</li>
-        <li>Quando houver 2 pontos ímpares, comece no <b>ponto de início</b>.</li>
+        <li>Quando houver 2 pontos ímpares, comece no <b>ponto verde</b> e termine no <b>ponto rosa</b>.</li>
       </ul>
-      <p class="small">Dica: níveis válidos seguem Euler (0 ou 2 vértices ímpares, grafo conectado).</p>
+      <p class="small">Todos os níveis são Eulerianos (0 ou 2 vértices ímpares + grafo conectado).</p>
     </div>
   </div>
 
