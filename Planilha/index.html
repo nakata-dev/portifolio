@@ -1,573 +1,358 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>Controle Financeiro | Turnos (JPY)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Finance PRO | Turnos + Despesas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Pular para o conteúdo</a>
-
-  <header class="header is-sticky" role="banner">
-    <div class="container header__inner">
-      <div class="brand" aria-label="Marca">
-        <svg class="brand__logo" viewBox="0 0 48 48" aria-hidden="true">
-          <path d="M8 24c0-8.837 7.163-16 16-16s16 7.163 16 16-7.163 16-16 16S8 32.837 8 24Z"></path>
-          <path d="M24 14v20M14 24h20"></path>
-        </svg>
-        <div class="brand__text">
-          <strong class="brand__title">Finance</strong>
-          <span class="brand__subtitle">Turnos + Despesas</span>
+  <!-- HEADER FIXO -->
+  <header class="header" role="banner">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">￥</div>
+        <div class="titles">
+          <h1>Finance <span class="pro">PRO</span></h1>
+          <p>Planilha inteligente (turnos + despesas) com PDF e câmbio diário.</p>
         </div>
       </div>
 
-      <button class="hamburger btn btn--icon" type="button"
-              aria-label="Abrir menu"
-              aria-controls="navDrawer"
-              aria-expanded="false"
-              data-action="toggle-drawer">
-        <span class="hamburger__lines" aria-hidden="true"></span>
-      </button>
+      <div class="menu-slot">
+        <button class="icon-btn" id="btnBurger" type="button" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+
+      <div class="actions">
+        <button class="pill ghost" id="btnSave" type="button">💾 Salvar</button>
+        <button class="pill ghost" id="btnClearMonth" type="button">🧼 Limpar mês</button>
+        <button class="pill" id="btnPDF" type="button">🧾 Gerar PDF</button>
+      </div>
     </div>
   </header>
 
-  <div class="backdrop" data-action="close-drawer" hidden></div>
+  <main class="container" role="main">
+    <!-- TOPBAR -->
+    <section class="topbar" aria-label="Barra superior">
+      <label class="field">
+        <span>Mês</span>
+        <input id="month" type="month" />
+        <small>Dados salvos por mês.</small>
+      </label>
 
-  <aside id="navDrawer" class="nav-drawer" aria-label="Menu" hidden>
-    <div class="nav-drawer__header">
-      <span class="nav-drawer__title">Menu</span>
-      <button class="btn btn--icon" type="button" aria-label="Fechar menu" data-action="close-drawer">✕</button>
-    </div>
-
-    <nav class="nav-drawer__nav">
-      <a class="nav-link" href="#config" data-action="close-drawer">Configurações</a>
-      <a class="nav-link" href="#tabela" data-action="close-drawer">Tabela</a>
-      <a class="nav-link" href="#despesas" data-action="close-drawer">Despesas</a>
-      <a class="nav-link" href="#relatorios" data-action="close-drawer">Relatórios</a>
-      <a class="nav-link" href="#resumo" data-action="close-drawer">Resumo</a>
-      <a class="nav-link" href="#conversao" data-action="close-drawer">Conversão</a>
-    </nav>
-
-    <div class="nav-drawer__footer">
-      <small class="muted">Dados ficam no seu dispositivo (offline).</small>
-    </div>
-  </aside>
-
-  <main id="main" class="app" role="main">
-    <section class="container stack hero" aria-label="Topo">
-      <div class="hero__row">
-        <div class="stack">
-          <h1 class="h1">Controle Financeiro (Turnos)</h1>
-          <p class="muted">
-            Aparência de planilha, cálculos automáticos por turno, despesas por dia e exportação em PDF.
-          </p>
+      <div class="fx-card" aria-label="Câmbio diário">
+        <div class="fx-head">
+          <div>
+            <div class="fx-title">Câmbio diário (base JPY)</div>
+            <div class="fx-sub" id="fxMeta">Carregando…</div>
+          </div>
+          <button class="pill ghost" id="btnRefreshFX" type="button">↻ Atualizar</button>
         </div>
 
-        <div class="hero__controls stack">
-          <div class="field">
-            <label class="label" for="monthSelect">Mês</label>
-            <input class="input" id="monthSelect" type="month" inputmode="numeric" />
-            <span class="hint">Os dados são salvos por mês.</span>
+        <div class="fx-grid">
+          <div class="mini">
+            <span>JPY → BRL</span>
+            <strong id="rateBRL">—</strong>
           </div>
-
-          <div class="field">
-            <label class="label" for="currencySelect">Moeda (cálculo)</label>
-            <select class="select" id="currencySelect" aria-label="Moeda">
-              <option value="JPY">JPY (¥)</option>
-              <option value="BRL">BRL (R$)</option>
-              <option value="USD">USD ($)</option>
-            </select>
-            <span class="hint">A receita/despesa do sistema usa essa moeda. Conversão usa câmbio do dia.</span>
+          <div class="mini">
+            <span>JPY → USD</span>
+            <strong id="rateUSD">—</strong>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Barra de ações -->
-    <section class="container">
-      <div class="actions-bar" role="region" aria-label="Ações">
-        <div class="actions-bar__left">
-          <span class="badge" id="saveStatus" aria-live="polite">Sem alterações</span>
-          <span class="muted small" id="lastSaved" aria-live="polite"></span>
+    <!-- CONFIG -->
+    <section class="card" id="secConfig" aria-label="Configurações">
+      <div class="card-head">
+        <h2>Configurações</h2>
+        <p>Primeiro passo: preencha Nome, Empresa, Valor/hora e horas padrão dos turnos.</p>
+      </div>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Nome</span>
+          <input id="name" type="text" placeholder="Ex: Aiko" autocomplete="name" />
+        </label>
+
+        <label class="field">
+          <span>Empresa</span>
+          <input id="company" type="text" placeholder="Ex: Fábrica X" />
+        </label>
+
+        <label class="field">
+          <span>Faixa (opcional)</span>
+          <input id="rangeText" type="text" placeholder="Ex: 1400 円 ~ 1500 円" />
+          <small>Apenas visual (não entra no cálculo).</small>
+        </label>
+
+        <label class="field">
+          <span>Valor por hora (JPY)</span>
+          <input id="hourValue" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 1450" />
+        </label>
+
+        <label class="field">
+          <span>Multiplicador hora extra</span>
+          <input id="overtimeMult" type="number" inputmode="decimal" min="1" step="0.01" />
+          <small>Ex: 1.25 = +25%.</small>
+        </label>
+
+        <label class="field">
+          <span>Auto-salvar</span>
+          <select id="autosave">
+            <option value="off">Desligado</option>
+            <option value="on" selected>Ligado (suave)</option>
+          </select>
+          <small>Não interfere enquanto você digita.</small>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <h3>Turnos (horas padrão)</h3>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Turno A: horas normais</span>
+          <input id="aNormal" type="number" inputmode="numeric" min="0" step="1" />
+        </label>
+
+        <label class="field">
+          <span>Turno A: horas extras</span>
+          <input id="aExtra" type="number" inputmode="numeric" min="0" step="1" />
+        </label>
+
+        <label class="field">
+          <span>Turno B: horas normais</span>
+          <input id="bNormal" type="number" inputmode="numeric" min="0" step="1" />
+        </label>
+
+        <label class="field">
+          <span>Turno B: horas extras</span>
+          <input id="bExtra" type="number" inputmode="numeric" min="0" step="1" />
+        </label>
+      </div>
+    </section>
+
+    <!-- TURNOS -->
+    <section class="card" id="secTurns" aria-label="Turnos">
+      <div class="card-head">
+        <h2>Turnos do mês</h2>
+        <p>Quantos dias foram feitos no Turno A e Turno B? O sistema calcula a receita.</p>
+      </div>
+
+      <div class="grid-3">
+        <label class="field">
+          <span>Dias Turno A</span>
+          <input id="daysA" type="number" inputmode="numeric" min="0" step="1" />
+        </label>
+
+        <label class="field">
+          <span>Dias Turno B</span>
+          <input id="daysB" type="number" inputmode="numeric" min="0" step="1" />
+        </label>
+
+        <label class="field">
+          <span>Bônus (JPY)</span>
+          <input id="bonusJPY" type="number" inputmode="decimal" min="0" step="0.01" />
+        </label>
+      </div>
+
+      <div class="summary-strip">
+        <div class="sum-item">
+          <span>Receita (JPY)</span>
+          <strong id="incomeJPY">—</strong>
+          <small id="incomeFormula" class="muted">Fórmula: —</small>
         </div>
 
-        <div class="actions-bar__right">
-          <button class="btn btn--ghost" type="button" data-action="jump-config" title="Ir para configurações">
-            Configurar
-          </button>
+        <div class="sum-item">
+          <span>Despesas (JPY)</span>
+          <strong id="expensesJPY">—</strong>
+          <small class="muted">Fixas + variáveis</small>
+        </div>
 
-          <button class="btn btn--ghost" type="button" data-action="toggle-view" id="toggleViewBtn" aria-pressed="false">
-            Ver: Cards
-          </button>
-
-          <button class="btn btn--primary" type="button" data-action="save" id="saveBtn" disabled>
-            Salvar
-          </button>
-
-          <button class="btn btn--danger" type="button" data-action="clear" id="clearBtn">
-            Limpar mês
-          </button>
-
-          <button class="btn btn--ghost" type="button" data-action="export-pdf" id="exportBtn">
-            Exportar PDF
-          </button>
+        <div class="sum-item glow">
+          <span>Saldo (JPY)</span>
+          <strong id="balanceJPY">—</strong>
+          <small class="muted">Receita - despesas</small>
         </div>
       </div>
     </section>
 
-    <!-- CONFIGURAÇÕES -->
-    <section id="config" class="container stack" aria-label="Configurações">
-      <div class="section-head">
-        <h2 class="h2">Configurações</h2>
-        <p class="muted">Essencial primeiro. Ajustes avançados só se precisar.</p>
+    <!-- DESPESAS -->
+    <section class="card" id="secExpenses" aria-label="Despesas">
+      <div class="card-head">
+        <h2>Despesas</h2>
+        <p>Coluna “Descrição” fixa + dias com rolagem horizontal. Totais automáticos.</p>
       </div>
 
-      <div class="panel stack">
-        <div class="callout">
-          <strong>Primeiros passos</strong>
-          <p class="muted">
-            Preencha <strong>Nome</strong>, <strong>Empresa</strong> e <strong>Valor por hora</strong>.
-            Depois selecione dias do mês em Turno A/B e preencha despesas por dia.
-          </p>
-        </div>
-
-        <!-- ESSENCIAL -->
-        <div class="grid config-grid config-grid--tight">
-          <div class="field">
-            <label class="label" for="personName">Nome</label>
-            <input class="input" id="personName" data-bind-setting="personName" placeholder="Ex: Aiko" />
+      <div class="two-cols">
+        <!-- FIXAS -->
+        <section class="matrix-card" aria-label="Despesas fixas">
+          <div class="matrix-head">
+            <h3>Despesas Fixas</h3>
+            <button class="pill ghost" type="button" data-add="fixed">+ Adicionar</button>
           </div>
 
-          <div class="field">
-            <label class="label" for="companyName">Empresa</label>
-            <input class="input" id="companyName" data-bind-setting="companyName" placeholder="Ex: Fábrica X" />
-          </div>
-
-          <div class="field">
-            <label class="label" for="hourlyRate">Valor por hora (cálculo)</label>
-            <input class="input input--money" id="hourlyRate" data-bind-setting="hourlyRate" inputmode="numeric" placeholder="0" />
-          </div>
-
-          <div class="field">
-            <label class="label" for="overtimeMultiplier">Multiplicador hora extra</label>
-            <input class="input input--number" id="overtimeMultiplier" data-bind-setting="overtimeMultiplier" inputmode="decimal" placeholder="1.25" />
-            <span class="hint">Ex: 1.25 = 25% a mais.</span>
-          </div>
-        </div>
-
-        <!-- AVANÇADO -->
-        <details class="details" id="advancedSettings">
-          <summary class="details__summary">
-            <span>Configurações avançadas</span>
-            <span class="details__hint muted">Faixa, auto-save, horas dos turnos, reset…</span>
-          </summary>
-
-          <div class="details__body stack">
-            <div class="grid config-grid">
-              <div class="field">
-                <label class="label" for="hourlyRateLabel">Faixa (opcional)</label>
-                <input class="input" id="hourlyRateLabel" data-bind-setting="hourlyRateLabel" placeholder="Ex: 1400 円～1500 円" />
-                <span class="hint">Apenas visual (não entra no cálculo).</span>
-              </div>
-
-              <div class="field">
-                <label class="label" for="autosave">Auto-salvar</label>
-                <select class="select" id="autosave" data-bind-setting="autosave">
-                  <option value="on">Ligado</option>
-                  <option value="off">Desligado</option>
-                </select>
-                <span class="hint">Não salva enquanto você digita.</span>
-              </div>
+          <div class="matrix-wrap" data-matrix="fixed">
+            <div class="matrix-scroll" role="region" aria-label="Tabela de despesas fixas (rolagem horizontal)" tabindex="0">
+              <table class="matrix" aria-label="Tabela de despesas fixas">
+                <thead id="theadFixed"></thead>
+                <tbody id="tbodyFixed"></tbody>
+                <tfoot id="tfootFixed"></tfoot>
+              </table>
             </div>
-
-            <div class="divider"></div>
-
-            <h3 class="h3">Turnos (horas padrão)</h3>
-
-            <div class="grid config-grid">
-              <div class="field">
-                <label class="label" for="normalHoursA">Turno A: horas normais</label>
-                <input class="input input--number" id="normalHoursA" data-bind-setting="normalHoursA" inputmode="numeric" placeholder="8" />
-              </div>
-
-              <div class="field">
-                <label class="label" for="extraHoursA">Turno A: horas extras</label>
-                <input class="input input--number" id="extraHoursA" data-bind-setting="extraHoursA" inputmode="numeric" placeholder="3" />
-              </div>
-
-              <div class="field">
-                <label class="label" for="normalHoursB">Turno B: horas normais</label>
-                <input class="input input--number" id="normalHoursB" data-bind-setting="normalHoursB" inputmode="numeric" placeholder="7" />
-              </div>
-
-              <div class="field">
-                <label class="label" for="extraHoursB">Turno B: horas extras</label>
-                <input class="input input--number" id="extraHoursB" data-bind-setting="extraHoursB" inputmode="numeric" placeholder="4" />
-              </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <button class="btn btn--danger" type="button" data-action="reset-app">
-              Reset geral (apaga tudo do dispositivo)
-            </button>
-            <small class="muted">Remove todos os meses salvos. Use com cuidado.</small>
           </div>
-        </details>
+
+          <div class="matrix-footer">
+            <span>Total Fixas</span>
+            <strong id="totalFixed">—</strong>
+          </div>
+        </section>
+
+        <!-- VARIÁVEIS -->
+        <section class="matrix-card" aria-label="Despesas variáveis">
+          <div class="matrix-head">
+            <h3>Despesas Variáveis</h3>
+            <button class="pill ghost" type="button" data-add="variable">+ Adicionar</button>
+          </div>
+
+          <div class="matrix-wrap" data-matrix="variable">
+            <div class="matrix-scroll" role="region" aria-label="Tabela de despesas variáveis (rolagem horizontal)" tabindex="0">
+              <table class="matrix" aria-label="Tabela de despesas variáveis">
+                <thead id="theadVar"></thead>
+                <tbody id="tbodyVar"></tbody>
+                <tfoot id="tfootVar"></tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="matrix-footer">
+            <span>Total Variáveis</span>
+            <strong id="totalVar">—</strong>
+          </div>
+        </section>
       </div>
+
+      <small class="hint">Dica: você pode rolar horizontalmente pros dias. A descrição fica fixa.</small>
     </section>
 
-    <!-- Toggle: tabela/cards -->
-    <section id="tabela" class="container stack" aria-label="Tabela e Cards">
-      <div class="section-head">
-        <h2 class="h2">Tabela Inteligente</h2>
-        <p class="muted">
-          No celular, use <strong>Cards</strong> para leitura rápida. A tabela mantém o “clima Excel”.
-        </p>
+    <!-- RECEITA CONVERTIDA -->
+    <section class="card" id="secSavings" aria-label="Receita em moedas">
+      <div class="card-head">
+        <h2>Receitas convertidas</h2>
+        <p>Digite o valor economizado em JPY e veja o equivalente em Real e Dólar (câmbio diário).</p>
       </div>
 
-      <!-- Cards -->
-      <div class="cards-view" id="cardsView" hidden>
-        <div class="grid cards-grid">
-          <article class="card">
-            <h3 class="card__title">Pessoa</h3>
-            <div class="card__body">
-              <div class="pair"><span class="muted">Nome</span><strong id="cardPerson">-</strong></div>
-              <div class="pair"><span class="muted">Empresa</span><strong id="cardCompany">-</strong></div>
-              <div class="pair"><span class="muted">Valor/hora</span><strong id="cardHourly">¥ 0</strong></div>
-              <div class="pair"><span class="muted">Faixa</span><strong id="cardHourlyRange">-</strong></div>
-            </div>
-          </article>
+      <div class="grid-3">
+        <label class="field">
+          <span>Economizado (JPY)</span>
+          <input id="savedJPY" type="number" inputmode="decimal" min="0" step="0.01" />
+          <small>Valor manual (não altera o saldo).</small>
+        </label>
 
-          <article class="card">
-            <h3 class="card__title">Turnos</h3>
-            <div class="card__body">
-              <div class="pair"><span class="muted">Dias Turno A</span><strong id="cardDaysA">0</strong></div>
-              <div class="pair"><span class="muted">Dias Turno B</span><strong id="cardDaysB">0</strong></div>
-              <div class="pair"><span class="muted">Diária A</span><strong id="cardDailyA">¥ 0</strong></div>
-              <div class="pair"><span class="muted">Diária B</span><strong id="cardDailyB">¥ 0</strong></div>
-            </div>
-          </article>
-
-          <article class="card">
-            <h3 class="card__title">Despesas</h3>
-            <div class="card__body">
-              <div class="pair"><span class="muted">Fixas</span><strong id="cardFixed">¥ 0</strong></div>
-              <div class="pair"><span class="muted">Variáveis</span><strong id="cardVariable">¥ 0</strong></div>
-              <div class="pair"><span class="muted">Total</span><strong id="cardExpenses">¥ 0</strong></div>
-            </div>
-          </article>
-
-          <article class="card card--highlight">
-            <h3 class="card__title">Resultado</h3>
-            <div class="card__body">
-              <div class="pair"><span class="muted">Receitas</span><strong id="cardIncome">¥ 0</strong></div>
-              <div class="pair"><span class="muted">Saldo</span><strong id="cardBalance">¥ 0</strong></div>
-              <div class="pair"><span class="muted">Enviado</span><strong id="cardSent">¥ 0</strong></div>
-              <div class="pair"><span class="muted">Diferença</span><strong id="cardDiff">¥ 0</strong></div>
-              <div class="divider"></div>
-              <div class="pair"><span class="muted">Receita (R$)</span><strong id="cardIncomeBRL">R$ 0</strong></div>
-              <div class="pair"><span class="muted">Receita ($)</span><strong id="cardIncomeUSD">$ 0</strong></div>
-              <div class="pair"><span class="muted">Economizado (R$)</span><strong id="cardSavedBRL">R$ 0</strong></div>
-              <div class="pair"><span class="muted">Economizado ($)</span><strong id="cardSavedUSD">$ 0</strong></div>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <!-- Tabela -->
-      <div class="table-view" id="tableView">
-        <div class="table-wrap" role="region" aria-label="Tabela de cálculos" tabindex="0">
-          <table class="table" aria-describedby="tableHelp">
-            <caption class="sr-only">Tabela de controle financeiro do mês selecionado</caption>
-
-            <thead class="thead">
-              <tr>
-                <th class="cell cell--sticky" scope="col">Item</th>
-                <th class="cell cell--right" scope="col">Valor</th>
-                <th class="cell" scope="col">Notas</th>
-              </tr>
-            </thead>
-
-            <tbody class="tbody">
-              <tr class="row row--highlight">
-                <th class="cell cell--sticky" scope="row">Dias Turno A</th>
-                <td class="cell cell--right">
-                  <input class="input input--number" data-bind="daysA" inputmode="numeric" placeholder="0" />
-                </td>
-                <td class="cell muted">Turno A = Dia</td>
-              </tr>
-
-              <tr class="row">
-                <th class="cell cell--sticky" scope="row">Dias Turno B</th>
-                <td class="cell cell--right">
-                  <input class="input input--number" data-bind="daysB" inputmode="numeric" placeholder="0" />
-                </td>
-                <td class="cell muted">Turno B = Noite</td>
-              </tr>
-
-              <tr class="row row--subtotal">
-                <th class="cell cell--sticky" scope="row">Bônus</th>
-                <td class="cell cell--right">
-                  <input class="input input--money" data-bind="bonus" inputmode="numeric" placeholder="0" />
-                </td>
-                <td class="cell muted">Receita extra</td>
-              </tr>
-
-              <tr class="row">
-                <th class="cell cell--sticky" scope="row">Enviado</th>
-                <td class="cell cell--right">
-                  <input class="input input--money" data-bind="sent" inputmode="numeric" placeholder="0" />
-                </td>
-                <td class="cell muted">Remessa/transferência</td>
-              </tr>
-            </tbody>
-
-            <tfoot class="tfoot">
-              <tr class="row row--total">
-                <th class="cell cell--sticky" scope="row">Receitas (calculado)</th>
-                <td class="cell cell--right">
-                  <strong id="tableIncome">¥ 0</strong>
-                </td>
-                <td class="cell muted">A + B + bônus</td>
-              </tr>
-
-              <tr class="row row--total">
-                <th class="cell cell--sticky" scope="row">Despesas (calculado)</th>
-                <td class="cell cell--right">
-                  <strong id="tableExpenses">¥ 0</strong>
-                </td>
-                <td class="cell muted">Fixas + variáveis</td>
-              </tr>
-
-              <tr class="row row--total">
-                <th class="cell cell--sticky" scope="row">Saldo</th>
-                <td class="cell cell--right">
-                  <strong id="tableBalance">¥ 0</strong>
-                </td>
-                <td class="cell muted">Receitas - despesas</td>
-              </tr>
-
-              <tr class="row row--total">
-                <th class="cell cell--sticky" scope="row">Diferença</th>
-                <td class="cell cell--right">
-                  <strong id="tableDiff">¥ 0</strong>
-                </td>
-                <td class="cell muted">Saldo - enviado</td>
-              </tr>
-            </tfoot>
-          </table>
+        <div class="kpi">
+          <span>Receita em Real (R$)</span>
+          <strong id="savedBRL">—</strong>
+          <small class="muted">Base: JPY → BRL</small>
         </div>
 
-        <p id="tableHelp" class="hint">
-          Dica: configure nome/empresa/horas em <strong>Configurações</strong>. As despesas agora são preenchidas por dia (estilo planilha).
-        </p>
-
-        <div class="grid mini-grid">
-          <div class="mini panel">
-            <div class="mini__title">Diária Turno A (calculada)</div>
-            <div class="mini__value" id="miniDailyA">¥ 0</div>
-            <div class="mini__sub muted" id="miniDailyAFormula">-</div>
-          </div>
-          <div class="mini panel">
-            <div class="mini__title">Diária Turno B (calculada)</div>
-            <div class="mini__value" id="miniDailyB">¥ 0</div>
-            <div class="mini__sub muted" id="miniDailyBFormula">-</div>
-          </div>
+        <div class="kpi">
+          <span>Receita em Dólar ($)</span>
+          <strong id="savedUSD">—</strong>
+          <small class="muted">Base: JPY → USD</small>
         </div>
       </div>
     </section>
-    <!-- Despesas (planilha por dia) -->
-    <section id="despesas" class="container stack" aria-label="Despesas">
-        <div class="section-head">
-          <br>
-        <h2 class="h2">Despesas</h2>
-        <p class="muted">Preencha por dia (coluna descrição fixa + rolagem horizontal). Total por item e total geral automáticos.</p>
+
+    <!-- RESUMO -->
+    <section class="card" id="secSummary" aria-label="Resumo">
+      <div class="card-head">
+        <h2>Resumo</h2>
+        <p>Fechamento do mês (sem atrapalhar sua digitação).</p>
       </div>
 
-      <div class="grid expense-grid">
-        <article class="panel stack">
-          <div class="panel__head">
-            <h3 class="h3">Despesas Fixas</h3>
-            <div class="panel__head-actions">
-              <button class="btn btn--ghost" type="button" data-action="add-matrix-row" data-kind="fixed">
-                + Adicionar linha
-              </button>
-            </div>
-          </div>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <span>Receitas</span>
+          <strong id="kpiIncome">—</strong>
+          <small class="muted">Turno A + Turno B + bônus</small>
+        </div>
 
-          <div class="matrix-wrap" role="region" aria-label="Planilha de despesas fixas" tabindex="0">
-            <table class="matrix" id="fixedMatrixTable">
-              <thead id="fixedMatrixThead"></thead>
-              <tbody id="fixedMatrixTbody"></tbody>
-              <tfoot>
-                <tr class="matrix__foot">
-                  <th class="matrix__cell matrix__cell--sticky matrix__cell--foot" scope="row">Total Fixas</th>
-                  <td class="matrix__cell matrix__cell--foot matrix__cell--right" id="fixedMatrixTotal" colspan="32">¥ 0</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+        <div class="kpi">
+          <span>Despesas</span>
+          <strong id="kpiExpenses">—</strong>
+          <small class="muted">Fixas + variáveis</small>
+        </div>
 
-          <p class="hint">Ex: aluguel, condomínio, plano de saúde…</p>
-        </article>
+        <div class="kpi glow">
+          <span>Saldo</span>
+          <strong id="kpiBalance">—</strong>
+          <small class="muted">Receitas - despesas</small>
+        </div>
 
-        <article class="panel stack">
-          <div class="panel__head">
-            <h3 class="h3">Despesas Variáveis</h3>
-            <div class="panel__head-actions">
-              <button class="btn btn--ghost" type="button" data-action="add-matrix-row" data-kind="variable">
-                + Adicionar linha
-              </button>
-            </div>
-          </div>
+        <label class="field">
+          <span>Enviado (JPY)</span>
+          <input id="sentJPY" type="number" inputmode="decimal" min="0" step="0.01" />
+          <small>Remessas/transferências.</small>
+        </label>
 
-          <div class="matrix-wrap" role="region" aria-label="Planilha de despesas variáveis" tabindex="0">
-            <table class="matrix" id="variableMatrixTable">
-              <thead id="variableMatrixThead"></thead>
-              <tbody id="variableMatrixTbody"></tbody>
-              <tfoot>
-                <tr class="matrix__foot">
-                  <th class="matrix__cell matrix__cell--sticky matrix__cell--foot" scope="row">Total Variáveis</th>
-                  <td class="matrix__cell matrix__cell--foot matrix__cell--right" id="variableMatrixTotal" colspan="32">¥ 0</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-
-          <p class="hint">Ex: mercado, transporte, lazer…</p>
-        </article>
+        <div class="kpi">
+          <span>Diferença</span>
+          <strong id="kpiDiff">—</strong>
+          <small class="muted">Saldo - enviado</small>
+        </div>
       </div>
-    </section>
-    <br>
-    <!-- Relatórios -->
-    <section id="relatorios" class="container stack" aria-label="Relatórios">
-      <h2 class="h2">Relatórios</h2>
-      <div class="grid report-grid">
-        <article class="panel">
-          <h3 class="h3">PDF Profissional</h3>
-          <p class="muted">
-            Clique em <strong>Exportar PDF</strong>. O relatório abre em nova aba e inicia a impressão.
-            Selecione “Salvar como PDF”.
-          </p>
-          <ul class="list">
-            <li>Nome + Empresa + Mês</li>
-            <li>KPIs, turnos e despesas por dia</li>
-            <li>Conversão (R$ e $) com câmbio do dia</li>
-          </ul>
-        </article>
-
-        <article class="panel">
-          <h3 class="h3">Próximos upgrades</h3>
-          <ul class="list">
-            <li>Importar Excel/CSV</li>
-            <li>Histórico anual e comparativo</li>
-            <li>Metas e alertas</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-    <br>
-    <!-- Resumo no final -->
-    <section id="resumo" class="container stack" aria-label="Resumo">
-      <h2 class="h2">Resumo</h2>
-
-      <div class="grid kpi-grid kpi-grid--end">
-        <article class="kpi-card" aria-label="Receitas">
-          <div class="kpi-title">Receitas</div>
-          <div class="kpi-value" id="kpiIncome">¥ 0</div>
-          <div class="kpi-sub muted">Turno A + Turno B + bônus</div>
-        </article>
-
-        <article class="kpi-card" aria-label="Despesas">
-          <div class="kpi-title">Despesas</div>
-          <div class="kpi-value" id="kpiExpenses">¥ 0</div>
-          <div class="kpi-sub muted">Fixas + variáveis</div>
-        </article>
-
-        <article class="kpi-card" aria-label="Saldo">
-          <div class="kpi-title">Saldo</div>
-          <div class="kpi-value" id="kpiBalance">¥ 0</div>
-          <div class="kpi-sub muted">Receitas - despesas</div>
-        </article>
-
-        <article class="kpi-card" aria-label="Enviado">
-          <div class="kpi-title">Enviado</div>
-          <div class="kpi-value" id="kpiSent">¥ 0</div>
-          <div class="kpi-sub muted">Remessas/transferências</div>
-        </article>
-
-        <article class="kpi-card" aria-label="Diferença">
-          <div class="kpi-title">Diferença</div>
-          <div class="kpi-value" id="kpiDiff">¥ 0</div>
-          <div class="kpi-sub muted">Saldo - enviado</div>
-        </article>
-      </div>
-    </section>
-
-    <!-- ✅ Conversão no final -->
-    <section id="conversao" class="container stack" aria-label="Conversão">
-      <div class="section-head">
-        <br>
-        <h2 class="h2">Conversão (câmbio diário)</h2>
-        <p class="muted" id="fxMeta">Buscando câmbio do dia…</p>
-      </div>
-
-      <div class="grid conversion-grid">
-        <article class="panel conversion-card">
-          <h3 class="h3">Receita em Real (R$)</h3>
-          <div class="conversion__value" id="incomeBRL">R$ 0</div>
-          <div class="conversion__sub muted">
-            Economizado: <strong id="savedBRL">R$ 0</strong>
-          </div>
-        </article>
-
-        <article class="panel conversion-card">
-          <h3 class="h3">Receita em Dólar ($)</h3>
-          <div class="conversion__value" id="incomeUSD">$ 0</div>
-          <div class="conversion__sub muted">
-            Economizado: <strong id="savedUSD">$ 0</strong>
-          </div>
-        </article>
-      </div>
-
-      <p class="hint">
-        Receita convertida = <strong>Receitas (calculado)</strong> × câmbio do dia.
-        Economizado convertido = <strong>Diferença</strong> × câmbio do dia.
-      </p>
     </section>
   </main>
 
-  <!-- Modal confirmação -->
-  <div class="modal" id="confirmModal" aria-hidden="true" hidden>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-      <div class="modal__head">
-        <h3 class="h3" id="confirmTitle">Confirmar</h3>
-        <button class="btn btn--icon" type="button" aria-label="Fechar" data-action="modal-cancel">✕</button>
-      </div>
+  <!-- DRAWER -->
+  <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
 
-      <p class="muted" id="confirmMessage">Tem certeza?</p>
-
-      <div class="modal__actions">
-        <button class="btn btn--ghost" type="button" data-action="modal-cancel">Cancelar</button>
-        <button class="btn btn--danger" type="button" data-action="modal-confirm">Confirmar</button>
-      </div>
+  <aside class="drawer" id="drawer" aria-label="Menu">
+    <div class="drawer-head">
+      <div class="drawer-badge">Menu</div>
+      <button class="icon-btn" id="btnCloseDrawer" type="button" aria-label="Fechar">✕</button>
     </div>
-  </div>
 
-  <!-- Toast -->
-  <div class="toast" id="toast" aria-live="polite" aria-atomic="true" hidden></div>
+    <div class="drawer-body">
+      <button class="drawer-item" data-scroll="#secConfig" type="button">
+        <strong>Configurações</strong><span>Primeiro passo</span>
+      </button>
+      <button class="drawer-item" data-scroll="#secTurns" type="button">
+        <strong>Turnos</strong><span>Receita do mês</span>
+      </button>
+      <button class="drawer-item" data-scroll="#secExpenses" type="button">
+        <strong>Despesas</strong><span>Fixas e variáveis</span>
+      </button>
+      <button class="drawer-item" data-scroll="#secSavings" type="button">
+        <strong>Receitas</strong><span>Real e Dólar</span>
+      </button>
+      <button class="drawer-item" data-scroll="#secSummary" type="button">
+        <strong>Resumo</strong><span>Fechamento</span>
+      </button>
 
-  <footer class="footer" role="contentinfo">
-    <div class="container footer__inner">
-      <small>Copyright @ 2026 - Ailton A. Nakata</small>
+      <div class="drawer-sep"></div>
+
+      <small class="drawer-note">
+        Dica: tudo salva no dispositivo. PDF usa impressão do navegador (layout já otimizado).
+      </small>
     </div>
+  </aside>
+
+  <footer class="footer">
+    Copyright &copy; 2026 - Ailton A. Nakata
   </footer>
 
-  <script src="script.js" defer></script>
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
