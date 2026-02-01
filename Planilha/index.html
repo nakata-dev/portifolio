@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Controle Financeiro | Turnos (JPY)</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+  <header class="header is-sticky" role="banner">
+    <div class="container header__inner">
+      <div class="brand" aria-label="Marca">
+        <svg class="brand__logo" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M8 24c0-8.837 7.163-16 16-16s16 7.163 16 16-7.163 16-16 16S8 32.837 8 24Z"></path>
+          <path d="M24 14v20M14 24h20"></path>
+        </svg>
+        <div class="brand__text">
+          <strong class="brand__title">Finance</strong>
+          <span class="brand__subtitle">Turnos + Despesas</span>
+        </div>
+      </div>
+
+      <button class="hamburger btn btn--icon" type="button"
+              aria-label="Abrir menu"
+              aria-controls="navDrawer"
+              aria-expanded="false"
+              data-action="toggle-drawer">
+        <span class="hamburger__lines" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="backdrop" data-action="close-drawer" hidden></div>
+
+  <aside id="navDrawer" class="nav-drawer" aria-label="Menu" hidden>
+    <div class="nav-drawer__header">
+      <span class="nav-drawer__title">Menu</span>
+      <button class="btn btn--icon" type="button" aria-label="Fechar menu" data-action="close-drawer">✕</button>
+    </div>
+
+    <nav class="nav-drawer__nav">
+      <a class="nav-link" href="#config" data-action="close-drawer">Configurações</a>
+      <a class="nav-link" href="#tabela" data-action="close-drawer">Tabela</a>
+      <a class="nav-link" href="#despesas" data-action="close-drawer">Despesas</a>
+      <a class="nav-link" href="#relatorios" data-action="close-drawer">Relatórios</a>
+      <a class="nav-link" href="#resumo" data-action="close-drawer">Resumo</a>
+      <a class="nav-link" href="#conversao" data-action="close-drawer">Conversão</a>
+    </nav>
+
+    <div class="nav-drawer__footer">
+      <small class="muted">Dados ficam no seu dispositivo (offline).</small>
+    </div>
+  </aside>
+
+  <main id="main" class="app" role="main">
+    <section class="container stack hero" aria-label="Topo">
+      <div class="hero__row">
+        <div class="stack">
+          <h1 class="h1">Controle Financeiro (Turnos)</h1>
+          <p class="muted">
+            Aparência de planilha, cálculos automáticos por turno, despesas por dia e exportação em PDF.
+          </p>
+        </div>
+
+        <div class="hero__controls stack">
+          <div class="field">
+            <label class="label" for="monthSelect">Mês</label>
+            <input class="input" id="monthSelect" type="month" inputmode="numeric" />
+            <span class="hint">Os dados são salvos por mês.</span>
+          </div>
+
+          <div class="field">
+            <label class="label" for="currencySelect">Moeda (cálculo)</label>
+            <select class="select" id="currencySelect" aria-label="Moeda">
+              <option value="JPY">JPY (¥)</option>
+              <option value="BRL">BRL (R$)</option>
+              <option value="USD">USD ($)</option>
+            </select>
+            <span class="hint">A receita/despesa do sistema usa essa moeda. Conversão usa câmbio do dia.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra de ações -->
+    <section class="container">
+      <div class="actions-bar" role="region" aria-label="Ações">
+        <div class="actions-bar__left">
+          <span class="badge" id="saveStatus" aria-live="polite">Sem alterações</span>
+          <span class="muted small" id="lastSaved" aria-live="polite"></span>
+        </div>
+
+        <div class="actions-bar__right">
+          <button class="btn btn--ghost" type="button" data-action="jump-config" title="Ir para configurações">
+            Configurar
+          </button>
+
+          <button class="btn btn--ghost" type="button" data-action="toggle-view" id="toggleViewBtn" aria-pressed="false">
+            Ver: Cards
+          </button>
+
+          <button class="btn btn--primary" type="button" data-action="save" id="saveBtn" disabled>
+            Salvar
+          </button>
+
+          <button class="btn btn--danger" type="button" data-action="clear" id="clearBtn">
+            Limpar mês
+          </button>
+
+          <button class="btn btn--ghost" type="button" data-action="export-pdf" id="exportBtn">
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIGURAÇÕES -->
+    <section id="config" class="container stack" aria-label="Configurações">
+      <div class="section-head">
+        <h2 class="h2">Configurações</h2>
+        <p class="muted">Essencial primeiro. Ajustes avançados só se precisar.</p>
+      </div>
+
+      <div class="panel stack">
+        <div class="callout">
+          <strong>Primeiros passos</strong>
+          <p class="muted">
+            Preencha <strong>Nome</strong>, <strong>Empresa</strong> e <strong>Valor por hora</strong>.
+            Depois selecione dias do mês em Turno A/B e preencha despesas por dia.
+          </p>
+        </div>
+
+        <!-- ESSENCIAL -->
+        <div class="grid config-grid config-grid--tight">
+          <div class="field">
+            <label class="label" for="personName">Nome</label>
+            <input class="input" id="personName" data-bind-setting="personName" placeholder="Ex: Aiko" />
+          </div>
+
+          <div class="field">
+            <label class="label" for="companyName">Empresa</label>
+            <input class="input" id="companyName" data-bind-setting="companyName" placeholder="Ex: Fábrica X" />
+          </div>
+
+          <div class="field">
+            <label class="label" for="hourlyRate">Valor por hora (cálculo)</label>
+            <input class="input input--money" id="hourlyRate" data-bind-setting="hourlyRate" inputmode="numeric" placeholder="0" />
+          </div>
+
+          <div class="field">
+            <label class="label" for="overtimeMultiplier">Multiplicador hora extra</label>
+            <input class="input input--number" id="overtimeMultiplier" data-bind-setting="overtimeMultiplier" inputmode="decimal" placeholder="1.25" />
+            <span class="hint">Ex: 1.25 = 25% a mais.</span>
+          </div>
+        </div>
+
+        <!-- AVANÇADO -->
+        <details class="details" id="advancedSettings">
+          <summary class="details__summary">
+            <span>Configurações avançadas</span>
+            <span class="details__hint muted">Faixa, auto-save, horas dos turnos, reset…</span>
+          </summary>
+
+          <div class="details__body stack">
+            <div class="grid config-grid">
+              <div class="field">
+                <label class="label" for="hourlyRateLabel">Faixa (opcional)</label>
+                <input class="input" id="hourlyRateLabel" data-bind-setting="hourlyRateLabel" placeholder="Ex: 1400 円～1500 円" />
+                <span class="hint">Apenas visual (não entra no cálculo).</span>
+              </div>
+
+              <div class="field">
+                <label class="label" for="autosave">Auto-salvar</label>
+                <select class="select" id="autosave" data-bind-setting="autosave">
+                  <option value="on">Ligado</option>
+                  <option value="off">Desligado</option>
+                </select>
+                <span class="hint">Não salva enquanto você digita.</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3 class="h3">Turnos (horas padrão)</h3>
+
+            <div class="grid config-grid">
+              <div class="field">
+                <label class="label" for="normalHoursA">Turno A: horas normais</label>
+                <input class="input input--number" id="normalHoursA" data-bind-setting="normalHoursA" inputmode="numeric" placeholder="8" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="extraHoursA">Turno A: horas extras</label>
+                <input class="input input--number" id="extraHoursA" data-bind-setting="extraHoursA" inputmode="numeric" placeholder="3" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="normalHoursB">Turno B: horas normais</label>
+                <input class="input input--number" id="normalHoursB" data-bind-setting="normalHoursB" inputmode="numeric" placeholder="7" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="extraHoursB">Turno B: horas extras</label>
+                <input class="input input--number" id="extraHoursB" data-bind-setting="extraHoursB" inputmode="numeric" placeholder="4" />
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <button class="btn btn--danger" type="button" data-action="reset-app">
+              Reset geral (apaga tudo do dispositivo)
+            </button>
+            <small class="muted">Remove todos os meses salvos. Use com cuidado.</small>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Toggle: tabela/cards -->
+    <section id="tabela" class="container stack" aria-label="Tabela e Cards">
+      <div class="section-head">
+        <h2 class="h2">Tabela Inteligente</h2>
+        <p class="muted">
+          No celular, use <strong>Cards</strong> para leitura rápida. A tabela mantém o “clima Excel”.
+        </p>
+      </div>
+
+      <!-- Cards -->
+      <div class="cards-view" id="cardsView" hidden>
+        <div class="grid cards-grid">
+          <article class="card">
+            <h3 class="card__title">Pessoa</h3>
+            <div class="card__body">
+              <div class="pair"><span class="muted">Nome</span><strong id="cardPerson">-</strong></div>
+              <div class="pair"><span class="muted">Empresa</span><strong id="cardCompany">-</strong></div>
+              <div class="pair"><span class="muted">Valor/hora</span><strong id="cardHourly">¥ 0</strong></div>
+              <div class="pair"><span class="muted">Faixa</span><strong id="cardHourlyRange">-</strong></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3 class="card__title">Turnos</h3>
+            <div class="card__body">
+              <div class="pair"><span class="muted">Dias Turno A</span><strong id="cardDaysA">0</strong></div>
+              <div class="pair"><span class="muted">Dias Turno B</span><strong id="cardDaysB">0</strong></div>
+              <div class="pair"><span class="muted">Diária A</span><strong id="cardDailyA">¥ 0</strong></div>
+              <div class="pair"><span class="muted">Diária B</span><strong id="cardDailyB">¥ 0</strong></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3 class="card__title">Despesas</h3>
+            <div class="card__body">
+              <div class="pair"><span class="muted">Fixas</span><strong id="cardFixed">¥ 0</strong></div>
+              <div class="pair"><span class="muted">Variáveis</span><strong id="cardVariable">¥ 0</strong></div>
+              <div class="pair"><span class="muted">Total</span><strong id="cardExpenses">¥ 0</strong></div>
+            </div>
+          </article>
+
+          <article class="card card--highlight">
+            <h3 class="card__title">Resultado</h3>
+            <div class="card__body">
+              <div class="pair"><span class="muted">Receitas</span><strong id="cardIncome">¥ 0</strong></div>
+              <div class="pair"><span class="muted">Saldo</span><strong id="cardBalance">¥ 0</strong></div>
+              <div class="pair"><span class="muted">Enviado</span><strong id="cardSent">¥ 0</strong></div>
+              <div class="pair"><span class="muted">Diferença</span><strong id="cardDiff">¥ 0</strong></div>
+              <div class="divider"></div>
+              <div class="pair"><span class="muted">Receita (R$)</span><strong id="cardIncomeBRL">R$ 0</strong></div>
+              <div class="pair"><span class="muted">Receita ($)</span><strong id="cardIncomeUSD">$ 0</strong></div>
+              <div class="pair"><span class="muted">Economizado (R$)</span><strong id="cardSavedBRL">R$ 0</strong></div>
+              <div class="pair"><span class="muted">Economizado ($)</span><strong id="cardSavedUSD">$ 0</strong></div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="table-view" id="tableView">
+        <div class="table-wrap" role="region" aria-label="Tabela de cálculos" tabindex="0">
+          <table class="table" aria-describedby="tableHelp">
+            <caption class="sr-only">Tabela de controle financeiro do mês selecionado</caption>
+
+            <thead class="thead">
+              <tr>
+                <th class="cell cell--sticky" scope="col">Item</th>
+                <th class="cell cell--right" scope="col">Valor</th>
+                <th class="cell" scope="col">Notas</th>
+              </tr>
+            </thead>
+
+            <tbody class="tbody">
+              <tr class="row row--highlight">
+                <th class="cell cell--sticky" scope="row">Dias Turno A</th>
+                <td class="cell cell--right">
+                  <input class="input input--number" data-bind="daysA" inputmode="numeric" placeholder="0" />
+                </td>
+                <td class="cell muted">Turno A = Dia</td>
+              </tr>
+
+              <tr class="row">
+                <th class="cell cell--sticky" scope="row">Dias Turno B</th>
+                <td class="cell cell--right">
+                  <input class="input input--number" data-bind="daysB" inputmode="numeric" placeholder="0" />
+                </td>
+                <td class="cell muted">Turno B = Noite</td>
+              </tr>
+
+              <tr class="row row--subtotal">
+                <th class="cell cell--sticky" scope="row">Bônus</th>
+                <td class="cell cell--right">
+                  <input class="input input--money" data-bind="bonus" inputmode="numeric" placeholder="0" />
+                </td>
+                <td class="cell muted">Receita extra</td>
+              </tr>
+
+              <tr class="row">
+                <th class="cell cell--sticky" scope="row">Enviado</th>
+                <td class="cell cell--right">
+                  <input class="input input--money" data-bind="sent" inputmode="numeric" placeholder="0" />
+                </td>
+                <td class="cell muted">Remessa/transferência</td>
+              </tr>
+            </tbody>
+
+            <tfoot class="tfoot">
+              <tr class="row row--total">
+                <th class="cell cell--sticky" scope="row">Receitas (calculado)</th>
+                <td class="cell cell--right">
+                  <strong id="tableIncome">¥ 0</strong>
+                </td>
+                <td class="cell muted">A + B + bônus</td>
+              </tr>
+
+              <tr class="row row--total">
+                <th class="cell cell--sticky" scope="row">Despesas (calculado)</th>
+                <td class="cell cell--right">
+                  <strong id="tableExpenses">¥ 0</strong>
+                </td>
+                <td class="cell muted">Fixas + variáveis</td>
+              </tr>
+
+              <tr class="row row--total">
+                <th class="cell cell--sticky" scope="row">Saldo</th>
+                <td class="cell cell--right">
+                  <strong id="tableBalance">¥ 0</strong>
+                </td>
+                <td class="cell muted">Receitas - despesas</td>
+              </tr>
+
+              <tr class="row row--total">
+                <th class="cell cell--sticky" scope="row">Diferença</th>
+                <td class="cell cell--right">
+                  <strong id="tableDiff">¥ 0</strong>
+                </td>
+                <td class="cell muted">Saldo - enviado</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <p id="tableHelp" class="hint">
+          Dica: configure nome/empresa/horas em <strong>Configurações</strong>. As despesas agora são preenchidas por dia (estilo planilha).
+        </p>
+
+        <div class="grid mini-grid">
+          <div class="mini panel">
+            <div class="mini__title">Diária Turno A (calculada)</div>
+            <div class="mini__value" id="miniDailyA">¥ 0</div>
+            <div class="mini__sub muted" id="miniDailyAFormula">-</div>
+          </div>
+          <div class="mini panel">
+            <div class="mini__title">Diária Turno B (calculada)</div>
+            <div class="mini__value" id="miniDailyB">¥ 0</div>
+            <div class="mini__sub muted" id="miniDailyBFormula">-</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Despesas (planilha por dia) -->
+    <section id="despesas" class="container stack" aria-label="Despesas">
+        <div class="section-head">
+          <br>
+        <h2 class="h2">Despesas</h2>
+        <p class="muted">Preencha por dia (coluna descrição fixa + rolagem horizontal). Total por item e total geral automáticos.</p>
+      </div>
+
+      <div class="grid expense-grid">
+        <article class="panel stack">
+          <div class="panel__head">
+            <h3 class="h3">Despesas Fixas</h3>
+            <div class="panel__head-actions">
+              <button class="btn btn--ghost" type="button" data-action="add-matrix-row" data-kind="fixed">
+                + Adicionar linha
+              </button>
+            </div>
+          </div>
+
+          <div class="matrix-wrap" role="region" aria-label="Planilha de despesas fixas" tabindex="0">
+            <table class="matrix" id="fixedMatrixTable">
+              <thead id="fixedMatrixThead"></thead>
+              <tbody id="fixedMatrixTbody"></tbody>
+              <tfoot>
+                <tr class="matrix__foot">
+                  <th class="matrix__cell matrix__cell--sticky matrix__cell--foot" scope="row">Total Fixas</th>
+                  <td class="matrix__cell matrix__cell--foot matrix__cell--right" id="fixedMatrixTotal" colspan="32">¥ 0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <p class="hint">Ex: aluguel, condomínio, plano de saúde…</p>
+        </article>
+
+        <article class="panel stack">
+          <div class="panel__head">
+            <h3 class="h3">Despesas Variáveis</h3>
+            <div class="panel__head-actions">
+              <button class="btn btn--ghost" type="button" data-action="add-matrix-row" data-kind="variable">
+                + Adicionar linha
+              </button>
+            </div>
+          </div>
+
+          <div class="matrix-wrap" role="region" aria-label="Planilha de despesas variáveis" tabindex="0">
+            <table class="matrix" id="variableMatrixTable">
+              <thead id="variableMatrixThead"></thead>
+              <tbody id="variableMatrixTbody"></tbody>
+              <tfoot>
+                <tr class="matrix__foot">
+                  <th class="matrix__cell matrix__cell--sticky matrix__cell--foot" scope="row">Total Variáveis</th>
+                  <td class="matrix__cell matrix__cell--foot matrix__cell--right" id="variableMatrixTotal" colspan="32">¥ 0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <p class="hint">Ex: mercado, transporte, lazer…</p>
+        </article>
+      </div>
+    </section>
+    <br>
+    <!-- Relatórios -->
+    <section id="relatorios" class="container stack" aria-label="Relatórios">
+      <h2 class="h2">Relatórios</h2>
+      <div class="grid report-grid">
+        <article class="panel">
+          <h3 class="h3">PDF Profissional</h3>
+          <p class="muted">
+            Clique em <strong>Exportar PDF</strong>. O relatório abre em nova aba e inicia a impressão.
+            Selecione “Salvar como PDF”.
+          </p>
+          <ul class="list">
+            <li>Nome + Empresa + Mês</li>
+            <li>KPIs, turnos e despesas por dia</li>
+            <li>Conversão (R$ e $) com câmbio do dia</li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <h3 class="h3">Próximos upgrades</h3>
+          <ul class="list">
+            <li>Importar Excel/CSV</li>
+            <li>Histórico anual e comparativo</li>
+            <li>Metas e alertas</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+    <br>
+    <!-- Resumo no final -->
+    <section id="resumo" class="container stack" aria-label="Resumo">
+      <h2 class="h2">Resumo</h2>
+
+      <div class="grid kpi-grid kpi-grid--end">
+        <article class="kpi-card" aria-label="Receitas">
+          <div class="kpi-title">Receitas</div>
+          <div class="kpi-value" id="kpiIncome">¥ 0</div>
+          <div class="kpi-sub muted">Turno A + Turno B + bônus</div>
+        </article>
+
+        <article class="kpi-card" aria-label="Despesas">
+          <div class="kpi-title">Despesas</div>
+          <div class="kpi-value" id="kpiExpenses">¥ 0</div>
+          <div class="kpi-sub muted">Fixas + variáveis</div>
+        </article>
+
+        <article class="kpi-card" aria-label="Saldo">
+          <div class="kpi-title">Saldo</div>
+          <div class="kpi-value" id="kpiBalance">¥ 0</div>
+          <div class="kpi-sub muted">Receitas - despesas</div>
+        </article>
+
+        <article class="kpi-card" aria-label="Enviado">
+          <div class="kpi-title">Enviado</div>
+          <div class="kpi-value" id="kpiSent">¥ 0</div>
+          <div class="kpi-sub muted">Remessas/transferências</div>
+        </article>
+
+        <article class="kpi-card" aria-label="Diferença">
+          <div class="kpi-title">Diferença</div>
+          <div class="kpi-value" id="kpiDiff">¥ 0</div>
+          <div class="kpi-sub muted">Saldo - enviado</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ✅ Conversão no final -->
+    <section id="conversao" class="container stack" aria-label="Conversão">
+      <div class="section-head">
+        <br>
+        <h2 class="h2">Conversão (câmbio diário)</h2>
+        <p class="muted" id="fxMeta">Buscando câmbio do dia…</p>
+      </div>
+
+      <div class="grid conversion-grid">
+        <article class="panel conversion-card">
+          <h3 class="h3">Receita em Real (R$)</h3>
+          <div class="conversion__value" id="incomeBRL">R$ 0</div>
+          <div class="conversion__sub muted">
+            Economizado: <strong id="savedBRL">R$ 0</strong>
+          </div>
+        </article>
+
+        <article class="panel conversion-card">
+          <h3 class="h3">Receita em Dólar ($)</h3>
+          <div class="conversion__value" id="incomeUSD">$ 0</div>
+          <div class="conversion__sub muted">
+            Economizado: <strong id="savedUSD">$ 0</strong>
+          </div>
+        </article>
+      </div>
+
+      <p class="hint">
+        Receita convertida = <strong>Receitas (calculado)</strong> × câmbio do dia.
+        Economizado convertido = <strong>Diferença</strong> × câmbio do dia.
+      </p>
+    </section>
+  </main>
+
+  <!-- Modal confirmação -->
+  <div class="modal" id="confirmModal" aria-hidden="true" hidden>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal__head">
+        <h3 class="h3" id="confirmTitle">Confirmar</h3>
+        <button class="btn btn--icon" type="button" aria-label="Fechar" data-action="modal-cancel">✕</button>
+      </div>
+
+      <p class="muted" id="confirmMessage">Tem certeza?</p>
+
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" data-action="modal-cancel">Cancelar</button>
+        <button class="btn btn--danger" type="button" data-action="modal-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" aria-live="polite" aria-atomic="true" hidden></div>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__inner">
+      <small>Copyright @ 2026 - Ailton A. Nakata</small>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
