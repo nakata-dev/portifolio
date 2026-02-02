@@ -105,7 +105,7 @@ function normalize(st) {
   const exp = st.monthData?.expenses;
   if (!exp) return;
 
-  ["fixed", "variable"].forEach((k) => {
+  ["fixed","variable"].forEach((k) => {
     exp[k] = Array.isArray(exp[k]) ? exp[k] : [];
     exp[k].forEach(row => {
       row.values = Array.isArray(row.values) ? row.values : [];
@@ -127,10 +127,8 @@ function loadMonth(month) {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed) return null;
-
     if (!parsed.expenses) parsed.expenses = { fixed: [], variable: [] };
     normalize({ monthData: { expenses: parsed.expenses } });
-
     return parsed;
   } catch {
     return null;
@@ -158,7 +156,7 @@ function fxCacheKey(date) {
 }
 
 async function fetchFX(force = false) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toISOString().slice(0,10);
   const cachedRaw = localStorage.getItem(fxCacheKey(today));
   if (!force && cachedRaw) {
     try {
@@ -196,11 +194,11 @@ async function fetchFX(force = false) {
   }
 }
 
-function renderFX(error = false) {
+function renderFX(error=false){
   const meta = $("#fxMeta");
-  if (error) {
+  if (error){
     meta.textContent = "Falha ao buscar câmbio. Usando cache, se existir.";
-  } else if (state.fx?.date) {
+  } else if (state.fx?.date){
     meta.textContent = `Atualizado: ${state.fx.date}`;
   } else {
     meta.textContent = "Sem dados ainda.";
@@ -218,17 +216,15 @@ function calcTurnValuePerDay(kind) {
   const mult = clampNum(state.settings.overtimeMult || 1.25);
 
   const aNorm = clampNum(state.settings.aNormal);
-  const aExt = clampNum(state.settings.aExtra);
+  const aExt  = clampNum(state.settings.aExtra);
   const bNorm = clampNum(state.settings.bNormal);
-  const bExt = clampNum(state.settings.bExtra);
+  const bExt  = clampNum(state.settings.bExtra);
 
-  if (kind === "A") {
-    return h * (aNorm + aExt * mult);
-  }
+  if (kind === "A") return h * (aNorm + aExt * mult);
   return h * (bNorm + bExt * mult);
 }
 
-function calcIncomeJPY() {
+function calcIncomeJPY(){
   const daysA = clampNum(state.monthData.daysA);
   const daysB = clampNum(state.monthData.daysB);
   const bonus = clampNum(state.monthData.bonusJPY);
@@ -239,15 +235,15 @@ function calcIncomeJPY() {
   return (daysA * dayA) + (daysB * dayB) + bonus;
 }
 
-function sumExpenses(kind) {
+function sumExpenses(kind){
   const rows = state.monthData.expenses[kind] || [];
   return rows.reduce((acc, row) => {
-    const rowSum = row.values.reduce((a, v) => a + clampNum(v), 0);
+    const rowSum = row.values.reduce((a,v)=> a + clampNum(v), 0);
     return acc + rowSum;
   }, 0);
 }
 
-function calcTotals() {
+function calcTotals(){
   const income = calcIncomeJPY();
   const fixed = sumExpenses("fixed");
   const vari = sumExpenses("variable");
@@ -260,7 +256,7 @@ function calcTotals() {
 }
 
 // --- Matrix builders ---
-function buildMatrixThead(targetId) {
+function buildMatrixThead(targetId){
   const thead = $(targetId);
   thead.innerHTML = "";
 
@@ -271,7 +267,7 @@ function buildMatrixThead(targetId) {
   thDesc.textContent = "Descrição";
   tr.appendChild(thDesc);
 
-  for (let d = 1; d <= DAYS_IN_MONTH; d++) {
+  for (let d=1; d<=DAYS_IN_MONTH; d++){
     const th = document.createElement("th");
     th.className = "sticky-top";
     th.textContent = String(d);
@@ -286,7 +282,7 @@ function buildMatrixThead(targetId) {
   thead.appendChild(tr);
 }
 
-function buildMatrixTfoot(targetId, kind) {
+function buildMatrixTfoot(targetId, kind){
   const tfoot = $(targetId);
   tfoot.innerHTML = "";
 
@@ -298,7 +294,7 @@ function buildMatrixTfoot(targetId, kind) {
   tr.appendChild(tdLabel);
 
   const rows = state.monthData.expenses[kind];
-  for (let d = 0; d < DAYS_IN_MONTH; d++) {
+  for (let d=0; d<DAYS_IN_MONTH; d++){
     const td = document.createElement("td");
     const totalDay = rows.reduce((acc, row) => acc + clampNum(row.values[d]), 0);
     td.textContent = Math.round(totalDay).toLocaleString("pt-BR");
@@ -306,14 +302,14 @@ function buildMatrixTfoot(targetId, kind) {
   }
 
   const tdGrand = document.createElement("td");
-  const grand = rows.reduce((acc, row) => acc + row.values.reduce((a, v) => a + clampNum(v), 0), 0);
+  const grand = rows.reduce((acc, row) => acc + row.values.reduce((a,v)=>a+clampNum(v),0), 0);
   tdGrand.textContent = Math.round(grand).toLocaleString("pt-BR");
   tr.appendChild(tdGrand);
 
   tfoot.appendChild(tr);
 }
 
-function buildMatrixBody(tbodyId, kind) {
+function buildMatrixBody(tbodyId, kind){
   const tbody = $(tbodyId);
   tbody.innerHTML = "";
 
@@ -326,13 +322,14 @@ function buildMatrixBody(tbodyId, kind) {
     tdDesc.className = "sticky desc-col";
     tdDesc.innerHTML = `
       <div class="desc-cell">
-        <input class="desc-input" data-kind="${kind}" data-id="${row.id}" data-field="desc" value="${escapeHTML(row.desc)}" placeholder="Ex: Aluguel" />
+        <input class="desc-input" data-kind="${kind}" data-id="${row.id}" data-field="desc"
+          value="${escapeHTML(row.desc)}" placeholder="Ex: Aluguel" />
         <button class="kill" type="button" data-kind="${kind}" data-id="${row.id}" title="Remover">×</button>
       </div>
     `;
     tr.appendChild(tdDesc);
 
-    for (let d = 0; d < DAYS_IN_MONTH; d++) {
+    for (let d=0; d<DAYS_IN_MONTH; d++){
       const td = document.createElement("td");
       const v = clampNum(row.values[d]);
       td.innerHTML = `
@@ -346,7 +343,7 @@ function buildMatrixBody(tbodyId, kind) {
     const tdTotal = document.createElement("td");
     tdTotal.className = "row-total";
     tdTotal.dataset.totalFor = row.id;
-    tdTotal.textContent = Math.round(row.values.reduce((a, v) => a + clampNum(v), 0)).toLocaleString("pt-BR");
+    tdTotal.textContent = Math.round(row.values.reduce((a,v)=>a+clampNum(v),0)).toLocaleString("pt-BR");
     tr.appendChild(tdTotal);
 
     tbody.appendChild(tr);
@@ -361,11 +358,11 @@ function escapeHTML(str) {
     .replaceAll('"', "&quot;");
 }
 
-// --- Autosave suave (sem salvar no meio da digitação) ---
+// --- Autosave suave ---
 let autosaveTimer = null;
 let isTyping = false;
 
-function autosaveSoon() {
+function autosaveSoon(){
   if (state.settings.autosave !== "on") return;
   if (isTyping) return;
 
@@ -376,12 +373,10 @@ function autosaveSoon() {
   }, 450);
 }
 
-function bindTypingGuard() {
+function bindTypingGuard(){
   document.addEventListener("focusin", (e) => {
     const tag = e.target?.tagName;
-    if (tag === "INPUT" || tag === "TEXTAREA") {
-      isTyping = true;
-    }
+    if (tag === "INPUT" || tag === "TEXTAREA") isTyping = true;
   });
 
   document.addEventListener("focusout", (e) => {
@@ -393,9 +388,58 @@ function bindTypingGuard() {
   });
 }
 
+/* ✅ Drag-to-scroll + wheel vira scroll horizontal dentro da tabela */
+function enableMatrixScrollAssist(){
+  document.querySelectorAll(".matrix-scroll").forEach((el) => {
+    let isDown = false;
+    let startX = 0;
+    let startLeft = 0;
+
+    // Drag
+    el.addEventListener("pointerdown", (e) => {
+      // não atrapalhar clique nos inputs, mas permitir arrastar mesmo em cima
+      isDown = true;
+      startX = e.clientX;
+      startLeft = el.scrollLeft;
+      el.setPointerCapture?.(e.pointerId);
+      // evita seleção de texto durante o arrasto
+      el.style.userSelect = "none";
+    });
+
+    el.addEventListener("pointermove", (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      el.scrollLeft = startLeft - dx;
+    });
+
+    const stop = () => {
+      if (!isDown) return;
+      isDown = false;
+      el.style.userSelect = "";
+    };
+
+    el.addEventListener("pointerup", stop);
+    el.addEventListener("pointercancel", stop);
+    el.addEventListener("mouseleave", stop);
+
+    // Wheel: rola pro lado com a rodinha (sem precisar shift)
+    el.addEventListener("wheel", (e) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+
+      const absY = Math.abs(e.deltaY);
+      const absX = Math.abs(e.deltaX);
+
+      // se o movimento é mais vertical, converte pra horizontal dentro da tabela
+      if (absY > absX) {
+        el.scrollLeft += e.deltaY;
+        e.preventDefault();
+      }
+    }, { passive: false });
+  });
+}
+
 // --- UI ---
-function bindUI() {
-  // drawer
+function bindUI(){
   $("#btnBurger").addEventListener("click", toggleDrawer);
   $("#btnCloseDrawer").addEventListener("click", closeDrawer);
   $("#drawerOverlay").addEventListener("click", closeDrawer);
@@ -408,7 +452,6 @@ function bindUI() {
     });
   });
 
-  // month
   $("#month").addEventListener("change", (e) => {
     const m = e.target.value;
     state.month = m;
@@ -418,13 +461,10 @@ function bindUI() {
 
     normalize(state);
     renderAll();
-
-    // salva só o "mês atual" e settings (1 vez, não agressivo)
     save();
     toast("Mês carregado ✅");
   });
 
-  // settings fields (agora sem salvar a cada tecla)
   const bindSetting = (id, key, parser = clampNum) => {
     $(id).addEventListener("input", (e) => {
       state.settings[key] = (parser === String) ? e.target.value : parser(e.target.value);
@@ -433,11 +473,11 @@ function bindUI() {
     });
   };
 
-  bindSetting("#name", "name", String);
-  bindSetting("#company", "company", String);
-  bindSetting("#rangeText", "rangeText", String);
-  bindSetting("#hourValue", "hourValue", clampNum);
-  bindSetting("#overtimeMult", "overtimeMult", clampNum);
+  bindSetting("#name","name", String);
+  bindSetting("#company","company", String);
+  bindSetting("#rangeText","rangeText", String);
+  bindSetting("#hourValue","hourValue", clampNum);
+  bindSetting("#overtimeMult","overtimeMult", clampNum);
 
   $("#autosave").addEventListener("change", (e) => {
     state.settings.autosave = e.target.value;
@@ -445,34 +485,28 @@ function bindUI() {
     toast(`Auto-salvar: ${state.settings.autosave === "on" ? "ligado" : "desligado"}`);
   });
 
-  bindSetting("#aNormal", "aNormal", clampNum);
-  bindSetting("#aExtra", "aExtra", clampNum);
-  bindSetting("#bNormal", "bNormal", clampNum);
-  bindSetting("#bExtra", "bExtra", clampNum);
+  bindSetting("#aNormal","aNormal", clampNum);
+  bindSetting("#aExtra","aExtra", clampNum);
+  bindSetting("#bNormal","bNormal", clampNum);
+  bindSetting("#bExtra","bExtra", clampNum);
 
-  // month data (sem salvar agressivo)
   const bindMonth = (id, key) => {
     $(id).addEventListener("input", (e) => {
       state.monthData[key] = clampNum(e.target.value);
 
-      // atualiza o que precisa sem travar
-      if (key === "savedJPY") {
-        renderSavings();
-      } else {
-        renderTotalsOnly();
-      }
+      if (key === "savedJPY") renderSavings();
+      else renderTotalsOnly();
 
       autosaveSoon();
     });
   };
 
-  bindMonth("#daysA", "daysA");
-  bindMonth("#daysB", "daysB");
-  bindMonth("#bonusJPY", "bonusJPY");
-  bindMonth("#sentJPY", "sentJPY");
-  bindMonth("#savedJPY", "savedJPY");
+  bindMonth("#daysA","daysA");
+  bindMonth("#daysB","daysB");
+  bindMonth("#bonusJPY","bonusJPY");
+  bindMonth("#sentJPY","sentJPY");
+  bindMonth("#savedJPY","savedJPY");
 
-  // matrix add
   document.querySelectorAll("[data-add]").forEach(btn => {
     btn.addEventListener("click", () => {
       const kind = btn.dataset.add;
@@ -480,14 +514,12 @@ function bindUI() {
     });
   });
 
-  // matrix delegation
   $("#tbodyFixed").addEventListener("input", onMatrixInput);
   $("#tbodyVar").addEventListener("input", onMatrixInput);
 
   $("#tbodyFixed").addEventListener("click", onMatrixClick);
   $("#tbodyVar").addEventListener("click", onMatrixClick);
 
-  // save / clear / pdf / fx
   $("#btnSave").addEventListener("click", () => {
     saveMonth();
     save();
@@ -495,15 +527,11 @@ function bindUI() {
   });
 
   $("#btnClearMonth").addEventListener("click", clearMonth);
-
-  $("#btnPDF").addEventListener("click", () => {
-    window.print();
-  });
-
+  $("#btnPDF").addEventListener("click", () => window.print());
   $("#btnRefreshFX").addEventListener("click", () => fetchFX(true));
 }
 
-function onMatrixClick(e) {
+function onMatrixClick(e){
   const kill = e.target.closest(".kill");
   if (!kill) return;
   const kind = kill.dataset.kind;
@@ -511,7 +539,7 @@ function onMatrixClick(e) {
   removeExpenseRow(kind, id);
 }
 
-function onMatrixInput(e) {
+function onMatrixInput(e){
   const el = e.target;
   if (!el) return;
 
@@ -523,18 +551,18 @@ function onMatrixInput(e) {
   const row = rows.find(r => r.id === id);
   if (!row) return;
 
-  if (field === "desc") {
+  if (field === "desc"){
     row.desc = el.value;
     autosaveSoon();
     return;
   }
 
-  if (field === "v") {
+  if (field === "v"){
     const day = Number(el.dataset.day);
     row.values[day] = clampNum(el.value);
 
     const td = document.querySelector(`[data-total-for="${id}"]`);
-    if (td) td.textContent = Math.round(row.values.reduce((a, v) => a + clampNum(v), 0)).toLocaleString("pt-BR");
+    if (td) td.textContent = Math.round(row.values.reduce((a,v)=>a+clampNum(v),0)).toLocaleString("pt-BR");
 
     renderTotalsOnly();
     renderFootersOnly();
@@ -542,7 +570,7 @@ function onMatrixInput(e) {
   }
 }
 
-function addExpenseRow(kind) {
+function addExpenseRow(kind){
   state.monthData.expenses[kind].push({
     id: uid(),
     desc: "",
@@ -553,7 +581,7 @@ function addExpenseRow(kind) {
   toast("Item adicionado ✅");
 }
 
-function removeExpenseRow(kind, id) {
+function removeExpenseRow(kind, id){
   state.monthData.expenses[kind] = state.monthData.expenses[kind].filter(r => r.id !== id);
   renderMatrices();
   renderTotalsOnly();
@@ -562,9 +590,9 @@ function removeExpenseRow(kind, id) {
 }
 
 // --- Rendering ---
-function renderAll() {
-  const current = new Date().toISOString().slice(0, 7);
-  if (!state.month) state.month = current;
+function renderAll(){
+  const current = new Date().toISOString().slice(0,7);
+  state.month = state.month || current;
 
   $("#month").value = state.month;
 
@@ -591,9 +619,12 @@ function renderAll() {
   renderTotalsOnly();
   renderFX();
   renderSavings();
+
+  // garante o assist depois de renderizar DOM
+  enableMatrixScrollAssist();
 }
 
-function renderMatrices() {
+function renderMatrices(){
   buildMatrixThead("#theadFixed");
   buildMatrixThead("#theadVar");
 
@@ -601,14 +632,17 @@ function renderMatrices() {
   buildMatrixBody("#tbodyVar", "variable");
 
   renderFootersOnly();
+
+  // reativa assist no DOM novo
+  enableMatrixScrollAssist();
 }
 
-function renderFootersOnly() {
+function renderFootersOnly(){
   buildMatrixTfoot("#tfootFixed", "fixed");
   buildMatrixTfoot("#tfootVar", "variable");
 }
 
-function renderTotalsOnly() {
+function renderTotalsOnly(){
   const t = calcTotals();
 
   $("#incomeJPY").textContent = formatJPY(t.income);
@@ -629,7 +663,7 @@ function renderTotalsOnly() {
   $("#kpiDiff").textContent = formatJPY(t.diff);
 }
 
-function renderSavings() {
+function renderSavings(){
   const jpy = clampNum(state.monthData.savedJPY);
   const brlRate = state.fx?.brl;
   const usdRate = state.fx?.usd;
@@ -642,24 +676,24 @@ function renderSavings() {
 }
 
 // --- Drawer ---
-function openDrawer() {
+function openDrawer(){
   document.body.classList.add("drawer-open");
-  $("#drawerOverlay").setAttribute("aria-hidden", "false");
-  $("#btnBurger").setAttribute("aria-expanded", "true");
+  $("#drawerOverlay").setAttribute("aria-hidden","false");
+  $("#btnBurger").setAttribute("aria-expanded","true");
 }
-function closeDrawer() {
+function closeDrawer(){
   document.body.classList.remove("drawer-open");
-  $("#drawerOverlay").setAttribute("aria-hidden", "true");
-  $("#btnBurger").setAttribute("aria-expanded", "false");
+  $("#drawerOverlay").setAttribute("aria-hidden","true");
+  $("#btnBurger").setAttribute("aria-expanded","false");
 }
-function toggleDrawer() {
+function toggleDrawer(){
   if (document.body.classList.contains("drawer-open")) closeDrawer();
   else openDrawer();
 }
 
 // --- Init ---
-function init() {
-  const current = new Date().toISOString().slice(0, 7);
+function init(){
+  const current = new Date().toISOString().slice(0,7);
   state.month = state.month || current;
 
   const loaded = loadMonth(state.month);
