@@ -1,3 +1,4 @@
+//TESTANDO ATUALIZAÇÃO JS
 const LS_KEY = "finance_pro_v4";
 const FX_API = "https://api.frankfurter.dev/v1";
 
