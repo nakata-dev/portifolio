@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Finance PRO | Turnos + Despesas</title>
+  <title>Saúde Financeira</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,21 +13,18 @@
 </head>
 
 <body>
-  <!-- HEADER FIXO -->
   <header class="header" role="banner">
     <div class="header-inner">
       <div class="brand">
         <div class="logo" aria-hidden="true">￥</div>
         <div class="titles">
-          <h1>Finance <span class="pro">PRO</span></h1>
-          <p>Planilha inteligente (turnos + despesas) com PDF e câmbio diário.</p>
+          <h1>Saúde Financeira<span class="pro">PRO</span></h1>
+          <p>Este Aplicativo vai organizar sua vida</p>
         </div>
       </div>
 
       <div class="menu-slot">
-        <button class="icon-btn" id="btnBurger" type="button" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false">
-          ☰
-        </button>
+        <button class="icon-btn" id="btnBurger" type="button" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false">☰</button>
       </div>
 
       <div class="actions">
@@ -39,7 +36,6 @@
   </header>
 
   <main class="container" role="main">
-    <!-- TOPBAR -->
     <section class="topbar" aria-label="Barra superior">
       <label class="field">
         <span>Mês</span>
@@ -66,14 +62,17 @@
             <strong id="rateUSD">—</strong>
           </div>
         </div>
+
+        <small class="hint" style="margin-top:10px">
+          Dica: itens em <b>R$</b> e <b>US$</b> são convertidos para JPY para compor o saldo do mês.
+        </small>
       </div>
     </section>
 
-    <!-- CONFIG -->
     <section class="card" id="secConfig" aria-label="Configurações">
       <div class="card-head">
         <h2>Configurações</h2>
-        <p>Primeiro passo: preencha Nome, Empresa, Valor/hora e horas padrão dos turnos.</p>
+        <p>Preencha os dados base. Isso guia todos os cálculos do mês.</p>
       </div>
 
       <div class="grid-2">
@@ -110,7 +109,7 @@
             <option value="off">Desligado</option>
             <option value="on" selected>Ligado (suave)</option>
           </select>
-          <small>Não interfere enquanto você digita.</small>
+          <small>Não atrapalha enquanto digita.</small>
         </label>
       </div>
 
@@ -141,7 +140,6 @@
       </div>
     </section>
 
-    <!-- TURNOS -->
     <section class="card" id="secTurns" aria-label="Turnos">
       <div class="card-head">
         <h2>Turnos do mês</h2>
@@ -175,76 +173,126 @@
         <div class="sum-item">
           <span>Despesas (JPY)</span>
           <strong id="expensesJPY">—</strong>
-          <small class="muted">Fixas + variáveis</small>
+          <small class="muted">Fixas + variáveis + pagar/receber do mês</small>
         </div>
 
         <div class="sum-item glow">
           <span>Saldo (JPY)</span>
           <strong id="balanceJPY">—</strong>
-          <small class="muted">Receita - despesas</small>
+          <small class="muted">Receita + recebidos - despesas - pagos</small>
         </div>
       </div>
     </section>
 
-    <!-- DESPESAS -->
     <section class="card" id="secExpenses" aria-label="Despesas">
       <div class="card-head">
-        <h2>Despesas</h2>
-        <p>Coluna “Descrição” fixa + dias com rolagem horizontal. Totais automáticos.</p>
+        <div class="head-row">
+          <div>
+            <h2>Despesas</h2>
+            <p>Exibição compacta e legível, sem barra horizontal. Detalhe por dia é opcional.</p>
+          </div>
+
+          <div class="font-tools" aria-label="Acessibilidade da grade de dias">
+            <button class="small-btn" id="btnFontDown" type="button" title="Diminuir fonte">A-</button>
+            <button class="small-btn" id="btnFontUp" type="button" title="Aumentar fonte">A+</button>
+          </div>
+        </div>
       </div>
 
       <div class="two-cols">
-        <!-- FIXAS -->
-        <section class="matrix-card" aria-label="Despesas fixas">
-          <div class="matrix-head">
+        <section class="list-card" aria-label="Despesas fixas">
+          <div class="list-head">
             <h3>Despesas Fixas</h3>
             <button class="pill ghost" type="button" data-add="fixed">+ Adicionar</button>
           </div>
 
-          <div class="matrix-wrap" data-matrix="fixed">
-            <div class="matrix-scroll" role="region" aria-label="Tabela de despesas fixas (rolagem horizontal)" tabindex="0">
-              <table class="matrix" aria-label="Tabela de despesas fixas">
-                <thead id="theadFixed"></thead>
-                <tbody id="tbodyFixed"></tbody>
-                <tfoot id="tfootFixed"></tfoot>
-              </table>
-            </div>
-          </div>
+          <div class="expense-list" id="listFixed"></div>
 
-          <div class="matrix-footer">
+          <div class="list-footer">
             <span>Total Fixas</span>
             <strong id="totalFixed">—</strong>
           </div>
         </section>
 
-        <!-- VARIÁVEIS -->
-        <section class="matrix-card" aria-label="Despesas variáveis">
-          <div class="matrix-head">
+        <section class="list-card" aria-label="Despesas variáveis">
+          <div class="list-head">
             <h3>Despesas Variáveis</h3>
             <button class="pill ghost" type="button" data-add="variable">+ Adicionar</button>
           </div>
 
-          <div class="matrix-wrap" data-matrix="variable">
-            <div class="matrix-scroll" role="region" aria-label="Tabela de despesas variáveis (rolagem horizontal)" tabindex="0">
-              <table class="matrix" aria-label="Tabela de despesas variáveis">
-                <thead id="theadVar"></thead>
-                <tbody id="tbodyVar"></tbody>
-                <tfoot id="tfootVar"></tfoot>
-              </table>
-            </div>
-          </div>
+          <div class="expense-list" id="listVar"></div>
 
-          <div class="matrix-footer">
+          <div class="list-footer">
             <span>Total Variáveis</span>
             <strong id="totalVar">—</strong>
           </div>
         </section>
       </div>
 
-      <small class="hint">Dica: arraste a tabela para o lado (mouse/touch) ou use a barra horizontal.</small>
+      <small class="hint">Dica: clique em <b>Dias</b> se quiser preencher valores por dia (opcional).</small>
     </section>
 
-    <!-- RECEITA CONVERTIDA -->
+    <section class="card" id="secDeals" aria-label="Receber & Pagar">
+      <div class="card-head">
+        <h2>Receber &amp; Pagar</h2>
+        <p>Negociações e prestações. Cada item pode ser em <b>JPY</b>, <b>R$</b> ou <b>US$</b>. O saldo do mês usa conversão para JPY.</p>
+      </div>
+
+      <div class="summary-strip">
+        <div class="sum-item">
+          <span>Recebidos no mês (JPY)</span>
+          <strong id="receivedMonthJPY">—</strong>
+          <small class="muted">Somatório convertido para JPY</small>
+        </div>
+
+        <div class="sum-item">
+          <span>Pagos no mês (JPY)</span>
+          <strong id="paidMonthJPY">—</strong>
+          <small class="muted">Somatório convertido para JPY</small>
+        </div>
+
+        <div class="sum-item glow">
+          <span>Saldo líquido do mês (JPY)</span>
+          <strong id="dealsNetJPY">—</strong>
+          <small class="muted">Recebidos - pagos</small>
+        </div>
+      </div>
+
+      <div class="two-cols">
+        <section class="list-card" aria-label="Receber">
+          <div class="list-head">
+            <h3>Receber</h3>
+            <button class="pill ghost" type="button" data-deal-add="receber">+ Nova venda</button>
+          </div>
+
+          <div class="deal-list" id="dealReceber"></div>
+
+          <div class="list-footer">
+            <span>Total a receber (restante, em JPY)</span>
+            <strong id="totalReceberRemaining">—</strong>
+          </div>
+        </section>
+
+        <section class="list-card" aria-label="Pagar">
+          <div class="list-head">
+            <h3>Pagar</h3>
+            <button class="pill ghost" type="button" data-deal-add="pagar">+ Nova compra</button>
+          </div>
+
+          <div class="deal-list" id="dealPagar"></div>
+
+          <div class="list-footer">
+            <span>Total a pagar (restante, em JPY)</span>
+            <strong id="totalPagarRemaining">—</strong>
+          </div>
+        </section>
+      </div>
+
+      <small class="hint">
+        Dica: toque em <b>Registrar</b> para abrir o menu flutuante e lançar a parcela na moeda do item.
+      </small>
+    </section>
+
     <section class="card" id="secSavings" aria-label="Receita em moedas">
       <div class="card-head">
         <h2>Receitas convertidas</h2>
@@ -272,24 +320,23 @@
       </div>
     </section>
 
-    <!-- RESUMO -->
     <section class="card" id="secSummary" aria-label="Resumo">
       <div class="card-head">
         <h2>Resumo</h2>
-        <p>Fechamento do mês (sem atrapalhar sua digitação).</p>
+        <p>Fechamento do mês.</p>
       </div>
 
       <div class="kpi-grid">
         <div class="kpi">
           <span>Receitas</span>
           <strong id="kpiIncome">—</strong>
-          <small class="muted">Turno A + Turno B + bônus</small>
+          <small class="muted">Turno A + Turno B + bônus + recebidos</small>
         </div>
 
         <div class="kpi">
           <span>Despesas</span>
           <strong id="kpiExpenses">—</strong>
-          <small class="muted">Fixas + variáveis</small>
+          <small class="muted">Fixas + variáveis + pagos</small>
         </div>
 
         <div class="kpi glow">
@@ -311,9 +358,31 @@
         </div>
       </div>
     </section>
+
+    <section class="print-only" id="printReport" aria-hidden="true">
+      <h1>Relatório Financeiro</h1>
+      <div class="print-meta" id="printMeta"></div>
+
+      <h2>Receitas</h2>
+      <div class="print-grid" id="printIncome"></div>
+
+      <h2>Receber &amp; Pagar (mês, convertido para JPY)</h2>
+      <div class="print-grid" id="printDealsMonth"></div>
+
+      <h2>Despesas Fixas</h2>
+      <table class="print-table" id="printFixed"></table>
+
+      <h2>Despesas Variáveis</h2>
+      <table class="print-table" id="printVar"></table>
+
+      <h2>Totais</h2>
+      <div class="print-grid" id="printTotals"></div>
+
+      <h2>Receitas convertidas</h2>
+      <div class="print-grid" id="printSavings"></div>
+    </section>
   </main>
 
-  <!-- DRAWER -->
   <div class="drawer-overlay" id="drawerOverlay" aria-hidden="true"></div>
 
   <aside class="drawer" id="drawer" aria-label="Menu">
@@ -332,6 +401,9 @@
       <button class="drawer-item" data-scroll="#secExpenses" type="button">
         <strong>Despesas</strong><span>Fixas e variáveis</span>
       </button>
+      <button class="drawer-item" data-scroll="#secDeals" type="button">
+        <strong>Receber &amp; Pagar</strong><span>Negociações e prestações</span>
+      </button>
       <button class="drawer-item" data-scroll="#secSavings" type="button">
         <strong>Receitas</strong><span>Real e Dólar</span>
       </button>
@@ -342,10 +414,61 @@
       <div class="drawer-sep"></div>
 
       <small class="drawer-note">
-        Dica: tudo salva no dispositivo. PDF usa impressão do navegador (layout já otimizado).
+        PDF: use “Gerar PDF” e salve como PDF pelo navegador.
       </small>
     </div>
   </aside>
+
+  <div class="sheet-overlay" id="dealOverlay" aria-hidden="true"></div>
+  <section class="sheet" id="dealSheet" role="dialog" aria-modal="true" aria-labelledby="dealSheetTitle">
+    <div class="sheet-handle" aria-hidden="true"></div>
+
+    <div class="sheet-head">
+      <div>
+        <h2 id="dealSheetTitle">Registrar pagamento</h2>
+        <p id="dealSheetSub">—</p>
+      </div>
+      <button class="icon-btn" id="btnCloseDealSheet" type="button" aria-label="Fechar">✕</button>
+    </div>
+
+    <div class="sheet-preview">
+      <div class="preview-item">
+        <span>Moeda do item</span>
+        <strong id="dealCurrency">—</strong>
+      </div>
+      <div class="preview-item">
+        <span>Restante</span>
+        <strong id="dealRemaining">—</strong>
+      </div>
+      <div class="preview-score" id="dealProgress">—</div>
+    </div>
+
+    <div class="turbo">
+      <div class="turbo-title">Novo lançamento</div>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Data</span>
+          <input id="payDate" type="date" />
+        </label>
+
+        <label class="field">
+          <span id="payAmountLabel">Valor</span>
+          <input id="payAmount" type="number" inputmode="decimal" min="0" step="0.01" />
+          <small id="payAmountHint">—</small>
+        </label>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="pill ghost" id="btnAddPayment" type="button">Adicionar ✅</button>
+        <button class="pill" id="btnFinishDeal" type="button">Concluir</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="pay-list" id="paymentsList"></div>
+  </section>
 
   <footer class="footer">
     Copyright &copy; 2026 - Ailton A. Nakata

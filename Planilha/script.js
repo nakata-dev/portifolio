@@ -1,13 +1,14 @@
-const LS_KEY = "finance_pro_v1";
+const LS_KEY = "finance_pro_v4";
 const FX_API = "https://api.frankfurter.dev/v1";
 
 const $ = (s) => document.querySelector(s);
-
 const DAYS_IN_MONTH = 31;
+
+const CURRENCIES = ["JPY", "BRL", "USD"];
+const CURRENCY_LABEL = { JPY: "JPY (¥)", BRL: "BRL (R$)", USD: "USD ($)" };
 
 const defaultState = () => ({
   month: "",
-
   settings: {
     name: "",
     company: "",
@@ -15,173 +16,193 @@ const defaultState = () => ({
     hourValue: 0,
     overtimeMult: 1.25,
     autosave: "on",
-
-    aNormal: 8,
-    aExtra: 3,
-    bNormal: 7,
-    bExtra: 4,
+    aNormal: 8, aExtra: 3,
+    bNormal: 7, bExtra: 4,
+    dayScale: 1
   },
 
   monthData: {
     daysA: 0,
     daysB: 0,
     bonusJPY: 0,
-
     sentJPY: 0,
     savedJPY: 0,
-
     expenses: {
-      fixed: [
-        { id: uid(), desc: "Aluguel", values: Array(DAYS_IN_MONTH).fill(0) }
-      ],
-      variable: [
-        { id: uid(), desc: "Mercado", values: Array(DAYS_IN_MONTH).fill(0) }
-      ],
+      fixed: [{ id: uid(), desc: "Aluguel", monthly: 0, values: Array(DAYS_IN_MONTH).fill(0), useDaily: false }],
+      variable: [{ id: uid(), desc: "Mercado", monthly: 0, values: Array(DAYS_IN_MONTH).fill(0), useDaily: false }]
     }
   },
 
-  fx: {
-    base: "JPY",
-    brl: null,
-    usd: null,
-    date: null,
-    fetchedAt: null
-  }
+  // Persistente (atravessa meses)
+  deals: { receber: [], pagar: [] },
+
+  // FX (base JPY)
+  fx: { base: "JPY", brl: null, usd: null, date: null, fetchedAt: null }
 });
 
 let state = load() || defaultState();
 
-// --- Utils ---
-function uid() {
-  return Math.random().toString(16).slice(2) + Date.now().toString(16);
+// ---------- utils ----------
+function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+function clampNum(v){ const n = Number(String(v).replace(",", ".")); return Number.isFinite(n) ? n : 0; }
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function monthOf(dateISO){ return String(dateISO || "").slice(0,7); }
+
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1500);
 }
 
-function clampNum(v) {
-  const n = Number(String(v).replace(",", "."));
-  return Number.isFinite(n) ? n : 0;
+function formatByCurrency(n, currency){
+  const v = clampNum(n);
+  try{
+    return new Intl.NumberFormat("pt-BR", { style:"currency", currency }).format(v);
+  }catch{
+    if(currency === "JPY") return `¥ ${Math.round(v).toLocaleString("pt-BR")}`;
+    if(currency === "BRL") return `R$ ${v.toFixed(2)}`;
+    return `$ ${v.toFixed(2)}`;
+  }
 }
 
-function formatJPY(n) {
+function formatJPY(n){
   const v = Math.round(clampNum(n));
   return `JP¥ ${v.toLocaleString("pt-BR")}`;
 }
 
-function formatMoney(n, currency) {
-  const v = clampNum(n);
-  try {
-    return new Intl.NumberFormat("pt-BR", { style: "currency", currency }).format(v);
-  } catch {
-    const sign = currency === "USD" ? "$" : "R$";
-    return `${sign} ${v.toFixed(2)}`;
+// Converte valor em moeda X para JPY (usando FX base JPY)
+function toJPY(amount, currency){
+  const v = clampNum(amount);
+  if(currency === "JPY") return v;
+
+  // fx: 1 JPY = rate BRL/USD
+  if(currency === "BRL"){
+    const r = state.fx?.brl;
+    if(!r) return null;
+    return v / r;
   }
+
+  if(currency === "USD"){
+    const r = state.fx?.usd;
+    if(!r) return null;
+    return v / r;
+  }
+
+  return null;
 }
 
-function toast(msg) {
-  const t = $("#toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 1600);
+function warnIfMissingFX(currency){
+  if(currency === "JPY") return false;
+  if(currency === "BRL" && !state.fx?.brl) return true;
+  if(currency === "USD" && !state.fx?.usd) return true;
+  return false;
 }
 
-// --- Storage ---
-function save() {
-  localStorage.setItem(LS_KEY, JSON.stringify(state));
-}
+// ---------- storage ----------
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
 
-function load() {
-  try {
+function load(){
+  try{
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return null;
+    if(!raw) return null;
     const parsed = JSON.parse(raw);
-    if (!parsed || !parsed.settings || !parsed.monthData) return null;
+    if(!parsed?.settings || !parsed?.monthData) return null;
     normalize(parsed);
     return parsed;
-  } catch {
-    return null;
-  }
+  }catch{ return null; }
 }
 
-function normalize(st) {
-  const exp = st.monthData?.expenses;
-  if (!exp) return;
+// mês separado
+function getMonthKey(month){ return `${LS_KEY}__month__${month}`; }
 
-  ["fixed","variable"].forEach((k) => {
-    exp[k] = Array.isArray(exp[k]) ? exp[k] : [];
-    exp[k].forEach(row => {
-      row.values = Array.isArray(row.values) ? row.values : [];
-      row.values = [...row.values, ...Array(DAYS_IN_MONTH).fill(0)].slice(0, DAYS_IN_MONTH);
-      row.desc = row.desc ?? "";
-      row.id = row.id ?? uid();
-    });
-  });
-}
-
-// --- Month handling (salvar por mês) ---
-function getMonthKey(month) {
-  return `${LS_KEY}__month__${month}`;
-}
-
-function loadMonth(month) {
-  try {
+function loadMonth(month){
+  try{
     const raw = localStorage.getItem(getMonthKey(month));
-    if (!raw) return null;
+    if(!raw) return null;
     const parsed = JSON.parse(raw);
-    if (!parsed) return null;
-    if (!parsed.expenses) parsed.expenses = { fixed: [], variable: [] };
-    normalize({ monthData: { expenses: parsed.expenses } });
+    if(!parsed) return null;
     return parsed;
-  } catch {
-    return null;
-  }
+  }catch{ return null; }
 }
 
-function saveMonth() {
-  if (!state.month) return;
+function saveMonth(){
+  if(!state.month) return;
   localStorage.setItem(getMonthKey(state.month), JSON.stringify(state.monthData));
 }
 
-function clearMonth() {
-  if (!state.month) return;
-  if (!confirm("Limpar os dados deste mês?")) return;
-  localStorage.removeItem(getMonthKey(state.month));
-  state.monthData = defaultState().monthData;
-  renderAll();
-  autosaveSoon();
-  toast("Mês limpo ✅");
+function normalize(st){
+  const exp = st?.monthData?.expenses;
+  if(exp){
+    ["fixed","variable"].forEach(k=>{
+      exp[k] = Array.isArray(exp[k]) ? exp[k] : [];
+      exp[k].forEach(row=>{
+        row.id = row.id ?? uid();
+        row.desc = row.desc ?? "";
+        row.monthly = clampNum(row.monthly ?? 0);
+        row.useDaily = !!row.useDaily;
+        row.values = Array.isArray(row.values) ? row.values : [];
+        row.values = [...row.values, ...Array(DAYS_IN_MONTH).fill(0)].slice(0, DAYS_IN_MONTH);
+      });
+    });
+  }
+
+  st.deals = st.deals || { receber: [], pagar: [] };
+  ["receber","pagar"].forEach(k=>{
+    st.deals[k] = Array.isArray(st.deals[k]) ? st.deals[k] : [];
+    st.deals[k].forEach(d=>{
+      d.id = d.id ?? uid();
+      d.title = d.title ?? "";
+      d.person = d.person ?? "";
+      d.currency = CURRENCIES.includes(d.currency) ? d.currency : "JPY";
+      d.total = clampNum(d.total ?? 0);
+      d.createdAt = d.createdAt ?? todayISO();
+      d.payments = Array.isArray(d.payments) ? d.payments : [];
+      d.payments.forEach(p=>{
+        p.id = p.id ?? uid();
+        p.date = p.date ?? todayISO();
+        p.amount = clampNum(p.amount ?? 0); // na moeda do deal
+      });
+    });
+  });
+
+  st.settings.dayScale = clampNum(st.settings.dayScale || 1) || 1;
 }
 
-// --- FX (cache diário) ---
-function fxCacheKey(date) {
-  return `${LS_KEY}__fx__${date}`;
-}
+// ---------- fx ----------
+function fxCacheKey(date){ return `${LS_KEY}__fx__${date}`; }
 
-async function fetchFX(force = false) {
+async function fetchFX(force=false){
   const today = new Date().toISOString().slice(0,10);
   const cachedRaw = localStorage.getItem(fxCacheKey(today));
-  if (!force && cachedRaw) {
-    try {
+  if(!force && cachedRaw){
+    try{
       const cached = JSON.parse(cachedRaw);
-      if (cached && cached.brl && cached.usd) {
+      if(cached?.brl && cached?.usd){
         state.fx = cached;
         renderFX();
         return;
       }
-    } catch {}
+    }catch{}
   }
 
-  try {
+  try{
     const url = `${FX_API}/latest?base=JPY&symbols=BRL,USD`;
     const res = await fetch(url);
-    if (!res.ok) throw new Error("FX fail");
+    if(!res.ok) throw new Error("FX fail");
     const data = await res.json();
-
-    const brl = data?.rates?.BRL ?? null;
-    const usd = data?.rates?.USD ?? null;
 
     state.fx = {
       base: "JPY",
-      brl,
-      usd,
+      brl: data?.rates?.BRL ?? null,
+      usd: data?.rates?.USD ?? null,
       date: data?.date ?? today,
       fetchedAt: Date.now()
     };
@@ -189,20 +210,15 @@ async function fetchFX(force = false) {
     localStorage.setItem(fxCacheKey(today), JSON.stringify(state.fx));
     save();
     renderFX();
-  } catch {
+  }catch{
     renderFX(true);
   }
 }
 
 function renderFX(error=false){
   const meta = $("#fxMeta");
-  if (error){
-    meta.textContent = "Falha ao buscar câmbio. Usando cache, se existir.";
-  } else if (state.fx?.date){
-    meta.textContent = `Atualizado: ${state.fx.date}`;
-  } else {
-    meta.textContent = "Sem dados ainda.";
-  }
+  if(error) meta.textContent = "Falha ao buscar câmbio. Usando cache (se existir).";
+  else meta.textContent = state.fx?.date ? `Atualizado: ${state.fx.date}` : "Sem dados ainda.";
 
   $("#rateBRL").textContent = state.fx?.brl ? state.fx.brl.toFixed(6) : "—";
   $("#rateUSD").textContent = state.fx?.usd ? state.fx.usd.toFixed(6) : "—";
@@ -210,21 +226,19 @@ function renderFX(error=false){
   renderSavings();
 }
 
-// --- Calculations ---
-function calcTurnValuePerDay(kind) {
+// ---------- calc turnos ----------
+function calcTurnValuePerDay(kind){
   const h = clampNum(state.settings.hourValue);
   const mult = clampNum(state.settings.overtimeMult || 1.25);
-
   const aNorm = clampNum(state.settings.aNormal);
   const aExt  = clampNum(state.settings.aExtra);
   const bNorm = clampNum(state.settings.bNormal);
   const bExt  = clampNum(state.settings.bExtra);
 
-  if (kind === "A") return h * (aNorm + aExt * mult);
-  return h * (bNorm + bExt * mult);
+  return kind === "A" ? h * (aNorm + aExt * mult) : h * (bNorm + bExt * mult);
 }
 
-function calcIncomeJPY(){
+function calcIncomeTurnsJPY(){
   const daysA = clampNum(state.monthData.daysA);
   const daysB = clampNum(state.monthData.daysB);
   const bonus = clampNum(state.monthData.bonusJPY);
@@ -235,224 +249,621 @@ function calcIncomeJPY(){
   return (daysA * dayA) + (daysB * dayB) + bonus;
 }
 
-function sumExpenses(kind){
-  const rows = state.monthData.expenses[kind] || [];
-  return rows.reduce((acc, row) => {
-    const rowSum = row.values.reduce((a,v)=> a + clampNum(v), 0);
-    return acc + rowSum;
-  }, 0);
+// ---------- despesas ----------
+function rowCost(row){
+  if(row.useDaily){
+    return row.values.reduce((a,v)=>a+clampNum(v),0);
+  }
+  return clampNum(row.monthly);
 }
 
+function sumExpenses(kind){
+  const rows = state.monthData.expenses[kind] || [];
+  return rows.reduce((acc, r)=> acc + rowCost(r), 0);
+}
+
+// ---------- deals ----------
+function dealPaidTotal(deal){
+  return (deal.payments || []).reduce((a,p)=> a + clampNum(p.amount), 0); // na moeda do deal
+}
+function dealRemaining(deal){
+  return Math.max(0, clampNum(deal.total) - dealPaidTotal(deal)); // na moeda do deal
+}
+function dealPaymentsInMonthJPY(deal, month){
+  return (deal.payments || []).reduce((a,p)=>{
+    if(monthOf(p.date) !== month) return a;
+
+    const j = toJPY(p.amount, deal.currency);
+    if(j === null) return a; // sem FX -> ignora na soma do saldo
+    return a + j;
+  }, 0);
+}
+function dealRemainingJPY(deal){
+  const rem = dealRemaining(deal);
+  const j = toJPY(rem, deal.currency);
+  return j === null ? null : j;
+}
+
+function monthReceivedPaid(month){
+  const receivedJPY = (state.deals.receber || []).reduce((a,d)=> a + dealPaymentsInMonthJPY(d, month), 0);
+  const paidJPY = (state.deals.pagar || []).reduce((a,d)=> a + dealPaymentsInMonthJPY(d, month), 0);
+  return { receivedJPY, paidJPY };
+}
+
+// ---------- totals ----------
 function calcTotals(){
-  const income = calcIncomeJPY();
+  const month = state.month || new Date().toISOString().slice(0,7);
+
+  const turns = calcIncomeTurnsJPY();
   const fixed = sumExpenses("fixed");
   const vari = sumExpenses("variable");
-  const expenses = fixed + vari;
+
+  const { receivedJPY, paidJPY } = monthReceivedPaid(month);
+
+  const income = turns + receivedJPY;
+  const expenses = fixed + vari + paidJPY;
+
   const balance = income - expenses;
   const sent = clampNum(state.monthData.sentJPY);
   const diff = balance - sent;
 
-  return { income, fixed, vari, expenses, balance, sent, diff };
+  return {
+    income, turns,
+    receivedJPY, paidJPY,
+    fixed, vari, expenses,
+    balance, sent, diff
+  };
 }
 
-// --- Matrix builders ---
-function buildMatrixThead(targetId){
-  const thead = $(targetId);
-  thead.innerHTML = "";
-
-  const tr = document.createElement("tr");
-
-  const thDesc = document.createElement("th");
-  thDesc.className = "sticky sticky-top desc-col";
-  thDesc.textContent = "Descrição";
-  tr.appendChild(thDesc);
-
-  for (let d=1; d<=DAYS_IN_MONTH; d++){
-    const th = document.createElement("th");
-    th.className = "sticky-top";
-    th.textContent = String(d);
-    tr.appendChild(th);
-  }
-
-  const thTotal = document.createElement("th");
-  thTotal.className = "sticky-top";
-  thTotal.textContent = "Total";
-  tr.appendChild(thTotal);
-
-  thead.appendChild(tr);
+// ---------- expenses UI ----------
+function renderExpenseLists(){
+  renderExpenseList("fixed", "#listFixed");
+  renderExpenseList("variable", "#listVar");
 }
 
-function buildMatrixTfoot(targetId, kind){
-  const tfoot = $(targetId);
-  tfoot.innerHTML = "";
-
-  const tr = document.createElement("tr");
-
-  const tdLabel = document.createElement("td");
-  tdLabel.className = "sticky desc-col";
-  tdLabel.textContent = "Total por dia";
-  tr.appendChild(tdLabel);
-
-  const rows = state.monthData.expenses[kind];
-  for (let d=0; d<DAYS_IN_MONTH; d++){
-    const td = document.createElement("td");
-    const totalDay = rows.reduce((acc, row) => acc + clampNum(row.values[d]), 0);
-    td.textContent = Math.round(totalDay).toLocaleString("pt-BR");
-    tr.appendChild(td);
-  }
-
-  const tdGrand = document.createElement("td");
-  const grand = rows.reduce((acc, row) => acc + row.values.reduce((a,v)=>a+clampNum(v),0), 0);
-  tdGrand.textContent = Math.round(grand).toLocaleString("pt-BR");
-  tr.appendChild(tdGrand);
-
-  tfoot.appendChild(tr);
-}
-
-function buildMatrixBody(tbodyId, kind){
-  const tbody = $(tbodyId);
-  tbody.innerHTML = "";
+function renderExpenseList(kind, targetSel){
+  const wrap = $(targetSel);
+  wrap.innerHTML = "";
 
   const rows = state.monthData.expenses[kind];
 
-  rows.forEach((row) => {
-    const tr = document.createElement("tr");
+  rows.forEach(row=>{
+    const el = document.createElement("div");
+    el.className = "exp-row";
+    el.dataset.kind = kind;
+    el.dataset.id = row.id;
 
-    const tdDesc = document.createElement("td");
-    tdDesc.className = "sticky desc-col";
-    tdDesc.innerHTML = `
-      <div class="desc-cell">
-        <input class="desc-input" data-kind="${kind}" data-id="${row.id}" data-field="desc"
-          value="${escapeHTML(row.desc)}" placeholder="Ex: Aluguel" />
-        <button class="kill" type="button" data-kind="${kind}" data-id="${row.id}" title="Remover">×</button>
+    const total = rowCost(row);
+
+    el.innerHTML = `
+      <div class="exp-top">
+        <input class="desc-input" data-field="desc" value="${escapeHTML(row.desc)}" placeholder="Ex: Aluguel" />
+        <input class="money" data-field="monthly" type="number" inputmode="decimal" min="0" step="0.01"
+               value="${row.monthly ?? 0}" ${row.useDaily ? "disabled" : ""} />
+      </div>
+
+      <div class="exp-actions">
+        <div class="left">
+          <button class="small-btn" type="button" data-action="toggleDaily">
+            ${row.useDaily ? "Mensal" : "Dias"}
+          </button>
+          <span class="exp-mini">Total: <b>${formatJPY(total)}</b></span>
+        </div>
+        <button class="kill" type="button" data-action="remove" title="Remover">×</button>
+      </div>
+
+      <div class="days-panel ${row.useDaily ? "open" : ""}" data-panel="days">
+        <div class="days-grid">
+          ${Array.from({length:DAYS_IN_MONTH}, (_,i)=>`
+            <div class="day-cell">
+              <div class="day-label">Dia ${i+1}</div>
+              <input class="day-input" type="number" inputmode="decimal" min="0" step="0.01"
+                     data-field="day" data-day="${i}" value="${row.values[i] ?? 0}" />
+            </div>
+          `).join("")}
+        </div>
       </div>
     `;
-    tr.appendChild(tdDesc);
 
-    for (let d=0; d<DAYS_IN_MONTH; d++){
-      const td = document.createElement("td");
-      const v = clampNum(row.values[d]);
-      td.innerHTML = `
-        <input class="money" type="number" inputmode="decimal" min="0" step="0.01"
-          data-kind="${kind}" data-id="${row.id}" data-field="v" data-day="${d}"
-          value="${v}" />
-      `;
-      tr.appendChild(td);
-    }
-
-    const tdTotal = document.createElement("td");
-    tdTotal.className = "row-total";
-    tdTotal.dataset.totalFor = row.id;
-    tdTotal.textContent = Math.round(row.values.reduce((a,v)=>a+clampNum(v),0)).toLocaleString("pt-BR");
-    tr.appendChild(tdTotal);
-
-    tbody.appendChild(tr);
+    wrap.appendChild(el);
   });
 }
 
-function escapeHTML(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+function findRow(kind, id){
+  return (state.monthData.expenses[kind] || []).find(r=>r.id===id);
 }
 
-// --- Autosave suave ---
+function addExpenseRow(kind){
+  state.monthData.expenses[kind].push({
+    id: uid(),
+    desc: "",
+    monthly: 0,
+    values: Array(DAYS_IN_MONTH).fill(0),
+    useDaily: false
+  });
+  renderExpenseLists();
+  renderTotalsOnly();
+  autosaveSoon();
+  toast("Item adicionado ✅");
+}
+
+function removeExpenseRow(kind, id){
+  state.monthData.expenses[kind] = state.monthData.expenses[kind].filter(r=>r.id!==id);
+  renderExpenseLists();
+  renderTotalsOnly();
+  autosaveSoon();
+  toast("Item removido ✅");
+}
+
+// ---------- deals UI ----------
+function renderDeals(){
+  renderDealList("receber", "#dealReceber");
+  renderDealList("pagar", "#dealPagar");
+
+  const month = state.month || new Date().toISOString().slice(0,7);
+  const { receivedJPY, paidJPY } = monthReceivedPaid(month);
+
+  $("#receivedMonthJPY").textContent = formatJPY(receivedJPY);
+  $("#paidMonthJPY").textContent = formatJPY(paidJPY);
+  $("#dealsNetJPY").textContent = formatJPY(receivedJPY - paidJPY);
+
+  const remR = (state.deals.receber || []).reduce((a,d)=>{
+    const j = dealRemainingJPY(d);
+    return a + (j === null ? 0 : j);
+  }, 0);
+
+  const remP = (state.deals.pagar || []).reduce((a,d)=>{
+    const j = dealRemainingJPY(d);
+    return a + (j === null ? 0 : j);
+  }, 0);
+
+  $("#totalReceberRemaining").textContent = formatJPY(remR);
+  $("#totalPagarRemaining").textContent = formatJPY(remP);
+}
+
+function renderDealList(kind, sel){
+  const wrap = $(sel);
+  wrap.innerHTML = "";
+
+  const list = state.deals[kind] || [];
+
+  if(list.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "exp-row";
+    empty.innerHTML = `<div class="deal-sub">Nenhum item. Use “+” para adicionar.</div>`;
+    wrap.appendChild(empty);
+    return;
+  }
+
+  list.forEach(deal=>{
+    const paid = dealPaidTotal(deal);
+    const rem = dealRemaining(deal);
+    const pct = deal.total > 0 ? Math.min(100, Math.round((paid / deal.total) * 100)) : 0;
+
+    const fxWarn = warnIfMissingFX(deal.currency);
+    const remJPY = dealRemainingJPY(deal);
+
+    const el = document.createElement("div");
+    el.className = "deal-row";
+    el.dataset.kind = kind;
+    el.dataset.id = deal.id;
+
+    el.innerHTML = `
+      <div class="deal-top">
+        <div class="deal-title">${escapeHTML((deal.title || "").trim() || "—")}</div>
+        <div class="deal-sub">
+          ${escapeHTML((deal.person || "").trim() || "Sem pessoa")} • criado em ${escapeHTML(deal.createdAt || "—")}
+          • <span class="chip">Moeda: ${escapeHTML(CURRENCY_LABEL[deal.currency] || deal.currency)}</span>
+          ${fxWarn ? `<span class="chip">⚠ sem câmbio</span>` : ""}
+        </div>
+
+        <div class="deal-metrics">
+          <div class="metric">
+            <span>Valor inicial</span>
+            <strong>${escapeHTML(formatByCurrency(deal.total, deal.currency))}</strong>
+          </div>
+          <div class="metric">
+            <span>Restante</span>
+            <strong>${escapeHTML(formatByCurrency(rem, deal.currency))}</strong>
+          </div>
+        </div>
+
+        <div class="deal-sub">
+          Convertido (restante em JPY): <b>${remJPY === null ? "—" : formatJPY(remJPY)}</b>
+        </div>
+
+        <div class="progress" aria-label="Progresso">
+          <i style="width:${pct}%"></i>
+        </div>
+      </div>
+
+      <div class="deal-actions">
+        <button class="small-btn" type="button" data-action="openPay">Registrar</button>
+        <button class="kill" type="button" data-action="removeDeal" title="Remover">×</button>
+      </div>
+    `;
+
+    wrap.appendChild(el);
+  });
+}
+
+function pickCurrencyPrompt(){
+  const raw = (prompt("Moeda do item? Digite: JPY, BRL ou USD", "JPY") || "JPY").trim().toUpperCase();
+  if(!CURRENCIES.includes(raw)) return "JPY";
+  return raw;
+}
+
+function addDeal(kind){
+  const isReceber = kind === "receber";
+  const title = prompt(isReceber ? "O que você vendeu? (ex: Armário)" : "O que você comprou? (ex: Carro)");
+  if(title === null) return;
+
+  const person = prompt(isReceber ? "Para quem foi vendido? (opcional)" : "De quem comprou? (opcional)") ?? "";
+  const currency = pickCurrencyPrompt();
+
+  if(warnIfMissingFX(currency)){
+    toast("⚠ Sem câmbio carregado. Atualize o câmbio para converter no saldo.");
+  }
+
+  const totalStr = prompt(`Valor total da negociação (${currency})`);
+  if(totalStr === null) return;
+
+  const total = clampNum(totalStr);
+  if(total <= 0){
+    toast("Informe um valor válido.");
+    return;
+  }
+
+  state.deals[kind].unshift({
+    id: uid(),
+    title: String(title || "").trim(),
+    person: String(person || "").trim(),
+    currency,
+    total,
+    createdAt: todayISO(),
+    payments: []
+  });
+
+  save();
+  renderDeals();
+  renderTotalsOnly();
+  toast(isReceber ? "Venda registrada ✅" : "Compra registrada ✅");
+}
+
+function removeDeal(kind, id){
+  if(!confirm("Remover este item?")) return;
+  state.deals[kind] = (state.deals[kind] || []).filter(d=>d.id !== id);
+  save();
+  renderDeals();
+  renderTotalsOnly();
+  toast("Removido ✅");
+}
+
+// ---------- deals sheet ----------
+let activeDeal = null; // {kind, id}
+
+function openDealSheet(kind, id){
+  const deal = (state.deals[kind] || []).find(d=>d.id===id);
+  if(!deal) return;
+
+  activeDeal = { kind, id };
+
+  $("#dealSheetTitle").textContent = kind === "receber" ? "Registrar recebimento" : "Registrar pagamento";
+  $("#dealSheetSub").textContent = `${(deal.title || "—").toUpperCase()} • ${deal.person || "Sem pessoa"}`;
+
+  $("#dealCurrency").textContent = CURRENCY_LABEL[deal.currency] || deal.currency;
+
+  $("#payDate").value = todayISO();
+  $("#payAmount").value = "";
+
+  $("#payAmountLabel").textContent = `Valor (${deal.currency})`;
+  $("#payAmountHint").textContent = deal.currency === "JPY"
+    ? "Lançamento entra direto no saldo."
+    : "Será convertido para JPY no saldo do mês (use câmbio atualizado).";
+
+  refreshDealSheetUI(deal);
+  renderPaymentsList(deal);
+
+  document.body.classList.add("sheet-open");
+  $("#dealOverlay").setAttribute("aria-hidden","false");
+}
+
+function closeDealSheet(){
+  document.body.classList.remove("sheet-open");
+  $("#dealOverlay").setAttribute("aria-hidden","true");
+  activeDeal = null;
+}
+
+function refreshDealSheetUI(deal){
+  const paid = dealPaidTotal(deal);
+  const rem = dealRemaining(deal);
+  const pct = deal.total > 0 ? Math.min(100, Math.round((paid / deal.total) * 100)) : 0;
+
+  $("#dealRemaining").textContent = formatByCurrency(rem, deal.currency);
+
+  const paidJPY = toJPY(paid, deal.currency);
+  const remJPY = toJPY(rem, deal.currency);
+
+  const extra = (paidJPY === null || remJPY === null)
+    ? "Conversão para JPY indisponível (atualize o câmbio)."
+    : `Convertido: pago ${formatJPY(paidJPY)} • restante ${formatJPY(remJPY)}`;
+
+  $("#dealProgress").textContent = `Pago/Recebido: ${formatByCurrency(paid, deal.currency)} • Progresso: ${pct}% • ${extra}`;
+}
+
+function addPaymentToActiveDeal(){
+  if(!activeDeal) return;
+
+  const { kind, id } = activeDeal;
+  const deal = (state.deals[kind] || []).find(d=>d.id===id);
+  if(!deal) return;
+
+  const date = $("#payDate").value || todayISO();
+  const amount = clampNum($("#payAmount").value);
+
+  if(amount <= 0){
+    toast("Valor inválido.");
+    return;
+  }
+
+  const rem = dealRemaining(deal);
+  const finalAmount = Math.min(amount, rem);
+
+  deal.payments.push({ id: uid(), date, amount: finalAmount });
+
+  save();
+  renderDeals();
+  renderTotalsOnly();
+
+  $("#payAmount").value = "";
+  refreshDealSheetUI(deal);
+  renderPaymentsList(deal);
+
+  toast("Lançado ✅");
+}
+
+function renderPaymentsList(deal){
+  const wrap = $("#paymentsList");
+  wrap.innerHTML = "";
+
+  const list = [...(deal.payments || [])].sort((a,b)=> (a.date > b.date ? -1 : 1));
+
+  if(list.length === 0){
+    wrap.innerHTML = `<div class="muted">Nenhum lançamento registrado ainda.</div>`;
+    return;
+  }
+
+  list.forEach(p=>{
+    const el = document.createElement("div");
+    el.className = "pay-item";
+    el.dataset.pid = p.id;
+
+    const j = toJPY(p.amount, deal.currency);
+    const jInfo = (j === null) ? "JPY: —" : `JPY: ${formatJPY(j)}`;
+
+    el.innerHTML = `
+      <div class="left">
+        <b>${escapeHTML(formatByCurrency(p.amount, deal.currency))}</b>
+        <span>${escapeHTML(p.date)} • ${escapeHTML(jInfo)}</span>
+      </div>
+      <button class="kill" type="button" data-action="removePay" title="Remover">×</button>
+    `;
+
+    wrap.appendChild(el);
+  });
+}
+
+function removePayment(pid){
+  if(!activeDeal) return;
+  const { kind, id } = activeDeal;
+  const deal = (state.deals[kind] || []).find(d=>d.id===id);
+  if(!deal) return;
+
+  if(!confirm("Remover este lançamento?")) return;
+
+  deal.payments = (deal.payments || []).filter(p=>p.id !== pid);
+  save();
+  renderDeals();
+  renderTotalsOnly();
+  refreshDealSheetUI(deal);
+  renderPaymentsList(deal);
+  toast("Removido ✅");
+}
+
+// ---------- autosave suave ----------
 let autosaveTimer = null;
 let isTyping = false;
 
 function autosaveSoon(){
-  if (state.settings.autosave !== "on") return;
-  if (isTyping) return;
-
+  if(state.settings.autosave !== "on") return;
+  if(isTyping) return;
   clearTimeout(autosaveTimer);
-  autosaveTimer = setTimeout(() => {
+  autosaveTimer = setTimeout(()=>{
     saveMonth();
     save();
-  }, 450);
+  }, 350);
 }
 
 function bindTypingGuard(){
-  document.addEventListener("focusin", (e) => {
-    const tag = e.target?.tagName;
-    if (tag === "INPUT" || tag === "TEXTAREA") isTyping = true;
+  document.addEventListener("focusin", (e)=>{
+    if(e.target && (e.target.tagName==="INPUT" || e.target.tagName==="TEXTAREA")){
+      isTyping = true;
+    }
   });
 
-  document.addEventListener("focusout", (e) => {
-    const tag = e.target?.tagName;
-    if (tag === "INPUT" || tag === "TEXTAREA") {
+  document.addEventListener("focusout", (e)=>{
+    if(e.target && (e.target.tagName==="INPUT" || e.target.tagName==="TEXTAREA")){
       isTyping = false;
       autosaveSoon();
     }
   });
 }
 
-/* ✅ Drag-to-scroll + wheel vira scroll horizontal dentro da tabela */
-function enableMatrixScrollAssist(){
-  document.querySelectorAll(".matrix-scroll").forEach((el) => {
-    let isDown = false;
-    let startX = 0;
-    let startLeft = 0;
+// ---------- render totals ----------
+function renderTotalsOnly(){
+  const t = calcTotals();
 
-    // Drag
-    el.addEventListener("pointerdown", (e) => {
-      // não atrapalhar clique nos inputs, mas permitir arrastar mesmo em cima
-      isDown = true;
-      startX = e.clientX;
-      startLeft = el.scrollLeft;
-      el.setPointerCapture?.(e.pointerId);
-      // evita seleção de texto durante o arrasto
-      el.style.userSelect = "none";
-    });
+  $("#incomeJPY").textContent = formatJPY(t.income);
+  $("#expensesJPY").textContent = formatJPY(t.expenses);
+  $("#balanceJPY").textContent = formatJPY(t.balance);
 
-    el.addEventListener("pointermove", (e) => {
-      if (!isDown) return;
-      const dx = e.clientX - startX;
-      el.scrollLeft = startLeft - dx;
-    });
+  const dayA = calcTurnValuePerDay("A");
+  const dayB = calcTurnValuePerDay("B");
 
-    const stop = () => {
-      if (!isDown) return;
-      isDown = false;
-      el.style.userSelect = "";
-    };
+  $("#incomeFormula").textContent =
+    `Fórmula: A(${state.monthData.daysA}×${Math.round(dayA)}) + B(${state.monthData.daysB}×${Math.round(dayB)}) + bônus(${Math.round(state.monthData.bonusJPY)}) + recebidos(${Math.round(t.receivedJPY)})`;
 
-    el.addEventListener("pointerup", stop);
-    el.addEventListener("pointercancel", stop);
-    el.addEventListener("mouseleave", stop);
+  $("#totalFixed").textContent = formatJPY(t.fixed);
+  $("#totalVar").textContent = formatJPY(t.vari);
 
-    // Wheel: rola pro lado com a rodinha (sem precisar shift)
-    el.addEventListener("wheel", (e) => {
-      if (el.scrollWidth <= el.clientWidth) return;
+  $("#kpiIncome").textContent = formatJPY(t.income);
+  $("#kpiExpenses").textContent = formatJPY(t.expenses);
+  $("#kpiBalance").textContent = formatJPY(t.balance);
+  $("#kpiDiff").textContent = formatJPY(t.diff);
 
-      const absY = Math.abs(e.deltaY);
-      const absX = Math.abs(e.deltaX);
-
-      // se o movimento é mais vertical, converte pra horizontal dentro da tabela
-      if (absY > absX) {
-        el.scrollLeft += e.deltaY;
-        e.preventDefault();
-      }
-    }, { passive: false });
-  });
+  renderDeals();
+  saveMonth();
+  save();
+  renderReport();
 }
 
-// --- UI ---
+function renderSavings(){
+  const jpy = clampNum(state.monthData.savedJPY);
+  const brlRate = state.fx?.brl;
+  const usdRate = state.fx?.usd;
+
+  const brl = brlRate ? jpy * brlRate : 0;
+  const usd = usdRate ? jpy * usdRate : 0;
+
+  $("#savedBRL").textContent = brlRate ? formatByCurrency(brl, "BRL") : "—";
+  $("#savedUSD").textContent = usdRate ? formatByCurrency(usd, "USD") : "—";
+
+  renderReport();
+}
+
+// ---------- PDF report ----------
+function setKV(container, items){
+  container.innerHTML = items.map(([k,v]) => `
+    <div class="print-kv"><span>${escapeHTML(k)}</span><b>${escapeHTML(v)}</b></div>
+  `).join("");
+}
+
+function setTable(table, rows){
+  table.innerHTML = `
+    <thead><tr><th>Descrição</th><th>Valor (JPY)</th></tr></thead>
+    <tbody>
+      ${rows.map(r=>`
+        <tr>
+          <td>${escapeHTML((r.desc||"").trim() || "—")}</td>
+          <td>${escapeHTML(formatJPY(rowCost(r)))}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+  `;
+}
+
+function renderReport(){
+  const t = calcTotals();
+  const month = state.month || new Date().toISOString().slice(0,7);
+
+  setKV($("#printMeta"), [
+    ["Mês", month],
+    ["Nome", state.settings.name || "—"],
+    ["Empresa", state.settings.company || "—"],
+    ["Faixa", state.settings.rangeText || "—"],
+    ["Valor/hora (JPY)", String(state.settings.hourValue || 0)],
+    ["Hora extra (x)", String(state.settings.overtimeMult || 1.25)],
+    ["Câmbio", state.fx?.date ? `JPY→BRL ${state.fx.brl?.toFixed(6) ?? "—"} | JPY→USD ${state.fx.usd?.toFixed(6) ?? "—"}` : "—"]
+  ]);
+
+  setKV($("#printIncome"), [
+    ["Dias Turno A", String(state.monthData.daysA ?? 0)],
+    ["Dias Turno B", String(state.monthData.daysB ?? 0)],
+    ["Bônus (JPY)", formatJPY(state.monthData.bonusJPY ?? 0)],
+    ["Receita de turnos (JPY)", formatJPY(t.turns)],
+    ["Recebidos (mês) (JPY)", formatJPY(t.receivedJPY)],
+    ["Receita total (JPY)", formatJPY(t.income)]
+  ]);
+
+  setKV($("#printDealsMonth"), [
+    ["Recebidos no mês (JPY)", formatJPY(t.receivedJPY)],
+    ["Pagos no mês (JPY)", formatJPY(t.paidJPY)],
+    ["Líquido (JPY)", formatJPY(t.receivedJPY - t.paidJPY)]
+  ]);
+
+  setTable($("#printFixed"), state.monthData.expenses.fixed || []);
+  setTable($("#printVar"), state.monthData.expenses.variable || []);
+
+  setKV($("#printTotals"), [
+    ["Despesas Fixas (JPY)", formatJPY(t.fixed)],
+    ["Despesas Variáveis (JPY)", formatJPY(t.vari)],
+    ["Pagos (mês) (JPY)", formatJPY(t.paidJPY)],
+    ["Despesas totais (JPY)", formatJPY(t.expenses)],
+    ["Saldo (JPY)", formatJPY(t.balance)],
+    ["Enviado (JPY)", formatJPY(state.monthData.sentJPY ?? 0)],
+    ["Diferença (JPY)", formatJPY(t.diff)]
+  ]);
+
+  const jpy = clampNum(state.monthData.savedJPY);
+  const brl = state.fx?.brl ? jpy * state.fx.brl : 0;
+  const usd = state.fx?.usd ? jpy * state.fx.usd : 0;
+
+  setKV($("#printSavings"), [
+    ["Economizado (JPY)", formatJPY(jpy)],
+    ["Receita em Real (R$)", state.fx?.brl ? formatByCurrency(brl, "BRL") : "—"],
+    ["Receita em Dólar ($)", state.fx?.usd ? formatByCurrency(usd, "USD") : "—"]
+  ]);
+}
+
+// ---------- drawer ----------
+function openDrawer(){
+  document.body.classList.add("drawer-open");
+  $("#drawerOverlay").setAttribute("aria-hidden","false");
+  $("#btnBurger").setAttribute("aria-expanded","true");
+}
+function closeDrawer(){
+  document.body.classList.remove("drawer-open");
+  $("#drawerOverlay").setAttribute("aria-hidden","true");
+  $("#btnBurger").setAttribute("aria-expanded","false");
+}
+function toggleDrawer(){
+  if(document.body.classList.contains("drawer-open")) closeDrawer();
+  else openDrawer();
+}
+
+// ---------- day scale ----------
+function applyDayScale(){
+  const s = clampNum(state.settings.dayScale || 1);
+  const clamped = Math.max(0.9, Math.min(1.25, s));
+  state.settings.dayScale = clamped;
+  document.documentElement.style.setProperty("--dayScale", String(clamped));
+  save();
+}
+
+function changeDayScale(delta){
+  state.settings.dayScale = (clampNum(state.settings.dayScale) || 1) + delta;
+  applyDayScale();
+  toast(`Fonte da grade: ${(state.settings.dayScale*100).toFixed(0)}%`);
+}
+
+// ---------- bind UI ----------
 function bindUI(){
   $("#btnBurger").addEventListener("click", toggleDrawer);
   $("#btnCloseDrawer").addEventListener("click", closeDrawer);
   $("#drawerOverlay").addEventListener("click", closeDrawer);
 
-  document.querySelectorAll(".drawer-item").forEach(btn => {
-    btn.addEventListener("click", () => {
+  document.querySelectorAll(".drawer-item").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
       const sel = btn.dataset.scroll;
       closeDrawer();
-      if (sel) document.querySelector(sel)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if(sel) document.querySelector(sel)?.scrollIntoView({behavior:"smooth", block:"start"});
     });
   });
 
-  $("#month").addEventListener("change", (e) => {
+  $("#btnFontDown").addEventListener("click", ()=>changeDayScale(-0.05));
+  $("#btnFontUp").addEventListener("click", ()=>changeDayScale(0.05));
+
+  $("#month").addEventListener("change", (e)=>{
     const m = e.target.value;
     state.month = m;
 
@@ -465,11 +876,12 @@ function bindUI(){
     toast("Mês carregado ✅");
   });
 
-  const bindSetting = (id, key, parser = clampNum) => {
-    $(id).addEventListener("input", (e) => {
-      state.settings[key] = (parser === String) ? e.target.value : parser(e.target.value);
+  const bindSetting = (id, key, parser=clampNum)=>{
+    $(id).addEventListener("input", (e)=>{
+      state.settings[key] = (parser===String) ? e.target.value : parser(e.target.value);
       renderTotalsOnly();
       autosaveSoon();
+      save();
     });
   };
 
@@ -479,10 +891,10 @@ function bindUI(){
   bindSetting("#hourValue","hourValue", clampNum);
   bindSetting("#overtimeMult","overtimeMult", clampNum);
 
-  $("#autosave").addEventListener("change", (e) => {
+  $("#autosave").addEventListener("change", (e)=>{
     state.settings.autosave = e.target.value;
     save();
-    toast(`Auto-salvar: ${state.settings.autosave === "on" ? "ligado" : "desligado"}`);
+    toast(`Auto-salvar: ${state.settings.autosave==="on" ? "ligado" : "desligado"}`);
   });
 
   bindSetting("#aNormal","aNormal", clampNum);
@@ -490,13 +902,10 @@ function bindUI(){
   bindSetting("#bNormal","bNormal", clampNum);
   bindSetting("#bExtra","bExtra", clampNum);
 
-  const bindMonth = (id, key) => {
-    $(id).addEventListener("input", (e) => {
+  const bindMonth = (id, key)=>{
+    $(id).addEventListener("input", (e)=>{
       state.monthData[key] = clampNum(e.target.value);
-
-      if (key === "savedJPY") renderSavings();
-      else renderTotalsOnly();
-
+      renderTotalsOnly();
       autosaveSoon();
     });
   };
@@ -507,94 +916,144 @@ function bindUI(){
   bindMonth("#sentJPY","sentJPY");
   bindMonth("#savedJPY","savedJPY");
 
-  document.querySelectorAll("[data-add]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const kind = btn.dataset.add;
-      addExpenseRow(kind);
+  document.querySelectorAll("[data-add]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      addExpenseRow(btn.dataset.add);
     });
   });
 
-  $("#tbodyFixed").addEventListener("input", onMatrixInput);
-  $("#tbodyVar").addEventListener("input", onMatrixInput);
+  // Delegação nas despesas
+  $("#secExpenses").addEventListener("input", (e)=>{
+    const rowEl = e.target.closest(".exp-row");
+    if(!rowEl) return;
 
-  $("#tbodyFixed").addEventListener("click", onMatrixClick);
-  $("#tbodyVar").addEventListener("click", onMatrixClick);
+    const kind = rowEl.dataset.kind;
+    const id = rowEl.dataset.id;
+    const row = findRow(kind, id);
+    if(!row) return;
 
-  $("#btnSave").addEventListener("click", () => {
+    const field = e.target.dataset.field;
+
+    if(field === "desc"){
+      row.desc = e.target.value;
+      autosaveSoon();
+      renderTotalsOnly();
+      return;
+    }
+
+    if(field === "monthly"){
+      row.monthly = clampNum(e.target.value);
+      renderTotalsOnly();
+      autosaveSoon();
+      return;
+    }
+
+    if(field === "day"){
+      const day = Number(e.target.dataset.day);
+      row.values[day] = clampNum(e.target.value);
+      renderTotalsOnly();
+      autosaveSoon();
+      return;
+    }
+  });
+
+  $("#secExpenses").addEventListener("click", (e)=>{
+    const rowEl = e.target.closest(".exp-row");
+    if(!rowEl) return;
+
+    const kind = rowEl.dataset.kind;
+    const id = rowEl.dataset.id;
+    const row = findRow(kind, id);
+    if(!row) return;
+
+    const action = e.target.dataset.action;
+    if(!action) return;
+
+    if(action === "remove"){
+      removeExpenseRow(kind, id);
+      return;
+    }
+
+    if(action === "toggleDaily"){
+      row.useDaily = !row.useDaily;
+      if(row.useDaily) row.monthly = 0;
+      renderExpenseLists();
+      renderTotalsOnly();
+      autosaveSoon();
+      return;
+    }
+  });
+
+  // Deals add
+  document.querySelectorAll("[data-deal-add]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      addDeal(btn.dataset.dealAdd);
+    });
+  });
+
+  // Deals delegate
+  $("#secDeals").addEventListener("click", (e)=>{
+    const rowEl = e.target.closest(".deal-row");
+    if(!rowEl) return;
+
+    const kind = rowEl.dataset.kind;
+    const id = rowEl.dataset.id;
+
+    const action = e.target.dataset.action;
+    if(!action) return;
+
+    if(action === "removeDeal"){
+      removeDeal(kind, id);
+      return;
+    }
+
+    if(action === "openPay"){
+      openDealSheet(kind, id);
+      return;
+    }
+  });
+
+  // deal sheet
+  $("#dealOverlay").addEventListener("click", closeDealSheet);
+  $("#btnCloseDealSheet").addEventListener("click", closeDealSheet);
+  $("#btnAddPayment").addEventListener("click", addPaymentToActiveDeal);
+  $("#btnFinishDeal").addEventListener("click", closeDealSheet);
+
+  $("#paymentsList").addEventListener("click", (e)=>{
+    const btn = e.target.closest("[data-action='removePay']");
+    if(!btn) return;
+    const item = e.target.closest(".pay-item");
+    if(!item) return;
+    removePayment(item.dataset.pid);
+  });
+
+  $("#btnSave").addEventListener("click", ()=>{
     saveMonth();
     save();
     toast("Salvo ✅");
   });
 
-  $("#btnClearMonth").addEventListener("click", clearMonth);
-  $("#btnPDF").addEventListener("click", () => window.print());
-  $("#btnRefreshFX").addEventListener("click", () => fetchFX(true));
-}
-
-function onMatrixClick(e){
-  const kill = e.target.closest(".kill");
-  if (!kill) return;
-  const kind = kill.dataset.kind;
-  const id = kill.dataset.id;
-  removeExpenseRow(kind, id);
-}
-
-function onMatrixInput(e){
-  const el = e.target;
-  if (!el) return;
-
-  const kind = el.dataset.kind;
-  const id = el.dataset.id;
-  const field = el.dataset.field;
-
-  const rows = state.monthData.expenses[kind];
-  const row = rows.find(r => r.id === id);
-  if (!row) return;
-
-  if (field === "desc"){
-    row.desc = el.value;
+  $("#btnClearMonth").addEventListener("click", ()=>{
+    if(!state.month) return;
+    if(!confirm("Limpar os dados deste mês?")) return;
+    localStorage.removeItem(getMonthKey(state.month));
+    state.monthData = defaultState().monthData;
+    renderAll();
     autosaveSoon();
-    return;
-  }
-
-  if (field === "v"){
-    const day = Number(el.dataset.day);
-    row.values[day] = clampNum(el.value);
-
-    const td = document.querySelector(`[data-total-for="${id}"]`);
-    if (td) td.textContent = Math.round(row.values.reduce((a,v)=>a+clampNum(v),0)).toLocaleString("pt-BR");
-
-    renderTotalsOnly();
-    renderFootersOnly();
-    autosaveSoon();
-  }
-}
-
-function addExpenseRow(kind){
-  state.monthData.expenses[kind].push({
-    id: uid(),
-    desc: "",
-    values: Array(DAYS_IN_MONTH).fill(0)
+    toast("Mês limpo ✅");
   });
-  renderMatrices();
-  autosaveSoon();
-  toast("Item adicionado ✅");
+
+  $("#btnPDF").addEventListener("click", ()=>{
+    renderReport();
+    window.print();
+  });
+
+  $("#btnRefreshFX").addEventListener("click", ()=>fetchFX(true));
 }
 
-function removeExpenseRow(kind, id){
-  state.monthData.expenses[kind] = state.monthData.expenses[kind].filter(r => r.id !== id);
-  renderMatrices();
-  renderTotalsOnly();
-  autosaveSoon();
-  toast("Item removido ✅");
-}
-
-// --- Rendering ---
+// ---------- render all ----------
 function renderAll(){
-  const current = new Date().toISOString().slice(0,7);
-  state.month = state.month || current;
-
-  $("#month").value = state.month;
+  $("#month").value = state.month || new Date().toISOString().slice(0,7);
 
   $("#name").value = state.settings.name || "";
   $("#company").value = state.settings.company || "";
@@ -615,89 +1074,22 @@ function renderAll(){
   $("#sentJPY").value = state.monthData.sentJPY ?? 0;
   $("#savedJPY").value = state.monthData.savedJPY ?? 0;
 
-  renderMatrices();
+  applyDayScale();
+  renderExpenseLists();
+  renderDeals();
   renderTotalsOnly();
   renderFX();
   renderSavings();
-
-  // garante o assist depois de renderizar DOM
-  enableMatrixScrollAssist();
+  renderReport();
 }
 
-function renderMatrices(){
-  buildMatrixThead("#theadFixed");
-  buildMatrixThead("#theadVar");
-
-  buildMatrixBody("#tbodyFixed", "fixed");
-  buildMatrixBody("#tbodyVar", "variable");
-
-  renderFootersOnly();
-
-  // reativa assist no DOM novo
-  enableMatrixScrollAssist();
-}
-
-function renderFootersOnly(){
-  buildMatrixTfoot("#tfootFixed", "fixed");
-  buildMatrixTfoot("#tfootVar", "variable");
-}
-
-function renderTotalsOnly(){
-  const t = calcTotals();
-
-  $("#incomeJPY").textContent = formatJPY(t.income);
-  $("#expensesJPY").textContent = formatJPY(t.expenses);
-  $("#balanceJPY").textContent = formatJPY(t.balance);
-
-  const dayA = calcTurnValuePerDay("A");
-  const dayB = calcTurnValuePerDay("B");
-  $("#incomeFormula").textContent =
-    `Fórmula: A(${state.monthData.daysA}×${Math.round(dayA)}) + B(${state.monthData.daysB}×${Math.round(dayB)}) + bônus(${Math.round(state.monthData.bonusJPY)})`;
-
-  $("#totalFixed").textContent = formatJPY(t.fixed);
-  $("#totalVar").textContent = formatJPY(t.vari);
-
-  $("#kpiIncome").textContent = formatJPY(t.income);
-  $("#kpiExpenses").textContent = formatJPY(t.expenses);
-  $("#kpiBalance").textContent = formatJPY(t.balance);
-  $("#kpiDiff").textContent = formatJPY(t.diff);
-}
-
-function renderSavings(){
-  const jpy = clampNum(state.monthData.savedJPY);
-  const brlRate = state.fx?.brl;
-  const usdRate = state.fx?.usd;
-
-  const brl = brlRate ? jpy * brlRate : 0;
-  const usd = usdRate ? jpy * usdRate : 0;
-
-  $("#savedBRL").textContent = brlRate ? formatMoney(brl, "BRL") : "—";
-  $("#savedUSD").textContent = usdRate ? formatMoney(usd, "USD") : "—";
-}
-
-// --- Drawer ---
-function openDrawer(){
-  document.body.classList.add("drawer-open");
-  $("#drawerOverlay").setAttribute("aria-hidden","false");
-  $("#btnBurger").setAttribute("aria-expanded","true");
-}
-function closeDrawer(){
-  document.body.classList.remove("drawer-open");
-  $("#drawerOverlay").setAttribute("aria-hidden","true");
-  $("#btnBurger").setAttribute("aria-expanded","false");
-}
-function toggleDrawer(){
-  if (document.body.classList.contains("drawer-open")) closeDrawer();
-  else openDrawer();
-}
-
-// --- Init ---
+// ---------- init ----------
 function init(){
   const current = new Date().toISOString().slice(0,7);
   state.month = state.month || current;
 
   const loaded = loadMonth(state.month);
-  if (loaded) state.monthData = loaded;
+  if(loaded) state.monthData = loaded;
 
   normalize(state);
 
