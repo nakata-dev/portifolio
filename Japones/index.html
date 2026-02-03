@@ -3,31 +3,43 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>105X Japonês (Auto)</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#070a11" />
+  <title>NIHONGO321</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
-  <header class="topbar">
+  <!-- HEADER FIXO -->
+  <header class="topbar" role="banner">
     <div class="brand">
-      <div class="logo">105X</div>
+      <div class="logo" aria-hidden="true"></div>
       <div class="brandText">
-        <div class="brandTitle">japones no automatico</div>
-        <div class="brandSub" id="subStatus">leve e direto</div>
+        <div class="brandTitle">NIHONGO321</div>
+        <div class="brandSub" id="subStatus">0 ciclos • 0 dominadas</div>
       </div>
     </div>
 
-    <div class="hud">
+    <div class="hud" aria-label="HUD">
+      <div class="hudItem" title="moedas">
+        <span class="hudIcon">🪙</span>
+        <span id="hudCoinsVal">0</span>
+      </div>
       <button class="hudBtn" id="hudSound" title="som">🔊</button>
-      <button class="hudBtn" id="hudVibe" title="vibracao">📳</button>
-      <div class="hudItem" title="moedas"><span class="hudIcon">🪙</span><span id="hudCoinsVal">0</span></div>
-      <button class="hudBtn" id="btnSettings" title="ajustes">⚙️</button>
+      <button class="hudBtn" id="hudVibe" title="vibração">📳</button>
+      <button class="hudBtn" title="ajustes" onclick="location.hash='#/settings'">⚙️</button>
     </div>
   </header>
 
-  <main id="app" class="app" role="main"></main>
+  <!-- CONTEÚDO -->
+  <main class="app" id="app" role="main"></main>
 
-  <div id="toast" class="toast" aria-live="polite"></div>
+  <!-- FOOTER FIXO -->
+  <footer class="footerbar" role="contentinfo">
+    <div class="footerText">Copyright @ 2026 - Ailton A. Nakata</div>
+  </footer>
 
-  <script src="app.js"></script>
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script src="./app.js"></script>
 </body>
 </html>

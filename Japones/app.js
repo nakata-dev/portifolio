@@ -1,12 +1,11 @@
 /* =========================================================
    105X Japonês (SPA leve, só 105X)
-   - HTML/CSS/JS puro
    - localStorage
-   - anti-kanji (JP só hiragana/katakana + pontuação básica)
-   - 100 moedas por ciclo ✅
-   - PULAR passa para próxima frase ✅
-   - IR carrega frase escolhida ✅
-   - efeitos leves: som + brilho + moedas flutuantes ✅
+   - aceita kanji opcionalmente
+   - furigana manual via: 漢字{かな}
+   - ✅ aceita parênteses japoneses: （ ）
+   - ✅ novas frases entram no topo
+   - ✅ gerenciar frases: editar / excluir (botão canto sup. direito)
    ========================================================= */
 
 const LS_KEY = "jp_105x_v2";
@@ -17,30 +16,80 @@ const now = () => Date.now();
 const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 const uid = (p = "id") => `${p}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
 const escapeHTML = (s) =>
-  String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+  String(s)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 
 function safeJSONParse(str) {
   try { return JSON.parse(str); } catch { return null; }
 }
 
-/* ---------- anti-kanji validation ----------
-   Permitir:
+/* ---------- JP validation ----------
+   Permite:
    - hiragana \u3040-\u309F
    - katakana \u30A0-\u30FF
-   - espaços (normal e japonês)
-   - pontuação básica
+   - kanji (CJK) \u4E00-\u9FFF
+   - espaço normal e japonês
    - números
+   - pontuação básica
+   - furigana manual com chaves: { }
+   - ✅ parênteses fullwidth: （ ）
 */
-const JP_ALLOWED_RE = /^[\u3040-\u309F\u30A0-\u30FF 　。、！？・ー\-~!?.,:;()「」『』…\n\r\t0-9]*$/;
+const JP_ALLOWED_RE =
+  /^[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF 　。、！？・ー\-~!?.,:;()（）「」『』【】［］…\n\r\t0-9{}]*$/;
 
 function isValidJP(text) {
   if (typeof text !== "string") return false;
   const t = text.trim();
   if (!t) return false;
-  return JP_ALLOWED_RE.test(t);
+
+  if (!JP_ALLOWED_RE.test(t)) return false;
+
+  const open = (t.match(/{/g) || []).length;
+  const close = (t.match(/}/g) || []).length;
+  if (open !== close) return false;
+
+  if (/\{\s*\}/.test(t)) return false;
+
+  return true;
 }
 
-/* ---------- seed (20 frases, sem kanji) ---------- */
+/* ---------- Furigana parsing ----------
+   base{reading} -> ruby
+   Ex: 仕事{しごと} は いそがしい
+*/
+const FURI_RE = /([^{}\s]+)\{([^{}]+)\}/g;
+
+function jpStripFurigana(raw) {
+  return String(raw || "").replace(FURI_RE, (_, base) => base);
+}
+
+function jpHasFurigana(raw) {
+  FURI_RE.lastIndex = 0;
+  return FURI_RE.test(String(raw || ""));
+}
+
+function jpToRubyHTML(raw) {
+  const s = String(raw || "");
+  FURI_RE.lastIndex = 0;
+
+  let out = "";
+  let last = 0;
+  let m;
+  while ((m = FURI_RE.exec(s)) !== null) {
+    const [full, base, reading] = m;
+    const i = m.index;
+    out += escapeHTML(s.slice(last, i));
+    out += `<ruby>${escapeHTML(base)}<rt>${escapeHTML(reading.trim())}</rt></ruby>`;
+    last = i + full.length;
+  }
+  out += escapeHTML(s.slice(last));
+  return out;
+}
+
+/* ---------- seed (20 frases) ---------- */
 function seedPhrases() {
   const t = now();
   return [
@@ -54,7 +103,6 @@ function seedPhrases() {
     { id:"ph_008", jp:"もういちど おねがい", pt:"de novo, por favor", newWords:[{jp:"もういちど",pt:"mais uma vez"},{jp:"おねがい",pt:"por favor"}], createdAt:t, updatedAt:t },
     { id:"ph_009", jp:"ゆっくり おねがい", pt:"devagar, por favor", newWords:[{jp:"ゆっくり",pt:"devagar"}], createdAt:t, updatedAt:t },
     { id:"ph_010", jp:"わからない", pt:"nao entendi / nao sei", newWords:[{jp:"わからない",pt:"nao entendi"}], createdAt:t, updatedAt:t },
-
     { id:"ph_011", jp:"これ どこ", pt:"onde fica isto?", newWords:[{jp:"これ",pt:"isto"},{jp:"どこ",pt:"onde"}], createdAt:t, updatedAt:t },
     { id:"ph_012", jp:"これ なに", pt:"o que e isto?", newWords:[{jp:"なに",pt:"o que"}], createdAt:t, updatedAt:t },
     { id:"ph_013", jp:"たすけて", pt:"me ajuda", newWords:[{jp:"たすけて",pt:"me ajuda"}], createdAt:t, updatedAt:t },
@@ -75,13 +123,7 @@ function defaultState() {
 
   const progress = {};
   for (const p of phrases) {
-    progress[p.id] = {
-      status: "training",     // training | mastered
-      cycleStart: 14,         // começa em 14 → 1
-      count: 14,              // contador atual no ciclo
-      masteredAt: null,
-      history: []
-    };
+    progress[p.id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
   }
 
   return {
@@ -89,8 +131,7 @@ function defaultState() {
 
     prefs: {
       audio: { enabled: true, volume: 0.35, unlocked: false },
-      haptics: { enabled: true },
-      motion: { reduced: "auto" }
+      haptics: { enabled: true }
     },
 
     stats: {
@@ -101,7 +142,6 @@ function defaultState() {
     },
 
     bank: { phrases },
-
     progress,
 
     session: {
@@ -113,8 +153,7 @@ function defaultState() {
     },
 
     ui: {
-      lastToast: "",
-      lastCheerAt: 0
+      lastToast: ""
     }
   };
 }
@@ -127,8 +166,6 @@ function loadState() {
   if (!raw) return defaultState();
   const parsed = safeJSONParse(raw);
   if (!parsed || !parsed.app) return defaultState();
-
-  // migração simples: se for antigo, recomeça leve
   if (parsed.app.schemaVersion !== 2) return defaultState();
   return parsed;
 }
@@ -197,6 +234,7 @@ const APP = $("#app");
 
 function toast(msg) {
   const el = $("#toast");
+  if (!el) return;
   el.textContent = msg;
   el.classList.add("on");
   clearTimeout(toast._t);
@@ -227,12 +265,17 @@ function sparkOn(node) {
 }
 
 function refreshHUD() {
-  $("#hudCoinsVal").textContent = String(STATE.stats.coins || 0);
-  $("#hudSound").textContent = STATE.prefs.audio.enabled ? "🔊" : "🔇";
-  $("#hudVibe").textContent = STATE.prefs.haptics.enabled ? "📳" : "📴";
+  const coinsEl = $("#hudCoinsVal");
+  if (coinsEl) coinsEl.textContent = String(STATE.stats.coins || 0);
 
-  const st = `${STATE.stats.cyclesDone || 0} ciclos • ${STATE.stats.phrasesMastered || 0} dominadas`;
-  $("#subStatus").textContent = st;
+  const soundEl = $("#hudSound");
+  if (soundEl) soundEl.textContent = STATE.prefs.audio.enabled ? "🔊" : "🔇";
+
+  const vibeEl = $("#hudVibe");
+  if (vibeEl) vibeEl.textContent = STATE.prefs.haptics.enabled ? "📳" : "📴";
+
+  const sub = $("#subStatus");
+  if (sub) sub.textContent = `${STATE.stats.cyclesDone || 0} ciclos • ${STATE.stats.phrasesMastered || 0} dominadas`;
 }
 
 function route() {
@@ -242,16 +285,20 @@ function route() {
 function nav(hash) { location.hash = hash; }
 
 /* ---------- session / queue ---------- */
+function getProg(id) {
+  if (!STATE.progress[id]) {
+    STATE.progress[id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
+  }
+  return STATE.progress[id];
+}
+
 function buildQueue() {
   const training = [];
   const mastered = [];
-
   for (const p of STATE.bank.phrases) {
     const pr = getProg(p.id);
     (pr.status === "mastered" ? mastered : training).push(p.id);
   }
-
-  // fila principal = treino primeiro
   return training.concat(mastered);
 }
 
@@ -266,30 +313,22 @@ function startAuto() {
   nav("#/105x");
 }
 
-function setPhraseById(id) {
-  const idx = STATE.session.queue.indexOf(id);
-  STATE.session.phraseId = id;
-  if (idx >= 0) STATE.session.index = idx;
-  resetCountForPhrase(id);
-  saveState();
-}
-
-/* ---------- progress ---------- */
 function getPhrase(id) {
   return STATE.bank.phrases.find(p => p.id === id) || null;
-}
-
-function getProg(id) {
-  if (!STATE.progress[id]) {
-    STATE.progress[id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
-  }
-  return STATE.progress[id];
 }
 
 function resetCountForPhrase(id) {
   const pr = getProg(id);
   const cs = clamp(pr.cycleStart || 14, 1, 14);
   pr.count = cs;
+  saveState();
+}
+
+function setPhraseById(id) {
+  const idx = STATE.session.queue.indexOf(id);
+  STATE.session.phraseId = id;
+  if (idx >= 0) STATE.session.index = idx;
+  resetCountForPhrase(id);
   saveState();
 }
 
@@ -301,7 +340,6 @@ function addCoins(amount) {
 }
 
 function nextPhrase() {
-  // avança na fila
   const q = STATE.session.queue;
   if (!q.length) return;
 
@@ -312,19 +350,14 @@ function nextPhrase() {
 }
 
 function skipPhrase() {
-  // sem culpa: joga a frase atual pro fim e passa pra próxima
   const q = STATE.session.queue;
   const current = STATE.session.phraseId;
   if (!current || !q.length) return;
 
   const idx = STATE.session.index;
-
-  // remove atual
   q.splice(idx, 1);
-  // empurra pro fim
   q.push(current);
 
-  // mantém index apontando para a próxima posição (que agora tem outro item)
   STATE.session.index = clamp(idx, 0, q.length - 1);
   STATE.session.phraseId = q[STATE.session.index];
 
@@ -335,15 +368,22 @@ function skipPhrase() {
   beep("tuk");
 }
 
-/* ---------- karaoke kana (leve) ---------- */
+/* ---------- karaoke ---------- */
 function segmentText(text) {
-  // simples: por caractere (barato e ok)
   return [...String(text || "")];
 }
 
-function setKanaLine(el, text) {
-  const segs = segmentText(text);
+function setKanaLine(el, rawText) {
+  const hasFuri = jpHasFurigana(rawText);
+  if (hasFuri) {
+    el.innerHTML = jpToRubyHTML(rawText);
+    el.dataset.mode = "ruby";
+    return;
+  }
+
+  const segs = segmentText(rawText);
   el.innerHTML = segs.map((s, i) => `<span class="kseg" data-idx="${i}">${escapeHTML(s)}</span>`).join("");
+  el.dataset.mode = "karaoke";
 }
 
 function estimateDurationMs(text, rate) {
@@ -354,11 +394,16 @@ function estimateDurationMs(text, rate) {
   return base / r;
 }
 
-function karaokePlay(el, text, rate) {
-  const segs = segmentText(text);
-  el.querySelectorAll(".kseg").forEach(sp => sp.classList.remove("on"));
+function karaokePlay(el, rawText, rate) {
+  const segEls = el.querySelectorAll(".kseg");
+  if (!segEls || segEls.length === 0) return;
 
-  const dur = estimateDurationMs(text, rate);
+  segEls.forEach(sp => sp.classList.remove("on"));
+
+  const plain = rawText;
+  const segs = segmentText(plain);
+
+  const dur = estimateDurationMs(plain, rate);
   const n = segs.length || 1;
   const step = dur / n;
 
@@ -400,26 +445,34 @@ function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
   return true;
 }
 
-function speakWithKaraoke(text, rate, kanaEl) {
+function speakWithKaraoke(jpRaw, rate, kanaEl) {
+  const plain = jpStripFurigana(jpRaw);
+
   const ok = ttsSpeak(
-    text,
+    plain,
     rate,
-    () => karaokePlay(kanaEl, text, rate),
+    () => karaokePlay(kanaEl, plain, rate),
     () => {}
   );
-  if (!ok) {
-    karaokePlay(kanaEl, text, rate);
-    toast("sem audio. mas da pra treinar lendo.");
-  }
+
+  if (!ok) toast("sem audio. mas da pra treinar lendo.");
 }
 
-/* ---------- call and response (sem voz) ---------- */
-function callAndResponse(text, rate, kanaEl, onDone) {
-  speakWithKaraoke(text, rate, kanaEl);
-  const t = estimateDurationMs(text, rate);
-  setTimeout(() => {
-    showNowYouSheet(onDone);
-  }, t + 90);
+/* ---------- call and response ---------- */
+function callAndResponse(jpRaw, rate, kanaEl, onDone) {
+  const plain = jpStripFurigana(jpRaw);
+
+  const ok = ttsSpeak(
+    plain,
+    rate,
+    () => karaokePlay(kanaEl, plain, rate),
+    () => {}
+  );
+
+  const t = estimateDurationMs(plain, rate);
+  setTimeout(() => showNowYouSheet(onDone), t + 90);
+
+  if (!ok) toast("sem audio. mas da pra treinar lendo.");
 }
 
 function showNowYouSheet(onDone) {
@@ -458,13 +511,14 @@ function onRepeat() {
   const pid = STATE.session.phraseId;
   if (!pid) return;
 
+  const p = getPhrase(pid);
+  if (!p) return;
+
   const pr = getProg(pid);
   const cs = clamp(pr.cycleStart || 14, 1, 14);
 
-  // garante count válido
   pr.count = clamp(pr.count || cs, 1, cs);
 
-  // contador desce
   if (pr.count > 1) {
     pr.count -= 1;
     pr.history.push({ at: now(), event: "rep", count: pr.count });
@@ -475,7 +529,7 @@ function onRepeat() {
     return;
   }
 
-  // chegou em 1: ciclo concluído ✅
+  // ciclo concluído
   pr.history.push({ at: now(), event: "cycle_done", cycleStart: cs });
 
   STATE.stats.cyclesDone = (STATE.stats.cyclesDone || 0) + 1;
@@ -484,22 +538,17 @@ function onRepeat() {
   beep("ding");
   vibrate([12]);
 
-  // efeito visual no contador
-  const counter = $("#counterBox");
-  sparkOn(counter);
+  sparkOn($("#counterBox"));
 
-  // reduz cicloStart
   if (pr.cycleStart > 1) pr.cycleStart -= 1;
   else pr.cycleStart = 1;
 
-  // frase dominada no fim (1 → 1 concluído)
   let masteredNow = false;
   if (pr.cycleStart === 1 && pr.status !== "mastered") {
     pr.status = "mastered";
     pr.masteredAt = now();
     STATE.stats.phrasesMastered = (STATE.stats.phrasesMastered || 0) + 1;
 
-    // bônus extra pra virar “tesouro”
     addCoins(500);
     floatCoin("+500 🪙");
     beep("level");
@@ -508,7 +557,6 @@ function onRepeat() {
     masteredNow = true;
   }
 
-  // reinicia contador no novo ciclo
   pr.count = clamp(pr.cycleStart, 1, 14);
   saveState();
 
@@ -542,6 +590,7 @@ function render() {
   if (r === "#/home") return renderHome();
   if (r === "#/105x") return render105x();
   if (r === "#/edit") return renderEdit();
+  if (r === "#/manage") return renderManage();
   if (r === "#/backup") return renderBackup();
   if (r === "#/settings") return renderSettings();
 
@@ -614,7 +663,7 @@ function render105x() {
       <div class="item">
         <div class="itemTop">
           <div>
-            <p class="itemTitle">${escapeHTML(x.jp)}</p>
+            <p class="itemTitle">${escapeHTML(jpStripFurigana(x.jp))}</p>
             <div class="itemMeta">${escapeHTML(x.pt)} • ${st}</div>
           </div>
           <button class="btn" data-action="goto" data-id="${x.id}">IR</button>
@@ -625,7 +674,9 @@ function render105x() {
 
   APP.innerHTML = `
     <div class="stack">
-      <section class="card stack" id="view105x">
+      <section class="card stack viewRel" id="view105x">
+        <button class="cornerManageBtn" title="editar / excluir" aria-label="editar / excluir" data-nav="#/manage">✏️</button>
+
         <div class="row row--between">
           <div class="badge">105x</div>
           <div class="badge">${STATE.session.callMode ? "chamada on" : "chamada off"}</div>
@@ -685,7 +736,6 @@ function render105xBodyOnly() {
   const pid = STATE.session.phraseId;
   const p = getPhrase(pid);
   const pr = getProg(pid);
-
   if (!p) return;
 
   const cs = clamp(pr.cycleStart || 14, 1, 14);
@@ -693,50 +743,22 @@ function render105xBodyOnly() {
 
   $("#countVal").textContent = String(count);
   $("#cycleSub").textContent = `ciclo ${cs} → 1`;
+
   const kanaEl = $("#kanaLine");
   setKanaLine(kanaEl, p.jp);
+
   $("#ptLine").textContent = p.pt;
 
   const nw = $("#newWordsBox");
   nw.innerHTML = renderNewWords(p.newWords || []);
 
-  // fecha sheet se mudou de frase e não foi ciclo recente
   const sheet = $("#cycleSheet");
   if (sheet && sheet.style.display === "block" && count > 1) {
     sheet.style.display = "none";
   }
 }
 
-/* ---------- cadastro (leve) ---------- */
-function renderEdit() {
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">cadastro</div>
-          <button class="btn" data-nav="#/home">voltar</button>
-        </div>
-
-        <div class="sheet stack">
-          <div class="small">jp (somente ひらがな / カタカナ)</div>
-          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: おつかれさま" />
-          <div class="small">pt</div>
-          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: bom trabalho" />
-          <div class="small">palavras novas (opcional) formato: jp=pt, jp=pt</div>
-          <input id="inNW" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: ねむい=sono, いま=agora" />
-
-          <button class="btn btn--ok btn--full" data-action="addPhrase">salvar frase</button>
-          <div class="small" id="editMsg"></div>
-        </div>
-
-        <div class="sep"></div>
-
-        <div class="badge">frases: ${STATE.bank.phrases.length}</div>
-      </section>
-    </div>
-  `;
-}
-
+/* ---------- cadastro ---------- */
 function parseNewWords(input) {
   const raw = String(input || "").trim();
   if (!raw) return [];
@@ -748,6 +770,85 @@ function parseNewWords(input) {
     out.push({ jp, pt });
   }
   return out;
+}
+
+function renderEdit(editingId = null) {
+  const editing = editingId ? getPhrase(editingId) : null;
+
+  const jpVal = editing ? editing.jp : "";
+  const ptVal = editing ? editing.pt : "";
+  const nwVal = editing && Array.isArray(editing.newWords)
+    ? editing.newWords.map(x => `${x.jp}=${x.pt}`).join(", ")
+    : "";
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">${editing ? "editar frase" : "cadastro"}</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
+
+        <div class="sheet stack">
+          <div class="small">jp (aceita kanji. furigana manual: 仕事{しごと}. parênteses （ ） também ok)</div>
+          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 私{わたし} の名前{なまえ} は あきおです。" value="${escapeHTML(jpVal)}" />
+          <div class="small">pt</div>
+          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: meu nome é Akio." value="${escapeHTML(ptVal)}" />
+          <div class="small">palavras novas (opcional) formato: jp=pt, jp=pt</div>
+          <input id="inNW" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 名前{なまえ}=nome" value="${escapeHTML(nwVal)}" />
+
+          <button class="btn btn--ok btn--full" data-action="${editing ? "saveEdit" : "addPhrase"}" data-id="${editing ? editing.id : ""}">
+            ${editing ? "salvar alteracoes" : "salvar frase"}
+          </button>
+
+          ${editing ? `<button class="btn btn--muted btn--full" data-nav="#/manage">voltar pro gerenciar</button>` : ""}
+
+          <div class="small" id="editMsg"></div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="badge">frases: ${STATE.bank.phrases.length}</div>
+      </section>
+    </div>
+  `;
+}
+
+/* ---------- gerenciar (editar/excluir) ---------- */
+function renderManage() {
+  const rows = STATE.bank.phrases.map(p => {
+    const pr = getProg(p.id);
+    const st = pr.status === "mastered" ? "dominada ✓" : "treino";
+    return `
+      <div class="item">
+        <div class="itemTop">
+          <div style="min-width:0">
+            <p class="itemTitle">${escapeHTML(jpStripFurigana(p.jp))}</p>
+            <div class="itemMeta">${escapeHTML(p.pt)} • ${st}</div>
+          </div>
+          <div class="manageBtns">
+            <button class="btn btn--ghost" data-action="editPhrase" data-id="${p.id}">editar</button>
+            <button class="btn btn--bad" data-action="deletePhrase" data-id="${p.id}">excluir</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">editar / excluir</div>
+          <button class="btn" data-nav="#/105x">voltar</button>
+        </div>
+
+        <div class="small">dica: furigana em cima usando { }. exemplo: 名前{なまえ}</div>
+
+        <div class="list">${rows}</div>
+      </section>
+    </div>
+  `;
 }
 
 /* ---------- backup ---------- */
@@ -793,7 +894,7 @@ function renderSettings() {
         <div class="sheet stack">
           <div class="small">volume do som (leve)</div>
           <input id="vol" type="range" min="0" max="1" step="0.05" value="${STATE.prefs.audio.volume ?? 0.35}" />
-          <div class="small">dica: som so toca depois do primeiro toque.</div>
+          <div class="small">som so toca depois do primeiro toque.</div>
         </div>
 
         <div class="sep"></div>
@@ -802,6 +903,38 @@ function renderSettings() {
       </section>
     </div>
   `;
+}
+
+/* ---------- phrase actions (edit/delete) ---------- */
+function deletePhraseById(id) {
+  const idx = STATE.bank.phrases.findIndex(p => p.id === id);
+  if (idx < 0) return false;
+
+  // remove banco
+  STATE.bank.phrases.splice(idx, 1);
+
+  // remove progresso
+  delete STATE.progress[id];
+
+  // remove da fila
+  if (Array.isArray(STATE.session.queue) && STATE.session.queue.length) {
+    STATE.session.queue = STATE.session.queue.filter(x => x !== id);
+  }
+
+  // se era a frase atual, move para próxima disponível
+  if (STATE.session.phraseId === id) {
+    if (!STATE.session.queue.length) {
+      STATE.session.phraseId = null;
+      STATE.session.index = 0;
+    } else {
+      STATE.session.index = clamp(STATE.session.index, 0, STATE.session.queue.length - 1);
+      STATE.session.phraseId = STATE.session.queue[STATE.session.index] || STATE.session.queue[0];
+      resetCountForPhrase(STATE.session.phraseId);
+    }
+  }
+
+  saveState();
+  return true;
 }
 
 /* ---------- global click delegation ---------- */
@@ -816,14 +949,11 @@ document.addEventListener("click", (e) => {
 
   const act = btn.dataset.action;
 
-  if (act === "repeat") {
-    onRepeat();
-    return;
-  }
+  if (act === "repeat") { onRepeat(); return; }
 
   if (act === "skip") {
     unlockAudio();
-    skipPhrase();        // ✅ agora passa para próxima frase
+    skipPhrase();
     render105xBodyOnly();
     return;
   }
@@ -841,7 +971,6 @@ document.addEventListener("click", (e) => {
     unlockAudio();
     const id = btn.dataset.id;
     if (!id) return;
-    // ✅ agora carrega a frase escolhida
     if (!STATE.session.inProgress) startAuto();
     setPhraseById(id);
     toast("frase carregada ✅");
@@ -855,7 +984,7 @@ document.addEventListener("click", (e) => {
     STATE.session.callMode = !STATE.session.callMode;
     saveState();
     toast(STATE.session.callMode ? "call and response: on" : "call and response: off");
-    render(); // atualiza badge/botao
+    render();
     return;
   }
 
@@ -880,45 +1009,107 @@ document.addEventListener("click", (e) => {
     const jp = ($("#inJp")?.value || "").trim();
     const pt = ($("#inPt")?.value || "").trim();
     const nw = parseNewWords($("#inNW")?.value || "");
-
     const msg = $("#editMsg");
+
     if (!jp || !pt) { msg.textContent = "preencha jp e pt."; toast("faltou jp/pt"); beep("tuk"); return; }
-    if (!isValidJP(jp)) { msg.textContent = "jp invalido. use so ひらがな / カタカナ."; toast("jp invalido"); beep("tuk"); return; }
+    if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou parênteses （ ）"; toast("jp invalido"); beep("tuk"); return; }
     for (const w of nw) {
       if (!isValidJP(w.jp)) { msg.textContent = "palavra nova jp invalida."; toast("palavra invalida"); beep("tuk"); return; }
     }
 
     const t = now();
     const id = uid("ph");
-    STATE.bank.phrases.push({ id, jp, pt, newWords: nw, createdAt:t, updatedAt:t });
+
+    // ✅ entra no topo
+    STATE.bank.phrases.unshift({ id, jp, pt, newWords: nw, createdAt:t, updatedAt:t });
     STATE.progress[id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
 
-    // atualiza fila, sem travar
-    if (STATE.session.inProgress) {
-      STATE.session.queue = buildQueue();
-    }
+    if (STATE.session.inProgress) STATE.session.queue = buildQueue();
 
     saveState();
-    toast("salvo ✅");
+    toast("salvo ✅ (entrou no topo)");
     beep("ding");
-    msg.textContent = "salvo ✅";
+    msg.textContent = "salvo ✅ entrou no topo";
+
     $("#inJp").value = "";
     $("#inPt").value = "";
     $("#inNW").value = "";
+
     render();
+    return;
+  }
+
+  if (act === "editPhrase") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+    // reaproveita a tela de cadastro como editor
+    renderEdit(id);
+    return;
+  }
+
+  if (act === "saveEdit") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    const p = getPhrase(id);
+    if (!p) return;
+
+    const jp = ($("#inJp")?.value || "").trim();
+    const pt = ($("#inPt")?.value || "").trim();
+    const nw = parseNewWords($("#inNW")?.value || "");
+    const msg = $("#editMsg");
+
+    if (!jp || !pt) { msg.textContent = "preencha jp e pt."; toast("faltou jp/pt"); beep("tuk"); return; }
+    if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou （ ）"; toast("jp invalido"); beep("tuk"); return; }
+    for (const w of nw) {
+      if (!isValidJP(w.jp)) { msg.textContent = "palavra nova jp invalida."; toast("palavra invalida"); beep("tuk"); return; }
+    }
+
+    p.jp = jp;
+    p.pt = pt;
+    p.newWords = nw;
+    p.updatedAt = now();
+
+    // se está treinando essa frase agora, atualiza a tela
+    if (STATE.session.phraseId === id) {
+      // nada de resetar contador: só atualiza conteúdo
+    }
+
+    saveState();
+    toast("alterado ✅");
+    beep("ding");
+    msg.textContent = "alterado ✅";
+    nav("#/manage");
+    return;
+  }
+
+  if (act === "deletePhrase") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    const ok = confirm("excluir esta frase? (sem culpa, mas nao tem desfazer)");
+    if (!ok) return;
+
+    const removed = deletePhraseById(id);
+    if (!removed) return;
+
+    toast("excluida ✅");
+    beep("tuk");
+    vibrate([8]);
+
+    // se apagou a atual e está em treino, mantém consistente
+    if (route() === "#/manage") renderManage();
     return;
   }
 
   if (act === "export") {
     const msg = $("#backupMsg");
-    const payload = {
-      schema: "jp_105x_backup_v1",
-      exportedAt: new Date().toISOString(),
-      state: STATE
-    };
+    const payload = { schema: "jp_105x_backup_v1", exportedAt: new Date().toISOString(), state: STATE };
     const txt = JSON.stringify(payload, null, 2);
 
-    // copia para clipboard se possível
     navigator.clipboard?.writeText(txt).then(() => {
       msg.textContent = "copiado pro clipboard ✅";
       toast("backup copiado ✅");
@@ -927,7 +1118,6 @@ document.addEventListener("click", (e) => {
       msg.textContent = "nao deu pra copiar. selecione e copie manualmente.";
       toast("copie manualmente");
       beep("tuk");
-      // coloca no textarea pra copiar
       const box = $("#importBox");
       if (box) box.value = txt;
     });
@@ -948,7 +1138,6 @@ document.addEventListener("click", (e) => {
       return;
     }
 
-    // validação mínima
     const st = parsed.state;
     if (!st.bank?.phrases || !Array.isArray(st.bank.phrases)) {
       msg.textContent = "backup incompleto.";
@@ -957,10 +1146,9 @@ document.addEventListener("click", (e) => {
       return;
     }
 
-    // bloqueia kanji no import (segurança)
     for (const p of st.bank.phrases) {
       if (!isValidJP(p.jp || "")) {
-        msg.textContent = "backup tem jp invalido (kanji ou simbolo).";
+        msg.textContent = "backup tem jp invalido (caractere fora do permitido).";
         toast("jp invalido no backup");
         beep("tuk");
         return;
@@ -1005,11 +1193,6 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if (btn.id === "btnSettings") {
-    nav("#/settings");
-    return;
-  }
-
   if (btn.id === "hudSound") {
     unlockAudio();
     STATE.prefs.audio.enabled = !STATE.prefs.audio.enabled;
@@ -1038,7 +1221,12 @@ document.addEventListener("input", (e) => {
 });
 
 /* ---------- hash change ---------- */
-window.addEventListener("hashchange", render);
+window.addEventListener("hashchange", () => {
+  // se você estiver na tela edit com id, respeita
+  const r = route();
+  if (r === "#/edit") renderEdit(null);
+  else render();
+});
 
 /* ---------- boot ---------- */
 (function init() {
