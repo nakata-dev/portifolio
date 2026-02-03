@@ -179,7 +179,7 @@ body{
   padding: var(--pad);
 }
 
-.stack{ display:flex; flex-direction:column; gap:12px; }
+.stack{ display:flex; flex-direction:column; gap:12px; text-align: center; }
 .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 .row--between{ justify-content:space-between; }
 
@@ -387,7 +387,7 @@ body{
   margin-top: 4px;
 }
 
-/* ✅ barra de progresso do cartão */
+/* barra de progresso do cartão */
 .pWrap{
   margin-top: 10px;
   display:flex;
@@ -419,7 +419,7 @@ body{
   text-align:right;
 }
 
-/* ✅ topo do treino com timer */
+/* topo do treino com timer */
 .studyTop{
   display:flex;
   align-items:center;
@@ -486,7 +486,6 @@ body{
   gap:10px;
 }
 
-/* botão mini (✏️) do lado do “chamada off” */
 .miniBtn{
   width: 44px;
   height: 44px;
@@ -612,6 +611,46 @@ input.btn, textarea.btn{
   text-align:center;
 }
 
+/* ==========================
+   ✅ Voltar ao topo (FAB)
+   ========================== */
+#backTop{
+  position: fixed;
+  right: calc(14px + var(--safeRight));
+  bottom: calc(14px + var(--footerH) + var(--safeBottom));
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.10);
+  color: var(--text);
+  box-shadow: 0 14px 28px rgba(0,0,0,.30);
+
+  opacity: 0;
+  transform: translateY(8px) scale(.98);
+  pointer-events: none;
+
+  transition: opacity .18s ease, transform .18s ease;
+  z-index: 80;
+
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+#backTop.on{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+#backTop:active{ transform: translateY(1px) scale(.99); }
+#backTop .ic{
+  font-size: 18px;
+  line-height: 1;
+}
+
 /* responsivo */
 @media (max-width: 420px){
   .app{
@@ -621,7 +660,7 @@ input.btn, textarea.btn{
       calc(18px + var(--footerH) + var(--safeBottom))
       10px;
   }
-  .card{ padding: 14px; border-radius: 22px; }
+  .card{ padding: 14px; border-radius: 22px;}
   .grid2{ grid-template-columns: 1fr; }
   .counterWrap{ flex-direction: column; }
   .counter{
@@ -632,12 +671,206 @@ input.btn, textarea.btn{
   }
   .counterVal{ font-size: 52px; }
   .kana{ font-size: 21px; }
-
-  /* topo do timer vira 2 linhas no mobile pequeno */
   .studyTop{ flex-wrap: wrap; }
   .studyTimer{ order: 3; width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition:none !important; }
+  #backTop{ transition: none !important; }
+}
+
+
+/* ==========================
+   SKILLS (progresso / projeção)
+   ========================== */
+
+.rankCard{
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(480px 220px at 22% 10%, rgba(122,167,255,.20), transparent 62%),
+    radial-gradient(420px 260px at 92% 90%, rgba(255,134,200,.14), transparent 60%),
+    rgba(255,255,255,.03);
+  padding: 14px;
+}
+
+.rankBig{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom: 12px;
+}
+
+.rankIcon{
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display:grid;
+  place-items:center;
+  font-size: 22px;
+  border: 1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(26px 20px at 28% 22%, rgba(255,255,255,.22), transparent 60%),
+    linear-gradient(135deg, rgba(37,211,102,.22), rgba(183,155,255,.18), rgba(255,134,200,.12));
+  box-shadow: 0 14px 28px rgba(0,0,0,.26);
+}
+
+.rankTitle{
+  font-weight: 1000;
+  letter-spacing: .2px;
+  font-size: 18px;
+  line-height: 1.05;
+}
+.rankSub{
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(238,243,255,.72);
+  line-height: 1.25;
+}
+
+.projWrap{
+  margin-top: 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  padding: 12px;
+}
+.projTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 8px;
+}
+.projBar{
+  height: 12px;
+}
+.projTxt{
+  margin-top: 8px;
+  color: rgba(238,243,255,.70);
+}
+
+/* timeline */
+.tlLine{
+  position: relative;
+  padding: 14px 8px 10px 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+  overflow:hidden;
+}
+.tlTrack{
+  position:absolute;
+  left: 12px;
+  right: 12px;
+  top: 32px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+}
+.tlFill{
+  position:absolute;
+  left: 12px;
+  right: 12px;
+  top: 32px;
+  height: 10px;
+  border-radius: 999px;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, rgba(37,211,102,.85), rgba(122,167,255,.65), rgba(255,134,200,.55));
+}
+
+.tlNodes{
+  position: relative;
+  display:grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  padding: 0 2px;
+  margin-top: 2px;
+}
+.tlNode{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+.tlDot{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.08);
+  box-shadow: 0 10px 20px rgba(0,0,0,.22);
+  margin-top: 6px;
+}
+.tlNode.done .tlDot{
+  background: rgba(37,211,102,.22);
+  border-color: rgba(37,211,102,.32);
+}
+.tlLbl{
+  font-size: 11px;
+  color: rgba(238,243,255,.78);
+  font-weight: 900;
+  text-align:center;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.tlMini{
+  font-size: 10px;
+  color: rgba(238,243,255,.55);
+  font-weight: 900;
+}
+
+/* mini skills */
+.skillGrid{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.skillRow{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+.skillLeft{
+  min-width: 0;
+  flex: 1;
+}
+.skillName{
+  font-weight: 1000;
+  font-size: 13px;
+  letter-spacing: .1px;
+}
+.skillTip{
+  margin-top: 3px;
+  font-size: 11px;
+  color: rgba(238,243,255,.62);
+  line-height: 1.25;
+}
+.skillRight{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  width: 44%;
+}
+.skillBar{
+  height: 10px;
+}
+
+/* mobile: timeline fica rolável se apertar */
+@media (max-width: 420px){
+  .tlNodes{
+    grid-template-columns: repeat(6, 120px);
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+  .tlNode{
+    scroll-snap-align: start;
+  }
 }

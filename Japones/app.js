@@ -1,13 +1,6 @@
 /* =========================================================
    105X Japonês (SPA leve, só 105X)
-   - localStorage
-   - aceita kanji opcionalmente
-   - furigana manual via: 漢字{かな}
-   - ✅ aceita parênteses japoneses: （ ）
-   - ✅ novas frases entram no topo
-   - ✅ gerenciar frases: editar / excluir
-   - ✅ timer de estudo (sessão) no topo da tela 105x
-   - ✅ barras de progresso em cada cartão (panorâmica)
+   + Skills (progresso e projeção)
    ========================================================= */
 
 const LS_KEY = "jp_105x_v2";
@@ -43,6 +36,17 @@ function fmtMMSS(ms) {
   return `${mm}:${ss}`;
 }
 
+function fmtDateShort(ts) {
+  const d = new Date(ts);
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}`;
+}
+
+function addDaysTS(ts, days) {
+  return ts + days * 24 * 60 * 60 * 1000;
+}
+
 /* ---------- JP validation ----------
    Permite:
    - hiragana \u3040-\u309F
@@ -52,7 +56,7 @@ function fmtMMSS(ms) {
    - números
    - pontuação básica
    - furigana manual com chaves: { }
-   - ✅ parênteses fullwidth: （ ）
+   - parênteses japoneses: （ ）
 */
 const JP_ALLOWED_RE =
   /^[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF 　。、！？・ー\-~!?.,:;()（）「」『』【】［］…\n\r\t0-9{}]*$/;
@@ -75,7 +79,6 @@ function isValidJP(text) {
 
 /* ---------- Furigana parsing ----------
    base{reading} -> ruby
-   Ex: 仕事{しごと} は いそがしい
 */
 const FURI_RE = /([^{}\s]+)\{([^{}]+)\}/g;
 
@@ -155,7 +158,17 @@ function defaultState() {
       coins: 0,
       bestCoins: 0,
       cyclesDone: 0,
-      phrasesMastered: 0
+      phrasesMastered: 0,
+
+      // ✅ para skills
+      listens: 0,
+      calls: 0
+    },
+
+    // ✅ hábito / histórico diário (pra skills e projeção)
+    habit: {
+      firstDay: null, // "YYYY-MM-DD"
+      days: {} // { "YYYY-MM-DD": { ms:number, cycles:number, listens:number, calls:number } }
     },
 
     bank: { phrases },
@@ -168,7 +181,6 @@ function defaultState() {
       phraseId: null,
       callMode: false,
 
-      // ✅ timer (hoje)
       study: {
         day: todayKey(),
         totalMs: 0,
@@ -191,9 +203,15 @@ function loadState() {
   if (!parsed || !parsed.app) return defaultState();
   if (parsed.app.schemaVersion !== 2) return defaultState();
 
-  // migração suave: garante campos novos
   parsed.session ||= {};
   parsed.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
+
+  parsed.stats ||= {};
+  parsed.stats.listens ||= 0;
+  parsed.stats.calls ||= 0;
+
+  parsed.habit ||= { firstDay: null, days: {} };
+  parsed.habit.days ||= {};
 
   return parsed;
 }
@@ -312,6 +330,34 @@ function route() {
 }
 function nav(hash) { location.hash = hash; }
 
+/* =========================================================
+   ✅ HABIT LOG (para Skills)
+   ========================================================= */
+function ensureHabitToday() {
+  const k = todayKey();
+  STATE.habit ||= { firstDay: null, days: {} };
+  STATE.habit.days ||= {};
+  if (!STATE.habit.firstDay) STATE.habit.firstDay = k;
+
+  if (!STATE.habit.days[k]) {
+    STATE.habit.days[k] = { ms: 0, cycles: 0, listens: 0, calls: 0 };
+  }
+  return k;
+}
+
+function syncHabitMs() {
+  const k = ensureHabitToday();
+  const ms = getStudyMs();
+  STATE.habit.days[k].ms = ms;
+  saveState();
+}
+
+function habitBump(key, field, amount = 1) {
+  const k = ensureHabitToday();
+  STATE.habit.days[k][field] = (STATE.habit.days[k][field] || 0) + amount;
+  saveState();
+}
+
 /* ---------- session / queue ---------- */
 function getProg(id) {
   if (!STATE.progress[id]) {
@@ -398,7 +444,6 @@ function skipPhrase() {
 
 /* ---------- progresso panorâmico ----------
    Total de repetições para dominar (14→1 ... 1→1) = 105
-   restante = count(atual) + soma(1..cycleStart-1)
 */
 function sum1to(n) { return (n * (n + 1)) / 2; }
 
@@ -496,6 +541,10 @@ function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
 function speakWithKaraoke(jpRaw, rate, kanaEl) {
   const plain = jpStripFurigana(jpRaw);
 
+  // ✅ contadores p/ skills
+  STATE.stats.listens = (STATE.stats.listens || 0) + 1;
+  habitBump(todayKey(), "listens", 1);
+
   const ok = ttsSpeak(
     plain,
     rate,
@@ -509,6 +558,10 @@ function speakWithKaraoke(jpRaw, rate, kanaEl) {
 /* ---------- call and response ---------- */
 function callAndResponse(jpRaw, rate, kanaEl, onDone) {
   const plain = jpStripFurigana(jpRaw);
+
+  // ✅ contadores p/ skills
+  STATE.stats.calls = (STATE.stats.calls || 0) + 1;
+  habitBump(todayKey(), "calls", 1);
 
   const ok = ttsSpeak(
     plain,
@@ -529,7 +582,7 @@ function showNowYouSheet(onDone) {
 
   sheet.style.display = "block";
   sheet.innerHTML = `
-    <div class="stamp">agora voce ✅</div>
+    <div class="stamp">AGORA VOCÊ✅</div>
     <div class="small">repete em voz alta. sem pressa.</div>
     <div class="row row--between">
       <div class="badge">tempo</div>
@@ -573,13 +626,17 @@ function onRepeat() {
     beep("pop");
     vibrate([8]);
     render105xBodyOnly();
+    renderPhraseListOnly();
     return;
   }
 
-  // ciclo concluído
   pr.history.push({ at: now(), event: "cycle_done", cycleStart: cs });
 
   STATE.stats.cyclesDone = (STATE.stats.cyclesDone || 0) + 1;
+
+  // ✅ log diário
+  habitBump(todayKey(), "cycles", 1);
+
   addCoins(100);
   floatCoin("+100 🪙");
   beep("ding");
@@ -608,7 +665,7 @@ function onRepeat() {
 
   showCycleSheet(masteredNow);
   render105xBodyOnly();
-  renderPhraseListOnly(); // ✅ atualiza barrinhas
+  renderPhraseListOnly();
 }
 
 function showCycleSheet(masteredNow) {
@@ -642,6 +699,7 @@ function ensureStudyDay() {
     STATE.session.study.runStartAt = null;
     saveState();
   }
+  ensureHabitToday();
 }
 
 function startStudyTimerIfOn105x() {
@@ -651,7 +709,6 @@ function startStudyTimerIfOn105x() {
   const st = STATE.session.study;
 
   if (!on105x) {
-    // pausa se estava rodando
     if (st.running && st.runStartAt) {
       st.totalMs += now() - st.runStartAt;
       st.running = false;
@@ -659,10 +716,10 @@ function startStudyTimerIfOn105x() {
       saveState();
     }
     stopTimerTick();
+    syncHabitMs();
     return;
   }
 
-  // iniciar
   if (!st.running) {
     st.running = true;
     st.runStartAt = now();
@@ -682,7 +739,10 @@ function stopTimerTick() {
 
 function startTimerTick() {
   if (timerTickId) return;
-  timerTickId = setInterval(() => updateStudyUI(), 1000);
+  timerTickId = setInterval(() => {
+    updateStudyUI();
+    syncHabitMs(); // ✅ grava no histórico diário
+  }, 1000);
 }
 
 function getStudyMs() {
@@ -700,10 +760,291 @@ function updateStudyUI() {
   const ms = getStudyMs();
   el.textContent = fmtMMSS(ms);
 
-  // meta padrão: 10min (pode passar de 100%, mas a barra “trava” no cheio)
   const goal = 10 * 60 * 1000;
   const pct = clamp(ms / goal, 0, 1);
   fill.style.transform = `scaleX(${pct})`;
+}
+
+/* =========================================================
+   ✅ SKILLS / PROJEÇÃO
+   ========================================================= */
+const SKILL_PLAN_DAYS = 270; // 9 meses (aprox)
+const BASE_MIN_PER_DAY = 30; // plano alvo
+
+const RANKS = [
+  { days: 7,   name: "Bronze",   vibe: "o nihongo nao e tao estranho assim", icon: "🥉" },
+  { days: 30,  name: "Aço",      vibe: "to comecando a achar que eu consigo", icon: "🛡️" },
+  { days: 90,  name: "Ouro",     vibe: "eu vou aprender nihongo sim", icon: "🥇" },
+  { days: 150, name: "Platina",  vibe: "minha boca ta ficando automatica", icon: "💠" },
+  { days: 210, name: "Diamante", vibe: "eu ja sobrevivo no cotidiano", icon: "💎" },
+  { days: 270, name: "Fluência", vibe: "fluencia total. o jogo virou", icon: "🌸" }
+];
+
+function isStudyDay(dayObj) {
+  if (!dayObj) return false;
+  const mins = (dayObj.ms || 0) / 60000;
+  return mins >= 2 || (dayObj.cycles || 0) > 0;
+}
+
+function habitSummary() {
+  const days = STATE.habit?.days || {};
+  const keys = Object.keys(days).sort();
+
+  let totalMs = 0;
+  let activeDays = 0;
+  let cycles = 0;
+  let listens = 0;
+  let calls = 0;
+
+  for (const k of keys) {
+    const d = days[k];
+    totalMs += d.ms || 0;
+    cycles += d.cycles || 0;
+    listens += d.listens || 0;
+    calls += d.calls || 0;
+    if (isStudyDay(d)) activeDays++;
+  }
+
+  // últimos 7 dias
+  const nowTS = now();
+  const last7 = [];
+  const last30 = [];
+  for (let i = 0; i < 30; i++) {
+    const ts = addDaysTS(nowTS, -i);
+    const dk = new Date(ts);
+    const y = dk.getFullYear();
+    const m = String(dk.getMonth() + 1).padStart(2, "0");
+    const dd = String(dk.getDate()).padStart(2, "0");
+    const key = `${y}-${m}-${dd}`;
+    const obj = days[key] || { ms: 0, cycles: 0, listens: 0, calls: 0 };
+    if (i < 7) last7.push(obj);
+    last30.push(obj);
+  }
+
+  const last7Ms = last7.reduce((a, x) => a + (x.ms || 0), 0);
+  const last30Ms = last30.reduce((a, x) => a + (x.ms || 0), 0);
+
+  const last7MinPerDay = last7Ms / 60000 / 7;
+  const last30MinPerDay = last30Ms / 60000 / 30;
+
+  return {
+    keys,
+    totalMs,
+    totalMin: totalMs / 60000,
+    activeDays,
+    cycles,
+    listens,
+    calls,
+    last7MinPerDay,
+    last30MinPerDay
+  };
+}
+
+function rankFromActiveDays(activeDays) {
+  let current = RANKS[0];
+  for (const r of RANKS) {
+    if (activeDays >= r.days) current = r;
+  }
+  const next = RANKS.find(r => r.days > activeDays) || null;
+  return { current, next };
+}
+
+function overallProgressByMinutes(totalMin) {
+  const totalNeededMin = SKILL_PLAN_DAYS * BASE_MIN_PER_DAY;
+  return clamp(totalMin / totalNeededMin, 0, 1);
+}
+
+function projectedFinishDate(avgMinPerDay) {
+  const sum = habitSummary();
+  const totalNeededMin = SKILL_PLAN_DAYS * BASE_MIN_PER_DAY;
+  const remainingMin = Math.max(0, totalNeededMin - sum.totalMin);
+  if (avgMinPerDay <= 0.1) return null;
+  const daysNeeded = remainingMin / avgMinPerDay;
+  return addDaysTS(now(), Math.ceil(daysNeeded));
+}
+
+function projectedRankDates(avgMinPerDay) {
+  const sum = habitSummary();
+  const dates = [];
+
+  if (avgMinPerDay <= 0.1) return dates;
+
+  // usando minutos acumulados como “unidade de progresso”
+  const totalMin = sum.totalMin;
+
+  for (const r of RANKS) {
+    const needMin = r.days * BASE_MIN_PER_DAY;
+    if (totalMin >= needMin) {
+      dates.push({ ...r, done: true, dateTS: null });
+    } else {
+      const rem = needMin - totalMin;
+      const daysNeeded = rem / avgMinPerDay;
+      dates.push({ ...r, done: false, dateTS: addDaysTS(now(), Math.ceil(daysNeeded)) });
+    }
+  }
+  return dates;
+}
+
+function skillBars() {
+  const sum = habitSummary();
+
+  // Audição: baseado em minutos + "ouvir"
+  const listening = clamp((sum.totalMin / (30 * 6)) * 0.65 + (sum.listens / 80) * 0.35, 0, 1);
+
+  // Fala: baseado em call-and-response
+  const speaking = clamp((sum.calls / 80), 0, 1);
+
+  // Repetição: ciclos feitos
+  const repetition = clamp((sum.cycles / 120), 0, 1);
+
+  // Vocabulário: proxy = frases dominadas + tempo
+  const vocab = clamp(((STATE.stats.phrasesMastered || 0) / 20) * 0.55 + (sum.totalMin / (30 * 10)) * 0.45, 0, 1);
+
+  // Confiança: mistura leve
+  const confidence = clamp((repetition * 0.35 + listening * 0.25 + vocab * 0.20 + speaking * 0.20), 0, 1);
+
+  return [
+    { name: "audição", val: listening, icon: "🎧", tip: "quanto mais voce ouve, menos pensa" },
+    { name: "fala", val: speaking, icon: "🗣️", tip: "call and response deixa a boca solta" },
+    { name: "repetição", val: repetition, icon: "🔁", tip: "o ouro vem do ciclo fechado" },
+    { name: "vocabulário", val: vocab, icon: "📦", tip: "palavras viram ferramentas" },
+    { name: "confiança", val: confidence, icon: "✨", tip: "a soma silenciosa do dia a dia" }
+  ];
+}
+
+function renderSkills() {
+  const sum = habitSummary();
+  const avg = Math.max(sum.last7MinPerDay, 0);
+  const avgShow = avg > 0.1 ? `${avg.toFixed(1)} min/dia` : "ainda sem ritmo";
+  const { current, next } = rankFromActiveDays(sum.activeDays);
+
+  const prog = overallProgressByMinutes(sum.totalMin);
+  const finish = projectedFinishDate(avg);
+  const dates = projectedRankDates(avg);
+
+  const bars = skillBars();
+
+  const progPct = Math.round(prog * 100);
+
+  const nextTxt = next
+    ? `proxima: ${next.icon} ${next.name} (${next.days} dias)`
+    : `voce chegou: ${current.icon} ${current.name} ✅`;
+
+  const projTxt = finish
+    ? `se continuar no ritmo (${avgShow}), fluencia em: ${fmtDateShort(finish)}`
+    : `faz 2 minutinhos hoje e eu te dou a projeçao 😉`;
+
+  const timeline = RANKS.map(r => {
+    const done = sum.activeDays >= r.days;
+    return `
+      <div class="tlNode ${done ? "done" : ""}">
+        <div class="tlDot"></div>
+        <div class="tlLbl">${r.icon} ${r.name}</div>
+        <div class="tlMini">${r.days}d</div>
+      </div>
+    `;
+  }).join("");
+
+  const datesList = dates.map(d => {
+    const right = d.done
+      ? `<span class="badge">feito ✅</span>`
+      : `<span class="badge">${d.dateTS ? fmtDateShort(d.dateTS) : "..."}</span>`;
+    return `
+      <div class="row row--between" style="gap:10px">
+        <div class="small"><b>${d.icon} ${d.name}</b> <span style="opacity:.8">(${d.days} dias)</span></div>
+        ${right}
+      </div>
+    `;
+  }).join("");
+
+  const barHtml = bars.map(b => {
+    const pct = Math.round(b.val * 100);
+    return `
+      <div class="skillRow">
+        <div class="skillLeft">
+          <div class="skillName">${b.icon} ${b.name}</div>
+          <div class="skillTip">${escapeHTML(b.tip)}</div>
+        </div>
+        <div class="skillRight">
+          <div class="pBar skillBar"><div class="pFill" style="transform:scaleX(${b.val})"></div></div>
+          <div class="pTxt">${pct}%</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">skills</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
+
+        <div class="rankCard">
+          <div class="rankBig">
+            <div class="rankIcon">${current.icon}</div>
+            <div>
+              <div class="rankTitle">${current.name}</div>
+              <div class="rankSub">${escapeHTML(current.vibe)}</div>
+            </div>
+          </div>
+
+          <div class="row row--between">
+            <div class="badge">${sum.activeDays} dias vivos</div>
+            <div class="badge">${nextTxt}</div>
+          </div>
+
+          <div class="projWrap">
+            <div class="projTop">
+              <div class="small">progresso ate fluencia</div>
+              <div class="badge">${progPct}%</div>
+            </div>
+            <div class="pBar projBar"><div class="pFill" style="transform:scaleX(${prog})"></div></div>
+            <div class="small projTxt">${projTxt}</div>
+          </div>
+        </div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">linha do tempo</div>
+            <div class="badge">meta: 9 meses</div>
+          </div>
+          <div class="tlLine">
+            <div class="tlTrack"></div>
+            <div class="tlFill" style="transform:scaleX(${clamp(sum.activeDays / SKILL_PLAN_DAYS, 0, 1)})"></div>
+            <div class="tlNodes">${timeline}</div>
+          </div>
+          <div class="small">dica: “dia vivo” = 2 min ou 1 ciclo. sem culpa.</div>
+        </div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">projeçao de ranks</div>
+            <div class="badge">${avgShow}</div>
+          </div>
+          <div class="stack" style="gap:8px">${datesList}</div>
+        </div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">mini skills</div>
+            <div class="badge">panorama</div>
+          </div>
+          <div class="skillGrid">
+            ${barHtml}
+          </div>
+        </div>
+
+        <div class="small">
+          voce nao precisa vencer o dia. so precisa encostar nele por 2 minutos.
+        </div>
+      </section>
+    </div>
+  `;
+
+  ensureBackTopButton();
+  updateBackTopVisibility();
 }
 
 /* ---------- render ---------- */
@@ -717,6 +1058,7 @@ function render() {
   if (r === "#/manage") return renderManage();
   if (r === "#/backup") return renderBackup();
   if (r === "#/settings") return renderSettings();
+  if (r === "#/skills") return renderSkills();
 
   nav("#/home");
 }
@@ -725,7 +1067,7 @@ function renderHome() {
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
-        <h1 class="h1">um toque. e pronto.</h1>
+        <h1 class="h1">✨ Tôque, Tôque, Tôque ✨</h1>
         <p class="p">hoje pode ser 2 minutos. ja conta. sem culpa.</p>
 
         <button class="bigBtn" id="btnStart">COMEÇAR AGORA</button>
@@ -736,6 +1078,7 @@ function renderHome() {
           <button class="btn" data-nav="#/105x">ir pro treino</button>
           <button class="btn" data-nav="#/edit">cadastro</button>
           <button class="btn" data-nav="#/backup">backup</button>
+          <button class="btn btn--ghost" data-nav="#/skills">skills</button>
         </div>
 
         <div class="small">dica: no fim de cada ciclo voce ganha 100 moedas. riqueza por repeticao 🪙</div>
@@ -784,7 +1127,6 @@ function render105x() {
     <div class="stack">
       <section class="card stack viewRel" id="view105x">
 
-        <!-- topo: badge + timer + ações -->
         <div class="studyTop">
           <div class="badge">105x</div>
 
@@ -797,6 +1139,7 @@ function render105x() {
           </div>
 
           <div class="studyActions">
+            <button class="miniBtn" title="skills" aria-label="skills" data-nav="#/skills">🏅</button>
             <button class="miniBtn" title="editar frases" aria-label="editar frases" data-nav="#/manage">✏️</button>
             <div class="badge">${STATE.session.callMode ? "chamada on" : "chamada off"}</div>
           </div>
@@ -852,8 +1195,9 @@ function render105x() {
   render105xBodyOnly();
   renderPhraseListOnly();
 
-  // ✅ liga timer quando estiver na tela
   startStudyTimerIfOn105x();
+  ensureBackTopButton();
+  updateBackTopVisibility();
 }
 
 function renderPhraseListOnly() {
@@ -969,7 +1313,7 @@ function renderEdit(editingId = null) {
   `;
 }
 
-/* ---------- gerenciar (editar/excluir) ---------- */
+/* ---------- gerenciar ---------- */
 function renderManage() {
   const rows = STATE.bank.phrases.map(p => {
     const pr = getProg(p.id);
@@ -1060,7 +1404,7 @@ function renderSettings() {
   `;
 }
 
-/* ---------- phrase actions (edit/delete) ---------- */
+/* ---------- delete phrase ---------- */
 function deletePhraseById(id) {
   const idx = STATE.bank.phrases.findIndex(p => p.id === id);
   if (idx < 0) return false;
@@ -1087,6 +1431,48 @@ function deletePhraseById(id) {
   return true;
 }
 
+/* =========================================================
+   ✅ Voltar ao topo (FAB)
+   ========================================================= */
+function ensureBackTopButton() {
+  if (document.getElementById("backTop")) return;
+
+  const btn = document.createElement("button");
+  btn.id = "backTop";
+  btn.type = "button";
+  btn.setAttribute("aria-label", "voltar ao topo");
+  btn.innerHTML = `<span class="ic">↑</span>`;
+  document.body.appendChild(btn);
+
+  btn.addEventListener("click", () => {
+    unlockAudio();
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) window.scrollTo(0, 0);
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+
+    try { beep("pop"); } catch {}
+    try { vibrate([8]); } catch {}
+  }, { passive: true });
+}
+
+let backTopTicking = false;
+function updateBackTopVisibility() {
+  const btn = document.getElementById("backTop");
+  if (!btn) return;
+  const y = window.scrollY || document.documentElement.scrollTop || 0;
+  btn.classList.toggle("on", y > 220);
+}
+function hookBackTopScroll() {
+  window.addEventListener("scroll", () => {
+    if (backTopTicking) return;
+    backTopTicking = true;
+    requestAnimationFrame(() => {
+      backTopTicking = false;
+      updateBackTopVisibility();
+    });
+  }, { passive: true });
+}
+
 /* ---------- global click delegation ---------- */
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
@@ -1105,6 +1491,7 @@ document.addEventListener("click", (e) => {
     unlockAudio();
     skipPhrase();
     render105xBodyOnly();
+    renderPhraseListOnly();
     return;
   }
 
@@ -1114,6 +1501,7 @@ document.addEventListener("click", (e) => {
     toast("proxima ✅");
     beep("pop");
     render105xBodyOnly();
+    renderPhraseListOnly();
     return;
   }
 
@@ -1370,12 +1758,21 @@ document.addEventListener("input", (e) => {
 window.addEventListener("hashchange", () => {
   render();
   startStudyTimerIfOn105x();
+  updateBackTopVisibility();
 });
 
 /* ---------- boot ---------- */
 (function init() {
   refreshHUD();
   if (!location.hash) nav("#/home");
+
+  ensureBackTopButton();
+  hookBackTopScroll();
+  updateBackTopVisibility();
+
+  ensureHabitToday();
+  syncHabitMs();
+
   render();
   startStudyTimerIfOn105x();
 })();
