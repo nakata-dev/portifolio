@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Japonês no Automático</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__dot" aria-hidden="true"></div>
+      <div class="brand__text">
+        <div class="brand__title">Japonês no Automático</div>
+        <div class="brand__sub" id="subStatus">30 min/dia (ou 2 min contam)</div>
+      </div>
+    </div>
+
+    <button class="iconBtn" id="btnSettings" title="Configurações" aria-label="Configurações">
+      ⚙️
+    </button>
+  </header>
+
+  <main id="app" class="app" role="main"></main>
+
+  <!-- HUD fixa -->
+  <footer class="hud" id="hud" aria-label="HUD">
+    <button class="hud__chip" id="hudCoins" title="Moedas" aria-label="Moedas">
+      🪙 <span id="hudCoinsVal">0</span>
+    </button>
+
+    <button class="hud__chip" id="hudCombo" title="Combo" aria-label="Combo">
+      🔥 <span id="hudComboVal">0</span>
+    </button>
+
+    <button class="hud__chip hud__chip--wide" id="hudMission" title="Missão do dia" aria-label="Missão do dia">
+      ✅ <span id="hudMissionText">missao: -</span>
+    </button>
+
+    <button class="hud__chip" id="hudFatigue" title="Modo" aria-label="Modo">
+      😵 <span id="hudFatigueText">ok</span>
+    </button>
+
+    <button class="hud__chip" id="hudSound" title="Som" aria-label="Som">
+      🔊
+    </button>
+
+    <button class="hud__chip" id="hudVibe" title="Vibração" aria-label="Vibração">
+      📳
+    </button>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
