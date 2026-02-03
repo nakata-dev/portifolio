@@ -5,7 +5,9 @@
    - furigana manual via: 漢字{かな}
    - ✅ aceita parênteses japoneses: （ ）
    - ✅ novas frases entram no topo
-   - ✅ gerenciar frases: editar / excluir (botão canto sup. direito)
+   - ✅ gerenciar frases: editar / excluir
+   - ✅ timer de estudo (sessão) no topo da tela 105x
+   - ✅ barras de progresso em cada cartão (panorâmica)
    ========================================================= */
 
 const LS_KEY = "jp_105x_v2";
@@ -24,6 +26,21 @@ const escapeHTML = (s) =>
 
 function safeJSONParse(str) {
   try { return JSON.parse(str); } catch { return null; }
+}
+
+function todayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
+}
+
+function fmtMMSS(ms) {
+  const s = Math.floor(ms / 1000);
+  const mm = String(Math.floor(s / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  return `${mm}:${ss}`;
 }
 
 /* ---------- JP validation ----------
@@ -149,12 +166,18 @@ function defaultState() {
       queue: [],
       index: 0,
       phraseId: null,
-      callMode: false
+      callMode: false,
+
+      // ✅ timer (hoje)
+      study: {
+        day: todayKey(),
+        totalMs: 0,
+        running: false,
+        runStartAt: null
+      }
     },
 
-    ui: {
-      lastToast: ""
-    }
+    ui: { lastToast: "" }
   };
 }
 
@@ -167,6 +190,11 @@ function loadState() {
   const parsed = safeJSONParse(raw);
   if (!parsed || !parsed.app) return defaultState();
   if (parsed.app.schemaVersion !== 2) return defaultState();
+
+  // migração suave: garante campos novos
+  parsed.session ||= {};
+  parsed.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
+
   return parsed;
 }
 
@@ -368,6 +396,26 @@ function skipPhrase() {
   beep("tuk");
 }
 
+/* ---------- progresso panorâmico ----------
+   Total de repetições para dominar (14→1 ... 1→1) = 105
+   restante = count(atual) + soma(1..cycleStart-1)
+*/
+function sum1to(n) { return (n * (n + 1)) / 2; }
+
+function phraseProgressPct(pr) {
+  if (!pr) return 0;
+  if (pr.status === "mastered") return 1;
+
+  const cycleStart = clamp(pr.cycleStart || 14, 1, 14);
+  const count = clamp(pr.count || cycleStart, 1, cycleStart);
+
+  const total = 105;
+  const remaining = count + sum1to(cycleStart - 1);
+  const done = clamp(total - remaining, 0, total);
+
+  return done / total;
+}
+
 /* ---------- karaoke ---------- */
 function segmentText(text) {
   return [...String(text || "")];
@@ -516,7 +564,6 @@ function onRepeat() {
 
   const pr = getProg(pid);
   const cs = clamp(pr.cycleStart || 14, 1, 14);
-
   pr.count = clamp(pr.count || cs, 1, cs);
 
   if (pr.count > 1) {
@@ -537,7 +584,6 @@ function onRepeat() {
   floatCoin("+100 🪙");
   beep("ding");
   vibrate([12]);
-
   sparkOn($("#counterBox"));
 
   if (pr.cycleStart > 1) pr.cycleStart -= 1;
@@ -562,6 +608,7 @@ function onRepeat() {
 
   showCycleSheet(masteredNow);
   render105xBodyOnly();
+  renderPhraseListOnly(); // ✅ atualiza barrinhas
 }
 
 function showCycleSheet(masteredNow) {
@@ -580,6 +627,83 @@ function showCycleSheet(masteredNow) {
       <button class="btn btn--ok btn--full" data-action="next">proxima frase 🔼</button>
     </div>
   `;
+}
+
+/* ---------- Timer (sessão hoje) ---------- */
+let timerTickId = null;
+
+function ensureStudyDay() {
+  const k = todayKey();
+  if (!STATE.session.study) STATE.session.study = { day: k, totalMs: 0, running: false, runStartAt: null };
+  if (STATE.session.study.day !== k) {
+    STATE.session.study.day = k;
+    STATE.session.study.totalMs = 0;
+    STATE.session.study.running = false;
+    STATE.session.study.runStartAt = null;
+    saveState();
+  }
+}
+
+function startStudyTimerIfOn105x() {
+  ensureStudyDay();
+
+  const on105x = route() === "#/105x";
+  const st = STATE.session.study;
+
+  if (!on105x) {
+    // pausa se estava rodando
+    if (st.running && st.runStartAt) {
+      st.totalMs += now() - st.runStartAt;
+      st.running = false;
+      st.runStartAt = null;
+      saveState();
+    }
+    stopTimerTick();
+    return;
+  }
+
+  // iniciar
+  if (!st.running) {
+    st.running = true;
+    st.runStartAt = now();
+    saveState();
+  }
+
+  startTimerTick();
+  updateStudyUI();
+}
+
+function stopTimerTick() {
+  if (timerTickId) {
+    clearInterval(timerTickId);
+    timerTickId = null;
+  }
+}
+
+function startTimerTick() {
+  if (timerTickId) return;
+  timerTickId = setInterval(() => updateStudyUI(), 1000);
+}
+
+function getStudyMs() {
+  ensureStudyDay();
+  const st = STATE.session.study;
+  const runningAdd = st.running && st.runStartAt ? (now() - st.runStartAt) : 0;
+  return (st.totalMs || 0) + runningAdd;
+}
+
+function updateStudyUI() {
+  const el = $("#studyTime");
+  const fill = $("#studyFill");
+  if (!el || !fill) return;
+
+  const ms = getStudyMs();
+  el.textContent = fmtMMSS(ms);
+
+  // meta padrão: 10min (pode passar de 100%, mas a barra “trava” no cheio)
+  const goal = 10 * 60 * 1000;
+  const pct = clamp(ms / goal, 0, 1);
+  fill.style.transform = `scaleX(${pct})`;
 }
 
 /* ---------- render ---------- */
@@ -656,30 +780,26 @@ function render105x() {
     saveState();
   }
 
-  const list = STATE.bank.phrases.map(x => {
-    const px = getProg(x.id);
-    const st = px.status === "mastered" ? "dominada ✓" : "treino";
-    return `
-      <div class="item">
-        <div class="itemTop">
-          <div>
-            <p class="itemTitle">${escapeHTML(jpStripFurigana(x.jp))}</p>
-            <div class="itemMeta">${escapeHTML(x.pt)} • ${st}</div>
-          </div>
-          <button class="btn" data-action="goto" data-id="${x.id}">IR</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack viewRel" id="view105x">
-        <button class="cornerManageBtn" title="editar / excluir" aria-label="editar / excluir" data-nav="#/manage">✏️</button>
 
-        <div class="row row--between">
+        <!-- topo: badge + timer + ações -->
+        <div class="studyTop">
           <div class="badge">105x</div>
-          <div class="badge">${STATE.session.callMode ? "chamada on" : "chamada off"}</div>
+
+          <div class="studyTimer" aria-label="tempo de estudo">
+            <div class="studyTimerRow">
+              <div class="studyTime"><span class="ic">⏱</span> <span id="studyTime">00:00</span></div>
+              <div class="studyHint">meta 10:00</div>
+            </div>
+            <div class="studyBar"><div class="studyFill" id="studyFill"></div></div>
+          </div>
+
+          <div class="studyActions">
+            <button class="miniBtn" title="editar frases" aria-label="editar frases" data-nav="#/manage">✏️</button>
+            <div class="badge">${STATE.session.callMode ? "chamada on" : "chamada off"}</div>
+          </div>
         </div>
 
         <div class="counterWrap">
@@ -724,12 +844,47 @@ function render105x() {
           <div class="badge">todas as frases</div>
           <div class="small">toque em IR</div>
         </div>
-        <div class="list" id="phraseList">${list}</div>
+        <div class="list" id="phraseList"></div>
       </section>
     </div>
   `;
 
   render105xBodyOnly();
+  renderPhraseListOnly();
+
+  // ✅ liga timer quando estiver na tela
+  startStudyTimerIfOn105x();
+}
+
+function renderPhraseListOnly() {
+  const box = $("#phraseList");
+  if (!box) return;
+
+  const list = STATE.bank.phrases.map(x => {
+    const pr = getProg(x.id);
+    const st = pr.status === "mastered" ? "dominada ✓" : "treino";
+    const pct = phraseProgressPct(pr);
+    const pctTxt = Math.round(pct * 100);
+
+    return `
+      <div class="item">
+        <div class="itemTop">
+          <div style="min-width:0">
+            <p class="itemTitle">${escapeHTML(jpStripFurigana(x.jp))}</p>
+            <div class="itemMeta">${escapeHTML(x.pt)} • ${st}</div>
+
+            <div class="pWrap" aria-label="progresso">
+              <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+              <div class="pTxt">${pctTxt}%</div>
+            </div>
+          </div>
+          <button class="btn" data-action="goto" data-id="${x.id}">IR</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  box.innerHTML = list;
 }
 
 function render105xBodyOnly() {
@@ -790,7 +945,7 @@ function renderEdit(editingId = null) {
         </div>
 
         <div class="sheet stack">
-          <div class="small">jp (aceita kanji. furigana manual: 仕事{しごと}. parênteses （ ） também ok)</div>
+          <div class="small">jp (aceita kanji. furigana manual: 仕事{しごと}. parênteses （ ） ok)</div>
           <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 私{わたし} の名前{なまえ} は あきおです。" value="${escapeHTML(jpVal)}" />
           <div class="small">pt</div>
           <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: meu nome é Akio." value="${escapeHTML(ptVal)}" />
@@ -910,18 +1065,13 @@ function deletePhraseById(id) {
   const idx = STATE.bank.phrases.findIndex(p => p.id === id);
   if (idx < 0) return false;
 
-  // remove banco
   STATE.bank.phrases.splice(idx, 1);
-
-  // remove progresso
   delete STATE.progress[id];
 
-  // remove da fila
   if (Array.isArray(STATE.session.queue) && STATE.session.queue.length) {
     STATE.session.queue = STATE.session.queue.filter(x => x !== id);
   }
 
-  // se era a frase atual, move para próxima disponível
   if (STATE.session.phraseId === id) {
     if (!STATE.session.queue.length) {
       STATE.session.phraseId = null;
@@ -1012,7 +1162,7 @@ document.addEventListener("click", (e) => {
     const msg = $("#editMsg");
 
     if (!jp || !pt) { msg.textContent = "preencha jp e pt."; toast("faltou jp/pt"); beep("tuk"); return; }
-    if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou parênteses （ ）"; toast("jp invalido"); beep("tuk"); return; }
+    if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou （ ）"; toast("jp invalido"); beep("tuk"); return; }
     for (const w of nw) {
       if (!isValidJP(w.jp)) { msg.textContent = "palavra nova jp invalida."; toast("palavra invalida"); beep("tuk"); return; }
     }
@@ -1020,7 +1170,6 @@ document.addEventListener("click", (e) => {
     const t = now();
     const id = uid("ph");
 
-    // ✅ entra no topo
     STATE.bank.phrases.unshift({ id, jp, pt, newWords: nw, createdAt:t, updatedAt:t });
     STATE.progress[id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
 
@@ -1043,7 +1192,6 @@ document.addEventListener("click", (e) => {
     unlockAudio();
     const id = btn.dataset.id;
     if (!id) return;
-    // reaproveita a tela de cadastro como editor
     renderEdit(id);
     return;
   }
@@ -1072,11 +1220,6 @@ document.addEventListener("click", (e) => {
     p.newWords = nw;
     p.updatedAt = now();
 
-    // se está treinando essa frase agora, atualiza a tela
-    if (STATE.session.phraseId === id) {
-      // nada de resetar contador: só atualiza conteúdo
-    }
-
     saveState();
     toast("alterado ✅");
     beep("ding");
@@ -1090,7 +1233,7 @@ document.addEventListener("click", (e) => {
     const id = btn.dataset.id;
     if (!id) return;
 
-    const ok = confirm("excluir esta frase? (sem culpa, mas nao tem desfazer)");
+    const ok = confirm("excluir esta frase? (sem desfazer)");
     if (!ok) return;
 
     const removed = deletePhraseById(id);
@@ -1100,8 +1243,11 @@ document.addEventListener("click", (e) => {
     beep("tuk");
     vibrate([8]);
 
-    // se apagou a atual e está em treino, mantém consistente
     if (route() === "#/manage") renderManage();
+    if (route() === "#/105x") {
+      render105xBodyOnly();
+      renderPhraseListOnly();
+    }
     return;
   }
 
@@ -1148,7 +1294,7 @@ document.addEventListener("click", (e) => {
 
     for (const p of st.bank.phrases) {
       if (!isValidJP(p.jp || "")) {
-        msg.textContent = "backup tem jp invalido (caractere fora do permitido).";
+        msg.textContent = "backup tem jp invalido.";
         toast("jp invalido no backup");
         beep("tuk");
         return;
@@ -1222,10 +1368,8 @@ document.addEventListener("input", (e) => {
 
 /* ---------- hash change ---------- */
 window.addEventListener("hashchange", () => {
-  // se você estiver na tela edit com id, respeita
-  const r = route();
-  if (r === "#/edit") renderEdit(null);
-  else render();
+  render();
+  startStudyTimerIfOn105x();
 });
 
 /* ---------- boot ---------- */
@@ -1233,4 +1377,5 @@ window.addEventListener("hashchange", () => {
   refreshHUD();
   if (!location.hash) nav("#/home");
   render();
+  startStudyTimerIfOn105x();
 })();
