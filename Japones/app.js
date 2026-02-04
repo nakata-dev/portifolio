@@ -1,12 +1,14 @@
 /* =========================================================
-   105X Japonês (SPA leve, só 105X)
-   + Skills (progresso e projeção)
+   NIHONGO321 (SPA leve, só 105X)
+   + Backup por arquivo (mobile friendly)
+   + Tópicos (conteúdo organizado)
    ========================================================= */
 
-const LS_KEY = "jp_105x_v2";
+const LS_KEY = "jp_105x_v3";
 
 /* ---------- helpers ---------- */
 const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const now = () => Date.now();
 const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 const uid = (p = "id") => `${p}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
@@ -45,6 +47,22 @@ function fmtDateShort(ts) {
 
 function addDaysTS(ts, days) {
   return ts + days * 24 * 60 * 60 * 1000;
+}
+
+function downloadTextFile(filename, text, mime = "application/json") {
+  const blob = new Blob([text], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function normalizeName(s) {
+  return String(s || "").trim().replace(/\s+/g, " ").slice(0, 40);
 }
 
 /* ---------- JP validation ----------
@@ -109,37 +127,55 @@ function jpToRubyHTML(raw) {
   return out;
 }
 
+/* ---------- topics ---------- */
+function topicPalette() {
+  return [
+    "tRose", "tViolet", "tBlue", "tCyan", "tGreen", "tAmber", "tPink", "tMint"
+  ];
+}
+
+function pickTopicColor(i) {
+  const p = topicPalette();
+  return p[i % p.length];
+}
+
+function defaultTopic() {
+  const t = now();
+  return { id: "topic_default", name: "Frases aleatórias", color: "tViolet", createdAt: t, updatedAt: t };
+}
+
 /* ---------- seed (20 frases) ---------- */
-function seedPhrases() {
+function seedPhrases(topicId) {
   const t = now();
   return [
-    { id:"ph_001", jp:"おはよう", pt:"bom dia", newWords:[{jp:"おはよう", pt:"bom dia"}], createdAt:t, updatedAt:t },
-    { id:"ph_002", jp:"おつかれさま", pt:"bom trabalho / valeu pelo esforço", newWords:[{jp:"おつかれさま", pt:"bom trabalho"}], createdAt:t, updatedAt:t },
-    { id:"ph_003", jp:"きょうは つかれた", pt:"hoje eu estou cansado", newWords:[{jp:"きょう",pt:"hoje"},{jp:"つかれた",pt:"cansado"}], createdAt:t, updatedAt:t },
-    { id:"ph_004", jp:"ねむい", pt:"estou com sono", newWords:[{jp:"ねむい",pt:"com sono"}], createdAt:t, updatedAt:t },
-    { id:"ph_005", jp:"いま いそがしい", pt:"agora estou ocupado", newWords:[{jp:"いま",pt:"agora"},{jp:"いそがしい",pt:"ocupado"}], createdAt:t, updatedAt:t },
-    { id:"ph_006", jp:"ちょっと まって", pt:"espera um pouco", newWords:[{jp:"ちょっと",pt:"um pouco"},{jp:"まって",pt:"espera"}], createdAt:t, updatedAt:t },
-    { id:"ph_007", jp:"だいじょうぶ", pt:"tudo bem / está ok", newWords:[{jp:"だいじょうぶ",pt:"tudo bem"}], createdAt:t, updatedAt:t },
-    { id:"ph_008", jp:"もういちど おねがい", pt:"de novo, por favor", newWords:[{jp:"もういちど",pt:"mais uma vez"},{jp:"おねがい",pt:"por favor"}], createdAt:t, updatedAt:t },
-    { id:"ph_009", jp:"ゆっくり おねがい", pt:"devagar, por favor", newWords:[{jp:"ゆっくり",pt:"devagar"}], createdAt:t, updatedAt:t },
-    { id:"ph_010", jp:"わからない", pt:"nao entendi / nao sei", newWords:[{jp:"わからない",pt:"nao entendi"}], createdAt:t, updatedAt:t },
-    { id:"ph_011", jp:"これ どこ", pt:"onde fica isto?", newWords:[{jp:"これ",pt:"isto"},{jp:"どこ",pt:"onde"}], createdAt:t, updatedAt:t },
-    { id:"ph_012", jp:"これ なに", pt:"o que e isto?", newWords:[{jp:"なに",pt:"o que"}], createdAt:t, updatedAt:t },
-    { id:"ph_013", jp:"たすけて", pt:"me ajuda", newWords:[{jp:"たすけて",pt:"me ajuda"}], createdAt:t, updatedAt:t },
-    { id:"ph_014", jp:"あぶない", pt:"perigoso", newWords:[{jp:"あぶない",pt:"perigoso"}], createdAt:t, updatedAt:t },
-    { id:"ph_015", jp:"きをつけて", pt:"cuidado", newWords:[{jp:"きをつけて",pt:"cuidado"}], createdAt:t, updatedAt:t },
-    { id:"ph_016", jp:"ここで まって", pt:"espera aqui", newWords:[{jp:"ここ",pt:"aqui"}], createdAt:t, updatedAt:t },
-    { id:"ph_017", jp:"これを つかう", pt:"usar isto", newWords:[{jp:"つかう",pt:"usar"}], createdAt:t, updatedAt:t },
-    { id:"ph_018", jp:"それは だめ", pt:"isso nao pode", newWords:[{jp:"それ",pt:"isso"},{jp:"だめ",pt:"nao pode"}], createdAt:t, updatedAt:t },
-    { id:"ph_019", jp:"もう いい", pt:"ja esta bom / pode parar", newWords:[{jp:"もう",pt:"ja"},{jp:"いい",pt:"bom"}], createdAt:t, updatedAt:t },
-    { id:"ph_020", jp:"あとで はなそう", pt:"vamos falar depois", newWords:[{jp:"あとで",pt:"depois"},{jp:"はなそう",pt:"vamos falar"}], createdAt:t, updatedAt:t }
+    { id:"ph_001", jp:"おはよう", pt:"bom dia", newWords:[{jp:"おはよう", pt:"bom dia"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_002", jp:"おつかれさま", pt:"bom trabalho / valeu pelo esforço", newWords:[{jp:"おつかれさま", pt:"bom trabalho"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_003", jp:"きょうは つかれた", pt:"hoje eu estou cansado", newWords:[{jp:"きょう",pt:"hoje"},{jp:"つかれた",pt:"cansado"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_004", jp:"ねむい", pt:"estou com sono", newWords:[{jp:"ねむい",pt:"com sono"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_005", jp:"いま いそがしい", pt:"agora estou ocupado", newWords:[{jp:"いま",pt:"agora"},{jp:"いそがしい",pt:"ocupado"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_006", jp:"ちょっと まって", pt:"espera um pouco", newWords:[{jp:"ちょっと",pt:"um pouco"},{jp:"まって",pt:"espera"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_007", jp:"だいじょうぶ", pt:"tudo bem / está ok", newWords:[{jp:"だいじょうぶ",pt:"tudo bem"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_008", jp:"もういちど おねがい", pt:"de novo, por favor", newWords:[{jp:"もういちど",pt:"mais uma vez"},{jp:"おねがい",pt:"por favor"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_009", jp:"ゆっくり おねがい", pt:"devagar, por favor", newWords:[{jp:"ゆっくり",pt:"devagar"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_010", jp:"わからない", pt:"nao entendi / nao sei", newWords:[{jp:"わからない",pt:"nao entendi"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_011", jp:"これ どこ", pt:"onde fica isto?", newWords:[{jp:"これ",pt:"isto"},{jp:"どこ",pt:"onde"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_012", jp:"これ なに", pt:"o que e isto?", newWords:[{jp:"なに",pt:"o que"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_013", jp:"たすけて", pt:"me ajuda", newWords:[{jp:"たすけて",pt:"me ajuda"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_014", jp:"あぶない", pt:"perigoso", newWords:[{jp:"あぶない",pt:"perigoso"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_015", jp:"きをつけて", pt:"cuidado", newWords:[{jp:"きをつけて",pt:"cuidado"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_016", jp:"ここで まって", pt:"espera aqui", newWords:[{jp:"ここ",pt:"aqui"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_017", jp:"これを つかう", pt:"usar isto", newWords:[{jp:"つかう",pt:"usar"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_018", jp:"それは だめ", pt:"isso nao pode", newWords:[{jp:"それ",pt:"isso"},{jp:"だめ",pt:"nao pode"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_019", jp:"もう いい", pt:"ja esta bom / pode parar", newWords:[{jp:"もう",pt:"ja"},{jp:"いい",pt:"bom"}], topicId, createdAt:t, updatedAt:t },
+    { id:"ph_020", jp:"あとで はなそう", pt:"vamos falar depois", newWords:[{jp:"あとで",pt:"depois"},{jp:"はなそう",pt:"vamos falar"}], topicId, createdAt:t, updatedAt:t }
   ];
 }
 
 /* ---------- state ---------- */
 function defaultState() {
   const t = now();
-  const phrases = seedPhrases();
+  const top = defaultTopic();
+  const phrases = seedPhrases(top.id);
 
   const progress = {};
   for (const p of phrases) {
@@ -147,7 +183,7 @@ function defaultState() {
   }
 
   return {
-    app: { schemaVersion: 2, createdAt: t, updatedAt: t },
+    app: { schemaVersion: 3, createdAt: t, updatedAt: t },
 
     prefs: {
       audio: { enabled: true, volume: 0.35, unlocked: false },
@@ -159,19 +195,20 @@ function defaultState() {
       bestCoins: 0,
       cyclesDone: 0,
       phrasesMastered: 0,
-
-      // ✅ para skills
       listens: 0,
       calls: 0
     },
 
-    // ✅ hábito / histórico diário (pra skills e projeção)
     habit: {
-      firstDay: null, // "YYYY-MM-DD"
-      days: {} // { "YYYY-MM-DD": { ms:number, cycles:number, listens:number, calls:number } }
+      firstDay: null,
+      days: {}
     },
 
-    bank: { phrases },
+    bank: {
+      topics: [top],
+      phrases
+    },
+
     progress,
 
     session: {
@@ -181,39 +218,86 @@ function defaultState() {
       phraseId: null,
       callMode: false,
 
-      study: {
-        day: todayKey(),
-        totalMs: 0,
-        running: false,
-        runStartAt: null
-      }
+      // filtro opcional (pra ficar organizado)
+      topicFilter: "ALL",
+
+      study: { day: todayKey(), totalMs: 0, running: false, runStartAt: null }
     },
 
-    ui: { lastToast: "" }
+    ui: {
+      lastToast: "",
+      collapsedTopics: {} // { [topicId]: true/false }
+    }
   };
 }
 
 let STATE = loadState();
 
-/* ---------- storage ---------- */
+/* ---------- storage + migration ---------- */
+function migrateToV3(st) {
+  if (!st || !st.app) return defaultState();
+
+  // 1) cria estruturas
+  st.app.schemaVersion = 3;
+
+  st.bank ||= {};
+  st.bank.phrases ||= [];
+  st.bank.topics ||= [];
+
+  st.ui ||= {};
+  st.ui.collapsedTopics ||= {};
+
+  st.session ||= {};
+  st.session.topicFilter ||= "ALL";
+
+  // 2) garante tópico default
+  let def = st.bank.topics.find(t => t.id === "topic_default");
+  if (!def) {
+    def = defaultTopic();
+    st.bank.topics.unshift(def);
+  }
+
+  // 3) garante topicId em frases
+  for (const p of st.bank.phrases) {
+    if (!p.topicId) p.topicId = def.id;
+  }
+
+  // 4) stats extras
+  st.stats ||= {};
+  st.stats.listens ||= 0;
+  st.stats.calls ||= 0;
+
+  // 5) habit
+  st.habit ||= { firstDay: null, days: {} };
+  st.habit.days ||= {};
+
+  // 6) session study
+  st.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
+
+  return st;
+}
+
 function loadState() {
-  const raw = localStorage.getItem(LS_KEY);
-  if (!raw) return defaultState();
-  const parsed = safeJSONParse(raw);
-  if (!parsed || !parsed.app) return defaultState();
-  if (parsed.app.schemaVersion !== 2) return defaultState();
+  // tenta v3 primeiro
+  let raw = localStorage.getItem(LS_KEY);
+  if (raw) {
+    const parsed = safeJSONParse(raw);
+    if (parsed && parsed.app?.schemaVersion === 3) return parsed;
+  }
 
-  parsed.session ||= {};
-  parsed.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
+  // tenta chaves antigas (v2)
+  const legacyRaw = localStorage.getItem("jp_105x_v2");
+  if (legacyRaw) {
+    const parsed = safeJSONParse(legacyRaw);
+    if (parsed && parsed.app) {
+      const migrated = migrateToV3(parsed);
+      // salva já em v3
+      localStorage.setItem(LS_KEY, JSON.stringify(migrated));
+      return migrated;
+    }
+  }
 
-  parsed.stats ||= {};
-  parsed.stats.listens ||= 0;
-  parsed.stats.calls ||= 0;
-
-  parsed.habit ||= { firstDay: null, days: {} };
-  parsed.habit.days ||= {};
-
-  return parsed;
+  return defaultState();
 }
 
 function saveState() {
@@ -331,7 +415,7 @@ function route() {
 function nav(hash) { location.hash = hash; }
 
 /* =========================================================
-   ✅ HABIT LOG (para Skills)
+   HABIT LOG (para Skills)
    ========================================================= */
 function ensureHabitToday() {
   const k = todayKey();
@@ -358,6 +442,70 @@ function habitBump(key, field, amount = 1) {
   saveState();
 }
 
+/* ---------- topics helpers ---------- */
+function getTopic(id) {
+  return (STATE.bank.topics || []).find(t => t.id === id) || null;
+}
+
+function topicName(id) {
+  return getTopic(id)?.name || "Sem tópico";
+}
+
+function topicColorClass(id) {
+  return getTopic(id)?.color || "tViolet";
+}
+
+function ensureDefaultTopic() {
+  let def = STATE.bank.topics.find(t => t.id === "topic_default");
+  if (!def) {
+    def = defaultTopic();
+    STATE.bank.topics.unshift(def);
+    saveState();
+  }
+  return def;
+}
+
+function createTopic(name) {
+  const n = normalizeName(name);
+  if (!n) return null;
+
+  // evita duplicatas “quase iguais”
+  const exists = STATE.bank.topics.some(t => t.name.toLowerCase() === n.toLowerCase());
+  if (exists) return null;
+
+  const t = now();
+  const id = uid("topic");
+  const color = pickTopicColor(STATE.bank.topics.length);
+
+  const topic = { id, name: n, color, createdAt: t, updatedAt: t };
+  STATE.bank.topics.unshift(topic);
+  saveState();
+  return topic;
+}
+
+function deleteTopic(topicId) {
+  const def = ensureDefaultTopic();
+  if (topicId === def.id) return false;
+
+  // move frases pro default
+  for (const p of STATE.bank.phrases) {
+    if (p.topicId === topicId) p.topicId = def.id;
+  }
+
+  // remove tópico
+  const idx = STATE.bank.topics.findIndex(t => t.id === topicId);
+  if (idx >= 0) STATE.bank.topics.splice(idx, 1);
+
+  // remove collapse state
+  if (STATE.ui?.collapsedTopics) delete STATE.ui.collapsedTopics[topicId];
+
+  // se filtro estava nesse tópico, volta pra ALL
+  if (STATE.session.topicFilter === topicId) STATE.session.topicFilter = "ALL";
+
+  saveState();
+  return true;
+}
+
 /* ---------- session / queue ---------- */
 function getProg(id) {
   if (!STATE.progress[id]) {
@@ -366,10 +514,18 @@ function getProg(id) {
   return STATE.progress[id];
 }
 
+function phrasesByFilter() {
+  const tf = STATE.session.topicFilter || "ALL";
+  if (tf === "ALL") return STATE.bank.phrases;
+  return STATE.bank.phrases.filter(p => p.topicId === tf);
+}
+
 function buildQueue() {
+  const list = phrasesByFilter();
+
   const training = [];
   const mastered = [];
-  for (const p of STATE.bank.phrases) {
+  for (const p of list) {
     const pr = getProg(p.id);
     (pr.status === "mastered" ? mastered : training).push(p.id);
   }
@@ -541,7 +697,6 @@ function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
 function speakWithKaraoke(jpRaw, rate, kanaEl) {
   const plain = jpStripFurigana(jpRaw);
 
-  // ✅ contadores p/ skills
   STATE.stats.listens = (STATE.stats.listens || 0) + 1;
   habitBump(todayKey(), "listens", 1);
 
@@ -559,7 +714,6 @@ function speakWithKaraoke(jpRaw, rate, kanaEl) {
 function callAndResponse(jpRaw, rate, kanaEl, onDone) {
   const plain = jpStripFurigana(jpRaw);
 
-  // ✅ contadores p/ skills
   STATE.stats.calls = (STATE.stats.calls || 0) + 1;
   habitBump(todayKey(), "calls", 1);
 
@@ -582,7 +736,7 @@ function showNowYouSheet(onDone) {
 
   sheet.style.display = "block";
   sheet.innerHTML = `
-    <div class="stamp">AGORA VOCÊ✅</div>
+    <div class="stamp">agora voce ✅</div>
     <div class="small">repete em voz alta. sem pressa.</div>
     <div class="row row--between">
       <div class="badge">tempo</div>
@@ -633,8 +787,6 @@ function onRepeat() {
   pr.history.push({ at: now(), event: "cycle_done", cycleStart: cs });
 
   STATE.stats.cyclesDone = (STATE.stats.cyclesDone || 0) + 1;
-
-  // ✅ log diário
   habitBump(todayKey(), "cycles", 1);
 
   addCoins(100);
@@ -741,7 +893,7 @@ function startTimerTick() {
   if (timerTickId) return;
   timerTickId = setInterval(() => {
     updateStudyUI();
-    syncHabitMs(); // ✅ grava no histórico diário
+    syncHabitMs();
   }, 1000);
 }
 
@@ -766,18 +918,18 @@ function updateStudyUI() {
 }
 
 /* =========================================================
-   ✅ SKILLS / PROJEÇÃO
+   SKILLS / PROJEÇÃO (mantido)
    ========================================================= */
-const SKILL_PLAN_DAYS = 270; // 9 meses (aprox)
-const BASE_MIN_PER_DAY = 30; // plano alvo
+const SKILL_PLAN_DAYS = 270;
+const BASE_MIN_PER_DAY = 30;
 
 const RANKS = [
   { days: 7,   name: "Bronze",   vibe: "o nihongo nao e tao estranho assim", icon: "🥉" },
-  { days: 30,  name: "Aço",      vibe: "to comecando a achar que eu consigo", icon: "🛡️" },
+  { days: 30,  name: "Aco",      vibe: "to comecando a achar que eu consigo", icon: "🛡️" },
   { days: 90,  name: "Ouro",     vibe: "eu vou aprender nihongo sim", icon: "🥇" },
   { days: 150, name: "Platina",  vibe: "minha boca ta ficando automatica", icon: "💠" },
   { days: 210, name: "Diamante", vibe: "eu ja sobrevivo no cotidiano", icon: "💎" },
-  { days: 270, name: "Fluência", vibe: "fluencia total. o jogo virou", icon: "🌸" }
+  { days: 270, name: "Fluencia", vibe: "fluencia total. o jogo virou", icon: "🌸" }
 ];
 
 function isStudyDay(dayObj) {
@@ -805,7 +957,6 @@ function habitSummary() {
     if (isStudyDay(d)) activeDays++;
   }
 
-  // últimos 7 dias
   const nowTS = now();
   const last7 = [];
   const last30 = [];
@@ -866,10 +1017,8 @@ function projectedFinishDate(avgMinPerDay) {
 function projectedRankDates(avgMinPerDay) {
   const sum = habitSummary();
   const dates = [];
-
   if (avgMinPerDay <= 0.1) return dates;
 
-  // usando minutos acumulados como “unidade de progresso”
   const totalMin = sum.totalMin;
 
   for (const r of RANKS) {
@@ -888,26 +1037,17 @@ function projectedRankDates(avgMinPerDay) {
 function skillBars() {
   const sum = habitSummary();
 
-  // Audição: baseado em minutos + "ouvir"
   const listening = clamp((sum.totalMin / (30 * 6)) * 0.65 + (sum.listens / 80) * 0.35, 0, 1);
-
-  // Fala: baseado em call-and-response
   const speaking = clamp((sum.calls / 80), 0, 1);
-
-  // Repetição: ciclos feitos
   const repetition = clamp((sum.cycles / 120), 0, 1);
-
-  // Vocabulário: proxy = frases dominadas + tempo
   const vocab = clamp(((STATE.stats.phrasesMastered || 0) / 20) * 0.55 + (sum.totalMin / (30 * 10)) * 0.45, 0, 1);
-
-  // Confiança: mistura leve
   const confidence = clamp((repetition * 0.35 + listening * 0.25 + vocab * 0.20 + speaking * 0.20), 0, 1);
 
   return [
-    { name: "audição", val: listening, icon: "🎧", tip: "quanto mais voce ouve, menos pensa" },
+    { name: "audiçao", val: listening, icon: "🎧", tip: "quanto mais voce ouve, menos pensa" },
     { name: "fala", val: speaking, icon: "🗣️", tip: "call and response deixa a boca solta" },
-    { name: "repetição", val: repetition, icon: "🔁", tip: "o ouro vem do ciclo fechado" },
-    { name: "vocabulário", val: vocab, icon: "📦", tip: "palavras viram ferramentas" },
+    { name: "repetiçao", val: repetition, icon: "🔁", tip: "o ouro vem do ciclo fechado" },
+    { name: "vocab", val: vocab, icon: "📦", tip: "palavras viram ferramentas" },
     { name: "confiança", val: confidence, icon: "✨", tip: "a soma silenciosa do dia a dia" }
   ];
 }
@@ -921,7 +1061,6 @@ function renderSkills() {
   const prog = overallProgressByMinutes(sum.totalMin);
   const finish = projectedFinishDate(avg);
   const dates = projectedRankDates(avg);
-
   const bars = skillBars();
 
   const progPct = Math.round(prog * 100);
@@ -1064,15 +1203,36 @@ function render() {
 }
 
 function renderHome() {
+  const topicFilter = STATE.session.topicFilter || "ALL";
+  const topics = STATE.bank.topics || [];
+  const filterLabel = topicFilter === "ALL" ? "tudo" : topicName(topicFilter);
+
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
-        <h1 class="h1">✨ Tôque, Tôque, Tôque ✨</h1>
+        <h1 class="h1">✨Super Memória✨</h1>
         <p class="p">hoje pode ser 2 minutos. ja conta. sem culpa.</p>
 
         <button class="bigBtn" id="btnStart">COMEÇAR AGORA</button>
 
         <div class="sep"></div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">separar por conteudo</div>
+            <div class="badge">agora: ${escapeHTML(filterLabel)}</div>
+          </div>
+
+          <div class="row">
+            <select class="btn selectBtn" id="topicFilterSel" aria-label="filtro de topicos">
+              <option value="ALL">tudo</option>
+              ${topics.map(t => `<option value="${t.id}" ${t.id===topicFilter?"selected":""}>${escapeHTML(t.name)}</option>`).join("")}
+            </select>
+            <button class="btn btn--ghost" data-nav="#/manage">gerenciar</button>
+          </div>
+
+          <div class="small">dica: filtro deixa seu treino mais “limpo”.</div>
+        </div>
 
         <div class="row">
           <button class="btn" data-nav="#/105x">ir pro treino</button>
@@ -1081,7 +1241,7 @@ function renderHome() {
           <button class="btn btn--ghost" data-nav="#/skills">skills</button>
         </div>
 
-        <div class="small">dica: no fim de cada ciclo voce ganha 100 moedas. riqueza por repeticao 🪙</div>
+        <div class="small">no fim de cada ciclo: +100 moedas 🪙</div>
       </section>
 
       <section class="card stack">
@@ -1098,6 +1258,23 @@ function renderHome() {
     startAuto();
     toast("vamos. so 1 frase por vez ✅");
   });
+
+  const sel = $("#topicFilterSel");
+  if (sel) {
+    sel.addEventListener("change", () => {
+      STATE.session.topicFilter = sel.value;
+      // reinicia fila se sessão já estiver ativa
+      if (STATE.session.inProgress) {
+        STATE.session.queue = buildQueue();
+        STATE.session.index = 0;
+        STATE.session.phraseId = STATE.session.queue[0] || null;
+      }
+      saveState();
+      toast("filtro aplicado ✅");
+      beep("ding");
+      render();
+    });
+  }
 }
 
 function renderNewWords(list) {
@@ -1111,17 +1288,42 @@ function renderNewWords(list) {
   `;
 }
 
+function renderTopicMiniPills(selectedId) {
+  const topics = STATE.bank.topics || [];
+  return `
+    <div class="topicPills">
+      <button class="pill ${selectedId==="ALL"?"on":""}" data-action="topicFilter" data-id="ALL">tudo</button>
+      ${topics.map(t => `
+        <button class="pill ${t.id===selectedId?"on":""} ${t.color}" data-action="topicFilter" data-id="${t.id}">
+          ${escapeHTML(t.name)}
+        </button>
+      `).join("")}
+    </div>
+  `;
+}
+
 function render105x() {
   if (!STATE.session.inProgress) {
     startAuto();
     return;
   }
-  if (!STATE.session.phraseId) {
+
+  // se filtro mudou e fila ficou vazia
+  if (!STATE.session.queue || !STATE.session.queue.length) {
     STATE.session.queue = buildQueue();
     STATE.session.index = 0;
     STATE.session.phraseId = STATE.session.queue[0] || null;
     saveState();
   }
+
+  if (!STATE.session.phraseId && STATE.session.queue.length) {
+    STATE.session.phraseId = STATE.session.queue[0];
+    STATE.session.index = 0;
+    saveState();
+  }
+
+  const curPhrase = getPhrase(STATE.session.phraseId);
+  const curTopic = curPhrase ? getTopic(curPhrase.topicId) : null;
 
   APP.innerHTML = `
     <div class="stack">
@@ -1145,6 +1347,15 @@ function render105x() {
           </div>
         </div>
 
+        <div class="row row--between" style="gap:10px">
+          <div class="badge ${curTopic ? curTopic.color : "tViolet"}">
+            ${curTopic ? escapeHTML(curTopic.name) : "Sem tópico"}
+          </div>
+          <button class="btn btn--ghost" data-action="toggleCall">${STATE.session.callMode ? "call: on" : "call: off"}</button>
+        </div>
+
+        ${renderTopicMiniPills(STATE.session.topicFilter || "ALL")}
+
         <div class="counterWrap">
           <div class="counter" id="counterBox" aria-label="contador">
             <div style="text-align:center">
@@ -1162,7 +1373,6 @@ function render105x() {
             <div class="row">
               <button class="btn btn--muted" data-action="speak" data-rate="1">ouvir normal</button>
               <button class="btn btn--muted" data-action="speak" data-rate="0.8">ouvir lento</button>
-              <button class="btn btn--ghost" data-action="toggleCall">${STATE.session.callMode ? "call: on" : "call: off"}</button>
             </div>
           </div>
         </div>
@@ -1185,7 +1395,7 @@ function render105x() {
       <section class="card stack">
         <div class="row row--between">
           <div class="badge">todas as frases</div>
-          <div class="small">toque em IR</div>
+          <div class="small">organizado por topicos</div>
         </div>
         <div class="list" id="phraseList"></div>
       </section>
@@ -1200,35 +1410,115 @@ function render105x() {
   updateBackTopVisibility();
 }
 
+function renderTopicHeader(topic, count, collapsed) {
+  return `
+    <button class="topicHdr ${topic.color}" data-action="toggleTopic" data-id="${topic.id}">
+      <span class="topicHdrL">
+        <span class="topicDot"></span>
+        <span class="topicName">${escapeHTML(topic.name)}</span>
+        <span class="topicCount">${count}</span>
+      </span>
+      <span class="topicChevron">${collapsed ? "▾" : "▴"}</span>
+    </button>
+  `;
+}
+
 function renderPhraseListOnly() {
   const box = $("#phraseList");
   if (!box) return;
 
-  const list = STATE.bank.phrases.map(x => {
-    const pr = getProg(x.id);
-    const st = pr.status === "mastered" ? "dominada ✓" : "treino";
-    const pct = phraseProgressPct(pr);
-    const pctTxt = Math.round(pct * 100);
+  const byTopic = new Map();
+  const phrases = phrasesByFilter();
 
-    return `
-      <div class="item">
-        <div class="itemTop">
-          <div style="min-width:0">
-            <p class="itemTitle">${escapeHTML(jpStripFurigana(x.jp))}</p>
-            <div class="itemMeta">${escapeHTML(x.pt)} • ${st}</div>
+  // agrupa mantendo a ordem dos tópicos
+  const topics = STATE.bank.topics || [];
+  for (const t of topics) byTopic.set(t.id, []);
+  byTopic.set("_missing", []);
 
-            <div class="pWrap" aria-label="progresso">
-              <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
-              <div class="pTxt">${pctTxt}%</div>
+  for (const p of phrases) {
+    if (byTopic.has(p.topicId)) byTopic.get(p.topicId).push(p);
+    else byTopic.get("_missing").push(p);
+  }
+
+  const collapsedTopics = STATE.ui.collapsedTopics || {};
+
+  const frag = document.createDocumentFragment();
+
+  for (const t of topics) {
+    const list = byTopic.get(t.id) || [];
+    if (!list.length) continue;
+
+    const collapsed = !!collapsedTopics[t.id];
+    const wrap = document.createElement("div");
+    wrap.className = "topicGroup";
+    wrap.innerHTML = `
+      ${renderTopicHeader(t, list.length, collapsed)}
+      <div class="topicBody ${collapsed ? "isCollapsed" : ""}">
+        ${list.map(x => {
+          const pr = getProg(x.id);
+          const st = pr.status === "mastered" ? "dominada ✓" : "treino";
+          const pct = phraseProgressPct(pr);
+          const pctTxt = Math.round(pct * 100);
+          return `
+            <div class="item">
+              <div class="itemTop">
+                <div style="min-width:0">
+                  <p class="itemTitle">${escapeHTML(jpStripFurigana(x.jp))}</p>
+                  <div class="itemMeta">${escapeHTML(x.pt)} • ${st}</div>
+
+                  <div class="pWrap" aria-label="progresso">
+                    <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+                    <div class="pTxt">${pctTxt}%</div>
+                  </div>
+                </div>
+                <button class="btn" data-action="goto" data-id="${x.id}">IR</button>
+              </div>
             </div>
-          </div>
-          <button class="btn" data-action="goto" data-id="${x.id}">IR</button>
-        </div>
+          `;
+        }).join("")}
       </div>
     `;
-  }).join("");
+    frag.appendChild(wrap);
+  }
 
-  box.innerHTML = list;
+  const missing = byTopic.get("_missing") || [];
+  if (missing.length) {
+    const t = ensureDefaultTopic();
+    const collapsed = !!collapsedTopics["_missing"];
+    const wrap = document.createElement("div");
+    wrap.className = "topicGroup";
+    wrap.innerHTML = `
+      ${renderTopicHeader({ ...t, id: "_missing", name: "sem topico" }, missing.length, collapsed)}
+      <div class="topicBody ${collapsed ? "isCollapsed" : ""}">
+        ${missing.map(x => {
+          const pr = getProg(x.id);
+          const st = pr.status === "mastered" ? "dominada ✓" : "treino";
+          const pct = phraseProgressPct(pr);
+          const pctTxt = Math.round(pct * 100);
+          return `
+            <div class="item">
+              <div class="itemTop">
+                <div style="min-width:0">
+                  <p class="itemTitle">${escapeHTML(jpStripFurigana(x.jp))}</p>
+                  <div class="itemMeta">${escapeHTML(x.pt)} • ${st}</div>
+
+                  <div class="pWrap" aria-label="progresso">
+                    <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+                    <div class="pTxt">${pctTxt}%</div>
+                  </div>
+                </div>
+                <button class="btn" data-action="goto" data-id="${x.id}">IR</button>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+    frag.appendChild(wrap);
+  }
+
+  box.innerHTML = "";
+  box.appendChild(frag);
 }
 
 function render105xBodyOnly() {
@@ -1271,6 +1561,16 @@ function parseNewWords(input) {
   return out;
 }
 
+function renderTopicSelect(selectedId) {
+  const topics = STATE.bank.topics || [];
+  const sel = selectedId || (ensureDefaultTopic().id);
+  return `
+    <select class="btn selectBtn" id="topicSel" aria-label="selecionar topico">
+      ${topics.map(t => `<option value="${t.id}" ${t.id===sel?"selected":""}>${escapeHTML(t.name)}</option>`).join("")}
+    </select>
+  `;
+}
+
 function renderEdit(editingId = null) {
   const editing = editingId ? getPhrase(editingId) : null;
 
@@ -1279,6 +1579,8 @@ function renderEdit(editingId = null) {
   const nwVal = editing && Array.isArray(editing.newWords)
     ? editing.newWords.map(x => `${x.jp}=${x.pt}`).join(", ")
     : "";
+
+  const topicId = editing ? (editing.topicId || ensureDefaultTopic().id) : (ensureDefaultTopic().id);
 
   APP.innerHTML = `
     <div class="stack">
@@ -1289,6 +1591,20 @@ function renderEdit(editingId = null) {
         </div>
 
         <div class="sheet stack">
+          <div class="row row--between" style="gap:10px">
+            <div class="badge">separar por conteudo</div>
+            <button class="btn btn--ghost" data-nav="#/manage">gerenciar</button>
+          </div>
+
+          ${renderTopicSelect(topicId)}
+
+          <div class="topicAddRow">
+            <input id="topicNewName" class="btn" placeholder="novo topico (ex: fabrica, segurança...)" />
+            <button class="btn btn--ok" data-action="addTopicInline">adicionar</button>
+          </div>
+
+          <div class="sep"></div>
+
           <div class="small">jp (aceita kanji. furigana manual: 仕事{しごと}. parênteses （ ） ok)</div>
           <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 私{わたし} の名前{なまえ} は あきおです。" value="${escapeHTML(jpVal)}" />
           <div class="small">pt</div>
@@ -1304,10 +1620,6 @@ function renderEdit(editingId = null) {
 
           <div class="small" id="editMsg"></div>
         </div>
-
-        <div class="sep"></div>
-
-        <div class="badge">frases: ${STATE.bank.phrases.length}</div>
       </section>
     </div>
   `;
@@ -1315,6 +1627,26 @@ function renderEdit(editingId = null) {
 
 /* ---------- gerenciar ---------- */
 function renderManage() {
+  const def = ensureDefaultTopic();
+  const topics = STATE.bank.topics || [];
+
+  const topicRows = topics.map(t => {
+    const canDel = t.id !== def.id;
+    return `
+      <div class="item">
+        <div class="itemTop">
+          <div style="min-width:0">
+            <p class="itemTitle">${escapeHTML(t.name)}</p>
+            <div class="itemMeta">topico • ${t.id===def.id ? "padrao" : "custom"}</div>
+          </div>
+          <div class="manageBtns">
+            ${canDel ? `<button class="btn btn--bad" data-action="deleteTopic" data-id="${t.id}">excluir</button>` : `<span class="badge">fixo</span>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
   const rows = STATE.bank.phrases.map(p => {
     const pr = getProg(p.id);
     const st = pr.status === "mastered" ? "dominada ✓" : "treino";
@@ -1323,7 +1655,7 @@ function renderManage() {
         <div class="itemTop">
           <div style="min-width:0">
             <p class="itemTitle">${escapeHTML(jpStripFurigana(p.jp))}</p>
-            <div class="itemMeta">${escapeHTML(p.pt)} • ${st}</div>
+            <div class="itemMeta">${escapeHTML(p.pt)} • ${st} • <span class="badge ${topicColorClass(p.topicId)}">${escapeHTML(topicName(p.topicId))}</span></div>
           </div>
           <div class="manageBtns">
             <button class="btn btn--ghost" data-action="editPhrase" data-id="${p.id}">editar</button>
@@ -1338,12 +1670,29 @@ function renderManage() {
     <div class="stack">
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">editar / excluir</div>
+          <div class="badge">topicos</div>
           <button class="btn" data-nav="#/105x">voltar</button>
         </div>
 
-        <div class="small">dica: furigana em cima usando { }. exemplo: 名前{なまえ}</div>
+        <div class="sheet stack">
+          <div class="small">criar topico novo</div>
+          <div class="topicAddRow">
+            <input id="topicNewName2" class="btn" placeholder="ex: fabrica, segurança, amigos..." />
+            <button class="btn btn--ok" data-action="addTopic">adicionar</button>
+          </div>
+          <div class="small" id="topicMsg"></div>
+        </div>
 
+        <div class="list">${topicRows}</div>
+
+        <div class="sep"></div>
+
+        <div class="row row--between">
+          <div class="badge">frases</div>
+          <button class="btn" data-nav="#/edit">novo cadastro</button>
+        </div>
+
+        <div class="small">furigana em cima usando { }. exemplo: 名前{なまえ}</div>
         <div class="list">${rows}</div>
       </section>
     </div>
@@ -1360,15 +1709,33 @@ function renderBackup() {
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-action="export">exportar json</button>
-          <button class="btn btn--muted btn--full" data-action="import">importar json</button>
+        <div class="sheet stack">
+          <div class="badge">exportar</div>
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="exportCopy">copiar json</button>
+            <button class="btn btn--ok btn--full" data-action="exportFile">baixar arquivo</button>
+          </div>
+          <div class="small">no celular, “baixar arquivo” costuma ser o mais confiável ✅</div>
         </div>
 
         <div class="sheet stack">
+          <div class="badge">importar</div>
+          <div class="grid2">
+            <button class="btn btn--muted btn--full" data-action="importText">importar do texto</button>
+            <button class="btn btn--muted btn--full" data-action="importFile">importar arquivo</button>
+          </div>
+
+          <input id="fileImport" type="file" accept=".json,application/json" style="display:none" />
+
           <div class="small">cole aqui para importar</div>
           <textarea id="importBox" class="btn" style="height:160px; width:100%; text-align:left; padding:12px; border-radius:18px;"></textarea>
           <div class="small" id="backupMsg"></div>
+        </div>
+
+        <div class="sheet stack">
+          <div class="small">como usar no celular:</div>
+          <div class="small">1) exportar: baixar arquivo (ou copiar) e mandar no whatsapp pra voce mesmo</div>
+          <div class="small">2) importar: abrir o arquivo e importar aqui</div>
         </div>
       </section>
     </div>
@@ -1432,7 +1799,7 @@ function deletePhraseById(id) {
 }
 
 /* =========================================================
-   ✅ Voltar ao topo (FAB)
+   Voltar ao topo (FAB)
    ========================================================= */
 function ensureBackTopButton() {
   if (document.getElementById("backTop")) return;
@@ -1471,6 +1838,47 @@ function hookBackTopScroll() {
       updateBackTopVisibility();
     });
   }, { passive: true });
+}
+
+/* ---------- import helper ---------- */
+function validateAndLoadBackup(parsed, msgEl) {
+  if (!parsed || parsed.schema !== "jp_105x_backup_v1" || !parsed.state) {
+    msgEl.textContent = "json invalido.";
+    toast("json invalido");
+    beep("tuk");
+    return false;
+  }
+
+  const st = parsed.state;
+  if (!st.bank?.phrases || !Array.isArray(st.bank.phrases)) {
+    msgEl.textContent = "backup incompleto.";
+    toast("backup incompleto");
+    beep("tuk");
+    return false;
+  }
+
+  // valida jp
+  for (const p of st.bank.phrases) {
+    if (!isValidJP(p.jp || "")) {
+      msgEl.textContent = "backup tem jp invalido.";
+      toast("jp invalido no backup");
+      beep("tuk");
+      return false;
+    }
+  }
+
+  // migra pra v3 caso venha de versões antigas
+  const migrated = migrateToV3(st);
+
+  STATE = migrated;
+  saveState();
+  refreshHUD();
+
+  msgEl.textContent = "importado ✅";
+  toast("importado ✅");
+  beep("ding");
+  nav("#/home");
+  return true;
 }
 
 /* ---------- global click delegation ---------- */
@@ -1517,6 +1925,35 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  if (act === "toggleTopic") {
+    const id = btn.dataset.id;
+    if (!id) return;
+    STATE.ui.collapsedTopics ||= {};
+    STATE.ui.collapsedTopics[id] = !STATE.ui.collapsedTopics[id];
+    saveState();
+    renderPhraseListOnly();
+    return;
+  }
+
+  if (act === "topicFilter") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    STATE.session.topicFilter = id;
+    // refaz fila
+    STATE.session.queue = buildQueue();
+    STATE.session.index = 0;
+    STATE.session.phraseId = STATE.session.queue[0] || null;
+
+    saveState();
+    toast(id === "ALL" ? "treino: tudo ✅" : `treino: ${topicName(id)} ✅`);
+    beep("ding");
+
+    render();
+    return;
+  }
+
   if (act === "toggleCall") {
     unlockAudio();
     STATE.session.callMode = !STATE.session.callMode;
@@ -1542,12 +1979,82 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  if (act === "addTopicInline") {
+    unlockAudio();
+    const input = $("#topicNewName");
+    const msg = $("#editMsg");
+    if (!input) return;
+
+    const topic = createTopic(input.value);
+    if (!topic) {
+      msg.textContent = "nao deu. nome vazio ou ja existe.";
+      toast("topico invalido");
+      beep("tuk");
+      return;
+    }
+
+    input.value = "";
+    toast("topico criado ✅");
+    beep("ding");
+
+    // seleciona automaticamente
+    const sel = $("#topicSel");
+    if (sel) {
+      sel.innerHTML = (STATE.bank.topics || []).map(t => `<option value="${t.id}" ${t.id===topic.id?"selected":""}>${escapeHTML(t.name)}</option>`).join("");
+      sel.value = topic.id;
+    }
+
+    msg.textContent = "topico criado ✅";
+    saveState();
+    return;
+  }
+
+  if (act === "addTopic") {
+    unlockAudio();
+    const input = $("#topicNewName2");
+    const msg = $("#topicMsg");
+    if (!input || !msg) return;
+
+    const topic = createTopic(input.value);
+    if (!topic) {
+      msg.textContent = "nome vazio ou ja existe.";
+      toast("topico invalido");
+      beep("tuk");
+      return;
+    }
+
+    input.value = "";
+    msg.textContent = "criado ✅";
+    toast("topico criado ✅");
+    beep("ding");
+    renderManage();
+    return;
+  }
+
+  if (act === "deleteTopic") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    const ok = confirm("excluir topico? as frases vao pro padrao.");
+    if (!ok) return;
+
+    const done = deleteTopic(id);
+    if (!done) return;
+
+    toast("topico excluido ✅");
+    beep("tuk");
+    renderManage();
+    return;
+  }
+
   if (act === "addPhrase") {
     unlockAudio();
     const jp = ($("#inJp")?.value || "").trim();
     const pt = ($("#inPt")?.value || "").trim();
     const nw = parseNewWords($("#inNW")?.value || "");
     const msg = $("#editMsg");
+    const topicId = ($("#topicSel")?.value || ensureDefaultTopic().id);
 
     if (!jp || !pt) { msg.textContent = "preencha jp e pt."; toast("faltou jp/pt"); beep("tuk"); return; }
     if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou （ ）"; toast("jp invalido"); beep("tuk"); return; }
@@ -1558,10 +2065,15 @@ document.addEventListener("click", (e) => {
     const t = now();
     const id = uid("ph");
 
-    STATE.bank.phrases.unshift({ id, jp, pt, newWords: nw, createdAt:t, updatedAt:t });
+    // topo da lista (como você pediu)
+    STATE.bank.phrases.unshift({ id, jp, pt, newWords: nw, topicId, createdAt:t, updatedAt:t });
     STATE.progress[id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
 
-    if (STATE.session.inProgress) STATE.session.queue = buildQueue();
+    if (STATE.session.inProgress) {
+      STATE.session.queue = buildQueue();
+      STATE.session.index = 0;
+      STATE.session.phraseId = STATE.session.queue[0] || null;
+    }
 
     saveState();
     toast("salvo ✅ (entrou no topo)");
@@ -1596,6 +2108,7 @@ document.addEventListener("click", (e) => {
     const pt = ($("#inPt")?.value || "").trim();
     const nw = parseNewWords($("#inNW")?.value || "");
     const msg = $("#editMsg");
+    const topicId = ($("#topicSel")?.value || ensureDefaultTopic().id);
 
     if (!jp || !pt) { msg.textContent = "preencha jp e pt."; toast("faltou jp/pt"); beep("tuk"); return; }
     if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou （ ）"; toast("jp invalido"); beep("tuk"); return; }
@@ -1606,6 +2119,7 @@ document.addEventListener("click", (e) => {
     p.jp = jp;
     p.pt = pt;
     p.newWords = nw;
+    p.topicId = topicId;
     p.updatedAt = now();
 
     saveState();
@@ -1639,65 +2153,61 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if (act === "export") {
+  /* ---------- BACKUP: export/import ---------- */
+  if (act === "exportCopy" || act === "exportFile") {
     const msg = $("#backupMsg");
     const payload = { schema: "jp_105x_backup_v1", exportedAt: new Date().toISOString(), state: STATE };
     const txt = JSON.stringify(payload, null, 2);
 
-    navigator.clipboard?.writeText(txt).then(() => {
-      msg.textContent = "copiado pro clipboard ✅";
-      toast("backup copiado ✅");
-      beep("ding");
-    }).catch(() => {
-      msg.textContent = "nao deu pra copiar. selecione e copie manualmente.";
-      toast("copie manualmente");
-      beep("tuk");
-      const box = $("#importBox");
-      if (box) box.value = txt;
-    });
+    if (act === "exportCopy") {
+      navigator.clipboard?.writeText(txt).then(() => {
+        msg.textContent = "copiado pro clipboard ✅";
+        toast("backup copiado ✅");
+        beep("ding");
+      }).catch(() => {
+        msg.textContent = "nao deu pra copiar. selecione e copie manualmente.";
+        toast("copie manualmente");
+        beep("tuk");
+        const box = $("#importBox");
+        if (box) box.value = txt;
+      });
+      return;
+    }
+
+    // exportFile
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const filename = `nihongo321-backup-${y}-${m}-${dd}.json`;
+
+    downloadTextFile(filename, txt);
+    msg.textContent = "baixado ✅ (procure em downloads)";
+    toast("backup baixado ✅");
+    beep("ding");
     return;
   }
 
-  if (act === "import") {
+  if (act === "importText") {
     const box = $("#importBox");
     const msg = $("#backupMsg");
     const raw = (box?.value || "").trim();
     if (!raw) { msg.textContent = "cole o json primeiro."; toast("sem json"); beep("tuk"); return; }
 
     const parsed = safeJSONParse(raw);
-    if (!parsed || parsed.schema !== "jp_105x_backup_v1" || !parsed.state) {
-      msg.textContent = "json invalido.";
-      toast("json invalido");
-      beep("tuk");
-      return;
-    }
-
-    const st = parsed.state;
-    if (!st.bank?.phrases || !Array.isArray(st.bank.phrases)) {
-      msg.textContent = "backup incompleto.";
-      toast("backup incompleto");
-      beep("tuk");
-      return;
-    }
-
-    for (const p of st.bank.phrases) {
-      if (!isValidJP(p.jp || "")) {
-        msg.textContent = "backup tem jp invalido.";
-        toast("jp invalido no backup");
-        beep("tuk");
-        return;
-      }
-    }
-
-    STATE = st;
-    saveState();
-    toast("importado ✅");
-    beep("ding");
-    refreshHUD();
-    nav("#/home");
+    validateAndLoadBackup(parsed, msg);
     return;
   }
 
+  if (act === "importFile") {
+    const input = $("#fileImport");
+    if (!input) return;
+    input.value = "";
+    input.click();
+    return;
+  }
+
+  /* ---------- settings ---------- */
   if (act === "toggleSound") {
     unlockAudio();
     STATE.prefs.audio.enabled = !STATE.prefs.audio.enabled;
@@ -1719,6 +2229,7 @@ document.addEventListener("click", (e) => {
 
   if (act === "reset") {
     localStorage.removeItem(LS_KEY);
+    localStorage.removeItem("jp_105x_v2");
     STATE = defaultState();
     saveState();
     toast("resetado. seed voltou ✅");
@@ -1754,6 +2265,30 @@ document.addEventListener("input", (e) => {
   }
 });
 
+document.addEventListener("change", (e) => {
+  const el = e.target;
+  if (el && el.id === "fileImport") {
+    const msg = $("#backupMsg");
+    if (!msg) return;
+
+    const file = el.files && el.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = String(reader.result || "").trim();
+      const parsed = safeJSONParse(text);
+      validateAndLoadBackup(parsed, msg);
+    };
+    reader.onerror = () => {
+      msg.textContent = "nao deu pra ler o arquivo.";
+      toast("erro ao ler arquivo");
+      beep("tuk");
+    };
+    reader.readAsText(file);
+  }
+});
+
 /* ---------- hash change ---------- */
 window.addEventListener("hashchange", () => {
   render();
@@ -1763,6 +2298,7 @@ window.addEventListener("hashchange", () => {
 
 /* ---------- boot ---------- */
 (function init() {
+  ensureDefaultTopic();
   refreshHUD();
   if (!location.hash) nav("#/home");
 
