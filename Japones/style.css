@@ -488,6 +488,7 @@ body{
   border: 1px solid rgba(255,255,255,.10);
   background: rgba(255,255,255,.03);
   padding: 12px;
+  text-align: left; /* ✅ reduz poluição visual só nessa área */
 }
 
 .reorderTop{
@@ -880,6 +881,24 @@ input.btn, textarea.btn{
 
   .primaryRow{ justify-content:flex-start; }
   .primaryRow .primaryAction{ width: 100%; }
+
+  /* ✅ FIX principal: evita “japonês em coluna” no Gerenciar */
+  .topicTools{
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .reorderTop{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .reorderLeft{
+    width: 100%;
+  }
+  .manageBtns{
+    justify-content: flex-end;
+    width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce){
