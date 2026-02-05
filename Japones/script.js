@@ -30,11 +30,17 @@ function todayKey() {
   return `${y}-${m}-${dd}`;
 }
 
-function fmtMMSS(ms) {
-  const s = Math.floor(ms / 1000);
-  const mm = String(Math.floor(s / 60)).padStart(2, "0");
-  const ss = String(s % 60).padStart(2, "0");
-  return `${mm}:${ss}`;
+/* ✅ NOVO: HH:MM:SS (Xd) */
+function fmtHMSDays(ms) {
+  const totalSec = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSec / 86400);
+  const rem = totalSec % 86400;
+
+  const hh = String(Math.floor(rem / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((rem % 3600) / 60)).padStart(2, "0");
+  const ss = String(rem % 60).padStart(2, "0");
+
+  return `${hh}:${mm}:${ss} (${days}d)`;
 }
 
 function fmtDateShort(ts) {
@@ -428,10 +434,6 @@ function topicName(id) {
   return getTopic(id)?.name || "Sem tópico";
 }
 
-function topicColorClass(id) {
-  return getTopic(id)?.color || "tViolet";
-}
-
 function ensureDefaultTopic() {
   let def = STATE.bank.topics.find(t => t.id === "topic_default");
   if (!def) {
@@ -501,9 +503,7 @@ function clearTopic(topicId) {
   const def = ensureDefaultTopic();
   if (!topicId) return 0;
 
-  // não impede limpar o default: às vezes o usuário quer zerar “Frases aleatórias”
   const ids = new Set(topicPhraseIds(topicId));
-
   if (!ids.size) return 0;
 
   STATE.bank.phrases = STATE.bank.phrases.filter(p => !ids.has(p.id));
@@ -924,7 +924,7 @@ function updateStudyUI() {
   if (!el || !fill) return;
 
   const ms = getStudyMs();
-  el.textContent = fmtMMSS(ms);
+  el.textContent = fmtHMSDays(ms);
 
   const goal = 10 * 60 * 1000;
   const pct = clamp(ms / goal, 0, 1);
@@ -1081,18 +1081,11 @@ function render105x() {
         <div class="studyTop">
           <div class="badge">105x</div>
 
-          <div class="studyTimer" aria-label="tempo de estudo">
-            <div class="studyTimerRow">
-              <div class="studyTime"><span class="ic">⏱</span> <span id="studyTime">00:00</span></div>
-              <div class="studyHint">meta 10:00</div>
-            </div>
-            <div class="studyBar"><div class="studyFill" id="studyFill"></div></div>
-          </div>
-
           <div class="studyActions">
             <button class="miniBtn" title="skills" aria-label="skills" data-nav="#/skills">🏅</button>
             <button class="miniBtn" title="editar frases" aria-label="editar frases" data-nav="#/manage">✏️</button>
-            <div class="badge">${STATE.session.callMode ? "chamada on" : "chamada off"}</div>
+            <!-- ✅ alinhado à direita (fica no topo, mas “encostado” no lado direito) -->
+            <div class="badge" style="margin-left:6px">${STATE.session.callMode ? "chamada on" : "chamada off"}</div>
           </div>
         </div>
 
@@ -1100,10 +1093,28 @@ function render105x() {
           <div class="badge ${curTopic ? curTopic.color : "tViolet"}">
             ${curTopic ? escapeHTML(curTopic.name) : "Sem tópico"}
           </div>
-          <button class="btn btn--ghost" data-action="toggleCall">${STATE.session.callMode ? "call: on" : "call: off"}</button>
+          <div></div>
         </div>
 
         ${renderTopicMiniPills(STATE.session.topicFilter || "ALL")}
+
+        <!-- ✅ timer desceu e ficou no bloco da direita (como na seta) -->
+        <div class="studyDock">
+          <div class="studyRight">
+            <div class="studyTimer" aria-label="tempo de estudo">
+              <div class="studyTimerRow">
+                <div class="studyTime"><span class="ic">⏱</span> <span id="studyTime">00:00:00 (0d)</span></div>
+                <div class="studyHint">Tempo Dedicado</div>
+              </div>
+              <div class="studyBar"><div class="studyFill" id="studyFill"></div></div>
+            </div>
+
+            <!-- ✅ call button desceu, alinhado à direita -->
+            <button class="btn btn--ghost callBtn" data-action="toggleCall">
+              ${STATE.session.callMode ? "call: on" : "call: off"}
+            </button>
+          </div>
+        </div>
 
         <div class="phraseArea" aria-label="frase em treino">
           <div class="counterMini" id="counterBox" aria-label="contador">
@@ -1334,7 +1345,7 @@ function renderEdit(editingId = null) {
   `;
 }
 
-/* ---------- GERENCIAR (NOVO: dropdown por tópico + adicionar dentro + reorder touch + limpar) ---------- */
+/* ---------- GERENCIAR (igual ao seu) ---------- */
 function renderManage() {
   ensurePhrasesHaveValidTopic();
 
@@ -1342,7 +1353,6 @@ function renderManage() {
   const topics = STATE.bank.topics || [];
   const collapsed = STATE.ui.collapsedTopics || {};
 
-  // Agrupa frases por tópico
   const byTopic = new Map();
   for (const t of topics) byTopic.set(t.id, []);
   for (const p of STATE.bank.phrases) {
@@ -1350,7 +1360,6 @@ function renderManage() {
     (byTopic.get(p.topicId) || byTopic.get(def.id)).push(p);
   }
 
-  // Área de criar tópico + botões gerais
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
@@ -1395,10 +1404,8 @@ function renderManage() {
     const wrap = document.createElement("div");
     wrap.className = "topicGroup";
 
-    // Header do tópico (dropdown)
     const headerHtml = renderTopicHeader(t, list.length, isCollapsed);
 
-    // Botões do tópico (aqui entra o “Adicionar” no lugar que você circulou)
     const toolsHtml = `
       <div class="topicTools">
         <button class="btn btn--ok" data-action="addPhraseToTopic" data-id="${t.id}">adicionar</button>
@@ -1407,7 +1414,6 @@ function renderManage() {
       </div>
     `;
 
-    // Lista reorder
     const bodyHtml = `
       <div class="topicBody ${isCollapsed ? "isCollapsed" : ""}">
         ${toolsHtml}
@@ -1450,18 +1456,13 @@ function renderManage() {
   root.innerHTML = "";
   root.appendChild(frag);
 
-  // ativa drag no gerenciar
   initReorderable();
 }
 
 /* ---------- Reorder touch-friendly (Pointer Events) ---------- */
 let DRAG = null;
 
-function initReorderable() {
-  // nada aqui, o handler é global via pointerdown no documento (delegação),
-  // mas garantimos que qualquer drag anterior morra ao re-render
-  DRAG = null;
-}
+function initReorderable() { DRAG = null; }
 
 function applyTopicOrder(topicId, orderedIds) {
   if (!topicId || !Array.isArray(orderedIds) || !orderedIds.length) return;
@@ -1469,14 +1470,12 @@ function applyTopicOrder(topicId, orderedIds) {
   const set = new Set(orderedIds);
   const arr = STATE.bank.phrases;
 
-  // encontra a posição do primeiro item desse tópico na lista atual
   let firstIndex = -1;
   for (let i = 0; i < arr.length; i++) {
     if (set.has(arr[i].id)) { firstIndex = i; break; }
   }
   if (firstIndex < 0) firstIndex = arr.length;
 
-  // remove os itens do tópico
   const removed = [];
   const kept = [];
   for (const p of arr) {
@@ -1484,11 +1483,9 @@ function applyTopicOrder(topicId, orderedIds) {
     else kept.push(p);
   }
 
-  // mapa id -> frase
   const map = new Map(removed.map(p => [p.id, p]));
   const ordered = orderedIds.map(id => map.get(id)).filter(Boolean);
 
-  // insere de volta no ponto “original” aproximado
   kept.splice(firstIndex, 0, ...ordered);
 
   STATE.bank.phrases = kept;
@@ -1603,11 +1600,7 @@ function validateAndLoadBackup(parsed, msgEl) {
   return true;
 }
 
-/* ---------- PÁGINAS restantes (backup/settings/skills) ----------
-   Mantidas iguais ao seu build anterior (sem mudanças funcionais aqui).
-   Para não explodir seu app, eu mantive estas telas bem “safe”.
-*/
-
+/* ---------- backup/settings/skills (mantidos) ---------- */
 function renderBackup() {
   APP.innerHTML = `
     <div class="stack">
@@ -1678,7 +1671,7 @@ function renderSettings() {
   `;
 }
 
-/* --- skills (mantido) --- */
+/* --- skills (mantido do seu build) --- */
 const SKILL_PLAN_DAYS = 270;
 const BASE_MIN_PER_DAY = 30;
 
@@ -1985,7 +1978,7 @@ document.addEventListener("click", (e) => {
     STATE.ui.collapsedTopics ||= {};
     STATE.ui.collapsedTopics[id] = !STATE.ui.collapsedTopics[id];
     saveState();
-    render(); // importante: toggle funciona tanto no 105x quanto no manage
+    render();
     return;
   }
 
@@ -2088,7 +2081,6 @@ document.addEventListener("click", (e) => {
     unlockAudio();
     const id = btn.dataset.id;
     if (!id) return;
-    // vai pro cadastro já com tópico selecionado
     nav(`#/edit?topic=${encodeURIComponent(id)}`);
     return;
   }
@@ -2136,7 +2128,6 @@ document.addEventListener("click", (e) => {
     $("#inPt").value = "";
     $("#inNW").value = "";
 
-    // volta pro gerenciar se veio de “Adicionar” do tópico
     const { params } = routeInfo();
     if (params.topic) {
       nav("#/manage");
@@ -2315,7 +2306,6 @@ document.addEventListener("pointerdown", (e) => {
   const topic = item.dataset.topic;
   if (!topic) return;
 
-  // trava apenas no gerenciar
   if (route() !== "#/manage") return;
 
   e.preventDefault();
@@ -2338,9 +2328,8 @@ document.addEventListener("pointermove", (e) => {
   if (!DRAG) return;
   if (e.pointerId !== DRAG.pointerId) return;
 
-  const { list, item, topic } = DRAG;
+  const { list, item } = DRAG;
 
-  // detecta alvo por elemento mais próximo
   const y = e.clientY;
   const items = $$("[data-reorder-item='1']", list).filter(el => el !== item);
   let target = null;
@@ -2351,14 +2340,8 @@ document.addEventListener("pointermove", (e) => {
     if (y < mid) { target = it; break; }
   }
 
-  if (target) {
-    list.insertBefore(item, target);
-  } else {
-    list.appendChild(item);
-  }
-
-  // feedback leve (não vibrar sempre)
-  // (mantido silencioso para não cansar)
+  if (target) list.insertBefore(item, target);
+  else list.appendChild(item);
 }, { passive: true });
 
 document.addEventListener("pointerup", (e) => {
@@ -2369,7 +2352,6 @@ document.addEventListener("pointerup", (e) => {
 
   item.classList.remove("dragging");
 
-  // salva ordem
   const orderedIds = $$("[data-reorder-item='1']", list).map(el => el.dataset.id).filter(Boolean);
   applyTopicOrder(topic, orderedIds);
 

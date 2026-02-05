@@ -295,6 +295,46 @@ body{
   gap:10px;
 }
 
+/* ✅ FIX: select legível (menu "tudo") */
+.selectBtn{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 36px;
+  position: relative;
+  background:
+    radial-gradient(240px 140px at 25% 25%, rgba(255,255,255,.10), transparent 60%),
+    rgba(255,255,255,.04);
+}
+select.selectBtn{
+  color: var(--text);
+}
+select.selectBtn option{
+  background: #0b1020;
+  color: #eef3ff;
+}
+select.selectBtn:focus{
+  outline: none;
+}
+.selectBtn{
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(238,243,255,.70) 50%),
+    linear-gradient(135deg, rgba(238,243,255,.70) 50%, transparent 50%),
+    radial-gradient(240px 140px at 25% 25%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%,
+    0 0,
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    auto,
+    auto;
+  background-repeat: no-repeat;
+}
+
 /* ---------- layout do treino ---------- */
 .phraseArea{
   position: relative;
@@ -406,7 +446,7 @@ body{
   white-space: nowrap;
 }
 
-/* ---- NOVO: dropdown / grupos no gerenciar ---- */
+/* ---- dropdown / grupos no gerenciar ---- */
 .topicGroup{ display:flex; flex-direction:column; gap:10px; }
 
 .topicHdr{
@@ -488,7 +528,7 @@ body{
   border: 1px solid rgba(255,255,255,.10);
   background: rgba(255,255,255,.03);
   padding: 12px;
-  text-align: left; /* ✅ reduz poluição visual só nessa área */
+  text-align: left;
 }
 
 .reorderTop{
@@ -514,7 +554,7 @@ body{
   font-weight: 1000;
   color: rgba(238,243,255,.85);
   box-shadow: 0 10px 22px rgba(0,0,0,.16);
-  touch-action: none; /* importante pro drag no mobile */
+  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -626,72 +666,19 @@ body{
   text-align:right;
 }
 
-/* topo do treino com timer */
+/* topo do treino */
 .studyTop{
   display:flex;
   align-items:center;
+  justify-content:space-between;
   gap:10px;
   margin-bottom: 6px;
 }
-
-.studyTimer{
-  flex: 1;
-  min-width: 0;
-  padding: 10px 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.03);
-}
-
-.studyTimerRow{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.studyTime{
-  font-weight: 1000;
-  letter-spacing: .2px;
-  font-size: 13px;
-  color: rgba(238,243,255,.92);
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-.studyTime .ic{ filter:saturate(1.2); }
-
-.studyHint{
-  font-size: 11px;
-  color: rgba(238,243,255,.60);
-  font-weight: 900;
-  white-space: nowrap;
-}
-
-.studyBar{
-  margin-top: 8px;
-  height: 8px;
-  border-radius: 999px;
-  overflow:hidden;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.05);
-}
-
-.studyFill{
-  height:100%;
-  width:100%;
-  transform-origin: left center;
-  transform: scaleX(0);
-  background:
-    linear-gradient(90deg, rgba(37,211,102,.85), rgba(122,167,255,.65), rgba(255,134,200,.55));
-}
-
 .studyActions{
   display:flex;
   align-items:center;
   gap:10px;
 }
-
 .miniBtn{
   width: 44px;
   height: 44px;
@@ -706,6 +693,74 @@ body{
 }
 .miniBtn:active{ transform: translateY(1px) scale(.99); }
 
+/* ✅ NOVO: painel do timer + call alinhado à direita (como na seta) */
+.studyDock{
+  display:flex;
+  justify-content:flex-end;
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+.studyRight{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:8px;
+  width: min(320px, 100%);
+}
+.studyTimer{
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.studyTimerRow{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+}
+.studyTime{
+  font-weight: 1000;
+  letter-spacing: .2px;
+  font-size: 13px;
+  color: rgba(238,243,255,.92);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.studyTime .ic{ filter:saturate(1.2); }
+.studyHint{
+  font-size: 11px;
+  color: rgba(238,243,255,.72);
+  font-weight: 950;
+  white-space: nowrap;
+}
+.studyBar{
+  margin-top: 8px;
+  height: 8px;
+  border-radius: 999px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+}
+.studyFill{
+  height:100%;
+  width:100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background:
+    linear-gradient(90deg, rgba(37,211,102,.85), rgba(122,167,255,.65), rgba(255,134,200,.55));
+}
+.callBtn{
+  width: 100%;
+  max-width: 240px;
+  height: 54px;
+  border-radius: 18px;
+}
+
+/* toast */
 .toast{
   position: fixed;
   left: calc(12px + var(--safeLeft));
@@ -877,12 +932,12 @@ input.btn, textarea.btn{
   .topicName{ max-width: 52vw; }
 
   .studyTop{ flex-wrap: wrap; }
-  .studyTimer{ order: 3; width: 100%; }
+  .studyRight{ width: 100%; max-width: 100%; }
+  .studyTimer{ width: 100%; }
 
   .primaryRow{ justify-content:flex-start; }
   .primaryRow .primaryAction{ width: 100%; }
 
-  /* ✅ FIX principal: evita “japonês em coluna” no Gerenciar */
   .topicTools{
     flex-wrap: wrap;
     justify-content: flex-start;
