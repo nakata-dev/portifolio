@@ -3,7 +3,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const LS_KEY = "nakata_finance_v4";
+  const LS_KEY = "nakata_finance_v5";
 
   const monthsShort = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
   const monthsLong  = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -15,7 +15,7 @@
     year: today.getFullYear(),
     month: today.getMonth(),
     financeFilter: "all",
-    financeMode: "entries", // entries | budget
+    financeMode: "entries",
     selectedDateISO: toISO(today),
   };
 
@@ -35,7 +35,8 @@
     financeEntries: [],
     investments: [],
     expenseTemplates: [],
-    sales: [],   // NEW: contratos de venda parcelada
+    sales: [],              // contratos de venda parcelada
+    employmentHistory: [],  // NEW: histórico de empresas
     reminders: [],
     patterns: { active: "AABBEE" }
   });
@@ -64,9 +65,8 @@
         return defaultState();
       }
     }
-
-    // migration from older keys
-    const oldKeys = ["nakata_finance_v3","nakata_finance_v2"];
+    // migration from older key versions
+    const oldKeys = ["nakata_finance_v4","nakata_finance_v3","nakata_finance_v2"];
     for(const k of oldKeys){
       const old = localStorage.getItem(k);
       if(!old) continue;
@@ -77,7 +77,6 @@
         return merged;
       }catch{}
     }
-
     return defaultState();
   }
 
@@ -92,14 +91,21 @@
       investments: parsed.investments || [],
       expenseTemplates: parsed.expenseTemplates || [],
       sales: parsed.sales || [],
+      employmentHistory: parsed.employmentHistory || [],
       reminders: parsed.reminders || [],
       patterns: { ...def.patterns, ...(parsed.patterns||{}) }
     };
 
-    // migration: settings.currency antigo -> displayCurrency
     if(parsed?.settings?.currency && !parsed?.settings?.displayCurrency){
       merged.settings.displayCurrency = parsed.settings.currency;
     }
+
+    // migrate sales older fields (safety)
+    merged.sales = merged.sales.map(s => ({
+      downPayment: 0,
+      paidInstallments: 0,
+      ...s
+    }));
 
     return merged;
   }
@@ -195,6 +201,17 @@
     return d;
   }
 
+  function endOfDay(d){
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+  }
+
+  function startOfMonth(y, m){
+    return new Date(y, m, 1);
+  }
+  function endOfMonth(y, m){
+    return new Date(y, m+1, 0, 23, 59, 59, 999);
+  }
+
   // ---------- UI Wiring ----------
   function wireNav(){
     $$(".nav-item").forEach(btn => {
@@ -235,11 +252,9 @@
       renderCalendar();
     });
 
-    // finance mode toggle
     $("#segFinEntries").addEventListener("click", () => setFinanceMode("entries"));
     $("#segFinBudget").addEventListener("click", () => setFinanceMode("budget"));
 
-    // finance primary button (changes by mode)
     $("#btnFinancePrimary").addEventListener("click", () => {
       if(ui.financeMode === "budget"){
         openExpenseSheet();
@@ -254,7 +269,6 @@
 
     $("#btnAddInvest").addEventListener("click", () => openInvestSheet());
 
-    // finance chips
     $$(".chip").forEach(chip => {
       chip.addEventListener("click", () => {
         $$(".chip").forEach(c => {
@@ -277,24 +291,15 @@
       el.addEventListener("click", () => closeSheet(el.dataset.closeSheet));
     });
 
-    // day sheet
     $("#btnDaySave").addEventListener("click", saveDayEntry);
     $("#btnDayClear").addEventListener("click", clearDayEntry);
     $("#btnDayDuplicate").addEventListener("click", duplicateDayEntry);
 
-    // finance sheet
     $("#btnFinSave").addEventListener("click", saveFinanceEntry);
-
-    // expense template sheet
     $("#btnExpSave").addEventListener("click", saveExpenseTemplate);
-
-    // sale sheet
     $("#btnSaleSave").addEventListener("click", saveSaleContract);
-
-    // invest sheet
     $("#btnInvSave").addEventListener("click", saveInvest);
 
-    // modal close
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
   }
 
@@ -538,20 +543,11 @@
 
     const fin = financeMonthStats(ui.year, ui.month);
 
-    // Entradas reais (sem empréstimo): recebimentos + recebimentos vindos de vendas (são "recv" também)
-    const inNoLoan = fin.recvOnlyDisplay;
-    const outNoLoan = fin.payOnlyDisplay;
-
-    // Bruto real: salário estimado + recebimentos (sem empréstimo)
-    const grossReal = workIncomeDisplay + inNoLoan;
-    // Líquido real: bruto - pagamentos (sem empréstimo)
-    const netReal = grossReal - outNoLoan;
+    const grossReal = workIncomeDisplay + fin.recvOnlyDisplay;
+    const netReal = grossReal - fin.payOnlyDisplay;
 
     const bud = budgetStats(ui.year, ui.month);
-
-    // Bruto previsto: igual ao real (salário estimado + recebimentos lançados)
     const grossForecast = grossReal;
-    // Líquido previsto: líquido real - restante do planejado (fixas/variáveis ainda não pagas)
     const netForecast = netReal - bud.remainingDisplay;
 
     $("#projGrossReal").textContent = moneyIn(dispCur, grossReal);
@@ -567,7 +563,6 @@
 
     const dispCur = state.settings.displayCurrency;
 
-    // 1) Lançamentos financeiros (pag/recv/loans)
     let entries = state.financeEntries
       .filter(e => isSameMonth(e.dateISO, ui.year, ui.month))
       .filter(e => {
@@ -580,7 +575,6 @@
       })
       .sort((a,b) => (a.dateISO > b.dateISO ? -1 : 1));
 
-    // 2) Contratos de venda (sempre disponíveis em qualquer mês, mas filtro "Vendas" mostra)
     const salesForView = state.sales
       .filter(s => ui.financeFilter === "sales" || ui.financeFilter === "all")
       .slice()
@@ -589,7 +583,6 @@
     const hasAnything = entries.length > 0 || salesForView.length > 0;
     $("#financeEmpty").classList.toggle("hidden", hasAnything);
 
-    // Render contracts first when filter is sales
     if(ui.financeFilter === "sales"){
       for(const s of salesForView){
         list.appendChild(renderSaleCard(s, dispCur));
@@ -597,7 +590,6 @@
       return;
     }
 
-    // Render normal entries
     for(const e of entries){
       const isIn = (e.type === "recv" || e.type === "loan_in");
       const sign = isIn ? "+" : "-";
@@ -643,7 +635,6 @@
       list.appendChild(el);
     }
 
-    // Render sales after (compact cards)
     if(salesForView.length){
       const sep = document.createElement("div");
       sep.style.margin = "6px 2px 2px 2px";
@@ -667,22 +658,26 @@
     const paidCount = sale.paidInstallments || 0;
     const remainingCount = Math.max(sale.installments - paidCount, 0);
 
+    const now = new Date();
+    const overdue = schedule.some(x => !x.paid && fromISO(x.dueISO) < startOfDay(now));
     const next = schedule.find(x => !x.paid);
     const nextText = next ? `${next.dueISO} (${moneyIn(cur, next.amount)})` : "Quitado ✅";
-
     const endISO = schedule.length ? schedule[schedule.length-1].dueISO : "—";
+
+    const down = clampNumber(sale.downPayment || 0);
+    const downText = down > 0 ? ` • Entrada ${moneyIn(cur, down)}` : "";
 
     const el = document.createElement("div");
     el.className = "item";
     el.innerHTML = `
       <div class="item-left">
         <div class="item-title">${escapeHTML(sale.item)} • ${escapeHTML(sale.buyer)}</div>
-        <div class="item-sub">Total ${moneyIn(cur, sale.total)} • ${sale.installments}x • termina em ${endISO}</div>
+        <div class="item-sub">Total ${moneyIn(cur, sale.total)}${downText} • ${sale.installments}x • termina em ${endISO}</div>
       </div>
       <div class="item-right">
         <div class="amount">${moneyIn(dispCur, totalDisp)}</div>
         <div class="tag sale">${paidCount}/${sale.installments} pago</div>
-        <div class="tag">${nextText}</div>
+        ${overdue ? `<div class="tag overdue">Atrasado</div>` : `<div class="tag">${nextText}</div>`}
       </div>
     `;
 
@@ -690,37 +685,50 @@
     return el;
   }
 
+  function startOfDay(d){
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  }
+
   function openSaleActionsModal(saleId){
     const sale = state.sales.find(s => s.id === saleId);
     if(!sale){ toast("Venda não encontrada."); return; }
 
     const schedule = getSaleSchedule(sale);
-    const next = schedule.find(x => !x.paid);
+
+    const rows = schedule.map(x => {
+      const cls = x.paid ? "good" : (fromISO(x.dueISO) < startOfDay(new Date()) ? "bad" : "");
+      const status = x.paid ? "Pago" : (fromISO(x.dueISO) < startOfDay(new Date()) ? "Vencida" : "Pendente");
+      return `
+        <div class="item" data-inst="${x.index}">
+          <div class="item-left">
+            <div class="item-title">Parcela ${x.index}/${sale.installments} • ${x.dueISO}</div>
+            <div class="item-sub">${moneyIn(sale.currency, x.amount)} • ${status}${sale.lateFeePct ? ` • multa ${sale.lateFeePct}%` : ""}</div>
+          </div>
+          <div class="item-right">
+            <div class="tag ${cls}">${status}</div>
+            ${!x.paid ? `<div class="tag sale">Marcar paga</div>` : ``}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    const down = clampNumber(sale.downPayment || 0);
 
     const body = `
       <div class="field">
         <span>Venda</span>
         <div style="color:var(--muted); font-weight:850; line-height:1.35">
           <b>${escapeHTML(sale.item)}</b> • ${escapeHTML(sale.buyer)}<br>
-          Total: ${moneyIn(sale.currency, sale.total)} • ${sale.installments}x<br>
-          Próxima: ${next ? `${next.dueISO} (${moneyIn(sale.currency, next.amount)})` : "Quitado ✅"}
+          Total: <b>${moneyIn(sale.currency, sale.total)}</b>${down>0 ? ` • Entrada: <b>${moneyIn(sale.currency, down)}</b>` : ""} • ${sale.installments}x<br>
+          Início: ${sale.startISO} • Vencimento: dia ${sale.dueDay}
+          ${sale.note ? `<br>Obs: ${escapeHTML(sale.note)}` : ""}
         </div>
       </div>
 
       <div class="field">
-        <span>Opções</span>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="ghost-btn grow" id="btnSalePayNext">
-            <i class="fa-solid fa-check"></i><span>Marcar próxima como paga</span>
-          </button>
-          <button class="ghost-btn grow" id="btnSalePDF">
-            <i class="fa-regular fa-file-pdf"></i><span>PDF do contrato</span>
-          </button>
-        </div>
-        <div style="margin-top:8px; display:flex; gap:8px;">
-          <button class="ghost-btn grow" id="btnSaleDelete">
-            <i class="fa-regular fa-trash-can"></i><span>Excluir venda</span>
-          </button>
+        <span>Parcelas (toque para marcar paga)</span>
+        <div class="list" style="max-height: 280px; overflow:auto; padding-right:4px;">
+          ${rows}
         </div>
       </div>
     `;
@@ -729,6 +737,12 @@
       "Venda / Recebimento",
       body,
       `
+        <button class="ghost-btn grow" id="btnSalePDF">
+          <i class="fa-regular fa-file-pdf"></i><span>PDF do contrato</span>
+        </button>
+        <button class="ghost-btn grow" id="btnSaleDelete">
+          <i class="fa-regular fa-trash-can"></i><span>Excluir</span>
+        </button>
         <button class="primary-btn grow" data-close-modal="true">
           <i class="fa-solid fa-xmark"></i><span>Fechar</span>
         </button>
@@ -752,64 +766,83 @@
       });
     });
 
-    $("#btnSalePayNext").addEventListener("click", () => {
-      if(!next){ toast("Já está quitado."); return; }
-
-      // Apply late fee if paid after due date (simple: flat percentage over parcel value)
-      const paidDate = new Date();
-      const due = fromISO(next.dueISO);
-      const late = paidDate > endOfDay(due);
-
-      let receivedAmount = next.amount;
-      if(late && clampNumber(sale.lateFeePct) > 0){
-        receivedAmount = Math.round(receivedAmount * (1 + clampNumber(sale.lateFeePct)/100));
-      }
-
-      // Mark installment as paid
-      sale.paidInstallments = (sale.paidInstallments || 0) + 1;
-
-      // Create a Finance entry as "Recebimento" so it appears in month balance
-      state.financeEntries.push({
-        id: cryptoId(),
-        type: "recv",
-        status: "paid",
-        currency: sale.currency,
-        amount: receivedAmount,
-        dateISO: toISO(paidDate),
-        category: `Venda: ${sale.item}`,
-        note: `Comprador: ${sale.buyer}${late ? ` • atraso (+${sale.lateFeePct}%)` : ""}`
+    $$("[data-inst]").forEach(row => {
+      row.addEventListener("click", () => {
+        const idx = Number(row.getAttribute("data-inst"));
+        const inst = schedule.find(x => x.index === idx);
+        if(!inst || inst.paid){
+          toast("Essa parcela já está paga.");
+          return;
+        }
+        closeModal();
+        markInstallmentPaid(saleId, idx);
       });
-
-      saveState();
-      toast("Parcela registrada como recebida.");
-      closeModal();
-      renderFinance();
-      renderSummaryBar();
     });
   }
 
-  function endOfDay(d){
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+  function markInstallmentPaid(saleId, installmentIndex){
+    const sale = state.sales.find(s => s.id === saleId);
+    if(!sale){ toast("Venda não encontrada."); return; }
+
+    const schedule = getSaleSchedule(sale);
+    const inst = schedule.find(x => x.index === installmentIndex);
+    if(!inst || inst.paid){ toast("Parcela inválida."); return; }
+
+    const paidDate = new Date();
+    const due = fromISO(inst.dueISO);
+    const late = paidDate > endOfDay(due);
+
+    let receivedAmount = inst.amount;
+    if(late && clampNumber(sale.lateFeePct) > 0){
+      receivedAmount = Math.round(receivedAmount * (1 + clampNumber(sale.lateFeePct)/100));
+    }
+
+    // Mark as paid by incrementing paidInstallments until it covers index.
+    // To support "mark any", we store a paidMap too.
+    sale.paidMap = sale.paidMap || {};
+    sale.paidMap[String(installmentIndex)] = true;
+
+    // recompute paidInstallments for display as count of paidMap
+    sale.paidInstallments = Object.values(sale.paidMap).filter(Boolean).length;
+
+    // Create finance entry as received
+    state.financeEntries.push({
+      id: cryptoId(),
+      type: "recv",
+      status: "paid",
+      currency: sale.currency,
+      amount: receivedAmount,
+      dateISO: toISO(paidDate),
+      category: `Venda: ${sale.item}`,
+      note: `Comprador: ${sale.buyer} • Parcela ${installmentIndex}/${sale.installments}${late ? ` • atraso (+${sale.lateFeePct}%)` : ""}`
+    });
+
+    saveState();
+    toast("Parcela registrada como recebida.");
+    renderFinance();
+    renderSummaryBar();
   }
 
   function getSaleSchedule(sale){
     const total = clampNumber(sale.total);
+    const downPayment = Math.max(0, Math.round(clampNumber(sale.downPayment || 0)));
+    const remainingTotal = Math.max(total - downPayment, 0);
+
     const installments = Math.max(1, Math.round(clampNumber(sale.installments)));
-    const base = Math.floor(total / installments);
-    let remainder = total - base * installments;
+    const base = Math.floor(remainingTotal / installments);
+    let remainder = remainingTotal - base * installments;
 
     const start = sale.startISO ? fromISO(sale.startISO) : new Date();
     const dueDay = Math.min(28, Math.max(1, Math.round(clampNumber(sale.dueDay || 10))));
 
-    const paidCount = sale.paidInstallments || 0;
-
+    const paidMap = sale.paidMap || {};
     const schedule = [];
+
     for(let i=0; i<installments; i++){
       const amount = base + (remainder > 0 ? 1 : 0);
       if(remainder > 0) remainder -= 1;
 
       const monthDate = addMonths(start, i);
-      // set due day
       const due = new Date(monthDate.getFullYear(), monthDate.getMonth(), dueDay);
       const dueISO = toISO(due);
 
@@ -817,7 +850,7 @@
         index: i+1,
         dueISO,
         amount,
-        paid: (i < paidCount)
+        paid: !!paidMap[String(i+1)]
       });
     }
     return schedule;
@@ -1028,8 +1061,8 @@
     let inDisplay = 0;
     let outDisplay = 0;
 
-    let recvOnlyDisplay = 0; // without loans
-    let payOnlyDisplay = 0;  // payments only
+    let recvOnlyDisplay = 0;
+    let payOnlyDisplay = 0;
 
     for(const e of state.financeEntries){
       if(!isSameMonth(e.dateISO, y, m)) continue;
@@ -1070,7 +1103,6 @@
 
     const plannedTotalDisplay = fixedTotalDisplay + variableTotalDisplay;
 
-    // "Pago" contra planejado: match simples por categoria == nome (pagamentos pagos)
     const templateNames = new Set(active.map(t => normalizeText(t.name)));
     let paidTowardsPlannedDisplay = 0;
 
@@ -1109,7 +1141,6 @@
     el.classList.add("show");
     el.setAttribute("aria-hidden", "false");
   }
-
   function closeSheet(id){
     const el = $("#"+id);
     el.classList.remove("show");
@@ -1252,7 +1283,7 @@
       return;
     }
 
-    const entry = {
+    state.financeEntries.push({
       id: cryptoId(),
       type,
       status,
@@ -1261,9 +1292,8 @@
       dateISO,
       category,
       note
-    };
+    });
 
-    state.financeEntries.push(entry);
     saveState();
     closeSheet("sheetFinance");
     toast("Lançamento salvo.");
@@ -1283,7 +1313,7 @@
   }
 
   function saveExpenseTemplate(){
-    const type = $("#expType").value; // fixed|variable
+    const type = $("#expType").value;
     const currency = $("#expCurrency").value;
     const name = String($("#expName").value || "").trim();
     const amount = Math.round(clampNumber($("#expAmount").value));
@@ -1324,6 +1354,7 @@
   function openSaleSheet(){
     $("#saleCurrency").value = "BRL";
     $("#saleTotal").value = "";
+    $("#saleDownPayment").value = "";
     $("#saleItem").value = "";
     $("#saleBuyer").value = "";
     $("#saleStart").value = toISO(new Date());
@@ -1337,6 +1368,7 @@
   function saveSaleContract(){
     const currency = $("#saleCurrency").value;
     const total = Math.round(clampNumber($("#saleTotal").value));
+    const downPayment = Math.round(clampNumber($("#saleDownPayment").value));
     const item = String($("#saleItem").value || "").trim();
     const buyer = String($("#saleBuyer").value || "").trim();
     const startISO = $("#saleStart").value || toISO(new Date());
@@ -1353,6 +1385,12 @@
       toast("Informe um total válido.");
       return;
     }
+    if(downPayment < 0 || downPayment >= total){
+      if(downPayment !== 0){
+        toast("Entrada inválida (deve ser menor que o total).");
+        return;
+      }
+    }
     if(!installments || installments < 1 || installments > 120){
       toast("Parcelas inválidas (1–120).");
       return;
@@ -1362,21 +1400,38 @@
       return;
     }
 
-    state.sales.push({
+    const sale = {
       id: cryptoId(),
       currency,
       total,
+      downPayment: Math.max(0, downPayment),
       item,
       buyer,
       startISO,
       dueDay,
       installments,
       lateFeePct: Math.max(0, lateFeePct),
+      paidMap: {}, // marks installments
       paidInstallments: 0,
       note,
       createdAt: new Date().toISOString()
-    });
+    };
 
+    // If down payment exists, create a received entry immediately on start date
+    if(sale.downPayment > 0){
+      state.financeEntries.push({
+        id: cryptoId(),
+        type: "recv",
+        status: "paid",
+        currency: sale.currency,
+        amount: sale.downPayment,
+        dateISO: startISO,
+        category: `Venda: ${sale.item} (Entrada)`,
+        note: `Comprador: ${sale.buyer}`
+      });
+    }
+
+    state.sales.push(sale);
     saveState();
     closeSheet("sheetSale");
     toast("Venda cadastrada.");
@@ -1469,9 +1524,28 @@
     });
   }
 
-  // Settings modal includes FX update
+  // ---------- Settings + Employment History ----------
   function openSettingsModal(){
     const s = state.settings;
+
+    const jobs = (state.employmentHistory || [])
+      .slice()
+      .sort((a,b) => (a.startISO > b.startISO ? -1 : 1))
+      .map(j => {
+        const end = j.endISO ? j.endISO : "—";
+        const reason = j.reason ? ` • ${escapeHTML(j.reason)}` : "";
+        return `
+          <div class="item" data-job="${j.id}">
+            <div class="item-left">
+              <div class="item-title">${escapeHTML(j.company)}</div>
+              <div class="item-sub">${j.startISO} → ${end}${reason}</div>
+            </div>
+            <div class="item-right">
+              <div class="tag">${j.endISO ? "finalizado" : "atual"}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
 
     openModal(
       "Configurações",
@@ -1540,6 +1614,47 @@
           Última atualização: ${s.fxLastUpdated ? escapeHTML(s.fxLastUpdated) : "—"}
         </div>
       </div>
+
+      <div style="height:1px; background: var(--line); margin: 6px 0;"></div>
+
+      <div class="field">
+        <span>Histórico de empresas (para seus PDFs)</span>
+        <div style="color:var(--muted); font-weight:750; font-size:12px; line-height:1.35">
+          Adicione cada empresa com início e término. No PDF do mês, o app mostra qual empresa estava ativa naquele período.
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Empresa</span>
+        <input id="jobCompany" placeholder="ex: Toyota / YKK / fábrica X" />
+      </label>
+
+      <div class="grid2">
+        <label class="field">
+          <span>Início</span>
+          <input id="jobStart" type="date" />
+        </label>
+        <label class="field">
+          <span>Término (opcional)</span>
+          <input id="jobEnd" type="date" />
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Motivo da saída (opcional)</span>
+        <input id="jobReason" placeholder="ex: troca de fábrica / retorno ao BR / contrato encerrado" />
+      </label>
+
+      <button class="primary-btn" id="btnAddJob">
+        <i class="fa-solid fa-plus"></i><span>Adicionar empresa</span>
+      </button>
+
+      <div class="field" style="margin-top:6px;">
+        <span>Lista (toque para excluir)</span>
+        <div class="list" style="max-height: 220px; overflow:auto; padding-right:4px;">
+          ${jobs || `<div style="color:var(--muted); font-weight:750; padding:10px;">Sem histórico ainda.</div>`}
+        </div>
+      </div>
       `,
       `
         <button class="ghost-btn grow" data-close-modal="true">
@@ -1562,6 +1677,55 @@
       }else{
         toast("Não consegui atualizar. Usando câmbio manual.");
       }
+    });
+
+    $("#btnAddJob").addEventListener("click", () => {
+      const company = String($("#jobCompany").value || "").trim();
+      const startISO = $("#jobStart").value;
+      const endISO = $("#jobEnd").value || null;
+      const reason = String($("#jobReason").value || "").trim();
+
+      if(!company || !startISO){
+        toast("Informe empresa e data de início.");
+        return;
+      }
+      if(endISO && endISO < startISO){
+        toast("Término não pode ser antes do início.");
+        return;
+      }
+
+      state.employmentHistory.push({
+        id: cryptoId(),
+        company,
+        startISO,
+        endISO,
+        reason
+      });
+
+      saveState();
+      toast("Empresa adicionada.");
+      closeModal();
+      openSettingsModal();
+    });
+
+    $$("[data-job]").forEach(el => {
+      el.addEventListener("click", () => {
+        const id = el.getAttribute("data-job");
+        const job = state.employmentHistory.find(j => j.id === id);
+        if(!job) return;
+
+        openConfirmModal(
+          "Excluir empresa?",
+          `${job.company} • ${job.startISO} → ${job.endISO || "—"}`,
+          () => {
+            state.employmentHistory = state.employmentHistory.filter(j => j.id !== id);
+            saveState();
+            toast("Empresa removida.");
+            closeModal();
+            openSettingsModal();
+          }
+        );
+      });
     });
 
     $("#btnSaveSettings").addEventListener("click", () => {
@@ -1615,21 +1779,18 @@
     return null;
   }
 
-  // --------- PATTERNS (mantido) ---------
+  // ---------- PATTERNS ----------
   function openPatternsModal(){
     const currentRaw = state.patterns.active || "AABBEE";
-    const normalized = normalizePattern(currentRaw).pattern || "AABBEE";
-    const preview = patternPreview(normalized, 14);
+    const preview = patternPreview(normalizePattern(currentRaw).pattern || "AABBEE", 14);
 
     openModal(
       "Padrões de escala",
       `
       <div class="field">
-        <span>Como funciona (bem simples)</span>
+        <span>Como funciona</span>
         <div style="color:var(--muted); font-weight:750; line-height:1.35">
-          Você cria uma sequência e o app repete essa sequência nos dias do mês.
-          <br><br>
-          <b>A</b>=Dia • <b>B</b>=Noite • <b>C</b>=Madrugada • <b>E</b> ou <b>-</b>=Folga
+          Sequência repetida no mês: <b>A</b>=Dia • <b>B</b>=Noite • <b>C</b>=Madrugada • <b>E</b>=Folga
         </div>
       </div>
 
@@ -1648,7 +1809,7 @@
       <div class="field">
         <span>Aplicar ao mês atual</span>
         <div style="color:var(--muted); font-weight:750; line-height:1.35">
-          Isso preenche o mês com padrão repetido. Depois você ajusta tocando nos dias.
+          Preenche o mês com padrão repetido. Depois ajuste tocando nos dias.
         </div>
       </div>
       `,
@@ -1738,7 +1899,7 @@
     }
   }
 
-  // ---------- Reminders (mantido) ----------
+  // ---------- Reminders ----------
   function openRemindersModal(){
     const items = state.reminders
       .slice()
@@ -1836,6 +1997,20 @@
   }
 
   // ---------- PDF (print-to-PDF) ----------
+  function jobsForMonth(y, m){
+    const start = startOfMonth(y, m);
+    const end = endOfMonth(y, m);
+
+    const list = (state.employmentHistory || []).filter(j => {
+      const js = fromISO(j.startISO);
+      const je = j.endISO ? fromISO(j.endISO) : null;
+      const overlaps = (js <= end) && (!je || je >= start);
+      return overlaps;
+    }).sort((a,b) => (a.startISO > b.startISO ? 1 : -1));
+
+    return list;
+  }
+
   function printMonthPDF(y, m){
     const dispCur = state.settings.displayCurrency;
 
@@ -1851,13 +2026,18 @@
 
     const title = `Resumo do mês • ${monthsLong[m]} ${y}`;
 
+    const jobs = jobsForMonth(y, m);
+    const jobsText = jobs.length
+      ? jobs.map(j => `${j.company} (${j.startISO} → ${j.endISO || "—"}${j.reason ? ` • ${j.reason}` : ""})`).join("<br>")
+      : "—";
+
     const html = `
       <html><head><meta charset="utf-8">
       <title>${escapeHTML(title)}</title>
       <style>
         body{font-family: Arial, sans-serif; padding:18px; color:#111;}
         h1{font-size:18px; margin:0 0 8px 0;}
-        .muted{color:#555; font-size:12px;}
+        .muted{color:#555; font-size:12px; line-height:1.35;}
         .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;}
         .card{border:1px solid #ddd; border-radius:10px; padding:10px;}
         .k{font-size:11px; color:#666;}
@@ -1868,6 +2048,11 @@
       </style></head><body>
         <h1>${escapeHTML(title)}</h1>
         <div class="muted">Moeda: ${dispCur} • ${escapeHTML(fxLabel())}</div>
+
+        <div class="card" style="margin-top:12px;">
+          <div class="k">Empresa(s) no período</div>
+          <div class="muted" style="margin-top:6px;">${jobsText}</div>
+        </div>
 
         <div class="grid">
           <div class="card"><div class="k">Horas normais</div><div class="v">${work.totalNormal}h</div></div>
@@ -1889,7 +2074,7 @@
         </table>
 
         <div class="muted" style="margin-top:12px;">
-          Dica: no celular, use “Compartilhar / Salvar como PDF” depois de imprimir.
+          No celular: “Compartilhar / Salvar como PDF” após imprimir.
         </div>
       </body></html>
     `;
@@ -1937,7 +2122,9 @@
         <div class="muted">
           Item: <b>${escapeHTML(sale.item)}</b><br>
           Comprador: <b>${escapeHTML(sale.buyer)}</b><br>
-          Total: <b>${moneyIn(sale.currency, sale.total)}</b> • Parcelas: <b>${sale.installments}x</b><br>
+          Total: <b>${moneyIn(sale.currency, sale.total)}</b>
+          ${sale.downPayment ? ` • Entrada: <b>${moneyIn(sale.currency, sale.downPayment)}</b>` : ""}
+          • Parcelas: <b>${sale.installments}x</b><br>
           Início: ${sale.startISO} • Vencimento: dia ${sale.dueDay} • Término previsto: ${endISO}<br>
           Juros/Multa por atraso: ${sale.lateFeePct || 0}% (aplicado na parcela quando paga após o vencimento)
           ${sale.note ? `<br>Obs: ${escapeHTML(sale.note)}` : ""}
@@ -1952,7 +2139,7 @@
         </div>
 
         <div class="muted" style="margin-top:12px;">
-          Dica: no celular, use “Compartilhar / Salvar como PDF” depois de imprimir.
+          No celular: “Compartilhar / Salvar como PDF” após imprimir.
         </div>
       </body></html>
     `;
@@ -1990,7 +2177,6 @@
     toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
   }
 
-  // ---------- Drawer / modal already wired ----------
-  // Start view
+  // ---------- Start ----------
   goView("calendar");
 })();

@@ -233,14 +233,28 @@ body{
   overflow:hidden;
 }
 
+/* ✅ grid anual */
 .year-grid{
   height: 100%;
+  width: 100%;
   display:grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  overflow:hidden;
+
+  /* ✅ importantíssimo: no celular (2 colunas) precisa rolar para ver Out/Nov/Dez */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-bottom: 6px;
 }
+
+/* esconder scrollbar (sem sumir com a rolagem) */
+.year-grid::-webkit-scrollbar{width:0;height:0}
+.year-grid{scrollbar-width:none}
+
 .month-card{
+  width: 100%;
+  min-width: 0;
   background: var(--card2);
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -257,14 +271,19 @@ body{
   font-weight: 800;
   font-size: 13px;
   letter-spacing:.2px;
+
+  /* deixa o título bem “cartão de calendário” */
+  text-align:center;
 }
+
 .month-meta{
   display:flex;
   align-items:center;
-  justify-content:space-between;
   gap: 8px;
   margin-top: 6px;
+  justify-content:space-between;
 }
+
 .pill{
   display:inline-flex;
   align-items:center;
@@ -275,7 +294,10 @@ body{
   color: var(--muted);
   font-size: 11px;
   background: rgba(255,255,255,.02);
+  white-space: nowrap;
+  max-width: 100%;
 }
+
 .dot{
   width: 8px;
   height: 8px;
@@ -588,14 +610,16 @@ body{
 .tag.good{color: var(--good)}
 .tag.bad{color: var(--bad)}
 .tag.orig{opacity:.9}
-
-/* Sales tag highlight */
 .tag.sale{
   color: var(--text);
   background: rgba(124,92,255,.12);
 }
+.tag.overdue{
+  color: var(--bad);
+  background: rgba(255,92,122,.10);
+  border-color: rgba(255,92,122,.25);
+}
 
-/* Budget section helpers */
 .bud-header{
   display:flex;
   align-items:center;
@@ -754,6 +778,7 @@ body{
   font-weight: 750;
   caret-color: var(--text);
 }
+
 .field select option{
   background: var(--card);
   color: var(--text);
@@ -842,17 +867,54 @@ body{
 }
 .toast.show{display:block}
 
-/* Print helper: we don't print the app UI */
 @media print{
   body{overflow:visible !important;}
   #app{display:none !important;}
+}
+
+/* ✅ MOBILE: 2 colunas + valor abaixo do mês e centralizado */
+@media (max-width: 420px){
+  .year-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* card compactinho (não explode a altura e não “come” Out/Nov/Dez) */
+  .month-card{
+    padding: 10px;
+    min-height: 78px;
+  }
+
+  .month-meta{
+    /* vira coluna, mas sem inflar demais */
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  /* ✅ assume: 1ª pill = dias, 2ª pill = valor
+     queremos: valor (2) logo abaixo do mês, centralizado */
+  .month-meta .pill:nth-child(2){
+    order: 1;
+    justify-content: center;
+    width: auto;
+    max-width: 100%;
+    padding: 4px 10px;
+    font-weight: 900;
+  }
+
+  .month-meta .pill:nth-child(1){
+    order: 2;
+    align-self: flex-start; /* dias fica “no canto” embaixo */
+    padding: 3px 8px;
+    font-size: 10px;
+    opacity: .95;
+  }
 }
 
 @media (max-width: 360px){
   .summary-bar{grid-template-columns: repeat(2,1fr)}
   #financeProjectionBar{grid-template-columns: repeat(2,1fr) !important}
   .mini-metrics{width: 120px}
-  .year-grid{grid-template-columns: repeat(2,1fr)}
   .pill-btn{padding: 0 10px}
   .seg-btn span{display:none}
 }
