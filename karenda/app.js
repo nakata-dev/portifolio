@@ -1,4 +1,6 @@
-// app.js
+// app.js (ATUALIZADO E COMPLETO)
+// Inclui: Extra fixa, multiplicadores (Domingo/Feriado/Folga trabalhada),
+// som opcional e explicações estratégicas no modal de Configurações.
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -26,22 +28,41 @@
       rateNormal: 1200,
       rateExtra: 1500,
       autoCalc: true,
+
+      // ✅ NOVO: Extra fixa (opcional)
+      extraFixedEnabled: false,
+      extraFixedHours: 2, // se ligado, pode preencher "extras" quando o usuário deixar em branco
+
+      // ✅ NOVO: multiplicadores por tipo de dia (modelos comuns no JP)
+      // Obs: aqui é multiplicador em cima do valor/hora (normal e extra).
+      multSunday: 1.35,     // 休日出勤 (domingo)
+      multHoliday: 1.35,    // 祝日
+      multOffWorked: 1.25,  // folga trabalhada (se você usar)
+      // ⚙️ som do “dinheiro entrando”
+      soundMoney: false,
+
       shiftLabels: { A: "Dia", B: "Noite", C: "Madrugada" },
       shiftColors: { A: "#7c5cff", B: "#00c2ff", C: "#ffb020" },
       theme: "dark",
       fxLastUpdated: null
     },
-    workEntries: {},
+    workEntries: {},      // iso -> {shift,status,normal,extra,addon,note,dayType}
     financeEntries: [],
     investments: [],
     expenseTemplates: [],
-    sales: [],              // contratos de venda parcelada
-    employmentHistory: [],  // NEW: histórico de empresas
+    sales: [],
+    employmentHistory: [],
     reminders: [],
     patterns: { active: "AABBEE" }
   });
 
   let state = loadState();
+
+  // para detectar “entrada de dinheiro”
+  const moneyPulseMem = {
+    key: "",
+    last: 0
+  };
 
   // ---------- Boot ----------
   applyTheme(state.settings.theme);
@@ -65,7 +86,6 @@
         return defaultState();
       }
     }
-    // migration from older key versions
     const oldKeys = ["nakata_finance_v4","nakata_finance_v3","nakata_finance_v2"];
     for(const k of oldKeys){
       const old = localStorage.getItem(k);
@@ -100,7 +120,6 @@
       merged.settings.displayCurrency = parsed.settings.currency;
     }
 
-    // migrate sales older fields (safety)
     merged.sales = merged.sales.map(s => ({
       downPayment: 0,
       paidInstallments: 0,
@@ -210,6 +229,28 @@
   }
   function endOfMonth(y, m){
     return new Date(y, m+1, 0, 23, 59, 59, 999);
+  }
+
+  function startOfDay(d){
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  }
+
+  function dayOfWeekISO(iso){
+    return fromISO(iso).getDay(); // 0=Dom
+  }
+
+  function autoDayTypeForISO(iso){
+    const dow = dayOfWeekISO(iso);
+    if(dow === 0) return "sunday";
+    return "normal";
+  }
+
+  function multiplierForDayType(dt){
+    const s = state.settings;
+    if(dt === "sunday") return Math.max(0.01, clampNumber(s.multSunday) || 1);
+    if(dt === "holiday") return Math.max(0.01, clampNumber(s.multHoliday) || 1);
+    if(dt === "off_worked") return Math.max(0.01, clampNumber(s.multOffWorked) || 1);
+    return 1;
   }
 
   // ---------- UI Wiring ----------
@@ -494,7 +535,20 @@
     $("#sumIncome").textContent = moneyIn(dispCur, incomeDisplay);
 
     const fin = financeMonthStats(ui.year, ui.month);
-    $("#sumBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
+    const nextBalance = fin.balanceDisplay;
+    $("#sumBalance").textContent = moneyIn(dispCur, nextBalance);
+
+    // ✅ Money pop (som opcional) quando saldo do mês aumentar
+    const memKey = `${ui.year}-${ui.month}-${dispCur}`;
+    if(moneyPulseMem.key !== memKey){
+      moneyPulseMem.key = memKey;
+      moneyPulseMem.last = nextBalance;
+    }else{
+      if(nextBalance > moneyPulseMem.last + 0.001){
+        window.NakataMoneyFX?.pop?.($("#sumBalanceCard"), !!state.settings.soundMoney);
+      }
+      moneyPulseMem.last = nextBalance;
+    }
 
     if(ui.view === "finance"){
       renderFinanceHeader(fin);
@@ -656,7 +710,6 @@
 
     const schedule = getSaleSchedule(sale);
     const paidCount = sale.paidInstallments || 0;
-    const remainingCount = Math.max(sale.installments - paidCount, 0);
 
     const now = new Date();
     const overdue = schedule.some(x => !x.paid && fromISO(x.dueISO) < startOfDay(now));
@@ -683,10 +736,6 @@
 
     el.addEventListener("click", () => openSaleActionsModal(sale.id));
     return el;
-  }
-
-  function startOfDay(d){
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
   }
 
   function openSaleActionsModal(saleId){
@@ -797,15 +846,10 @@
       receivedAmount = Math.round(receivedAmount * (1 + clampNumber(sale.lateFeePct)/100));
     }
 
-    // Mark as paid by incrementing paidInstallments until it covers index.
-    // To support "mark any", we store a paidMap too.
     sale.paidMap = sale.paidMap || {};
     sale.paidMap[String(installmentIndex)] = true;
-
-    // recompute paidInstallments for display as count of paidMap
     sale.paidInstallments = Object.values(sale.paidMap).filter(Boolean).length;
 
-    // Create finance entry as received
     state.financeEntries.push({
       id: cryptoId(),
       type: "recv",
@@ -1026,33 +1070,42 @@
     let addon = 0;
     let daysWithRecords = 0;
 
+    let estimatedIncomeJPY = 0;
+
     const prefix = `${y}-${String(m+1).padStart(2,"0")}-`;
     for(const [iso, entry] of Object.entries(state.workEntries)){
       if(!iso.startsWith(prefix)) continue;
+
       const n = clampNumber(entry.normal);
       const e = clampNumber(entry.extra);
       const a = clampNumber(entry.addon);
-      if(n || e || a || entry.shift || entry.note) daysWithRecords++;
+
+      const dt = (entry.dayType && entry.dayType !== "auto") ? entry.dayType : autoDayTypeForISO(iso);
+      const mult = multiplierForDayType(dt);
+
+      if(n || e || a || entry.shift || entry.note || entry.dayType) daysWithRecords++;
+
       totalNormal += n;
       totalExtra += e;
       addon += a;
-    }
 
-    const estimatedIncomeJPY = calcIncomeJPY(totalNormal, totalExtra) + addon;
+      // ✅ calcula renda por dia para aplicar multiplicadores corretamente
+      estimatedIncomeJPY += calcIncomeJPY(n, e, mult) + a;
+    }
 
     return {
       totalNormal: Math.round(totalNormal * 10)/10,
       totalExtra: Math.round(totalExtra * 10)/10,
-      estimatedIncomeJPY,
+      estimatedIncomeJPY: Math.round(estimatedIncomeJPY),
       daysWithRecords
     };
   }
 
-  function calcIncomeJPY(normalHours, extraHours){
+  function calcIncomeJPY(normalHours, extraHours, multiplier = 1){
     const s = state.settings;
     const normal = clampNumber(normalHours) * clampNumber(s.rateNormal);
     const extra = clampNumber(extraHours) * clampNumber(s.rateExtra);
-    return normal + extra;
+    return (normal + extra) * Math.max(0.01, clampNumber(multiplier) || 1);
   }
 
   function financeMonthStats(y, m){
@@ -1154,10 +1207,24 @@
     const entry = state.workEntries[dateISO] || {};
     $("#dayShift").value = entry.shift || "A";
     $("#dayStatus").value = entry.status || "work";
+
+    // ✅ Tipo de dia (auto por padrão)
+    $("#dayType").value = entry.dayType || "auto";
+
     $("#dayNormal").value = entry.normal ?? "";
     $("#dayExtra").value = entry.extra ?? "";
     $("#dayAddon").value = entry.addon ?? "";
     $("#dayNote").value = entry.note ?? "";
+
+    // ✅ Extra fixa: se ligado e o campo extra estiver vazio, pré-sugere (sem forçar)
+    if(state.settings.extraFixedEnabled){
+      const extraField = $("#dayExtra");
+      const isBlank = String(extraField.value || "").trim() === "";
+      const willWork = ($("#dayStatus").value === "work" && $("#dayShift").value !== "F");
+      if(isBlank && willWork){
+        extraField.placeholder = `ex: ${state.settings.extraFixedHours} (extra fixa)`;
+      }
+    }
 
     openSheet("sheetDay");
   }
@@ -1167,10 +1234,30 @@
 
     const shift = $("#dayShift").value;
     const status = $("#dayStatus").value;
-    const normal = clampNumber($("#dayNormal").value);
-    const extra = clampNumber($("#dayExtra").value);
+
+    const normalRaw = String($("#dayNormal").value || "").trim();
+    const extraRaw  = String($("#dayExtra").value || "").trim();
+
+    const normal = clampNumber(normalRaw);
+    let extra = clampNumber(extraRaw);
+
+    // ✅ aplica “extra fixa” só se:
+    // - ligado
+    // - dia de trabalho
+    // - o usuário deixou o campo extra vazio (não sobrescreve!)
+    const willWork = (status === "work" && shift !== "F");
+    if(state.settings.extraFixedEnabled && willWork && extraRaw === ""){
+      extra = clampNumber(state.settings.extraFixedHours);
+    }
+
     const addon = Math.round(clampNumber($("#dayAddon").value));
     const note = String($("#dayNote").value || "").trim();
+
+    let dayType = $("#dayType").value || "auto";
+    if(dayType === "auto"){
+      // domingo detecta sozinho no cálculo; aqui guarda “auto”
+      dayType = "auto";
+    }
 
     const isOff = (shift === "F" || status === "off");
     const entry = {
@@ -1179,10 +1266,11 @@
       normal: isOff ? 0 : normal,
       extra: isOff ? 0 : extra,
       addon: isOff ? 0 : addon,
-      note
+      note,
+      dayType
     };
 
-    const hasAny = entry.shift || entry.normal || entry.extra || entry.addon || entry.note;
+    const hasAny = entry.shift || entry.normal || entry.extra || entry.addon || entry.note || (entry.dayType && entry.dayType !== "auto");
     if(!hasAny){
       delete state.workEntries[iso];
     }else{
@@ -1235,6 +1323,10 @@
             <button class="ghost-btn" id="btnCreateSale">
               <i class="fa-solid fa-hand-holding-dollar"></i><span>Venda / Recebimento (parcelado)</span>
             </button>
+          </div>
+          <div class="helper" style="margin-top:10px;">
+            <i class="fa-regular fa-lightbulb"></i>
+            <span>Venda parcelada: você controla parcelas e pode gerar PDF do contrato.</span>
           </div>
         </div>
       `,
@@ -1411,13 +1503,12 @@
       dueDay,
       installments,
       lateFeePct: Math.max(0, lateFeePct),
-      paidMap: {}, // marks installments
+      paidMap: {},
       paidInstallments: 0,
       note,
       createdAt: new Date().toISOString()
     };
 
-    // If down payment exists, create a received entry immediately on start date
     if(sale.downPayment > 0){
       state.financeEntries.push({
         id: cryptoId(),
@@ -1550,7 +1641,15 @@
     openModal(
       "Configurações",
       `
-      <div class="grid2">
+      <div class="helper">
+        <i class="fa-regular fa-map"></i>
+        <span>
+          Aqui você define “regras do seu mundo”: salário/hora, câmbio, extras fixas e quanto vale Domingo/Feriado.
+          Depois, no “Registro do dia”, você só marca o tipo do dia e pronto.
+        </span>
+      </div>
+
+      <div class="grid2" style="margin-top:10px;">
         <label class="field">
           <span>Moeda de visualização</span>
           <select id="setDisplayCurrency">
@@ -1583,6 +1682,70 @@
           <option value="false" ${!s.autoCalc ? "selected":""}>Desligado</option>
         </select>
       </label>
+
+      <div style="height:1px; background: var(--line); margin: 6px 0;"></div>
+
+      <div class="helper">
+        <i class="fa-regular fa-clock"></i>
+        <span>
+          Extras fixas: se sua rotina quase sempre tem a mesma extra (ex.: 2h), ligue e o app sugere/preenche quando você deixar o campo “Extras” em branco.
+        </span>
+      </div>
+
+      <div class="grid2">
+        <label class="field">
+          <span>Extra fixa</span>
+          <select id="setExtraFixedEnabled">
+            <option value="false" ${!s.extraFixedEnabled ? "selected":""}>Desligada</option>
+            <option value="true" ${s.extraFixedEnabled ? "selected":""}>Ligada</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Horas de extra fixa</span>
+          <input id="setExtraFixedHours" inputmode="decimal" value="${String(s.extraFixedHours ?? 2)}">
+        </label>
+      </div>
+
+      <div class="helper">
+        <i class="fa-regular fa-star"></i>
+        <span>
+          Domingo/Feriado no Japão costuma ter adicional. Aqui é um multiplicador em cima do valor/hora (normal e extra).
+          Ex.: 1.35 significa +35%.
+        </span>
+      </div>
+
+      <div class="grid2">
+        <label class="field">
+          <span>Multiplicador Domingo (休日出勤)</span>
+          <input id="setMultSunday" inputmode="decimal" value="${String(s.multSunday ?? 1.35)}">
+        </label>
+        <label class="field">
+          <span>Multiplicador Feriado (祝日)</span>
+          <input id="setMultHoliday" inputmode="decimal" value="${String(s.multHoliday ?? 1.35)}">
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Multiplicador Folga trabalhada</span>
+        <input id="setMultOffWorked" inputmode="decimal" value="${String(s.multOffWorked ?? 1.25)}">
+      </label>
+
+      <div class="helper">
+        <i class="fa-solid fa-volume-high"></i>
+        <span>
+          Som opcional: toca um “pling” discreto quando o saldo do mês aumenta (entrada de dinheiro).
+        </span>
+      </div>
+
+      <label class="field">
+        <span>Som de entrada de dinheiro</span>
+        <select id="setSoundMoney">
+          <option value="false" ${!s.soundMoney ? "selected":""}>Desligado</option>
+          <option value="true" ${s.soundMoney ? "selected":""}>Ligado</option>
+        </select>
+      </label>
+
+      <div style="height:1px; background: var(--line); margin: 6px 0;"></div>
 
       <div class="grid2">
         <label class="field">
@@ -1738,6 +1901,15 @@
       state.settings.rateExtra = Math.round(clampNumber($("#setRateExtra").value));
       state.settings.autoCalc = $("#setAutoCalc").value === "true";
 
+      state.settings.extraFixedEnabled = $("#setExtraFixedEnabled").value === "true";
+      state.settings.extraFixedHours = clampNumber($("#setExtraFixedHours").value) || 0;
+
+      state.settings.multSunday = clampNumber($("#setMultSunday").value) || 1;
+      state.settings.multHoliday = clampNumber($("#setMultHoliday").value) || 1;
+      state.settings.multOffWorked = clampNumber($("#setMultOffWorked").value) || 1;
+
+      state.settings.soundMoney = $("#setSoundMoney").value === "true";
+
       state.settings.shiftColors.A = String($("#setShiftA").value || "#7c5cff").trim();
       state.settings.shiftColors.B = String($("#setShiftB").value || "#00c2ff").trim();
       state.settings.shiftColors.C = String($("#setShiftC").value || "#ffb020").trim();
@@ -1806,11 +1978,9 @@
         </div>
       </div>
 
-      <div class="field">
-        <span>Aplicar ao mês atual</span>
-        <div style="color:var(--muted); font-weight:750; line-height:1.35">
-          Preenche o mês com padrão repetido. Depois ajuste tocando nos dias.
-        </div>
+      <div class="helper">
+        <i class="fa-regular fa-lightbulb"></i>
+        <span>Depois de aplicar, você ainda pode tocar nos dias e ajustar individualmente.</span>
       </div>
       `,
       `
@@ -1892,9 +2062,9 @@
       const ch = pat[(d-1) % pat.length];
 
       if(ch === "E"){
-        state.workEntries[iso] = { shift:"F", status:"off", normal:0, extra:0, addon:0, note:"" };
+        state.workEntries[iso] = { shift:"F", status:"off", normal:0, extra:0, addon:0, note:"", dayType:"auto" };
       }else{
-        state.workEntries[iso] = { shift: ch, status:"work", normal:8, extra:0, addon:0, note:"" };
+        state.workEntries[iso] = { shift: ch, status:"work", normal:8, extra:0, addon:0, note:"", dayType:"auto" };
       }
     }
   }
@@ -1919,7 +2089,12 @@
     openModal(
       "Lembretes & aniversários",
       `
-      <div class="grid2">
+      <div class="helper">
+        <i class="fa-regular fa-bell"></i>
+        <span>Anote aniversários e datas importantes. (O som é para lembretes futuros quando você quiser evoluir isso.)</span>
+      </div>
+
+      <div class="grid2" style="margin-top:10px;">
         <label class="field">
           <span>Data</span>
           <input id="remDate" type="date" />
@@ -1996,7 +2171,7 @@
     });
   }
 
-  // ---------- PDF (print-to-PDF) ----------
+  // ---------- PDF ----------
   function jobsForMonth(y, m){
     const start = startOfMonth(y, m);
     const end = endOfMonth(y, m);
