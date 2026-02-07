@@ -151,6 +151,12 @@ body{
   gap: 10px;
 }
 
+.finance-actions{
+  display:flex;
+  gap: 8px;
+  align-items:center;
+}
+
 .toggle{
   display:flex;
   gap:6px;
@@ -583,6 +589,12 @@ body{
 .tag.bad{color: var(--bad)}
 .tag.orig{opacity:.9}
 
+/* Sales tag highlight */
+.tag.sale{
+  color: var(--text);
+  background: rgba(124,92,255,.12);
+}
+
 /* Budget section helpers */
 .bud-header{
   display:flex;
@@ -830,8 +842,15 @@ body{
 }
 .toast.show{display:block}
 
+/* Print helper: we don't print the app UI */
+@media print{
+  body{overflow:visible !important;}
+  #app{display:none !important;}
+}
+
 @media (max-width: 360px){
   .summary-bar{grid-template-columns: repeat(2,1fr)}
+  #financeProjectionBar{grid-template-columns: repeat(2,1fr) !important}
   .mini-metrics{width: 120px}
   .year-grid{grid-template-columns: repeat(2,1fr)}
   .pill-btn{padding: 0 10px}

@@ -3,7 +3,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const LS_KEY = "nakata_finance_v3";
+  const LS_KEY = "nakata_finance_v4";
 
   const monthsShort = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
   const monthsLong  = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -34,10 +34,8 @@
     workEntries: {},
     financeEntries: [],
     investments: [],
-    // NEW: expense templates (fixed/variable)
-    expenseTemplates: [
-      // { id, type:"fixed"|"variable", name, amount, currency:"JPY"|"BRL", dayOfMonth:null|number, active:true, note:"" }
-    ],
+    expenseTemplates: [],
+    sales: [],   // NEW: contratos de venda parcelada
     reminders: [],
     patterns: { active: "AABBEE" }
   });
@@ -58,50 +56,52 @@
   // ---------- State ----------
   function loadState(){
     const raw = localStorage.getItem(LS_KEY);
-    if(!raw){
-      // tentativa de migração de versões anteriores (v2)
-      const old = localStorage.getItem("nakata_finance_v2");
-      if(old){
-        try{
-          const parsed = JSON.parse(old);
-          const merged = { ...defaultState(), ...parsed };
-          merged.settings = { ...defaultState().settings, ...(parsed.settings||{}) };
-          merged.workEntries = parsed.workEntries || {};
-          merged.financeEntries = parsed.financeEntries || [];
-          merged.investments = parsed.investments || [];
-          merged.reminders = parsed.reminders || [];
-          merged.patterns = { ...defaultState().patterns, ...(parsed.patterns||{}) };
-          merged.expenseTemplates = parsed.expenseTemplates || [];
-          localStorage.setItem(LS_KEY, JSON.stringify(merged));
-          return merged;
-        }catch{}
+    if(raw){
+      try{
+        const parsed = JSON.parse(raw);
+        return mergeWithDefault(parsed);
+      }catch{
+        return defaultState();
       }
-      return defaultState();
     }
 
-    try{
-      const parsed = JSON.parse(raw);
-      const def = defaultState();
-      const merged = {
-        ...def,
-        ...parsed,
-        settings: { ...def.settings, ...(parsed.settings||{}) },
-        workEntries: parsed.workEntries || {},
-        financeEntries: parsed.financeEntries || [],
-        investments: parsed.investments || [],
-        expenseTemplates: parsed.expenseTemplates || [],
-        reminders: parsed.reminders || [],
-        patterns: { ...def.patterns, ...(parsed.patterns||{}) }
-      };
-
-      // migração: settings.currency antigo -> displayCurrency
-      if(parsed?.settings?.currency && !parsed?.settings?.displayCurrency){
-        merged.settings.displayCurrency = parsed.settings.currency;
-      }
-      return merged;
-    }catch{
-      return defaultState();
+    // migration from older keys
+    const oldKeys = ["nakata_finance_v3","nakata_finance_v2"];
+    for(const k of oldKeys){
+      const old = localStorage.getItem(k);
+      if(!old) continue;
+      try{
+        const parsed = JSON.parse(old);
+        const merged = mergeWithDefault(parsed);
+        localStorage.setItem(LS_KEY, JSON.stringify(merged));
+        return merged;
+      }catch{}
     }
+
+    return defaultState();
+  }
+
+  function mergeWithDefault(parsed){
+    const def = defaultState();
+    const merged = {
+      ...def,
+      ...parsed,
+      settings: { ...def.settings, ...(parsed.settings||{}) },
+      workEntries: parsed.workEntries || {},
+      financeEntries: parsed.financeEntries || [],
+      investments: parsed.investments || [],
+      expenseTemplates: parsed.expenseTemplates || [],
+      sales: parsed.sales || [],
+      reminders: parsed.reminders || [],
+      patterns: { ...def.patterns, ...(parsed.patterns||{}) }
+    };
+
+    // migration: settings.currency antigo -> displayCurrency
+    if(parsed?.settings?.currency && !parsed?.settings?.displayCurrency){
+      merged.settings.displayCurrency = parsed.settings.currency;
+    }
+
+    return merged;
   }
 
   function saveState(){
@@ -176,6 +176,25 @@
       .replace(/\s+/g, " ");
   }
 
+  function cryptoId(){
+    return (crypto?.randomUUID?.() || `id_${Math.random().toString(16).slice(2)}_${Date.now()}`);
+  }
+
+  function escapeHTML(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function addMonths(date, n){
+    const d = new Date(date.getFullYear(), date.getMonth(), 1);
+    d.setMonth(d.getMonth() + n);
+    return d;
+  }
+
   // ---------- UI Wiring ----------
   function wireNav(){
     $$(".nav-item").forEach(btn => {
@@ -202,7 +221,6 @@
       renderAll();
     });
 
-    // calendar mode
     $("#segYear").addEventListener("click", () => setCalMode("year"));
     $("#segMonth").addEventListener("click", () => setCalMode("month"));
 
@@ -223,8 +241,15 @@
 
     // finance primary button (changes by mode)
     $("#btnFinancePrimary").addEventListener("click", () => {
-      if(ui.financeMode === "entries") openFinanceSheet();
-      else openExpenseSheet(); // budget mode
+      if(ui.financeMode === "budget"){
+        openExpenseSheet();
+        return;
+      }
+      openFinanceCreateChooser();
+    });
+
+    $("#btnFinancePDF").addEventListener("click", () => {
+      printMonthPDF(ui.year, ui.month);
     });
 
     $("#btnAddInvest").addEventListener("click", () => openInvestSheet());
@@ -262,6 +287,9 @@
 
     // expense template sheet
     $("#btnExpSave").addEventListener("click", saveExpenseTemplate);
+
+    // sale sheet
+    $("#btnSaleSave").addEventListener("click", saveSaleContract);
 
     // invest sheet
     $("#btnInvSave").addEventListener("click", saveInvest);
@@ -343,10 +371,8 @@
     $("#financeBudgetWrap").classList.toggle("hidden", mode !== "budget");
     $("#budgetSummaryBar").classList.toggle("hidden", mode !== "budget");
 
-    // Change primary button label
     $("#financePrimaryLabel").textContent = (mode === "entries") ? "Novo" : "Adicionar";
 
-    // Adjust big card labels in Finance header
     $("#finBigLabel").textContent = (mode === "entries") ? "Saldo do mês" : "Saldo real (mês)";
     $("#finInLabel").textContent = (mode === "entries") ? "Entradas" : "Pago";
     $("#finOutLabel").textContent = (mode === "entries") ? "Saídas" : "Planejado";
@@ -467,6 +493,7 @@
 
     if(ui.view === "finance"){
       renderFinanceHeader(fin);
+      renderFinanceProjections();
     }
   }
 
@@ -478,6 +505,7 @@
 
     const fin = financeMonthStats(ui.year, ui.month);
     renderFinanceHeader(fin);
+    renderFinanceProjections();
 
     if(ui.financeMode === "entries"){
       renderFinanceEntries();
@@ -489,7 +517,6 @@
   function renderFinanceHeader(fin){
     const dispCur = state.settings.displayCurrency;
 
-    // In Entries mode: show entradas/saídas
     if(ui.financeMode === "entries"){
       $("#finMonthBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
       $("#finIn").textContent = moneyIn(dispCur, fin.inDisplay);
@@ -497,11 +524,40 @@
       return;
     }
 
-    // In Budget mode: big shows saldo real, minis show pago/planejado (saída)
     const bud = budgetStats(ui.year, ui.month);
     $("#finMonthBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
     $("#finIn").textContent = moneyIn(dispCur, bud.paidTowardsPlannedDisplay);
     $("#finOut").textContent = moneyIn(dispCur, bud.plannedTotalDisplay);
+  }
+
+  function renderFinanceProjections(){
+    const dispCur = state.settings.displayCurrency;
+
+    const work = monthStats(ui.year, ui.month);
+    const workIncomeDisplay = convert(work.estimatedIncomeJPY, "JPY", dispCur);
+
+    const fin = financeMonthStats(ui.year, ui.month);
+
+    // Entradas reais (sem empréstimo): recebimentos + recebimentos vindos de vendas (são "recv" também)
+    const inNoLoan = fin.recvOnlyDisplay;
+    const outNoLoan = fin.payOnlyDisplay;
+
+    // Bruto real: salário estimado + recebimentos (sem empréstimo)
+    const grossReal = workIncomeDisplay + inNoLoan;
+    // Líquido real: bruto - pagamentos (sem empréstimo)
+    const netReal = grossReal - outNoLoan;
+
+    const bud = budgetStats(ui.year, ui.month);
+
+    // Bruto previsto: igual ao real (salário estimado + recebimentos lançados)
+    const grossForecast = grossReal;
+    // Líquido previsto: líquido real - restante do planejado (fixas/variáveis ainda não pagas)
+    const netForecast = netReal - bud.remainingDisplay;
+
+    $("#projGrossReal").textContent = moneyIn(dispCur, grossReal);
+    $("#projNetReal").textContent = moneyIn(dispCur, netReal);
+    $("#projGrossForecast").textContent = moneyIn(dispCur, grossForecast);
+    $("#projNetForecast").textContent = moneyIn(dispCur, netForecast);
   }
 
   function renderFinanceEntries(){
@@ -509,23 +565,40 @@
     listWrap.innerHTML = `<div class="list" id="financeScroll"></div>`;
     const list = $("#financeScroll");
 
-    const items = state.financeEntries
+    const dispCur = state.settings.displayCurrency;
+
+    // 1) Lançamentos financeiros (pag/recv/loans)
+    let entries = state.financeEntries
       .filter(e => isSameMonth(e.dateISO, ui.year, ui.month))
       .filter(e => {
         if(ui.financeFilter === "all") return true;
         if(ui.financeFilter === "pay") return e.type === "pay";
         if(ui.financeFilter === "recv") return e.type === "recv";
         if(ui.financeFilter === "loan") return (e.type === "loan_in" || e.type === "loan_out");
+        if(ui.financeFilter === "sales") return false;
         return true;
       })
       .sort((a,b) => (a.dateISO > b.dateISO ? -1 : 1));
 
-    $("#financeEmpty").classList.toggle("hidden", items.length !== 0);
-    if(items.length === 0) return;
+    // 2) Contratos de venda (sempre disponíveis em qualquer mês, mas filtro "Vendas" mostra)
+    const salesForView = state.sales
+      .filter(s => ui.financeFilter === "sales" || ui.financeFilter === "all")
+      .slice()
+      .sort((a,b) => (a.createdAt > b.createdAt ? -1 : 1));
 
-    const dispCur = state.settings.displayCurrency;
+    const hasAnything = entries.length > 0 || salesForView.length > 0;
+    $("#financeEmpty").classList.toggle("hidden", hasAnything);
 
-    for(const e of items){
+    // Render contracts first when filter is sales
+    if(ui.financeFilter === "sales"){
+      for(const s of salesForView){
+        list.appendChild(renderSaleCard(s, dispCur));
+      }
+      return;
+    }
+
+    // Render normal entries
+    for(const e of entries){
       const isIn = (e.type === "recv" || e.type === "loan_in");
       const sign = isIn ? "+" : "-";
       const typeLabel =
@@ -543,8 +616,8 @@
       el.className = "item";
       el.innerHTML = `
         <div class="item-left">
-          <div class="item-title">${e.category || typeLabel}</div>
-          <div class="item-sub">${typeLabel} • ${e.dateISO} • ${statusLabel}${e.note ? " • " + e.note : ""}</div>
+          <div class="item-title">${escapeHTML(e.category || typeLabel)}</div>
+          <div class="item-sub">${typeLabel} • ${e.dateISO} • ${statusLabel}${e.note ? " • " + escapeHTML(e.note) : ""}</div>
         </div>
         <div class="item-right">
           <div class="amount">${sign} ${moneyIn(dispCur, amountDisplay)}</div>
@@ -569,13 +642,191 @@
 
       list.appendChild(el);
     }
+
+    // Render sales after (compact cards)
+    if(salesForView.length){
+      const sep = document.createElement("div");
+      sep.style.margin = "6px 2px 2px 2px";
+      sep.style.color = "var(--muted)";
+      sep.style.fontSize = "11px";
+      sep.style.fontWeight = "850";
+      sep.textContent = "Vendas / Recebimentos";
+      list.appendChild(sep);
+
+      for(const s of salesForView){
+        list.appendChild(renderSaleCard(s, dispCur));
+      }
+    }
   }
 
-  function renderFinanceBudget(fin){
+  function renderSaleCard(sale, dispCur){
+    const cur = sale.currency || "BRL";
+    const totalDisp = convert(sale.total, cur, dispCur);
+
+    const schedule = getSaleSchedule(sale);
+    const paidCount = sale.paidInstallments || 0;
+    const remainingCount = Math.max(sale.installments - paidCount, 0);
+
+    const next = schedule.find(x => !x.paid);
+    const nextText = next ? `${next.dueISO} (${moneyIn(cur, next.amount)})` : "Quitado ✅";
+
+    const endISO = schedule.length ? schedule[schedule.length-1].dueISO : "—";
+
+    const el = document.createElement("div");
+    el.className = "item";
+    el.innerHTML = `
+      <div class="item-left">
+        <div class="item-title">${escapeHTML(sale.item)} • ${escapeHTML(sale.buyer)}</div>
+        <div class="item-sub">Total ${moneyIn(cur, sale.total)} • ${sale.installments}x • termina em ${endISO}</div>
+      </div>
+      <div class="item-right">
+        <div class="amount">${moneyIn(dispCur, totalDisp)}</div>
+        <div class="tag sale">${paidCount}/${sale.installments} pago</div>
+        <div class="tag">${nextText}</div>
+      </div>
+    `;
+
+    el.addEventListener("click", () => openSaleActionsModal(sale.id));
+    return el;
+  }
+
+  function openSaleActionsModal(saleId){
+    const sale = state.sales.find(s => s.id === saleId);
+    if(!sale){ toast("Venda não encontrada."); return; }
+
+    const schedule = getSaleSchedule(sale);
+    const next = schedule.find(x => !x.paid);
+
+    const body = `
+      <div class="field">
+        <span>Venda</span>
+        <div style="color:var(--muted); font-weight:850; line-height:1.35">
+          <b>${escapeHTML(sale.item)}</b> • ${escapeHTML(sale.buyer)}<br>
+          Total: ${moneyIn(sale.currency, sale.total)} • ${sale.installments}x<br>
+          Próxima: ${next ? `${next.dueISO} (${moneyIn(sale.currency, next.amount)})` : "Quitado ✅"}
+        </div>
+      </div>
+
+      <div class="field">
+        <span>Opções</span>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="ghost-btn grow" id="btnSalePayNext">
+            <i class="fa-solid fa-check"></i><span>Marcar próxima como paga</span>
+          </button>
+          <button class="ghost-btn grow" id="btnSalePDF">
+            <i class="fa-regular fa-file-pdf"></i><span>PDF do contrato</span>
+          </button>
+        </div>
+        <div style="margin-top:8px; display:flex; gap:8px;">
+          <button class="ghost-btn grow" id="btnSaleDelete">
+            <i class="fa-regular fa-trash-can"></i><span>Excluir venda</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    openModal(
+      "Venda / Recebimento",
+      body,
+      `
+        <button class="primary-btn grow" data-close-modal="true">
+          <i class="fa-solid fa-xmark"></i><span>Fechar</span>
+        </button>
+      `
+    );
+
+    $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
+
+    $("#btnSalePDF").addEventListener("click", () => {
+      closeModal();
+      printSalePDF(saleId);
+    });
+
+    $("#btnSaleDelete").addEventListener("click", () => {
+      closeModal();
+      openConfirmModal("Excluir venda?", "Este contrato será removido.", () => {
+        state.sales = state.sales.filter(s => s.id !== saleId);
+        saveState();
+        toast("Venda removida.");
+        renderFinance();
+      });
+    });
+
+    $("#btnSalePayNext").addEventListener("click", () => {
+      if(!next){ toast("Já está quitado."); return; }
+
+      // Apply late fee if paid after due date (simple: flat percentage over parcel value)
+      const paidDate = new Date();
+      const due = fromISO(next.dueISO);
+      const late = paidDate > endOfDay(due);
+
+      let receivedAmount = next.amount;
+      if(late && clampNumber(sale.lateFeePct) > 0){
+        receivedAmount = Math.round(receivedAmount * (1 + clampNumber(sale.lateFeePct)/100));
+      }
+
+      // Mark installment as paid
+      sale.paidInstallments = (sale.paidInstallments || 0) + 1;
+
+      // Create a Finance entry as "Recebimento" so it appears in month balance
+      state.financeEntries.push({
+        id: cryptoId(),
+        type: "recv",
+        status: "paid",
+        currency: sale.currency,
+        amount: receivedAmount,
+        dateISO: toISO(paidDate),
+        category: `Venda: ${sale.item}`,
+        note: `Comprador: ${sale.buyer}${late ? ` • atraso (+${sale.lateFeePct}%)` : ""}`
+      });
+
+      saveState();
+      toast("Parcela registrada como recebida.");
+      closeModal();
+      renderFinance();
+      renderSummaryBar();
+    });
+  }
+
+  function endOfDay(d){
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+  }
+
+  function getSaleSchedule(sale){
+    const total = clampNumber(sale.total);
+    const installments = Math.max(1, Math.round(clampNumber(sale.installments)));
+    const base = Math.floor(total / installments);
+    let remainder = total - base * installments;
+
+    const start = sale.startISO ? fromISO(sale.startISO) : new Date();
+    const dueDay = Math.min(28, Math.max(1, Math.round(clampNumber(sale.dueDay || 10))));
+
+    const paidCount = sale.paidInstallments || 0;
+
+    const schedule = [];
+    for(let i=0; i<installments; i++){
+      const amount = base + (remainder > 0 ? 1 : 0);
+      if(remainder > 0) remainder -= 1;
+
+      const monthDate = addMonths(start, i);
+      // set due day
+      const due = new Date(monthDate.getFullYear(), monthDate.getMonth(), dueDay);
+      const dueISO = toISO(due);
+
+      schedule.push({
+        index: i+1,
+        dueISO,
+        amount,
+        paid: (i < paidCount)
+      });
+    }
+    return schedule;
+  }
+
+  function renderFinanceBudget(){
     const dispCur = state.settings.displayCurrency;
     const bud = budgetStats(ui.year, ui.month);
 
-    // summary chips
     $("#budFixed").textContent = moneyIn(dispCur, bud.fixedTotalDisplay);
     $("#budVar").textContent = moneyIn(dispCur, bud.variableTotalDisplay);
     $("#budRemaining").textContent = moneyIn(dispCur, bud.remainingDisplay);
@@ -586,10 +837,8 @@
 
     const wrap = $("#budgetLists");
     wrap.innerHTML = "";
-
     if(!hasAny) return;
 
-    // grouped lists
     renderExpenseGroup("Fixas", "fixed", bud.fixedTotalDisplay);
     renderExpenseGroup("Variáveis", "variable", bud.variableTotalDisplay);
 
@@ -630,7 +879,7 @@
 
         const meta = [
           it.dayOfMonth ? `dia ${it.dayOfMonth}` : null,
-          active ? "ativo" : "inativo",
+          active ? "ativa (todo mês)" : "inativa",
           it.note ? it.note : null
         ].filter(Boolean).join(" • ");
 
@@ -640,8 +889,8 @@
         el.className = "item";
         el.innerHTML = `
           <div class="item-left">
-            <div class="item-title">${it.name}</div>
-            <div class="item-sub">${meta || "—"}</div>
+            <div class="item-title">${escapeHTML(it.name)}</div>
+            <div class="item-sub">${escapeHTML(meta || "—")}</div>
           </div>
           <div class="item-right">
             <div class="amount">- ${moneyIn(dispCur, amountDisplay)}</div>
@@ -710,8 +959,8 @@
       el.className = "item";
       el.innerHTML = `
         <div class="item-left">
-          <div class="item-title">${it.name}</div>
-          <div class="item-sub">Atual ${moneyIn(dispCur, valueDisp)} • Aporte ${moneyIn(dispCur, depDisp)}${it.note ? " • " + it.note : ""}</div>
+          <div class="item-title">${escapeHTML(it.name)}</div>
+          <div class="item-sub">Atual ${moneyIn(dispCur, valueDisp)} • Aporte ${moneyIn(dispCur, depDisp)}${it.note ? " • " + escapeHTML(it.note) : ""}</div>
         </div>
         <div class="item-right">
           <div class="amount">${moneyIn(dispCur, valueDisp)}</div>
@@ -779,16 +1028,29 @@
     let inDisplay = 0;
     let outDisplay = 0;
 
+    let recvOnlyDisplay = 0; // without loans
+    let payOnlyDisplay = 0;  // payments only
+
     for(const e of state.financeEntries){
       if(!isSameMonth(e.dateISO, y, m)) continue;
       const cur = e.currency || "JPY";
       const amtDisp = convert(e.amount, cur, dispCur);
 
-      if(e.type === "recv" || e.type === "loan_in") inDisplay += amtDisp;
+      const isIn = (e.type === "recv" || e.type === "loan_in");
+      if(isIn) inDisplay += amtDisp;
       else outDisplay += amtDisp;
+
+      if(e.type === "recv") recvOnlyDisplay += amtDisp;
+      if(e.type === "pay") payOnlyDisplay += amtDisp;
     }
 
-    return { inDisplay, outDisplay, balanceDisplay: inDisplay - outDisplay };
+    return {
+      inDisplay,
+      outDisplay,
+      balanceDisplay: inDisplay - outDisplay,
+      recvOnlyDisplay,
+      payOnlyDisplay
+    };
   }
 
   function budgetStats(y, m){
@@ -808,7 +1070,7 @@
 
     const plannedTotalDisplay = fixedTotalDisplay + variableTotalDisplay;
 
-    // "Pago" contra planejado: tenta bater por nome == categoria (pagamentos pagos)
+    // "Pago" contra planejado: match simples por categoria == nome (pagamentos pagos)
     const templateNames = new Set(active.map(t => normalizeText(t.name)));
     let paidTowardsPlannedDisplay = 0;
 
@@ -820,7 +1082,6 @@
       const cat = normalizeText(e.category || "");
       if(!cat) continue;
 
-      // match simples
       if(templateNames.has(cat)){
         const cur = e.currency || "JPY";
         paidTowardsPlannedDisplay += convert(e.amount, cur, dispCur);
@@ -930,6 +1191,42 @@
     renderCalendar();
   }
 
+  function openFinanceCreateChooser(){
+    openModal(
+      "Novo",
+      `
+        <div class="field">
+          <span>O que você quer adicionar?</span>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <button class="ghost-btn" id="btnCreateEntry">
+              <i class="fa-solid fa-receipt"></i><span>Lançamento (pag/recv/empréstimo)</span>
+            </button>
+            <button class="ghost-btn" id="btnCreateSale">
+              <i class="fa-solid fa-hand-holding-dollar"></i><span>Venda / Recebimento (parcelado)</span>
+            </button>
+          </div>
+        </div>
+      `,
+      `
+        <button class="primary-btn grow" data-close-modal="true">
+          <i class="fa-solid fa-xmark"></i><span>Fechar</span>
+        </button>
+      `
+    );
+
+    $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
+
+    $("#btnCreateEntry").addEventListener("click", () => {
+      closeModal();
+      openFinanceSheet();
+    });
+
+    $("#btnCreateSale").addEventListener("click", () => {
+      closeModal();
+      openSaleSheet();
+    });
+  }
+
   function openFinanceSheet(){
     $("#finType").value = "pay";
     $("#finStatus").value = "paid";
@@ -1020,7 +1317,69 @@
 
     saveState();
     closeSheet("sheetExpense");
-    toast("Despesa salva.");
+    toast("Despesa salva (vale todo mês).");
+    renderFinance();
+  }
+
+  function openSaleSheet(){
+    $("#saleCurrency").value = "BRL";
+    $("#saleTotal").value = "";
+    $("#saleItem").value = "";
+    $("#saleBuyer").value = "";
+    $("#saleStart").value = toISO(new Date());
+    $("#saleDueDay").value = "10";
+    $("#saleInstallments").value = "5";
+    $("#saleLateFeePct").value = "0";
+    $("#saleNote").value = "";
+    openSheet("sheetSale");
+  }
+
+  function saveSaleContract(){
+    const currency = $("#saleCurrency").value;
+    const total = Math.round(clampNumber($("#saleTotal").value));
+    const item = String($("#saleItem").value || "").trim();
+    const buyer = String($("#saleBuyer").value || "").trim();
+    const startISO = $("#saleStart").value || toISO(new Date());
+    const dueDay = Math.round(clampNumber($("#saleDueDay").value));
+    const installments = Math.round(clampNumber($("#saleInstallments").value));
+    const lateFeePct = clampNumber($("#saleLateFeePct").value);
+    const note = String($("#saleNote").value || "").trim();
+
+    if(!item || !buyer){
+      toast("Informe item e comprador.");
+      return;
+    }
+    if(!total || total <= 0){
+      toast("Informe um total válido.");
+      return;
+    }
+    if(!installments || installments < 1 || installments > 120){
+      toast("Parcelas inválidas (1–120).");
+      return;
+    }
+    if(!dueDay || dueDay < 1 || dueDay > 28){
+      toast("Dia de vencimento inválido (1–28).");
+      return;
+    }
+
+    state.sales.push({
+      id: cryptoId(),
+      currency,
+      total,
+      item,
+      buyer,
+      startISO,
+      dueDay,
+      installments,
+      lateFeePct: Math.max(0, lateFeePct),
+      paidInstallments: 0,
+      note,
+      createdAt: new Date().toISOString()
+    });
+
+    saveState();
+    closeSheet("sheetSale");
+    toast("Venda cadastrada.");
     renderFinance();
   }
 
@@ -1241,7 +1600,6 @@
         }
       }
     }catch{}
-
     try{
       let r = await fetch("https://api.exchangerate.host/latest?base=JPY&symbols=BRL", { cache: "no-store" });
       if(r.ok){
@@ -1254,7 +1612,6 @@
         }
       }
     }catch{}
-
     return null;
   }
 
@@ -1273,13 +1630,11 @@
           Você cria uma sequência e o app repete essa sequência nos dias do mês.
           <br><br>
           <b>A</b>=Dia • <b>B</b>=Noite • <b>C</b>=Madrugada • <b>E</b> ou <b>-</b>=Folga
-          <br>
-          Você pode usar separadores: vírgula, espaço, barra.
         </div>
       </div>
 
       <label class="field">
-        <span>Padrão ativo (ex.: AABBEE ou AAAA, EE, BBBB, EE)</span>
+        <span>Padrão ativo (ex.: AABBEE)</span>
         <input id="patActive" value="${escapeHTML(currentRaw)}" />
       </label>
 
@@ -1293,8 +1648,7 @@
       <div class="field">
         <span>Aplicar ao mês atual</span>
         <div style="color:var(--muted); font-weight:750; line-height:1.35">
-          Isso preenche os dias do mês com o padrão repetido.
-          Depois você pode ajustar dia por dia tocando no calendário.
+          Isso preenche o mês com padrão repetido. Depois você ajusta tocando nos dias.
         </div>
       </div>
       `,
@@ -1320,11 +1674,7 @@
     $("#btnApplyPattern").addEventListener("click", () => {
       const raw = String($("#patActive").value || "").trim();
       const res = normalizePattern(raw);
-
-      if(!res.ok){
-        toast(res.error);
-        return;
-      }
+      if(!res.ok){ toast(res.error); return; }
 
       state.patterns.active = res.pattern;
       applyPatternToMonth(ui.year, ui.month, res.pattern);
@@ -1338,7 +1688,7 @@
 
   function normalizePattern(raw){
     let s = String(raw || "").trim();
-    if(!s) return { ok:false, error:"Digite um padrão (ex.: AABBEE ou AAAA, EE, BBBB, EE)." };
+    if(!s) return { ok:false, error:"Digite um padrão (ex.: AABBEE)." };
 
     s = s
       .toUpperCase()
@@ -1357,9 +1707,9 @@
     s = s.replaceAll("-", "E");
 
     if(!/^[ABCE]+$/.test(s)){
-      return { ok:false, error:"Use apenas A, B, C e E (folga). Ex.: AABBEE ou AAAA, EE, BBBB, EE." };
+      return { ok:false, error:"Use apenas A, B, C e E (folga)." };
     }
-    if(s.length < 2) return { ok:false, error:"Padrão muito curto. Use pelo menos 2 caracteres." };
+    if(s.length < 2) return { ok:false, error:"Padrão muito curto." };
 
     return { ok:true, pattern:s };
   }
@@ -1485,6 +1835,137 @@
     });
   }
 
+  // ---------- PDF (print-to-PDF) ----------
+  function printMonthPDF(y, m){
+    const dispCur = state.settings.displayCurrency;
+
+    const work = monthStats(y, m);
+    const fin = financeMonthStats(y, m);
+    const bud = budgetStats(y, m);
+
+    const workIncome = convert(work.estimatedIncomeJPY, "JPY", dispCur);
+
+    const grossReal = workIncome + fin.recvOnlyDisplay;
+    const netReal = grossReal - fin.payOnlyDisplay;
+    const netForecast = netReal - bud.remainingDisplay;
+
+    const title = `Resumo do mês • ${monthsLong[m]} ${y}`;
+
+    const html = `
+      <html><head><meta charset="utf-8">
+      <title>${escapeHTML(title)}</title>
+      <style>
+        body{font-family: Arial, sans-serif; padding:18px; color:#111;}
+        h1{font-size:18px; margin:0 0 8px 0;}
+        .muted{color:#555; font-size:12px;}
+        .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;}
+        .card{border:1px solid #ddd; border-radius:10px; padding:10px;}
+        .k{font-size:11px; color:#666;}
+        .v{font-size:16px; font-weight:800; margin-top:6px;}
+        table{width:100%; border-collapse:collapse; margin-top:12px;}
+        th,td{border:1px solid #ddd; padding:8px; font-size:12px;}
+        th{background:#f4f4f4; text-align:left;}
+      </style></head><body>
+        <h1>${escapeHTML(title)}</h1>
+        <div class="muted">Moeda: ${dispCur} • ${escapeHTML(fxLabel())}</div>
+
+        <div class="grid">
+          <div class="card"><div class="k">Horas normais</div><div class="v">${work.totalNormal}h</div></div>
+          <div class="card"><div class="k">Horas extras</div><div class="v">${work.totalExtra}h</div></div>
+          <div class="card"><div class="k">Bruto (real)</div><div class="v">${moneyIn(dispCur, grossReal)}</div></div>
+          <div class="card"><div class="k">Líquido (prev.)</div><div class="v">${moneyIn(dispCur, netForecast)}</div></div>
+        </div>
+
+        <table>
+          <tr><th>Item</th><th>Valor</th></tr>
+          <tr><td>Ganho do trabalho (estimado)</td><td>${moneyIn(dispCur, workIncome)}</td></tr>
+          <tr><td>Recebimentos (sem empréstimos)</td><td>${moneyIn(dispCur, fin.recvOnlyDisplay)}</td></tr>
+          <tr><td>Pagamentos (sem empréstimos)</td><td>${moneyIn(dispCur, fin.payOnlyDisplay)}</td></tr>
+          <tr><td>Fixas planejadas</td><td>${moneyIn(dispCur, bud.fixedTotalDisplay)}</td></tr>
+          <tr><td>Variáveis planejadas</td><td>${moneyIn(dispCur, bud.variableTotalDisplay)}</td></tr>
+          <tr><td>Restante do planejado</td><td>${moneyIn(dispCur, bud.remainingDisplay)}</td></tr>
+          <tr><td>Líquido (real)</td><td>${moneyIn(dispCur, netReal)}</td></tr>
+          <tr><td>Líquido (previsto)</td><td>${moneyIn(dispCur, netForecast)}</td></tr>
+        </table>
+
+        <div class="muted" style="margin-top:12px;">
+          Dica: no celular, use “Compartilhar / Salvar como PDF” depois de imprimir.
+        </div>
+      </body></html>
+    `;
+
+    const w = window.open("", "_blank");
+    if(!w){ toast("Bloqueado pelo navegador. Permita pop-ups."); return; }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    setTimeout(() => w.print(), 250);
+  }
+
+  function printSalePDF(saleId){
+    const sale = state.sales.find(s => s.id === saleId);
+    if(!sale){ toast("Venda não encontrada."); return; }
+
+    const schedule = getSaleSchedule(sale);
+    const endISO = schedule.length ? schedule[schedule.length-1].dueISO : "—";
+
+    const rows = schedule.map(x => `
+      <tr>
+        <td>${x.index}/${sale.installments}</td>
+        <td>${x.dueISO}</td>
+        <td>${moneyIn(sale.currency, x.amount)}</td>
+        <td>${x.paid ? "Pago" : "Pendente"}</td>
+      </tr>
+    `).join("");
+
+    const title = `Contrato de venda • ${sale.item} • ${sale.buyer}`;
+
+    const html = `
+      <html><head><meta charset="utf-8">
+      <title>${escapeHTML(title)}</title>
+      <style>
+        body{font-family: Arial, sans-serif; padding:18px; color:#111;}
+        h1{font-size:18px; margin:0 0 8px 0;}
+        .muted{color:#555; font-size:12px; line-height:1.35;}
+        .card{border:1px solid #ddd; border-radius:10px; padding:10px; margin-top:12px;}
+        table{width:100%; border-collapse:collapse; margin-top:12px;}
+        th,td{border:1px solid #ddd; padding:8px; font-size:12px;}
+        th{background:#f4f4f4; text-align:left;}
+      </style></head><body>
+        <h1>${escapeHTML(title)}</h1>
+        <div class="muted">
+          Item: <b>${escapeHTML(sale.item)}</b><br>
+          Comprador: <b>${escapeHTML(sale.buyer)}</b><br>
+          Total: <b>${moneyIn(sale.currency, sale.total)}</b> • Parcelas: <b>${sale.installments}x</b><br>
+          Início: ${sale.startISO} • Vencimento: dia ${sale.dueDay} • Término previsto: ${endISO}<br>
+          Juros/Multa por atraso: ${sale.lateFeePct || 0}% (aplicado na parcela quando paga após o vencimento)
+          ${sale.note ? `<br>Obs: ${escapeHTML(sale.note)}` : ""}
+        </div>
+
+        <div class="card">
+          <div class="muted"><b>Parcelas</b></div>
+          <table>
+            <tr><th>#</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr>
+            ${rows}
+          </table>
+        </div>
+
+        <div class="muted" style="margin-top:12px;">
+          Dica: no celular, use “Compartilhar / Salvar como PDF” depois de imprimir.
+        </div>
+      </body></html>
+    `;
+
+    const w = window.open("", "_blank");
+    if(!w){ toast("Bloqueado pelo navegador. Permita pop-ups."); return; }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    setTimeout(() => w.print(), 250);
+  }
+
   // ---------- Theme / Colors ----------
   function applyTheme(theme){
     document.documentElement.setAttribute("data-theme", theme);
@@ -1509,20 +1990,7 @@
     toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
   }
 
-  // ---------- Utilities ----------
-  function cryptoId(){
-    return (crypto?.randomUUID?.() || `id_${Math.random().toString(16).slice(2)}_${Date.now()}`);
-  }
-
-  function escapeHTML(str){
-    return String(str)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
+  // ---------- Drawer / modal already wired ----------
   // Start view
   goView("calendar");
 })();

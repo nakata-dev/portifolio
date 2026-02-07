@@ -26,7 +26,6 @@
       </div>
 
       <div class="topbar-actions">
-        <!-- Currency toggle -->
         <button class="pill-btn" id="btnCurrency" aria-label="Alternar moeda de visualização">
           <i class="fa-solid fa-coins"></i>
           <span id="currencyLabel">¥</span>
@@ -107,7 +106,6 @@
       <section class="view" id="viewFinance" data-view="finance">
         <div class="panel">
           <div class="panel-row">
-            <!-- Finance mode toggle -->
             <div class="toggle" aria-label="Modo do Financeiro">
               <button class="seg-btn seg-active" id="segFinEntries" aria-pressed="true">
                 <i class="fa-solid fa-receipt"></i>
@@ -119,10 +117,36 @@
               </button>
             </div>
 
-            <button class="primary-btn" id="btnFinancePrimary" aria-label="Ação principal do Financeiro">
-              <i class="fa-solid fa-plus"></i>
-              <span id="financePrimaryLabel">Novo</span>
-            </button>
+            <div class="finance-actions">
+              <button class="icon-btn" id="btnFinancePDF" aria-label="Gerar PDF do mês">
+                <i class="fa-regular fa-file-pdf"></i>
+              </button>
+
+              <button class="primary-btn" id="btnFinancePrimary" aria-label="Ação principal do Financeiro">
+                <i class="fa-solid fa-plus"></i>
+                <span id="financePrimaryLabel">Novo</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Projeções do mês (bruto/líquido) -->
+          <div class="summary-bar" id="financeProjectionBar" style="margin-top:10px; grid-template-columns: repeat(4, 1fr);">
+            <div class="sum-item">
+              <div class="sum-k">Bruto (real)</div>
+              <div class="sum-v" id="projGrossReal">¥0</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-k">Líquido (real)</div>
+              <div class="sum-v" id="projNetReal">¥0</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-k">Bruto (prev.)</div>
+              <div class="sum-v" id="projGrossForecast">¥0</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-k">Líquido (prev.)</div>
+              <div class="sum-v" id="projNetForecast">¥0</div>
+            </div>
           </div>
 
           <!-- Filters only for Entries mode -->
@@ -132,10 +156,11 @@
               <button class="chip" data-fin-filter="pay" role="tab" aria-selected="false">Pagamentos</button>
               <button class="chip" data-fin-filter="recv" role="tab" aria-selected="false">Recebimentos</button>
               <button class="chip" data-fin-filter="loan" role="tab" aria-selected="false">Empréstimos</button>
+              <button class="chip" data-fin-filter="sales" role="tab" aria-selected="false">Vendas</button>
             </div>
           </div>
 
-          <!-- Top summary: always visible (adapta ao modo) -->
+          <!-- Top summary: always visible -->
           <div class="finance-top">
             <div class="big-metric">
               <div class="big-k" id="finBigLabel">Saldo do mês</div>
@@ -182,23 +207,21 @@
 
           <div class="empty-state hidden" id="financeEmpty">
             <i class="fa-regular fa-clipboard"></i>
-            <div class="empty-title">Sem lançamentos ainda</div>
-            <div class="empty-sub">Toque em “Novo” para adicionar pagamentos, recebimentos ou empréstimos.</div>
+            <div class="empty-title">Sem itens neste mês</div>
+            <div class="empty-sub">Toque em “Novo” para adicionar lançamentos ou vendas parceladas.</div>
           </div>
         </div>
 
         <!-- Budget mode -->
         <div id="financeBudgetWrap" class="finance-wrap hidden">
           <div class="list-area" aria-label="Despesas fixas e variáveis">
-            <div class="list" id="budgetLists">
-              <!-- injected by JS -->
-            </div>
+            <div class="list" id="budgetLists"></div>
           </div>
 
           <div class="empty-state hidden" id="budgetEmpty">
             <i class="fa-solid fa-list-check"></i>
             <div class="empty-title">Sem despesas cadastradas</div>
-            <div class="empty-sub">Adicione despesas fixas e variáveis para prever seu saldo do mês.</div>
+            <div class="empty-sub">Adicione despesas fixas e variáveis (valem para todos os meses).</div>
           </div>
         </div>
       </section>
@@ -453,14 +476,14 @@
       </div>
     </div>
 
-    <!-- Bottom Sheet: Despesa Fixa/Variável (template) -->
+    <!-- Bottom Sheet: Despesa (template global) -->
     <div class="sheet" id="sheetExpense" aria-hidden="true">
       <div class="sheet-backdrop" data-close-sheet="sheetExpense"></div>
       <div class="sheet-panel" role="dialog" aria-label="Nova despesa (fixa ou variável)">
         <div class="sheet-header">
           <div>
             <div class="sheet-title">Despesa</div>
-            <div class="sheet-sub">Fixas & Variáveis • ponte para o saldo previsto</div>
+            <div class="sheet-sub">Fixas & Variáveis • vale para todos os meses</div>
           </div>
           <button class="icon-btn" data-close-sheet="sheetExpense" aria-label="Fechar">
             <i class="fa-solid fa-xmark"></i>
@@ -505,7 +528,7 @@
 
           <div class="grid2">
             <label class="field">
-              <span>Ativo neste mês</span>
+              <span>Ativa (vale todo mês)</span>
               <select id="expActive">
                 <option value="true" selected>Sim</option>
                 <option value="false">Não</option>
@@ -525,6 +548,90 @@
             </button>
 
             <button class="primary-btn grow" id="btnExpSave">
+              <i class="fa-regular fa-floppy-disk"></i>
+              <span>Salvar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Sheet: Venda / Recebimento (contrato) -->
+    <div class="sheet" id="sheetSale" aria-hidden="true">
+      <div class="sheet-backdrop" data-close-sheet="sheetSale"></div>
+      <div class="sheet-panel" role="dialog" aria-label="Venda parcelada">
+        <div class="sheet-header">
+          <div>
+            <div class="sheet-title">Venda / Recebimento</div>
+            <div class="sheet-sub">Controle de cobranças e parcelas</div>
+          </div>
+          <button class="icon-btn" data-close-sheet="sheetSale" aria-label="Fechar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="sheet-body">
+          <div class="grid2">
+            <label class="field">
+              <span>Moeda</span>
+              <select id="saleCurrency">
+                <option value="BRL">R$ (BRL)</option>
+                <option value="JPY">¥ (JPY)</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Total da venda</span>
+              <input id="saleTotal" inputmode="numeric" placeholder="ex: 2500" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Item vendido</span>
+            <input id="saleItem" placeholder="ex: Fogão / Geladeira / Carro" />
+          </label>
+
+          <label class="field">
+            <span>Nome do comprador</span>
+            <input id="saleBuyer" placeholder="ex: João Silva" />
+          </label>
+
+          <div class="grid2">
+            <label class="field">
+              <span>Data inicial</span>
+              <input id="saleStart" type="date" />
+            </label>
+
+            <label class="field">
+              <span>Dia de vencimento (1–28)</span>
+              <input id="saleDueDay" inputmode="numeric" placeholder="ex: 10" />
+            </label>
+          </div>
+
+          <div class="grid2">
+            <label class="field">
+              <span>Parcelas (x)</span>
+              <input id="saleInstallments" inputmode="numeric" placeholder="ex: 5" />
+            </label>
+
+            <label class="field">
+              <span>Juros/Multa se atrasar (%)</span>
+              <input id="saleLateFeePct" inputmode="decimal" placeholder="ex: 2" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Observação (opcional)</span>
+            <input id="saleNote" placeholder="ex: combinar pix até 10 de cada mês" />
+          </label>
+
+          <div class="sheet-actions">
+            <button class="ghost-btn" id="btnSaleCancel" data-close-sheet="sheetSale">
+              <i class="fa-regular fa-circle-xmark"></i>
+              <span>Cancelar</span>
+            </button>
+
+            <button class="primary-btn grow" id="btnSaleSave">
               <i class="fa-regular fa-floppy-disk"></i>
               <span>Salvar</span>
             </button>
@@ -600,7 +707,7 @@
       </div>
     </div>
 
-    <!-- Modal: Settings / Patterns / Reminders -->
+    <!-- Modal: General -->
     <div class="modal" id="modal" aria-hidden="true">
       <div class="modal-backdrop" data-close-modal="true"></div>
       <div class="modal-card" role="dialog" aria-label="Painel">
