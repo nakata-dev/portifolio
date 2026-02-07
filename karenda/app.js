@@ -3,7 +3,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const LS_KEY = "nakata_finance_v2";
+  const LS_KEY = "nakata_finance_v3";
 
   const monthsShort = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
   const monthsLong  = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -15,31 +15,29 @@
     year: today.getFullYear(),
     month: today.getMonth(),
     financeFilter: "all",
+    financeMode: "entries", // entries | budget
     selectedDateISO: toISO(today),
   };
 
   const defaultState = () => ({
     settings: {
-      // display currency toggle (global view)
       displayCurrency: "JPY", // JPY | BRL
-
-      // câmbio manual: 1 JPY = fxJPYBRL BRL
-      fxJPYBRL: 0.033, // exemplo
-
-      // salário/hora (mantido em JPY por enquanto)
+      fxJPYBRL: 0.033,        // 1 JPY = BRL
       rateNormal: 1200,
       rateExtra: 1500,
       autoCalc: true,
-
       shiftLabels: { A: "Dia", B: "Noite", C: "Madrugada" },
       shiftColors: { A: "#7c5cff", B: "#00c2ff", C: "#ffb020" },
-
       theme: "dark",
-      fxLastUpdated: null, // ISO string
+      fxLastUpdated: null
     },
     workEntries: {},
     financeEntries: [],
     investments: [],
+    // NEW: expense templates (fixed/variable)
+    expenseTemplates: [
+      // { id, type:"fixed"|"variable", name, amount, currency:"JPY"|"BRL", dayOfMonth:null|number, active:true, note:"" }
+    ],
     reminders: [],
     patterns: { active: "AABBEE" }
   });
@@ -60,10 +58,29 @@
   // ---------- State ----------
   function loadState(){
     const raw = localStorage.getItem(LS_KEY);
-    if(!raw) return defaultState();
+    if(!raw){
+      // tentativa de migração de versões anteriores (v2)
+      const old = localStorage.getItem("nakata_finance_v2");
+      if(old){
+        try{
+          const parsed = JSON.parse(old);
+          const merged = { ...defaultState(), ...parsed };
+          merged.settings = { ...defaultState().settings, ...(parsed.settings||{}) };
+          merged.workEntries = parsed.workEntries || {};
+          merged.financeEntries = parsed.financeEntries || [];
+          merged.investments = parsed.investments || [];
+          merged.reminders = parsed.reminders || [];
+          merged.patterns = { ...defaultState().patterns, ...(parsed.patterns||{}) };
+          merged.expenseTemplates = parsed.expenseTemplates || [];
+          localStorage.setItem(LS_KEY, JSON.stringify(merged));
+          return merged;
+        }catch{}
+      }
+      return defaultState();
+    }
+
     try{
       const parsed = JSON.parse(raw);
-      // merge suave + defaults
       const def = defaultState();
       const merged = {
         ...def,
@@ -72,12 +89,12 @@
         workEntries: parsed.workEntries || {},
         financeEntries: parsed.financeEntries || [],
         investments: parsed.investments || [],
+        expenseTemplates: parsed.expenseTemplates || [],
         reminders: parsed.reminders || [],
         patterns: { ...def.patterns, ...(parsed.patterns||{}) }
       };
 
-      // migração rápida de versões antigas caso existam chaves:
-      // - se tiver settings.currency antigo, use como displayCurrency
+      // migração: settings.currency antigo -> displayCurrency
       if(parsed?.settings?.currency && !parsed?.settings?.displayCurrency){
         merged.settings.displayCurrency = parsed.settings.currency;
       }
@@ -128,27 +145,17 @@
     return `${sym(cur)}${n.toLocaleString("pt-BR")}`;
   }
 
-  function money(v){
-    return moneyIn(state.settings.displayCurrency, v);
-  }
-
-  function monthKey(y, m){
-    return `${y}-${String(m+1).padStart(2,"0")}`;
-  }
-
   function isSameMonth(iso, y, m){
     return iso.startsWith(`${y}-${String(m+1).padStart(2,"0")}`);
   }
 
-  // currency conversion
   function convert(amount, fromCur, toCur){
     const a = clampNumber(amount);
     if(fromCur === toCur) return a;
 
     const fx = clampNumber(state.settings.fxJPYBRL);
-    if(!fx || fx <= 0) return a; // fallback neutro (evita NaN)
+    if(!fx || fx <= 0) return a;
 
-    // fx: 1 JPY = fx BRL
     if(fromCur === "JPY" && toCur === "BRL") return a * fx;
     if(fromCur === "BRL" && toCur === "JPY") return a / fx;
 
@@ -160,12 +167,19 @@
     return `Câmbio: 1¥ = R$${fx.toFixed(3)}`;
   }
 
+  function normalizeText(s){
+    return String(s||"")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ");
+  }
+
   // ---------- UI Wiring ----------
   function wireNav(){
     $$(".nav-item").forEach(btn => {
-      btn.addEventListener("click", () => {
-        goView(btn.dataset.go);
-      });
+      btn.addEventListener("click", () => goView(btn.dataset.go));
     });
   }
 
@@ -188,6 +202,7 @@
       renderAll();
     });
 
+    // calendar mode
     $("#segYear").addEventListener("click", () => setCalMode("year"));
     $("#segMonth").addEventListener("click", () => setCalMode("month"));
 
@@ -202,9 +217,19 @@
       renderCalendar();
     });
 
-    $("#btnAddFinance").addEventListener("click", () => openFinanceSheet());
+    // finance mode toggle
+    $("#segFinEntries").addEventListener("click", () => setFinanceMode("entries"));
+    $("#segFinBudget").addEventListener("click", () => setFinanceMode("budget"));
+
+    // finance primary button (changes by mode)
+    $("#btnFinancePrimary").addEventListener("click", () => {
+      if(ui.financeMode === "entries") openFinanceSheet();
+      else openExpenseSheet(); // budget mode
+    });
+
     $("#btnAddInvest").addEventListener("click", () => openInvestSheet());
 
+    // finance chips
     $$(".chip").forEach(chip => {
       chip.addEventListener("click", () => {
         $$(".chip").forEach(c => {
@@ -212,7 +237,7 @@
           c.setAttribute("aria-selected", c === chip ? "true" : "false");
         });
         ui.financeFilter = chip.dataset.finFilter;
-        renderFinance();
+        renderFinanceEntries();
       });
     });
   }
@@ -227,19 +252,22 @@
       el.addEventListener("click", () => closeSheet(el.dataset.closeSheet));
     });
 
+    // day sheet
     $("#btnDaySave").addEventListener("click", saveDayEntry);
     $("#btnDayClear").addEventListener("click", clearDayEntry);
     $("#btnDayDuplicate").addEventListener("click", duplicateDayEntry);
 
+    // finance sheet
     $("#btnFinSave").addEventListener("click", saveFinanceEntry);
-    $("#btnFinCancel").addEventListener("click", () => closeSheet("sheetFinance"));
 
+    // expense template sheet
+    $("#btnExpSave").addEventListener("click", saveExpenseTemplate);
+
+    // invest sheet
     $("#btnInvSave").addEventListener("click", saveInvest);
-    $("#btnInvCancel").addEventListener("click", () => closeSheet("sheetInvest"));
 
-    $$("[data-close-modal]").forEach(el => {
-      el.addEventListener("click", () => closeModal());
-    });
+    // modal close
+    $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
   }
 
   function wireDrawer(){
@@ -299,8 +327,31 @@
     $("#monthNav").style.display = (mode === "month") ? "flex" : "none";
 
     $("#appSubtitle").textContent = mode === "year" ? "Visão anual" : `${monthsLong[ui.month]} • ${ui.year}`;
-
     renderCalendar();
+  }
+
+  function setFinanceMode(mode){
+    ui.financeMode = mode;
+
+    $("#segFinEntries").classList.toggle("seg-active", mode === "entries");
+    $("#segFinBudget").classList.toggle("seg-active", mode === "budget");
+    $("#segFinEntries").setAttribute("aria-pressed", mode === "entries" ? "true" : "false");
+    $("#segFinBudget").setAttribute("aria-pressed", mode === "budget" ? "true" : "false");
+
+    $("#financeFiltersRow").classList.toggle("hidden", mode !== "entries");
+    $("#financeEntriesWrap").classList.toggle("hidden", mode !== "entries");
+    $("#financeBudgetWrap").classList.toggle("hidden", mode !== "budget");
+    $("#budgetSummaryBar").classList.toggle("hidden", mode !== "budget");
+
+    // Change primary button label
+    $("#financePrimaryLabel").textContent = (mode === "entries") ? "Novo" : "Adicionar";
+
+    // Adjust big card labels in Finance header
+    $("#finBigLabel").textContent = (mode === "entries") ? "Saldo do mês" : "Saldo real (mês)";
+    $("#finInLabel").textContent = (mode === "entries") ? "Entradas" : "Pago";
+    $("#finOutLabel").textContent = (mode === "entries") ? "Saídas" : "Planejado";
+
+    renderFinance();
   }
 
   // ---------- Render ----------
@@ -333,18 +384,16 @@
       const card = document.createElement("button");
       card.className = "month-card";
       card.setAttribute("type", "button");
-      card.setAttribute("aria-label", `Abrir ${monthsLong[m]}`);
 
       const dotClass = (stats.daysWithRecords > 0) ? "dot" : "dot none";
-
-      // mostra ganho estimado já convertido para moeda de visualização
-      const incomeDisplay = convert(stats.estimatedIncomeJPY, "JPY", state.settings.displayCurrency);
+      const dispCur = state.settings.displayCurrency;
+      const incomeDisplay = convert(stats.estimatedIncomeJPY, "JPY", dispCur);
 
       card.innerHTML = `
         <div class="month-name">${monthsShort[m]}</div>
         <div class="month-meta">
           <span class="pill"><span class="${dotClass}"></span><span>${stats.daysWithRecords} dias</span></span>
-          <span class="pill">${moneyIn(state.settings.displayCurrency, incomeDisplay)}</span>
+          <span class="pill">${moneyIn(dispCur, incomeDisplay)}</span>
         </div>
       `;
 
@@ -360,19 +409,17 @@
   function renderMonthGrid(){
     const area = $("#monthGrid");
     area.innerHTML = "";
-
     if(ui.calMode !== "month") return;
 
     const first = new Date(ui.year, ui.month, 1);
     const startDow = first.getDay();
     const daysInMonth = new Date(ui.year, ui.month+1, 0).getDate();
-
     const totalCells = 42;
 
     for(let i=0; i<totalCells; i++){
       const cell = document.createElement("div");
-
       const dayNum = (i - startDow) + 1;
+
       if(dayNum < 1 || dayNum > daysInMonth){
         cell.className = "day empty";
         cell.innerHTML = `<div class="day-top"><span class="day-num"> </span><span class="badge"></span></div>`;
@@ -382,7 +429,6 @@
 
       const dateISO = `${ui.year}-${String(ui.month+1).padStart(2,"0")}-${String(dayNum).padStart(2,"0")}`;
       const entry = state.workEntries[dateISO];
-
       const shift = entry?.shift || "";
       const normal = clampNumber(entry?.normal);
       const extra = clampNumber(entry?.extra);
@@ -394,7 +440,7 @@
       cell.innerHTML = `
         <div class="day-top">
           <span class="day-num">${dayNum}${isToday ? " •" : ""}</span>
-          <span class="${badgeClass}" title="${shift || "—"}"></span>
+          <span class="${badgeClass}"></span>
         </div>
         <div class="day-mini">
           ${normal ? `<span class="chip-mini">N ${normal}h</span>` : ``}
@@ -409,21 +455,18 @@
 
   function renderSummaryBar(){
     const stats = monthStats(ui.year, ui.month);
-
     $("#sumNormal").textContent = `${stats.totalNormal}h`;
     $("#sumExtra").textContent = `${stats.totalExtra}h`;
 
-    // ganho do trabalho é calculado em JPY (rateNormal/rateExtra), e depois convertido para exibição
-    const incomeDisplay = convert(stats.estimatedIncomeJPY, "JPY", state.settings.displayCurrency);
-    $("#sumIncome").textContent = moneyIn(state.settings.displayCurrency, incomeDisplay);
+    const dispCur = state.settings.displayCurrency;
+    const incomeDisplay = convert(stats.estimatedIncomeJPY, "JPY", dispCur);
+    $("#sumIncome").textContent = moneyIn(dispCur, incomeDisplay);
 
     const fin = financeMonthStats(ui.year, ui.month);
-    $("#sumBalance").textContent = moneyIn(state.settings.displayCurrency, fin.balanceDisplay);
+    $("#sumBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
 
     if(ui.view === "finance"){
-      $("#finMonthBalance").textContent = moneyIn(state.settings.displayCurrency, fin.balanceDisplay);
-      $("#finIn").textContent = moneyIn(state.settings.displayCurrency, fin.inDisplay);
-      $("#finOut").textContent = moneyIn(state.settings.displayCurrency, fin.outDisplay);
+      renderFinanceHeader(fin);
     }
   }
 
@@ -433,8 +476,35 @@
       return;
     }
 
-    renderSummaryBar();
+    const fin = financeMonthStats(ui.year, ui.month);
+    renderFinanceHeader(fin);
 
+    if(ui.financeMode === "entries"){
+      renderFinanceEntries();
+    } else {
+      renderFinanceBudget(fin);
+    }
+  }
+
+  function renderFinanceHeader(fin){
+    const dispCur = state.settings.displayCurrency;
+
+    // In Entries mode: show entradas/saídas
+    if(ui.financeMode === "entries"){
+      $("#finMonthBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
+      $("#finIn").textContent = moneyIn(dispCur, fin.inDisplay);
+      $("#finOut").textContent = moneyIn(dispCur, fin.outDisplay);
+      return;
+    }
+
+    // In Budget mode: big shows saldo real, minis show pago/planejado (saída)
+    const bud = budgetStats(ui.year, ui.month);
+    $("#finMonthBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
+    $("#finIn").textContent = moneyIn(dispCur, bud.paidTowardsPlannedDisplay);
+    $("#finOut").textContent = moneyIn(dispCur, bud.plannedTotalDisplay);
+  }
+
+  function renderFinanceEntries(){
     const listWrap = $("#financeList");
     listWrap.innerHTML = `<div class="list" id="financeScroll"></div>`;
     const list = $("#financeScroll");
@@ -453,6 +523,8 @@
     $("#financeEmpty").classList.toggle("hidden", items.length !== 0);
     if(items.length === 0) return;
 
+    const dispCur = state.settings.displayCurrency;
+
     for(const e of items){
       const isIn = (e.type === "recv" || e.type === "loan_in");
       const sign = isIn ? "+" : "-";
@@ -462,12 +534,10 @@
         e.type === "loan_in" ? "Empréstimo (entrada)" : "Empréstimo (saída)";
 
       const statusLabel = e.status === "paid" ? "pago" : "pendente";
-
       const cur = e.currency || "JPY";
-      const displayCur = state.settings.displayCurrency;
 
-      const amountDisplay = convert(e.amount, cur, displayCur);
-      const origText = (cur !== displayCur) ? `orig: ${moneyIn(cur, e.amount)}` : "";
+      const amountDisplay = convert(e.amount, cur, dispCur);
+      const origText = (cur !== dispCur) ? `orig: ${moneyIn(cur, e.amount)}` : "";
 
       const el = document.createElement("div");
       el.className = "item";
@@ -477,7 +547,7 @@
           <div class="item-sub">${typeLabel} • ${e.dateISO} • ${statusLabel}${e.note ? " • " + e.note : ""}</div>
         </div>
         <div class="item-right">
-          <div class="amount">${sign} ${moneyIn(displayCur, amountDisplay)}</div>
+          <div class="amount">${sign} ${moneyIn(dispCur, amountDisplay)}</div>
           <div class="tag ${isIn ? "good" : "bad"}">${isIn ? "entrada" : "saída"}</div>
           ${origText ? `<div class="tag orig">${origText}</div>` : ``}
         </div>
@@ -501,17 +571,114 @@
     }
   }
 
+  function renderFinanceBudget(fin){
+    const dispCur = state.settings.displayCurrency;
+    const bud = budgetStats(ui.year, ui.month);
+
+    // summary chips
+    $("#budFixed").textContent = moneyIn(dispCur, bud.fixedTotalDisplay);
+    $("#budVar").textContent = moneyIn(dispCur, bud.variableTotalDisplay);
+    $("#budRemaining").textContent = moneyIn(dispCur, bud.remainingDisplay);
+    $("#budForecast").textContent = moneyIn(dispCur, bud.forecastBalanceDisplay);
+
+    const hasAny = state.expenseTemplates.length > 0;
+    $("#budgetEmpty").classList.toggle("hidden", hasAny);
+
+    const wrap = $("#budgetLists");
+    wrap.innerHTML = "";
+
+    if(!hasAny) return;
+
+    // grouped lists
+    renderExpenseGroup("Fixas", "fixed", bud.fixedTotalDisplay);
+    renderExpenseGroup("Variáveis", "variable", bud.variableTotalDisplay);
+
+    function renderExpenseGroup(title, type, totalDisplay){
+      const group = state.expenseTemplates
+        .filter(x => x.type === type)
+        .slice()
+        .sort((a,b) => (normalizeText(a.name) > normalizeText(b.name) ? 1 : -1));
+
+      const header = document.createElement("div");
+      header.className = "bud-header";
+      header.innerHTML = `
+        <div class="bud-title">${title}</div>
+        <div class="bud-pill">${moneyIn(dispCur, totalDisplay)}</div>
+      `;
+      wrap.appendChild(header);
+
+      if(group.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "item";
+        empty.innerHTML = `
+          <div class="item-left">
+            <div class="item-title" style="color:var(--muted); font-weight:850;">Sem ${title.toLowerCase()}</div>
+            <div class="item-sub">Toque em “Adicionar” para criar</div>
+          </div>
+          <div class="item-right">
+            <div class="tag">—</div>
+          </div>
+        `;
+        wrap.appendChild(empty);
+        return;
+      }
+
+      for(const it of group){
+        const active = (it.active !== false);
+        const cur = it.currency || "JPY";
+        const amountDisplay = convert(it.amount, cur, dispCur);
+
+        const meta = [
+          it.dayOfMonth ? `dia ${it.dayOfMonth}` : null,
+          active ? "ativo" : "inativo",
+          it.note ? it.note : null
+        ].filter(Boolean).join(" • ");
+
+        const origText = (cur !== dispCur) ? `orig: ${moneyIn(cur, it.amount)}` : "";
+
+        const el = document.createElement("div");
+        el.className = "item";
+        el.innerHTML = `
+          <div class="item-left">
+            <div class="item-title">${it.name}</div>
+            <div class="item-sub">${meta || "—"}</div>
+          </div>
+          <div class="item-right">
+            <div class="amount">- ${moneyIn(dispCur, amountDisplay)}</div>
+            ${origText ? `<div class="tag orig">${origText}</div>` : ``}
+            <div class="tag">${active ? "conta no mês" : "fora do mês"}</div>
+          </div>
+        `;
+
+        el.addEventListener("click", () => {
+          openConfirmModal(
+            "Remover despesa?",
+            `${it.name} • ${moneyIn(cur, it.amount)}`,
+            () => {
+              state.expenseTemplates = state.expenseTemplates.filter(x => x.id !== it.id);
+              saveState();
+              toast("Despesa removida.");
+              renderFinance();
+            }
+          );
+        });
+
+        wrap.appendChild(el);
+      }
+    }
+  }
+
   function renderInvest(){
-    const displayCur = state.settings.displayCurrency;
+    const dispCur = state.settings.displayCurrency;
 
     const totalDisplay = state.investments.reduce((acc, it) => {
       const cur = it.currency || "JPY";
-      return acc + convert(it.value, cur, displayCur);
+      return acc + convert(it.value, cur, dispCur);
     }, 0);
 
     const monthDepDisplay = state.investments.reduce((acc, it) => {
       const cur = it.currency || "JPY";
-      return acc + convert(it.depositMonth, cur, displayCur);
+      return acc + convert(it.depositMonth, cur, dispCur);
     }, 0);
 
     const roiAvg = (() => {
@@ -522,8 +689,8 @@
       return vals.reduce((a,b) => a+b, 0) / vals.length;
     })();
 
-    $("#invTotal").textContent = moneyIn(displayCur, totalDisplay);
-    $("#invMonth").textContent = moneyIn(displayCur, monthDepDisplay);
+    $("#invTotal").textContent = moneyIn(dispCur, totalDisplay);
+    $("#invMonth").textContent = moneyIn(dispCur, monthDepDisplay);
     $("#invRoi").textContent = `${Math.round(roiAvg * 10) / 10}%`;
 
     const listWrap = $("#investList");
@@ -535,20 +702,19 @@
 
     for(const it of state.investments){
       const cur = it.currency || "JPY";
-      const valueDisp = convert(it.value, cur, displayCur);
-      const depDisp = convert(it.depositMonth, cur, displayCur);
-
-      const origText = (cur !== displayCur) ? `orig: ${moneyIn(cur, it.value)}` : "";
+      const valueDisp = convert(it.value, cur, dispCur);
+      const depDisp = convert(it.depositMonth, cur, dispCur);
+      const origText = (cur !== dispCur) ? `orig: ${moneyIn(cur, it.value)}` : "";
 
       const el = document.createElement("div");
       el.className = "item";
       el.innerHTML = `
         <div class="item-left">
           <div class="item-title">${it.name}</div>
-          <div class="item-sub">Atual ${moneyIn(displayCur, valueDisp)} • Aporte ${moneyIn(displayCur, depDisp)}${it.note ? " • " + it.note : ""}</div>
+          <div class="item-sub">Atual ${moneyIn(dispCur, valueDisp)} • Aporte ${moneyIn(dispCur, depDisp)}${it.note ? " • " + it.note : ""}</div>
         </div>
         <div class="item-right">
-          <div class="amount">${moneyIn(displayCur, valueDisp)}</div>
+          <div class="amount">${moneyIn(dispCur, valueDisp)}</div>
           <div class="tag">${(clampNumber(it.roi) || 0)}%</div>
           ${origText ? `<div class="tag orig">${origText}</div>` : ``}
         </div>
@@ -590,7 +756,6 @@
       addon += a;
     }
 
-    // ganhos do trabalho: JPY (rateNormal/rateExtra) + addon (JPY)
     const estimatedIncomeJPY = calcIncomeJPY(totalNormal, totalExtra) + addon;
 
     return {
@@ -609,22 +774,72 @@
   }
 
   function financeMonthStats(y, m){
-    const displayCur = state.settings.displayCurrency;
+    const dispCur = state.settings.displayCurrency;
 
     let inDisplay = 0;
     let outDisplay = 0;
 
     for(const e of state.financeEntries){
       if(!isSameMonth(e.dateISO, y, m)) continue;
-
       const cur = e.currency || "JPY";
-      const amtDisp = convert(e.amount, cur, displayCur);
+      const amtDisp = convert(e.amount, cur, dispCur);
 
       if(e.type === "recv" || e.type === "loan_in") inDisplay += amtDisp;
       else outDisplay += amtDisp;
     }
 
     return { inDisplay, outDisplay, balanceDisplay: inDisplay - outDisplay };
+  }
+
+  function budgetStats(y, m){
+    const dispCur = state.settings.displayCurrency;
+
+    const active = state.expenseTemplates.filter(x => x.active !== false);
+
+    let fixedTotalDisplay = 0;
+    let variableTotalDisplay = 0;
+
+    for(const t of active){
+      const cur = t.currency || "JPY";
+      const amtDisp = convert(t.amount, cur, dispCur);
+      if(t.type === "fixed") fixedTotalDisplay += amtDisp;
+      else variableTotalDisplay += amtDisp;
+    }
+
+    const plannedTotalDisplay = fixedTotalDisplay + variableTotalDisplay;
+
+    // "Pago" contra planejado: tenta bater por nome == categoria (pagamentos pagos)
+    const templateNames = new Set(active.map(t => normalizeText(t.name)));
+    let paidTowardsPlannedDisplay = 0;
+
+    for(const e of state.financeEntries){
+      if(!isSameMonth(e.dateISO, y, m)) continue;
+      if(e.type !== "pay") continue;
+      if(e.status !== "paid") continue;
+
+      const cat = normalizeText(e.category || "");
+      if(!cat) continue;
+
+      // match simples
+      if(templateNames.has(cat)){
+        const cur = e.currency || "JPY";
+        paidTowardsPlannedDisplay += convert(e.amount, cur, dispCur);
+      }
+    }
+
+    const remainingDisplay = Math.max(plannedTotalDisplay - paidTowardsPlannedDisplay, 0);
+
+    const fin = financeMonthStats(y, m);
+    const forecastBalanceDisplay = fin.balanceDisplay - remainingDisplay;
+
+    return {
+      fixedTotalDisplay,
+      variableTotalDisplay,
+      plannedTotalDisplay,
+      paidTowardsPlannedDisplay,
+      remainingDisplay,
+      forecastBalanceDisplay
+    };
   }
 
   // ---------- Sheets / Modals ----------
@@ -718,12 +933,11 @@
   function openFinanceSheet(){
     $("#finType").value = "pay";
     $("#finStatus").value = "paid";
-    $("#finCurrency").value = state.settings.displayCurrency; // ajuda: já abre na moeda que está vendo
+    $("#finCurrency").value = state.settings.displayCurrency;
     $("#finAmount").value = "";
     $("#finCategory").value = "";
     $("#finNote").value = "";
     $("#finDate").value = toISO(new Date(ui.year, ui.month, today.getDate()));
-
     openSheet("sheetFinance");
   }
 
@@ -758,6 +972,56 @@
     toast("Lançamento salvo.");
     renderFinance();
     renderSummaryBar();
+  }
+
+  function openExpenseSheet(presetType = "fixed"){
+    $("#expType").value = presetType;
+    $("#expCurrency").value = state.settings.displayCurrency;
+    $("#expName").value = "";
+    $("#expAmount").value = "";
+    $("#expDay").value = "";
+    $("#expActive").value = "true";
+    $("#expNote").value = "";
+    openSheet("sheetExpense");
+  }
+
+  function saveExpenseTemplate(){
+    const type = $("#expType").value; // fixed|variable
+    const currency = $("#expCurrency").value;
+    const name = String($("#expName").value || "").trim();
+    const amount = Math.round(clampNumber($("#expAmount").value));
+    const dayOfMonth = Math.round(clampNumber($("#expDay").value));
+    const active = $("#expActive").value === "true";
+    const note = String($("#expNote").value || "").trim();
+
+    if(!name){
+      toast("Informe o nome da despesa.");
+      return;
+    }
+    if(!amount || amount <= 0){
+      toast("Informe um valor válido.");
+      return;
+    }
+    if(dayOfMonth && (dayOfMonth < 1 || dayOfMonth > 31)){
+      toast("Dia do mês inválido (1–31).");
+      return;
+    }
+
+    state.expenseTemplates.push({
+      id: cryptoId(),
+      type,
+      currency,
+      name,
+      amount,
+      dayOfMonth: dayOfMonth || null,
+      active,
+      note
+    });
+
+    saveState();
+    closeSheet("sheetExpense");
+    toast("Despesa salva.");
+    renderFinance();
   }
 
   function openInvestSheet(){
@@ -840,14 +1104,13 @@
     );
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
-
     $("#btnConfirmOk").addEventListener("click", () => {
       closeModal();
       onConfirm?.();
     });
   }
 
-  // Settings modal now includes FX + Update FX button
+  // Settings modal includes FX update
   function openSettingsModal(){
     const s = state.settings;
 
@@ -966,11 +1229,7 @@
   }
 
   async function fetchFxJPYBRL(){
-    // tenta 2 fontes, sem depender de API key
-    // Retorna fx: 1 JPY = BRL
     try{
-      // Frankfurter (ECB) nem sempre tem JPY->BRL direto, mas costuma funcionar:
-      // https://api.frankfurter.app/latest?from=JPY&to=BRL
       let r = await fetch("https://api.frankfurter.app/latest?from=JPY&to=BRL", { cache: "no-store" });
       if(r.ok){
         const j = await r.json();
@@ -984,8 +1243,6 @@
     }catch{}
 
     try{
-      // exchangerate.host
-      // https://api.exchangerate.host/latest?base=JPY&symbols=BRL
       let r = await fetch("https://api.exchangerate.host/latest?base=JPY&symbols=BRL", { cache: "no-store" });
       if(r.ok){
         const j = await r.json();

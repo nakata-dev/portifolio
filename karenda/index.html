@@ -107,44 +107,99 @@
       <section class="view" id="viewFinance" data-view="finance">
         <div class="panel">
           <div class="panel-row">
+            <!-- Finance mode toggle -->
+            <div class="toggle" aria-label="Modo do Financeiro">
+              <button class="seg-btn seg-active" id="segFinEntries" aria-pressed="true">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Lançamentos</span>
+              </button>
+              <button class="seg-btn" id="segFinBudget" aria-pressed="false">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Fixas & Var.</span>
+              </button>
+            </div>
+
+            <button class="primary-btn" id="btnFinancePrimary" aria-label="Ação principal do Financeiro">
+              <i class="fa-solid fa-plus"></i>
+              <span id="financePrimaryLabel">Novo</span>
+            </button>
+          </div>
+
+          <!-- Filters only for Entries mode -->
+          <div class="panel-row" id="financeFiltersRow" style="margin-top:10px;">
             <div class="chips" role="tablist" aria-label="Filtros do financeiro">
               <button class="chip chip-active" data-fin-filter="all" role="tab" aria-selected="true">Tudo</button>
               <button class="chip" data-fin-filter="pay" role="tab" aria-selected="false">Pagamentos</button>
               <button class="chip" data-fin-filter="recv" role="tab" aria-selected="false">Recebimentos</button>
               <button class="chip" data-fin-filter="loan" role="tab" aria-selected="false">Empréstimos</button>
             </div>
-
-            <button class="primary-btn" id="btnAddFinance" aria-label="Novo lançamento">
-              <i class="fa-solid fa-plus"></i>
-              <span>Novo</span>
-            </button>
           </div>
 
+          <!-- Top summary: always visible (adapta ao modo) -->
           <div class="finance-top">
             <div class="big-metric">
-              <div class="big-k">Saldo do mês</div>
+              <div class="big-k" id="finBigLabel">Saldo do mês</div>
               <div class="big-v" id="finMonthBalance">¥0</div>
               <div class="tiny-note" id="fxNoteFin">Câmbio: 1¥ = R$0,00</div>
             </div>
-            <div class="mini-metrics">
+
+            <div class="mini-metrics" id="finMiniBox">
               <div class="mini">
-                <div class="mini-k">Entradas</div>
+                <div class="mini-k" id="finInLabel">Entradas</div>
                 <div class="mini-v" id="finIn">¥0</div>
               </div>
               <div class="mini">
-                <div class="mini-k">Saídas</div>
+                <div class="mini-k" id="finOutLabel">Saídas</div>
                 <div class="mini-v" id="finOut">¥0</div>
               </div>
             </div>
           </div>
+
+          <!-- Extra metrics for Budget mode -->
+          <div class="summary-bar hidden" id="budgetSummaryBar" style="margin-top:10px;">
+            <div class="sum-item">
+              <div class="sum-k">Fixas</div>
+              <div class="sum-v" id="budFixed">¥0</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-k">Variáveis</div>
+              <div class="sum-v" id="budVar">¥0</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-k">Restante</div>
+              <div class="sum-v" id="budRemaining">¥0</div>
+            </div>
+            <div class="sum-item">
+              <div class="sum-k">Previsto</div>
+              <div class="sum-v" id="budForecast">¥0</div>
+            </div>
+          </div>
         </div>
 
-        <div class="list-area" id="financeList" aria-label="Lista de lançamentos"></div>
+        <!-- Entries mode -->
+        <div id="financeEntriesWrap" class="finance-wrap">
+          <div class="list-area" id="financeList" aria-label="Lista de lançamentos"></div>
 
-        <div class="empty-state hidden" id="financeEmpty">
-          <i class="fa-regular fa-clipboard"></i>
-          <div class="empty-title">Sem lançamentos ainda</div>
-          <div class="empty-sub">Toque em “Novo” para adicionar pagamentos, recebimentos ou empréstimos.</div>
+          <div class="empty-state hidden" id="financeEmpty">
+            <i class="fa-regular fa-clipboard"></i>
+            <div class="empty-title">Sem lançamentos ainda</div>
+            <div class="empty-sub">Toque em “Novo” para adicionar pagamentos, recebimentos ou empréstimos.</div>
+          </div>
+        </div>
+
+        <!-- Budget mode -->
+        <div id="financeBudgetWrap" class="finance-wrap hidden">
+          <div class="list-area" aria-label="Despesas fixas e variáveis">
+            <div class="list" id="budgetLists">
+              <!-- injected by JS -->
+            </div>
+          </div>
+
+          <div class="empty-state hidden" id="budgetEmpty">
+            <i class="fa-solid fa-list-check"></i>
+            <div class="empty-title">Sem despesas cadastradas</div>
+            <div class="empty-sub">Adicione despesas fixas e variáveis para prever seu saldo do mês.</div>
+          </div>
         </div>
       </section>
 
@@ -390,6 +445,86 @@
             </button>
 
             <button class="primary-btn grow" id="btnFinSave">
+              <i class="fa-regular fa-floppy-disk"></i>
+              <span>Salvar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Sheet: Despesa Fixa/Variável (template) -->
+    <div class="sheet" id="sheetExpense" aria-hidden="true">
+      <div class="sheet-backdrop" data-close-sheet="sheetExpense"></div>
+      <div class="sheet-panel" role="dialog" aria-label="Nova despesa (fixa ou variável)">
+        <div class="sheet-header">
+          <div>
+            <div class="sheet-title">Despesa</div>
+            <div class="sheet-sub">Fixas & Variáveis • ponte para o saldo previsto</div>
+          </div>
+          <button class="icon-btn" data-close-sheet="sheetExpense" aria-label="Fechar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="sheet-body">
+          <div class="grid2">
+            <label class="field">
+              <span>Tipo</span>
+              <select id="expType">
+                <option value="fixed">Fixa</option>
+                <option value="variable">Variável</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Moeda</span>
+              <select id="expCurrency">
+                <option value="JPY">¥ (JPY)</option>
+                <option value="BRL">R$ (BRL)</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Nome (use o mesmo da categoria para bater no “Pago”)</span>
+            <input id="expName" placeholder="ex: Aluguel / Internet / Mercado" />
+          </label>
+
+          <div class="grid2">
+            <label class="field">
+              <span>Valor</span>
+              <input id="expAmount" inputmode="numeric" placeholder="ex: 60000" />
+            </label>
+
+            <label class="field">
+              <span>Dia do mês (opcional)</span>
+              <input id="expDay" inputmode="numeric" placeholder="ex: 5" />
+            </label>
+          </div>
+
+          <div class="grid2">
+            <label class="field">
+              <span>Ativo neste mês</span>
+              <select id="expActive">
+                <option value="true" selected>Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Nota (opcional)</span>
+              <input id="expNote" placeholder="ex: reajusta em Abril" />
+            </label>
+          </div>
+
+          <div class="sheet-actions">
+            <button class="ghost-btn" id="btnExpCancel" data-close-sheet="sheetExpense">
+              <i class="fa-regular fa-circle-xmark"></i>
+              <span>Cancelar</span>
+            </button>
+
+            <button class="primary-btn grow" id="btnExpSave">
               <i class="fa-regular fa-floppy-disk"></i>
               <span>Salvar</span>
             </button>

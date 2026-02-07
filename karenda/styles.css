@@ -103,7 +103,6 @@ body{
 .icon-btn:active{transform: scale(.98)}
 .icon-btn i{font-size: 16px}
 
-/* new compact pill button (currency toggle) */
 .pill-btn{
   height: 40px;
   padding: 0 12px;
@@ -173,6 +172,7 @@ body{
   cursor:pointer;
   font-weight: 600;
   font-size: 13px;
+  -webkit-tap-highlight-color: transparent;
 }
 .seg-btn i{opacity:.9}
 .seg-active{
@@ -504,6 +504,15 @@ body{
   text-overflow:ellipsis;
 }
 
+.finance-wrap{
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
 .list-area{
   flex:1;
   min-height:0;
@@ -573,6 +582,30 @@ body{
 .tag.good{color: var(--good)}
 .tag.bad{color: var(--bad)}
 .tag.orig{opacity:.9}
+
+/* Budget section helpers */
+.bud-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  margin: 6px 2px 8px 2px;
+}
+.bud-title{
+  font-weight: 950;
+  font-size: 12px;
+  color: var(--text);
+  opacity:.95;
+}
+.bud-pill{
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.02);
+  white-space:nowrap;
+}
 
 .empty-state{
   flex:1;
@@ -797,11 +830,10 @@ body{
 }
 .toast.show{display:block}
 
-.hidden{display:none !important}
-
 @media (max-width: 360px){
   .summary-bar{grid-template-columns: repeat(2,1fr)}
   .mini-metrics{width: 120px}
   .year-grid{grid-template-columns: repeat(2,1fr)}
   .pill-btn{padding: 0 10px}
+  .seg-btn span{display:none}
 }
