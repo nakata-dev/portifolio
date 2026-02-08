@@ -80,7 +80,9 @@
               <div class="sum-k">Ganho</div>
               <div class="sum-v" id="sumIncome">¥0</div>
             </div>
-            <div class="sum-item">
+
+            <!-- ✅ ADICIONADO: id para o card do saldo (usado pelo money-effects.js/app.js) -->
+            <div class="sum-item" id="sumBalanceCard">
               <div class="sum-k">Saldo</div>
               <div class="sum-v" id="sumBalance">¥0</div>
             </div>
@@ -252,7 +254,8 @@
                 </div>
                 <div class="mini">
                   <div class="mini-k">Rentab. (est.)</div>
-                  <div class="mini-v" id="invRoi">0%</div>
+                  <!-- ✅ CORRIGIDO: id único (antes duplicava com o input do sheet) -->
+                  <div class="mini-v" id="invRoiText">0%</div>
                 </div>
               </div>
             </div>
@@ -364,6 +367,18 @@
               </select>
             </label>
           </div>
+
+          <!-- ✅ ADICIONADO: Tipo do dia (o app.js já usa #dayType) -->
+          <label class="field">
+            <span>Tipo do dia</span>
+            <select id="dayType">
+              <option value="auto" selected>Auto (Domingo detecta sozinho)</option>
+              <option value="normal">Normal</option>
+              <option value="sunday">Domingo</option>
+              <option value="holiday">Feriado</option>
+              <option value="off_worked">Folga trabalhada</option>
+            </select>
+          </label>
 
           <div class="grid2">
             <label class="field">
@@ -684,6 +699,7 @@
 
             <label class="field">
               <span>Rentabilidade estimada (%)</span>
+              <!-- mantém o input id="invRoi" aqui -->
               <input id="invRoi" inputmode="decimal" placeholder="ex: 5" />
             </label>
           </div>

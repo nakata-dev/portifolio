@@ -1,4 +1,3 @@
-/* styles.css */
 :root{
   --bg: #0b0c10;
   --card: #12141b;
@@ -10,11 +9,10 @@
   --good: #3ddc97;
   --bad: #ff5c7a;
 
-  --shiftA: #7c5cff; /* Dia */
-  --shiftB: #00c2ff; /* Noite */
-  --shiftC: #ffb020; /* Madrugada */
+  --shiftA: #7c5cff;
+  --shiftB: #00c2ff;
+  --shiftC: #ffb020;
 
-  /* ✅ ÍCONES LEVES (SVG inline) para reduzir peso e deixar menos chamativo */
   --icon-day: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M12 18a6 6 0 1 1 0-12a6 6 0 0 1 0 12Zm0-16h1v3h-1V2Zm0 17h1v3h-1v-3ZM2 11h3v1H2v-1Zm19 0h3v1h-3v-1ZM4.2 4.2l2.2 2.2l-.7.7L3.5 4.9l.7-.7Zm13.4 13.4l2.2 2.2l-.7.7l-2.2-2.2l.7-.7ZM19.8 4.2l.7.7l-2.2 2.2l-.7-.7l2.2-2.2ZM6.4 17.6l.7.7l-2.2 2.2l-.7-.7l2.2-2.2Z'/%3E%3C/svg%3E");
   --icon-night: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M21 14.2A8.5 8.5 0 0 1 9.8 3a7 7 0 1 0 11.2 11.2Z'/%3E%3C/svg%3E");
   --icon-dawn: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M7.5 13.2c1.4-1.2 3.2-1.9 4.7-1.1c1 .5 1.7 1.6 1.8 2.9c.2 2.2-1.2 4-3.7 4.1c-2.7.1-4.4-1.6-4.7-4.1c0-.6.1-1.2.4-1.8c-.9.4-1.8 1.1-2.4 2.1l-1.1-.6c1-1.8 2.7-3 4.9-3.5Zm8.2.2c.7.5 1.3 1.2 1.6 2l-1.1.6c-.4-.7-1-1.3-1.6-1.6c.3.6.4 1.2.4 1.8c-.2 2.5-2 4.2-4.7 4.1c2.1-.4 3.3-2 3.1-3.9c-.1-1.1-.7-2-1.5-2.5c1.4-.7 3-.3 3.8.5Z'/%3E%3C/svg%3E");
@@ -38,7 +36,6 @@
   --muted: #5f6a85;
   --line: rgba(16,20,35,.10);
   --shadow: 0 12px 28px rgba(10,15,30,.10);
-
   color-scheme: light;
 }
 
@@ -52,12 +49,7 @@ body{
   overflow:hidden;
 }
 
-.app{
-  height: 100dvh;
-  width: 100%;
-  display:flex;
-  flex-direction:column;
-}
+.app{height:100dvh;width:100%;display:flex;flex-direction:column;}
 
 .topbar{
   height: 56px;
@@ -71,31 +63,11 @@ body{
   background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
 }
 
-.topbar-title{
-  flex:1;
-  min-width: 0;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-.title{
-  font-weight: 700;
-  letter-spacing: .2px;
-  font-size: 15px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.subtitle{
-  font-size: 12px;
-  color: var(--muted);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+.topbar-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.title{font-weight:700;letter-spacing:.2px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.subtitle{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-.topbar-actions{display:flex; gap:8px}
-
+.topbar-actions{display:flex;gap:8px}
 .icon-btn{
   height: 40px;
   width: 40px;
@@ -129,19 +101,8 @@ body{
 .pill-btn i{font-size: 15px; color: var(--muted)}
 .pill-btn span{font-size: 13px}
 
-.main{
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-  padding: 12px 12px 0 12px;
-}
-
-.view{
-  height: 100%;
-  display:none;
-  flex-direction:column;
-  gap: 10px;
-}
+.main{flex:1;min-height:0;overflow:hidden;padding: 12px 12px 0 12px;}
+.view{height: 100%;display:none;flex-direction:column;gap: 10px;}
 .view-active{display:flex}
 
 .panel{
@@ -152,28 +113,10 @@ body{
   box-shadow: var(--shadow);
 }
 
-.panel-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 10px;
-}
+.panel-row{display:flex;align-items:center;justify-content:space-between;gap: 10px;}
+.finance-actions{display:flex;gap: 8px;align-items:center;}
 
-.finance-actions{
-  display:flex;
-  gap: 8px;
-  align-items:center;
-}
-
-.toggle{
-  display:flex;
-  gap:6px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--line);
-  padding: 4px;
-  border-radius: 14px;
-}
-
+.toggle{display:flex;gap:6px;background: rgba(255,255,255,.03);border: 1px solid var(--line);padding: 4px;border-radius: 14px;}
 .seg-btn{
   border:0;
   background: transparent;
@@ -189,32 +132,12 @@ body{
   -webkit-tap-highlight-color: transparent;
 }
 .seg-btn i{opacity:.9}
-.seg-active{
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  border: 1px solid var(--line);
-}
+.seg-active{background: rgba(255,255,255,.06);color: var(--text);border: 1px solid var(--line);}
 
-.month-nav{
-  display:none;
-  align-items:center;
-  gap: 8px;
-}
-.month-label{
-  font-weight: 700;
-  font-size: 13px;
-  min-width: 92px;
-  text-align:center;
-  color: var(--text);
-  opacity:.95;
-}
+.month-nav{display:none;align-items:center;gap: 8px;}
+.month-label{font-weight:700;font-size:13px;min-width:92px;text-align:center;color:var(--text);opacity:.95;}
 
-.summary-bar{
-  margin-top: 10px;
-  display:grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
+.summary-bar{margin-top: 10px;display:grid;grid-template-columns: repeat(4, 1fr);gap: 8px;}
 .sum-item{
   background: rgba(255,255,255,.03);
   border: 1px solid var(--line);
@@ -223,23 +146,10 @@ body{
   min-width:0;
   position: relative;
 }
-.sum-k{
-  font-size: 11px;
-  color: var(--muted);
-}
-.sum-v{
-  margin-top: 4px;
-  font-size: 13px;
-  font-weight: 800;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+.sum-k{font-size: 11px;color: var(--muted);}
+.sum-v{margin-top:4px;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-/* ✅ Glow de “entrada de dinheiro” no Saldo */
-.sum-item.money-pop{
-  animation: moneyGlow 900ms ease-out 1;
-}
+.sum-item.money-pop{animation: moneyGlow 900ms ease-out 1;}
 .sum-item.money-pop::after{
   content:"";
   position:absolute;
@@ -261,7 +171,6 @@ body{
   100%{ opacity: 0; }
 }
 
-/* ✅ Ícone de dinheiro mais discreto ao lado do texto “Saldo” (injetado pelo JS) */
 .sum-k .money-ico{
   display:inline-block;
   width: 12px;
@@ -276,20 +185,14 @@ body{
   filter: saturate(.6);
 }
 
-.calendar-area{
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-}
+.calendar-area{flex:1;min-height:0;overflow:hidden;}
 
-/* ✅ grid anual */
 .year-grid{
   height: 100%;
   width: 100%;
   display:grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -297,13 +200,8 @@ body{
 }
 .year-grid::-webkit-scrollbar{width:8px}
 .year-grid::-webkit-scrollbar-track{background: transparent}
-.year-grid::-webkit-scrollbar-thumb{
-  background: rgba(255,255,255,.10);
-  border-radius: 999px;
-}
-[data-theme="light"] .year-grid::-webkit-scrollbar-thumb{
-  background: rgba(16,20,35,.15);
-}
+.year-grid::-webkit-scrollbar-thumb{background: rgba(255,255,255,.10);border-radius: 999px;}
+[data-theme="light"] .year-grid::-webkit-scrollbar-thumb{background: rgba(16,20,35,.15);}
 
 .month-card{
   width: 100%;
@@ -320,21 +218,9 @@ body{
   -webkit-tap-highlight-color: transparent;
 }
 .month-card:active{transform: scale(.99)}
-.month-name{
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing:.2px;
-  text-align:center;
-}
+.month-name{font-weight:800;font-size:13px;letter-spacing:.2px;text-align:center;}
 
-.month-meta{
-  display:flex;
-  align-items:center;
-  gap: 8px;
-  margin-top: 6px;
-  justify-content:space-between;
-}
-
+.month-meta{display:flex;align-items:center;gap: 8px;margin-top: 6px;justify-content:space-between;}
 .pill{
   display:inline-flex;
   align-items:center;
@@ -351,64 +237,30 @@ body{
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.month-meta .pill:nth-child(2){
-  flex: 1 1 auto;
-  justify-content:center;
-  text-align:center;
-}
-.month-meta .pill:nth-child(1){
-  flex: 0 0 auto;
-}
-
-.dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity:.9;
-}
+.month-meta .pill:nth-child(2){flex: 1 1 auto;justify-content:center;text-align:center;}
+.month-meta .pill:nth-child(1){flex: 0 0 auto;}
+.dot{width: 8px;height: 8px;border-radius: 50%;background: var(--accent);opacity:.9;}
 .dot.none{opacity:.25}
 
-.month-area{
-  height: 100%;
-  display:flex;
-  flex-direction:column;
-  gap: 8px;
-}
-.dow{
-  display:grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  color: var(--muted);
-  font-size: 11px;
-  padding: 0 2px;
-}
+.month-area{height: 100%;display:flex;flex-direction:column;gap: 8px;}
+.dow{display:grid;grid-template-columns: repeat(7, 1fr);gap: 6px;color: var(--muted);font-size: 11px;padding: 0 2px;}
 
-/* ✅ FIX “dias sumindo”: permitir rolagem vertical no mês */
 .month-grid{
   flex:1;
   min-height:0;
   display:grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
-
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
-
   padding-bottom: 4px;
 }
 .month-grid::-webkit-scrollbar{width:8px}
-.month-grid::-webkit-scrollbar-thumb{
-  background: rgba(255,255,255,.10);
-  border-radius: 999px;
-}
-[data-theme="light"] .month-grid::-webkit-scrollbar-thumb{
-  background: rgba(16,20,35,.15);
-}
+.month-grid::-webkit-scrollbar-thumb{background: rgba(255,255,255,.10);border-radius: 999px;}
+[data-theme="light"] .month-grid::-webkit-scrollbar-thumb{background: rgba(16,20,35,.15);}
 
-/* ✅ FIX DO VAZAMENTO “N 8h”:
-   aumenta altura mínima e ancora o chip no rodapé do card */
+/* ✅ agora .day pode ser button sem "cara de botão" */
 .day{
   border-radius: 14px;
   border: 1px solid var(--line);
@@ -418,28 +270,22 @@ body{
   flex-direction:column;
   gap: 4px;
   cursor:pointer;
-
   min-height: 64px;
-
   -webkit-tap-highlight-color: transparent;
+
+  /* reset p/ button */
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  text-align: left;
+  color: inherit;
 }
 .day:active{transform: scale(.99)}
-.day.empty{
-  opacity:.25;
-  cursor:default;
-}
+.day.empty{opacity:.25;cursor:default;}
+.day.empty:active{transform:none;}
 
-.day-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 6px;
-}
-
-.day-num{
-  font-weight: 800;
-  font-size: 12px;
-}
+.day-top{display:flex;align-items:center;justify-content:space-between;gap: 6px;}
+.day-num{font-weight: 800;font-size: 12px;}
 
 .badge{
   height: 18px;
@@ -456,7 +302,6 @@ body{
 .badge.C{background: rgba(255,176,32,.16); border-color: rgba(255,176,32,.34)}
 .badge.F{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.12)}
 
-/* ✅ Ícones menos chamativos */
 .badge::after{
   content:"";
   position:absolute;
@@ -478,14 +323,7 @@ body{
 .badge.MONEY{ background: rgba(61,220,151,.16); border-color: rgba(61,220,151,.28) }
 .badge.MONEY::after{ background-image: var(--icon-money); }
 
-/* Chips no rodapé do card do dia */
-.day-mini{
-  display:flex;
-  gap: 6px;
-  flex-wrap:wrap;
-  margin-top: auto;
-}
-
+.day-mini{display:flex;gap: 6px;flex-wrap:wrap;margin-top: auto;}
 .chip-mini{
   font-size: 10px;
   line-height: 1.05;
@@ -515,15 +353,7 @@ body{
   color: var(--text);
 }
 
-.hint{
-  display:flex;
-  align-items:center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 12px;
-  padding: 2px 4px 0 4px;
-}
-
+.hint{display:flex;align-items:center;gap: 8px;color: var(--muted);font-size: 12px;padding: 2px 4px 0 4px;}
 .hidden{display:none !important}
 
 .bottom-nav{
@@ -594,12 +424,7 @@ body{
 .ghost-btn:active{transform: scale(.99)}
 .ghost-btn.grow{flex:1}
 
-.chips{
-  display:flex;
-  gap:6px;
-  flex-wrap:nowrap;
-  overflow:hidden;
-}
+.chips{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;}
 .chip{
   border: 1px solid var(--line);
   background: rgba(255,255,255,.02);
@@ -611,69 +436,20 @@ body{
   font-size: 12px;
   white-space:nowrap;
 }
-.chip-active{
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-}
+.chip-active{background: rgba(255,255,255,.06);color: var(--text);}
 
-.finance-top{
-  margin-top: 10px;
-  display:flex;
-  gap: 10px;
-  align-items:stretch;
-}
-.big-metric{
-  flex:1;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 10px;
-  min-width:0;
-}
+.finance-top{margin-top: 10px;display:flex;gap: 10px;align-items:stretch;}
+.big-metric{flex:1;background: rgba(255,255,255,.03);border: 1px solid var(--line);border-radius: 16px;padding: 10px;min-width:0;}
 .big-k{color: var(--muted); font-size: 11px}
-.big-v{
-  margin-top: 6px;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: .2px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.mini-metrics{
-  width: 140px;
-  display:flex;
-  flex-direction:column;
-  gap: 8px;
-}
-.mini{
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 10px;
-}
+.big-v{margin-top: 6px;font-size: 18px;font-weight: 900;letter-spacing: .2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mini-metrics{width: 140px;display:flex;flex-direction:column;gap: 8px;}
+.mini{background: rgba(255,255,255,.03);border: 1px solid var(--line);border-radius: 16px;padding: 10px;}
 .mini-k{color: var(--muted); font-size: 11px}
 .mini-v{margin-top: 6px; font-size: 12px; font-weight: 900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
-.tiny-note{
-  margin-top: 6px;
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 750;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+.tiny-note{margin-top: 6px;font-size: 11px;color: var(--muted);font-weight: 750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-.finance-wrap{
-  flex:1;
-  min-height:0;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  gap: 10px;
-}
-
+.finance-wrap{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap: 10px;}
 .list-area{
   flex:1;
   min-height:0;
@@ -686,12 +462,7 @@ body{
   flex-direction:column;
   gap: 8px;
 }
-.list{
-  flex:1;
-  min-height:0;
-  overflow:auto;
-  padding-right: 4px;
-}
+.list{flex:1;min-height:0;overflow:auto;padding-right: 4px;}
 .item{
   display:flex;
   align-items:center;
@@ -703,55 +474,17 @@ body{
   background: rgba(255,255,255,.02);
 }
 .item:active{transform: scale(.995)}
-.item-left{
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  gap: 3px;
-}
-.item-title{
-  font-weight: 850;
-  font-size: 13px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.item-sub{
-  color: var(--muted);
-  font-size: 11px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.item-right{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  gap: 3px;
-}
-.amount{
-  font-weight: 900;
-  font-size: 13px;
-}
-.tag{
-  font-size: 10px;
-  color: var(--muted);
-  border: 1px solid var(--line);
-  padding: 2px 6px;
-  border-radius: 999px;
-}
+.item-left{min-width:0;display:flex;flex-direction:column;gap: 3px;}
+.item-title{font-weight: 850;font-size: 13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-sub{color: var(--muted);font-size: 11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-right{display:flex;flex-direction:column;align-items:flex-end;gap: 3px;}
+.amount{font-weight: 900;font-size: 13px;}
+.tag{font-size: 10px;color: var(--muted);border: 1px solid var(--line);padding: 2px 6px;border-radius: 999px;}
 .tag.good{color: var(--good)}
 .tag.bad{color: var(--bad)}
 .tag.orig{opacity:.9}
-.tag.sale{
-  color: var(--text);
-  background: rgba(124,92,255,.12);
-}
-.tag.overdue{
-  color: var(--bad);
-  background: rgba(255,92,122,.10);
-  border-color: rgba(255,92,122,.25);
-}
+.tag.sale{color: var(--text);background: rgba(124,92,255,.12);}
+.tag.overdue{color: var(--bad);background: rgba(255,92,122,.10);border-color: rgba(255,92,122,.25);}
 
 .empty-state{
   flex:1;
@@ -769,21 +502,9 @@ body{
 .empty-title{font-weight: 900; color: var(--text)}
 .empty-sub{font-size: 12px; max-width: 280px}
 
-.copyright{
-  margin-top: 10px;
-  font-size: 11px;
-  color: var(--muted);
-  opacity: .85;
-  text-align:center;
-}
+.copyright{margin-top: 10px;font-size: 11px;color: var(--muted);opacity: .85;text-align:center;}
 
-/* Drawer / Sheet / Modal com rolagem interna */
-.drawer{
-  position:fixed;
-  inset:0;
-  display:none;
-  z-index: 20;
-}
+.drawer{position:fixed;inset:0;display:none;z-index: 20;}
 .drawer.show{display:block}
 .drawer-sheet{
   position:absolute;
@@ -799,21 +520,9 @@ body{
   flex-direction:column;
   overflow:hidden;
 }
-.drawer-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding: 12px;
-  border-bottom: 1px solid var(--line);
-}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding: 12px;border-bottom: 1px solid var(--line);}
 .drawer-title{font-weight: 900}
-.drawer-items{
-  padding: 10px;
-  display:flex;
-  flex-direction:column;
-  gap: 8px;
-  overflow:auto;
-}
+.drawer-items{padding: 10px;display:flex;flex-direction:column;gap: 8px;overflow:auto;}
 .drawer-item{
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -828,24 +537,12 @@ body{
 }
 .drawer-item i{width: 18px; text-align:center; color: var(--muted)}
 .drawer-sep{height:1px; background: var(--line); margin: 2px 0}
-.drawer-foot{
-  padding: 10px 12px;
-  border-top: 1px solid var(--line);
-}
+.drawer-foot{padding: 10px 12px;border-top: 1px solid var(--line);}
 .tiny{font-size: 11px; color: var(--muted)}
 
-.sheet{
-  position:fixed;
-  inset:0;
-  display:none;
-  z-index: 30;
-}
+.sheet{position:fixed;inset:0;display:none;z-index: 30;}
 .sheet.show{display:block}
-.sheet-backdrop{
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,.55);
-}
+.sheet-backdrop{position:absolute;inset:0;background: rgba(0,0,0,.55);}
 .sheet-panel{
   position:absolute;
   left: 10px;
@@ -859,14 +556,7 @@ body{
   display:flex;
   flex-direction:column;
 }
-.sheet-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap: 10px;
-  padding: 12px;
-  border-bottom: 1px solid var(--line);
-}
+.sheet-header{display:flex;justify-content:space-between;align-items:flex-start;gap: 10px;padding: 12px;border-bottom: 1px solid var(--line);}
 .sheet-title{font-weight: 900}
 .sheet-sub{font-size: 12px; color: var(--muted); margin-top: 2px}
 
@@ -881,25 +571,12 @@ body{
   overflow-x: hidden;
 }
 .sheet-body::-webkit-scrollbar{width:8px}
-.sheet-body::-webkit-scrollbar-thumb{
-  background: rgba(255,255,255,.10);
-  border-radius: 999px;
-}
-[data-theme="light"] .sheet-body::-webkit-scrollbar-thumb{
-  background: rgba(16,20,35,.15);
-}
+.sheet-body::-webkit-scrollbar-thumb{background: rgba(255,255,255,.10);border-radius: 999px;}
+[data-theme="light"] .sheet-body::-webkit-scrollbar-thumb{background: rgba(16,20,35,.15);}
 
-.sheet-actions{
-  display:flex;
-  gap: 8px;
-  margin-top: 6px;
-}
+.sheet-actions{display:flex;gap: 8px;margin-top: 6px;}
 
-.field{
-  display:flex;
-  flex-direction:column;
-  gap: 6px;
-}
+.field{display:flex;flex-direction:column;gap: 6px;}
 .field span{font-size: 11px; color: var(--muted); font-weight: 750}
 
 .field input, .field select{
@@ -913,39 +590,21 @@ body{
   font-weight: 750;
   caret-color: var(--text);
 }
+.field input::placeholder{color: rgba(169,176,191,.7)}
 
+/* ✅ CORRIGE “itens fantasmas” do select em alguns navegadores */
+[data-theme="dark"] .field select{ color-scheme: dark; }
+[data-theme="light"] .field select{ color-scheme: light; }
 .field select option{
   background: var(--card);
   color: var(--text);
 }
-.field select option:checked{
-  background: rgba(255,255,255,.10);
-  color: var(--text);
-}
-.field select:-moz-focusring{
-  color: transparent;
-  text-shadow: 0 0 0 var(--text);
-}
 
-.field input::placeholder{color: rgba(169,176,191,.7)}
-.grid2{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+.grid2{display:grid;grid-template-columns: 1fr 1fr;gap: 10px;}
 
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  z-index: 35;
-}
+.modal{position:fixed;inset:0;display:none;z-index: 35;}
 .modal.show{display:block}
-.modal-backdrop{
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,.55);
-}
+.modal-backdrop{position:absolute;inset:0;background: rgba(0,0,0,.55);}
 .modal-card{
   position:absolute;
   left: 10px;
@@ -960,13 +619,7 @@ body{
   display:flex;
   flex-direction:column;
 }
-.modal-header{
-  padding: 12px;
-  border-bottom: 1px solid var(--line);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
+.modal-header{padding: 12px;border-bottom: 1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
 .modal-title{font-weight: 900}
 .modal-body{
   padding: 12px;
@@ -978,12 +631,7 @@ body{
   overflow-y: auto;
   overflow-x: hidden;
 }
-.modal-actions{
-  padding: 12px;
-  border-top: 1px solid var(--line);
-  display:flex;
-  gap: 8px;
-}
+.modal-actions{padding: 12px;border-top: 1px solid var(--line);display:flex;gap: 8px;}
 
 .toast{
   position:fixed;
@@ -1000,83 +648,8 @@ body{
   font-size: 13px;
   border: 1px solid rgba(255,255,255,.14);
 }
-[data-theme="light"] .toast{
-  background: rgba(16,20,35,.88);
-}
+[data-theme="light"] .toast{background: rgba(16,20,35,.88);}
 .toast.show{display:block}
-
-/* ✅ Switch para Configurações (som opcional) */
-.switch-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,.02);
-}
-.switch-row .left{
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  gap: 2px;
-}
-.switch-row .t{
-  font-weight: 850;
-  font-size: 13px;
-  color: var(--text);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.switch-row .d{
-  font-size: 11px;
-  color: var(--muted);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.switch{
-  position: relative;
-  width: 46px;
-  height: 28px;
-  flex: 0 0 auto;
-}
-.switch input{
-  opacity:0;
-  width:0;
-  height:0;
-}
-.slider{
-  position:absolute;
-  inset:0;
-  border-radius: 999px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid var(--line);
-  transition: all .18s ease;
-}
-.slider::before{
-  content:"";
-  position:absolute;
-  width: 22px;
-  height: 22px;
-  left: 3px;
-  top: 2px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.85);
-  box-shadow: 0 6px 18px rgba(0,0,0,.25);
-  transition: all .18s ease;
-}
-.switch input:checked + .slider{
-  background: rgba(124,92,255,.25);
-  border-color: rgba(124,92,255,.35);
-}
-.switch input:checked + .slider::before{
-  transform: translateX(18px);
-  background: rgba(255,255,255,.92);
-}
 
 @media print{
   body{overflow:visible !important;}
@@ -1087,814 +660,72 @@ body{
   .year-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Telas bem pequenas */
 @media (max-width: 360px){
   .summary-bar{grid-template-columns: repeat(2,1fr)}
   #financeProjectionBar{grid-template-columns: repeat(2,1fr) !important}
   .mini-metrics{width: 120px}
   .pill-btn{padding: 0 10px}
   .seg-btn span{display:none}
-
-  /* reforço: dias ainda cabem sem vazar */
   .day{ min-height: 60px; }
   .chip-mini{ font-size: 9px; }
 }
 
-<!-- index.html (ATUALIZADO E COMPLETO) -->
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Nakata Finance • Calendário</title>
-
-  <!-- Font Awesome -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <link rel="stylesheet" href="styles.css" />
-</head>
-
-<body>
-  <div id="app" class="app">
-    <!-- Header -->
-    <header class="topbar">
-      <button class="icon-btn" id="btnMenu" aria-label="Abrir menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <div class="topbar-title">
-        <div class="title" id="appTitle">Calendário</div>
-        <div class="subtitle" id="appSubtitle">Visão anual</div>
-      </div>
-
-      <div class="topbar-actions">
-        <button class="pill-btn" id="btnCurrency" aria-label="Alternar moeda de visualização">
-          <i class="fa-solid fa-coins"></i>
-          <span id="currencyLabel">¥</span>
-        </button>
-
-        <button class="icon-btn" id="btnTheme" aria-label="Alternar tema">
-          <i class="fa-solid fa-moon"></i>
-        </button>
-      </div>
-    </header>
-
-    <!-- Main -->
-    <main class="main" role="main">
-      <!-- View: Calendário -->
-      <section class="view view-active" id="viewCalendar" data-view="calendar">
-        <div class="panel">
-          <div class="panel-row">
-            <div class="toggle">
-              <button class="seg-btn seg-active" id="segYear" aria-pressed="true">
-                <i class="fa-regular fa-calendar"></i>
-                <span>Ano</span>
-              </button>
-              <button class="seg-btn" id="segMonth" aria-pressed="false">
-                <i class="fa-regular fa-calendar-days"></i>
-                <span>Mês</span>
-              </button>
-            </div>
-
-            <div class="month-nav" id="monthNav">
-              <button class="icon-btn" id="btnPrevMonth" aria-label="Mês anterior">
-                <i class="fa-solid fa-chevron-left"></i>
-              </button>
-              <div class="month-label" id="monthLabel">—</div>
-              <button class="icon-btn" id="btnNextMonth" aria-label="Próximo mês">
-                <i class="fa-solid fa-chevron-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="summary-bar" id="summaryBar">
-            <div class="sum-item">
-              <div class="sum-k">Normais</div>
-              <div class="sum-v" id="sumNormal">0h</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Extras</div>
-              <div class="sum-v" id="sumExtra">0h</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Ganho</div>
-              <div class="sum-v" id="sumIncome">¥0</div>
-            </div>
-            <div class="sum-item" id="sumBalanceCard">
-              <div class="sum-k">Saldo</div>
-              <div class="sum-v" id="sumBalance">¥0</div>
-            </div>
-          </div>
-
-          <div class="helper" style="margin-top:8px;">
-            <i class="fa-regular fa-lightbulb"></i>
-            <span>Dica: toque em um dia para registrar. Domingo/Feriado você marca dentro do “Registro do dia”.</span>
-          </div>
-        </div>
-
-        <div class="calendar-area">
-          <div class="year-grid" id="yearGrid" aria-label="Calendário anual"></div>
-
-          <div class="month-area hidden" id="monthArea">
-            <div class="dow">
-              <div>Dom</div>
-              <div>Seg</div>
-              <div>Ter</div>
-              <div>Qua</div>
-              <div>Qui</div>
-              <div>Sex</div>
-              <div>Sáb</div>
-            </div>
-            <div class="month-grid" id="monthGrid" aria-label="Calendário mensal"></div>
-          </div>
-        </div>
-
-        <div class="hint">
-          <i class="fa-regular fa-hand-pointer"></i>
-          <span>Toque em um dia para registrar horas. Toque no mês para abrir a visão mensal.</span>
-        </div>
-      </section>
-
-      <!-- View: Financeiro -->
-      <section class="view" id="viewFinance" data-view="finance">
-        <div class="panel">
-          <div class="panel-row">
-            <div class="toggle" aria-label="Modo do Financeiro">
-              <button class="seg-btn seg-active" id="segFinEntries" aria-pressed="true">
-                <i class="fa-solid fa-receipt"></i>
-                <span>Lançamentos</span>
-              </button>
-              <button class="seg-btn" id="segFinBudget" aria-pressed="false">
-                <i class="fa-solid fa-layer-group"></i>
-                <span>Fixas & Var.</span>
-              </button>
-            </div>
-
-            <div class="finance-actions">
-              <button class="icon-btn" id="btnFinancePDF" aria-label="Gerar PDF do mês">
-                <i class="fa-regular fa-file-pdf"></i>
-              </button>
-
-              <button class="primary-btn" id="btnFinancePrimary" aria-label="Ação principal do Financeiro">
-                <i class="fa-solid fa-plus"></i>
-                <span id="financePrimaryLabel">Novo</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Projeções do mês (bruto/líquido) -->
-          <div class="summary-bar" id="financeProjectionBar"
-            style="margin-top:10px; grid-template-columns: repeat(4, 1fr);">
-            <div class="sum-item">
-              <div class="sum-k">Bruto (real)</div>
-              <div class="sum-v" id="projGrossReal">¥0</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Líquido (real)</div>
-              <div class="sum-v" id="projNetReal">¥0</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Bruto (prev.)</div>
-              <div class="sum-v" id="projGrossForecast">¥0</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Líquido (prev.)</div>
-              <div class="sum-v" id="projNetForecast">¥0</div>
-            </div>
-          </div>
-
-          <div class="helper" style="margin-top:8px;">
-            <i class="fa-regular fa-compass"></i>
-            <span>“Bruto” = trabalho + recebimentos. “Líquido” = bruto − pagamentos. “Prev.” considera o que falta pagar nas despesas fixas/variáveis.</span>
-          </div>
-
-          <!-- Filters only for Entries mode -->
-          <div class="panel-row" id="financeFiltersRow" style="margin-top:10px;">
-            <div class="chips" role="tablist" aria-label="Filtros do financeiro">
-              <button class="chip chip-active" data-fin-filter="all" role="tab" aria-selected="true">Tudo</button>
-              <button class="chip" data-fin-filter="pay" role="tab" aria-selected="false">Pagamentos</button>
-              <button class="chip" data-fin-filter="recv" role="tab" aria-selected="false">Recebimentos</button>
-              <button class="chip" data-fin-filter="loan" role="tab" aria-selected="false">Empréstimos</button>
-              <button class="chip" data-fin-filter="sales" role="tab" aria-selected="false">Vendas</button>
-            </div>
-          </div>
-
-          <!-- Top summary: always visible -->
-          <div class="finance-top">
-            <div class="big-metric">
-              <div class="big-k" id="finBigLabel">Saldo do mês</div>
-              <div class="big-v" id="finMonthBalance">¥0</div>
-              <div class="tiny-note" id="fxNoteFin">Câmbio: 1¥ = R$0,00</div>
-            </div>
-
-            <div class="mini-metrics" id="finMiniBox">
-              <div class="mini">
-                <div class="mini-k" id="finInLabel">Entradas</div>
-                <div class="mini-v" id="finIn">¥0</div>
-              </div>
-              <div class="mini">
-                <div class="mini-k" id="finOutLabel">Saídas</div>
-                <div class="mini-v" id="finOut">¥0</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Extra metrics for Budget mode -->
-          <div class="summary-bar hidden" id="budgetSummaryBar" style="margin-top:10px;">
-            <div class="sum-item">
-              <div class="sum-k">Fixas</div>
-              <div class="sum-v" id="budFixed">¥0</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Variáveis</div>
-              <div class="sum-v" id="budVar">¥0</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Restante</div>
-              <div class="sum-v" id="budRemaining">¥0</div>
-            </div>
-            <div class="sum-item">
-              <div class="sum-k">Previsto</div>
-              <div class="sum-v" id="budForecast">¥0</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Entries mode -->
-        <div id="financeEntriesWrap" class="finance-wrap">
-          <div class="list-area" id="financeList" aria-label="Lista de lançamentos"></div>
-
-          <div class="empty-state hidden" id="financeEmpty">
-            <i class="fa-regular fa-clipboard"></i>
-            <div class="empty-title">Sem itens neste mês</div>
-            <div class="empty-sub">Toque em “Novo” para adicionar lançamentos ou vendas parceladas.</div>
-          </div>
-        </div>
-
-        <!-- Budget mode -->
-        <div id="financeBudgetWrap" class="finance-wrap hidden">
-          <div class="list-area" aria-label="Despesas fixas e variáveis">
-            <div class="list" id="budgetLists"></div>
-          </div>
-
-          <div class="empty-state hidden" id="budgetEmpty">
-            <i class="fa-solid fa-list-check"></i>
-            <div class="empty-title">Sem despesas cadastradas</div>
-            <div class="empty-sub">Adicione despesas fixas e variáveis (valem para todos os meses).</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- View: Investimentos -->
-      <section class="view" id="viewInvest" data-view="invest">
-        <div class="panel">
-          <div class="panel-row">
-            <div class="invest-head">
-              <div class="big-metric">
-                <div class="big-k">Patrimônio</div>
-                <div class="big-v" id="invTotal">¥0</div>
-                <div class="tiny-note" id="fxNoteInv">Câmbio: 1¥ = R$0,00</div>
-              </div>
-              <div class="mini-metrics">
-                <div class="mini">
-                  <div class="mini-k">Aporte (mês)</div>
-                  <div class="mini-v" id="invMonth">¥0</div>
-                </div>
-                <div class="mini">
-                  <div class="mini-k">Rentab. (est.)</div>
-                  <div class="mini-v" id="invRoi">0%</div>
-                </div>
-              </div>
-            </div>
-
-            <button class="primary-btn" id="btnAddInvest" aria-label="Novo investimento">
-              <i class="fa-solid fa-plus"></i>
-              <span>Novo</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="list-area" id="investList" aria-label="Lista de ativos"></div>
-
-        <div class="empty-state hidden" id="investEmpty">
-          <i class="fa-solid fa-seedling"></i>
-          <div class="empty-title">Nenhum ativo cadastrado</div>
-          <div class="empty-sub">Adicione um ativo e comece pelos aportes simples.</div>
-        </div>
-        <div class="copyright">
-          Copyright @ 2026 - Ailton A. Nakata
-        </div>
-
-      </section>
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav" aria-label="Navegação principal">
-      <button class="nav-item nav-active" data-go="calendar" aria-label="Calendário">
-        <i class="fa-regular fa-calendar"></i>
-        <span>Calendário</span>
-      </button>
-      <button class="nav-item" data-go="finance" aria-label="Financeiro">
-        <i class="fa-solid fa-receipt"></i>
-        <span>Financeiro</span>
-      </button>
-      <button class="nav-item" data-go="invest" aria-label="Investimentos">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Invest.</span>
-      </button>
-    </nav>
-
-    <!-- Drawer Menu -->
-    <aside class="drawer" id="drawer" aria-hidden="true">
-      <div class="drawer-sheet">
-        <div class="drawer-header">
-          <div class="drawer-title">Menu</div>
-          <button class="icon-btn" id="btnCloseMenu" aria-label="Fechar menu">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="drawer-items">
-          <button class="drawer-item" data-open="settings">
-            <i class="fa-solid fa-gear"></i>
-            <span>Configurações</span>
-          </button>
-          <button class="drawer-item" data-open="patterns">
-            <i class="fa-solid fa-repeat"></i>
-            <span>Padrões de escala</span>
-          </button>
-          <button class="drawer-item" data-open="reminders">
-            <i class="fa-regular fa-bell"></i>
-            <span>Lembretes & aniversários</span>
-          </button>
-          <div class="drawer-sep"></div>
-          <button class="drawer-item" id="btnReset">
-            <i class="fa-solid fa-rotate-left"></i>
-            <span>Resetar dados (local)</span>
-          </button>
-        </div>
-
-        <div class="drawer-foot">
-          <div class="tiny">Nakata Finance • protótipo localStorage</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Bottom Sheet: Registro do Dia -->
-    <div class="sheet" id="sheetDay" aria-hidden="true">
-      <div class="sheet-backdrop" data-close-sheet="sheetDay"></div>
-      <div class="sheet-panel" role="dialog" aria-label="Registro do dia">
-        <div class="sheet-header">
-          <div>
-            <div class="sheet-title">Registro do dia</div>
-            <div class="sheet-sub" id="daySheetDate">—</div>
-          </div>
-          <button class="icon-btn" data-close-sheet="sheetDay" aria-label="Fechar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="sheet-body">
-          <div class="helper">
-            <i class="fa-regular fa-circle-question"></i>
-            <span>Use “Tipo do dia” para aplicar multiplicadores (Domingo/Feriado). “Extra fixa” pode preencher automaticamente se você deixar vazio.</span>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Turno</span>
-              <select id="dayShift">
-                <option value="A">A (Dia)</option>
-                <option value="B">B (Noite)</option>
-                <option value="C">C (Madrugada)</option>
-                <option value="F">Folga</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Status</span>
-              <select id="dayStatus">
-                <option value="work">Trabalho</option>
-                <option value="off">Folga</option>
-              </select>
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Tipo do dia</span>
-            <select id="dayType">
-              <option value="auto">Automático (domingo detecta sozinho)</option>
-              <option value="normal">Normal</option>
-              <option value="sunday">Domingo (休日出勤)</option>
-              <option value="holiday">Feriado (祝日)</option>
-              <option value="off_worked">Folga trabalhada</option>
-            </select>
-          </label>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Horas normais</span>
-              <input id="dayNormal" inputmode="decimal" placeholder="ex: 8" />
-            </label>
-
-            <label class="field">
-              <span>Horas extras</span>
-              <input id="dayExtra" inputmode="decimal" placeholder="ex: 2" />
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Adicional / Noturno (¥)</span>
-            <input id="dayAddon" inputmode="numeric" placeholder="ex: 500" />
-          </label>
-
-          <label class="field">
-            <span>Observação (opcional)</span>
-            <input id="dayNote" placeholder="ex: feriado / troca de linha" />
-          </label>
-
-          <div class="sheet-actions">
-            <button class="ghost-btn" id="btnDayClear">
-              <i class="fa-regular fa-trash-can"></i>
-              <span>Limpar</span>
-            </button>
-
-            <button class="ghost-btn" id="btnDayDuplicate">
-              <i class="fa-regular fa-copy"></i>
-              <span>Duplicar</span>
-            </button>
-
-            <button class="primary-btn grow" id="btnDaySave">
-              <i class="fa-regular fa-floppy-disk"></i>
-              <span>Salvar</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Sheet: Novo Financeiro -->
-    <div class="sheet" id="sheetFinance" aria-hidden="true">
-      <div class="sheet-backdrop" data-close-sheet="sheetFinance"></div>
-      <div class="sheet-panel" role="dialog" aria-label="Novo lançamento financeiro">
-        <div class="sheet-header">
-          <div>
-            <div class="sheet-title">Novo lançamento</div>
-            <div class="sheet-sub" id="finSheetSub">Pagamentos • Recebimentos • Empréstimos</div>
-          </div>
-          <button class="icon-btn" data-close-sheet="sheetFinance" aria-label="Fechar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="sheet-body">
-          <div class="helper">
-            <i class="fa-regular fa-lightbulb"></i>
-            <span>Dica: se você lançar a mesma coisa todo mês, cadastre em “Fixas & Var.” para virar padrão.</span>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Tipo</span>
-              <select id="finType">
-                <option value="pay">Pagamento</option>
-                <option value="recv">Recebimento</option>
-                <option value="loan_in">Empréstimo (entrada)</option>
-                <option value="loan_out">Empréstimo (saída)</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Status</span>
-              <select id="finStatus">
-                <option value="paid">Pago</option>
-                <option value="pending">Pendente</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Moeda</span>
-              <select id="finCurrency">
-                <option value="JPY">¥ (JPY)</option>
-                <option value="BRL">R$ (BRL)</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Valor</span>
-              <input id="finAmount" inputmode="numeric" placeholder="ex: 12000" />
-            </label>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Data</span>
-              <input id="finDate" type="date" />
-            </label>
-
-            <label class="field">
-              <span>Categoria</span>
-              <input id="finCategory" placeholder="ex: aluguel / comida / boleto" />
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Nota (opcional)</span>
-            <input id="finNote" placeholder="ex: vence dia 10" />
-          </label>
-
-          <div class="sheet-actions">
-            <button class="ghost-btn" id="btnFinCancel" data-close-sheet="sheetFinance">
-              <i class="fa-regular fa-circle-xmark"></i>
-              <span>Cancelar</span>
-            </button>
-
-            <button class="primary-btn grow" id="btnFinSave">
-              <i class="fa-regular fa-floppy-disk"></i>
-              <span>Salvar</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Sheet: Despesa (template global) -->
-    <div class="sheet" id="sheetExpense" aria-hidden="true">
-      <div class="sheet-backdrop" data-close-sheet="sheetExpense"></div>
-      <div class="sheet-panel" role="dialog" aria-label="Nova despesa (fixa ou variável)">
-        <div class="sheet-header">
-          <div>
-            <div class="sheet-title">Despesa</div>
-            <div class="sheet-sub">Fixas & Variáveis • vale para todos os meses</div>
-          </div>
-          <button class="icon-btn" data-close-sheet="sheetExpense" aria-label="Fechar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="sheet-body">
-          <div class="helper">
-            <i class="fa-regular fa-circle-question"></i>
-            <span>Para bater no “Pago”, use o mesmo texto da categoria do pagamento (ex.: “Aluguel”).</span>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Tipo</span>
-              <select id="expType">
-                <option value="fixed">Fixa</option>
-                <option value="variable">Variável</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Moeda</span>
-              <select id="expCurrency">
-                <option value="JPY">¥ (JPY)</option>
-                <option value="BRL">R$ (BRL)</option>
-              </select>
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Nome (use o mesmo da categoria para bater no “Pago”)</span>
-            <input id="expName" placeholder="ex: Aluguel / Internet / Mercado" />
-          </label>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Valor</span>
-              <input id="expAmount" inputmode="numeric" placeholder="ex: 60000" />
-            </label>
-
-            <label class="field">
-              <span>Dia do mês (opcional)</span>
-              <input id="expDay" inputmode="numeric" placeholder="ex: 5" />
-            </label>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Ativa (vale todo mês)</span>
-              <select id="expActive">
-                <option value="true" selected>Sim</option>
-                <option value="false">Não</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Nota (opcional)</span>
-              <input id="expNote" placeholder="ex: reajusta em Abril" />
-            </label>
-          </div>
-
-          <div class="sheet-actions">
-            <button class="ghost-btn" id="btnExpCancel" data-close-sheet="sheetExpense">
-              <i class="fa-regular fa-circle-xmark"></i>
-              <span>Cancelar</span>
-            </button>
-
-            <button class="primary-btn grow" id="btnExpSave">
-              <i class="fa-regular fa-floppy-disk"></i>
-              <span>Salvar</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Sheet: Venda / Recebimento (contrato) -->
-    <div class="sheet" id="sheetSale" aria-hidden="true">
-      <div class="sheet-backdrop" data-close-sheet="sheetSale"></div>
-      <div class="sheet-panel" role="dialog" aria-label="Venda parcelada">
-        <div class="sheet-header">
-          <div>
-            <div class="sheet-title">Venda / Recebimento</div>
-            <div class="sheet-sub">Controle de cobranças e parcelas</div>
-          </div>
-          <button class="icon-btn" data-close-sheet="sheetSale" aria-label="Fechar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="sheet-body">
-          <div class="helper">
-            <i class="fa-regular fa-lightbulb"></i>
-            <span>Quando marcar parcela como paga, o app cria automaticamente um “Recebimento” no Financeiro.</span>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Moeda</span>
-              <select id="saleCurrency">
-                <option value="BRL">R$ (BRL)</option>
-                <option value="JPY">¥ (JPY)</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Total da venda</span>
-              <input id="saleTotal" inputmode="numeric" placeholder="ex: 2500" />
-            </label>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Entrada / Sinal (opcional)</span>
-              <input id="saleDownPayment" inputmode="numeric" placeholder="ex: 500" />
-            </label>
-
-            <label class="field">
-              <span>Parcelas (x)</span>
-              <input id="saleInstallments" inputmode="numeric" placeholder="ex: 5" />
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Item vendido</span>
-            <input id="saleItem" placeholder="ex: Fogão / Geladeira / Carro" />
-          </label>
-
-          <label class="field">
-            <span>Nome do comprador</span>
-            <input id="saleBuyer" placeholder="ex: João Silva" />
-          </label>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Data inicial</span>
-              <input id="saleStart" type="date" />
-            </label>
-
-            <label class="field">
-              <span>Dia de vencimento (1–28)</span>
-              <input id="saleDueDay" inputmode="numeric" placeholder="ex: 10" />
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Juros/Multa se atrasar (%)</span>
-            <input id="saleLateFeePct" inputmode="decimal" placeholder="ex: 2" />
-          </label>
-
-          <label class="field">
-            <span>Observação (opcional)</span>
-            <input id="saleNote" placeholder="ex: combinar pix até 10 de cada mês" />
-          </label>
-
-          <div class="sheet-actions">
-            <button class="ghost-btn" id="btnSaleCancel" data-close-sheet="sheetSale">
-              <i class="fa-regular fa-circle-xmark"></i>
-              <span>Cancelar</span>
-            </button>
-
-            <button class="primary-btn grow" id="btnSaleSave">
-              <i class="fa-regular fa-floppy-disk"></i>
-              <span>Salvar</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Sheet: Novo Investimento -->
-    <div class="sheet" id="sheetInvest" aria-hidden="true">
-      <div class="sheet-backdrop" data-close-sheet="sheetInvest"></div>
-      <div class="sheet-panel" role="dialog" aria-label="Novo ativo ou aporte">
-        <div class="sheet-header">
-          <div>
-            <div class="sheet-title">Investimento</div>
-            <div class="sheet-sub">Cadastre um ativo e seus valores</div>
-          </div>
-          <button class="icon-btn" data-close-sheet="sheetInvest" aria-label="Fechar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="sheet-body">
-          <div class="helper">
-            <i class="fa-regular fa-lightbulb"></i>
-            <span>Você pode lançar em ¥ ou R$. O app converte para a moeda de visualização usando seu câmbio.</span>
-          </div>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Moeda</span>
-              <select id="invCurrency">
-                <option value="JPY">¥ (JPY)</option>
-                <option value="BRL">R$ (BRL)</option>
-              </select>
-            </label>
-
-            <label class="field">
-              <span>Rentabilidade estimada (%)</span>
-              <input id="invRoi" inputmode="decimal" placeholder="ex: 5" />
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Nome do ativo</span>
-            <input id="invName" placeholder="ex: NISA / ETF / Poupança" />
-          </label>
-
-          <div class="grid2">
-            <label class="field">
-              <span>Valor atual</span>
-              <input id="invValue" inputmode="numeric" placeholder="ex: 250000" />
-            </label>
-
-            <label class="field">
-              <span>Aporte (mês)</span>
-              <input id="invDeposit" inputmode="numeric" placeholder="ex: 30000" />
-            </label>
-          </div>
-
-          <label class="field">
-            <span>Observação</span>
-            <input id="invNote" placeholder="ex: meta: 1M até 2027" />
-          </label>
-
-          <div class="sheet-actions">
-            <button class="ghost-btn" id="btnInvCancel" data-close-sheet="sheetInvest">
-              <i class="fa-regular fa-circle-xmark"></i>
-              <span>Cancelar</span>
-            </button>
-
-            <button class="primary-btn grow" id="btnInvSave">
-              <i class="fa-regular fa-floppy-disk"></i>
-              <span>Salvar</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal: General -->
-    <div class="modal" id="modal" aria-hidden="true">
-      <div class="modal-backdrop" data-close-modal="true"></div>
-      <div class="modal-card" role="dialog" aria-label="Painel">
-        <div class="modal-header">
-          <div class="modal-title" id="modalTitle">—</div>
-          <button class="icon-btn" data-close-modal="true" aria-label="Fechar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div class="modal-body" id="modalBody"></div>
-        <div class="modal-actions" id="modalActions"></div>
-      </div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
-  </div>
-
-  <script src="app.js"></script>
-  <script src="money-effects.js"></script>
-</body>
-
-</html>
+/* ===========================
+   PATCH FINAL (INTEGRAÇÃO + CLIQUE)
+   cole no final do styles.css
+   =========================== */
+
+/* Dia como BUTTON: remove estilo padrão e garante clique confiável */
+.day{
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.02);
+  color: var(--text);
+  text-align: left;
+  width: 100%;
+}
+
+/* Foco acessível */
+.day:focus-visible{
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  outline-offset: 2px;
+}
+
+/* Integra cores configuráveis nos badges */
+.badge.A{
+  background: color-mix(in srgb, var(--shiftA) 22%, transparent);
+  border-color: color-mix(in srgb, var(--shiftA) 38%, transparent);
+}
+.badge.B{
+  background: color-mix(in srgb, var(--shiftB) 18%, transparent);
+  border-color: color-mix(in srgb, var(--shiftB) 34%, transparent);
+}
+.badge.C{
+  background: color-mix(in srgb, var(--shiftC) 16%, transparent);
+  border-color: color-mix(in srgb, var(--shiftC) 34%, transparent);
+}
+
+/* Integra cores configuráveis no “realce” do dia */
+.day.shiftA{ box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shiftA) 35%, transparent); }
+.day.shiftB{ box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shiftB) 35%, transparent); }
+.day.shiftC{ box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shiftC) 35%, transparent); }
+
+/* Helper: microexplicações estratégicas */
+.helper{
+  margin-top: 6px;
+  display:flex;
+  align-items:flex-start;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.02);
+}
+.helper i{margin-top: 1px; opacity:.9}
+
+/* Deixa o card do Saldo pronto para “pop” sem alterar layout */
+#sumBalanceCard{ position: relative; }
