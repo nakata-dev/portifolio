@@ -5,6 +5,14 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  // ✅ Correção necessária: evita "quebrar tudo" quando algum ID não existe no HTML
+  const on = (sel, evt, handler, root = document) => {
+    const el = $(sel, root);
+    if (!el) return false;
+    el.addEventListener(evt, handler);
+    return true;
+  };
+
   const LS_KEY = "nakata_finance_v5";
 
   const monthsShort = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
@@ -261,9 +269,9 @@
   }
 
   function wireTopbar(){
-    $("#btnMenu").addEventListener("click", openDrawer);
+    on("#btnMenu","click", openDrawer);
 
-    $("#btnTheme").addEventListener("click", () => {
+    on("#btnTheme","click", () => {
       const next = (state.settings.theme === "dark") ? "light" : "dark";
       state.settings.theme = next;
       saveState();
@@ -271,7 +279,7 @@
       toast(next === "dark" ? "Tema escuro" : "Tema claro");
     });
 
-    $("#btnCurrency").addEventListener("click", () => {
+    on("#btnCurrency","click", () => {
       state.settings.displayCurrency = (state.settings.displayCurrency === "JPY") ? "BRL" : "JPY";
       saveState();
       renderCurrencyToggle();
@@ -279,24 +287,24 @@
       renderAll();
     });
 
-    $("#segYear").addEventListener("click", () => setCalMode("year"));
-    $("#segMonth").addEventListener("click", () => setCalMode("month"));
+    on("#segYear","click", () => setCalMode("year"));
+    on("#segMonth","click", () => setCalMode("month"));
 
-    $("#btnPrevMonth").addEventListener("click", () => {
+    on("#btnPrevMonth","click", () => {
       ui.month -= 1;
       if(ui.month < 0){ ui.month = 11; ui.year -= 1; }
       renderCalendar();
     });
-    $("#btnNextMonth").addEventListener("click", () => {
+    on("#btnNextMonth","click", () => {
       ui.month += 1;
       if(ui.month > 11){ ui.month = 0; ui.year += 1; }
       renderCalendar();
     });
 
-    $("#segFinEntries").addEventListener("click", () => setFinanceMode("entries"));
-    $("#segFinBudget").addEventListener("click", () => setFinanceMode("budget"));
+    on("#segFinEntries","click", () => setFinanceMode("entries"));
+    on("#segFinBudget","click", () => setFinanceMode("budget"));
 
-    $("#btnFinancePrimary").addEventListener("click", () => {
+    on("#btnFinancePrimary","click", () => {
       if(ui.financeMode === "budget"){
         openExpenseSheet();
         return;
@@ -304,11 +312,11 @@
       openFinanceCreateChooser();
     });
 
-    $("#btnFinancePDF").addEventListener("click", () => {
+    on("#btnFinancePDF","click", () => {
       printMonthPDF(ui.year, ui.month);
     });
 
-    $("#btnAddInvest").addEventListener("click", () => openInvestSheet());
+    on("#btnAddInvest","click", () => openInvestSheet());
 
     $$(".chip").forEach(chip => {
       chip.addEventListener("click", () => {
@@ -324,7 +332,8 @@
 
   function renderCurrencyToggle(){
     const cur = state.settings.displayCurrency;
-    $("#currencyLabel").textContent = cur === "JPY" ? "¥" : "R$";
+    const lbl = $("#currencyLabel");
+    if(lbl) lbl.textContent = cur === "JPY" ? "¥" : "R$";
   }
 
   function wireSheets(){
@@ -332,23 +341,27 @@
       el.addEventListener("click", () => closeSheet(el.dataset.closeSheet));
     });
 
-    $("#btnDaySave").addEventListener("click", saveDayEntry);
-    $("#btnDayClear").addEventListener("click", clearDayEntry);
-    $("#btnDayDuplicate").addEventListener("click", duplicateDayEntry);
+    on("#btnDaySave","click", saveDayEntry);
+    on("#btnDayClear","click", clearDayEntry);
+    on("#btnDayDuplicate","click", duplicateDayEntry);
 
-    $("#btnFinSave").addEventListener("click", saveFinanceEntry);
-    $("#btnExpSave").addEventListener("click", saveExpenseTemplate);
-    $("#btnSaleSave").addEventListener("click", saveSaleContract);
-    $("#btnInvSave").addEventListener("click", saveInvest);
+    on("#btnFinSave","click", saveFinanceEntry);
+    on("#btnExpSave","click", saveExpenseTemplate);
+    on("#btnSaleSave","click", saveSaleContract);
+    on("#btnInvSave","click", saveInvest);
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
   }
 
   function wireDrawer(){
-    $("#btnCloseMenu").addEventListener("click", closeDrawer);
-    $("#drawer").addEventListener("click", (e) => {
-      if(e.target.id === "drawer") closeDrawer();
-    });
+    on("#btnCloseMenu","click", closeDrawer);
+
+    const drawer = $("#drawer");
+    if(drawer){
+      drawer.addEventListener("click", (e) => {
+        if(e.target.id === "drawer") closeDrawer();
+      });
+    }
 
     $$(".drawer-item[data-open]").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -360,7 +373,7 @@
       });
     });
 
-    $("#btnReset").addEventListener("click", () => {
+    on("#btnReset","click", () => {
       closeDrawer();
       openConfirmModal(
         "Resetar dados",
@@ -376,14 +389,18 @@
     $$(".nav-item").forEach(n => n.classList.toggle("nav-active", n.dataset.go === view));
 
     const title = view === "calendar" ? "Calendário" : (view === "finance" ? "Financeiro" : "Investimentos");
-    $("#appTitle").textContent = title;
+    const t = $("#appTitle");
+    if(t) t.textContent = title;
 
-    if(view === "calendar"){
-      $("#appSubtitle").textContent = ui.calMode === "year" ? "Visão anual" : `${monthsLong[ui.month]} • ${ui.year}`;
-    } else if(view === "finance"){
-      $("#appSubtitle").textContent = `${monthsLong[ui.month]} • ${ui.year}`;
-    } else {
-      $("#appSubtitle").textContent = "Resumo rápido";
+    const sub = $("#appSubtitle");
+    if(sub){
+      if(view === "calendar"){
+        sub.textContent = ui.calMode === "year" ? "Visão anual" : `${monthsLong[ui.month]} • ${ui.year}`;
+      } else if(view === "finance"){
+        sub.textContent = `${monthsLong[ui.month]} • ${ui.year}`;
+      } else {
+        sub.textContent = "Resumo rápido";
+      }
     }
 
     renderAll();
@@ -391,45 +408,78 @@
 
   function setCalMode(mode){
     ui.calMode = mode;
-    $("#segYear").classList.toggle("seg-active", mode === "year");
-    $("#segMonth").classList.toggle("seg-active", mode === "month");
-    $("#segYear").setAttribute("aria-pressed", mode === "year" ? "true" : "false");
-    $("#segMonth").setAttribute("aria-pressed", mode === "month" ? "true" : "false");
 
-    $("#yearGrid").classList.toggle("hidden", mode !== "year");
-    $("#monthArea").classList.toggle("hidden", mode !== "month");
-    $("#monthNav").style.display = (mode === "month") ? "flex" : "none";
+    const segYear = $("#segYear");
+    const segMonth = $("#segMonth");
+    if(segYear){
+      segYear.classList.toggle("seg-active", mode === "year");
+      segYear.setAttribute("aria-pressed", mode === "year" ? "true" : "false");
+    }
+    if(segMonth){
+      segMonth.classList.toggle("seg-active", mode === "month");
+      segMonth.setAttribute("aria-pressed", mode === "month" ? "true" : "false");
+    }
 
-    $("#appSubtitle").textContent = mode === "year" ? "Visão anual" : `${monthsLong[ui.month]} • ${ui.year}`;
+    const yearGrid = $("#yearGrid");
+    const monthArea = $("#monthArea");
+    const monthNav = $("#monthNav");
+
+    if(yearGrid) yearGrid.classList.toggle("hidden", mode !== "year");
+    if(monthArea) monthArea.classList.toggle("hidden", mode !== "month");
+    if(monthNav) monthNav.style.display = (mode === "month") ? "flex" : "none";
+
+    const sub = $("#appSubtitle");
+    if(sub) sub.textContent = mode === "year" ? "Visão anual" : `${monthsLong[ui.month]} • ${ui.year}`;
+
     renderCalendar();
   }
 
   function setFinanceMode(mode){
     ui.financeMode = mode;
 
-    $("#segFinEntries").classList.toggle("seg-active", mode === "entries");
-    $("#segFinBudget").classList.toggle("seg-active", mode === "budget");
-    $("#segFinEntries").setAttribute("aria-pressed", mode === "entries" ? "true" : "false");
-    $("#segFinBudget").setAttribute("aria-pressed", mode === "budget" ? "true" : "false");
+    const a = $("#segFinEntries");
+    const b = $("#segFinBudget");
+    if(a){
+      a.classList.toggle("seg-active", mode === "entries");
+      a.setAttribute("aria-pressed", mode === "entries" ? "true" : "false");
+    }
+    if(b){
+      b.classList.toggle("seg-active", mode === "budget");
+      b.setAttribute("aria-pressed", mode === "budget" ? "true" : "false");
+    }
 
-    $("#financeFiltersRow").classList.toggle("hidden", mode !== "entries");
-    $("#financeEntriesWrap").classList.toggle("hidden", mode !== "entries");
-    $("#financeBudgetWrap").classList.toggle("hidden", mode !== "budget");
-    $("#budgetSummaryBar").classList.toggle("hidden", mode !== "budget");
+    const filters = $("#financeFiltersRow");
+    const entriesWrap = $("#financeEntriesWrap");
+    const budgetWrap = $("#financeBudgetWrap");
+    const bar = $("#budgetSummaryBar");
 
-    $("#financePrimaryLabel").textContent = (mode === "entries") ? "Novo" : "Adicionar";
+    if(filters) filters.classList.toggle("hidden", mode !== "entries");
+    if(entriesWrap) entriesWrap.classList.toggle("hidden", mode !== "entries");
+    if(budgetWrap) budgetWrap.classList.toggle("hidden", mode !== "budget");
+    if(bar) bar.classList.toggle("hidden", mode !== "budget");
 
-    $("#finBigLabel").textContent = (mode === "entries") ? "Saldo do mês" : "Saldo real (mês)";
-    $("#finInLabel").textContent = (mode === "entries") ? "Entradas" : "Pago";
-    $("#finOutLabel").textContent = (mode === "entries") ? "Saídas" : "Planejado";
+    const primaryLbl = $("#financePrimaryLabel");
+    if(primaryLbl) primaryLbl.textContent = (mode === "entries") ? "Novo" : "Adicionar";
+
+    const finBig = $("#finBigLabel");
+    const finIn = $("#finInLabel");
+    const finOut = $("#finOutLabel");
+
+    if(finBig) finBig.textContent = (mode === "entries") ? "Saldo do mês" : "Saldo real (mês)";
+    if(finIn) finIn.textContent = (mode === "entries") ? "Entradas" : "Pago";
+    if(finOut) finOut.textContent = (mode === "entries") ? "Saídas" : "Planejado";
 
     renderFinance();
   }
 
   // ---------- Render ----------
   function renderAll(){
-    $("#fxNoteFin").textContent = fxLabel();
-    $("#fxNoteInv").textContent = fxLabel();
+    const fx1 = $("#fxNoteFin");
+    const fx2 = $("#fxNoteInv");
+    const label = fxLabel();
+    if(fx1) fx1.textContent = label;
+    if(fx2) fx2.textContent = label;
+
     renderCalendar();
     renderFinance();
     renderInvest();
@@ -443,11 +493,13 @@
   }
 
   function renderMonthLabel(){
-    $("#monthLabel").textContent = `${monthsShort[ui.month]} ${ui.year}`;
+    const el = $("#monthLabel");
+    if(el) el.textContent = `${monthsShort[ui.month]} ${ui.year}`;
   }
 
   function renderYearGrid(){
     const grid = $("#yearGrid");
+    if(!grid) return;
     grid.innerHTML = "";
 
     for(let m=0; m<12; m++){
@@ -480,6 +532,8 @@
 
   function renderMonthGrid(){
     const area = $("#monthGrid");
+    if(!area) return;
+
     area.innerHTML = "";
     if(ui.calMode !== "month") return;
 
@@ -527,16 +581,22 @@
 
   function renderSummaryBar(){
     const stats = monthStats(ui.year, ui.month);
-    $("#sumNormal").textContent = `${stats.totalNormal}h`;
-    $("#sumExtra").textContent = `${stats.totalExtra}h`;
+
+    const sumN = $("#sumNormal");
+    const sumE = $("#sumExtra");
+    const sumI = $("#sumIncome");
+    const sumB = $("#sumBalance");
+
+    if(sumN) sumN.textContent = `${stats.totalNormal}h`;
+    if(sumE) sumE.textContent = `${stats.totalExtra}h`;
 
     const dispCur = state.settings.displayCurrency;
     const incomeDisplay = convert(stats.estimatedIncomeJPY, "JPY", dispCur);
-    $("#sumIncome").textContent = moneyIn(dispCur, incomeDisplay);
+    if(sumI) sumI.textContent = moneyIn(dispCur, incomeDisplay);
 
     const fin = financeMonthStats(ui.year, ui.month);
     const nextBalance = fin.balanceDisplay;
-    $("#sumBalance").textContent = moneyIn(dispCur, nextBalance);
+    if(sumB) sumB.textContent = moneyIn(dispCur, nextBalance);
 
     // ✅ Money pop (som opcional) quando saldo do mês aumentar
     const memKey = `${ui.year}-${ui.month}-${dispCur}`;
@@ -545,6 +605,7 @@
       moneyPulseMem.last = nextBalance;
     }else{
       if(nextBalance > moneyPulseMem.last + 0.001){
+        // ✅ blindado
         window.NakataMoneyFX?.pop?.($("#sumBalanceCard"), !!state.settings.soundMoney);
       }
       moneyPulseMem.last = nextBalance;
@@ -576,17 +637,21 @@
   function renderFinanceHeader(fin){
     const dispCur = state.settings.displayCurrency;
 
+    const monthBal = $("#finMonthBalance");
+    const finIn = $("#finIn");
+    const finOut = $("#finOut");
+
     if(ui.financeMode === "entries"){
-      $("#finMonthBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
-      $("#finIn").textContent = moneyIn(dispCur, fin.inDisplay);
-      $("#finOut").textContent = moneyIn(dispCur, fin.outDisplay);
+      if(monthBal) monthBal.textContent = moneyIn(dispCur, fin.balanceDisplay);
+      if(finIn) finIn.textContent = moneyIn(dispCur, fin.inDisplay);
+      if(finOut) finOut.textContent = moneyIn(dispCur, fin.outDisplay);
       return;
     }
 
     const bud = budgetStats(ui.year, ui.month);
-    $("#finMonthBalance").textContent = moneyIn(dispCur, fin.balanceDisplay);
-    $("#finIn").textContent = moneyIn(dispCur, bud.paidTowardsPlannedDisplay);
-    $("#finOut").textContent = moneyIn(dispCur, bud.plannedTotalDisplay);
+    if(monthBal) monthBal.textContent = moneyIn(dispCur, fin.balanceDisplay);
+    if(finIn) finIn.textContent = moneyIn(dispCur, bud.paidTowardsPlannedDisplay);
+    if(finOut) finOut.textContent = moneyIn(dispCur, bud.plannedTotalDisplay);
   }
 
   function renderFinanceProjections(){
@@ -604,16 +669,24 @@
     const grossForecast = grossReal;
     const netForecast = netReal - bud.remainingDisplay;
 
-    $("#projGrossReal").textContent = moneyIn(dispCur, grossReal);
-    $("#projNetReal").textContent = moneyIn(dispCur, netReal);
-    $("#projGrossForecast").textContent = moneyIn(dispCur, grossForecast);
-    $("#projNetForecast").textContent = moneyIn(dispCur, netForecast);
+    const a = $("#projGrossReal");
+    const b = $("#projNetReal");
+    const c = $("#projGrossForecast");
+    const d = $("#projNetForecast");
+
+    if(a) a.textContent = moneyIn(dispCur, grossReal);
+    if(b) b.textContent = moneyIn(dispCur, netReal);
+    if(c) c.textContent = moneyIn(dispCur, grossForecast);
+    if(d) d.textContent = moneyIn(dispCur, netForecast);
   }
 
   function renderFinanceEntries(){
     const listWrap = $("#financeList");
+    if(!listWrap) return;
+
     listWrap.innerHTML = `<div class="list" id="financeScroll"></div>`;
     const list = $("#financeScroll");
+    if(!list) return;
 
     const dispCur = state.settings.displayCurrency;
 
@@ -635,7 +708,8 @@
       .sort((a,b) => (a.createdAt > b.createdAt ? -1 : 1));
 
     const hasAnything = entries.length > 0 || salesForView.length > 0;
-    $("#financeEmpty").classList.toggle("hidden", hasAnything);
+    const empty = $("#financeEmpty");
+    if(empty) empty.classList.toggle("hidden", hasAnything);
 
     if(ui.financeFilter === "sales"){
       for(const s of salesForView){
@@ -800,12 +874,12 @@
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
 
-    $("#btnSalePDF").addEventListener("click", () => {
+    on("#btnSalePDF","click", () => {
       closeModal();
       printSalePDF(saleId);
     });
 
-    $("#btnSaleDelete").addEventListener("click", () => {
+    on("#btnSaleDelete","click", () => {
       closeModal();
       openConfirmModal("Excluir venda?", "Este contrato será removido.", () => {
         state.sales = state.sales.filter(s => s.id !== saleId);
@@ -904,15 +978,22 @@
     const dispCur = state.settings.displayCurrency;
     const bud = budgetStats(ui.year, ui.month);
 
-    $("#budFixed").textContent = moneyIn(dispCur, bud.fixedTotalDisplay);
-    $("#budVar").textContent = moneyIn(dispCur, bud.variableTotalDisplay);
-    $("#budRemaining").textContent = moneyIn(dispCur, bud.remainingDisplay);
-    $("#budForecast").textContent = moneyIn(dispCur, bud.forecastBalanceDisplay);
+    const a = $("#budFixed");
+    const b = $("#budVar");
+    const c = $("#budRemaining");
+    const d = $("#budForecast");
+
+    if(a) a.textContent = moneyIn(dispCur, bud.fixedTotalDisplay);
+    if(b) b.textContent = moneyIn(dispCur, bud.variableTotalDisplay);
+    if(c) c.textContent = moneyIn(dispCur, bud.remainingDisplay);
+    if(d) d.textContent = moneyIn(dispCur, bud.forecastBalanceDisplay);
 
     const hasAny = state.expenseTemplates.length > 0;
-    $("#budgetEmpty").classList.toggle("hidden", hasAny);
+    const empty = $("#budgetEmpty");
+    if(empty) empty.classList.toggle("hidden", hasAny);
 
     const wrap = $("#budgetLists");
+    if(!wrap) return;
     wrap.innerHTML = "";
     if(!hasAny) return;
 
@@ -1015,15 +1096,24 @@
       return vals.reduce((a,b) => a+b, 0) / vals.length;
     })();
 
-    $("#invTotal").textContent = moneyIn(dispCur, totalDisplay);
-    $("#invMonth").textContent = moneyIn(dispCur, monthDepDisplay);
-    $("#invRoi").textContent = `${Math.round(roiAvg * 10) / 10}%`;
+    const a = $("#invTotal");
+    const b = $("#invMonth");
+    const c = $("#invRoi");
+
+    if(a) a.textContent = moneyIn(dispCur, totalDisplay);
+    if(b) b.textContent = moneyIn(dispCur, monthDepDisplay);
+    if(c) c.textContent = `${Math.round(roiAvg * 10) / 10}%`;
 
     const listWrap = $("#investList");
+    if(!listWrap) return;
+
     listWrap.innerHTML = `<div class="list" id="investScroll"></div>`;
     const list = $("#investScroll");
+    if(!list) return;
 
-    $("#investEmpty").classList.toggle("hidden", state.investments.length !== 0);
+    const invEmpty = $("#investEmpty");
+    if(invEmpty) invEmpty.classList.toggle("hidden", state.investments.length !== 0);
+
     if(state.investments.length === 0) return;
 
     for(const it of state.investments){
@@ -1191,38 +1281,46 @@
   // ---------- Sheets / Modals ----------
   function openSheet(id){
     const el = $("#"+id);
+    if(!el) return; // ✅ blindado
     el.classList.add("show");
     el.setAttribute("aria-hidden", "false");
   }
   function closeSheet(id){
     const el = $("#"+id);
+    if(!el) return; // ✅ blindado
     el.classList.remove("show");
     el.setAttribute("aria-hidden", "true");
   }
 
   function openDaySheet(dateISO){
     ui.selectedDateISO = dateISO;
-    $("#daySheetDate").textContent = dateISO;
+    const dateEl = $("#daySheetDate");
+    if(dateEl) dateEl.textContent = dateISO;
 
     const entry = state.workEntries[dateISO] || {};
-    $("#dayShift").value = entry.shift || "A";
-    $("#dayStatus").value = entry.status || "work";
+    const a = $("#dayShift");
+    const b = $("#dayStatus");
+    const c = $("#dayType");
+    const d = $("#dayNormal");
+    const e = $("#dayExtra");
+    const f = $("#dayAddon");
+    const g = $("#dayNote");
 
-    // ✅ Tipo de dia (auto por padrão)
-    $("#dayType").value = entry.dayType || "auto";
+    if(a) a.value = entry.shift || "A";
+    if(b) b.value = entry.status || "work";
+    if(c) c.value = entry.dayType || "auto";
 
-    $("#dayNormal").value = entry.normal ?? "";
-    $("#dayExtra").value = entry.extra ?? "";
-    $("#dayAddon").value = entry.addon ?? "";
-    $("#dayNote").value = entry.note ?? "";
+    if(d) d.value = entry.normal ?? "";
+    if(e) e.value = entry.extra ?? "";
+    if(f) f.value = entry.addon ?? "";
+    if(g) g.value = entry.note ?? "";
 
     // ✅ Extra fixa: se ligado e o campo extra estiver vazio, pré-sugere (sem forçar)
-    if(state.settings.extraFixedEnabled){
-      const extraField = $("#dayExtra");
-      const isBlank = String(extraField.value || "").trim() === "";
-      const willWork = ($("#dayStatus").value === "work" && $("#dayShift").value !== "F");
+    if(state.settings.extraFixedEnabled && e){
+      const isBlank = String(e.value || "").trim() === "";
+      const willWork = ((b?.value || "work") === "work" && (a?.value || "A") !== "F");
       if(isBlank && willWork){
-        extraField.placeholder = `ex: ${state.settings.extraFixedHours} (extra fixa)`;
+        e.placeholder = `ex: ${state.settings.extraFixedHours} (extra fixa)`;
       }
     }
 
@@ -1232,11 +1330,14 @@
   function saveDayEntry(){
     const iso = ui.selectedDateISO;
 
-    const shift = $("#dayShift").value;
-    const status = $("#dayStatus").value;
+    const shiftEl = $("#dayShift");
+    const statusEl = $("#dayStatus");
 
-    const normalRaw = String($("#dayNormal").value || "").trim();
-    const extraRaw  = String($("#dayExtra").value || "").trim();
+    const shift = shiftEl ? shiftEl.value : "A";
+    const status = statusEl ? statusEl.value : "work";
+
+    const normalRaw = String($("#dayNormal")?.value || "").trim();
+    const extraRaw  = String($("#dayExtra")?.value || "").trim();
 
     const normal = clampNumber(normalRaw);
     let extra = clampNumber(extraRaw);
@@ -1250,12 +1351,11 @@
       extra = clampNumber(state.settings.extraFixedHours);
     }
 
-    const addon = Math.round(clampNumber($("#dayAddon").value));
-    const note = String($("#dayNote").value || "").trim();
+    const addon = Math.round(clampNumber($("#dayAddon")?.value));
+    const note = String($("#dayNote")?.value || "").trim();
 
-    let dayType = $("#dayType").value || "auto";
+    let dayType = $("#dayType")?.value || "auto";
     if(dayType === "auto"){
-      // domingo detecta sozinho no cálculo; aqui guarda “auto”
       dayType = "auto";
     }
 
@@ -1339,36 +1439,47 @@
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
 
-    $("#btnCreateEntry").addEventListener("click", () => {
+    on("#btnCreateEntry","click", () => {
       closeModal();
       openFinanceSheet();
     });
 
-    $("#btnCreateSale").addEventListener("click", () => {
+    on("#btnCreateSale","click", () => {
       closeModal();
       openSaleSheet();
     });
   }
 
   function openFinanceSheet(){
-    $("#finType").value = "pay";
-    $("#finStatus").value = "paid";
-    $("#finCurrency").value = state.settings.displayCurrency;
-    $("#finAmount").value = "";
-    $("#finCategory").value = "";
-    $("#finNote").value = "";
-    $("#finDate").value = toISO(new Date(ui.year, ui.month, today.getDate()));
+    const a = $("#finType");
+    const b = $("#finStatus");
+    const c = $("#finCurrency");
+    const d = $("#finAmount");
+    const e = $("#finCategory");
+    const f = $("#finNote");
+    const g = $("#finDate");
+
+    if(a) a.value = "pay";
+    if(b) b.value = "paid";
+    if(c) c.value = state.settings.displayCurrency;
+    if(d) d.value = "";
+    if(e) e.value = "";
+    if(f) f.value = "";
+
+    const safeDay = Math.min(today.getDate(), new Date(ui.year, ui.month+1, 0).getDate());
+    if(g) g.value = toISO(new Date(ui.year, ui.month, safeDay));
+
     openSheet("sheetFinance");
   }
 
   function saveFinanceEntry(){
-    const type = $("#finType").value;
-    const status = $("#finStatus").value;
-    const currency = $("#finCurrency").value;
-    const amount = Math.round(clampNumber($("#finAmount").value));
-    const dateISO = $("#finDate").value || toISO(new Date());
-    const category = String($("#finCategory").value || "").trim();
-    const note = String($("#finNote").value || "").trim();
+    const type = $("#finType")?.value;
+    const status = $("#finStatus")?.value;
+    const currency = $("#finCurrency")?.value;
+    const amount = Math.round(clampNumber($("#finAmount")?.value));
+    const dateISO = $("#finDate")?.value || toISO(new Date());
+    const category = String($("#finCategory")?.value || "").trim();
+    const note = String($("#finNote")?.value || "").trim();
 
     if(!amount || amount <= 0){
       toast("Informe um valor válido.");
@@ -1394,24 +1505,32 @@
   }
 
   function openExpenseSheet(presetType = "fixed"){
-    $("#expType").value = presetType;
-    $("#expCurrency").value = state.settings.displayCurrency;
-    $("#expName").value = "";
-    $("#expAmount").value = "";
-    $("#expDay").value = "";
-    $("#expActive").value = "true";
-    $("#expNote").value = "";
+    const a = $("#expType");
+    const b = $("#expCurrency");
+    const c = $("#expName");
+    const d = $("#expAmount");
+    const e = $("#expDay");
+    const f = $("#expActive");
+    const g = $("#expNote");
+
+    if(a) a.value = presetType;
+    if(b) b.value = state.settings.displayCurrency;
+    if(c) c.value = "";
+    if(d) d.value = "";
+    if(e) e.value = "";
+    if(f) f.value = "true";
+    if(g) g.value = "";
     openSheet("sheetExpense");
   }
 
   function saveExpenseTemplate(){
-    const type = $("#expType").value;
-    const currency = $("#expCurrency").value;
-    const name = String($("#expName").value || "").trim();
-    const amount = Math.round(clampNumber($("#expAmount").value));
-    const dayOfMonth = Math.round(clampNumber($("#expDay").value));
-    const active = $("#expActive").value === "true";
-    const note = String($("#expNote").value || "").trim();
+    const type = $("#expType")?.value;
+    const currency = $("#expCurrency")?.value;
+    const name = String($("#expName")?.value || "").trim();
+    const amount = Math.round(clampNumber($("#expAmount")?.value));
+    const dayOfMonth = Math.round(clampNumber($("#expDay")?.value));
+    const active = $("#expActive")?.value === "true";
+    const note = String($("#expNote")?.value || "").trim();
 
     if(!name){
       toast("Informe o nome da despesa.");
@@ -1444,30 +1563,41 @@
   }
 
   function openSaleSheet(){
-    $("#saleCurrency").value = "BRL";
-    $("#saleTotal").value = "";
-    $("#saleDownPayment").value = "";
-    $("#saleItem").value = "";
-    $("#saleBuyer").value = "";
-    $("#saleStart").value = toISO(new Date());
-    $("#saleDueDay").value = "10";
-    $("#saleInstallments").value = "5";
-    $("#saleLateFeePct").value = "0";
-    $("#saleNote").value = "";
+    const a = $("#saleCurrency");
+    const b = $("#saleTotal");
+    const c = $("#saleDownPayment");
+    const d = $("#saleItem");
+    const e = $("#saleBuyer");
+    const f = $("#saleStart");
+    const g = $("#saleDueDay");
+    const h = $("#saleInstallments");
+    const i = $("#saleLateFeePct");
+    const j = $("#saleNote");
+
+    if(a) a.value = "BRL";
+    if(b) b.value = "";
+    if(c) c.value = "";
+    if(d) d.value = "";
+    if(e) e.value = "";
+    if(f) f.value = toISO(new Date());
+    if(g) g.value = "10";
+    if(h) h.value = "5";
+    if(i) i.value = "0";
+    if(j) j.value = "";
     openSheet("sheetSale");
   }
 
   function saveSaleContract(){
-    const currency = $("#saleCurrency").value;
-    const total = Math.round(clampNumber($("#saleTotal").value));
-    const downPayment = Math.round(clampNumber($("#saleDownPayment").value));
-    const item = String($("#saleItem").value || "").trim();
-    const buyer = String($("#saleBuyer").value || "").trim();
-    const startISO = $("#saleStart").value || toISO(new Date());
-    const dueDay = Math.round(clampNumber($("#saleDueDay").value));
-    const installments = Math.round(clampNumber($("#saleInstallments").value));
-    const lateFeePct = clampNumber($("#saleLateFeePct").value);
-    const note = String($("#saleNote").value || "").trim();
+    const currency = $("#saleCurrency")?.value;
+    const total = Math.round(clampNumber($("#saleTotal")?.value));
+    const downPayment = Math.round(clampNumber($("#saleDownPayment")?.value));
+    const item = String($("#saleItem")?.value || "").trim();
+    const buyer = String($("#saleBuyer")?.value || "").trim();
+    const startISO = $("#saleStart")?.value || toISO(new Date());
+    const dueDay = Math.round(clampNumber($("#saleDueDay")?.value));
+    const installments = Math.round(clampNumber($("#saleInstallments")?.value));
+    const lateFeePct = clampNumber($("#saleLateFeePct")?.value);
+    const note = String($("#saleNote")?.value || "").trim();
 
     if(!item || !buyer){
       toast("Informe item e comprador.");
@@ -1530,22 +1660,29 @@
   }
 
   function openInvestSheet(){
-    $("#invCurrency").value = state.settings.displayCurrency;
-    $("#invName").value = "";
-    $("#invValue").value = "";
-    $("#invDeposit").value = "";
-    $("#invRoi").value = "";
-    $("#invNote").value = "";
+    const a = $("#invCurrency");
+    const b = $("#invName");
+    const c = $("#invValue");
+    const d = $("#invDeposit");
+    const e = $("#invRoi");
+    const f = $("#invNote");
+
+    if(a) a.value = state.settings.displayCurrency;
+    if(b) b.value = "";
+    if(c) c.value = "";
+    if(d) d.value = "";
+    if(e) e.value = "";
+    if(f) f.value = "";
     openSheet("sheetInvest");
   }
 
   function saveInvest(){
-    const currency = $("#invCurrency").value;
-    const name = String($("#invName").value || "").trim();
-    const value = Math.round(clampNumber($("#invValue").value));
-    const depositMonth = Math.round(clampNumber($("#invDeposit").value));
-    const roi = clampNumber($("#invRoi").value);
-    const note = String($("#invNote").value || "").trim();
+    const currency = $("#invCurrency")?.value;
+    const name = String($("#invName")?.value || "").trim();
+    const value = Math.round(clampNumber($("#invValue")?.value));
+    const depositMonth = Math.round(clampNumber($("#invDeposit")?.value));
+    const roi = clampNumber($("#invRoi")?.value);
+    const note = String($("#invNote")?.value || "").trim();
 
     if(!name){
       toast("Informe o nome do ativo.");
@@ -1570,25 +1707,38 @@
 
   // ---------- Drawer ----------
   function openDrawer(){
-    $("#drawer").classList.add("show");
-    $("#drawer").setAttribute("aria-hidden", "false");
+    const d = $("#drawer");
+    if(!d) return;
+    d.classList.add("show");
+    d.setAttribute("aria-hidden", "false");
   }
   function closeDrawer(){
-    $("#drawer").classList.remove("show");
-    $("#drawer").setAttribute("aria-hidden", "true");
+    const d = $("#drawer");
+    if(!d) return;
+    d.classList.remove("show");
+    d.setAttribute("aria-hidden", "true");
   }
 
   // ---------- Modal ----------
   function openModal(title, bodyHTML, actionsHTML){
-    $("#modalTitle").textContent = title;
-    $("#modalBody").innerHTML = bodyHTML;
-    $("#modalActions").innerHTML = actionsHTML || "";
-    $("#modal").classList.add("show");
-    $("#modal").setAttribute("aria-hidden", "false");
+    const t = $("#modalTitle");
+    const b = $("#modalBody");
+    const a = $("#modalActions");
+    const m = $("#modal");
+
+    if(t) t.textContent = title;
+    if(b) b.innerHTML = bodyHTML;
+    if(a) a.innerHTML = actionsHTML || "";
+    if(m){
+      m.classList.add("show");
+      m.setAttribute("aria-hidden", "false");
+    }
   }
   function closeModal(){
-    $("#modal").classList.remove("show");
-    $("#modal").setAttribute("aria-hidden", "true");
+    const m = $("#modal");
+    if(!m) return;
+    m.classList.remove("show");
+    m.setAttribute("aria-hidden", "true");
   }
 
   function openConfirmModal(title, text, onConfirm){
@@ -1609,7 +1759,7 @@
     );
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
-    $("#btnConfirmOk").addEventListener("click", () => {
+    on("#btnConfirmOk","click", () => {
       closeModal();
       onConfirm?.();
     });
@@ -1831,22 +1981,23 @@
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
 
-    $("#btnUpdateFx").addEventListener("click", async () => {
+    on("#btnUpdateFx","click", async () => {
       toast("Buscando câmbio...");
       const fx = await fetchFxJPYBRL();
       if(fx && fx > 0){
-        $("#setFx").value = String(fx.toFixed(4));
+        const fxEl = $("#setFx");
+        if(fxEl) fxEl.value = String(fx.toFixed(4));
         toast(`Câmbio atualizado: 1¥=R$${fx.toFixed(3)}`);
       }else{
         toast("Não consegui atualizar. Usando câmbio manual.");
       }
     });
 
-    $("#btnAddJob").addEventListener("click", () => {
-      const company = String($("#jobCompany").value || "").trim();
-      const startISO = $("#jobStart").value;
-      const endISO = $("#jobEnd").value || null;
-      const reason = String($("#jobReason").value || "").trim();
+    on("#btnAddJob","click", () => {
+      const company = String($("#jobCompany")?.value || "").trim();
+      const startISO = $("#jobStart")?.value;
+      const endISO = $("#jobEnd")?.value || null;
+      const reason = String($("#jobReason")?.value || "").trim();
 
       if(!company || !startISO){
         toast("Informe empresa e data de início.");
@@ -1891,28 +2042,28 @@
       });
     });
 
-    $("#btnSaveSettings").addEventListener("click", () => {
-      state.settings.displayCurrency = $("#setDisplayCurrency").value;
+    on("#btnSaveSettings","click", () => {
+      state.settings.displayCurrency = $("#setDisplayCurrency")?.value || state.settings.displayCurrency;
 
-      const fx = clampNumber($("#setFx").value);
+      const fx = clampNumber($("#setFx")?.value);
       if(fx > 0) state.settings.fxJPYBRL = fx;
 
-      state.settings.rateNormal = Math.round(clampNumber($("#setRateNormal").value));
-      state.settings.rateExtra = Math.round(clampNumber($("#setRateExtra").value));
-      state.settings.autoCalc = $("#setAutoCalc").value === "true";
+      state.settings.rateNormal = Math.round(clampNumber($("#setRateNormal")?.value));
+      state.settings.rateExtra = Math.round(clampNumber($("#setRateExtra")?.value));
+      state.settings.autoCalc = ($("#setAutoCalc")?.value === "true");
 
-      state.settings.extraFixedEnabled = $("#setExtraFixedEnabled").value === "true";
-      state.settings.extraFixedHours = clampNumber($("#setExtraFixedHours").value) || 0;
+      state.settings.extraFixedEnabled = ($("#setExtraFixedEnabled")?.value === "true");
+      state.settings.extraFixedHours = clampNumber($("#setExtraFixedHours")?.value) || 0;
 
-      state.settings.multSunday = clampNumber($("#setMultSunday").value) || 1;
-      state.settings.multHoliday = clampNumber($("#setMultHoliday").value) || 1;
-      state.settings.multOffWorked = clampNumber($("#setMultOffWorked").value) || 1;
+      state.settings.multSunday = clampNumber($("#setMultSunday")?.value) || 1;
+      state.settings.multHoliday = clampNumber($("#setMultHoliday")?.value) || 1;
+      state.settings.multOffWorked = clampNumber($("#setMultOffWorked")?.value) || 1;
 
-      state.settings.soundMoney = $("#setSoundMoney").value === "true";
+      state.settings.soundMoney = ($("#setSoundMoney")?.value === "true");
 
-      state.settings.shiftColors.A = String($("#setShiftA").value || "#7c5cff").trim();
-      state.settings.shiftColors.B = String($("#setShiftB").value || "#00c2ff").trim();
-      state.settings.shiftColors.C = String($("#setShiftC").value || "#ffb020").trim();
+      state.settings.shiftColors.A = String($("#setShiftA")?.value || "#7c5cff").trim();
+      state.settings.shiftColors.B = String($("#setShiftB")?.value || "#00c2ff").trim();
+      state.settings.shiftColors.C = String($("#setShiftC")?.value || "#ffb020").trim();
 
       saveState();
       applyShiftColors();
@@ -1995,15 +2146,16 @@
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
 
-    $("#patActive").addEventListener("input", () => {
-      const raw = $("#patActive").value;
+    on("#patActive","input", () => {
+      const raw = $("#patActive")?.value;
       const res = normalizePattern(raw);
       const out = res.ok ? patternPreview(res.pattern, 14) : `⚠️ ${res.error}`;
-      $("#patPreview").textContent = out;
+      const prev = $("#patPreview");
+      if(prev) prev.textContent = out;
     });
 
-    $("#btnApplyPattern").addEventListener("click", () => {
-      const raw = String($("#patActive").value || "").trim();
+    on("#btnApplyPattern","click", () => {
+      const raw = String($("#patActive")?.value || "").trim();
       const res = normalizePattern(raw);
       if(!res.ok){ toast(res.error); return; }
 
@@ -2141,11 +2293,11 @@
 
     $$("[data-close-modal]").forEach(el => el.addEventListener("click", () => closeModal()));
 
-    $("#btnAddRem").addEventListener("click", () => {
-      const dateISO = $("#remDate").value;
-      const title = String($("#remTitle").value || "").trim();
-      const importance = $("#remImp").value;
-      const sound = $("#remSound").value === "true";
+    on("#btnAddRem","click", () => {
+      const dateISO = $("#remDate")?.value;
+      const title = String($("#remTitle")?.value || "").trim();
+      const importance = $("#remImp")?.value;
+      const sound = ($("#remSound")?.value === "true");
       if(!dateISO || !title){
         toast("Informe data e título.");
         return;
@@ -2332,7 +2484,7 @@
   function applyTheme(theme){
     document.documentElement.setAttribute("data-theme", theme);
     const icon = $("#btnTheme i");
-    icon.className = (theme === "dark") ? "fa-solid fa-moon" : "fa-solid fa-sun";
+    if(icon) icon.className = (theme === "dark") ? "fa-solid fa-moon" : "fa-solid fa-sun";
   }
 
   function applyShiftColors(){
@@ -2346,6 +2498,7 @@
   let toastTimer = null;
   function toast(msg){
     const t = $("#toast");
+    if(!t) return; // ✅ blindado
     t.textContent = msg;
     t.classList.add("show");
     clearTimeout(toastTimer);
