@@ -1,11 +1,20 @@
-// app.js (ATUALIZADO E COMPLETO)
-// Inclui: Extra fixa, multiplicadores (Domingo/Feriado/Folga trabalhada),
-// som opcional e explicações estratégicas no modal de Configurações.
+// app.js (CORRIGIDO + APRIMORADO)
+// Fixes:
+// - ROI: usa #invRoiText (resumo) e mantém #invRoi (input do sheet)
+// - Visão mensal: dias como <button> (clique/teclado confiáveis)
+// - ESC fecha modal/sheet/drawer (ordem: modal > sheet > drawer)
+// - Foco por teclado + Enter/Espaço ativam elementos clicáveis (itens/listas)
+// - Budget: cabeçalhos e grupos mais bonitos (sem mexer no CSS)
+// - Lembretes: cores chamativas por importância
+// - Extra fixa: preenche automaticamente o campo "Horas extras" e aplica no save,
+//   só vira "manual" se o usuário editar
+// - Remove dependência de money-effects.js (pode remover o arquivo sem conflitos)
+// - PDF: adiciona rodapé com Copyright e mais detalhes (Dom/Feriado e turnos A/B/C)
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  // ✅ Correção necessária: evita "quebrar tudo" quando algum ID não existe no HTML
+  // ✅ Evita “quebrar tudo” se um ID não existir
   const on = (sel, evt, handler, root = document) => {
     const el = $(sel, root);
     if (!el) return false;
@@ -19,6 +28,7 @@
   const monthsLong  = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
   const today = new Date();
+
   let ui = {
     view: "calendar",
     calMode: "year",
@@ -37,16 +47,16 @@
       rateExtra: 1500,
       autoCalc: true,
 
-      // ✅ NOVO: Extra fixa (opcional)
+      // Extra fixa (opcional)
       extraFixedEnabled: false,
-      extraFixedHours: 2, // se ligado, pode preencher "extras" quando o usuário deixar em branco
+      extraFixedHours: 2,
 
-      // ✅ NOVO: multiplicadores por tipo de dia (modelos comuns no JP)
-      // Obs: aqui é multiplicador em cima do valor/hora (normal e extra).
-      multSunday: 1.35,     // 休日出勤 (domingo)
-      multHoliday: 1.35,    // 祝日
-      multOffWorked: 1.25,  // folga trabalhada (se você usar)
-      // ⚙️ som do “dinheiro entrando”
+      // multiplicadores por tipo de dia
+      multSunday: 1.35,
+      multHoliday: 1.35,
+      multOffWorked: 1.25,
+
+      // som do “dinheiro entrando” (mantido no state, mas app.js não depende mais de money-effects.js)
       soundMoney: false,
 
       shiftLabels: { A: "Dia", B: "Noite", C: "Madrugada" },
@@ -54,7 +64,7 @@
       theme: "dark",
       fxLastUpdated: null
     },
-    workEntries: {},      // iso -> {shift,status,normal,extra,addon,note,dayType}
+    workEntries: {},      // iso -> {shift,status,normal,extra,addon,note,dayType, extraSource}
     financeEntries: [],
     investments: [],
     expenseTemplates: [],
@@ -66,17 +76,12 @@
 
   let state = loadState();
 
-  // para detectar “entrada de dinheiro”
-  const moneyPulseMem = {
-    key: "",
-    last: 0
-  };
-
   // ---------- Boot ----------
   applyTheme(state.settings.theme);
   applyShiftColors();
   renderCurrencyToggle();
 
+  wireGlobalKeyboard();
   wireNav();
   wireTopbar();
   wireSheets();
@@ -128,7 +133,7 @@
       merged.settings.displayCurrency = parsed.settings.currency;
     }
 
-    merged.sales = merged.sales.map(s => ({
+    merged.sales = (merged.sales || []).map(s => ({
       downPayment: 0,
       paidInstallments: 0,
       ...s
@@ -232,16 +237,9 @@
     return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
   }
 
-  function startOfMonth(y, m){
-    return new Date(y, m, 1);
-  }
-  function endOfMonth(y, m){
-    return new Date(y, m+1, 0, 23, 59, 59, 999);
-  }
-
-  function startOfDay(d){
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-  }
+  function startOfMonth(y, m){ return new Date(y, m, 1); }
+  function endOfMonth(y, m){ return new Date(y, m+1, 0, 23, 59, 59, 999); }
+  function startOfDay(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0); }
 
   function dayOfWeekISO(iso){
     return fromISO(iso).getDay(); // 0=Dom
@@ -259,6 +257,52 @@
     if(dt === "holiday") return Math.max(0.01, clampNumber(s.multHoliday) || 1);
     if(dt === "off_worked") return Math.max(0.01, clampNumber(s.multOffWorked) || 1);
     return 1;
+  }
+
+  function isWorkLike(entry){
+    const shift = entry?.shift || "A";
+    const status = entry?.status || "work";
+    return (status === "work" && shift !== "F");
+  }
+
+  // Acessibilidade: transformar div “clicável” em teclado também
+  function makeKeyboardClickable(el, handler){
+    if(!el) return;
+    el.setAttribute("tabindex","0");
+    el.setAttribute("role","button");
+    el.addEventListener("click", handler);
+    el.addEventListener("keydown", (ev) => {
+      if(ev.key === "Enter" || ev.key === " "){
+        ev.preventDefault();
+        handler();
+      }
+    });
+  }
+
+  // ---------- Global keyboard (ESC + foco) ----------
+  function wireGlobalKeyboard(){
+    document.addEventListener("keydown", (ev) => {
+      if(ev.key !== "Escape") return;
+
+      // prioridade: modal > sheet > drawer
+      const modal = $("#modal");
+      if(modal && modal.classList.contains("show")){
+        closeModal();
+        return;
+      }
+
+      const openSheetEl = $$(".sheet.show")[0];
+      if(openSheetEl){
+        closeSheet(openSheetEl.id);
+        return;
+      }
+
+      const drawer = $("#drawer");
+      if(drawer && drawer.classList.contains("show")){
+        closeDrawer();
+        return;
+      }
+    }, { passive: true });
   }
 
   // ---------- UI Wiring ----------
@@ -543,10 +587,11 @@
     const totalCells = 42;
 
     for(let i=0; i<totalCells; i++){
-      const cell = document.createElement("div");
       const dayNum = (i - startDow) + 1;
 
+      // vazios
       if(dayNum < 1 || dayNum > daysInMonth){
+        const cell = document.createElement("div");
         cell.className = "day empty";
         cell.innerHTML = `<div class="day-top"><span class="day-num"> </span><span class="badge"></span></div>`;
         area.appendChild(cell);
@@ -562,7 +607,12 @@
       const badgeClass = shift ? `badge ${shift}` : "badge";
       const isToday = dateISO === toISO(new Date());
 
+      // ✅ agora é BUTTON
+      const cell = document.createElement("button");
       cell.className = "day";
+      cell.setAttribute("type","button");
+      cell.setAttribute("aria-label", `Dia ${dayNum} de ${monthsLong[ui.month]}`);
+
       cell.innerHTML = `
         <div class="day-top">
           <span class="day-num">${dayNum}${isToday ? " •" : ""}</span>
@@ -598,18 +648,8 @@
     const nextBalance = fin.balanceDisplay;
     if(sumB) sumB.textContent = moneyIn(dispCur, nextBalance);
 
-    // ✅ Money pop (som opcional) quando saldo do mês aumentar
-    const memKey = `${ui.year}-${ui.month}-${dispCur}`;
-    if(moneyPulseMem.key !== memKey){
-      moneyPulseMem.key = memKey;
-      moneyPulseMem.last = nextBalance;
-    }else{
-      if(nextBalance > moneyPulseMem.last + 0.001){
-        // ✅ blindado
-        window.NakataMoneyFX?.pop?.($("#sumBalanceCard"), !!state.settings.soundMoney);
-      }
-      moneyPulseMem.last = nextBalance;
-    }
+    // ❌ removido: dependência do money-effects.js
+    // (se você apagar money-effects.js, nada quebra aqui)
 
     if(ui.view === "finance"){
       renderFinanceHeader(fin);
@@ -713,7 +753,8 @@
 
     if(ui.financeFilter === "sales"){
       for(const s of salesForView){
-        list.appendChild(renderSaleCard(s, dispCur));
+        const card = renderSaleCard(s, dispCur);
+        list.appendChild(card);
       }
       return;
     }
@@ -746,7 +787,7 @@
         </div>
       `;
 
-      el.addEventListener("click", () => {
+      makeKeyboardClickable(el, () => {
         openConfirmModal(
           "Excluir lançamento?",
           `${typeLabel} • ${moneyIn(cur, e.amount)} • ${e.dateISO}`,
@@ -808,7 +849,7 @@
       </div>
     `;
 
-    el.addEventListener("click", () => openSaleActionsModal(sale.id));
+    makeKeyboardClickable(el, () => openSaleActionsModal(sale.id));
     return el;
   }
 
@@ -890,7 +931,7 @@
     });
 
     $$("[data-inst]").forEach(row => {
-      row.addEventListener("click", () => {
+      makeKeyboardClickable(row, () => {
         const idx = Number(row.getAttribute("data-inst"));
         const inst = schedule.find(x => x.index === idx);
         if(!inst || inst.paid){
@@ -1008,9 +1049,26 @@
 
       const header = document.createElement("div");
       header.className = "bud-header";
+      header.style.display = "flex";
+      header.style.alignItems = "center";
+      header.style.justifyContent = "space-between";
+      header.style.gap = "10px";
+      header.style.padding = "10px 10px";
+      header.style.margin = "8px 0 4px 0";
+      header.style.border = "1px solid var(--line)";
+      header.style.borderRadius = "16px";
+      header.style.background = "rgba(255,255,255,.03)";
       header.innerHTML = `
-        <div class="bud-title">${title}</div>
-        <div class="bud-pill">${moneyIn(dispCur, totalDisplay)}</div>
+        <div style="font-weight:900; letter-spacing:.2px;">${title}</div>
+        <div style="
+          padding: 6px 10px;
+          border-radius: 999px;
+          border: 1px solid var(--line);
+          background: rgba(255,255,255,.02);
+          font-weight: 900;
+          font-size: 12px;
+          white-space: nowrap;
+        ">${moneyIn(dispCur, totalDisplay)}</div>
       `;
       wrap.appendChild(header);
 
@@ -1045,6 +1103,7 @@
 
         const el = document.createElement("div");
         el.className = "item";
+        el.style.outline = "none";
         el.innerHTML = `
           <div class="item-left">
             <div class="item-title">${escapeHTML(it.name)}</div>
@@ -1057,7 +1116,7 @@
           </div>
         `;
 
-        el.addEventListener("click", () => {
+        makeKeyboardClickable(el, () => {
           openConfirmModal(
             "Remover despesa?",
             `${it.name} • ${moneyIn(cur, it.amount)}`,
@@ -1098,7 +1157,7 @@
 
     const a = $("#invTotal");
     const b = $("#invMonth");
-    const c = $("#invRoi");
+    const c = $("#invRoiText"); // ✅ corrigido: era #invRoi (id do input do sheet)
 
     if(a) a.textContent = moneyIn(dispCur, totalDisplay);
     if(b) b.textContent = moneyIn(dispCur, monthDepDisplay);
@@ -1136,7 +1195,7 @@
         </div>
       `;
 
-      el.addEventListener("click", () => {
+      makeKeyboardClickable(el, () => {
         openConfirmModal(
           "Excluir ativo?",
           `${it.name} • ${moneyIn(cur, it.value)}`,
@@ -1162,6 +1221,16 @@
 
     let estimatedIncomeJPY = 0;
 
+    // breakdowns
+    const breakdown = {
+      sunday: { days: 0, incomeJPY: 0 },
+      holiday: { days: 0, incomeJPY: 0 },
+      off_worked: { days: 0, incomeJPY: 0 },
+      shiftA: { days: 0, incomeJPY: 0 },
+      shiftB: { days: 0, incomeJPY: 0 },
+      shiftC: { days: 0, incomeJPY: 0 },
+    };
+
     const prefix = `${y}-${String(m+1).padStart(2,"0")}-`;
     for(const [iso, entry] of Object.entries(state.workEntries)){
       if(!iso.startsWith(prefix)) continue;
@@ -1179,15 +1248,51 @@
       totalExtra += e;
       addon += a;
 
-      // ✅ calcula renda por dia para aplicar multiplicadores corretamente
-      estimatedIncomeJPY += calcIncomeJPY(n, e, mult) + a;
+      const dayIncomeJPY = calcIncomeJPY(n, e, mult) + a;
+      estimatedIncomeJPY += dayIncomeJPY;
+
+      // conta “trabalhado” para breakdowns (evita somar folga zerada)
+      const worked = isWorkLike(entry) && (n > 0 || e > 0 || a > 0);
+
+      if(worked){
+        if(dt === "sunday"){
+          breakdown.sunday.days += 1;
+          breakdown.sunday.incomeJPY += dayIncomeJPY;
+        }
+        if(dt === "holiday"){
+          breakdown.holiday.days += 1;
+          breakdown.holiday.incomeJPY += dayIncomeJPY;
+        }
+        if(dt === "off_worked"){
+          breakdown.off_worked.days += 1;
+          breakdown.off_worked.incomeJPY += dayIncomeJPY;
+        }
+
+        const sh = entry.shift;
+        if(sh === "A"){
+          breakdown.shiftA.days += 1;
+          breakdown.shiftA.incomeJPY += dayIncomeJPY;
+        } else if(sh === "B"){
+          breakdown.shiftB.days += 1;
+          breakdown.shiftB.incomeJPY += dayIncomeJPY;
+        } else if(sh === "C"){
+          breakdown.shiftC.days += 1;
+          breakdown.shiftC.incomeJPY += dayIncomeJPY;
+        }
+      }
+    }
+
+    // arredondamentos
+    for(const k of Object.keys(breakdown)){
+      breakdown[k].incomeJPY = Math.round(breakdown[k].incomeJPY);
     }
 
     return {
       totalNormal: Math.round(totalNormal * 10)/10,
       totalExtra: Math.round(totalExtra * 10)/10,
       estimatedIncomeJPY: Math.round(estimatedIncomeJPY),
-      daysWithRecords
+      daysWithRecords,
+      breakdown
     };
   }
 
@@ -1281,13 +1386,13 @@
   // ---------- Sheets / Modals ----------
   function openSheet(id){
     const el = $("#"+id);
-    if(!el) return; // ✅ blindado
+    if(!el) return;
     el.classList.add("show");
     el.setAttribute("aria-hidden", "false");
   }
   function closeSheet(id){
     const el = $("#"+id);
-    if(!el) return; // ✅ blindado
+    if(!el) return;
     el.classList.remove("show");
     el.setAttribute("aria-hidden", "true");
   }
@@ -1311,16 +1416,40 @@
     if(c) c.value = entry.dayType || "auto";
 
     if(d) d.value = entry.normal ?? "";
-    if(e) e.value = entry.extra ?? "";
     if(f) f.value = entry.addon ?? "";
     if(g) g.value = entry.note ?? "";
 
-    // ✅ Extra fixa: se ligado e o campo extra estiver vazio, pré-sugere (sem forçar)
-    if(state.settings.extraFixedEnabled && e){
-      const isBlank = String(e.value || "").trim() === "";
-      const willWork = ((b?.value || "work") === "work" && (a?.value || "A") !== "F");
-      if(isBlank && willWork){
-        e.placeholder = `ex: ${state.settings.extraFixedHours} (extra fixa)`;
+    // ✅ Extra fixa robusta:
+    // - quando ligada, campo "Horas extras" já abre preenchido
+    // - só fica manual se o usuário editar
+    if(e){
+      const shift = a ? a.value : (entry.shift || "A");
+      const status = b ? b.value : (entry.status || "work");
+      const willWork = (status === "work" && shift !== "F");
+
+      // listener: se digitar, vira manual
+      e.oninput = () => {
+        e.dataset.autofill = "false";
+      };
+
+      if(state.settings.extraFixedEnabled && willWork){
+        const fixed = clampNumber(state.settings.extraFixedHours);
+        // regra:
+        // - se entry.extraSource === "manual": respeita o valor salvo
+        // - senão: preenche com fixed (mesmo que antes fosse 0)
+        if(entry.extraSource === "manual"){
+          e.value = entry.extra ?? "";
+          e.dataset.autofill = "false";
+        } else {
+          e.value = String(fixed);
+          e.dataset.autofill = "true";
+        }
+        e.placeholder = `ex: ${fixed} (extra fixa)`;
+      }else{
+        // modo normal (sem extra fixa)
+        e.value = entry.extra ?? "";
+        e.dataset.autofill = "false";
+        e.placeholder = "ex: 2";
       }
     }
 
@@ -1337,19 +1466,11 @@
     const status = statusEl ? statusEl.value : "work";
 
     const normalRaw = String($("#dayNormal")?.value || "").trim();
-    const extraRaw  = String($("#dayExtra")?.value || "").trim();
+    const extraEl = $("#dayExtra");
+    const extraRaw  = String(extraEl?.value || "").trim();
 
     const normal = clampNumber(normalRaw);
     let extra = clampNumber(extraRaw);
-
-    // ✅ aplica “extra fixa” só se:
-    // - ligado
-    // - dia de trabalho
-    // - o usuário deixou o campo extra vazio (não sobrescreve!)
-    const willWork = (status === "work" && shift !== "F");
-    if(state.settings.extraFixedEnabled && willWork && extraRaw === ""){
-      extra = clampNumber(state.settings.extraFixedHours);
-    }
 
     const addon = Math.round(clampNumber($("#dayAddon")?.value));
     const note = String($("#dayNote")?.value || "").trim();
@@ -1360,6 +1481,29 @@
     }
 
     const isOff = (shift === "F" || status === "off");
+    const willWork = (status === "work" && shift !== "F");
+
+    let extraSource = null;
+
+    // ✅ Extra fixa aplica por padrão quando:
+    // - está ligada
+    // - é dia de trabalho
+    // - campo foi auto-preenchido e o usuário não mexeu (dataset.autofill === "true")
+    // - ou o usuário deixou vazio
+    if(!isOff && state.settings.extraFixedEnabled && willWork){
+      const fixed = clampNumber(state.settings.extraFixedHours);
+      const autoFilled = (extraEl?.dataset?.autofill === "true");
+      const empty = (extraRaw === "");
+      if(empty || autoFilled){
+        extra = fixed;
+        extraSource = "fixed";
+      }else{
+        extraSource = "manual";
+      }
+    } else {
+      extraSource = "manual";
+    }
+
     const entry = {
       shift,
       status: isOff ? "off" : "work",
@@ -1367,7 +1511,8 @@
       extra: isOff ? 0 : extra,
       addon: isOff ? 0 : addon,
       note,
-      dayType
+      dayType,
+      extraSource: isOff ? null : extraSource
     };
 
     const hasAny = entry.shift || entry.normal || entry.extra || entry.addon || entry.note || (entry.dayType && entry.dayType !== "auto");
@@ -1765,7 +1910,7 @@
     });
   }
 
-  // ---------- Settings + Employment History ----------
+  // ---------- Settings ----------
   function openSettingsModal(){
     const s = state.settings;
 
@@ -1794,8 +1939,7 @@
       <div class="helper">
         <i class="fa-regular fa-map"></i>
         <span>
-          Aqui você define “regras do seu mundo”: salário/hora, câmbio, extras fixas e quanto vale Domingo/Feriado.
-          Depois, no “Registro do dia”, você só marca o tipo do dia e pronto.
+          Aqui você define salário/hora, câmbio e regras de extras. Depois, no “Registro do dia”, só marca o tipo do dia e pronto.
         </span>
       </div>
 
@@ -1838,7 +1982,7 @@
       <div class="helper">
         <i class="fa-regular fa-clock"></i>
         <span>
-          Extras fixas: se sua rotina quase sempre tem a mesma extra (ex.: 2h), ligue e o app sugere/preenche quando você deixar o campo “Extras” em branco.
+          Extra fixa: quando ligada, o campo “Horas extras” já abre preenchido com seu padrão. Só vira manual se você editar.
         </span>
       </div>
 
@@ -1859,7 +2003,7 @@
       <div class="helper">
         <i class="fa-regular fa-star"></i>
         <span>
-          Domingo/Feriado no Japão costuma ter adicional. Aqui é um multiplicador em cima do valor/hora (normal e extra).
+          Domingo/Feriado: multiplicador em cima do valor/hora (normal e extra).
           Ex.: 1.35 significa +35%.
         </span>
       </div>
@@ -1883,7 +2027,7 @@
       <div class="helper">
         <i class="fa-solid fa-volume-high"></i>
         <span>
-          Som opcional: toca um “pling” discreto quando o saldo do mês aumenta (entrada de dinheiro).
+          Som opcional: fica guardado, mas o app.js não depende mais de money-effects.js.
         </span>
       </div>
 
@@ -2023,7 +2167,7 @@
     });
 
     $$("[data-job]").forEach(el => {
-      el.addEventListener("click", () => {
+      makeKeyboardClickable(el, () => {
         const id = el.getAttribute("data-job");
         const job = state.employmentHistory.find(j => j.id === id);
         if(!job) return;
@@ -2214,36 +2358,49 @@
       const ch = pat[(d-1) % pat.length];
 
       if(ch === "E"){
-        state.workEntries[iso] = { shift:"F", status:"off", normal:0, extra:0, addon:0, note:"", dayType:"auto" };
+        state.workEntries[iso] = { shift:"F", status:"off", normal:0, extra:0, addon:0, note:"", dayType:"auto", extraSource:null };
       }else{
-        state.workEntries[iso] = { shift: ch, status:"work", normal:8, extra:0, addon:0, note:"", dayType:"auto" };
+        // mantém extra 0 no padrão; extra fixa vai preencher na abertura do sheet e na gravação automática se estiver ligada
+        state.workEntries[iso] = { shift: ch, status:"work", normal:8, extra:0, addon:0, note:"", dayType:"auto", extraSource:"fixed" };
       }
     }
   }
 
   // ---------- Reminders ----------
+  function reminderColor(importance){
+    // cor chamativa por nível
+    if(importance === "high") return { bg:"rgba(255,92,122,.14)", bd:"rgba(255,92,122,.35)", fg:"var(--text)" };
+    if(importance === "med")  return { bg:"rgba(255,176,32,.14)", bd:"rgba(255,176,32,.35)", fg:"var(--text)" };
+    return { bg:"rgba(61,220,151,.12)", bd:"rgba(61,220,151,.30)", fg:"var(--text)" }; // low
+  }
+
   function openRemindersModal(){
     const items = state.reminders
       .slice()
       .sort((a,b) => a.dateISO > b.dateISO ? 1 : -1)
-      .map(r => `
-        <div class="item" data-rem="${r.id}">
-          <div class="item-left">
-            <div class="item-title">${escapeHTML(r.title)}</div>
-            <div class="item-sub">${r.dateISO} • ${r.importance} • som: ${r.sound ? "on" : "off"}</div>
+      .map(r => {
+        const c = reminderColor(r.importance);
+        return `
+          <div class="item" data-rem="${r.id}" style="border-color:${c.bd}; background:${c.bg};">
+            <div class="item-left">
+              <div class="item-title">${escapeHTML(r.title)}</div>
+              <div class="item-sub">${r.dateISO} • ${r.importance} • som: ${r.sound ? "on" : "off"}</div>
+            </div>
+            <div class="item-right">
+              <div class="tag" style="color:${c.fg}; border-color:${c.bd}; background:${c.bg}; font-weight:900;">
+                ${r.importance}
+              </div>
+            </div>
           </div>
-          <div class="item-right">
-            <div class="tag">${r.importance}</div>
-          </div>
-        </div>
-      `).join("");
+        `;
+      }).join("");
 
     openModal(
       "Lembretes & aniversários",
       `
       <div class="helper">
         <i class="fa-regular fa-bell"></i>
-        <span>Anote aniversários e datas importantes. (O som é para lembretes futuros quando você quiser evoluir isso.)</span>
+        <span>Anote aniversários e datas importantes. (A cor destaca a prioridade.)</span>
       </div>
 
       <div class="grid2" style="margin-top:10px;">
@@ -2310,7 +2467,7 @@
     });
 
     $$(".item[data-rem]").forEach(el => {
-      el.addEventListener("click", () => {
+      makeKeyboardClickable(el, () => {
         const id = el.getAttribute("data-rem");
         openConfirmModal("Excluir lembrete?", "Este lembrete será removido.", () => {
           state.reminders = state.reminders.filter(r => r.id !== id);
@@ -2358,6 +2515,24 @@
       ? jobs.map(j => `${j.company} (${j.startISO} → ${j.endISO || "—"}${j.reason ? ` • ${j.reason}` : ""})`).join("<br>")
       : "—";
 
+    // extras do PDF: domingos/feriados e turnos
+    const bd = work.breakdown || {};
+    const sDays = bd.sunday?.days || 0;
+    const hDays = bd.holiday?.days || 0;
+    const offWDays = bd.off_worked?.days || 0;
+
+    const sIncome = convert(bd.sunday?.incomeJPY || 0, "JPY", dispCur);
+    const hIncome = convert(bd.holiday?.incomeJPY || 0, "JPY", dispCur);
+    const offWIncome = convert(bd.off_worked?.incomeJPY || 0, "JPY", dispCur);
+
+    const aDays = bd.shiftA?.days || 0;
+    const bDays = bd.shiftB?.days || 0;
+    const cDays = bd.shiftC?.days || 0;
+
+    const aIncome = convert(bd.shiftA?.incomeJPY || 0, "JPY", dispCur);
+    const bIncome = convert(bd.shiftB?.incomeJPY || 0, "JPY", dispCur);
+    const cIncome = convert(bd.shiftC?.incomeJPY || 0, "JPY", dispCur);
+
     const html = `
       <html><head><meta charset="utf-8">
       <title>${escapeHTML(title)}</title>
@@ -2372,6 +2547,7 @@
         table{width:100%; border-collapse:collapse; margin-top:12px;}
         th,td{border:1px solid #ddd; padding:8px; font-size:12px;}
         th{background:#f4f4f4; text-align:left;}
+        .foot{margin-top:14px; font-size:11px; color:#555; text-align:center;}
       </style></head><body>
         <h1>${escapeHTML(title)}</h1>
         <div class="muted">Moeda: ${dispCur} • ${escapeHTML(fxLabel())}</div>
@@ -2400,9 +2576,24 @@
           <tr><td>Líquido (previsto)</td><td>${moneyIn(dispCur, netForecast)}</td></tr>
         </table>
 
+        <div class="card" style="margin-top:12px;">
+          <div class="k">Detalhes extras do trabalho</div>
+          <div class="muted" style="margin-top:6px; line-height:1.45;">
+            Domingos trabalhados: <b>${sDays}</b> • Ganhos: <b>${moneyIn(dispCur, sIncome)}</b><br>
+            Feriados trabalhados: <b>${hDays}</b> • Ganhos: <b>${moneyIn(dispCur, hIncome)}</b><br>
+            Folgas trabalhadas: <b>${offWDays}</b> • Ganhos: <b>${moneyIn(dispCur, offWIncome)}</b><br>
+            <br>
+            Turno A (Dia): <b>${aDays}</b> • Ganhos: <b>${moneyIn(dispCur, aIncome)}</b><br>
+            Turno B (Noite): <b>${bDays}</b> • Ganhos: <b>${moneyIn(dispCur, bIncome)}</b><br>
+            Turno C (Madrugada): <b>${cDays}</b> • Ganhos: <b>${moneyIn(dispCur, cIncome)}</b>
+          </div>
+        </div>
+
         <div class="muted" style="margin-top:12px;">
           No celular: “Compartilhar / Salvar como PDF” após imprimir.
         </div>
+
+        <div class="foot">Copyright @ 2026 - Ailton A. Nakata</div>
       </body></html>
     `;
 
@@ -2444,6 +2635,7 @@
         table{width:100%; border-collapse:collapse; margin-top:12px;}
         th,td{border:1px solid #ddd; padding:8px; font-size:12px;}
         th{background:#f4f4f4; text-align:left;}
+        .foot{margin-top:14px; font-size:11px; color:#555; text-align:center;}
       </style></head><body>
         <h1>${escapeHTML(title)}</h1>
         <div class="muted">
@@ -2468,6 +2660,8 @@
         <div class="muted" style="margin-top:12px;">
           No celular: “Compartilhar / Salvar como PDF” após imprimir.
         </div>
+
+        <div class="foot">Copyright @ 2026 - Ailton A. Nakata</div>
       </body></html>
     `;
 
@@ -2498,7 +2692,7 @@
   let toastTimer = null;
   function toast(msg){
     const t = $("#toast");
-    if(!t) return; // ✅ blindado
+    if(!t) return;
     t.textContent = msg;
     t.classList.add("show");
     clearTimeout(toastTimer);

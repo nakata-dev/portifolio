@@ -52,6 +52,20 @@ body{
 
 .app{height:100dvh;width:100%;display:flex;flex-direction:column;}
 
+/* ✅ FOCO POR TECLADO (ACESSIBILIDADE) */
+.icon-btn:focus-visible,
+.pill-btn:focus-visible,
+.primary-btn:focus-visible,
+.ghost-btn:focus-visible,
+.seg-btn:focus-visible,
+.nav-item:focus-visible,
+.chip:focus-visible,
+.month-card:focus-visible,
+.drawer-item:focus-visible{
+  outline: 2px solid rgba(124,92,255,.65);
+  outline-offset: 2px;
+}
+
 .topbar{
   height: 56px;
   padding-top: var(--safeT);
@@ -261,7 +275,7 @@ body{
 .month-grid::-webkit-scrollbar-thumb{background: rgba(255,255,255,.10);border-radius: 999px;}
 [data-theme="light"] .month-grid::-webkit-scrollbar-thumb{background: rgba(16,20,35,.15);}
 
-/* ✅ agora .day pode ser button sem "cara de botão" */
+/* ✅ .day agora pode ser BUTTON (reset completo) */
 .day{
   border-radius: 14px;
   border: 1px solid var(--line);
@@ -274,16 +288,22 @@ body{
   min-height: 64px;
   -webkit-tap-highlight-color: transparent;
 
-  /* reset p/ button */
   appearance: none;
   -webkit-appearance: none;
   font: inherit;
   text-align: left;
   color: inherit;
+  width: 100%;
 }
 .day:active{transform: scale(.99)}
 .day.empty{opacity:.25;cursor:default;}
 .day.empty:active{transform:none;}
+
+/* ✅ foco acessível nos dias */
+.day:focus-visible{
+  outline: 2px solid rgba(124,92,255,.65);
+  outline-offset: 2px;
+}
 
 .day-top{display:flex;align-items:center;justify-content:space-between;gap: 6px;}
 .day-num{font-weight: 800;font-size: 12px;}
@@ -298,6 +318,8 @@ body{
   overflow:hidden;
   flex: 0 0 auto;
 }
+
+/* fallback OK (mantido) */
 .badge.A{background: rgba(124,92,255,.22); border-color: rgba(124,92,255,.38)}
 .badge.B{background: rgba(0,194,255,.18); border-color: rgba(0,194,255,.34)}
 .badge.C{background: rgba(255,176,32,.16); border-color: rgba(255,176,32,.34)}
@@ -505,6 +527,38 @@ body{
 
 .copyright{margin-top: 10px;font-size: 11px;color: var(--muted);opacity: .85;text-align:center;}
 
+/* ✅ Budget bonito */
+.bud-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.02);
+  margin-top: 8px;
+}
+.bud-title{
+  font-weight: 950;
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing: .2px;
+}
+.bud-pill{
+  font-weight: 900;
+  font-size: 11px;
+  color: var(--text);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.03);
+  padding: 4px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  max-width: 55%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
 .drawer{position:fixed;inset:0;display:none;z-index: 20;}
 .drawer.show{display:block}
 .drawer-sheet{
@@ -670,47 +724,6 @@ body{
   .day{ min-height: 60px; }
   .chip-mini{ font-size: 9px; }
 }
-
-/* ===========================
-   PATCH FINAL (INTEGRAÇÃO + CLIQUE)
-   cole no final do styles.css
-   =========================== */
-
-/* Dia como BUTTON: remove estilo padrão e garante clique confiável */
-.day{
-  appearance: none;
-  -webkit-appearance: none;
-  border: 1px solid var(--line);
-  background: rgba(255,255,255,.02);
-  color: var(--text);
-  text-align: left;
-  width: 100%;
-}
-
-/* Foco acessível */
-.day:focus-visible{
-  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
-  outline-offset: 2px;
-}
-
-/* Integra cores configuráveis nos badges */
-.badge.A{
-  background: color-mix(in srgb, var(--shiftA) 22%, transparent);
-  border-color: color-mix(in srgb, var(--shiftA) 38%, transparent);
-}
-.badge.B{
-  background: color-mix(in srgb, var(--shiftB) 18%, transparent);
-  border-color: color-mix(in srgb, var(--shiftB) 34%, transparent);
-}
-.badge.C{
-  background: color-mix(in srgb, var(--shiftC) 16%, transparent);
-  border-color: color-mix(in srgb, var(--shiftC) 34%, transparent);
-}
-
-/* Integra cores configuráveis no “realce” do dia */
-.day.shiftA{ box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shiftA) 35%, transparent); }
-.day.shiftB{ box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shiftB) 35%, transparent); }
-.day.shiftC{ box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shiftC) 35%, transparent); }
 
 /* Helper: microexplicações estratégicas */
 .helper{

@@ -254,7 +254,6 @@
                 </div>
                 <div class="mini">
                   <div class="mini-k">Rentab. (est.)</div>
-                  <!-- ✅ CORRIGIDO: id único (antes duplicava com o input do sheet) -->
                   <div class="mini-v" id="invRoiText">0%</div>
                 </div>
               </div>
@@ -368,7 +367,6 @@
             </label>
           </div>
 
-          <!-- ✅ ADICIONADO: Tipo do dia (o app.js já usa #dayType) -->
           <label class="field">
             <span>Tipo do dia</span>
             <select id="dayType">
@@ -699,7 +697,6 @@
 
             <label class="field">
               <span>Rentabilidade estimada (%)</span>
-              <!-- mantém o input id="invRoi" aqui -->
               <input id="invRoi" inputmode="decimal" placeholder="ex: 5" />
             </label>
           </div>
@@ -762,8 +759,6 @@
   </div>
 
   <script src="app.js"></script>
-  <script src="money-effects.js"></script>
-
 </body>
 
 </html>
