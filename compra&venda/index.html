@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Comprar &amp; Venda - PRO</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+  <header class="app-header" role="banner">
+    <div class="header-inner">
+      <div class="brand" aria-label="Comprar e Venda PRO">
+        <span class="brand-mark" aria-hidden="true">⇄</span>
+        <div class="brand-text">
+          <div class="brand-title">Comprar &amp; Venda <span class="brand-pro">PRO</span></div>
+          <div class="brand-sub">Offline-first • simples • rápido</div>
+        </div>
+      </div>
+
+      <button class="icon-btn" id="menuBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menuPanel">
+        <span class="sr-only">Abrir menu</span>
+        <span class="burger" aria-hidden="true"><span></span></span>
+      </button>
+    </div>
+
+    <nav class="top-nav" aria-label="Navegação principal">
+      <a class="tab" href="#dashboard" data-route="dashboard">Dashboard</a>
+      <a class="tab" href="#transactions" data-route="transactions">Transações</a>
+      <a class="tab" href="#form" data-route="form">Nova/Editar</a>
+    </nav>
+  </header>
+
+  <!-- Menu overlay -->
+  <div class="overlay" id="menuOverlay" hidden>
+    <div class="overlay-scrim" data-close="menu" tabindex="-1" aria-hidden="true"></div>
+
+    <div class="panel" id="menuPanel" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="panel-header">
+        <h2 class="panel-title">Menu</h2>
+        <button class="icon-btn" type="button" data-close="menu" aria-label="Fechar menu">
+          <span class="x" aria-hidden="true">✕</span>
+        </button>
+      </div>
+
+      <div class="panel-body">
+        <button class="menu-item" type="button" id="exportBtn">
+          Exportar JSON
+          <span class="menu-hint">Baixar arquivo com todos os dados</span>
+        </button>
+
+        <button class="menu-item" type="button" id="importBtn">
+          Importar JSON
+          <span class="menu-hint">Carregar arquivo e restaurar dados</span>
+        </button>
+
+        <div class="divider" role="separator" aria-hidden="true"></div>
+
+        <button class="menu-item danger" type="button" id="clearBtn">
+          Limpar dados
+          <span class="menu-hint">Requer digitar “LIMPAR”</span>
+        </button>
+
+        <div class="divider" role="separator" aria-hidden="true"></div>
+
+        <button class="menu-item" type="button" id="ratesBtnMenu">
+          Atualizar Câmbio
+          <span class="menu-hint">Usa internet se disponível</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main id="main" class="app-main" role="main" tabindex="-1">
+    <div class="toast-wrap" aria-live="polite" aria-relevant="additions" aria-atomic="false" id="toastWrap"></div>
+
+    <!-- Dashboard -->
+    <section class="view" id="view-dashboard" data-view="dashboard" hidden>
+      <header class="view-header">
+        <h1 class="view-title">Dashboard</h1>
+        <p class="view-sub">Resumo rápido do que entra, do que sai e do que está emprestado.</p>
+      </header>
+
+      <div class="grid-cards" id="dashCards" aria-label="Resumo"></div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">Recentes</h2>
+          <p class="card-desc">Até 6 transações mais novas.</p>
+        </div>
+        <div id="recentList" class="list" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">Configurações</h2>
+          <p class="card-desc">Moeda de exibição e câmbio.</p>
+        </div>
+
+        <form class="form" id="settingsForm">
+          <div class="field">
+            <label for="displayCurrency">Moeda de exibição</label>
+            <select id="displayCurrency" name="displayCurrency">
+              <option value="BRL">BRL (R$)</option>
+              <option value="USD">USD (US$)</option>
+              <option value="JPY">JPY (¥)</option>
+            </select>
+            <div class="hint">A conversão usa BRL como ponte quando necessário.</div>
+          </div>
+
+          <div class="field">
+            <div class="rates-row">
+              <div class="rates-meta" id="ratesMeta" aria-live="polite"></div>
+              <button class="btn" type="button" id="ratesBtnSettings">Atualizar Câmbio</button>
+            </div>
+            <div class="offline-badge" id="offlineBadge" hidden>
+              <span class="dot" aria-hidden="true"></span>
+              Offline: usando última cotação salva
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn primary cta" href="#form" id="newFromDash">+ Nova transação</a>
+      </div>
+    </section>
+
+    <!-- Transactions -->
+    <section class="view" id="view-transactions" data-view="transactions" hidden>
+      <header class="view-header">
+        <h1 class="view-title">Transações</h1>
+        <p class="view-sub">Buscar, filtrar, pagar parcela e gerar relatório.</p>
+      </header>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">Busca e filtros</h2>
+        </div>
+
+        <form class="form form-compact" id="filterForm">
+          <div class="row">
+            <div class="field grow">
+              <label for="q">Buscar (item ou nome)</label>
+              <input id="q" name="q" type="search" inputmode="search" autocomplete="off" placeholder="Ex.: Notebook, João..." />
+            </div>
+          </div>
+
+          <div class="row row-3">
+            <div class="field">
+              <label for="fType">Tipo</label>
+              <select id="fType" name="fType">
+                <option value="all">Todos</option>
+                <option value="compra">Compra</option>
+                <option value="venda">Venda</option>
+                <option value="emprestimo">Empréstimo</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="fStatus">Status</label>
+              <select id="fStatus" name="fStatus">
+                <option value="all">Todos</option>
+                <option value="pendente">Pendente</option>
+                <option value="concluido">Concluído</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="fCompetencia">Mês/Ano</label>
+              <input id="fCompetencia" name="fCompetencia" type="month" />
+              <div class="hint">Filtra pela competência das parcelas.</div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">Lista</h2>
+          <div class="card-actions">
+            <a class="btn" href="#form" id="newFromList">Nova</a>
+          </div>
+        </div>
+
+        <div id="txEmpty" class="empty" hidden>
+          <div class="empty-emoji" aria-hidden="true">📦</div>
+          <h3>Nenhuma transação ainda</h3>
+          <p>Crie sua primeira compra, venda ou empréstimo. Funciona offline.</p>
+          <a class="btn primary" href="#form">+ Criar agora</a>
+        </div>
+
+        <div id="txNoResults" class="empty" hidden>
+          <div class="empty-emoji" aria-hidden="true">🔎</div>
+          <h3>Sem resultados</h3>
+          <p>Tente ajustar a busca ou os filtros.</p>
+          <button class="btn" type="button" id="clearFiltersBtn">Limpar filtros</button>
+        </div>
+
+        <div id="txList" class="list" aria-live="polite"></div>
+      </div>
+
+      <div class="card" id="detailCard" hidden>
+        <div class="card-head">
+          <h2 class="card-title">Detalhe</h2>
+          <div class="card-actions">
+            <button class="btn" type="button" id="closeDetailBtn">Fechar</button>
+          </div>
+        </div>
+        <div id="txDetail" class="detail" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section class="view" id="view-form" data-view="form" hidden>
+      <header class="view-header">
+        <h1 class="view-title" id="formTitle">Nova transação</h1>
+        <p class="view-sub" id="formSubtitle">Preencha os campos obrigatórios. Parcelas são geradas automaticamente.</p>
+      </header>
+
+      <div class="card">
+        <form class="form" id="txForm" novalidate>
+          <input type="hidden" id="txId" name="txId" />
+
+          <div class="row row-2">
+            <div class="field">
+              <label for="type">Tipo</label>
+              <select id="type" name="type" required>
+                <option value="">Selecione</option>
+                <option value="compra">Compra</option>
+                <option value="venda">Venda</option>
+                <option value="emprestimo">Empréstimo</option>
+              </select>
+              <div class="error" id="err-type" role="alert"></div>
+            </div>
+
+            <div class="field">
+              <label for="currency">Moeda da transação</label>
+              <select id="currency" name="currency" required>
+                <option value="BRL">BRL (R$)</option>
+                <option value="USD">USD (US$)</option>
+                <option value="JPY">JPY (¥)</option>
+              </select>
+              <div class="hint">A transação mantém sua própria moeda.</div>
+            </div>
+          </div>
+
+          <div class="row row-2">
+            <div class="field">
+              <label for="item">Item/Bem</label>
+              <input id="item" name="item" required autocomplete="off" placeholder="Ex.: Notebook, Empréstimo..." />
+              <div class="error" id="err-item" role="alert"></div>
+            </div>
+
+            <div class="field">
+              <label for="counterpartyName">Nome da outra parte</label>
+              <input id="counterpartyName" name="counterpartyName" required autocomplete="name" placeholder="Ex.: João, Loja X..." />
+              <div class="error" id="err-counterpartyName" role="alert"></div>
+            </div>
+          </div>
+
+          <div class="row row-2">
+            <div class="field">
+              <label for="counterpartyDoc">CPF/CNPJ (opcional)</label>
+              <input id="counterpartyDoc" name="counterpartyDoc" inputmode="numeric" autocomplete="off" placeholder="Somente se quiser (ex.: 000.000.000-00)" />
+              <div class="hint">Campo opcional. Pode deixar em branco.</div>
+            </div>
+
+            <div class="field">
+              <label for="totalValue">Valor total</label>
+              <input id="totalValue" name="totalValue" required inputmode="decimal" autocomplete="off" placeholder="Ex.: 1200,50" />
+              <div class="error" id="err-totalValue" role="alert"></div>
+            </div>
+          </div>
+
+          <div class="row row-2">
+            <div class="field">
+              <label for="agreementDate">Data do acordo</label>
+              <input id="agreementDate" name="agreementDate" type="date" required autocomplete="off" />
+              <div class="error" id="err-agreementDate" role="alert"></div>
+            </div>
+
+            <div class="field" id="loanRateField" hidden>
+              <label for="loanRate">Rendimento mensal estimado (opcional)</label>
+              <input id="loanRate" name="loanRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
+              <div class="hint">Padrão sugerido: 0,67% ao mês (0,5% + TR estimada).</div>
+            </div>
+          </div>
+
+          <fieldset class="fieldset">
+            <legend>Forma de pagamento</legend>
+
+            <div class="segmented" role="radiogroup" aria-label="Forma de pagamento">
+              <label class="seg">
+                <input type="radio" name="paymentMode" value="avista" checked />
+                <span>À vista</span>
+              </label>
+              <label class="seg">
+                <input type="radio" name="paymentMode" value="parcelado" />
+                <span>Parcelado</span>
+              </label>
+            </div>
+
+            <div id="installmentsBox" class="installments-box" hidden>
+              <div class="row row-3">
+                <div class="field">
+                  <label for="frequency">Frequência</label>
+                  <select id="frequency" name="frequency">
+                    <option value="mensal">Mensal</option>
+                    <option value="anual">Anual</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="numInstallments">Nº parcelas</label>
+                  <input id="numInstallments" name="numInstallments" type="number" min="2" max="1200" step="1" inputmode="numeric" autocomplete="off" placeholder="Ex.: 10" />
+                  <div class="error" id="err-numInstallments" role="alert"></div>
+                </div>
+
+                <div class="field">
+                  <label for="dueDay">Dia do vencimento</label>
+                  <input id="dueDay" name="dueDay" type="number" min="1" max="31" step="1" inputmode="numeric" autocomplete="off" placeholder="1–28 recomendado" />
+                  <div class="error" id="err-dueDay" role="alert"></div>
+                </div>
+              </div>
+
+              <div class="row row-2">
+                <div class="field">
+                  <label for="installmentValue">Valor por parcela (opcional)</label>
+                  <input id="installmentValue" name="installmentValue" inputmode="decimal" autocomplete="off" placeholder="Ex.: 350,00" />
+                  <div class="error" id="err-installmentValue" role="alert"></div>
+                </div>
+                <div class="field">
+                  <label for="spacer2"> </label>
+                  <div class="hint" style="margin-top:10px">Ideal quando o cliente define um valor fixo por mês.</div>
+                </div>
+              </div>
+
+              <div class="preview" id="installmentsPreview" aria-live="polite"></div>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="notes">Observações (opcional)</label>
+            <textarea id="notes" name="notes" rows="3" maxlength="600" placeholder="Detalhes extras (opcional)"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn primary" type="submit" id="saveBtn">Salvar</button>
+            <button class="btn" type="button" id="cancelEditBtn">Cancelar</button>
+          </div>
+
+          <div class="form-meta" id="formMeta" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ✅ Receipt Overlay (corrigido: body rolável interno + footer fixo) -->
+  <div class="overlay" id="receiptOverlay" hidden>
+    <div class="overlay-scrim" data-close="receipt" tabindex="-1" aria-hidden="true"></div>
+
+    <div class="panel panel-wide" role="dialog" aria-modal="true" aria-label="Recibo e Relatório">
+      <div class="panel-header">
+        <h2 class="panel-title" id="receiptTitle">Relatório</h2>
+        <button class="icon-btn" type="button" data-close="receipt" aria-label="Fechar">
+          <span class="x" aria-hidden="true">✕</span>
+        </button>
+      </div>
+
+      <div class="panel-body panel-body-scroll">
+        <div class="receipt-controls">
+          <div class="field">
+            <label for="receiptMode">Tipo</label>
+            <select id="receiptMode">
+              <option value="total">Recibo do total</option>
+              <option value="installment">Recibo de parcela</option>
+              <option value="report">Relatório (mensal e transparente)</option>
+            </select>
+            <div class="hint">Relatório é ótimo para WhatsApp e PDF mensal.</div>
+          </div>
+
+          <div class="field" id="receiptInstallmentField" hidden>
+            <label for="receiptInstallment">Parcela</label>
+            <select id="receiptInstallment"></select>
+          </div>
+
+          <div class="field">
+            <label for="signature">Assinatura digitada (opcional)</label>
+            <input id="signature" autocomplete="off" placeholder="Ex.: Ailton A. Nakata" />
+          </div>
+        </div>
+
+        <article class="receipt" id="receiptDoc" aria-label="Documento"></article>
+      </div>
+
+      <div class="panel-footer">
+        <div class="receipt-actions">
+          <button class="btn" type="button" id="copyReceiptBtn">Copiar</button>
+          <button class="btn" type="button" id="shareReceiptBtn">Compartilhar</button>
+          <button class="btn primary" type="button" id="printReceiptBtn">Imprimir / Salvar PDF</button>
+        </div>
+        <p class="print-hint">
+          Para PDF no WhatsApp: toque em “Imprimir / Salvar PDF”, selecione “Salvar como PDF” e envie o arquivo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json" hidden />
+
+  <footer class="app-footer" role="contentinfo">
+    <small>Copyright @ 2026 - Ailton A. Nakata</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
