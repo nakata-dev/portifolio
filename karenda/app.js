@@ -1,20 +1,18 @@
 // app.js (CORRIGIDO + APRIMORADO)
-// Fixes:
-// - ROI: usa #invRoiText (resumo) e mantém #invRoi (input do sheet)
-// - Visão mensal: dias como <button> (clique/teclado confiáveis)
-// - ESC fecha modal/sheet/drawer (ordem: modal > sheet > drawer)
-// - Foco por teclado + Enter/Espaço ativam elementos clicáveis (itens/listas)
-// - Budget: cabeçalhos e grupos mais bonitos (sem mexer no CSS)
-// - Lembretes: cores chamativas por importância
-// - Extra fixa: preenche automaticamente o campo "Horas extras" e aplica no save,
-//   só vira "manual" se o usuário editar
-// - Remove dependência de money-effects.js (pode remover o arquivo sem conflitos)
-// - PDF: adiciona rodapé com Copyright e mais detalhes (Dom/Feriado e turnos A/B/C)
+// Inclui:
+// - Correção ROI (#invRoiText)
+// - Dias do calendário como <button> (acessível + clique confiável)
+// - ESC fecha Modal/Sheets/Drawer + foco por teclado (trap simples)
+// - Lembretes destacados no calendário anual e mensal (com ícone pulsante)
+// - Extra fixa: preenche valor automaticamente (sem precisar clicar), mas respeita edição manual
+// - PDF do mês: adiciona Domingos/Feriados/Folga trabalhada e Turnos com ganhos (sem poluir)
+// - Rodapé no PDF: "Copyright @ 2026 - Ailton A. Nakata"
+
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  // ✅ Evita “quebrar tudo” se um ID não existir
+  // ✅ evita quebrar quando algum ID não existe
   const on = (sel, evt, handler, root = document) => {
     const el = $(sel, root);
     if (!el) return false;
@@ -28,7 +26,6 @@
   const monthsLong  = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
   const today = new Date();
-
   let ui = {
     view: "calendar",
     calMode: "year",
@@ -56,7 +53,7 @@
       multHoliday: 1.35,
       multOffWorked: 1.25,
 
-      // som do “dinheiro entrando” (mantido no state, mas app.js não depende mais de money-effects.js)
+      // som do “dinheiro entrando”
       soundMoney: false,
 
       shiftLabels: { A: "Dia", B: "Noite", C: "Madrugada" },
@@ -64,28 +61,35 @@
       theme: "dark",
       fxLastUpdated: null
     },
-    workEntries: {},      // iso -> {shift,status,normal,extra,addon,note,dayType, extraSource}
+    workEntries: {},      // iso -> {shift,status,normal,extra,addon,note,dayType}
     financeEntries: [],
     investments: [],
     expenseTemplates: [],
     sales: [],
     employmentHistory: [],
-    reminders: [],
+    reminders: [],        // {id,dateISO,title,importance,sound,(future:repeat)}
     patterns: { active: "AABBEE" }
   });
 
   let state = loadState();
+
+  // para detectar “entrada de dinheiro”
+  const moneyPulseMem = { key: "", last: 0 };
+
+  // ----------- A11Y / CSS Inject (pulsos + destaques) -----------
+  injectReminderStyles();
 
   // ---------- Boot ----------
   applyTheme(state.settings.theme);
   applyShiftColors();
   renderCurrencyToggle();
 
-  wireGlobalKeyboard();
   wireNav();
   wireTopbar();
   wireSheets();
   wireDrawer();
+  wireGlobalKeyboard();
+
   renderAll();
 
   // ---------- State ----------
@@ -133,7 +137,7 @@
       merged.settings.displayCurrency = parsed.settings.currency;
     }
 
-    merged.sales = (merged.sales || []).map(s => ({
+    merged.sales = merged.sales.map(s => ({
       downPayment: 0,
       paidInstallments: 0,
       ...s
@@ -239,7 +243,10 @@
 
   function startOfMonth(y, m){ return new Date(y, m, 1); }
   function endOfMonth(y, m){ return new Date(y, m+1, 0, 23, 59, 59, 999); }
-  function startOfDay(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0); }
+
+  function startOfDay(d){
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  }
 
   function dayOfWeekISO(iso){
     return fromISO(iso).getDay(); // 0=Dom
@@ -259,50 +266,54 @@
     return 1;
   }
 
-  function isWorkLike(entry){
-    const shift = entry?.shift || "A";
-    const status = entry?.status || "work";
-    return (status === "work" && shift !== "F");
+  // ---------- Reminders: helpers ----------
+  function remKeyFromISO(iso){
+    // YYYY-MM-DD -> MM-DD
+    const parts = String(iso||"").split("-");
+    if(parts.length !== 3) return "";
+    return `${parts[1]}-${parts[2]}`;
   }
 
-  // Acessibilidade: transformar div “clicável” em teclado também
-  function makeKeyboardClickable(el, handler){
-    if(!el) return;
-    el.setAttribute("tabindex","0");
-    el.setAttribute("role","button");
-    el.addEventListener("click", handler);
-    el.addEventListener("keydown", (ev) => {
-      if(ev.key === "Enter" || ev.key === " "){
-        ev.preventDefault();
-        handler();
-      }
-    });
+  function guessReminderType(title){
+    const t = normalizeText(title);
+    if(t.includes("anivers") || t.includes("niver") || t.includes("birthday")) return "bday";
+    return "rem";
   }
 
-  // ---------- Global keyboard (ESC + foco) ----------
-  function wireGlobalKeyboard(){
-    document.addEventListener("keydown", (ev) => {
-      if(ev.key !== "Escape") return;
+  function getRemindersForISO(dateISO){
+    const key = remKeyFromISO(dateISO);
+    // hoje: todos são recorrentes anuais por padrão (profissional pro seu caso)
+    // se você quiser diferenciar no futuro, dá pra adicionar campo repeat.
+    return (state.reminders || []).filter(r => remKeyFromISO(r.dateISO) === key);
+  }
 
-      // prioridade: modal > sheet > drawer
-      const modal = $("#modal");
-      if(modal && modal.classList.contains("show")){
-        closeModal();
-        return;
-      }
+  function remindersCountForMonth(y, m){
+    const mm = String(m+1).padStart(2,"0");
+    let count = 0;
+    for(const r of (state.reminders || [])){
+      const k = remKeyFromISO(r.dateISO);
+      if(!k) continue;
+      if(k.startsWith(mm + "-")) count++;
+    }
+    return count;
+  }
 
-      const openSheetEl = $$(".sheet.show")[0];
-      if(openSheetEl){
-        closeSheet(openSheetEl.id);
-        return;
-      }
+  function topReminderLevel(reminders){
+    // prioridade: high > med > low
+    let level = "low";
+    for(const r of reminders){
+      const imp = r.importance || "med";
+      if(imp === "high") return "high";
+      if(imp === "med") level = "med";
+    }
+    return level;
+  }
 
-      const drawer = $("#drawer");
-      if(drawer && drawer.classList.contains("show")){
-        closeDrawer();
-        return;
-      }
-    }, { passive: true });
+  function reminderTitlePreview(reminders){
+    if(!reminders || reminders.length === 0) return "";
+    const first = reminders[0];
+    const more = reminders.length > 1 ? ` (+${reminders.length-1})` : "";
+    return `${first.title}${more}`;
   }
 
   // ---------- UI Wiring ----------
@@ -389,6 +400,18 @@
     on("#btnDayClear","click", clearDayEntry);
     on("#btnDayDuplicate","click", duplicateDayEntry);
 
+    // ✅ extra fixa: respeita edição manual
+    on("#dayExtra","input", () => {
+      const extraEl = $("#dayExtra");
+      if(extraEl){
+        extraEl.dataset.autofilled = "0";
+      }
+    });
+
+    // ✅ se usuário muda turno/status, reaplica extra fixa automaticamente quando fizer sentido
+    on("#dayShift","change", () => applyExtraFixedLive());
+    on("#dayStatus","change", () => applyExtraFixedLive());
+
     on("#btnFinSave","click", saveFinanceEntry);
     on("#btnExpSave","click", saveExpenseTemplate);
     on("#btnSaleSave","click", saveSaleContract);
@@ -427,6 +450,31 @@
     });
   }
 
+  // ---------- Global Keyboard (ESC + foco) ----------
+  function wireGlobalKeyboard(){
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        // prioridade: modal > sheet > drawer
+        const modal = $("#modal");
+        if(modal && modal.classList.contains("show")){
+          closeModal();
+          return;
+        }
+        const sheet = $$(".sheet.show")[0];
+        if(sheet){
+          closeSheet(sheet.id);
+          return;
+        }
+        const drawer = $("#drawer");
+        if(drawer && drawer.classList.contains("show")){
+          closeDrawer();
+          return;
+        }
+      }
+    });
+  }
+
+  // ---------- Views ----------
   function goView(view){
     ui.view = view;
     $$(".view").forEach(v => v.classList.toggle("view-active", v.dataset.view === view));
@@ -548,6 +596,7 @@
 
     for(let m=0; m<12; m++){
       const stats = monthStats(ui.year, m);
+      const remCount = remindersCountForMonth(ui.year, m);
 
       const card = document.createElement("button");
       card.className = "month-card";
@@ -557,10 +606,22 @@
       const dispCur = state.settings.displayCurrency;
       const incomeDisplay = convert(stats.estimatedIncomeJPY, "JPY", dispCur);
 
+      // ✅ texto compacto: "X dias • Y lemb"
+      const daysText = remCount > 0
+        ? `${stats.daysWithRecords} dias • ${remCount} lemb`
+        : `${stats.daysWithRecords} dias`;
+
+      // ✅ mini ícone quando tem lembretes (chamativo porém limpo)
+      const remIcon = remCount > 0 ? `<span class="rem-year-ico" aria-hidden="true"></span>` : "";
+
       card.innerHTML = `
         <div class="month-name">${monthsShort[m]}</div>
         <div class="month-meta">
-          <span class="pill"><span class="${dotClass}"></span><span>${stats.daysWithRecords} dias</span></span>
+          <span class="pill">
+            <span class="${dotClass}"></span>
+            <span>${daysText}</span>
+            ${remIcon}
+          </span>
           <span class="pill">${moneyIn(dispCur, incomeDisplay)}</span>
         </div>
       `;
@@ -589,8 +650,8 @@
     for(let i=0; i<totalCells; i++){
       const dayNum = (i - startDow) + 1;
 
-      // vazios
       if(dayNum < 1 || dayNum > daysInMonth){
+        // ✅ células vazias: mantém sem foco
         const cell = document.createElement("div");
         cell.className = "day empty";
         cell.innerHTML = `<div class="day-top"><span class="day-num"> </span><span class="badge"></span></div>`;
@@ -607,16 +668,35 @@
       const badgeClass = shift ? `badge ${shift}` : "badge";
       const isToday = dateISO === toISO(new Date());
 
-      // ✅ agora é BUTTON
+      // ✅ lembretes do dia (anual por MM-DD)
+      const rems = getRemindersForISO(dateISO);
+      const hasRem = rems.length > 0;
+      const remLevel = hasRem ? topReminderLevel(rems) : "low";
+      const remType = hasRem ? guessReminderType(rems[0].title) : "rem";
+      const remPreview = hasRem ? reminderTitlePreview(rems) : "";
+
       const cell = document.createElement("button");
       cell.className = "day";
-      cell.setAttribute("type","button");
-      cell.setAttribute("aria-label", `Dia ${dayNum} de ${monthsLong[ui.month]}`);
+      cell.setAttribute("type", "button");
+      cell.setAttribute("aria-label", hasRem ? `${dayNum}. Lembrete: ${remPreview}` : `${dayNum}`);
+      if(hasRem){
+        cell.classList.add("has-rem", `rem-${remLevel}`);
+        if(remType === "bday") cell.classList.add("rem-bday");
+        cell.title = `${remType === "bday" ? "🎂 " : "🔔 "}${remPreview}`;
+      }
+
+      // ✅ badge do lembrete (pulsante)
+      const remBadgeHTML = hasRem
+        ? `<span class="badge ${remType === "bday" ? "BDAY" : "REM"} rem-pulse rem-${remLevel}" aria-hidden="true"></span>`
+        : ``;
 
       cell.innerHTML = `
         <div class="day-top">
           <span class="day-num">${dayNum}${isToday ? " •" : ""}</span>
-          <span class="${badgeClass}"></span>
+          <span style="display:flex; gap:6px; align-items:center;">
+            ${remBadgeHTML}
+            <span class="${badgeClass}"></span>
+          </span>
         </div>
         <div class="day-mini">
           ${normal ? `<span class="chip-mini">N ${normal}h</span>` : ``}
@@ -648,8 +728,17 @@
     const nextBalance = fin.balanceDisplay;
     if(sumB) sumB.textContent = moneyIn(dispCur, nextBalance);
 
-    // ❌ removido: dependência do money-effects.js
-    // (se você apagar money-effects.js, nada quebra aqui)
+    // ✅ money pop: totalmente opcional e blindado (se money-effects.js estiver ausente, não dá erro)
+    const memKey = `${ui.year}-${ui.month}-${dispCur}`;
+    if(moneyPulseMem.key !== memKey){
+      moneyPulseMem.key = memKey;
+      moneyPulseMem.last = nextBalance;
+    }else{
+      if(nextBalance > moneyPulseMem.last + 0.001){
+        window.NakataMoneyFX?.pop?.($("#sumBalanceCard"), !!state.settings.soundMoney);
+      }
+      moneyPulseMem.last = nextBalance;
+    }
 
     if(ui.view === "finance"){
       renderFinanceHeader(fin);
@@ -753,8 +842,7 @@
 
     if(ui.financeFilter === "sales"){
       for(const s of salesForView){
-        const card = renderSaleCard(s, dispCur);
-        list.appendChild(card);
+        list.appendChild(renderSaleCard(s, dispCur));
       }
       return;
     }
@@ -787,7 +875,7 @@
         </div>
       `;
 
-      makeKeyboardClickable(el, () => {
+      el.addEventListener("click", () => {
         openConfirmModal(
           "Excluir lançamento?",
           `${typeLabel} • ${moneyIn(cur, e.amount)} • ${e.dateISO}`,
@@ -849,7 +937,7 @@
       </div>
     `;
 
-    makeKeyboardClickable(el, () => openSaleActionsModal(sale.id));
+    el.addEventListener("click", () => openSaleActionsModal(sale.id));
     return el;
   }
 
@@ -931,7 +1019,7 @@
     });
 
     $$("[data-inst]").forEach(row => {
-      makeKeyboardClickable(row, () => {
+      row.addEventListener("click", () => {
         const idx = Number(row.getAttribute("data-inst"));
         const inst = schedule.find(x => x.index === idx);
         if(!inst || inst.paid){
@@ -1049,26 +1137,9 @@
 
       const header = document.createElement("div");
       header.className = "bud-header";
-      header.style.display = "flex";
-      header.style.alignItems = "center";
-      header.style.justifyContent = "space-between";
-      header.style.gap = "10px";
-      header.style.padding = "10px 10px";
-      header.style.margin = "8px 0 4px 0";
-      header.style.border = "1px solid var(--line)";
-      header.style.borderRadius = "16px";
-      header.style.background = "rgba(255,255,255,.03)";
       header.innerHTML = `
-        <div style="font-weight:900; letter-spacing:.2px;">${title}</div>
-        <div style="
-          padding: 6px 10px;
-          border-radius: 999px;
-          border: 1px solid var(--line);
-          background: rgba(255,255,255,.02);
-          font-weight: 900;
-          font-size: 12px;
-          white-space: nowrap;
-        ">${moneyIn(dispCur, totalDisplay)}</div>
+        <div class="bud-title">${title}</div>
+        <div class="bud-pill">${moneyIn(dispCur, totalDisplay)}</div>
       `;
       wrap.appendChild(header);
 
@@ -1103,7 +1174,6 @@
 
         const el = document.createElement("div");
         el.className = "item";
-        el.style.outline = "none";
         el.innerHTML = `
           <div class="item-left">
             <div class="item-title">${escapeHTML(it.name)}</div>
@@ -1116,7 +1186,7 @@
           </div>
         `;
 
-        makeKeyboardClickable(el, () => {
+        el.addEventListener("click", () => {
           openConfirmModal(
             "Remover despesa?",
             `${it.name} • ${moneyIn(cur, it.amount)}`,
@@ -1157,7 +1227,7 @@
 
     const a = $("#invTotal");
     const b = $("#invMonth");
-    const c = $("#invRoiText"); // ✅ corrigido: era #invRoi (id do input do sheet)
+    const c = $("#invRoiText"); // ✅ CORRIGIDO (antes era #invRoi e dava bug)
 
     if(a) a.textContent = moneyIn(dispCur, totalDisplay);
     if(b) b.textContent = moneyIn(dispCur, monthDepDisplay);
@@ -1195,7 +1265,7 @@
         </div>
       `;
 
-      makeKeyboardClickable(el, () => {
+      el.addEventListener("click", () => {
         openConfirmModal(
           "Excluir ativo?",
           `${it.name} • ${moneyIn(cur, it.value)}`,
@@ -1221,16 +1291,6 @@
 
     let estimatedIncomeJPY = 0;
 
-    // breakdowns
-    const breakdown = {
-      sunday: { days: 0, incomeJPY: 0 },
-      holiday: { days: 0, incomeJPY: 0 },
-      off_worked: { days: 0, incomeJPY: 0 },
-      shiftA: { days: 0, incomeJPY: 0 },
-      shiftB: { days: 0, incomeJPY: 0 },
-      shiftC: { days: 0, incomeJPY: 0 },
-    };
-
     const prefix = `${y}-${String(m+1).padStart(2,"0")}-`;
     for(const [iso, entry] of Object.entries(state.workEntries)){
       if(!iso.startsWith(prefix)) continue;
@@ -1248,51 +1308,14 @@
       totalExtra += e;
       addon += a;
 
-      const dayIncomeJPY = calcIncomeJPY(n, e, mult) + a;
-      estimatedIncomeJPY += dayIncomeJPY;
-
-      // conta “trabalhado” para breakdowns (evita somar folga zerada)
-      const worked = isWorkLike(entry) && (n > 0 || e > 0 || a > 0);
-
-      if(worked){
-        if(dt === "sunday"){
-          breakdown.sunday.days += 1;
-          breakdown.sunday.incomeJPY += dayIncomeJPY;
-        }
-        if(dt === "holiday"){
-          breakdown.holiday.days += 1;
-          breakdown.holiday.incomeJPY += dayIncomeJPY;
-        }
-        if(dt === "off_worked"){
-          breakdown.off_worked.days += 1;
-          breakdown.off_worked.incomeJPY += dayIncomeJPY;
-        }
-
-        const sh = entry.shift;
-        if(sh === "A"){
-          breakdown.shiftA.days += 1;
-          breakdown.shiftA.incomeJPY += dayIncomeJPY;
-        } else if(sh === "B"){
-          breakdown.shiftB.days += 1;
-          breakdown.shiftB.incomeJPY += dayIncomeJPY;
-        } else if(sh === "C"){
-          breakdown.shiftC.days += 1;
-          breakdown.shiftC.incomeJPY += dayIncomeJPY;
-        }
-      }
-    }
-
-    // arredondamentos
-    for(const k of Object.keys(breakdown)){
-      breakdown[k].incomeJPY = Math.round(breakdown[k].incomeJPY);
+      estimatedIncomeJPY += calcIncomeJPY(n, e, mult) + a;
     }
 
     return {
       totalNormal: Math.round(totalNormal * 10)/10,
       totalExtra: Math.round(totalExtra * 10)/10,
       estimatedIncomeJPY: Math.round(estimatedIncomeJPY),
-      daysWithRecords,
-      breakdown
+      daysWithRecords
     };
   }
 
@@ -1301,6 +1324,61 @@
     const normal = clampNumber(normalHours) * clampNumber(s.rateNormal);
     const extra = clampNumber(extraHours) * clampNumber(s.rateExtra);
     return (normal + extra) * Math.max(0.01, clampNumber(multiplier) || 1);
+  }
+
+  // ✅ breakdown compacto: Dom/Feriado/FolgaTrab + Turnos (contagem e ganhos)
+  function monthWorkBreakdown(y, m){
+    const prefix = `${y}-${String(m+1).padStart(2,"0")}-`;
+
+    const out = {
+      dayTypes: {
+        sunday:   { days: 0, incomeJPY: 0 },
+        holiday:  { days: 0, incomeJPY: 0 },
+        off_worked:{ days: 0, incomeJPY: 0 }
+      },
+      shifts: {
+        A: { days: 0, incomeJPY: 0 },
+        B: { days: 0, incomeJPY: 0 },
+        C: { days: 0, incomeJPY: 0 }
+      }
+    };
+
+    for(const [iso, entry] of Object.entries(state.workEntries)){
+      if(!iso.startsWith(prefix)) continue;
+
+      const shift = entry?.shift || "";
+      const status = entry?.status || "work";
+      const isOff = (shift === "F" || status === "off");
+      if(isOff) continue;
+
+      const n = clampNumber(entry.normal);
+      const e = clampNumber(entry.extra);
+      const a = clampNumber(entry.addon);
+
+      const dt = (entry.dayType && entry.dayType !== "auto") ? entry.dayType : autoDayTypeForISO(iso);
+      const mult = multiplierForDayType(dt);
+      const dayIncome = calcIncomeJPY(n, e, mult) + a;
+
+      if(dt === "sunday" || dt === "holiday" || dt === "off_worked"){
+        out.dayTypes[dt].days += 1;
+        out.dayTypes[dt].incomeJPY += dayIncome;
+      }
+
+      if(shift === "A" || shift === "B" || shift === "C"){
+        out.shifts[shift].days += 1;
+        out.shifts[shift].incomeJPY += dayIncome;
+      }
+    }
+
+    // arredonda
+    for(const k of Object.keys(out.dayTypes)){
+      out.dayTypes[k].incomeJPY = Math.round(out.dayTypes[k].incomeJPY);
+    }
+    for(const k of Object.keys(out.shifts)){
+      out.shifts[k].incomeJPY = Math.round(out.shifts[k].incomeJPY);
+    }
+
+    return out;
   }
 
   function financeMonthStats(y, m){
@@ -1384,17 +1462,36 @@
   }
 
   // ---------- Sheets / Modals ----------
+  let lastFocusEl = null;
+  let trapCleanup = null;
+
   function openSheet(id){
     const el = $("#"+id);
     if(!el) return;
+    lastFocusEl = document.activeElement;
+
     el.classList.add("show");
     el.setAttribute("aria-hidden", "false");
+
+    // foco inicial
+    requestAnimationFrame(() => {
+      const focusable = getFocusable(el);
+      (focusable[0] || el).focus?.();
+      trapCleanup?.();
+      trapCleanup = trapFocus(el);
+    });
   }
+
   function closeSheet(id){
     const el = $("#"+id);
     if(!el) return;
     el.classList.remove("show");
     el.setAttribute("aria-hidden", "true");
+    trapCleanup?.(); trapCleanup = null;
+
+    // restaura foco
+    if(lastFocusEl && lastFocusEl.focus) lastFocusEl.focus();
+    lastFocusEl = null;
   }
 
   function openDaySheet(dateISO){
@@ -1416,44 +1513,82 @@
     if(c) c.value = entry.dayType || "auto";
 
     if(d) d.value = entry.normal ?? "";
+    if(e) e.value = entry.extra ?? "";
     if(f) f.value = entry.addon ?? "";
     if(g) g.value = entry.note ?? "";
 
-    // ✅ Extra fixa robusta:
-    // - quando ligada, campo "Horas extras" já abre preenchido
-    // - só fica manual se o usuário editar
-    if(e){
-      const shift = a ? a.value : (entry.shift || "A");
-      const status = b ? b.value : (entry.status || "work");
-      const willWork = (status === "work" && shift !== "F");
+    // ✅ Extra fixa: já coloca o valor no campo (sem click), mas respeita edição manual
+    applyExtraFixedOnOpen();
 
-      // listener: se digitar, vira manual
-      e.oninput = () => {
-        e.dataset.autofill = "false";
-      };
-
-      if(state.settings.extraFixedEnabled && willWork){
-        const fixed = clampNumber(state.settings.extraFixedHours);
-        // regra:
-        // - se entry.extraSource === "manual": respeita o valor salvo
-        // - senão: preenche com fixed (mesmo que antes fosse 0)
-        if(entry.extraSource === "manual"){
-          e.value = entry.extra ?? "";
-          e.dataset.autofill = "false";
-        } else {
-          e.value = String(fixed);
-          e.dataset.autofill = "true";
-        }
-        e.placeholder = `ex: ${fixed} (extra fixa)`;
-      }else{
-        // modo normal (sem extra fixa)
-        e.value = entry.extra ?? "";
-        e.dataset.autofill = "false";
-        e.placeholder = "ex: 2";
-      }
+    // ✅ se houver lembretes do dia, dá uma dica sutil no placeholder da nota
+    const rems = getRemindersForISO(dateISO);
+    if(rems.length && g){
+      const prev = reminderTitlePreview(rems);
+      g.placeholder = `ex: ${prev}`;
     }
 
     openSheet("sheetDay");
+  }
+
+  function applyExtraFixedOnOpen(){
+    const extraEl = $("#dayExtra");
+    if(!extraEl) return;
+
+    const shift = $("#dayShift")?.value || "A";
+    const status = $("#dayStatus")?.value || "work";
+    const willWork = (status === "work" && shift !== "F");
+
+    const enabled = !!state.settings.extraFixedEnabled;
+    const fixed = clampNumber(state.settings.extraFixedHours);
+
+    // se não habilitado ou não é dia de trabalho, não mexe
+    if(!enabled || !willWork || fixed <= 0) return;
+
+    const raw = String(extraEl.value || "").trim();
+    const isBlank = raw === "";
+
+    // se vazio, preenche e marca como autofill
+    if(isBlank){
+      extraEl.value = String(fixed);
+      extraEl.dataset.autofilled = "1";
+      return;
+    }
+
+    // se já estava autofill, garante sincronizado com config atual
+    if(extraEl.dataset.autofilled === "1"){
+      extraEl.value = String(fixed);
+    }
+  }
+
+  function applyExtraFixedLive(){
+    // usado quando shift/status muda no sheet aberto
+    const extraEl = $("#dayExtra");
+    if(!extraEl) return;
+
+    const shift = $("#dayShift")?.value || "A";
+    const status = $("#dayStatus")?.value || "work";
+    const willWork = (status === "work" && shift !== "F");
+
+    const enabled = !!state.settings.extraFixedEnabled;
+    const fixed = clampNumber(state.settings.extraFixedHours);
+
+    // se virou folga, limpa se foi autofill
+    if(!willWork){
+      if(extraEl.dataset.autofilled === "1"){
+        extraEl.value = "";
+        extraEl.dataset.autofilled = "0";
+      }
+      return;
+    }
+
+    // se habilitado, aplica se campo vazio ou autofilled
+    if(enabled && fixed > 0){
+      const raw = String(extraEl.value || "").trim();
+      if(raw === "" || extraEl.dataset.autofilled === "1"){
+        extraEl.value = String(fixed);
+        extraEl.dataset.autofilled = "1";
+      }
+    }
   }
 
   function saveDayEntry(){
@@ -1466,11 +1601,16 @@
     const status = statusEl ? statusEl.value : "work";
 
     const normalRaw = String($("#dayNormal")?.value || "").trim();
-    const extraEl = $("#dayExtra");
-    const extraRaw  = String(extraEl?.value || "").trim();
+    const extraRaw  = String($("#dayExtra")?.value || "").trim();
 
     const normal = clampNumber(normalRaw);
     let extra = clampNumber(extraRaw);
+
+    // ✅ aplica extra fixa só se campo está vazio (não sobrescreve)
+    const willWork = (status === "work" && shift !== "F");
+    if(state.settings.extraFixedEnabled && willWork && extraRaw === ""){
+      extra = clampNumber(state.settings.extraFixedHours);
+    }
 
     const addon = Math.round(clampNumber($("#dayAddon")?.value));
     const note = String($("#dayNote")?.value || "").trim();
@@ -1481,29 +1621,6 @@
     }
 
     const isOff = (shift === "F" || status === "off");
-    const willWork = (status === "work" && shift !== "F");
-
-    let extraSource = null;
-
-    // ✅ Extra fixa aplica por padrão quando:
-    // - está ligada
-    // - é dia de trabalho
-    // - campo foi auto-preenchido e o usuário não mexeu (dataset.autofill === "true")
-    // - ou o usuário deixou vazio
-    if(!isOff && state.settings.extraFixedEnabled && willWork){
-      const fixed = clampNumber(state.settings.extraFixedHours);
-      const autoFilled = (extraEl?.dataset?.autofill === "true");
-      const empty = (extraRaw === "");
-      if(empty || autoFilled){
-        extra = fixed;
-        extraSource = "fixed";
-      }else{
-        extraSource = "manual";
-      }
-    } else {
-      extraSource = "manual";
-    }
-
     const entry = {
       shift,
       status: isOff ? "off" : "work",
@@ -1511,8 +1628,7 @@
       extra: isOff ? 0 : extra,
       addon: isOff ? 0 : addon,
       note,
-      dayType,
-      extraSource: isOff ? null : extraSource
+      dayType
     };
 
     const hasAny = entry.shift || entry.normal || entry.extra || entry.addon || entry.note || (entry.dayType && entry.dayType !== "auto");
@@ -1854,14 +1970,27 @@
   function openDrawer(){
     const d = $("#drawer");
     if(!d) return;
+    lastFocusEl = document.activeElement;
+
     d.classList.add("show");
     d.setAttribute("aria-hidden", "false");
+
+    requestAnimationFrame(() => {
+      const focusable = getFocusable(d);
+      (focusable[0] || d).focus?.();
+      trapCleanup?.();
+      trapCleanup = trapFocus(d);
+    });
   }
   function closeDrawer(){
     const d = $("#drawer");
     if(!d) return;
     d.classList.remove("show");
     d.setAttribute("aria-hidden", "true");
+
+    trapCleanup?.(); trapCleanup = null;
+    if(lastFocusEl && lastFocusEl.focus) lastFocusEl.focus();
+    lastFocusEl = null;
   }
 
   // ---------- Modal ----------
@@ -1875,15 +2004,28 @@
     if(b) b.innerHTML = bodyHTML;
     if(a) a.innerHTML = actionsHTML || "";
     if(m){
+      lastFocusEl = document.activeElement;
       m.classList.add("show");
       m.setAttribute("aria-hidden", "false");
+
+      requestAnimationFrame(() => {
+        const focusable = getFocusable(m);
+        (focusable[0] || m).focus?.();
+        trapCleanup?.();
+        trapCleanup = trapFocus(m);
+      });
     }
   }
+
   function closeModal(){
     const m = $("#modal");
     if(!m) return;
     m.classList.remove("show");
     m.setAttribute("aria-hidden", "true");
+
+    trapCleanup?.(); trapCleanup = null;
+    if(lastFocusEl && lastFocusEl.focus) lastFocusEl.focus();
+    lastFocusEl = null;
   }
 
   function openConfirmModal(title, text, onConfirm){
@@ -1910,7 +2052,7 @@
     });
   }
 
-  // ---------- Settings ----------
+  // ---------- Settings + Employment History ----------
   function openSettingsModal(){
     const s = state.settings;
 
@@ -1939,7 +2081,8 @@
       <div class="helper">
         <i class="fa-regular fa-map"></i>
         <span>
-          Aqui você define salário/hora, câmbio e regras de extras. Depois, no “Registro do dia”, só marca o tipo do dia e pronto.
+          Aqui você define “regras do seu mundo”: salário/hora, câmbio, extras fixas e quanto vale Domingo/Feriado.
+          Depois, no “Registro do dia”, você só marca o tipo do dia e pronto.
         </span>
       </div>
 
@@ -1982,7 +2125,8 @@
       <div class="helper">
         <i class="fa-regular fa-clock"></i>
         <span>
-          Extra fixa: quando ligada, o campo “Horas extras” já abre preenchido com seu padrão. Só vira manual se você editar.
+          Extras fixas: se sua rotina quase sempre tem a mesma extra (ex.: 2h), o app preenche automaticamente a “Hora extra” do dia
+          (você ainda pode editar manualmente quando quiser).
         </span>
       </div>
 
@@ -2003,7 +2147,7 @@
       <div class="helper">
         <i class="fa-regular fa-star"></i>
         <span>
-          Domingo/Feriado: multiplicador em cima do valor/hora (normal e extra).
+          Domingo/Feriado no Japão costuma ter adicional. Aqui é um multiplicador em cima do valor/hora (normal e extra).
           Ex.: 1.35 significa +35%.
         </span>
       </div>
@@ -2026,9 +2170,7 @@
 
       <div class="helper">
         <i class="fa-solid fa-volume-high"></i>
-        <span>
-          Som opcional: fica guardado, mas o app.js não depende mais de money-effects.js.
-        </span>
+        <span>Som opcional: toca um “pling” discreto quando o saldo do mês aumenta (entrada de dinheiro).</span>
       </div>
 
       <label class="field">
@@ -2167,7 +2309,7 @@
     });
 
     $$("[data-job]").forEach(el => {
-      makeKeyboardClickable(el, () => {
+      el.addEventListener("click", () => {
         const id = el.getAttribute("data-job");
         const job = state.employmentHistory.find(j => j.id === id);
         if(!job) return;
@@ -2215,6 +2357,12 @@
       closeModal();
       toast("Configurações salvas.");
       renderAll();
+
+      // ✅ se sheet do dia estiver aberto, atualiza extra fixa ao vivo
+      const sheetDay = $("#sheetDay");
+      if(sheetDay && sheetDay.classList.contains("show")){
+        applyExtraFixedLive();
+      }
     });
   }
 
@@ -2358,38 +2506,30 @@
       const ch = pat[(d-1) % pat.length];
 
       if(ch === "E"){
-        state.workEntries[iso] = { shift:"F", status:"off", normal:0, extra:0, addon:0, note:"", dayType:"auto", extraSource:null };
+        state.workEntries[iso] = { shift:"F", status:"off", normal:0, extra:0, addon:0, note:"", dayType:"auto" };
       }else{
-        // mantém extra 0 no padrão; extra fixa vai preencher na abertura do sheet e na gravação automática se estiver ligada
-        state.workEntries[iso] = { shift: ch, status:"work", normal:8, extra:0, addon:0, note:"", dayType:"auto", extraSource:"fixed" };
+        state.workEntries[iso] = { shift: ch, status:"work", normal:8, extra:0, addon:0, note:"", dayType:"auto" };
       }
     }
   }
 
   // ---------- Reminders ----------
-  function reminderColor(importance){
-    // cor chamativa por nível
-    if(importance === "high") return { bg:"rgba(255,92,122,.14)", bd:"rgba(255,92,122,.35)", fg:"var(--text)" };
-    if(importance === "med")  return { bg:"rgba(255,176,32,.14)", bd:"rgba(255,176,32,.35)", fg:"var(--text)" };
-    return { bg:"rgba(61,220,151,.12)", bd:"rgba(61,220,151,.30)", fg:"var(--text)" }; // low
-  }
-
   function openRemindersModal(){
-    const items = state.reminders
+    const items = (state.reminders || [])
       .slice()
       .sort((a,b) => a.dateISO > b.dateISO ? 1 : -1)
       .map(r => {
-        const c = reminderColor(r.importance);
+        const t = guessReminderType(r.title);
+        const cls = r.importance === "high" ? "rem-card-high" : (r.importance === "med" ? "rem-card-med" : "rem-card-low");
+        const ico = t === "bday" ? "🎂" : "🔔";
         return `
-          <div class="item" data-rem="${r.id}" style="border-color:${c.bd}; background:${c.bg};">
+          <div class="item ${cls}" data-rem="${r.id}">
             <div class="item-left">
-              <div class="item-title">${escapeHTML(r.title)}</div>
+              <div class="item-title">${ico} ${escapeHTML(r.title)}</div>
               <div class="item-sub">${r.dateISO} • ${r.importance} • som: ${r.sound ? "on" : "off"}</div>
             </div>
             <div class="item-right">
-              <div class="tag" style="color:${c.fg}; border-color:${c.bd}; background:${c.bg}; font-weight:900;">
-                ${r.importance}
-              </div>
+              <div class="tag">${r.importance}</div>
             </div>
           </div>
         `;
@@ -2400,7 +2540,10 @@
       `
       <div class="helper">
         <i class="fa-regular fa-bell"></i>
-        <span>Anote aniversários e datas importantes. (A cor destaca a prioridade.)</span>
+        <span>
+          Lembretes são exibidos automaticamente todo ano (por mês/dia).
+          No calendário, eles aparecem com ícone pulsante e destaque por importância.
+        </span>
       </div>
 
       <div class="grid2" style="margin-top:10px;">
@@ -2420,7 +2563,7 @@
 
       <label class="field">
         <span>Título</span>
-        <input id="remTitle" placeholder="ex: Aniversário da mãe" />
+        <input id="remTitle" placeholder="ex: Aniversário do Pai" />
       </label>
 
       <label class="field">
@@ -2459,22 +2602,27 @@
         toast("Informe data e título.");
         return;
       }
+
+      state.reminders = state.reminders || [];
       state.reminders.push({ id: cryptoId(), dateISO, title, importance, sound });
       saveState();
       toast("Lembrete adicionado.");
+
       closeModal();
       openRemindersModal();
+      renderCalendar(); // ✅ já reflete no calendário
     });
 
     $$(".item[data-rem]").forEach(el => {
-      makeKeyboardClickable(el, () => {
+      el.addEventListener("click", () => {
         const id = el.getAttribute("data-rem");
         openConfirmModal("Excluir lembrete?", "Este lembrete será removido.", () => {
-          state.reminders = state.reminders.filter(r => r.id !== id);
+          state.reminders = (state.reminders || []).filter(r => r.id !== id);
           saveState();
           toast("Lembrete removido.");
           closeModal();
           openRemindersModal();
+          renderCalendar(); // ✅ já reflete no calendário
         });
       });
     });
@@ -2501,6 +2649,7 @@
     const work = monthStats(y, m);
     const fin = financeMonthStats(y, m);
     const bud = budgetStats(y, m);
+    const breakdown = monthWorkBreakdown(y, m);
 
     const workIncome = convert(work.estimatedIncomeJPY, "JPY", dispCur);
 
@@ -2515,23 +2664,26 @@
       ? jobs.map(j => `${j.company} (${j.startISO} → ${j.endISO || "—"}${j.reason ? ` • ${j.reason}` : ""})`).join("<br>")
       : "—";
 
-    // extras do PDF: domingos/feriados e turnos
-    const bd = work.breakdown || {};
-    const sDays = bd.sunday?.days || 0;
-    const hDays = bd.holiday?.days || 0;
-    const offWDays = bd.off_worked?.days || 0;
+    // ✅ linhas compactas (sem poluir)
+    const dayTypeRows = [
+      ["Domingos trabalhados", `${breakdown.dayTypes.sunday.days} dia(s)`],
+      ["Ganho em Domingos", moneyIn(dispCur, convert(breakdown.dayTypes.sunday.incomeJPY, "JPY", dispCur))],
+      ["Feriados trabalhados", `${breakdown.dayTypes.holiday.days} dia(s)`],
+      ["Ganho em Feriados", moneyIn(dispCur, convert(breakdown.dayTypes.holiday.incomeJPY, "JPY", dispCur))],
+      ["Folga trabalhada", `${breakdown.dayTypes.off_worked.days} dia(s)`],
+      ["Ganho folga trabalhada", moneyIn(dispCur, convert(breakdown.dayTypes.off_worked.incomeJPY, "JPY", dispCur))]
+    ];
 
-    const sIncome = convert(bd.sunday?.incomeJPY || 0, "JPY", dispCur);
-    const hIncome = convert(bd.holiday?.incomeJPY || 0, "JPY", dispCur);
-    const offWIncome = convert(bd.off_worked?.incomeJPY || 0, "JPY", dispCur);
+    const shiftRows = [
+      ["Turno A (Dia)", `${breakdown.shifts.A.days} dia(s)`],
+      ["Ganho Turno A", moneyIn(dispCur, convert(breakdown.shifts.A.incomeJPY, "JPY", dispCur))],
+      ["Turno B (Noite)", `${breakdown.shifts.B.days} dia(s)`],
+      ["Ganho Turno B", moneyIn(dispCur, convert(breakdown.shifts.B.incomeJPY, "JPY", dispCur))],
+      ["Turno C (Madrugada)", `${breakdown.shifts.C.days} dia(s)`],
+      ["Ganho Turno C", moneyIn(dispCur, convert(breakdown.shifts.C.incomeJPY, "JPY", dispCur))]
+    ];
 
-    const aDays = bd.shiftA?.days || 0;
-    const bDays = bd.shiftB?.days || 0;
-    const cDays = bd.shiftC?.days || 0;
-
-    const aIncome = convert(bd.shiftA?.incomeJPY || 0, "JPY", dispCur);
-    const bIncome = convert(bd.shiftB?.incomeJPY || 0, "JPY", dispCur);
-    const cIncome = convert(bd.shiftC?.incomeJPY || 0, "JPY", dispCur);
+    const htmlRows = (arr) => arr.map(([k,v]) => `<tr><td>${escapeHTML(k)}</td><td>${escapeHTML(v)}</td></tr>`).join("");
 
     const html = `
       <html><head><meta charset="utf-8">
@@ -2547,7 +2699,18 @@
         table{width:100%; border-collapse:collapse; margin-top:12px;}
         th,td{border:1px solid #ddd; padding:8px; font-size:12px;}
         th{background:#f4f4f4; text-align:left;}
-        .foot{margin-top:14px; font-size:11px; color:#555; text-align:center;}
+        .section{margin-top:14px;}
+        .section-title{font-weight:800; font-size:12px; color:#333; margin:12px 0 6px;}
+        .footer{
+          position: fixed;
+          bottom: 10px;
+          left: 18px;
+          right: 18px;
+          font-size: 11px;
+          color: #666;
+          display:flex;
+          justify-content:space-between;
+        }
       </style></head><body>
         <h1>${escapeHTML(title)}</h1>
         <div class="muted">Moeda: ${dispCur} • ${escapeHTML(fxLabel())}</div>
@@ -2564,36 +2727,38 @@
           <div class="card"><div class="k">Líquido (prev.)</div><div class="v">${moneyIn(dispCur, netForecast)}</div></div>
         </div>
 
-        <table>
-          <tr><th>Item</th><th>Valor</th></tr>
-          <tr><td>Ganho do trabalho (estimado)</td><td>${moneyIn(dispCur, workIncome)}</td></tr>
-          <tr><td>Recebimentos (sem empréstimos)</td><td>${moneyIn(dispCur, fin.recvOnlyDisplay)}</td></tr>
-          <tr><td>Pagamentos (sem empréstimos)</td><td>${moneyIn(dispCur, fin.payOnlyDisplay)}</td></tr>
-          <tr><td>Fixas planejadas</td><td>${moneyIn(dispCur, bud.fixedTotalDisplay)}</td></tr>
-          <tr><td>Variáveis planejadas</td><td>${moneyIn(dispCur, bud.variableTotalDisplay)}</td></tr>
-          <tr><td>Restante do planejado</td><td>${moneyIn(dispCur, bud.remainingDisplay)}</td></tr>
-          <tr><td>Líquido (real)</td><td>${moneyIn(dispCur, netReal)}</td></tr>
-          <tr><td>Líquido (previsto)</td><td>${moneyIn(dispCur, netForecast)}</td></tr>
-        </table>
+        <div class="section">
+          <div class="section-title">Detalhes de trabalho (compacto)</div>
+          <table>
+            <tr><th>Item</th><th>Valor</th></tr>
+            ${htmlRows(dayTypeRows)}
+            ${htmlRows(shiftRows)}
+          </table>
+        </div>
 
-        <div class="card" style="margin-top:12px;">
-          <div class="k">Detalhes extras do trabalho</div>
-          <div class="muted" style="margin-top:6px; line-height:1.45;">
-            Domingos trabalhados: <b>${sDays}</b> • Ganhos: <b>${moneyIn(dispCur, sIncome)}</b><br>
-            Feriados trabalhados: <b>${hDays}</b> • Ganhos: <b>${moneyIn(dispCur, hIncome)}</b><br>
-            Folgas trabalhadas: <b>${offWDays}</b> • Ganhos: <b>${moneyIn(dispCur, offWIncome)}</b><br>
-            <br>
-            Turno A (Dia): <b>${aDays}</b> • Ganhos: <b>${moneyIn(dispCur, aIncome)}</b><br>
-            Turno B (Noite): <b>${bDays}</b> • Ganhos: <b>${moneyIn(dispCur, bIncome)}</b><br>
-            Turno C (Madrugada): <b>${cDays}</b> • Ganhos: <b>${moneyIn(dispCur, cIncome)}</b>
-          </div>
+        <div class="section">
+          <div class="section-title">Financeiro</div>
+          <table>
+            <tr><th>Item</th><th>Valor</th></tr>
+            <tr><td>Ganho do trabalho (estimado)</td><td>${moneyIn(dispCur, workIncome)}</td></tr>
+            <tr><td>Recebimentos (sem empréstimos)</td><td>${moneyIn(dispCur, fin.recvOnlyDisplay)}</td></tr>
+            <tr><td>Pagamentos (sem empréstimos)</td><td>${moneyIn(dispCur, fin.payOnlyDisplay)}</td></tr>
+            <tr><td>Fixas planejadas</td><td>${moneyIn(dispCur, bud.fixedTotalDisplay)}</td></tr>
+            <tr><td>Variáveis planejadas</td><td>${moneyIn(dispCur, bud.variableTotalDisplay)}</td></tr>
+            <tr><td>Restante do planejado</td><td>${moneyIn(dispCur, bud.remainingDisplay)}</td></tr>
+            <tr><td>Líquido (real)</td><td>${moneyIn(dispCur, netReal)}</td></tr>
+            <tr><td>Líquido (previsto)</td><td>${moneyIn(dispCur, netForecast)}</td></tr>
+          </table>
         </div>
 
         <div class="muted" style="margin-top:12px;">
           No celular: “Compartilhar / Salvar como PDF” após imprimir.
         </div>
 
-        <div class="foot">Copyright @ 2026 - Ailton A. Nakata</div>
+        <div class="footer">
+          <div>Copyright @ 2026 - Ailton A. Nakata</div>
+          <div>${escapeHTML(monthsLong[m])} ${y}</div>
+        </div>
       </body></html>
     `;
 
@@ -2635,7 +2800,16 @@
         table{width:100%; border-collapse:collapse; margin-top:12px;}
         th,td{border:1px solid #ddd; padding:8px; font-size:12px;}
         th{background:#f4f4f4; text-align:left;}
-        .foot{margin-top:14px; font-size:11px; color:#555; text-align:center;}
+        .footer{
+          position: fixed;
+          bottom: 10px;
+          left: 18px;
+          right: 18px;
+          font-size: 11px;
+          color: #666;
+          display:flex;
+          justify-content:space-between;
+        }
       </style></head><body>
         <h1>${escapeHTML(title)}</h1>
         <div class="muted">
@@ -2661,7 +2835,10 @@
           No celular: “Compartilhar / Salvar como PDF” após imprimir.
         </div>
 
-        <div class="foot">Copyright @ 2026 - Ailton A. Nakata</div>
+        <div class="footer">
+          <div>Copyright @ 2026 - Ailton A. Nakata</div>
+          <div>Contrato</div>
+        </div>
       </body></html>
     `;
 
@@ -2697,6 +2874,102 @@
     t.classList.add("show");
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  // ---------- Focus helpers ----------
+  function getFocusable(root){
+    return $$(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      root
+    ).filter(el => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+  }
+
+  function trapFocus(container){
+    const handler = (e) => {
+      if(e.key !== "Tab") return;
+      const focusables = getFocusable(container);
+      if(!focusables.length) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if(e.shiftKey && document.activeElement === first){
+        e.preventDefault();
+        last.focus();
+      } else if(!e.shiftKey && document.activeElement === last){
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    container.addEventListener("keydown", handler);
+    return () => container.removeEventListener("keydown", handler);
+  }
+
+  // ---------- Inject CSS for reminders pulse + evidência ----------
+  function injectReminderStyles(){
+    if($("#nakata-reminder-style")) return;
+
+    const bellSVG = encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="white" d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2Zm6-6V11a6 6 0 1 0-12 0v5L4 18v1h16v-1l-2-2Z"/>
+      </svg>
+    `.trim());
+
+    const style = document.createElement("style");
+    style.id = "nakata-reminder-style";
+    style.textContent = `
+      /* badge para lembrete (ícone sino) */
+      .badge.REM{
+        background: rgba(0,194,255,.16);
+        border-color: rgba(0,194,255,.28);
+      }
+      .badge.REM::after{
+        background-image: url("data:image/svg+xml,${bellSVG}");
+      }
+
+      /* pulsar (profissional e controlado) */
+      @keyframes remPulse{
+        0%{ transform: translateZ(0) scale(1); filter: saturate(.9); opacity: .85; }
+        55%{ transform: translateZ(0) scale(1.08); filter: saturate(1.15); opacity: 1; }
+        100%{ transform: translateZ(0) scale(1); filter: saturate(.9); opacity: .85; }
+      }
+      .rem-pulse{ animation: remPulse 1.35s ease-in-out infinite; }
+
+      @media (prefers-reduced-motion: reduce){
+        .rem-pulse{ animation: none !important; }
+      }
+
+      /* destaque do dia por importância */
+      .day.has-rem.rem-high{ box-shadow: inset 0 0 0 1px rgba(255,92,122,.55); }
+      .day.has-rem.rem-med{ box-shadow: inset 0 0 0 1px rgba(255,176,32,.55); }
+      .day.has-rem.rem-low{ box-shadow: inset 0 0 0 1px rgba(0,194,255,.45); }
+
+      .day.has-rem.rem-high{ background: linear-gradient(180deg, rgba(255,92,122,.10), rgba(255,255,255,0)); }
+      .day.has-rem.rem-med{ background: linear-gradient(180deg, rgba(255,176,32,.10), rgba(255,255,255,0)); }
+      .day.has-rem.rem-low{ background: linear-gradient(180deg, rgba(0,194,255,.08), rgba(255,255,255,0)); }
+
+      /* cards de lembrete no modal (bem evidentes, mas elegantes) */
+      .rem-card-high{ border-color: rgba(255,92,122,.35) !important; background: rgba(255,92,122,.06) !important; }
+      .rem-card-med{ border-color: rgba(255,176,32,.35) !important; background: rgba(255,176,32,.06) !important; }
+      .rem-card-low{ border-color: rgba(0,194,255,.30) !important; background: rgba(0,194,255,.05) !important; }
+
+      /* mini ícone nos cards do ano (limpo) */
+      .rem-year-ico{
+        display:inline-block;
+        width: 12px;
+        height: 12px;
+        margin-left: 6px;
+        vertical-align: -2px;
+        background-image: url("data:image/svg+xml,${bellSVG}");
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size: contain;
+        opacity: .65;
+        filter: saturate(.9);
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   // ---------- Start ----------
