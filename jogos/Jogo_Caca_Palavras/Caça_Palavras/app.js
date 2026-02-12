@@ -86,26 +86,26 @@ function pickDeterministicUnique(arr, n, seed) {
 
 /* =========================
    Cores por palavra
-   - paleta fixa, boa distinção
-   - determinística por texto da palavra
+   - Paleta com ALTO contraste (menos parecidas)
+   - Escolhidas para funcionar bem em fundo escuro
+   - Preferência por cores mais claras (texto escuro nas células continua legível)
 ========================= */
 const WORD_COLORS = [
-  "#60A5FA", // azul
-  "#34D399", // verde
-  "#FBBF24", // amarelo
-  "#F472B6", // rosa
-  "#A78BFA", // roxo
-  "#FB7185", // coral
+  "#FF595E", // vermelho vivo
+  "#FFCA3A", // amarelo forte
+  "#8AC926", // verde-lima
+  "#4D96FF", // azul vivo
+  "#FF922B", // laranja forte
+  "#63E6BE", // verde-água
+  "#F783AC", // rosa
+  "#B197FC", // lilás claro
   "#22D3EE", // ciano
-  "#F97316", // laranja
-  "#E5E7EB", // cinza claro
-  "#93C5FD",
-  "#86EFAC",
-  "#FDE68A",
+  "#A9E34B", // verde neon suave
+  "#FFD8A8", // pêssego claro (boa diferença no tabuleiro)
+  "#E599F7", // roxo claro
 ];
 
 function hashWordToColor(word) {
-  // hash simples (rápido e estável)
   let h = 2166136261;
   for (let i = 0; i < word.length; i++) {
     h ^= word.charCodeAt(i);
@@ -325,7 +325,6 @@ let timerId = null;
 
 let genToken = 0;
 
-// mapa da palavra -> cor (do nível atual)
 let wordColorMap = new Map();
 
 /* =========================
@@ -477,7 +476,6 @@ async function startLevel(index, opts = {}) {
   fillGridRandom();
   renderBoard(size);
 
-  // ✅ define cor fixa por palavra (do nível atual)
   for (const w of placements.map(p => p.word)) {
     wordColorMap.set(w, hashWordToColor(w));
   }
@@ -716,7 +714,6 @@ function renderWords(words) {
     span.textContent = w;
     span.dataset.word = w;
 
-    // ✅ cor fixa por palavra (para idosos)
     const color = hashWordToColor(w);
     span.style.setProperty("--wcolor", color);
 
@@ -793,7 +790,6 @@ function validateSelection() {
   if (match) {
     foundWords.add(match.word);
 
-    // ✅ pinta tabuleiro com a cor da palavra encontrada
     const color = wordColorMap.get(match.word) || hashWordToColor(match.word);
 
     selectedCells.forEach(c => {
