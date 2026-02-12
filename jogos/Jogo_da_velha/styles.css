@@ -1,0 +1,377 @@
+/* styles.css */
+
+/* =========================
+   Tema (claro/escuro)
+========================= */
+:root{
+  color-scheme: light dark;
+
+  --bg: #f4f4f4;
+  --panel: #ffffff;
+  --text: #1f2937;
+  --muted: #4b5563;
+
+  --border: rgba(17,24,39,.22);
+  --cell-hover: rgba(17,24,39,.04);
+
+  --shadow: 0 10px 26px rgba(0,0,0,.10);
+
+  --x: #2563eb;
+  --o: #f59e0b;
+  --win: #10b981;
+
+  --focus: rgba(59,130,246,.65);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg: #0b0d12;
+    --panel: #121624;
+    --text: #eef2ff;
+    --muted: #c7cbd8;
+
+    --border: rgba(255,255,255,.18);
+    --cell-hover: rgba(255,255,255,.06);
+
+    --shadow: 0 14px 34px rgba(0,0,0,.45);
+
+    --x: #60a5fa;
+    --o: #fbbf24;
+    --win: #34d399;
+
+    --focus: rgba(96,165,250,.65);
+  }
+}
+
+/* =========================
+   Base (mobile-first)
+========================= */
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
+
+body{
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(1200px 700px at 50% -20%, rgba(59,130,246,.18), transparent 60%),
+              radial-gradient(900px 600px at 80% 10%, rgba(16,185,129,.14), transparent 55%),
+              var(--bg);
+  color: var(--text);
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app{
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.topo{
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+h1{
+  margin: 0 0 10px 0;
+  font-size: 1.9rem;
+  letter-spacing: .2px;
+}
+
+/* =========================
+   Barra compacta
+========================= */
+.barra{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,.05);
+  box-shadow: var(--shadow);
+  border-radius: 16px;
+  padding: 8px 10px;
+}
+
+.grupo{
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  .grupo{ background: rgba(255,255,255,.08); }
+}
+
+.seg{
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: .95rem;
+  transition: background .15s ease, transform .12s ease;
+}
+.seg:hover{
+  background: rgba(0,0,0,.08);
+  transform: scale(1.01);
+}
+@media (prefers-color-scheme: dark){
+  .seg:hover{ background: rgba(255,255,255,.08); }
+}
+
+.seg.active{
+  background: rgba(0,0,0,.12);
+  font-weight: 800;
+}
+@media (prefers-color-scheme: dark){
+  .seg.active{ background: rgba(255,255,255,.12); }
+}
+
+.status{
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rotulo{
+  color: var(--muted);
+  font-weight: 800;
+  font-size: .95rem;
+}
+
+.chip{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  letter-spacing: .4px;
+  border: 1px solid rgba(0,0,0,.12);
+}
+.chip-x{ color: #fff; background: var(--x); }
+.chip-o{ color: #111; background: var(--o); }
+
+/* =========================
+   Card do jogo
+========================= */
+.jogo{
+  margin-top: 12px;
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+/* =========================
+   Tabuleiro
+========================= */
+#tabuleiro{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: min(92vw, 360px);
+  margin: 8px auto 10px auto;
+}
+
+.celula{
+  appearance: none;
+  -webkit-appearance: none;
+
+  aspect-ratio: 1 / 1;
+  font-size: 2.1rem;
+  font-weight: 900;
+
+  background: rgba(255,255,255,.02);
+  border: 2.5px solid var(--border);
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  user-select: none;
+  cursor: pointer;
+  transition: transform .12s ease, background .15s ease, outline-color .15s ease;
+}
+
+.celula:hover{
+  background: var(--cell-hover);
+  transform: scale(1.02);
+}
+
+.celula:focus-visible{
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.celula[disabled]{
+  cursor: not-allowed;
+  opacity: .92;
+}
+
+.celula.win{
+  outline: 3px solid rgba(16,185,129,.75);
+  outline-offset: 2px;
+  background: rgba(16,185,129,.12);
+  transform: none;
+}
+
+/* =========================
+   Mensagens + rodapé do card
+========================= */
+#mensagem{
+  margin-top: 8px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--muted);
+  min-height: 1.6em;
+  text-align: center;
+}
+
+.rodape-card{
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark){
+  .rodape-card{ border-top-color: rgba(255,255,255,.10); }
+}
+
+.placar{
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.badge{
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(0,0,0,.04);
+  font-weight: 800;
+  font-size: .95rem;
+}
+@media (prefers-color-scheme: dark){
+  .badge{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
+}
+
+.opcoes{
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Switch simples */
+.switch{
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.switch input{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.slider{
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.18);
+  position: relative;
+  transition: background 0.15s ease;
+  border: 1px solid rgba(0,0,0,.12);
+}
+@media (prefers-color-scheme: dark){
+  .slider{ background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.12); }
+}
+.slider::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: #fff;
+  transition: left 0.15s ease;
+}
+.switch input:checked + .slider{
+  background: rgba(16,185,129,.55);
+}
+.switch input:checked + .slider::after{
+  left: 21px;
+}
+.txt{
+  color: var(--muted);
+  font-weight: 900;
+  font-size: .95rem;
+}
+
+.btn-sec{
+  border: 1px solid rgba(0,0,0,.14);
+  background: transparent;
+  color: var(--text);
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-weight: 900;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+.btn-sec:hover{
+  background: rgba(0,0,0,.06);
+  transform: scale(1.01);
+}
+@media (prefers-color-scheme: dark){
+  .btn-sec{ border-color: rgba(255,255,255,.14); }
+  .btn-sec:hover{ background: rgba(255,255,255,.06); }
+}
+
+/* =========================
+   Rodapé
+========================= */
+.rodape{
+  text-align: center;
+  padding: 14px 10px;
+  font-size: .95rem;
+  color: var(--muted);
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark){
+  .rodape{ border-top-color: rgba(255,255,255,.10); }
+}
+
+/* =========================
+   Responsividade
+========================= */
+@media (min-width: 768px){
+  h1{ font-size: 2.1rem; }
+  #tabuleiro{ width: 380px; }
+  .celula{ font-size: 2.25rem; }
+}

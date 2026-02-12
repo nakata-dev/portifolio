@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo da Velha</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app" aria-label="Jogo da Velha">
+    <header class="topo">
+      <h1>Jogo da Velha</h1>
+
+      <div class="barra" aria-label="Controles do jogo">
+        <div class="grupo" role="group" aria-label="Modo de jogo">
+          <button id="modoPvp" class="seg active" type="button" aria-pressed="true">2 Jogadores</button>
+          <button id="modoCpu" class="seg" type="button" aria-pressed="false">Vs Computador</button>
+        </div>
+
+        <div class="status" aria-label="Jogador atual">
+          <span class="rotulo">Vez</span>
+          <span id="chipJogador" class="chip chip-x" aria-live="polite">X</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="jogo" aria-label="Área do jogo">
+      <div id="tabuleiro" aria-label="Tabuleiro do jogo"></div>
+
+      <div id="mensagem" aria-live="polite"></div>
+
+      <div class="rodape-card" aria-label="Placar e opções">
+        <div class="placar" aria-label="Placar">
+          <span class="badge" id="scoreX" aria-label="Placar do X">X: 0</span>
+          <span class="badge" id="scoreO" aria-label="Placar do O">O: 0</span>
+          <span class="badge" id="scoreE" aria-label="Empates">E: 0</span>
+        </div>
+
+        <div class="opcoes" aria-label="Opções">
+          <label class="switch">
+            <input id="salvarPlacar" type="checkbox" />
+            <span class="slider" aria-hidden="true"></span>
+            <span class="txt">Salvar</span>
+          </label>
+
+          <button id="zerarPlacar" class="btn-sec" type="button">Zerar placar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    Copyright @ Ailton A. Nakata
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
