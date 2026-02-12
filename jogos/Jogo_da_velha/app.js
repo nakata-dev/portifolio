@@ -14,8 +14,11 @@ const scoreEEl = document.getElementById("scoreE");
 const salvarPlacarEl = document.getElementById("salvarPlacar");
 const zerarPlacarBtn = document.getElementById("zerarPlacar");
 
+const temaToggleBtn = document.getElementById("temaToggle");
+
 const LS_SAVE = "ttt_saveEnabled_v1";
 const LS_SCORE = "ttt_score_v1";
+const LS_THEME = "ttt_theme_v1"; // "light" | "dark" | "auto"
 
 let jogadorAtual = "X";
 let fimDeJogo = false;
@@ -29,6 +32,58 @@ let saveEnabled = false;
 
 const celulas = [];
 let board = Array(9).fill("");
+
+/* =========================
+   Tema (toggle com persistência)
+========================= */
+function systemPrefersDark() {
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function applyTheme(mode) {
+  // mode: "light" | "dark" | "auto"
+  const html = document.documentElement;
+  html.classList.remove("theme-light", "theme-dark");
+
+  let effective = mode;
+  if (mode === "auto") effective = systemPrefersDark() ? "dark" : "light";
+
+  html.classList.add(effective === "dark" ? "theme-dark" : "theme-light");
+  temaToggleBtn.textContent = effective === "dark" ? "☀️" : "🌙";
+
+  // theme-color (Android address bar)
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", effective === "dark" ? "#0b0d12" : "#f4f4f4");
+}
+
+function loadTheme() {
+  let mode = "auto";
+  try {
+    const raw = localStorage.getItem(LS_THEME);
+    if (raw === "light" || raw === "dark" || raw === "auto") mode = raw;
+  } catch {}
+  applyTheme(mode);
+  return mode;
+}
+
+let themeMode = loadTheme();
+
+if (window.matchMedia) {
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  // se estiver em auto, reage ao sistema
+  mq.addEventListener?.("change", () => {
+    if (themeMode === "auto") applyTheme("auto");
+  });
+}
+
+temaToggleBtn.addEventListener("click", () => {
+  // alterna entre light/dark (sem complicar)
+  const html = document.documentElement;
+  const isDark = html.classList.contains("theme-dark");
+  themeMode = isDark ? "light" : "dark";
+  applyTheme(themeMode);
+  try { localStorage.setItem(LS_THEME, themeMode); } catch {}
+});
 
 /* =========================
    Som de clique (Web Audio)

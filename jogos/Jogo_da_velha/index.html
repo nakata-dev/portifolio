@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0d12" />
   <title>Jogo da Velha</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -17,9 +18,15 @@
           <button id="modoCpu" class="seg" type="button" aria-pressed="false">Vs Computador</button>
         </div>
 
-        <div class="status" aria-label="Jogador atual">
-          <span class="rotulo">Vez</span>
-          <span id="chipJogador" class="chip chip-x" aria-live="polite">X</span>
+        <div class="direita">
+          <div class="status" aria-label="Jogador atual">
+            <span class="rotulo">Vez</span>
+            <span id="chipJogador" class="chip chip-x" aria-live="polite">X</span>
+          </div>
+
+          <button id="temaToggle" class="icon-btn" type="button" aria-label="Alternar tema" title="Alternar tema">
+            🌙
+          </button>
         </div>
       </div>
     </header>
