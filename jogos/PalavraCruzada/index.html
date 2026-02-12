@@ -34,6 +34,11 @@
           <strong id="timeLabel">00:00</strong>
           <span class="penalty" id="penaltyLabel" aria-label="Penalidade">+0s</span>
         </div>
+
+        <div class="hud-pill hud-coins" aria-label="Moedas ganhas">
+          <span class="coin-emoji" aria-hidden="true">🪙</span>
+          <strong id="coinLabel">0</strong>
+        </div>
       </div>
     </div>
   </header>
@@ -44,7 +49,13 @@
       <div class="worksheet-head">
         <div class="worksheet-title">
           <h2 id="sheetTitle">Complete a cruzadinha</h2>
-          <p class="muted" id="sheetRule">Toque e digite. Tab alterna direção.</p>
+          <p class="muted" id="sheetRule">Toque e digite. Toque 2x na mesma célula para alternar direção.</p>
+        </div>
+
+        <!-- ✅ DICA EM EVIDÊNCIA (SEM PAINEL POLUINDO) -->
+        <div class="clue-panel" aria-label="Dica atual">
+          <p class="clue-label">Dica</p>
+          <p class="clue-text" id="clueText">Clique em uma célula para selecionar uma palavra.</p>
         </div>
       </div>
 
@@ -68,54 +79,10 @@
         />
       </section>
 
-      <article class="dock" aria-label="Painel da dica e ações">
-        <div class="dock-top">
-          <div class="dock-left">
-            <span class="muted">Selecionado</span>
-            <strong id="activeWordLabel" class="dock-word">—</strong>
-          </div>
-
-          <div class="dir-toggle" role="group" aria-label="Direção da palavra">
-            <button class="chip" type="button" id="dirAcrossBtn" aria-pressed="true">Horizontal</button>
-            <button class="chip" type="button" id="dirDownBtn" aria-pressed="false">Vertical</button>
-          </div>
-        </div>
-
-        <p class="dock-clue" id="clueText">Clique em uma célula para selecionar uma palavra.</p>
-
-        <div class="hint-row" aria-label="Dicas extras">
-          <button class="btn btn-secondary hint-btn" id="hint1Btn" type="button" disabled>
-            1 letra <span class="hint-cost">(+10s)</span>
-          </button>
-          <button class="btn btn-secondary hint-btn" id="hint2Btn" type="button" disabled>
-            2 letras <span class="hint-cost">(+20s)</span>
-          </button>
-          <button class="btn btn-secondary hint-btn" id="hint3Btn" type="button" disabled>
-            Palavra <span class="hint-cost">(+30s)</span>
-          </button>
-        </div>
-
-        <p class="muted small dock-meta" id="clueMeta">—</p>
-      </article>
-
-      <div class="bottom-controls" aria-label="Controles do jogo">
-        <button class="btn btn-ghost" id="kbdToggle" type="button" aria-pressed="false">Teclado</button>
-        <button class="btn btn-secondary" id="pauseBtn" type="button" aria-pressed="false">Pausar</button>
-        <button class="btn btn-secondary" id="resetBtn" type="button">Resetar</button>
-        <button class="btn btn-primary" id="nextBtn" type="button" disabled>Próximo</button>
-      </div>
-
-      <section class="kbd-card" id="kbdCard" aria-label="Teclado compacto" hidden>
-        <div class="kbd-top">
-          <p class="muted small">Toque para inserir letras na célula ativa.</p>
-          <button class="btn btn-ghost" id="kbdClose" type="button">Fechar</button>
-        </div>
-        <div class="kbd" id="kbd"></div>
-      </section>
-
     </section>
   </main>
 
+  <!-- Overlay de pausa -->
   <div class="overlay" id="pauseOverlay" hidden>
     <div class="overlay-card" role="dialog" aria-modal="true" aria-label="Jogo pausado">
       <button class="overlay-close" type="button" id="pauseCloseBtn" aria-label="Fechar pausa">✕</button>
@@ -125,6 +92,7 @@
     </div>
   </div>
 
+  <!-- Modal de conclusão -->
   <div class="overlay" id="winOverlay" hidden>
     <div class="overlay-card" role="dialog" aria-modal="true" aria-label="Nível concluído">
       <button class="overlay-close" type="button" id="winCloseBtn" aria-label="Fechar modal">✕</button>
@@ -136,6 +104,8 @@
       </div>
     </div>
   </div>
+
+  <div id="fxLayer" class="fx-layer" aria-hidden="true"></div>
 
   <footer class="app-footer">
     <div class="container footer-inner">

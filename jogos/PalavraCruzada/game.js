@@ -1,14 +1,25 @@
 /* =========================================================
-  Crossword Elite - game.js
-  Ajustes desta versão:
-  ✅ Mobile (<768px): 10 níveis total, 5 níveis 5×5 + 5 níveis 6×6
-  ✅ Tablet/Desktop (>=768px): mantém níveis 9×9 (os seus originais)
-  ✅ Células ficam maiores no mobile por ter grid menor
-  ✅ Removido caractere solto no final do arquivo (corrige crash)
+  Crossword Elite - game.js (LIMPO + RECOMPENSAS)
+  ✅ UI inferior removida (sem dock / sem botões embaixo)
+  ✅ dica fica só em #clueText (agora no topo)
+  ✅ moedas + som + animação ao completar palavra
 ========================================================= */
 
 const $ = (s) => document.querySelector(s);
 const pad2 = (n) => String(n).padStart(2, "0");
+
+function on(el, ev, fn, opt){
+  if (!el) return;
+  el.addEventListener(ev, fn, opt);
+}
+function setText(el, txt){
+  if (!el) return;
+  el.textContent = txt;
+}
+function setAttr(el, k, v){
+  if (!el) return;
+  el.setAttribute(k, v);
+}
 
 const UI = {
   grid: $("#grid"),
@@ -18,27 +29,9 @@ const UI = {
   levelTotal: $("#levelTotal"),
   timeLabel: $("#timeLabel"),
   penaltyLabel: $("#penaltyLabel"),
+  coinLabel: $("#coinLabel"),
 
-  sheetTitle: $("#sheetTitle"),
   clueText: $("#clueText"),
-  clueMeta: $("#clueMeta"),
-  activeWordLabel: $("#activeWordLabel"),
-
-  dirAcrossBtn: $("#dirAcrossBtn"),
-  dirDownBtn: $("#dirDownBtn"),
-
-  hint1Btn: $("#hint1Btn"),
-  hint2Btn: $("#hint2Btn"),
-  hint3Btn: $("#hint3Btn"),
-
-  kbdToggle: $("#kbdToggle"),
-  kbdCard: $("#kbdCard"),
-  kbd: $("#kbd"),
-  kbdClose: $("#kbdClose"),
-
-  pauseBtn: $("#pauseBtn"),
-  resetBtn: $("#resetBtn"),
-  nextBtn: $("#nextBtn"),
 
   pauseOverlay: $("#pauseOverlay"),
   pauseCloseBtn: $("#pauseCloseBtn"),
@@ -49,11 +42,10 @@ const UI = {
   winSummary: $("#winSummary"),
   winResetBtn: $("#winResetBtn"),
   winNextBtn: $("#winNextBtn"),
+
+  fxLayer: $("#fxLayer"),
 };
 
-/* =========================================================
-  HELPERS
-========================================================= */
 function sanitizeWord(str){
   return String(str || "")
     .normalize("NFD")
@@ -61,162 +53,153 @@ function sanitizeWord(str){
     .toUpperCase()
     .replace(/[^A-Z]/g, "");
 }
-
 function inBounds(r, c){ return r >= 0 && c >= 0 && r < state.size && c < state.size; }
 function cellAt(r,c){ return state.grid[r]?.[c] || null; }
 function isAlphaKey(k){ return /^[a-zA-ZÀ-ÿ]$/.test(k); }
-
 function formatTime(total){
   const m = Math.floor(total / 60);
   const s = total % 60;
   return `${pad2(m)}:${pad2(s)}`;
 }
 
-function setPenaltyLabel(){
-  UI.penaltyLabel.textContent = `+${state.penaltySeconds}s`;
+/* =========================================================
+  AUDIO (sem arquivos externos)
+========================================================= */
+let _ac = null;
+function audioContext(){
+  if (_ac) return _ac;
+  try{
+    _ac = new (window.AudioContext || window.webkitAudioContext)();
+  }catch(_e){
+    _ac = null;
+  }
+  return _ac;
 }
 
-function addPenalty(sec){
-  state.penaltySeconds += sec;
-  setPenaltyLabel();
+function playChime(kind = "word"){
+  const ac = audioContext();
+  if (!ac) return;
+
+  const now = ac.currentTime;
+  const master = ac.createGain();
+  master.gain.value = 0.0001;
+  master.connect(ac.destination);
+
+  const o1 = ac.createOscillator();
+  const o2 = ac.createOscillator();
+  const g1 = ac.createGain();
+  const g2 = ac.createGain();
+
+  o1.type = "sine";
+  o2.type = "triangle";
+
+  const base = (kind === "level") ? 523.25 : 440;
+  o1.frequency.setValueAtTime(base, now);
+  o2.frequency.setValueAtTime(base * 1.5, now);
+
+  o1.frequency.exponentialRampToValueAtTime(base * (kind === "level" ? 2.0 : 1.25), now + (kind === "level" ? 0.18 : 0.10));
+  o2.frequency.exponentialRampToValueAtTime(base * (kind === "level" ? 2.4 : 1.6), now + (kind === "level" ? 0.22 : 0.12));
+
+  g1.gain.setValueAtTime(0.0001, now);
+  g2.gain.setValueAtTime(0.0001, now);
+
+  g1.gain.exponentialRampToValueAtTime(kind === "level" ? 0.10 : 0.07, now + 0.02);
+  g2.gain.exponentialRampToValueAtTime(kind === "level" ? 0.06 : 0.04, now + 0.02);
+
+  g1.gain.exponentialRampToValueAtTime(0.0001, now + (kind === "level" ? 0.28 : 0.18));
+  g2.gain.exponentialRampToValueAtTime(0.0001, now + (kind === "level" ? 0.34 : 0.22));
+
+  o1.connect(g1); g1.connect(master);
+  o2.connect(g2); g2.connect(master);
+
+  master.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
+  master.gain.exponentialRampToValueAtTime(0.0001, now + (kind === "level" ? 0.36 : 0.24));
+
+  o1.start(now);
+  o2.start(now);
+  o1.stop(now + (kind === "level" ? 0.40 : 0.26));
+  o2.stop(now + (kind === "level" ? 0.40 : 0.26));
 }
 
 /* =========================================================
-  NÍVEIS MOBILE (meio a meio): 5 níveis 5×5 + 5 níveis 6×6
-  - Objetivo: letras grandes, toque fácil, palavras curtas e comuns
-  - Layout simples: blocos separados (sem cruzamentos) para evitar confusão
+  FX
 ========================================================= */
-const levelsMobile = [
-  // 1..5 => 5×5
-  {
-    id: 1,
-    size: 5,
-    words: [
-      { answer: "SOL", row: 0, col: 0, dir: "across", clue: "Estrela do nosso sistema." },
-      { answer: "MAR", row: 2, col: 0, dir: "across", clue: "Água salgada enorme." },
-      { answer: "PAZ", row: 4, col: 0, dir: "across", clue: "Calma e tranquilidade." },
+function rectCenter(el){
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width/2, y: r.top + r.height/2 };
+}
 
-      { answer: "NUVEM", row: 0, col: 3, dir: "down", clue: "Branca no céu, às vezes chove." },
-      { answer: "AMIGO", row: 0, col: 4, dir: "down", clue: "Pessoa querida." },
-    ],
-  },
-  {
-    id: 2,
-    size: 5,
-    words: [
-      { answer: "CASA", row: 0, col: 0, dir: "across", clue: "Lugar onde moramos." },
-      { answer: "LEITE", row: 2, col: 0, dir: "across", clue: "Bebida branca da vaca." }, // cabe? 5 letras, col0..4 ok
-      { answer: "MEL", row: 4, col: 0, dir: "across", clue: "Produzido pelas abelhas." },
-    ],
-  },
-  {
-    id: 3,
-    size: 5,
-    words: [
-      { answer: "BOLA", row: 0, col: 0, dir: "across", clue: "Usada em esportes." },
-      { answer: "PATO", row: 2, col: 0, dir: "across", clue: "Ave que nada." },
-      { answer: "RISO", row: 4, col: 0, dir: "across", clue: "Som de alegria." },
-    ],
-  },
-  {
-    id: 4,
-    size: 5,
-    words: [
-      { answer: "FOTO", row: 0, col: 0, dir: "across", clue: "Imagem registrada." },
-      { answer: "DADO", row: 2, col: 0, dir: "across", clue: "Cubo usado em jogos." },
-      { answer: "DOCE", row: 4, col: 0, dir: "across", clue: "Sabor de açúcar." },
-    ],
-  },
-  {
-    id: 5,
-    size: 5,
-    words: [
-      { answer: "LUA", row: 0, col: 0, dir: "across", clue: "Satélite natural da Terra." },
-      { answer: "RUA", row: 2, col: 0, dir: "across", clue: "Via da cidade." },
-      { answer: "SAL", row: 4, col: 0, dir: "across", clue: "Tempero branco comum." },
-    ],
-  },
+function spawnCoin(fromEl, toEl, delayMs = 0){
+  if (!UI.fxLayer || !fromEl || !toEl) return;
 
-  // 6..10 => 6×6
-  {
-    id: 6,
-    size: 6,
-    words: [
-      { answer: "GATO", row: 0, col: 0, dir: "across", clue: "Animal de estimação que mia." },
-      { answer: "CASA", row: 2, col: 0, dir: "across", clue: "Lugar onde moramos." },
-      { answer: "AGUA", row: 4, col: 0, dir: "across", clue: "Essencial para a vida." },
+  const start = rectCenter(fromEl);
+  const end = rectCenter(toEl);
 
-      { answer: "AMIGOS", row: 0, col: 4, dir: "down", clue: "Pessoas queridas." }, // 6 letras
-      { answer: "BONECO", row: 0, col: 5, dir: "down", clue: "Brinquedo em forma de pessoa." },
+  const coin = document.createElement("div");
+  coin.className = "fx-coin";
+  coin.textContent = "🪙";
+  coin.style.left = `${start.x}px`;
+  coin.style.top = `${start.y}px`;
+  UI.fxLayer.appendChild(coin);
+
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const dur = reduce ? 0 : 520;
+
+  const anim = coin.animate(
+    [
+      { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+      { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.75)`, opacity: 0.95 }
     ],
-  },
-  {
-    id: 7,
-    size: 6,
-    words: [
-      { answer: "LIVRO", row: 0, col: 0, dir: "across", clue: "Cheio de páginas e histórias." },
-      { answer: "PAPEL", row: 2, col: 0, dir: "across", clue: "Usado para escrever." },
-      { answer: "CARRO", row: 4, col: 0, dir: "across", clue: "Veículo comum." },
+    { duration: dur, delay: delayMs, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" }
+  );
 
-      { answer: "MUSICA", row: 0, col: 4, dir: "down", clue: "Arte de sons." },
-      { answer: "VIAGEM", row: 0, col: 5, dir: "down", clue: "Ir para outro lugar." },
+  anim.onfinish = () => coin.remove();
+}
+
+function spawnSpark(fromEl){
+  if (!UI.fxLayer || !fromEl) return;
+
+  const p = rectCenter(fromEl);
+  const spark = document.createElement("div");
+  spark.className = "fx-spark";
+  spark.style.left = `${p.x}px`;
+  spark.style.top = `${p.y}px`;
+  UI.fxLayer.appendChild(spark);
+
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const dur = reduce ? 0 : 420;
+
+  const driftX = (Math.random() * 60 - 30);
+  const driftY = - (40 + Math.random() * 40);
+
+  const anim = spark.animate(
+    [
+      { transform: "translate(-50%, -50%) scale(1)", opacity: 0.95 },
+      { transform: `translate(calc(-50% + ${driftX}px), calc(-50% + ${driftY}px)) scale(0.6)`, opacity: 0 }
     ],
-  },
-  {
-    id: 8,
-    size: 6,
-    words: [
-      { answer: "BOLO", row: 0, col: 0, dir: "across", clue: "Sobremesa de festa." },
-      { answer: "SUCO", row: 2, col: 0, dir: "across", clue: "Bebida de fruta." },
-      { answer: "SOPA", row: 4, col: 0, dir: "across", clue: "Comida líquida e quente." },
+    { duration: dur, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" }
+  );
 
-      { answer: "TEMPERO", row: 0, col: 4, dir: "down", clue: "Dá sabor à comida." }, // 7 letras não cabe; ajustar para 6
-      { answer: "TOMATE", row: 0, col: 5, dir: "down", clue: "Fruto vermelho comum." },
-    ],
-  },
-  {
-    id: 9,
-    size: 6,
-    words: [
-      { answer: "PRAIA", row: 0, col: 0, dir: "across", clue: "Lugar com areia e mar." },
-      { answer: "AREIA", row: 2, col: 0, dir: "across", clue: "O chão da praia." },
-      { answer: "PEIXE", row: 4, col: 0, dir: "across", clue: "Animal que vive na água." },
+  anim.onfinish = () => spark.remove();
+}
 
-      { answer: "NAVIOS", row: 0, col: 4, dir: "down", clue: "Barcos grandes." },
-      { answer: "VENTOS", row: 0, col: 5, dir: "down", clue: "Ar em movimento." },
-    ],
-  },
-  {
-    id: 10,
-    size: 6,
-    words: [
-      { answer: "ONTEM", row: 0, col: 0, dir: "across", clue: "O dia anterior." },
-      { answer: "HOJE", row: 2, col: 0, dir: "across", clue: "O dia atual." },
-      { answer: "AGORA", row: 4, col: 0, dir: "across", clue: "Neste momento." },
-
-      { answer: "IDEIAS", row: 0, col: 4, dir: "down", clue: "Pensamentos, planos." },
-      { answer: "FUTURO", row: 0, col: 5, dir: "down", clue: "O que ainda vai acontecer." },
-    ],
-  },
-];
-
-/* Correção: no nível 8, TEMPERO tem 7 letras e não cabe em 6×6.
-   Para manter a ideia sem estourar, usamos "SALADA" (6) no lugar. */
-levelsMobile[7].words = [
-  { answer: "BOLO", row: 0, col: 0, dir: "across", clue: "Sobremesa de festa." },
-  { answer: "SUCO", row: 2, col: 0, dir: "across", clue: "Bebida de fruta." },
-  { answer: "SOPA", row: 4, col: 0, dir: "across", clue: "Comida líquida e quente." },
-  { answer: "SALADA", row: 0, col: 4, dir: "down", clue: "Mistura de folhas e legumes." },
-  { answer: "TOMATE", row: 0, col: 5, dir: "down", clue: "Fruto vermelho comum." },
-];
+function pulseCoins(){
+  const pill = document.querySelector(".hud-coins");
+  if (!pill) return;
+  pill.classList.remove("pulse");
+  void pill.offsetWidth;
+  pill.classList.add("pulse");
+}
 
 /* =========================================================
-  NÍVEIS DESKTOP/TABLET (seus originais 9×9)
+  LEVELS (seus 10)
 ========================================================= */
-const levelsDesktop = [
+const levels = [
   {
-    id: 1,
-    size: 9,
+    id: 1, size: 9,
     words: [
       { answer: "GATO", row: 0, col: 0, dir: "across", clue: "Animal de estimação que mia." },
       { answer: "CASA", row: 2, col: 0, dir: "across", clue: "Lugar onde moramos." },
@@ -232,8 +215,7 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 2,
-    size: 9,
+    id: 2, size: 9,
     words: [
       { answer: "LIVRO", row: 0, col: 0, dir: "across", clue: "Cheio de páginas e histórias." },
       { answer: "AULA",  row: 2, col: 0, dir: "across", clue: "Momento de aprender." },
@@ -249,8 +231,7 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 3,
-    size: 9,
+    id: 3, size: 9,
     words: [
       { answer: "PRAIA", row: 0, col: 0, dir: "across", clue: "Lugar com areia e mar." },
       { answer: "MAR",   row: 2, col: 0, dir: "across", clue: "Água salgada enorme." },
@@ -266,8 +247,7 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 4,
-    size: 9,
+    id: 4, size: 9,
     words: [
       { answer: "DOCE", row: 0, col: 0, dir: "across", clue: "Sabor de açúcar." },
       { answer: "BOLO", row: 2, col: 0, dir: "across", clue: "Sobremesa de festa." },
@@ -279,12 +259,11 @@ const levelsDesktop = [
       { answer: "CEU",  row: 0, col: 5, dir: "down", clue: "Onde ficam as nuvens." },
       { answer: "COCO", row: 0, col: 6, dir: "down", clue: "Fruta de palmeira." },
       { answer: "LOJA", row: 0, col: 7, dir: "down", clue: "Lugar de comprar coisas." },
-      { answer: "PIPO", row: 0, col: 8, dir: "down", clue: "Grão que vira pipoca (abreviado)." },
+      { answer: "PIPO", row: 0, col: 8, dir: "down", clue: "Grão que vira pipoca (curto)." },
     ],
   },
   {
-    id: 5,
-    size: 9,
+    id: 5, size: 9,
     words: [
       { answer: "MATA", row: 0, col: 0, dir: "across", clue: "Floresta; vegetação densa." },
       { answer: "RATO", row: 2, col: 0, dir: "across", clue: "Pequeno roedor." },
@@ -300,14 +279,13 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 6,
-    size: 9,
+    id: 6, size: 9,
     words: [
       { answer: "FILME", row: 0, col: 0, dir: "across", clue: "História em vídeo." },
       { answer: "ATOR",  row: 2, col: 0, dir: "across", clue: "Pessoa que atua." },
       { answer: "SOM",   row: 4, col: 0, dir: "across", clue: "O que ouvimos." },
       { answer: "TELA",  row: 6, col: 0, dir: "across", clue: "Onde aparece a imagem." },
-      { answer: "CINE",  row: 8, col: 0, dir: "across", clue: "Cinema (forma curta)." },
+      { answer: "CINE",  row: 8, col: 0, dir: "across", clue: "Cinema (curto)." },
 
       { answer: "CARTA", row: 0, col: 4, dir: "down", clue: "Mensagem escrita." },
       { answer: "MEIA",  row: 0, col: 5, dir: "down", clue: "Roupa do pé." },
@@ -317,8 +295,7 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 7,
-    size: 9,
+    id: 7, size: 9,
     words: [
       { answer: "JANE", row: 0, col: 0, dir: "across", clue: "Apelido de Janeiro (curto)." },
       { answer: "FEV",  row: 2, col: 0, dir: "across", clue: "Apelido de Fevereiro (curto)." },
@@ -334,8 +311,7 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 8,
-    size: 9,
+    id: 8, size: 9,
     words: [
       { answer: "MUSI", row: 0, col: 0, dir: "across", clue: "Música (curto)." },
       { answer: "NOTA", row: 2, col: 0, dir: "across", clue: "Dó, Ré, Mi..." },
@@ -351,8 +327,7 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 9,
-    size: 9,
+    id: 9, size: 9,
     words: [
       { answer: "BRASIL",row: 0, col: 0, dir: "across", clue: "País da América do Sul." },
       { answer: "RIO",   row: 2, col: 0, dir: "across", clue: "Curso de água." },
@@ -368,8 +343,7 @@ const levelsDesktop = [
     ],
   },
   {
-    id: 10,
-    size: 9,
+    id: 10, size: 9,
     words: [
       { answer: "HOJE",  row: 0, col: 0, dir: "across", clue: "O dia atual." },
       { answer: "ONTEM", row: 2, col: 0, dir: "across", clue: "O dia anterior." },
@@ -387,19 +361,7 @@ const levelsDesktop = [
 ];
 
 /* =========================================================
-  SELEÇÃO DE CONJUNTO DE NÍVEIS
-========================================================= */
-function isMobile(){
-  // alinhado com seu requisito: 768px+ é tablet/desktop
-  return window.matchMedia("(max-width: 767px)").matches;
-}
-
-function getActiveLevels(){
-  return isMobile() ? levelsMobile : levelsDesktop;
-}
-
-/* =========================================================
-  ESTADO
+  STATE
 ========================================================= */
 const state = {
   levelIndex: 0,
@@ -415,52 +377,13 @@ const state = {
   timerId: null,
   paused: false,
   winShown: false,
-  kbdOpen: false,
-  levels: [],
+  coins: 0,
 };
 
 /* =========================================================
-  VALIDADOR DE NÍVEL (COLISÕES)
-========================================================= */
-function validateLevelData(level){
-  const size = level.size;
-  const map = new Map();
-  const conflicts = [];
-
-  for (const w of level.words){
-    const ans = sanitizeWord(w.answer);
-    const dr = w.dir === "down" ? 1 : 0;
-    const dc = w.dir === "across" ? 1 : 0;
-
-    for (let i=0; i<ans.length; i++){
-      const r = w.row + dr*i;
-      const c = w.col + dc*i;
-      if (r < 0 || c < 0 || r >= size || c >= size) continue;
-
-      const key = `${r},${c}`;
-      const prev = map.get(key);
-      if (prev && prev !== ans[i]){
-        conflicts.push({ key, prev, next: ans[i], word: w.answer, dir: w.dir });
-      } else {
-        map.set(key, ans[i]);
-      }
-    }
-  }
-
-  if (conflicts.length){
-    console.warn(
-      `⚠️ Nível ${level.id} inválido: colisões detectadas (mesma célula com letras diferentes).`,
-      conflicts
-    );
-  }
-}
-
-/* =========================================================
-  BUILD GRID FROM WORDS
+  BUILD + RENDER
 ========================================================= */
 function buildLevel(level){
-  validateLevelData(level);
-
   state.size = level.size;
 
   state.grid = Array.from({length: state.size}, (_, r) =>
@@ -471,7 +394,6 @@ function buildLevel(level){
       value: "",
       locked: false,
       num: null,
-      revealed: false,
     }))
   );
 
@@ -487,12 +409,7 @@ function buildLevel(level){
 
       const cell = cellAt(rr,cc);
       cell.isBlock = false;
-
-      if (cell.solution && cell.solution !== ans[i]){
-        console.warn(`Conflito em (${rr},${cc}): "${cell.solution}" vs "${ans[i]}"`);
-        continue;
-      }
-      cell.solution = ans[i];
+      if (!cell.solution) cell.solution = ans[i];
     }
   }
 
@@ -531,29 +448,18 @@ function buildLevel(level){
 
     const num = startMap.get(`${w.row},${w.col}`) || (idx+1);
     const id = `${w.dir}-${num}`;
-    return {
-      id,
-      num,
-      dir: w.dir,
-      clue: w.clue,
-      answer: ans,
-      cells,
-      done: false,
-      hintUsed: 0,
-    };
+    return { id, num, dir: w.dir, clue: w.clue, answer: ans, cells, done: false };
   });
 
-  UI.levelTotal.textContent = String(state.levels.length);
-  UI.levelLabel.textContent = String(level.id);
+  setText(UI.levelTotal, String(levels.length));
+  setText(UI.levelLabel, String(level.id));
 
-  UI.grid.setAttribute("aria-rowcount", String(state.size));
-  UI.grid.setAttribute("aria-colcount", String(state.size));
+  setAttr(UI.grid, "aria-rowcount", String(state.size));
+  setAttr(UI.grid, "aria-colcount", String(state.size));
 }
 
-/* =========================================================
-  RENDER GRID
-========================================================= */
 function renderGrid(){
+  if (!UI.grid) return;
   UI.grid.style.setProperty("--cols", state.size);
   UI.grid.innerHTML = "";
   state.cellEls = Array.from({length: state.size}, () => Array(state.size).fill(null));
@@ -591,7 +497,7 @@ function renderGrid(){
 }
 
 /* =========================================================
-  SELEÇÃO / PALAVRA ATIVA
+  SELEÇÃO + DICA (SÓ O ESSENCIAL)
 ========================================================= */
 function getWordsAtCell(r,c){
   const list = [];
@@ -603,17 +509,12 @@ function getWordsAtCell(r,c){
 
 function setDirection(dir){
   state.dir = dir;
-  UI.dirAcrossBtn.setAttribute("aria-pressed", String(dir === "across"));
-  UI.dirDownBtn.setAttribute("aria-pressed", String(dir === "down"));
-  updateHighlights();
-  updateDock();
 }
 
 function setActiveWord(word){
   state.activeWordId = word ? word.id : null;
   updateHighlights();
-  updateDock();
-  updateHintButtons();
+  updateClue();
 }
 
 function setActiveCell(r,c, preferToggle=false){
@@ -621,6 +522,7 @@ function setActiveCell(r,c, preferToggle=false){
   if (!cell || cell.isBlock) return;
 
   const candidates = getWordsAtCell(r,c);
+
   if (!candidates.length){
     state.activeCell = {r,c};
     setActiveWord(null);
@@ -633,6 +535,7 @@ function setActiveCell(r,c, preferToggle=false){
     candidates.find(w => w.dir === "across") ||
     candidates[0];
 
+  // ✅ 2º toque na mesma célula alterna direção (ótimo no mobile)
   if (preferToggle && candidates.length >= 2){
     const other = candidates.find(w => w.dir !== chosen.dir);
     if (other) chosen = other;
@@ -645,12 +548,9 @@ function setActiveCell(r,c, preferToggle=false){
 }
 
 function focusInput(){
-  UI.hiddenInput.focus({ preventScroll: true });
+  UI.hiddenInput?.focus({ preventScroll: true });
 }
 
-/* =========================================================
-  HIGHLIGHTS / DOCK
-========================================================= */
 function clearCellClasses(){
   for (let r=0; r<state.size; r++){
     for (let c=0; c<state.size; c++){
@@ -663,8 +563,8 @@ function clearCellClasses(){
 
 function updateHighlights(){
   clearCellClasses();
-
   if (!state.activeCell) return;
+
   const {r,c} = state.activeCell;
   const activeEl = state.cellEls[r]?.[c];
   if (activeEl) activeEl.classList.add("active");
@@ -678,42 +578,37 @@ function updateHighlights(){
   }
 }
 
-function updateDock(){
+function updateClue(){
   const w = state.words.find(x => x.id === state.activeWordId);
-
   if (!w){
-    UI.activeWordLabel.textContent = "—";
-    UI.clueText.textContent = "Clique em uma célula para selecionar uma palavra.";
-    UI.clueMeta.textContent = "—";
+    setText(UI.clueText, "Clique em uma célula para selecionar uma palavra.");
     return;
   }
-
-  UI.activeWordLabel.textContent = `${w.num}${w.dir === "across" ? "H" : "V"} · ${w.answer.length} letras`;
-  UI.clueText.textContent = w.clue;
-
-  const filled = w.cells.reduce((acc,p) => acc + (cellAt(p.r,p.c).value ? 1 : 0), 0);
-  UI.clueMeta.textContent = `${w.answer.length} letras · preenchido: ${filled}/${w.answer.length}`;
-}
-
-function updateHintButtons(){
-  const w = state.words.find(x => x.id === state.activeWordId);
-  const enabled = !!w && !w.done && !state.paused;
-  UI.hint1Btn.disabled = !enabled;
-  UI.hint2Btn.disabled = !enabled;
-  UI.hint3Btn.disabled = !enabled;
+  setText(UI.clueText, w.clue);
 }
 
 /* =========================================================
-  INPUT / DIGITAÇÃO
+  COINS
 ========================================================= */
-function setLetter(r,c,ch, {fromHint=false} = {}){
+function setCoins(n){
+  state.coins = Math.max(0, n|0);
+  setText(UI.coinLabel, String(state.coins));
+}
+function addCoins(amount){
+  setCoins(state.coins + amount);
+  pulseCoins();
+}
+
+/* =========================================================
+  INPUT
+========================================================= */
+function setLetter(r,c,ch){
   const cell = cellAt(r,c);
   if (!cell || cell.isBlock) return;
   if (cell.locked) return;
 
   const v = ch ? sanitizeWord(ch).slice(0,1) : "";
   cell.value = v;
-  if (fromHint) cell.revealed = true;
 
   const el = state.cellEls[r][c];
   if (el){
@@ -730,8 +625,8 @@ function validateCell(r,c){
   if (!cell || !el || cell.isBlock) return;
 
   el.classList.remove("wrong");
-
   if (!cell.value) return;
+
   if (cell.value !== cell.solution && !cell.locked){
     el.classList.add("wrong");
   }
@@ -755,7 +650,6 @@ function moveWithinWord(step){
     if (cell && !cell.isBlock){
       state.activeCell = {r: p.r, c: p.c};
       updateHighlights();
-      updateDock();
       return;
     }
     next += step;
@@ -802,7 +696,6 @@ function handleKeyDown(e){
     if (inBounds(rr,cc) && !cellAt(rr,cc).isBlock){
       state.activeCell = {r: rr, c: cc};
       updateHighlights();
-      updateDock();
       focusInput();
     }
     return;
@@ -824,7 +717,6 @@ function handleKeyDown(e){
     }
 
     validateWords();
-    updateDock();
     return;
   }
 
@@ -841,12 +733,52 @@ function handleKeyDown(e){
     if (w) moveWithinWord(1);
 
     validateWords();
-    updateDock();
     return;
   }
 }
 
+/* =========================================================
+  RECOMPENSAS
+========================================================= */
+function rewardWord(w){
+  const amount = Math.max(3, Math.min(8, w.answer.length));
+  addCoins(amount);
+
+  const fromP = w.cells[Math.max(0, w.cells.length - 1)];
+  const fromEl = state.cellEls[fromP.r]?.[fromP.c];
+  const toEl = UI.coinLabel || document.querySelector(".hud-coins");
+
+  spawnSpark(fromEl);
+  const coinsToSpawn = Math.min(6, amount);
+  for (let i=0; i<coinsToSpawn; i++){
+    spawnCoin(fromEl, toEl, i * 45);
+  }
+
+  playChime("word");
+}
+
+function rewardLevel(){
+  addCoins(10);
+  playChime("level");
+
+  const centerEl = UI.grid;
+  if (centerEl){
+    for (let i=0; i<10; i++){
+      setTimeout(() => spawnSpark(centerEl), i * 35);
+    }
+    const toEl = UI.coinLabel || document.querySelector(".hud-coins");
+    for (let i=0; i<6; i++){
+      spawnCoin(centerEl, toEl, i * 60);
+    }
+  }
+}
+
+/* =========================================================
+  VALIDAÇÃO
+========================================================= */
 function validateWords(){
+  let justCompleted = [];
+
   for (const w of state.words){
     if (w.done) continue;
 
@@ -862,6 +794,8 @@ function validateWords(){
 
     if (allFilled && allCorrect){
       w.done = true;
+      justCompleted.push(w);
+
       for (const p of w.cells){
         const cell = cellAt(p.r,p.c);
         cell.locked = true;
@@ -872,61 +806,14 @@ function validateWords(){
     }
   }
 
-  const allDone = state.words.length > 0 && state.words.every(w => w.done);
-  UI.nextBtn.disabled = !allDone;
+  for (const w of justCompleted) rewardWord(w);
 
+  const allDone = state.words.length > 0 && state.words.every(w => w.done);
   if (allDone && !state.winShown){
     state.winShown = true;
+    rewardLevel();
     showWin();
   }
-}
-
-/* =========================================================
-  DICAS
-========================================================= */
-function getEmptyCellsInWord(w){
-  return w.cells.filter(p => {
-    const cell = cellAt(p.r,p.c);
-    return cell && !cell.value && !cell.locked;
-  });
-}
-
-function revealRandomLetters(count){
-  const w = getActiveWord();
-  if (!w || w.done) return;
-
-  const empty = getEmptyCellsInWord(w);
-  if (!empty.length) return;
-
-  const picks = [];
-  const pool = [...empty];
-
-  while (pool.length && picks.length < count){
-    const i = Math.floor(Math.random() * pool.length);
-    picks.push(pool.splice(i,1)[0]);
-  }
-
-  for (const p of picks){
-    const cell = cellAt(p.r,p.c);
-    setLetter(p.r,p.c, cell.solution, {fromHint:true});
-  }
-
-  validateWords();
-  updateDock();
-}
-
-function revealWholeWord(){
-  const w = getActiveWord();
-  if (!w || w.done) return;
-
-  for (const p of w.cells){
-    const cell = cellAt(p.r,p.c);
-    if (!cell.locked){
-      setLetter(p.r,p.c, cell.solution, {fromHint:true});
-    }
-  }
-  validateWords();
-  updateDock();
 }
 
 /* =========================================================
@@ -937,68 +824,49 @@ function startTimer(){
   state.timerId = setInterval(() => {
     if (!state.paused){
       state.seconds += 1;
-      UI.timeLabel.textContent = formatTime(state.seconds);
+      setText(UI.timeLabel, formatTime(state.seconds));
     }
   }, 1000);
 }
-
 function stopTimer(){
   if (state.timerId) clearInterval(state.timerId);
   state.timerId = null;
 }
-
 function setPaused(p){
   state.paused = p;
-  UI.pauseBtn.setAttribute("aria-pressed", String(p));
-  UI.pauseBtn.textContent = p ? "Continuar" : "Pausar";
-
-  UI.pauseOverlay.hidden = !p;
-  updateHintButtons();
-
-  if (p){
-    UI.hiddenInput.blur();
-  } else {
-    focusInput();
-  }
+  if (UI.pauseOverlay) UI.pauseOverlay.hidden = !p;
+  if (p) UI.hiddenInput?.blur();
+  else focusInput();
 }
+function togglePause(){ setPaused(!state.paused); }
 
-function togglePause(){
-  setPaused(!state.paused);
-}
-
-/* =========================================================
-  OVERLAYS
-========================================================= */
+/* overlays */
 function showWin(){
   const total = state.seconds + state.penaltySeconds;
-  UI.winSummary.textContent =
-    `Tempo: ${formatTime(state.seconds)}  |  Penalidades: +${state.penaltySeconds}s  |  Total: ${formatTime(total)}`;
-  UI.winOverlay.hidden = false;
+  setText(UI.winSummary, `Tempo: ${formatTime(state.seconds)} | Total: ${formatTime(total)} | Moedas: ${state.coins}`);
+  if (UI.winOverlay) UI.winOverlay.hidden = false;
 }
-
 function closeWin(){
-  UI.winOverlay.hidden = true;
+  if (UI.winOverlay) UI.winOverlay.hidden = true;
 }
 
 /* =========================================================
-  NÍVEL: INIT/RESET/NEXT
+  NÍVEL
 ========================================================= */
 function loadLevel(index){
-  const level = state.levels[index];
-  if (!level) return;
-
+  const level = levels[index];
   state.levelIndex = index;
   state.seconds = 0;
   state.penaltySeconds = 0;
   state.paused = false;
   state.winShown = false;
+  setCoins(0);
 
-  UI.timeLabel.textContent = "00:00";
-  setPenaltyLabel();
-  UI.nextBtn.disabled = true;
+  setText(UI.timeLabel, "00:00");
+  if (UI.penaltyLabel) UI.penaltyLabel.textContent = "+0s";
 
-  UI.winOverlay.hidden = true;
-  UI.pauseOverlay.hidden = true;
+  if (UI.winOverlay) UI.winOverlay.hidden = true;
+  if (UI.pauseOverlay) UI.pauseOverlay.hidden = true;
 
   buildLevel(level);
   renderGrid();
@@ -1008,7 +876,6 @@ function loadLevel(index){
       const cell = cellAt(r,c);
       cell.value = "";
       cell.locked = false;
-      cell.revealed = false;
     }
   }
 
@@ -1022,7 +889,7 @@ function loadLevel(index){
     }
   }
 
-  const candidates = state.activeCell ? getWordsAtCell(state.activeCell.r, state.activeCell.c) : [];
+  const candidates = getWordsAtCell(state.activeCell.r, state.activeCell.c);
   const chosen = candidates.find(w => w.dir === "across") || candidates[0] || null;
   if (chosen){
     setDirection(chosen.dir);
@@ -1032,23 +899,19 @@ function loadLevel(index){
   }
 
   updateHighlights();
-  updateDock();
-  updateHintButtons();
+  updateClue();
   startTimer();
   focusInput();
 }
 
-function resetLevel(){
-  loadLevel(state.levelIndex);
-}
-
+function resetLevel(){ loadLevel(state.levelIndex); }
 function nextLevel(){
-  const idx = Math.min(state.levelIndex + 1, state.levels.length - 1);
+  const idx = Math.min(state.levelIndex + 1, levels.length - 1);
   loadLevel(idx);
 }
 
 /* =========================================================
-  EVENTOS
+  EVENTS
 ========================================================= */
 function onGridClick(e){
   const btn = e.target.closest(".cell");
@@ -1056,109 +919,47 @@ function onGridClick(e){
 
   const r = Number(btn.dataset.r);
   const c = Number(btn.dataset.c);
-
   if (cellAt(r,c).isBlock) return;
 
   const isSameCell = state.activeCell && state.activeCell.r === r && state.activeCell.c === c;
   setActiveCell(r,c, isSameCell);
 }
 
-function setupKbd(){
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  UI.kbd.innerHTML = "";
-
-  for (const ch of letters){
-    const b = document.createElement("button");
-    b.type = "button";
-    b.textContent = ch;
-    b.addEventListener("click", () => {
-      if (state.paused) return;
-      if (!state.activeCell) return;
-      setLetter(state.activeCell.r, state.activeCell.c, ch);
-      const w = getActiveWord();
-      if (w) moveWithinWord(1);
-      validateWords();
-      updateDock();
-      focusInput();
-    });
-    UI.kbd.appendChild(b);
-  }
-}
-
-function toggleKbd(open){
-  state.kbdOpen = (open ?? !state.kbdOpen);
-  UI.kbdCard.hidden = !state.kbdOpen;
-  UI.kbdToggle.setAttribute("aria-pressed", String(state.kbdOpen));
-  if (state.kbdOpen) focusInput();
-}
-
 function bindUI(){
-  UI.grid.addEventListener("click", onGridClick);
+  on(UI.grid, "click", onGridClick);
 
-  UI.dirAcrossBtn.addEventListener("click", () => {
-    if (!state.activeCell) return;
-    const cand = getWordsAtCell(state.activeCell.r, state.activeCell.c);
-    const across = cand.find(x => x.dir === "across");
-    if (across){
-      setDirection("across");
-      setActiveWord(across);
-    } else {
-      setDirection("across");
-    }
-  });
+  on(UI.pauseCloseBtn, "click", () => setPaused(false));
+  on(UI.resumeBtn, "click", () => setPaused(false));
 
-  UI.dirDownBtn.addEventListener("click", () => {
-    if (!state.activeCell) return;
-    const cand = getWordsAtCell(state.activeCell.r, state.activeCell.c);
-    const down = cand.find(x => x.dir === "down");
-    if (down){
-      setDirection("down");
-      setActiveWord(down);
-    } else {
-      setDirection("down");
-    }
-  });
-
-  UI.hint1Btn.addEventListener("click", () => { addPenalty(10); revealRandomLetters(1); });
-  UI.hint2Btn.addEventListener("click", () => { addPenalty(20); revealRandomLetters(2); });
-  UI.hint3Btn.addEventListener("click", () => { addPenalty(30); revealWholeWord(); });
-
-  UI.pauseBtn.addEventListener("click", togglePause);
-  UI.pauseCloseBtn.addEventListener("click", () => setPaused(false));
-  UI.resumeBtn.addEventListener("click", () => setPaused(false));
-
-  UI.resetBtn.addEventListener("click", resetLevel);
-  UI.nextBtn.addEventListener("click", () => {
-    if (UI.nextBtn.disabled) return;
-    nextLevel();
-  });
-
-  UI.kbdToggle.addEventListener("click", () => toggleKbd());
-  UI.kbdClose.addEventListener("click", () => toggleKbd(false));
-
-  UI.winCloseBtn.addEventListener("click", closeWin);
-  UI.winResetBtn.addEventListener("click", () => { closeWin(); resetLevel(); });
-  UI.winNextBtn.addEventListener("click", () => { closeWin(); nextLevel(); });
+  on(UI.winCloseBtn, "click", closeWin);
+  on(UI.winResetBtn, "click", () => { closeWin(); resetLevel(); });
+  on(UI.winNextBtn, "click", () => { closeWin(); nextLevel(); });
 
   document.addEventListener("keydown", handleKeyDown);
 
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
-    if (!UI.winOverlay.hidden) closeWin();
-    if (!UI.pauseOverlay.hidden) setPaused(false);
+    if (UI.winOverlay && !UI.winOverlay.hidden) closeWin();
+    if (UI.pauseOverlay && !UI.pauseOverlay.hidden) setPaused(false);
   });
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) setPaused(true);
   });
+
+  // iOS: desbloqueia áudio no 1º toque
+  const unlock = () => {
+    const ac = audioContext();
+    if (!ac) return;
+    if (ac.state === "suspended") ac.resume().catch(()=>{});
+  };
+  document.addEventListener("pointerdown", unlock, { once: true, capture: true });
 }
 
 /* =========================================================
   INIT
 ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
-  state.levels = getActiveLevels();
-  setupKbd();
   bindUI();
   loadLevel(0);
 });
