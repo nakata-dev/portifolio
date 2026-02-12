@@ -33,6 +33,9 @@ let saveEnabled = false;
 const celulas = [];
 let board = Array(9).fill("");
 
+// laser element
+let winLineEl = null;
+
 /* =========================
    Tema (default: DARK na 1ª vez)
 ========================= */
@@ -59,7 +62,6 @@ function applyTheme(mode) {
 }
 
 function loadTheme() {
-  // Default solicitado: dark
   let mode = "dark";
   try {
     const raw = localStorage.getItem(LS_THEME);
@@ -211,6 +213,11 @@ function buildBoard() {
   tabuleiro.innerHTML = "";
   celulas.length = 0;
 
+  // cria/insere o laser (fica acima das células)
+  winLineEl = document.createElement("div");
+  winLineEl.className = "win-line";
+  tabuleiro.appendChild(winLineEl);
+
   for (let i = 0; i < 9; i++) {
     const btn = document.createElement("button");
     btn.type = "button";
@@ -251,9 +258,7 @@ function isDraw(b) {
 }
 
 function triggerCellFx(btn) {
-  // efeito neon rápido sem custo alto
   btn.classList.remove("fx");
-  // força reflow mínimo para reiniciar animação
   void btn.offsetWidth;
   btn.classList.add("fx");
 }
@@ -279,6 +284,45 @@ function clearWinHighlights() {
 
 function highlightLine(indices) {
   indices.forEach((i) => celulas[i].classList.add("win"));
+}
+
+/* =========================
+   Laser de vitória
+========================= */
+function hideWinLine() {
+  if (!winLineEl) return;
+  winLineEl.className = "win-line";
+  winLineEl.style.animation = "none";
+  // força reflow para resetar animação quando mostrar de novo
+  void winLineEl.offsetWidth;
+  winLineEl.style.animation = "";
+}
+
+function lineKeyFromIndices(line) {
+  const key = line.join(",");
+  switch (key) {
+    case "0,1,2": return "r0";
+    case "3,4,5": return "r1";
+    case "6,7,8": return "r2";
+    case "0,3,6": return "c0";
+    case "1,4,7": return "c1";
+    case "2,5,8": return "c2";
+    case "0,4,8": return "d0";
+    case "2,4,6": return "d1";
+    default: return "";
+  }
+}
+
+function showWinLine(line) {
+  if (!winLineEl || !line) return;
+
+  hideWinLine();
+  const k = lineKeyFromIndices(line);
+  if (!k) return;
+
+  winLineEl.classList.add(k);
+  // liga a animação
+  winLineEl.classList.add("show");
 }
 
 /* =========================
@@ -336,6 +380,7 @@ function jogar(index) {
   if (w.win) {
     fimDeJogo = true;
     highlightLine(w.line);
+    showWinLine(w.line);
 
     const textoFinal = (modo === "cpu")
       ? (w.win === humano ? "Você venceu! 🎉" : "O computador venceu! 🤖")
@@ -351,6 +396,7 @@ function jogar(index) {
 
   if (isDraw(board)) {
     fimDeJogo = true;
+    hideWinLine();
 
     score.E += 1;
     renderScore();
@@ -428,6 +474,7 @@ function cpuMove() {
 function reiniciarJogo(keepTurnX) {
   clearRoundTimer();
   clearWinHighlights();
+  hideWinLine();
 
   board = Array(9).fill("");
   celulas.forEach((btn, i) => {

@@ -26,6 +26,10 @@
   --neon-x: rgba(37,99,235,.35);
   --neon-o: rgba(245,158,11,.35);
   --neon-ui: rgba(99,102,241,.22);
+
+  /* laser */
+  --laser-core: color-mix(in srgb, var(--win) 78%, white);
+  --laser-glow: color-mix(in srgb, var(--win) 55%, transparent);
 }
 
 /* Auto dark (sistema) */
@@ -51,6 +55,9 @@
     --neon-x: rgba(96,165,250,.55);
     --neon-o: rgba(251,191,36,.55);
     --neon-ui: rgba(99,102,241,.35);
+
+    --laser-core: color-mix(in srgb, var(--win) 72%, white);
+    --laser-glow: color-mix(in srgb, var(--win) 58%, transparent);
   }
 }
 
@@ -75,6 +82,9 @@ html.theme-light{
   --neon-x: rgba(37,99,235,.35);
   --neon-o: rgba(245,158,11,.35);
   --neon-ui: rgba(99,102,241,.22);
+
+  --laser-core: color-mix(in srgb, var(--win) 78%, white);
+  --laser-glow: color-mix(in srgb, var(--win) 55%, transparent);
 }
 
 html.theme-dark{
@@ -97,6 +107,9 @@ html.theme-dark{
   --neon-x: rgba(96,165,250,.55);
   --neon-o: rgba(251,191,36,.55);
   --neon-ui: rgba(99,102,241,.35);
+
+  --laser-core: color-mix(in srgb, var(--win) 72%, white);
+  --laser-glow: color-mix(in srgb, var(--win) 58%, transparent);
 }
 
 /* =========================
@@ -310,7 +323,66 @@ html.theme-dark .grupo{
 
   width: min(100%, var(--boardSize));
   margin: 10px auto 10px auto;
+
+  position: relative; /* para o laser */
 }
+
+/* ===== Laser clean de vitória (FIX para diagonais) ===== */
+.win-line{
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+
+  /* centro do tabuleiro */
+  left: 50%;
+  top: 50%;
+
+  height: 7px;
+  width: 88%;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--laser-core),
+    var(--laser-core),
+    transparent
+  );
+
+  box-shadow:
+    0 0 10px var(--laser-glow),
+    0 0 18px var(--laser-glow),
+    0 0 26px color-mix(in srgb, var(--laser-glow) 70%, transparent);
+
+  transform-origin: center;
+  transform: translate(-50%, -50%) rotate(0deg) scaleX(0);
+  opacity: 0;
+}
+
+.win-line.show{
+  animation: laserDraw 240ms ease-out forwards;
+}
+
+@keyframes laserDraw{
+  0%   { transform: translate(-50%, -50%) rotate(var(--ang, 0deg)) scaleX(0); opacity: 0; }
+  25%  { opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(var(--ang, 0deg)) scaleX(1); opacity: 1; }
+}
+
+/* linhas horizontais */
+.win-line.r0{ top: 16.666%; --ang: 0deg; width: 88%; }
+.win-line.r1{ top: 50%;     --ang: 0deg; width: 88%; }
+.win-line.r2{ top: 83.333%; --ang: 0deg; width: 88%; }
+
+/* colunas verticais */
+.win-line.c0{ left: 16.666%; --ang: 90deg; width: 88%; }
+.win-line.c1{ left: 50%;     --ang: 90deg; width: 88%; }
+.win-line.c2{ left: 83.333%; --ang: 90deg; width: 88%; }
+
+/* diagonais: precisam ser mais longas */
+.win-line.d0{ left: 50%; top: 50%; --ang: 45deg;  width: 132%; }
+.win-line.d1{ left: 50%; top: 50%; --ang: -45deg; width: 132%; }
 
 /* célula com “neon card” */
 .celula{
@@ -338,6 +410,8 @@ html.theme-dark .grupo{
 
   position: relative;
   overflow: hidden;
+
+  z-index: 1; /* abaixo do laser */
 }
 
 html.theme-light .celula{
@@ -376,7 +450,7 @@ html.theme-light .celula{
   animation: cellPulse 180ms ease-out;
 }
 @keyframes cellPulse{
-  0%   { transform: scale(1);   box-shadow: 0 0 0 rgba(99,102,241,0); }
+  0%   { transform: scale(1);    box-shadow: 0 0 0 rgba(99,102,241,0); }
   100% { transform: scale(1.03); box-shadow: 0 0 28px rgba(99,102,241,.22); }
 }
 
