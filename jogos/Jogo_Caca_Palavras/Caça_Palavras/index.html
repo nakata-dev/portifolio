@@ -40,7 +40,11 @@
           </div>
         </div>
         <div id="wordList" class="words"></div>
-        <p class="msg" id="message" aria-live="polite"></p>
+
+        <!-- Mensagem inicial para você ver se o JS mexe aqui -->
+        <p class="msg" id="message" aria-live="polite">
+          Carregando jogo…
+        </p>
       </section>
 
       <section class="card dev-card" id="devPanel" hidden>
@@ -63,7 +67,6 @@
       </section>
     </main>
 
-    <!-- Barra fixa no mobile -->
     <nav class="mobilebar" aria-label="Ações rápidas">
       <button class="btn ghost" id="btnHint" type="button">💡 Dica</button>
       <button class="btn ghost" id="btnRestart" type="button">🔁 Reiniciar</button>
@@ -76,6 +79,20 @@
     </footer>
   </div>
 
-  <script src="app.js"></script>
+  <script>
+    // Se o app.js falhar (404/caminho errado), você vai ver aqui na tela.
+    window.addEventListener("error", function (ev) {
+      const msg = ev && ev.message ? String(ev.message) : "";
+      if (!msg) return;
+      const el = document.getElementById("message");
+      if (el) el.textContent = "❌ Erro no JavaScript: " + msg;
+    });
+  </script>
+
+  <script
+    src="app.js"
+    defer
+    onerror="document.getElementById('message').textContent='❌ app.js não carregou. Verifique se o arquivo se chama exatamente app.js e está na mesma pasta do index.html.'">
+  </script>
 </body>
 </html>

@@ -33,7 +33,7 @@ body{
 .app{
   max-width: 680px;
   margin: 0 auto;
-  padding: 16px 14px 90px; /* espaço para mobilebar */
+  padding: 16px 14px 90px;
   display:flex;
   flex-direction:column;
   gap: 12px;
@@ -121,10 +121,11 @@ body{
   border-color: rgba(74,222,128,.30);
 }
 
+/* ✅ encontrado agora usa cor por palavra (fallback verde) */
 .cell.found{
-  background: var(--accent);
-  border-color: rgba(74,222,128,.65);
-  color: #05210f;
+  background: var(--wcolor, var(--accent));
+  border-color: color-mix(in srgb, var(--wcolor, var(--accent)) 70%, transparent);
+  color: #061018;
 }
 
 .cell.hint{
@@ -160,10 +161,11 @@ body{
   font-weight: 800;
 }
 
+/* ✅ palavra encontrada: usa cor própria (e mantém contraste) */
 .word.found{
-  background: var(--accent);
-  border-color: rgba(74,222,128,.65);
-  color: #05210f;
+  background: color-mix(in srgb, var(--wcolor, var(--accent)) 85%, #0b0c10);
+  border-color: color-mix(in srgb, var(--wcolor, var(--accent)) 70%, transparent);
+  color: #eaf0ff;
   text-decoration: line-through;
 }
 
