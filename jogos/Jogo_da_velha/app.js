@@ -41,7 +41,6 @@ function systemPrefersDark() {
 }
 
 function applyTheme(mode) {
-  // mode: "light" | "dark" | "auto"
   const html = document.documentElement;
   html.classList.remove("theme-light", "theme-dark");
 
@@ -49,9 +48,12 @@ function applyTheme(mode) {
   if (mode === "auto") effective = systemPrefersDark() ? "dark" : "light";
 
   html.classList.add(effective === "dark" ? "theme-dark" : "theme-light");
-  temaToggleBtn.textContent = effective === "dark" ? "☀️" : "🌙";
 
-  // theme-color (Android address bar)
+  if (temaToggleBtn) {
+    temaToggleBtn.textContent = effective === "dark" ? "☀️" : "🌙";
+    temaToggleBtn.setAttribute("aria-pressed", effective === "dark" ? "true" : "false");
+  }
+
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute("content", effective === "dark" ? "#0b0d12" : "#f4f4f4");
 }
@@ -70,20 +72,21 @@ let themeMode = loadTheme();
 
 if (window.matchMedia) {
   const mq = window.matchMedia("(prefers-color-scheme: dark)");
-  // se estiver em auto, reage ao sistema
   mq.addEventListener?.("change", () => {
     if (themeMode === "auto") applyTheme("auto");
   });
 }
 
-temaToggleBtn.addEventListener("click", () => {
-  // alterna entre light/dark (sem complicar)
-  const html = document.documentElement;
-  const isDark = html.classList.contains("theme-dark");
-  themeMode = isDark ? "light" : "dark";
-  applyTheme(themeMode);
-  try { localStorage.setItem(LS_THEME, themeMode); } catch {}
-});
+if (temaToggleBtn) {
+  temaToggleBtn.addEventListener("click", () => {
+    // alterna entre light/dark
+    const html = document.documentElement;
+    const isDark = html.classList.contains("theme-dark");
+    themeMode = isDark ? "light" : "dark";
+    applyTheme(themeMode);
+    try { localStorage.setItem(LS_THEME, themeMode); } catch {}
+  });
+}
 
 /* =========================
    Som de clique (Web Audio)
@@ -132,7 +135,7 @@ function loadPrefs() {
   } catch {
     saveEnabled = false;
   }
-  salvarPlacarEl.checked = saveEnabled;
+  if (salvarPlacarEl) salvarPlacarEl.checked = saveEnabled;
 
   if (saveEnabled) {
     try {

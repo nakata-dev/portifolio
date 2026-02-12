@@ -93,7 +93,6 @@ body{
   font-family: Arial, sans-serif;
   color: var(--text);
 
-  /* evita scroll lateral fantasma */
   overflow-x: hidden;
 
   background:
@@ -110,7 +109,6 @@ body{
   width: 100%;
   max-width: 520px;
   margin: 0 auto;
-
   padding: 14px;
 
   flex: 1;
@@ -131,12 +129,11 @@ h1{
 }
 
 /* =========================
-   Barra compacta
+   Barra compacta (ajuste de layout horizontal)
 ========================= */
 .barra{
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 10px;
 
@@ -146,10 +143,10 @@ h1{
   border-radius: 16px;
   padding: 8px 10px;
 
-  /* em telas menores, deixa quebrar sem estourar */
   flex-wrap: wrap;
 }
 
+/* garante que o grupo de modo não estoure */
 .grupo{
   display: inline-flex;
   gap: 4px;
@@ -157,6 +154,8 @@ h1{
   border-radius: 999px;
   background: rgba(0,0,0,.06);
   max-width: 100%;
+  flex: 1 1 auto; /* ajuda a distribuir melhor em telas estreitas */
+  justify-content: center;
 }
 @media (prefers-color-scheme: dark){
   .grupo{ background: rgba(255,255,255,.08); }
@@ -172,6 +171,7 @@ h1{
   font-size: .95rem;
   transition: background .15s ease, transform .12s ease;
   white-space: nowrap;
+  touch-action: manipulation;
 }
 .seg:hover{
   background: rgba(0,0,0,.08);
@@ -189,11 +189,13 @@ h1{
   .seg.active{ background: rgba(255,255,255,.12); }
 }
 
+/* direita sempre “encaixa” e não empurra horizontal */
 .direita{
   display: inline-flex;
   gap: 10px;
   align-items: center;
   margin-left: auto;
+  flex: 0 0 auto;
 }
 
 .status{
@@ -236,6 +238,7 @@ h1{
   align-items: center;
   justify-content: center;
   transition: transform .12s ease, background .15s ease;
+  touch-action: manipulation;
 }
 .icon-btn:hover{
   background: rgba(0,0,0,.08);
@@ -266,7 +269,7 @@ h1{
 }
 
 /* =========================
-   Tabuleiro (sem estranheza horizontal)
+   Tabuleiro
 ========================= */
 #tabuleiro{
   --boardSize: min(92vw, 360px);
@@ -275,7 +278,6 @@ h1{
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 
-  /* respeita o container e evita overflow */
   width: min(100%, var(--boardSize));
   margin: 8px auto 10px auto;
 }
@@ -299,6 +301,7 @@ h1{
   user-select: none;
   cursor: pointer;
   transition: transform .12s ease, background .15s ease, outline-color .15s ease;
+  touch-action: manipulation;
 }
 
 .celula:hover{
@@ -435,6 +438,7 @@ h1{
   cursor: pointer;
   font-weight: 900;
   transition: background 0.15s ease, transform 0.12s ease;
+  touch-action: manipulation;
 }
 .btn-sec:hover{
   background: rgba(0,0,0,.06);

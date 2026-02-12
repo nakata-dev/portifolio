@@ -3,9 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Ajuda o navegador a saber que a página suporta claro/escuro -->
+  <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#0b0d12" />
+
   <title>Jogo da Velha</title>
-  <link rel="stylesheet" href="styles.css" />
+
+  <!-- BOOTSTRAP DE TEMA (antes do CSS) para evitar falha/flash e depender menos do app.js -->
+  <script>
+    (function () {
+      try {
+        var key = "ttt_theme_v1"; // mesmo do app.js
+        var mode = localStorage.getItem(key) || "auto";
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var effective = mode === "auto" ? (prefersDark ? "dark" : "light") : mode;
+
+        var html = document.documentElement;
+        html.classList.remove("theme-light", "theme-dark");
+        html.classList.add(effective === "dark" ? "theme-dark" : "theme-light");
+
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", effective === "dark" ? "#0b0d12" : "#f4f4f4");
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Cache-busting (mude o número quando publicar) -->
+  <link rel="stylesheet" href="styles.css?v=3" />
 </head>
 <body>
   <main class="app" aria-label="Jogo da Velha">
@@ -24,9 +49,14 @@
             <span id="chipJogador" class="chip chip-x" aria-live="polite">X</span>
           </div>
 
-          <button id="temaToggle" class="icon-btn" type="button" aria-label="Alternar tema" title="Alternar tema">
-            🌙
-          </button>
+          <button
+            id="temaToggle"
+            class="icon-btn"
+            type="button"
+            aria-label="Alternar tema"
+            aria-pressed="false"
+            title="Alternar tema"
+          >🌙</button>
         </div>
       </div>
     </header>
@@ -60,6 +90,7 @@
     Copyright @ Ailton A. Nakata
   </footer>
 
-  <script src="app.js" defer></script>
+  <!-- Cache-busting -->
+  <script src="app.js?v=3" defer></script>
 </body>
 </html>
