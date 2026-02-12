@@ -4,18 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Ajuda o navegador a saber que a página suporta claro/escuro -->
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#0b0d12" />
 
   <title>Jogo da Velha</title>
 
-  <!-- BOOTSTRAP DE TEMA (antes do CSS) para evitar falha/flash e depender menos do app.js -->
+  <!-- BOOTSTRAP DE TEMA (default: DARK) -->
   <script>
     (function () {
       try {
-        var key = "ttt_theme_v1"; // mesmo do app.js
-        var mode = localStorage.getItem(key) || "auto";
+        var key = "ttt_theme_v1";
+        var stored = localStorage.getItem(key);
+        // Default solicitado: começar no dark caso não exista preferência salva
+        var mode = stored ? stored : "dark";
+
         var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         var effective = mode === "auto" ? (prefersDark ? "dark" : "light") : mode;
 
@@ -29,8 +31,7 @@
     })();
   </script>
 
-  <!-- Cache-busting (mude o número quando publicar) -->
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
   <main class="app" aria-label="Jogo da Velha">
@@ -90,7 +91,6 @@
     Copyright @ Ailton A. Nakata
   </footer>
 
-  <!-- Cache-busting -->
-  <script src="app.js?v=3" defer></script>
+  <script src="app.js?v=4" defer></script>
 </body>
 </html>

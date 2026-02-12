@@ -34,7 +34,7 @@ const celulas = [];
 let board = Array(9).fill("");
 
 /* =========================
-   Tema (toggle com persistência)
+   Tema (default: DARK na 1ª vez)
 ========================= */
 function systemPrefersDark() {
   return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -59,7 +59,8 @@ function applyTheme(mode) {
 }
 
 function loadTheme() {
-  let mode = "auto";
+  // Default solicitado: dark
+  let mode = "dark";
   try {
     const raw = localStorage.getItem(LS_THEME);
     if (raw === "light" || raw === "dark" || raw === "auto") mode = raw;
@@ -79,7 +80,6 @@ if (window.matchMedia) {
 
 if (temaToggleBtn) {
   temaToggleBtn.addEventListener("click", () => {
-    // alterna entre light/dark
     const html = document.documentElement;
     const isDark = html.classList.contains("theme-dark");
     themeMode = isDark ? "light" : "dark";
@@ -250,10 +250,26 @@ function isDraw(b) {
   return b.every((x) => x !== "") && !winnerOf(b).win;
 }
 
+function triggerCellFx(btn) {
+  // efeito neon rápido sem custo alto
+  btn.classList.remove("fx");
+  // força reflow mínimo para reiniciar animação
+  void btn.offsetWidth;
+  btn.classList.add("fx");
+}
+
 function setCell(i, v) {
   board[i] = v;
   const btn = celulas[i];
+
   btn.textContent = v;
+
+  btn.classList.remove("x", "o");
+  if (v === "X") btn.classList.add("x");
+  if (v === "O") btn.classList.add("o");
+
+  triggerCellFx(btn);
+
   btn.setAttribute("aria-label", `Célula ${i + 1}: ${v ? v : "vazia"}`);
 }
 
@@ -416,6 +432,7 @@ function reiniciarJogo(keepTurnX) {
   board = Array(9).fill("");
   celulas.forEach((btn, i) => {
     btn.textContent = "";
+    btn.classList.remove("x", "o", "fx");
     btn.disabled = false;
     btn.setAttribute("aria-disabled", "false");
     btn.setAttribute("aria-label", `Célula ${i + 1}: vazia`);
