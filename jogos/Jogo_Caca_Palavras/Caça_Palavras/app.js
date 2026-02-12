@@ -3,7 +3,8 @@
    ✅ Android sem travar (geração assíncrona)
    ✅ 100 níveis 5..8, 9 palavras, 8 direções
    ✅ Garantia de 9 palavras com fallback
-   ✅ NOVO: cada palavra tem uma cor fixa (melhor para idosos)
+   ✅ Cores por palavra (melhor para idosos)
+   ✅ NOVO: som leve + moedas (sem arquivos, sem travar)
 ========================== */
 
 const LS_KEY = "wordsearch_pro_v1";
@@ -85,24 +86,21 @@ function pickDeterministicUnique(arr, n, seed) {
 }
 
 /* =========================
-   Cores por palavra
-   - Paleta com ALTO contraste (menos parecidas)
-   - Escolhidas para funcionar bem em fundo escuro
-   - Preferência por cores mais claras (texto escuro nas células continua legível)
+   Cores por palavra (alto contraste)
 ========================= */
 const WORD_COLORS = [
-  "#FF595E", // vermelho vivo
-  "#FFCA3A", // amarelo forte
-  "#8AC926", // verde-lima
-  "#4D96FF", // azul vivo
-  "#FF922B", // laranja forte
-  "#63E6BE", // verde-água
-  "#F783AC", // rosa
-  "#B197FC", // lilás claro
-  "#22D3EE", // ciano
-  "#A9E34B", // verde neon suave
-  "#FFD8A8", // pêssego claro (boa diferença no tabuleiro)
-  "#E599F7", // roxo claro
+  "#FF595E",
+  "#FFCA3A",
+  "#8AC926",
+  "#4D96FF",
+  "#FF922B",
+  "#63E6BE",
+  "#F783AC",
+  "#B197FC",
+  "#22D3EE",
+  "#A9E34B",
+  "#FFD8A8",
+  "#E599F7",
 ];
 
 function hashWordToColor(word) {
@@ -192,6 +190,7 @@ const btnHint = $("btnHint");
 const btnRestart = $("btnRestart");
 const btnNext = $("btnNext");
 const btnDev = $("btnDev");
+const btnSound = $("btnSound");
 
 const devPanel = $("devPanel");
 const levelsInput = $("levelsInput");
@@ -211,6 +210,10 @@ function readAllStorage() {
   }
 }
 
+function writeAllStorage(data) {
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
 function loadProgress() {
   try {
     const raw = localStorage.getItem(LS_KEY);
@@ -225,7 +228,7 @@ function loadProgress() {
 function saveProgress(progress) {
   const data = readAllStorage();
   data.progress = { ...(data.progress || {}), ...progress };
-  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  writeAllStorage(data);
 }
 
 function saveBestTime(levelIdx, seconds) {
@@ -236,7 +239,7 @@ function saveBestTime(levelIdx, seconds) {
 
   if (prev == null || seconds < prev) {
     data.bestTimes[key] = seconds;
-    localStorage.setItem(LS_KEY, JSON.stringify(data));
+    writeAllStorage(data);
   }
 }
 
@@ -249,13 +252,26 @@ function setOverrideWords(levelIdx, words) {
   const data = readAllStorage();
   data.overrides = data.overrides || {};
   data.overrides[String(levelIdx)] = words.slice(0, 9);
-  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  writeAllStorage(data);
 }
 
 function clearOverrides() {
   const data = readAllStorage();
   data.overrides = {};
-  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  writeAllStorage(data);
+}
+
+function getSoundPref() {
+  const data = readAllStorage();
+  const v = data?.settings?.soundOn;
+  return v == null ? true : !!v;
+}
+
+function setSoundPref(on) {
+  const data = readAllStorage();
+  data.settings = data.settings || {};
+  data.settings.soundOn = !!on;
+  writeAllStorage(data);
 }
 
 function loadLevels() {
@@ -263,13 +279,14 @@ function loadLevels() {
 
   if (Number(data.schemaVersion || 0) !== SCHEMA_VERSION) {
     const fresh = safeClone(DEFAULT_LEVELS);
-    localStorage.setItem(LS_KEY, JSON.stringify({
+    writeAllStorage({
       schemaVersion: SCHEMA_VERSION,
       levels: fresh,
       progress: { levelIndex: 0 },
       bestTimes: {},
-      overrides: {}
-    }));
+      overrides: {},
+      settings: { soundOn: true }
+    });
     return fresh;
   }
 
@@ -282,7 +299,8 @@ function saveLevels(levelsArr) {
   data.schemaVersion = SCHEMA_VERSION;
   data.levels = levelsArr;
   if (!data.overrides) data.overrides = {};
-  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  if (!data.settings) data.settings = { soundOn: true };
+  writeAllStorage(data);
 }
 
 /* =========================
@@ -300,6 +318,154 @@ function validateLevels(arr) {
     });
     if (lvl.directions != null && lvl.directions !== 8) throw new Error("directions deve ser 8");
   });
+}
+
+/* =========================
+   Som (Web Audio) - super leve
+========================= */
+let soundOn = getSoundPref();
+let audioCtx = null;
+let audioUnlocked = false;
+
+function syncSoundButton() {
+  if (!btnSound) return;
+  btnSound.setAttribute("aria-pressed", String(!!soundOn));
+  btnSound.textContent = soundOn ? "🔊" : "🔇";
+  btnSound.title = soundOn ? "Som ligado" : "Som desligado";
+}
+
+function ensureAudio() {
+  if (audioCtx) return audioCtx;
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return null;
+  audioCtx = new Ctx();
+  return audioCtx;
+}
+
+async function unlockAudioIfNeeded() {
+  if (audioUnlocked) return;
+  const ctx = ensureAudio();
+  if (!ctx) return;
+
+  try {
+    if (ctx.state === "suspended") await ctx.resume();
+    // “ping” inaudível curtinho só para garantir inicialização
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.00001;
+    osc.type = "sine";
+    osc.frequency.value = 440;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.01);
+    audioUnlocked = true;
+  } catch {
+    // se falhar, só não toca som
+  }
+}
+
+function playBeep(freq, durMs, type = "sine", vol = 0.035) {
+  if (!soundOn) return;
+  const ctx = ensureAudio();
+  if (!ctx || !audioUnlocked) return;
+
+  const t0 = ctx.currentTime;
+  const dur = Math.max(0.02, durMs / 1000);
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, t0);
+
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start(t0);
+  osc.stop(t0 + dur + 0.02);
+}
+
+function sfxFound() {
+  // arpejo curtinho (som de “moedinha”)
+  playBeep(880, 70, "triangle", 0.03);
+  setTimeout(() => playBeep(1175, 70, "triangle", 0.028), 55);
+  setTimeout(() => playBeep(1568, 90, "triangle", 0.026), 110);
+}
+
+function sfxComplete() {
+  // sequência um pouco maior (fim do nível)
+  playBeep(784, 90, "sine", 0.03);
+  setTimeout(() => playBeep(988, 90, "sine", 0.03), 90);
+  setTimeout(() => playBeep(1175, 110, "sine", 0.03), 180);
+  setTimeout(() => playBeep(1568, 140, "sine", 0.032), 300);
+}
+
+/* =========================
+   FX Moedas (DOM + CSS)
+========================= */
+let coinsActive = 0;
+const MAX_COINS_ACTIVE = 6;
+
+function prefersReducedMotion() {
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function spawnCoinAt(x, y, kind = "coin") {
+  if (coinsActive >= MAX_COINS_ACTIVE) return;
+
+  const el = document.createElement("span");
+  el.className = "fx-coin";
+
+  if (prefersReducedMotion()) {
+    el.classList.add("fx-text");
+    el.textContent = "+1";
+  } else {
+    el.textContent = "🪙";
+    if (kind === "small") el.classList.add("fx-small");
+  }
+
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+
+  coinsActive++;
+  document.body.appendChild(el);
+
+  const cleanup = () => {
+    if (!el.isConnected) return;
+    el.remove();
+    coinsActive = Math.max(0, coinsActive - 1);
+  };
+
+  el.addEventListener("animationend", cleanup, { once: true });
+  setTimeout(cleanup, prefersReducedMotion() ? 350 : 1200);
+}
+
+function spawnCoinNearElement(domEl, kind = "coin") {
+  if (!domEl) return;
+  const r = domEl.getBoundingClientRect();
+  const x = r.left + r.width * 0.5;
+  const y = r.top + r.height * 0.25;
+  spawnCoinAt(x, y, kind);
+}
+
+function spawnCoinsCelebration() {
+  // máximo 3 moedas, com delays pequenos
+  const base = boardEl?.getBoundingClientRect?.();
+  const x0 = base ? base.left + base.width * 0.5 : window.innerWidth * 0.5;
+  const y0 = base ? base.top + base.height * 0.45 : window.innerHeight * 0.35;
+
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      const x = x0 + randInt(-40, 40);
+      const y = y0 + randInt(-20, 20);
+      spawnCoinAt(x, y, "small");
+    }, i * 120);
+  }
 }
 
 /* =========================
@@ -324,22 +490,36 @@ let startTime = 0;
 let timerId = null;
 
 let genToken = 0;
-
 let wordColorMap = new Map();
 
 /* =========================
    Boot
 ========================= */
 wireUI();
+syncSoundButton();
 startLevel(levelIndex);
 
 /* =========================
    UI
 ========================= */
 function wireUI() {
+  // ✅ primeira interação desbloqueia som (política do navegador)
+  const unlock = () => unlockAudioIfNeeded();
+  window.addEventListener("pointerdown", unlock, { passive: true });
+  window.addEventListener("keydown", unlock, { passive: true });
+
   btnHint.addEventListener("click", hint);
   btnRestart.addEventListener("click", () => startLevel(levelIndex, { resetStats: true }));
   btnNext.addEventListener("click", nextLevel);
+
+  btnSound?.addEventListener("click", async () => {
+    soundOn = !soundOn;
+    setSoundPref(soundOn);
+    syncSoundButton();
+    await unlockAudioIfNeeded();
+    toast(soundOn ? "🔊 Som ligado" : "🔇 Som desligado");
+    if (soundOn) playBeep(880, 70, "triangle", 0.02);
+  });
 
   btnDev.addEventListener("click", toggleDevPanel);
 
@@ -792,17 +972,23 @@ function validateSelection() {
 
     const color = wordColorMap.get(match.word) || hashWordToColor(match.word);
 
+    // pinta tabuleiro
     selectedCells.forEach(c => {
       c.classList.remove("active");
       c.classList.add("found");
       c.style.setProperty("--wcolor", color);
     });
 
+    // pinta tag
     const tag = document.querySelector(`[data-word="${match.word}"]`);
     if (tag) tag.style.setProperty("--wcolor", color);
     tag?.classList.add("found");
 
-    navigator.vibrate?.(60);
+    // ✅ FX + SOM (leves)
+    sfxFound();
+    spawnCoinNearElement(selectedCells[selectedCells.length - 1], "coin");
+
+    navigator.vibrate?.(50);
     toast(`✔ Encontrou: ${match.word}`);
   }
 
@@ -823,6 +1009,10 @@ function updateProgress() {
 
     const elapsed = Math.floor((Date.now() - startTime) / 1000);
     saveBestTime(levelIndex, elapsed);
+
+    // ✅ fim do nível: som + moedas (bem leve)
+    sfxComplete();
+    spawnCoinsCelebration();
 
     toast("✔ Nível concluído!");
     setTimeout(() => {
