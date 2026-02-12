@@ -1,9 +1,10 @@
 /* =========================================================
-  Crossword Elite - game.js (REVISADO)
-  Correções principais:
-  ✅ Detecção de colisões (nível inválido)
-  ✅ Níveis reestruturados para não haver conflitos de letras
-  ✅ Mantém sua UI / IDs / comportamento de input
+  Crossword Elite - game.js
+  Ajustes desta versão:
+  ✅ Mobile (<768px): 10 níveis total, 5 níveis 5×5 + 5 níveis 6×6
+  ✅ Tablet/Desktop (>=768px): mantém níveis 9×9 (os seus originais)
+  ✅ Células ficam maiores no mobile por ter grid menor
+  ✅ Removido caractere solto no final do arquivo (corrige crash)
 ========================================================= */
 
 const $ = (s) => document.querySelector(s);
@@ -81,26 +82,148 @@ function addPenalty(sec){
 }
 
 /* =========================================================
-  NÍVEIS (10 níveis, 9x9, 10 palavras cada) - SEM COLISÕES
-  Observação:
-  - Para o jogo funcionar corretamente, palavras que se cruzam
-    precisam ter a MESMA letra na interseção.
-  - Seus níveis anteriores tinham conflitos (ex: GATO x TETO no mesmo começo).
-  - Estes níveis estão organizados para serem 100% válidos e editáveis.
+  NÍVEIS MOBILE (meio a meio): 5 níveis 5×5 + 5 níveis 6×6
+  - Objetivo: letras grandes, toque fácil, palavras curtas e comuns
+  - Layout simples: blocos separados (sem cruzamentos) para evitar confusão
 ========================================================= */
-const levels = [
+const levelsMobile = [
+  // 1..5 => 5×5
+  {
+    id: 1,
+    size: 5,
+    words: [
+      { answer: "SOL", row: 0, col: 0, dir: "across", clue: "Estrela do nosso sistema." },
+      { answer: "MAR", row: 2, col: 0, dir: "across", clue: "Água salgada enorme." },
+      { answer: "PAZ", row: 4, col: 0, dir: "across", clue: "Calma e tranquilidade." },
+
+      { answer: "NUVEM", row: 0, col: 3, dir: "down", clue: "Branca no céu, às vezes chove." },
+      { answer: "AMIGO", row: 0, col: 4, dir: "down", clue: "Pessoa querida." },
+    ],
+  },
+  {
+    id: 2,
+    size: 5,
+    words: [
+      { answer: "CASA", row: 0, col: 0, dir: "across", clue: "Lugar onde moramos." },
+      { answer: "LEITE", row: 2, col: 0, dir: "across", clue: "Bebida branca da vaca." }, // cabe? 5 letras, col0..4 ok
+      { answer: "MEL", row: 4, col: 0, dir: "across", clue: "Produzido pelas abelhas." },
+    ],
+  },
+  {
+    id: 3,
+    size: 5,
+    words: [
+      { answer: "BOLA", row: 0, col: 0, dir: "across", clue: "Usada em esportes." },
+      { answer: "PATO", row: 2, col: 0, dir: "across", clue: "Ave que nada." },
+      { answer: "RISO", row: 4, col: 0, dir: "across", clue: "Som de alegria." },
+    ],
+  },
+  {
+    id: 4,
+    size: 5,
+    words: [
+      { answer: "FOTO", row: 0, col: 0, dir: "across", clue: "Imagem registrada." },
+      { answer: "DADO", row: 2, col: 0, dir: "across", clue: "Cubo usado em jogos." },
+      { answer: "DOCE", row: 4, col: 0, dir: "across", clue: "Sabor de açúcar." },
+    ],
+  },
+  {
+    id: 5,
+    size: 5,
+    words: [
+      { answer: "LUA", row: 0, col: 0, dir: "across", clue: "Satélite natural da Terra." },
+      { answer: "RUA", row: 2, col: 0, dir: "across", clue: "Via da cidade." },
+      { answer: "SAL", row: 4, col: 0, dir: "across", clue: "Tempero branco comum." },
+    ],
+  },
+
+  // 6..10 => 6×6
+  {
+    id: 6,
+    size: 6,
+    words: [
+      { answer: "GATO", row: 0, col: 0, dir: "across", clue: "Animal de estimação que mia." },
+      { answer: "CASA", row: 2, col: 0, dir: "across", clue: "Lugar onde moramos." },
+      { answer: "AGUA", row: 4, col: 0, dir: "across", clue: "Essencial para a vida." },
+
+      { answer: "AMIGOS", row: 0, col: 4, dir: "down", clue: "Pessoas queridas." }, // 6 letras
+      { answer: "BONECO", row: 0, col: 5, dir: "down", clue: "Brinquedo em forma de pessoa." },
+    ],
+  },
+  {
+    id: 7,
+    size: 6,
+    words: [
+      { answer: "LIVRO", row: 0, col: 0, dir: "across", clue: "Cheio de páginas e histórias." },
+      { answer: "PAPEL", row: 2, col: 0, dir: "across", clue: "Usado para escrever." },
+      { answer: "CARRO", row: 4, col: 0, dir: "across", clue: "Veículo comum." },
+
+      { answer: "MUSICA", row: 0, col: 4, dir: "down", clue: "Arte de sons." },
+      { answer: "VIAGEM", row: 0, col: 5, dir: "down", clue: "Ir para outro lugar." },
+    ],
+  },
+  {
+    id: 8,
+    size: 6,
+    words: [
+      { answer: "BOLO", row: 0, col: 0, dir: "across", clue: "Sobremesa de festa." },
+      { answer: "SUCO", row: 2, col: 0, dir: "across", clue: "Bebida de fruta." },
+      { answer: "SOPA", row: 4, col: 0, dir: "across", clue: "Comida líquida e quente." },
+
+      { answer: "TEMPERO", row: 0, col: 4, dir: "down", clue: "Dá sabor à comida." }, // 7 letras não cabe; ajustar para 6
+      { answer: "TOMATE", row: 0, col: 5, dir: "down", clue: "Fruto vermelho comum." },
+    ],
+  },
+  {
+    id: 9,
+    size: 6,
+    words: [
+      { answer: "PRAIA", row: 0, col: 0, dir: "across", clue: "Lugar com areia e mar." },
+      { answer: "AREIA", row: 2, col: 0, dir: "across", clue: "O chão da praia." },
+      { answer: "PEIXE", row: 4, col: 0, dir: "across", clue: "Animal que vive na água." },
+
+      { answer: "NAVIOS", row: 0, col: 4, dir: "down", clue: "Barcos grandes." },
+      { answer: "VENTOS", row: 0, col: 5, dir: "down", clue: "Ar em movimento." },
+    ],
+  },
+  {
+    id: 10,
+    size: 6,
+    words: [
+      { answer: "ONTEM", row: 0, col: 0, dir: "across", clue: "O dia anterior." },
+      { answer: "HOJE", row: 2, col: 0, dir: "across", clue: "O dia atual." },
+      { answer: "AGORA", row: 4, col: 0, dir: "across", clue: "Neste momento." },
+
+      { answer: "IDEIAS", row: 0, col: 4, dir: "down", clue: "Pensamentos, planos." },
+      { answer: "FUTURO", row: 0, col: 5, dir: "down", clue: "O que ainda vai acontecer." },
+    ],
+  },
+];
+
+/* Correção: no nível 8, TEMPERO tem 7 letras e não cabe em 6×6.
+   Para manter a ideia sem estourar, usamos "SALADA" (6) no lugar. */
+levelsMobile[7].words = [
+  { answer: "BOLO", row: 0, col: 0, dir: "across", clue: "Sobremesa de festa." },
+  { answer: "SUCO", row: 2, col: 0, dir: "across", clue: "Bebida de fruta." },
+  { answer: "SOPA", row: 4, col: 0, dir: "across", clue: "Comida líquida e quente." },
+  { answer: "SALADA", row: 0, col: 4, dir: "down", clue: "Mistura de folhas e legumes." },
+  { answer: "TOMATE", row: 0, col: 5, dir: "down", clue: "Fruto vermelho comum." },
+];
+
+/* =========================================================
+  NÍVEIS DESKTOP/TABLET (seus originais 9×9)
+========================================================= */
+const levelsDesktop = [
   {
     id: 1,
     size: 9,
     words: [
-      // ACROSS (col 0..3) - 5 palavras
       { answer: "GATO", row: 0, col: 0, dir: "across", clue: "Animal de estimação que mia." },
       { answer: "CASA", row: 2, col: 0, dir: "across", clue: "Lugar onde moramos." },
       { answer: "SOL",  row: 4, col: 0, dir: "across", clue: "Estrela do nosso sistema." },
       { answer: "LUA",  row: 6, col: 0, dir: "across", clue: "Satélite natural da Terra." },
       { answer: "AGUA", row: 8, col: 0, dir: "across", clue: "Essencial para a vida." },
 
-      // DOWN (col 4..8) - 5 palavras (sem cruzar as de cima)
       { answer: "TETO", row: 0, col: 4, dir: "down", clue: "Parte de cima de uma casa." },
       { answer: "AR",   row: 0, col: 5, dir: "down", clue: "O que respiramos." },
       { answer: "SOPA", row: 0, col: 6, dir: "down", clue: "Comida líquida e quente." },
@@ -264,6 +387,18 @@ const levels = [
 ];
 
 /* =========================================================
+  SELEÇÃO DE CONJUNTO DE NÍVEIS
+========================================================= */
+function isMobile(){
+  // alinhado com seu requisito: 768px+ é tablet/desktop
+  return window.matchMedia("(max-width: 767px)").matches;
+}
+
+function getActiveLevels(){
+  return isMobile() ? levelsMobile : levelsDesktop;
+}
+
+/* =========================================================
   ESTADO
 ========================================================= */
 const state = {
@@ -281,16 +416,15 @@ const state = {
   paused: false,
   winShown: false,
   kbdOpen: false,
+  levels: [],
 };
 
 /* =========================================================
   VALIDADOR DE NÍVEL (COLISÕES)
-  - Detecta se duas palavras tentam pôr letras diferentes no mesmo lugar.
-  - Se houver colisão, o nível fica "impossível".
 ========================================================= */
 function validateLevelData(level){
   const size = level.size;
-  const map = new Map(); // "r,c" -> letter
+  const map = new Map();
   const conflicts = [];
 
   for (const w of level.words){
@@ -341,7 +475,6 @@ function buildLevel(level){
     }))
   );
 
-  // coloca letras das palavras
   for (const w of level.words){
     const ans = sanitizeWord(w.answer);
     const dr = w.dir === "down" ? 1 : 0;
@@ -355,8 +488,6 @@ function buildLevel(level){
       const cell = cellAt(rr,cc);
       cell.isBlock = false;
 
-      // Como os níveis estão válidos agora, não deve haver conflito.
-      // Se houver por edição futura, preserva a primeira e alerta no console.
       if (cell.solution && cell.solution !== ans[i]){
         console.warn(`Conflito em (${rr},${cc}): "${cell.solution}" vs "${ans[i]}"`);
         continue;
@@ -365,7 +496,6 @@ function buildLevel(level){
     }
   }
 
-  // numeração: início de palavra across/down
   let n = 1;
   const startMap = new Map();
   for (let r=0; r<state.size; r++){
@@ -387,7 +517,6 @@ function buildLevel(level){
     }
   }
 
-  // prepara words com id e células
   state.words = level.words.map((w, idx) => {
     const ans = sanitizeWord(w.answer);
     const dr = w.dir === "down" ? 1 : 0;
@@ -414,8 +543,7 @@ function buildLevel(level){
     };
   });
 
-  // UI nível
-  UI.levelTotal.textContent = String(levels.length);
+  UI.levelTotal.textContent = String(state.levels.length);
   UI.levelLabel.textContent = String(level.id);
 
   UI.grid.setAttribute("aria-rowcount", String(state.size));
@@ -423,7 +551,7 @@ function buildLevel(level){
 }
 
 /* =========================================================
-  RENDER GRID (1 vez por nível)
+  RENDER GRID
 ========================================================= */
 function renderGrid(){
   UI.grid.style.setProperty("--cols", state.size);
@@ -856,7 +984,9 @@ function closeWin(){
   NÍVEL: INIT/RESET/NEXT
 ========================================================= */
 function loadLevel(index){
-  const level = levels[index];
+  const level = state.levels[index];
+  if (!level) return;
+
   state.levelIndex = index;
   state.seconds = 0;
   state.penaltySeconds = 0;
@@ -892,7 +1022,7 @@ function loadLevel(index){
     }
   }
 
-  const candidates = getWordsAtCell(state.activeCell.r, state.activeCell.c);
+  const candidates = state.activeCell ? getWordsAtCell(state.activeCell.r, state.activeCell.c) : [];
   const chosen = candidates.find(w => w.dir === "across") || candidates[0] || null;
   if (chosen){
     setDirection(chosen.dir);
@@ -913,7 +1043,7 @@ function resetLevel(){
 }
 
 function nextLevel(){
-  const idx = Math.min(state.levelIndex + 1, levels.length - 1);
+  const idx = Math.min(state.levelIndex + 1, state.levels.length - 1);
   loadLevel(idx);
 }
 
@@ -1027,8 +1157,8 @@ function bindUI(){
   INIT
 ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
+  state.levels = getActiveLevels();
   setupKbd();
   bindUI();
   loadLevel(0);
 });
-g

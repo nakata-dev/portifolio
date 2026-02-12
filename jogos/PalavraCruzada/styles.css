@@ -2,16 +2,21 @@
   --bg: #1a1a2e;
   --text: #e0e0e0;
   --accent: #00bcd4;
+
+  /* um pouco mais “limpo” (menos peso visual) */
   --surface: #33334d;
-  --surfaceA: rgba(51,51,77,0.40);
-  --surfaceB: rgba(51,51,77,0.55);
-  --border: rgba(224,224,224,0.12);
-  --shadow: 0 16px 40px rgba(0,0,0,0.35);
+  --surfaceA: rgba(51,51,77,0.30);
+  --surfaceB: rgba(51,51,77,0.45);
+  --border: rgba(224,224,224,0.10);
+  --shadow: 0 12px 28px rgba(0,0,0,0.30);
   --radius: 18px;
 
+  /* grid */
   --gridMax: 520px;
-  --gridGap: clamp(6px, 1.2vw, 10px);
-  --focus: 0 0 0 4px rgba(0,188,212,0.22);
+  --gridGap: clamp(7px, 1.4vw, 12px);
+
+  /* foco mais visível */
+  --focus: 0 0 0 4px rgba(0,188,212,0.24);
 }
 
 *{ box-sizing: border-box; }
@@ -21,8 +26,8 @@ body{
   margin: 0;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background:
-    radial-gradient(900px 500px at 20% 0%, rgba(0,188,212,0.14), transparent 60%),
-    radial-gradient(900px 500px at 90% 20%, rgba(0,188,212,0.08), transparent 55%),
+    radial-gradient(900px 500px at 20% 0%, rgba(0,188,212,0.10), transparent 60%),
+    radial-gradient(900px 500px at 90% 20%, rgba(0,188,212,0.06), transparent 55%),
     var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -109,7 +114,7 @@ body{
   padding: 10px 12px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(51,51,77,0.38);
+  background: rgba(51,51,77,0.34);
   min-width: 0;
   white-space: nowrap;
 }
@@ -136,18 +141,18 @@ body{
   max-width: 100%;
 }
 
-.btn:hover{ transform: translateY(-1px); border-color: rgba(224,224,224,0.22); }
+.btn:hover{ transform: translateY(-1px); border-color: rgba(224,224,224,0.18); }
 .btn:active{ transform: translateY(0); }
 .btn:disabled{ opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .btn-primary{
   background: linear-gradient(180deg, rgba(0,188,212,0.92), rgba(0,188,212,0.62));
   border-color: transparent;
-  box-shadow: 0 12px 26px rgba(0,188,212,0.18);
+  box-shadow: 0 12px 26px rgba(0,188,212,0.16);
   color: #0d141a;
 }
-.btn-primary:hover{ box-shadow: 0 16px 34px rgba(0,188,212,0.22); }
-.btn-secondary{ background: rgba(51,51,77,0.55); }
+.btn-primary:hover{ box-shadow: 0 16px 34px rgba(0,188,212,0.20); }
+.btn-secondary{ background: rgba(51,51,77,0.48); }
 .btn-ghost{ background: rgba(255,255,255,0.04); }
 
 .chip{
@@ -164,21 +169,21 @@ body{
   max-width: 100%;
 }
 .chip[aria-pressed="true"]{
-  background: rgba(0,188,212,0.14);
-  border-color: rgba(0,188,212,0.30);
+  background: rgba(0,188,212,0.12);
+  border-color: rgba(0,188,212,0.28);
 }
 
 /* WORKSHEET */
 .worksheet{
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: rgba(51,51,77,0.28);
+  background: rgba(51,51,77,0.24);
   box-shadow: var(--shadow);
   padding: 14px;
   display: grid;
   gap: 12px;
   min-width: 0;
-  position: relative; /* para o sticky interno funcionar bonito */
+  position: relative;
 }
 
 .worksheet-head{
@@ -197,10 +202,11 @@ body{
 /* GRID CARD */
 .grid-card{
   position: relative;
+  /* mantém overflow para não “vazar”, mas com foco mais interno nas células */
   overflow: hidden;
   padding: 12px;
   border-radius: var(--radius);
-  background: rgba(51,51,77,0.35);
+  background: rgba(51,51,77,0.30);
 }
 .grid-card::before{
   content:"";
@@ -219,9 +225,9 @@ body{
   display: grid;
   grid-template-columns: repeat(var(--cols, 9), minmax(0, 1fr));
   gap: var(--gridGap);
-  padding: 10px;
+  padding: 12px;
   border-radius: 16px;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0,0,0,0.05);
 }
 
 /* CÉLULAS */
@@ -229,51 +235,63 @@ body{
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  border: 1px solid rgba(224,224,224,0.16);
-  background: rgba(255,255,255,0.05);
+  border-radius: 14px;
+  border: 1px solid rgba(224,224,224,0.14);
+  background: rgba(255,255,255,0.045);
   color: var(--text);
   display: grid;
   place-items: center;
   font-weight: 900;
-  font-size: clamp(0.92rem, 3.2vw, 1.08rem);
+  font-size: clamp(0.98rem, 3.2vw, 1.10rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
   transition: background .12s ease, border-color .12s ease, box-shadow .12s ease;
   outline: none;
 }
+
 .cell:hover{
-  border-color: rgba(0,188,212,0.30);
-  background: rgba(0,188,212,0.06);
+  border-color: rgba(0,188,212,0.26);
+  background: rgba(0,188,212,0.05);
 }
+
 .cell:focus-visible{
   box-shadow: var(--focus);
-  border-color: rgba(0,188,212,0.40);
+  border-color: rgba(0,188,212,0.42);
 }
+
 .cell.block{
-  background: rgba(0,0,0,0.25);
-  border-color: rgba(0,0,0,0.18);
+  background: rgba(0,0,0,0.22);
+  border-color: rgba(0,0,0,0.14);
   cursor: default;
 }
+
 .cell.active{
-  border-color: rgba(0,188,212,0.55);
-  background: rgba(0,188,212,0.14);
+  border-color: rgba(0,188,212,0.65);
+  background: rgba(0,188,212,0.18);
+  box-shadow: 0 0 0 3px rgba(0,188,212,0.14);
 }
-.cell.in-word{ border-color: rgba(0,188,212,0.22); }
+
+.cell.in-word{
+  border-color: rgba(0,188,212,0.26);
+  background: rgba(0,188,212,0.06);
+}
+
 .cell.locked{
   background: rgba(255,255,255,0.07);
-  border-color: rgba(224,224,224,0.24);
+  border-color: rgba(224,224,224,0.22);
 }
+
 .cell.wrong{
-  border-color: rgba(255,90,120,0.35);
+  border-color: rgba(255,90,120,0.38);
   box-shadow: 0 0 0 3px rgba(255,90,120,0.12);
 }
+
 .cell .num{
   position: absolute;
   top: 6px;
   left: 7px;
-  font-size: 0.68rem;
+  font-size: 0.70rem;
   font-weight: 900;
   color: rgba(224,224,224,0.78);
 }
@@ -287,11 +305,11 @@ body{
   opacity: 0;
 }
 
-/* DOCK ESSENCIAL */
+/* DOCK */
 .dock{
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: rgba(51,51,77,0.38);
+  background: rgba(51,51,77,0.32);
   padding: 12px;
   min-width: 0;
   overflow: hidden;
@@ -358,9 +376,17 @@ body{
   .hint-row{ grid-template-columns: 1fr; }
   .dir-toggle{ width: 100%; }
   .chip{ width: 100%; justify-content: center; }
+
+  /* mobile: foco em legibilidade e toque */
+  .grid{ padding: 14px; }
+  .cell{
+    font-size: clamp(1.18rem, 5.2vw, 1.42rem);
+    border-radius: 16px;
+  }
+  .cell .num{ font-size: 0.78rem; }
 }
 
-/* ✅ CONTROLES NO RODAPÉ DO WORKSHEET (sticky) */
+/* CONTROLES sticky */
 .bottom-controls{
   position: sticky;
   bottom: 10px;
@@ -370,14 +396,13 @@ body{
   gap: 10px;
   padding: 10px;
   border-radius: 16px;
-  background: rgba(26,26,46,0.65);
+  background: rgba(26,26,46,0.62);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(224,224,224,0.10);
 }
 
 .bottom-controls .btn{ width: 100%; }
 
-/* em telas muito pequenas, 2 colunas para não esmagar */
 @media (max-width: 420px){
   .header-inner{ flex-direction: column; align-items: flex-start; }
   .hud{ width: 100%; justify-content: flex-start; }
@@ -390,7 +415,7 @@ body{
   border: 1px solid rgba(224,224,224,0.12);
   padding: 12px;
   border-radius: var(--radius);
-  background: rgba(51,51,77,0.35);
+  background: rgba(51,51,77,0.32);
   min-width: 0;
 }
 
