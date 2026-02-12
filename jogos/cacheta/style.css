@@ -1,0 +1,65 @@
+:root {
+    --bg-table: #1a472a;
+    --card-white: #ffffff;
+    --accent: #ffcc00;
+    --card-w: 65px;
+    --card-h: 95px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body { 
+    margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; 
+    background: var(--bg-table); color: white; overflow: hidden;
+}
+
+#game-container {
+    display: flex; flex-direction: column; height: 100vh; justify-content: space-between;
+}
+
+/* Área Central */
+#table {
+    display: flex; justify-content: space-around; align-items: center; padding: 20px 0;
+}
+
+.slot { text-align: center; font-size: 12px; font-weight: bold; }
+
+/* Cartas Visual */
+.card {
+    width: var(--card-w); height: var(--card-h);
+    background: white; border-radius: 6px; position: relative;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 4px; color: black; border: 1px solid #999;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.4); transition: 0.2s;
+}
+
+.card.selected { border: 4px solid var(--accent); transform: translateY(-15px) !important; }
+
+.card-back {
+    width: var(--card-w); height: var(--card-h);
+    background: #c0392b; border: 3px solid white; border-radius: 6px;
+}
+
+/* Mão em Leque */
+.hand-container {
+    display: flex; justify-content: center; height: 120px;
+    position: relative; margin-top: 10px;
+}
+
+.hand-container .card {
+    position: absolute; bottom: 10px; transform-origin: bottom center;
+}
+
+/* Controles */
+#controls {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px;
+}
+
+.btn-main {
+    padding: 15px; font-size: 18px; font-weight: bold; border-radius: 10px;
+    border: none; background: var(--accent); cursor: pointer; min-height: 55px;
+}
+
+.btn-main:disabled { background: #555; color: #888; }
+
+#message-log { text-align: center; font-size: 18px; background: rgba(0,0,0,0.3); padding: 5px; }

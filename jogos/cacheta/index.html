@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cacheta Royale Pro</title>
+    <style>
+        :root {
+            --felt: radial-gradient(circle, #1a4a2a 0%, #0a2012 100%);
+            --gold: #d4af37;
+            --card-w: 64px;
+            --card-h: 92px;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; user-select: none; }
+        body { margin: 0; background: #000; overflow: hidden; color: white; }
+
+        #table {
+            width: 100vw; height: 100vh;
+            background: var(--felt);
+            display: flex; flex-direction: column; align-items: center;
+            border: 10px solid #2a1810; position: relative;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+        }
+
+        /* Área de Descarte (Lixo) - Agora mais ampla para o espalhamento */
+        #trash-area {
+            position: relative;
+            width: 180px; height: 180px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .trash-card {
+            position: absolute;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 1;
+        }
+
+        /* Cartas */
+        .card-visual {
+            width: var(--card-w); height: var(--card-h);
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            border-radius: 6px; border: 1px solid #ccc; color: #333;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 5px; font-weight: 800; box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        }
+        .card-visual.red { color: #e74c3c; }
+        .card-visual.coringa { border: 2px solid var(--gold); background: linear-gradient(135deg, #fff9c4, #f1c40f); }
+        .card-visual.active { transform: translateY(-30px) scale(1.1); border: 2px solid var(--gold); box-shadow: 0 0 15px var(--gold); }
+
+        /* Centro e HUD */
+        #center { flex-grow: 1; display: flex; align-items: center; justify-content: center; gap: 40px; }
+        .stack-label { font-size: 10px; color: var(--gold); text-align: center; margin-top: 5px; font-weight: bold; }
+
+        /* Mão em Leque */
+        #hand { width: 100%; height: 160px; position: relative; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 90px; }
+        .card-wrapper { position: absolute; transform-origin: bottom center; transition: 0.3s; }
+
+        /* Controlos */
+        #controls {
+            position: absolute; bottom: 20px; width: 90%; background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px); padding: 15px; border-radius: 20px;
+            display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn {
+            background: linear-gradient(180deg, #d4af37, #b8860b);
+            color: #2c1810; border: none; padding: 12px 20px; border-radius: 12px;
+            font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer;
+        }
+        .btn:disabled { opacity: 0.3; filter: grayscale(1); }
+    </style>
+</head>
+<body>
+
+<div id="table">
+    <div id="center">
+        <div>
+            <div class="card-visual" style="background: #8e0000; cursor:pointer;" onclick="gameAction('draw')"></div>
+            <div class="stack-label">MONTE</div>
+        </div>
+
+        <div>
+            <div id="vira-slot"></div>
+            <div class="stack-label">VIRA</div>
+        </div>
+
+        <div id="trash-area" onclick="gameAction('draw-trash')">
+            </div>
+    </div>
+
+    <div id="hand"></div>
+
+    <div id="controls">
+        <button id="btn-monte" class="btn" onclick="gameAction('draw')">Monte</button>
+        <button id="btn-lixo" class="btn" onclick="gameAction('draw-trash')">Lixo</button>
+        <button id="btn-discard" class="btn" onclick="gameAction('discard')" disabled>Descartar</button>
+    </div>
+</div>
+
+<script>
+    const suits = { hearts:'♥', diamonds:'♦', clubs:'♣', spades:'♠' };
+    const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    let deck = [], hand = [], trash = [], vira, coringaVal, state = 'DRAW', selectedIdx = null;
+
+    function init() {
+        deck = [];
+        for(let s in suits) values.forEach(v => deck.push({suit:s, sym:suits[s], val:v}));
+        deck.sort(() => Math.random() - 0.5);
+        hand = deck.splice(0, 9);
+        vira = deck.pop();
+        coringaVal = values[(values.indexOf(vira.val) + 1) % 13];
+        render();
+    }
+
+    function createCardUI(c, active = false) {
+        if(!c) return '';
+        const isRed = (c.suit === 'hearts' || c.suit === 'diamonds') ? 'red' : '';
+        const isCoringa = (c.val === coringaVal && c.suit === vira.suit) ? 'coringa' : '';
+        return `
+            <div class="card-visual ${isRed} ${isCoringa} ${active ? 'active' : ''}">
+                <div>${c.val}</div>
+                <div style="font-size: 24px; align-self: center;">${c.sym}</div>
+                <div style="transform: rotate(180deg);">${c.val}</div>
+            </div>`;
+    }
+
+    function render() {
+        // Vira
+        document.getElementById('vira-slot').innerHTML = createCardUI(vira);
+
+        // Lixo Espalhado (Lógica corrigida aqui)
+        const trashArea = document.getElementById('trash-area');
+        // Apenas adicionamos se o visual não bater com o estado do array trash
+        if (trashArea.children.length !== trash.length) {
+            trashArea.innerHTML = '';
+            trash.forEach((card, i) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'trash-card';
+                wrapper.innerHTML = createCardUI(card);
+                
+                // Posições aleatórias para parecer jogado
+                const randomRot = (i * 137) % 60 - 30; // Rotação pseudo-aleatória estável
+                const randomX = (i * 223) % 40 - 20; 
+                const randomY = (i * 197) % 40 - 20;
+
+                wrapper.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRot}deg)`;
+                wrapper.style.zIndex = i;
+                trashArea.appendChild(wrapper);
+            });
+        }
+
+        // Mão em Leque
+        const handDiv = document.getElementById('hand');
+        handDiv.innerHTML = '';
+        hand.forEach((card, i) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'card-wrapper';
+            const angle = (i - (hand.length-1)/2) * 8;
+            const x = (i - (hand.length-1)/2) * 40;
+            const y = Math.abs(i - (hand.length-1)/2) * 6;
+            wrapper.style.transform = `translateX(${x}px) rotate(${angle}deg) translateY(${y}px)`;
+            wrapper.innerHTML = createCardUI(card, selectedIdx === i);
+            wrapper.onclick = () => {
+                if(selectedIdx === i) selectedIdx = null;
+                else if(selectedIdx === null) selectedIdx = i;
+                else {
+                    [hand[selectedIdx], hand[i]] = [hand[i], hand[selectedIdx]];
+                    selectedIdx = (state === 'DISCARD') ? i : null;
+                }
+                render();
+            };
+            handDiv.appendChild(wrapper);
+        });
+
+        document.getElementById('btn-monte').disabled = (state !== 'DRAW');
+        document.getElementById('btn-lixo').disabled = (state !== 'DRAW' || trash.length === 0);
+        document.getElementById('btn-discard').disabled = (state !== 'DISCARD' || selectedIdx === null);
+    }
+
+    function gameAction(act) {
+        if(act === 'draw' && state === 'DRAW') {
+            hand.push(deck.pop()); state = 'DISCARD';
+        } else if(act === 'draw-trash' && state === 'DRAW' && trash.length > 0) {
+            hand.push(trash.pop()); state = 'DISCARD';
+        } else if(act === 'discard' && state === 'DISCARD') {
+            trash.push(hand.splice(selectedIdx, 1)[0]);
+            selectedIdx = null; state = 'WAIT';
+            render();
+            setTimeout(() => {
+                trash.push(deck.pop()); state = 'DRAW';
+                render();
+            }, 800);
+        }
+        render();
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
