@@ -4,18 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Cacheta Royale: O Blefe do Totó</title>
-
-  <meta name="theme-color" content="#0a2012" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.webmanifest" />
-
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
   <div id="mesa">
-    <div id="topo">
+    <header id="topo" aria-label="Placar e falas">
       <div id="pl-toto" class="p-unit">
         <div class="p-name">TOTÓ</div>
         <div class="p-score" id="sc-toto">00</div>
@@ -23,27 +16,21 @@
 
       <div class="area-pet-topo">
         <div class="avatar" aria-hidden="true">🐶</div>
-
-        <!-- fala com botão de zoeira embutido (não altera estética) -->
-        <div class="fala-wrap">
-          <div class="fala-box" id="fala">Bora pra cima! 😼</div>
-
-          <!-- aparece só quando a Maia joga o coringa fora -->
-          <button id="btn-zueira" class="btn-zueira hidden" type="button" aria-label="Tirar sarro da Maia">
-            😹
-          </button>
-        </div>
+        <div class="fala-box" id="fala">Bora pra cima! 😼</div>
       </div>
 
       <div id="pl-maia" class="p-unit">
         <div class="p-name">MAIA</div>
         <div class="p-score" id="sc-maia">00</div>
       </div>
-    </div>
 
-    <div id="centro">
+      <!-- ajuda discreta (não altera layout: absolute) -->
+      <button id="btn-ajuda" class="btn-ajuda" type="button" aria-label="Abrir tutorial">?</button>
+    </header>
+
+    <main id="centro" aria-label="Mesa de jogo">
       <div id="slot-monte" class="slot-wrap" data-acao="monte" role="button" tabindex="0" aria-label="Comprar do monte">
-        <div class="monte-container"></div>
+        <div class="monte-container" aria-hidden="true"></div>
         <div class="slot-label">MONTE</div>
       </div>
 
@@ -56,41 +43,66 @@
         <div id="lixo-area"></div>
         <div class="slot-label">LIXO</div>
       </div>
-    </div>
+    </main>
 
-    <div id="container-mao"></div>
+    <section id="container-mao" aria-label="Sua mão"></section>
 
-    <div id="controles">
+    <div id="controles" aria-label="Controles">
       <button id="btn-cmd" class="btn" type="button" data-acao="confirmar">COMPRAR</button>
       <button id="btn-bati" class="btn btn-bati" type="button" data-acao="bati">BATI!</button>
       <button class="btn btn-reset" type="button" data-acao="novo">NOVO</button>
     </div>
 
-    <footer>Copyright @ 2026 - Ailton A. Nakata</footer>
+    <!-- botão zoeira (pequeno e estratégico, não invade estética) -->
+    <button id="btn-zueira" class="btn-zueira hidden" type="button" aria-label="Tirar sarro">🤣</button>
 
-    <!-- OVERLAY (vitória / conferência) -->
+    <footer id="rodape">Copyright @ 2026 - Ailton A. Nakata</footer>
+
+    <!-- OVERLAY: vitória / conferência (reutilizado) -->
     <div id="overlay-vitoria" class="overlay hidden" aria-hidden="true">
-      <div class="overlay-card" role="dialog" aria-modal="true" aria-labelledby="tit-vitoria">
-        <div class="badge-win" id="badge-icone" aria-hidden="true">🏆</div>
-        <div id="tit-vitoria" class="overlay-title">VOCÊ BATEU!</div>
-        <div id="sub-vitoria" class="overlay-sub">Bonito, hein! 💥</div>
+      <div id="confetti-layer" class="confetti-layer" aria-hidden="true"></div>
+
+      <div class="overlay-card" role="dialog" aria-modal="true" aria-label="Mensagem do jogo">
+        <button id="btn-fechar-overlay" class="overlay-close" type="button" aria-label="Fechar">✕</button>
+
+        <div class="overlay-badge" aria-hidden="true">
+          <div id="badge-icone" class="badge-icone">🏆</div>
+        </div>
+
+        <h2 id="tit-vitoria" class="overlay-title">Mensagem</h2>
+        <p id="sub-vitoria" class="overlay-sub">...</p>
 
         <div id="maia-cards" class="maia-cards hidden" aria-label="Cartas da Maia"></div>
 
         <div id="veredito-actions" class="overlay-actions hidden">
-          <button id="btn-parabens" class="btn btn-bati" type="button">PARABÉNS!</button>
-          <button id="btn-piou" class="btn btn-reset" type="button">PIOU HEIM!</button>
+          <button id="btn-parabens" class="btn big ok" type="button">PARABÉNS!</button>
+          <button id="btn-piou" class="btn big nope" type="button">PIOU HEIM!</button>
         </div>
 
         <div id="default-actions" class="overlay-actions">
-          <button id="btn-jogar-novamente" class="btn btn-bati" type="button">JOGAR DE NOVO</button>
-          <button id="btn-fechar-overlay" class="btn btn-reset" type="button">FECHAR</button>
+          <button id="btn-jogar-novamente" class="btn big ok" type="button">JOGAR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TUTORIAL (COACH MARKS) -->
+    <div id="tutorial-overlay" class="tut hidden" aria-hidden="true">
+      <div id="tutorial-hole" class="tut-hole" aria-hidden="true"></div>
+
+      <div id="tutorial-pop" class="tut-pop" role="dialog" aria-modal="true" aria-label="Tutorial">
+        <div class="tut-top">
+          <div class="tut-step" id="tut-step">1/6</div>
+          <button id="tut-skip" class="tut-skip" type="button">Pular</button>
         </div>
 
-        <div class="shine" aria-hidden="true"></div>
-      </div>
+        <div class="tut-title" id="tut-title">Bem-vindo!</div>
+        <div class="tut-text" id="tut-text">...</div>
 
-      <div id="confetti-layer" aria-hidden="true"></div>
+        <div class="tut-actions">
+          <button id="tut-prev" class="tut-btn ghost" type="button">Voltar</button>
+          <button id="tut-next" class="tut-btn" type="button">Próximo</button>
+        </div>
+      </div>
     </div>
   </div>
 
