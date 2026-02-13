@@ -3,271 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Cacheta Royale: Edição Vovô Simpático</title>
+    <title>Cacheta Royale: O Blefe do Totó</title>
     <style>
         :root {
-            --feltro: radial-gradient(circle, #1a472a 0%, #071a0d 100%);
+            --feltro: radial-gradient(circle at center, #1e5631 0%, #0a2012 100%);
             --ouro: #f1c40f;
-            --ouro-dark: #d4af37;
-            /* Tamanhos responsivos */
-            --card-w: min(18vw, 85px);
-            --card-h: calc(var(--card-w) * 1.45);
+            --madeira: #2c1a10;
+            --card-w: clamp(58px, 16vw, 78px);
+            --card-h: calc(var(--card-w) * 1.4);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; margin: 0; padding: 0; }
-        
-        body, html { 
-            width: 100%; height: 100%; background: #000; 
-            overflow: hidden; font-family: 'Segoe UI', sans-serif;
-        }
+        body, html { width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Trebuchet MS', sans-serif; }
 
         #mesa {
             width: 100%; height: 100%; background: var(--feltro);
             display: flex; flex-direction: column; position: relative;
-            border: 8px solid #2c1810;
+            border: 12px solid var(--madeira);
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.8);
         }
 
-        /* --- UI DO VOVÔ SIMPÁTICO --- */
-        #topo {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px; z-index: 10;
+        /* HEADER 90PX */
+        #topo { 
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 5px 20px; background: rgba(0,0,0,0.5); height: 90px; 
+            border-bottom: 2px solid rgba(255,255,255,0.1); z-index: 100;
+        }
+        .p-unit { text-align: center; color: white; min-width: 80px; transition: 0.3s; }
+        .p-unit.vez { transform: scale(1.1); text-shadow: 0 0 15px var(--ouro); }
+        .p-score { font-size: 24px; font-weight: 900; color: white; }
+        .p-name { font-size: 10px; color: var(--ouro); font-weight: bold; letter-spacing: 2px; }
+        
+        .area-pet-topo { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .avatar { font-size: 45px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); transform: translateY(5px); }
+        .fala-box { 
+            background: #fff; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: bold;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.3); border-left: 3px solid var(--ouro);
+            max-width: 160px; text-align: center; margin-top: 5px; min-height: 20px;
         }
 
-        .vovo-box { display: flex; align-items: center; gap: 10px; }
-        #vovo-avatar { 
-            font-size: 50px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-            animation: vovo-quique 3s infinite ease-in-out;
+        /* ÁREA CENTRAL */
+        #centro { flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 40px; }
+        .monte-container {
+            position: relative; width: var(--card-w); height: var(--card-h);
+            background: #b22222; border-radius: 6px;
+            box-shadow: 0 1px 0 #800, 0 2px 0 #800, 0 3px 0 #800, 0 4px 0 #800, 0 5px 15px rgba(0,0,0,0.5);
+            cursor: pointer;
         }
-        @keyframes vovo-quique { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        #lixo-area { position: relative; width: var(--card-w); height: var(--card-h); perspective: 1000px; }
+        .carta-lixo { position: absolute; top: 0; left: 0; transition: all 0.5s; }
 
-        .balao {
-            background: white; color: #333; padding: 8px 15px;
-            border-radius: 15px; font-size: 12px; font-weight: bold;
-            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            max-width: 150px;
-        }
-        .balao::after {
-            content: ''; position: absolute; left: -8px; top: 50%;
-            border-style: solid; border-width: 8px 8px 8px 0;
-            border-color: transparent white transparent transparent;
-            transform: translateY(-50%);
-        }
+        /* CARTAS */
+        #container-mao { height: 140px; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 100px; }
+        .wrapper-carta { position: absolute; transform-origin: bottom center; transition: 0.25s ease; cursor: pointer; }
+        .wrapper-carta.selecionada { transform: translateY(-50px) scale(1.1) !important; z-index: 2000 !important; }
 
-        /* --- ÁREA CENTRAL (MONTE, VIRA, LIXO) --- */
-        #centro {
-            flex-grow: 1; display: flex; justify-content: center; align-items: center;
-            gap: 4vw; margin-top: -5vh;
-        }
-
-        .label-centro { color: var(--ouro); font-size: 10px; font-weight: 900; margin-top: 5px; text-align: center; }
-
-        /* --- DESIGN DA CARTA --- */
         .carta {
-            width: var(--card-w); height: var(--card-h);
-            background: white; border-radius: 8px; color: black;
-            display: flex; flex-direction: column; position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4); border: 1px solid #ddd;
-            transition: transform 0.2s;
+            width: var(--card-w); height: var(--card-h); background: white; border-radius: 6px; 
+            color: black; display: flex; flex-direction: column; position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); border: 1px solid #ccc;
         }
+        .vermelho { color: #e74c3c; }
+        .coringa-fx { border: 3px solid var(--ouro) !important; background: linear-gradient(135deg, #fff, #fffde7) !important; }
+        .val { position: absolute; top: 5px; left: 7px; font-size: 20px; font-weight: 900; line-height: 0.8; }
+        .centro-s { margin: auto; font-size: 38px; }
 
-        .canto {
-            position: absolute; top: 3px; left: 4px;
-            display: flex; flex-direction: column; align-items: center;
-            line-height: 0.85;
+        /* CONTROLES */
+        #controles { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 12px; padding: 0 10px; }
+        .btn { 
+            background: linear-gradient(180deg, #f1c40f, #c49b09); border: none; border-radius: 50px; 
+            color: #2c1a10; font-weight: 900; padding: 14px 25px; font-size: 13px;
+            box-shadow: 0 5px 0 #8a6d05, 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; flex: 1; max-width: 130px;
         }
-        .canto .valor { font-size: min(5vw, 24px); font-weight: 900; }
-        .canto .naipe-sm { font-size: min(4vw, 18px); }
+        .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #8a6d05; }
+        .btn-bati { background: linear-gradient(180deg, #2ecc71, #27ae60); color: white; box-shadow: 0 5px 0 #1e8449; }
+        .btn-reset { background: #444; color: white; box-shadow: 0 5px 0 #222; max-width: 100px; }
 
-        .naipe-central { margin: auto; font-size: min(10vw, 45px); }
-
-        .canto-bottom {
-            position: absolute; bottom: 3px; right: 4px;
-            transform: rotate(180deg); display: flex; flex-direction: column; align-items: center;
-            line-height: 0.85;
-        }
-
-        .vermelho { color: #d32f2f; }
-
-        /* Estilo Especial do Coringa */
-        .coringa {
-            border: 3px solid var(--ouro) !important;
-            background: linear-gradient(135deg, #fff 0%, #fff9c4 100%);
-            box-shadow: 0 0 15px var(--ouro);
-            animation: brilho-coringa 2s infinite;
-        }
-        @keyframes brilho-coringa { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
-
-        /* --- MÃO DO JOGADOR RESPONSIVA --- */
-        #mao {
-            height: 25vh; width: 100%; display: flex; justify-content: center;
-            align-items: flex-end; position: relative; margin-bottom: 80px;
-        }
-        .card-slot { position: absolute; transform-origin: bottom center; transition: 0.3s; }
-        .card-slot.selecionada { transform: translateY(-35px) scale(1.1) !important; z-index: 100 !important; }
-
-        /* --- CONTROLES --- */
-        #barra-acoes {
-            position: absolute; bottom: 0; width: 100%; height: 80px;
-            display: flex; justify-content: center; align-items: center;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding-bottom: 10px;
-        }
-
-        .btn-principal {
-            background: linear-gradient(#f1c40f, #d4af37);
-            border: none; border-radius: 30px; color: #2c1810;
-            font-weight: 900; font-size: 16px; padding: 12px 40px;
-            box-shadow: 0 4px 0 #9c640c; text-transform: uppercase;
-        }
-        .btn-principal:disabled { background: #555; box-shadow: none; color: #888; }
+        footer { position: absolute; bottom: 8px; width: 100%; text-align: center; color: rgba(255,255,255,0.2); font-size: 10px; }
     </style>
 </head>
 <body>
 
 <div id="mesa">
     <div id="topo">
-        <div class="vovo-box">
-            <span id="vovo-avatar">👴</span>
-            <div class="balao" id="vovo-fala">Vamos jogar, meu neto! Sua vez.</div>
+        <div id="pl-toto" class="p-unit"><div class="p-name">TOTÓ</div><div class="p-score" id="sc-toto">00</div></div>
+        <div class="area-pet-topo">
+            <div class="avatar">🐶</div>
+            <div class="fala-box" id="fala">O destino aguarda...</div>
         </div>
-        <div style="text-align: right;">
-            <div style="color:var(--ouro); font-size:10px; font-weight:900;">PONTOS</div>
-            <div style="color:white; font-size:22px; font-weight:bold;" id="score">00</div>
-        </div>
+        <div id="pl-maia" class="p-unit"><div class="p-name">MAIA</div><div class="p-score" id="sc-maia">00</div></div>
     </div>
 
     <div id="centro">
-        <div onclick="fluxo('compra-monte')">
-            <div class="carta" style="background:#8e0000; border:2px solid #fff;"></div>
-            <div class="label-centro">MONTE</div>
+        <div class="slot-wrap" onclick="fluxo('monte')">
+            <div class="monte-container"></div>
+            <div style="color:var(--ouro); font-size:10px; font-weight:bold; margin-top:10px; text-align:center;">MONTE</div>
         </div>
-        <div id="vira-slot">
-            </div>
-        <div id="lixo-slot" onclick="fluxo('compra-lixo')">
-            </div>
+        <div class="slot-wrap"><div id="vira-area"></div><div style="color:var(--ouro); font-size:10px; font-weight:bold; margin-top:10px; text-align:center;">VIRA</div></div>
+        <div class="slot-wrap" onclick="fluxo('lixo')"><div id="lixo-area"></div><div style="color:var(--ouro); font-size:10px; font-weight:bold; margin-top:10px; text-align:center;">LIXO</div></div>
     </div>
 
-    <div id="mao"></div>
+    <div id="container-mao"></div>
 
-    <div id="barra-acoes">
-        <button id="btn-main" class="btn-principal" onclick="fluxo('confirmar')">COMPRAR</button>
+    <div id="controles">
+        <button id="btn-cmd" class="btn" onclick="fluxo('confirmar')">COMPRAR</button>
+        <button id="btn-bati" class="btn btn-bati" onclick="fluxo('bati')">BATI!</button>
+        <button class="btn btn-reset" onclick="novoJogo()">NOVO</button>
     </div>
+
+    <footer>Copyright @ 2026 - Ailton A. Nakata</footer>
 </div>
 
 <script>
-    const suits = { hearts:'♥', diamonds:'♦', clubs:'♣', spades:'♠' };
-    const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-    let deck = [], hand = [], trash = [], vira, coringaRank, state = 'DRAW', selIdx = null;
+    const audio = new (window.AudioContext || window.webkitAudioContext)();
+    function som(f, d, v=0.1) { const o=audio.createOscillator(), g=audio.createGain(); o.type='triangle'; o.frequency.value=f; g.gain.setValueAtTime(v, audio.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime+d); o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime+d); }
 
-    function init() {
-        deck = [];
-        for(let i=0; i<2; i++) {
-            for(let s in suits) values.forEach(v => deck.push({suit:s, sym:suits[s], val:v}));
+    const naipes = { hearts:'♥', diamonds:'♦', clubs:'♣', spades:'♠' };
+    const valores = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    let deck=[], mao=[], lixo=[], vira, coringaRank, estado='COMPRA', selIdx=null;
+    let pontos = { toto: 0, maia: 0 };
+
+    const pensamentos = {
+        subst: ["O baralho", "A sorte", "O destino", "A vida", "O silêncio", "O coringa"],
+        verbos: ["revela", "esconde", "ilumina", "testa", "é como", "engana"],
+        comp: ["um karma antigo.", "o segredo das mãos.", "a vontade divina.", "o caminho dos sábios.", "o sopro do acaso."],
+        maia: ["Será que você tem?", "Hum, estou de olho...", "Vou conferir tudo!", "Essa carta era minha...", "Sinto cheiro de blefe!"]
+    };
+
+    function falar(tipo) {
+        const box = document.getElementById('fala');
+        let msg = "";
+        if(tipo === 'maia') msg = "MAIA: " + pensamentos.maia[Math.floor(Math.random()*pensamentos.maia.length)];
+        else {
+            const s = pensamentos.subst[Math.floor(Math.random()*pensamentos.subst.length)];
+            const v = pensamentos.verbos[Math.floor(Math.random()*pensamentos.verbos.length)];
+            const c = pensamentos.comp[Math.floor(Math.random()*pensamentos.comp.length)];
+            msg = `${s} ${v} ${c}`;
         }
-        deck.sort(() => Math.random() - 0.5);
-        hand = deck.splice(0, 9);
-        vira = deck.pop();
-        // Regra: O coringa é o próximo valor após o vira
-        coringaRank = values[(values.indexOf(vira.val) + 1) % 13];
-        trash = [deck.pop()];
-        render();
+        box.innerText = msg;
+        som(800, 0.1, 0.05);
     }
 
-    function render() {
-        // Vira e Lixo
-        document.getElementById('vira-slot').innerHTML = `<div>${createCardHTML(vira)}<div class="label-centro">VIRA</div></div>`;
-        document.getElementById('lixo-slot').innerHTML = `<div>${createCardHTML(trash[trash.length-1])}<div class="label-centro">LIXO</div></div>`;
+    function novoJogo() {
+        deck=[]; for(let i=0;i<2;i++) for(let s in naipes) valores.forEach(v=>deck.push({suit:s, sym:naipes[s], val:v}));
+        deck.sort(()=>Math.random()-0.5);
+        mao=deck.splice(0,9); vira=deck.pop(); lixo=[deck.pop()];
+        coringaRank=valores[(valores.indexOf(vira.val)+1)%13];
+        estado='COMPRA'; selIdx=null;
+        document.getElementById('lixo-area').innerHTML = '';
+        document.getElementById('sc-toto').innerText = pontos.toto.toString().padStart(2, '0');
+        document.getElementById('sc-maia').innerText = pontos.maia.toString().padStart(2, '0');
+        renderizar();
+        addCartaAoLixo(lixo[0]);
+        som(400, 0.3);
+        falar();
+    }
 
-        // Mão Responsiva
-        const handDiv = document.getElementById('mao');
-        handDiv.innerHTML = '';
-        hand.forEach((c, i) => {
-            const slot = document.createElement('div');
-            slot.className = `card-slot ${selIdx === i ? 'selecionada' : ''}`;
-            
-            // Cálculo de espalhamento responsivo
-            const total = hand.length;
-            const step = window.innerWidth < 400 ? 30 : 40; // Mais apertado em telas pequenas
-            const x = (i - (total-1)/2) * step;
-            const rot = (i - (total-1)/2) * 6;
-            
-            slot.style.transform = `translateX(${x}px) rotate(${rot}deg)`;
-            slot.innerHTML = createCardHTML(c);
-            slot.onclick = () => {
-                if(selIdx === i) selIdx = null;
-                else if(selIdx === null) selIdx = i;
-                else {
-                    [hand[selIdx], hand[i]] = [hand[i], hand[selIdx]];
-                    selIdx = (state === 'DISCARD') ? i : null;
-                }
-                render();
+    function renderizar() {
+        document.getElementById('vira-area').innerHTML = criarCartaHTML(vira);
+        const cMao = document.getElementById('container-mao'); cMao.innerHTML='';
+        const esp = Math.min(32, (window.innerWidth-80)/(mao.length-1));
+        mao.forEach((c,i)=>{
+            const w = document.createElement('div');
+            w.className=`wrapper-carta ${selIdx===i?'selecionada':''}`;
+            w.style.left="50%";
+            w.style.marginLeft=`calc(${(i-(mao.length-1)/2)*esp}px - (var(--card-w)/2))`;
+            w.style.transform=`rotate(${(i-(mao.length-1)/2)*3}deg)`;
+            w.innerHTML = criarCartaHTML(c);
+            w.onclick=()=>{
+                som(600, 0.05);
+                if(selIdx===null) selIdx=i;
+                else if(selIdx===i) selIdx=null;
+                else { [mao[selIdx], mao[i]]=[mao[i], mao[selIdx]]; selIdx=(estado==='DESCARTE')?i:null; }
+                renderizar();
             };
-            handDiv.appendChild(slot);
+            cMao.appendChild(w);
         });
-
-        const btn = document.getElementById('btn-main');
-        btn.innerText = (state === 'DRAW') ? "COMPRAR" : "DESCARTAR";
-        btn.disabled = (state === 'DISCARD' && selIdx === null);
+        document.getElementById('btn-cmd').innerText = (estado==='COMPRA')?'COMPRAR':'DESCARTAR';
     }
 
-    function createCardHTML(c) {
+    function addCartaAoLixo(c) {
+        const area = document.getElementById('lixo-area');
+        const div = document.createElement('div');
+        div.className = 'carta-lixo';
+        div.style.transform = `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px) rotate(${Math.random()*40-20}deg)`;
+        div.innerHTML = criarCartaHTML(c);
+        area.appendChild(div);
+        if(area.children.length > 5) area.removeChild(area.firstChild);
+    }
+
+    function criarCartaHTML(c) {
         if(!c) return '';
-        const isRed = (c.suit === 'hearts' || c.suit === 'diamonds') ? 'vermelho' : '';
-        const isCoringa = (c.val === coringaRank && c.suit === vira.suit);
-        
-        return `
-            <div class="carta ${isRed} ${isCoringa ? 'coringa' : ''}">
-                <div class="canto">
-                    <span class="valor">${c.val}</span>
-                    <span class="naipe-sm">${c.sym}</span>
-                </div>
-                <div class="naipe-central">${isCoringa ? '👑' : c.sym}</div>
-                <div class="canto-bottom">
-                    <span class="valor">${c.val}</span>
-                    <span class="naipe-sm">${c.sym}</span>
-                </div>
-            </div>`;
+        const red = (c.suit==='hearts'||c.suit==='diamonds')?'vermelho':'';
+        const isCor = (c.val===coringaRank && c.suit===vira.suit);
+        return `<div class="carta ${red} ${isCor?'coringa-fx':''}">
+            <div class="val">${c.val}</div>
+            <div class="centro-s">${isCor?'👑':c.sym}</div>
+        </div>`;
     }
 
-    function fluxo(tipo) {
-        if(state === 'DRAW') {
-            if(tipo === 'compra-lixo') {
-                hand.push(trash.pop());
-                vovoFala("Cuidado com o que pega no lixo! 😉");
+    function fluxo(t) {
+        if(t === 'bati') {
+            const blefe = Math.random() > 0.5;
+            if(confirm("MAIA: Você bateu mesmo ou é blefe? Vou conferir! (OK para Conferir, Cancel para Deixar Passar)")) {
+                if(blefe) {
+                    alert("PEGOU NO BLEFE! Maia ganhou!");
+                    pontos.maia++;
+                } else {
+                    alert("VOCÊ GANHOU! Maia perdeu no protesto!");
+                    pontos.toto++;
+                }
             } else {
-                hand.push(deck.pop());
-                vovoFala("Boa escolha! O que veio de bom?");
+                alert("MAIA: Não vou arriscar... Você ganhou!");
+                pontos.toto++;
             }
-            state = 'DISCARD';
-        } else if(tipo === 'confirmar' && state === 'DISCARD') {
-            trash.push(hand.splice(selIdx, 1)[0]);
-            selIdx = null;
-            state = 'WAIT';
-            vovoFala("Deixa eu ver... hummm... 🤔");
-            render();
-            setTimeout(turnoVovo, 1500);
+            novoJogo();
+            return;
         }
-        render();
+
+        if(estado==='COMPRA') {
+            som(400, 0.1);
+            mao.push(t==='lixo'?lixo.pop():deck.pop());
+            if(t==='lixo' && document.getElementById('lixo-area').lastChild) {
+                document.getElementById('lixo-area').removeChild(document.getElementById('lixo-area').lastChild);
+            }
+            estado='DESCARTE';
+            if(Math.random() > 0.7) falar('maia');
+        } else if(t==='confirmar' && selIdx!==null) {
+            som(200, 0.1);
+            const desc = mao.splice(selIdx, 1)[0];
+            lixo.push(desc);
+            addCartaAoLixo(desc);
+            selIdx=null; estado='WAIT';
+            renderizar();
+            setTimeout(()=>{
+                const d = deck.pop(); lixo.push(d); addCartaAoLixo(d);
+                estado='COMPRA'; renderizar();
+                if(Math.random() > 0.5) falar();
+            }, 800);
+        }
+        renderizar();
     }
 
-    function turnoVovo() {
-        trash.push(deck.pop());
-        state = 'DRAW';
-        vovoFala("Sua vez! Estou de olho, hein? 😄");
-        render();
-    }
-
-    function vovoFala(txt) {
-        const balao = document.getElementById('vovo-fala');
-        balao.innerText = txt;
-        // Efeito de pulo no avatar quando ele fala
-        const avatar = document.getElementById('vovo-avatar');
-        avatar.style.animation = 'none';
-        void avatar.offsetWidth; 
-        avatar.style.animation = 'vovo-quique 0.5s ease-in-out';
-    }
-
-    window.onload = init;
+    window.onload = novoJogo;
 </script>
 </body>
 </html>
