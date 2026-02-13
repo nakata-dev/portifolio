@@ -1,197 +1,270 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cacheta Royale Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Cacheta Royale: Edição Vovô Simpático</title>
     <style>
         :root {
-            --felt: radial-gradient(circle, #1a4a2a 0%, #0a2012 100%);
-            --gold: #d4af37;
-            --card-w: 64px;
-            --card-h: 92px;
+            --feltro: radial-gradient(circle, #1a472a 0%, #071a0d 100%);
+            --ouro: #f1c40f;
+            --ouro-dark: #d4af37;
+            /* Tamanhos responsivos */
+            --card-w: min(18vw, 85px);
+            --card-h: calc(var(--card-w) * 1.45);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; user-select: none; }
-        body { margin: 0; background: #000; overflow: hidden; color: white; }
-
-        #table {
-            width: 100vw; height: 100vh;
-            background: var(--felt);
-            display: flex; flex-direction: column; align-items: center;
-            border: 10px solid #2a1810; position: relative;
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; margin: 0; padding: 0; }
+        
+        body, html { 
+            width: 100%; height: 100%; background: #000; 
+            overflow: hidden; font-family: 'Segoe UI', sans-serif;
         }
 
-        /* Área de Descarte (Lixo) - Agora mais ampla para o espalhamento */
-        #trash-area {
-            position: relative;
-            width: 180px; height: 180px;
-            display: flex; align-items: center; justify-content: center;
+        #mesa {
+            width: 100%; height: 100%; background: var(--feltro);
+            display: flex; flex-direction: column; position: relative;
+            border: 8px solid #2c1810;
         }
 
-        .trash-card {
-            position: absolute;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            z-index: 1;
+        /* --- UI DO VOVÔ SIMPÁTICO --- */
+        #topo {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; z-index: 10;
         }
 
-        /* Cartas */
-        .card-visual {
+        .vovo-box { display: flex; align-items: center; gap: 10px; }
+        #vovo-avatar { 
+            font-size: 50px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            animation: vovo-quique 3s infinite ease-in-out;
+        }
+        @keyframes vovo-quique { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        .balao {
+            background: white; color: #333; padding: 8px 15px;
+            border-radius: 15px; font-size: 12px; font-weight: bold;
+            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            max-width: 150px;
+        }
+        .balao::after {
+            content: ''; position: absolute; left: -8px; top: 50%;
+            border-style: solid; border-width: 8px 8px 8px 0;
+            border-color: transparent white transparent transparent;
+            transform: translateY(-50%);
+        }
+
+        /* --- ÁREA CENTRAL (MONTE, VIRA, LIXO) --- */
+        #centro {
+            flex-grow: 1; display: flex; justify-content: center; align-items: center;
+            gap: 4vw; margin-top: -5vh;
+        }
+
+        .label-centro { color: var(--ouro); font-size: 10px; font-weight: 900; margin-top: 5px; text-align: center; }
+
+        /* --- DESIGN DA CARTA --- */
+        .carta {
             width: var(--card-w); height: var(--card-h);
-            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-            border-radius: 6px; border: 1px solid #ccc; color: #333;
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 5px; font-weight: 800; box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+            background: white; border-radius: 8px; color: black;
+            display: flex; flex-direction: column; position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4); border: 1px solid #ddd;
+            transition: transform 0.2s;
         }
-        .card-visual.red { color: #e74c3c; }
-        .card-visual.coringa { border: 2px solid var(--gold); background: linear-gradient(135deg, #fff9c4, #f1c40f); }
-        .card-visual.active { transform: translateY(-30px) scale(1.1); border: 2px solid var(--gold); box-shadow: 0 0 15px var(--gold); }
 
-        /* Centro e HUD */
-        #center { flex-grow: 1; display: flex; align-items: center; justify-content: center; gap: 40px; }
-        .stack-label { font-size: 10px; color: var(--gold); text-align: center; margin-top: 5px; font-weight: bold; }
-
-        /* Mão em Leque */
-        #hand { width: 100%; height: 160px; position: relative; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 90px; }
-        .card-wrapper { position: absolute; transform-origin: bottom center; transition: 0.3s; }
-
-        /* Controlos */
-        #controls {
-            position: absolute; bottom: 20px; width: 90%; background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px); padding: 15px; border-radius: 20px;
-            display: flex; justify-content: space-around; border: 1px solid rgba(255,255,255,0.1);
+        .canto {
+            position: absolute; top: 3px; left: 4px;
+            display: flex; flex-direction: column; align-items: center;
+            line-height: 0.85;
         }
-        .btn {
-            background: linear-gradient(180deg, #d4af37, #b8860b);
-            color: #2c1810; border: none; padding: 12px 20px; border-radius: 12px;
-            font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer;
+        .canto .valor { font-size: min(5vw, 24px); font-weight: 900; }
+        .canto .naipe-sm { font-size: min(4vw, 18px); }
+
+        .naipe-central { margin: auto; font-size: min(10vw, 45px); }
+
+        .canto-bottom {
+            position: absolute; bottom: 3px; right: 4px;
+            transform: rotate(180deg); display: flex; flex-direction: column; align-items: center;
+            line-height: 0.85;
         }
-        .btn:disabled { opacity: 0.3; filter: grayscale(1); }
+
+        .vermelho { color: #d32f2f; }
+
+        /* Estilo Especial do Coringa */
+        .coringa {
+            border: 3px solid var(--ouro) !important;
+            background: linear-gradient(135deg, #fff 0%, #fff9c4 100%);
+            box-shadow: 0 0 15px var(--ouro);
+            animation: brilho-coringa 2s infinite;
+        }
+        @keyframes brilho-coringa { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.2); } }
+
+        /* --- MÃO DO JOGADOR RESPONSIVA --- */
+        #mao {
+            height: 25vh; width: 100%; display: flex; justify-content: center;
+            align-items: flex-end; position: relative; margin-bottom: 80px;
+        }
+        .card-slot { position: absolute; transform-origin: bottom center; transition: 0.3s; }
+        .card-slot.selecionada { transform: translateY(-35px) scale(1.1) !important; z-index: 100 !important; }
+
+        /* --- CONTROLES --- */
+        #barra-acoes {
+            position: absolute; bottom: 0; width: 100%; height: 80px;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding-bottom: 10px;
+        }
+
+        .btn-principal {
+            background: linear-gradient(#f1c40f, #d4af37);
+            border: none; border-radius: 30px; color: #2c1810;
+            font-weight: 900; font-size: 16px; padding: 12px 40px;
+            box-shadow: 0 4px 0 #9c640c; text-transform: uppercase;
+        }
+        .btn-principal:disabled { background: #555; box-shadow: none; color: #888; }
     </style>
 </head>
 <body>
 
-<div id="table">
-    <div id="center">
-        <div>
-            <div class="card-visual" style="background: #8e0000; cursor:pointer;" onclick="gameAction('draw')"></div>
-            <div class="stack-label">MONTE</div>
+<div id="mesa">
+    <div id="topo">
+        <div class="vovo-box">
+            <span id="vovo-avatar">👴</span>
+            <div class="balao" id="vovo-fala">Vamos jogar, meu neto! Sua vez.</div>
         </div>
-
-        <div>
-            <div id="vira-slot"></div>
-            <div class="stack-label">VIRA</div>
+        <div style="text-align: right;">
+            <div style="color:var(--ouro); font-size:10px; font-weight:900;">PONTOS</div>
+            <div style="color:white; font-size:22px; font-weight:bold;" id="score">00</div>
         </div>
+    </div>
 
-        <div id="trash-area" onclick="gameAction('draw-trash')">
+    <div id="centro">
+        <div onclick="fluxo('compra-monte')">
+            <div class="carta" style="background:#8e0000; border:2px solid #fff;"></div>
+            <div class="label-centro">MONTE</div>
+        </div>
+        <div id="vira-slot">
+            </div>
+        <div id="lixo-slot" onclick="fluxo('compra-lixo')">
             </div>
     </div>
 
-    <div id="hand"></div>
+    <div id="mao"></div>
 
-    <div id="controls">
-        <button id="btn-monte" class="btn" onclick="gameAction('draw')">Monte</button>
-        <button id="btn-lixo" class="btn" onclick="gameAction('draw-trash')">Lixo</button>
-        <button id="btn-discard" class="btn" onclick="gameAction('discard')" disabled>Descartar</button>
+    <div id="barra-acoes">
+        <button id="btn-main" class="btn-principal" onclick="fluxo('confirmar')">COMPRAR</button>
     </div>
 </div>
 
 <script>
     const suits = { hearts:'♥', diamonds:'♦', clubs:'♣', spades:'♠' };
     const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-    let deck = [], hand = [], trash = [], vira, coringaVal, state = 'DRAW', selectedIdx = null;
+    let deck = [], hand = [], trash = [], vira, coringaRank, state = 'DRAW', selIdx = null;
 
     function init() {
         deck = [];
-        for(let s in suits) values.forEach(v => deck.push({suit:s, sym:suits[s], val:v}));
+        for(let i=0; i<2; i++) {
+            for(let s in suits) values.forEach(v => deck.push({suit:s, sym:suits[s], val:v}));
+        }
         deck.sort(() => Math.random() - 0.5);
         hand = deck.splice(0, 9);
         vira = deck.pop();
-        coringaVal = values[(values.indexOf(vira.val) + 1) % 13];
+        // Regra: O coringa é o próximo valor após o vira
+        coringaRank = values[(values.indexOf(vira.val) + 1) % 13];
+        trash = [deck.pop()];
         render();
-    }
-
-    function createCardUI(c, active = false) {
-        if(!c) return '';
-        const isRed = (c.suit === 'hearts' || c.suit === 'diamonds') ? 'red' : '';
-        const isCoringa = (c.val === coringaVal && c.suit === vira.suit) ? 'coringa' : '';
-        return `
-            <div class="card-visual ${isRed} ${isCoringa} ${active ? 'active' : ''}">
-                <div>${c.val}</div>
-                <div style="font-size: 24px; align-self: center;">${c.sym}</div>
-                <div style="transform: rotate(180deg);">${c.val}</div>
-            </div>`;
     }
 
     function render() {
-        // Vira
-        document.getElementById('vira-slot').innerHTML = createCardUI(vira);
+        // Vira e Lixo
+        document.getElementById('vira-slot').innerHTML = `<div>${createCardHTML(vira)}<div class="label-centro">VIRA</div></div>`;
+        document.getElementById('lixo-slot').innerHTML = `<div>${createCardHTML(trash[trash.length-1])}<div class="label-centro">LIXO</div></div>`;
 
-        // Lixo Espalhado (Lógica corrigida aqui)
-        const trashArea = document.getElementById('trash-area');
-        // Apenas adicionamos se o visual não bater com o estado do array trash
-        if (trashArea.children.length !== trash.length) {
-            trashArea.innerHTML = '';
-            trash.forEach((card, i) => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'trash-card';
-                wrapper.innerHTML = createCardUI(card);
-                
-                // Posições aleatórias para parecer jogado
-                const randomRot = (i * 137) % 60 - 30; // Rotação pseudo-aleatória estável
-                const randomX = (i * 223) % 40 - 20; 
-                const randomY = (i * 197) % 40 - 20;
-
-                wrapper.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRot}deg)`;
-                wrapper.style.zIndex = i;
-                trashArea.appendChild(wrapper);
-            });
-        }
-
-        // Mão em Leque
-        const handDiv = document.getElementById('hand');
+        // Mão Responsiva
+        const handDiv = document.getElementById('mao');
         handDiv.innerHTML = '';
-        hand.forEach((card, i) => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'card-wrapper';
-            const angle = (i - (hand.length-1)/2) * 8;
-            const x = (i - (hand.length-1)/2) * 40;
-            const y = Math.abs(i - (hand.length-1)/2) * 6;
-            wrapper.style.transform = `translateX(${x}px) rotate(${angle}deg) translateY(${y}px)`;
-            wrapper.innerHTML = createCardUI(card, selectedIdx === i);
-            wrapper.onclick = () => {
-                if(selectedIdx === i) selectedIdx = null;
-                else if(selectedIdx === null) selectedIdx = i;
+        hand.forEach((c, i) => {
+            const slot = document.createElement('div');
+            slot.className = `card-slot ${selIdx === i ? 'selecionada' : ''}`;
+            
+            // Cálculo de espalhamento responsivo
+            const total = hand.length;
+            const step = window.innerWidth < 400 ? 30 : 40; // Mais apertado em telas pequenas
+            const x = (i - (total-1)/2) * step;
+            const rot = (i - (total-1)/2) * 6;
+            
+            slot.style.transform = `translateX(${x}px) rotate(${rot}deg)`;
+            slot.innerHTML = createCardHTML(c);
+            slot.onclick = () => {
+                if(selIdx === i) selIdx = null;
+                else if(selIdx === null) selIdx = i;
                 else {
-                    [hand[selectedIdx], hand[i]] = [hand[i], hand[selectedIdx]];
-                    selectedIdx = (state === 'DISCARD') ? i : null;
+                    [hand[selIdx], hand[i]] = [hand[i], hand[selIdx]];
+                    selIdx = (state === 'DISCARD') ? i : null;
                 }
                 render();
             };
-            handDiv.appendChild(wrapper);
+            handDiv.appendChild(slot);
         });
 
-        document.getElementById('btn-monte').disabled = (state !== 'DRAW');
-        document.getElementById('btn-lixo').disabled = (state !== 'DRAW' || trash.length === 0);
-        document.getElementById('btn-discard').disabled = (state !== 'DISCARD' || selectedIdx === null);
+        const btn = document.getElementById('btn-main');
+        btn.innerText = (state === 'DRAW') ? "COMPRAR" : "DESCARTAR";
+        btn.disabled = (state === 'DISCARD' && selIdx === null);
     }
 
-    function gameAction(act) {
-        if(act === 'draw' && state === 'DRAW') {
-            hand.push(deck.pop()); state = 'DISCARD';
-        } else if(act === 'draw-trash' && state === 'DRAW' && trash.length > 0) {
-            hand.push(trash.pop()); state = 'DISCARD';
-        } else if(act === 'discard' && state === 'DISCARD') {
-            trash.push(hand.splice(selectedIdx, 1)[0]);
-            selectedIdx = null; state = 'WAIT';
+    function createCardHTML(c) {
+        if(!c) return '';
+        const isRed = (c.suit === 'hearts' || c.suit === 'diamonds') ? 'vermelho' : '';
+        const isCoringa = (c.val === coringaRank && c.suit === vira.suit);
+        
+        return `
+            <div class="carta ${isRed} ${isCoringa ? 'coringa' : ''}">
+                <div class="canto">
+                    <span class="valor">${c.val}</span>
+                    <span class="naipe-sm">${c.sym}</span>
+                </div>
+                <div class="naipe-central">${isCoringa ? '👑' : c.sym}</div>
+                <div class="canto-bottom">
+                    <span class="valor">${c.val}</span>
+                    <span class="naipe-sm">${c.sym}</span>
+                </div>
+            </div>`;
+    }
+
+    function fluxo(tipo) {
+        if(state === 'DRAW') {
+            if(tipo === 'compra-lixo') {
+                hand.push(trash.pop());
+                vovoFala("Cuidado com o que pega no lixo! 😉");
+            } else {
+                hand.push(deck.pop());
+                vovoFala("Boa escolha! O que veio de bom?");
+            }
+            state = 'DISCARD';
+        } else if(tipo === 'confirmar' && state === 'DISCARD') {
+            trash.push(hand.splice(selIdx, 1)[0]);
+            selIdx = null;
+            state = 'WAIT';
+            vovoFala("Deixa eu ver... hummm... 🤔");
             render();
-            setTimeout(() => {
-                trash.push(deck.pop()); state = 'DRAW';
-                render();
-            }, 800);
+            setTimeout(turnoVovo, 1500);
         }
         render();
+    }
+
+    function turnoVovo() {
+        trash.push(deck.pop());
+        state = 'DRAW';
+        vovoFala("Sua vez! Estou de olho, hein? 😄");
+        render();
+    }
+
+    function vovoFala(txt) {
+        const balao = document.getElementById('vovo-fala');
+        balao.innerText = txt;
+        // Efeito de pulo no avatar quando ele fala
+        const avatar = document.getElementById('vovo-avatar');
+        avatar.style.animation = 'none';
+        void avatar.offsetWidth; 
+        avatar.style.animation = 'vovo-quique 0.5s ease-in-out';
     }
 
     window.onload = init;
