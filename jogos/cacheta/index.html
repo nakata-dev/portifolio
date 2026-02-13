@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Cacheta Royale: O Blefe do Totó</title>
 
-  <!-- PWA (offline) -->
   <meta name="theme-color" content="#0a2012" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -24,7 +23,16 @@
 
       <div class="area-pet-topo">
         <div class="avatar" aria-hidden="true">🐶</div>
-        <div class="fala-box" id="fala">Bora pra cima! 😼</div>
+
+        <!-- fala com botão de zoeira embutido (não altera estética) -->
+        <div class="fala-wrap">
+          <div class="fala-box" id="fala">Bora pra cima! 😼</div>
+
+          <!-- aparece só quando a Maia joga o coringa fora -->
+          <button id="btn-zueira" class="btn-zueira hidden" type="button" aria-label="Tirar sarro da Maia">
+            😹
+          </button>
+        </div>
       </div>
 
       <div id="pl-maia" class="p-unit">
@@ -67,16 +75,13 @@
         <div id="tit-vitoria" class="overlay-title">VOCÊ BATEU!</div>
         <div id="sub-vitoria" class="overlay-sub">Bonito, hein! 💥</div>
 
-        <!-- Área das cartas da Maia (aparece só na conferência) -->
         <div id="maia-cards" class="maia-cards hidden" aria-label="Cartas da Maia"></div>
 
-        <!-- Botões de veredito (aparecem só na conferência) -->
         <div id="veredito-actions" class="overlay-actions hidden">
           <button id="btn-parabens" class="btn btn-bati" type="button">PARABÉNS!</button>
           <button id="btn-piou" class="btn btn-reset" type="button">PIOU HEIM!</button>
         </div>
 
-        <!-- Botões padrão -->
         <div id="default-actions" class="overlay-actions">
           <button id="btn-jogar-novamente" class="btn btn-bati" type="button">JOGAR DE NOVO</button>
           <button id="btn-fechar-overlay" class="btn btn-reset" type="button">FECHAR</button>
