@@ -4,7 +4,7 @@
   /* =========================
      PERSISTÊNCIA
   ========================= */
-  const STORAGE_KEY = "cachetaRoyale_v7";
+  const STORAGE_KEY = "cachetaRoyale_v10";
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -80,41 +80,68 @@
   }
 
   /* =========================
-     DOM
+     DOM (fallback seguro)
   ========================= */
   const $ = (sel) => document.querySelector(sel);
+  function safeEl(sel) {
+    const el = $(sel);
+    if (!el) {
+      return {
+        classList: { add() {}, remove() {}, toggle() {} },
+        setAttribute() {},
+        addEventListener() {},
+        appendChild() {},
+        removeChild() {},
+        get lastChild() {
+          return null;
+        },
+        get children() {
+          return [];
+        },
+        innerHTML: "",
+        style: {},
+        disabled: false,
+        innerText: "",
+        click() {},
+      };
+    }
+    return el;
+  }
 
   const ui = {
-    mesa: $("#mesa"),
-    fala: $("#fala"),
-    plToto: $("#pl-toto"),
-    plMaia: $("#pl-maia"),
-    scToto: $("#sc-toto"),
-    scMaia: $("#sc-maia"),
-    viraArea: $("#vira-area"),
-    lixoArea: $("#lixo-area"),
-    maoArea: $("#container-mao"),
-    btnCmd: $("#btn-cmd"),
-    btnBati: $("#btn-bati"),
-    slotLixo: $("#slot-lixo"),
-    slotMonte: $("#slot-monte"),
+    mesa: safeEl("#mesa"),
+    fala: safeEl("#fala"),
+    plToto: safeEl("#pl-toto"),
+    plMaia: safeEl("#pl-maia"),
+    scToto: safeEl("#sc-toto"),
+    scMaia: safeEl("#sc-maia"),
+    viraArea: safeEl("#vira-area"),
+    lixoArea: safeEl("#lixo-area"),
+    maoArea: safeEl("#container-mao"),
+    btnCmd: safeEl("#btn-cmd"),
+    btnBati: safeEl("#btn-bati"),
 
-    // zoeira
-    btnZueira: $("#btn-zueira"),
+    slotMonte: safeEl("#slot-monte"), // opcional
+    slotLixo: safeEl("#slot-lixo"),   // opcional
 
-    overlay: $("#overlay-vitoria"),
-    badge: $("#badge-icone"),
-    tit: $("#tit-vitoria"),
-    sub: $("#sub-vitoria"),
-    confetti: $("#confetti-layer"),
-    btnAgain: $("#btn-jogar-novamente"),
-    btnClose: $("#btn-fechar-overlay"),
+    // zoeira (opcional)
+    btnZueira: safeEl("#btn-zueira"),
 
-    maiaCards: $("#maia-cards"),
-    vereditoActions: $("#veredito-actions"),
-    defaultActions: $("#default-actions"),
-    btnParabens: $("#btn-parabens"),
-    btnPiou: $("#btn-piou"),
+    // overlay (se existir no seu HTML)
+    overlay: safeEl("#overlay-vitoria"),
+    badge: safeEl("#badge-icone"),
+    tit: safeEl("#tit-vitoria"),
+    sub: safeEl("#sub-vitoria"),
+    confetti: safeEl("#confetti-layer"),
+    btnAgain: safeEl("#btn-jogar-novamente"),
+    btnClose: safeEl("#btn-fechar-overlay"),
+
+    // conferência Maia
+    maiaCards: safeEl("#maia-cards"),
+    vereditoActions: safeEl("#veredito-actions"),
+    defaultActions: safeEl("#default-actions"),
+    btnParabens: safeEl("#btn-parabens"),
+    btnPiou: safeEl("#btn-piou"),
   };
 
   /* =========================
@@ -122,6 +149,10 @@
   ========================= */
   const naipes = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" };
   const valores = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+  const suitOrder = { clubs: 0, spades: 1, hearts: 2, diamonds: 3 };
+
+  // Regra do usuário: sequência pode “voltar” SÓ em Q-K-A (mesmo naipe)
+  const ALLOW_QKA_ONLY = true;
 
   let nextId = 1;
   function newCard(suit, sym, val) {
@@ -136,7 +167,7 @@
     return valores.indexOf(val);
   }
   function cardIsCoringa(c) {
-    return c && c.val === coringaRank && c.suit === vira.suit;
+    return c && vira && c.val === coringaRank && c.suit === vira.suit;
   }
 
   function prepararDeck() {
@@ -147,7 +178,23 @@
     deck.sort(() => Math.random() - 0.5);
   }
 
-  // solver: TODAS as cartas precisam virar melds 3+
+  /* =========================
+     SET (TRINCA/QUADRA): naipes diferentes (máx 4)
+  ========================= */
+  function hasDuplicateSuit(cards) {
+    const s = new Set();
+    for (const c of cards) {
+      if (!c || cardIsCoringa(c)) continue;
+      if (s.has(c.suit)) return true;
+      s.add(c.suit);
+    }
+    return false;
+  }
+
+  /* =========================
+     CHECK: fecha com melds 3+ (set/run)
+     + run especial Q-K-A
+  ========================= */
   function isWinningExact(cards) {
     const jokers = cards.filter(cardIsCoringa);
     const normals = cards.filter((c) => !cardIsCoringa(c));
@@ -174,9 +221,10 @@
       const set = new Set(idsToRemove);
       return arr.filter((x) => !set.has(x));
     }
-    function getFirstRemaining(remIds) {
-      const id = remIds[0];
-      return idToCard.get(id);
+
+    function pickIdForRankSuit(suitMap, r, remIds) {
+      const list = suitMap.get(r) || [];
+      return list.map((c) => c.id).find((id2) => remIds.includes(id2)) || null;
     }
 
     function genMeldsForBase(baseCard, remIds, jokersLeft) {
@@ -184,29 +232,39 @@
       const baseRank = rankIndex(baseCard.val);
       const baseSuit = baseCard.suit;
 
-      // set
+      // SET: mesmo valor, naipes diferentes, máximo 4
       const sameRankAll = (byRank.get(baseRank) || []).map((c) => c.id);
       const sameRank = sameRankAll.filter((id) => remIds.includes(id));
       if (sameRank.includes(baseCard.id)) {
         const pool = sameRank.filter((id) => id !== baseCard.id);
         const maxMask = 1 << pool.length;
 
-        for (let size = 3; size <= Math.min(6, sameRank.length + jokersLeft); size++) {
+        for (let size = 3; size <= 4; size++) {
           for (let mask = 0; mask < maxMask; mask++) {
-            const pick = [baseCard.id];
-            for (let j = 0; j < pool.length; j++) if (mask & (1 << j)) pick.push(pool[j]);
-            if (pick.length > size) continue;
-            const needJ = size - pick.length;
+            const pickIds = [baseCard.id];
+            for (let j = 0; j < pool.length; j++) if (mask & (1 << j)) pickIds.push(pool[j]);
+            if (pickIds.length > size) continue;
+
+            const pickedCards = pickIds.map((id) => idToCard.get(id)).filter(Boolean);
+            if (hasDuplicateSuit(pickedCards)) continue;
+
+            const uniqSuit = new Set(pickedCards.map((c) => c.suit));
+            const suitsLeft = 4 - uniqSuit.size;
+
+            const needJ = size - pickIds.length;
             if (needJ < 0 || needJ > jokersLeft) continue;
-            melds.push({ type: "set", useIds: pick, useJ: needJ });
+            if (needJ > suitsLeft) continue; // coringa não duplica naipe no set
+
+            melds.push({ type: "set", useIds: pickIds, useJ: needJ });
           }
         }
       }
 
-      // run
+      // RUN: sequência mesmo naipe (linear)
       const suitMap = bySuit.get(baseSuit);
       if (suitMap) {
         const maxLen = 8;
+
         for (let start = Math.max(0, baseRank - 7); start <= baseRank; start++) {
           for (let len = 3; len <= maxLen; len++) {
             const end = start + len - 1;
@@ -217,8 +275,7 @@
             let jokersNeed = 0;
 
             for (let r = start; r <= end; r++) {
-              const list = suitMap.get(r) || [];
-              const id = list.map((c) => c.id).find((id2) => remIds.includes(id2));
+              const id = pickIdForRankSuit(suitMap, r, remIds);
               if (id) idsPicked.push(id);
               else jokersNeed++;
             }
@@ -229,8 +286,37 @@
             melds.push({ type: "run", useIds: idsPicked, useJ: jokersNeed });
           }
         }
+
+        // ✅ RUN especial Q-K-A (mesmo naipe), apenas len=3
+        if (ALLOW_QKA_ONLY) {
+          const ranks = [11, 12, 0]; // Q, K, A
+          if (ranks.includes(baseRank)) {
+            const idsPicked = [];
+            let jokersNeed = 0;
+
+            for (const r of ranks) {
+              const id = pickIdForRankSuit(suitMap, r, remIds);
+              if (id) idsPicked.push(id);
+              else jokersNeed++;
+            }
+
+            if (jokersNeed <= jokersLeft) {
+              // precisa conter a carta base
+              const baseOk = idsPicked.includes(baseCard.id) || jokersNeed > 0;
+              // OBS: se baseCard for real, tem que estar nos idsPicked
+              if (remIds.includes(baseCard.id) && baseOk && (idsPicked.includes(baseCard.id) || jokersNeed > 0)) {
+                // se baseCard não está, não cria meld desse base
+                if (idsPicked.includes(baseCard.id)) {
+                  melds.push({ type: "run_qka", useIds: idsPicked, useJ: jokersNeed });
+                }
+              }
+              // caso baseCard seja uma carta real e não entrou, ignora; (mais seguro)
+            }
+          }
+        }
       }
 
+      // dedupe
       const seen = new Set();
       const uniq = [];
       for (const m of melds) {
@@ -246,7 +332,7 @@
     function solve(remIds, jokersLeft) {
       if (remIds.length === 0) return jokersLeft === 0;
 
-      const base = getFirstRemaining(remIds);
+      const base = idToCard.get(remIds[0]);
       if (!base) return false;
 
       const melds = genMeldsForBase(base, remIds, jokersLeft);
@@ -262,7 +348,6 @@
     return solve(remainingIds, jokerCountInit);
   }
 
-  // com 10: permite 1 descarte; valida as 9 restantes
   function canCloseWithOneDiscard(cards10) {
     if (!Array.isArray(cards10) || cards10.length !== 10) return { ok: false, discard: null };
     for (let i = 0; i < cards10.length; i++) {
@@ -273,13 +358,9 @@
   }
 
   /* =========================
-     ✅ NOVO: organizar cartas da Maia pra conferência
-     - Se for batida real: tenta montar grupos (trincas/seqs) e exibir em ordem fácil
-     - Se for blefe: exibe ordenado por naipe e valor (ainda facilita conferir)
+     PARTITION: organizar melds pra conferência
+     + inclui run Q-K-A
   ========================= */
-
-  const suitOrder = { clubs: 0, spades: 1, hearts: 2, diamonds: 3 };
-
   function sortCardsNice(cards) {
     return cards.slice().sort((a, b) => {
       const aj = cardIsCoringa(a) ? 1 : 0;
@@ -292,7 +373,6 @@
     });
   }
 
-  // Retorna grupos (array de arrays de cartas) se conseguir particionar em melds 3+
   function findWinningPartition(cards) {
     const jokers = cards.filter(cardIsCoringa).slice();
     const normals = cards.filter((c) => !cardIsCoringa(c)).slice();
@@ -316,8 +396,17 @@
       const b = js.map((c) => c.id).sort((x, y) => x - y).join(",");
       return `${a}|${b}`;
     }
-
     const memo = new Map();
+
+    function removeCards(list, removeList) {
+      const set = new Set(removeList.map((c) => c.id));
+      return list.filter((c) => !set.has(c.id));
+    }
+
+    function pickCardForRankSuit(suitMap, r, remSet) {
+      const list = suitMap.get(r) || [];
+      return list.find((x) => remSet.has(x.id)) || null;
+    }
 
     function genMeldsForBase(baseCard, remNormals, remJokers) {
       const melds = [];
@@ -326,20 +415,25 @@
 
       const remSet = new Set(remNormals.map((c) => c.id));
 
-      // set: mesmo valor, naipes diferentes (no nosso baralho pode repetir, mas aqui seguimos o que dá)
+      // SET 3-4, naipes diferentes
       const sameRankAll = (byRank.get(baseRank) || []).filter((c) => remSet.has(c.id));
       if (sameRankAll.some((c) => c.id === baseCard.id)) {
         const pool = sameRankAll.filter((c) => c.id !== baseCard.id);
         const maxMask = 1 << pool.length;
 
-        for (let size = 3; size <= Math.min(6, sameRankAll.length + remJokers.length); size++) {
+        for (let size = 3; size <= 4; size++) {
           for (let mask = 0; mask < maxMask; mask++) {
             const pick = [baseCard];
             for (let j = 0; j < pool.length; j++) if (mask & (1 << j)) pick.push(pool[j]);
             if (pick.length > size) continue;
 
+            if (hasDuplicateSuit(pick)) continue;
+
+            const uniqSuit = new Set(pick.map((c) => c.suit));
+            const suitsLeft = 4 - uniqSuit.size;
             const needJ = size - pick.length;
             if (needJ < 0 || needJ > remJokers.length) continue;
+            if (needJ > suitsLeft) continue;
 
             const jokPick = remJokers.slice(0, needJ);
             melds.push({ type: "set", cards: pick.concat(jokPick) });
@@ -347,22 +441,23 @@
         }
       }
 
-      // run: mesmo naipe, sequência
+      // RUN linear
       const suitMap = bySuit.get(baseSuit);
       if (suitMap) {
         const maxLen = 8;
-        for (let start = Math.max(0, baseRank - 7); start <= baseRank; start++) {
+        const baseR = baseRank;
+
+        for (let start = Math.max(0, baseR - 7); start <= baseR; start++) {
           for (let len = 3; len <= maxLen; len++) {
             const end = start + len - 1;
             if (end > 12) continue;
-            if (baseRank < start || baseRank > end) continue;
+            if (baseR < start || baseR > end) continue;
 
             const picked = [];
             let needJ = 0;
 
             for (let r = start; r <= end; r++) {
-              const list = suitMap.get(r) || [];
-              const c = list.find((x) => remSet.has(x.id));
+              const c = pickCardForRankSuit(suitMap, r, remSet);
               if (c) picked.push(c);
               else needJ++;
             }
@@ -370,23 +465,45 @@
             if (!picked.some((c) => c.id === baseCard.id)) continue;
 
             const jokPick = remJokers.slice(0, needJ);
-            // ordena sequência visualmente (normais em ordem + coringas no lugar)
             const group = [];
+            let jp = 0;
             for (let r = start; r <= end; r++) {
-              const list = suitMap.get(r) || [];
-              const c = list.find((x) => remSet.has(x.id));
+              const c = pickCardForRankSuit(suitMap, r, remSet);
               if (c) group.push(c);
-              else group.push(jokPick.pop() || remJokers[0]); // placeholder seguro
+              else group.push(jokPick[jp++]);
             }
-
             melds.push({ type: "run", cards: group });
+          }
+        }
+
+        // ✅ RUN especial Q-K-A (somente 3 cartas)
+        if (ALLOW_QKA_ONLY) {
+          const ranks = [11, 12, 0];
+          if (ranks.includes(baseR)) {
+            const picked = [];
+            let needJ = 0;
+            for (const r of ranks) {
+              const c = pickCardForRankSuit(suitMap, r, remSet);
+              if (c) picked.push(c);
+              else needJ++;
+            }
+            if (needJ <= remJokers.length && picked.some((c) => c.id === baseCard.id)) {
+              const jokPick = remJokers.slice(0, needJ);
+              const group = [];
+              let jp = 0;
+              for (const r of ranks) {
+                const c = pickCardForRankSuit(suitMap, r, remSet);
+                if (c) group.push(c);
+                else group.push(jokPick[jp++]);
+              }
+              melds.push({ type: "run_qka", cards: group });
+            }
           }
         }
       }
 
-      // preferência: grupos maiores primeiro (fica mais fácil bater o olho)
       melds.sort((a, b) => b.cards.length - a.cards.length);
-      // remove duplicados por ids
+
       const seen = new Set();
       const uniq = [];
       for (const m of melds) {
@@ -403,11 +520,6 @@
       return uniq;
     }
 
-    function removeCards(list, removeList) {
-      const set = new Set(removeList.map((c) => c.id));
-      return list.filter((c) => !set.has(c.id));
-    }
-
     function solve(remNormals, remJokers) {
       const k = keyFor(remNormals, remJokers);
       if (memo.has(k)) return memo.get(k);
@@ -419,7 +531,6 @@
         return res;
       }
 
-      // pega a menor carta por rank/suit pra reduzir ramificação
       const base = remNormals
         .slice()
         .sort((a, b) => {
@@ -430,16 +541,14 @@
         })[0];
 
       const melds = genMeldsForBase(base, remNormals, remJokers);
-
       for (const meld of melds) {
-        // separa quais coringas foram usados no meld
-        const usedJokers = meld.cards.filter(cardIsCoringa);
-        const usedNormals = meld.cards.filter((c) => !cardIsCoringa(c));
+        const usedJ = meld.cards.filter(cardIsCoringa);
+        const usedN = meld.cards.filter((c) => !cardIsCoringa(c));
 
-        const nextNormals = removeCards(remNormals, usedNormals);
-        const nextJokers = removeCards(remJokers, usedJokers);
+        const nextN = removeCards(remNormals, usedN);
+        const nextJ = removeCards(remJokers, usedJ);
 
-        const tail = solve(nextNormals, nextJokers);
+        const tail = solve(nextN, nextJ);
         if (tail) {
           const out = [meld.cards].concat(tail);
           memo.set(k, out);
@@ -451,12 +560,10 @@
       return null;
     }
 
-    const groups = solve(normals, jokers);
-    return groups; // null ou array de arrays
+    return solve(normals, jokers);
   }
 
   function buildDisplayOrderForMaia(cards, pendente) {
-    // se for 10 e existir descarte vencedor, mostra os 9 “batidos” em grupos
     let base = cards.slice();
     let discard = null;
 
@@ -465,31 +572,172 @@
       base = base.filter((c) => c.id !== discard.id);
     }
 
-    // se a batida é real, tenta agrupar; senão ordena só bonitinho
     if (pendente?.validoReal === true) {
       const groups = findWinningPartition(base);
       if (groups && groups.length) {
-        // “achata” em ordem: grupo a grupo. (sem dividers, só colado pra ficar fácil bater o olho)
         const flat = [];
         for (const g of groups) {
-          // ordena dentro do grupo: coringas no fim
-          const gg = g.slice().sort((a, b) => (cardIsCoringa(a) ? 1 : 0) - (cardIsCoringa(b) ? 1 : 0));
+          // deixa Q-K-A na ordem natural do grupo (já vem certo)
+          const gg = g
+            .slice()
+            .sort((a, b) => (cardIsCoringa(a) ? 1 : 0) - (cardIsCoringa(b) ? 1 : 0));
           flat.push(...gg);
         }
-        // se tinha descarte sugerido, coloca no fim (fica “ah, era só jogar essa fora”)
         if (discard) flat.push(discard);
         return flat;
       }
     }
 
-    // fallback: ordenado por naipe/valor
     const ordered = sortCardsNice(base);
     if (discard) ordered.push(discard);
     return ordered;
   }
 
   /* =========================
-     ESTADO
+     IA DA MAIA (de verdade)
+     - compra do lixo só se melhorar
+     - descarta carta mais “inútil”
+     - só bate se fechar (sem blefe aleatório)
+  ========================= */
+  const MAIA_BLUFF_ENABLED = false; // se quiser humor no futuro, ligue e use chance baixa
+  const MAIA_BLUFF_CHANCE = 0.06;   // só terá efeito se enabled=true
+
+  function countUsefulNeighborsRun(hand, card) {
+    if (!card) return 0;
+    if (cardIsCoringa(card)) return 5;
+
+    const r = rankIndex(card.val);
+    const s = card.suit;
+
+    const hasRankSuit = (ri) => hand.some((c) => !cardIsCoringa(c) && c.suit === s && rankIndex(c.val) === ri);
+
+    let score = 0;
+    // linear neighbors
+    if (r - 1 >= 0 && hasRankSuit(r - 1)) score++;
+    if (r - 2 >= 0 && hasRankSuit(r - 2)) score++;
+    if (r + 1 <= 12 && hasRankSuit(r + 1)) score++;
+    if (r + 2 <= 12 && hasRankSuit(r + 2)) score++;
+
+    // especial Q-K-A
+    if (ALLOW_QKA_ONLY) {
+      if (r === 11) { // Q
+        if (hasRankSuit(12)) score += 2;
+        if (hasRankSuit(0)) score += 2;
+      }
+      if (r === 12) { // K
+        if (hasRankSuit(11)) score += 2;
+        if (hasRankSuit(0)) score += 2;
+      }
+      if (r === 0) { // A
+        if (hasRankSuit(11)) score += 2;
+        if (hasRankSuit(12)) score += 2;
+      }
+    }
+
+    return score;
+  }
+
+  function countUsefulSetPotential(hand, card) {
+    if (!card) return 0;
+    if (cardIsCoringa(card)) return 6;
+
+    const r = card.val;
+    const same = hand.filter((c) => !cardIsCoringa(c) && c.val === r);
+
+    // quantos naipes diferentes desse valor eu já tenho?
+    const suits = new Set(same.map((c) => c.suit));
+    // o valor máximo de uma trinca/quarteto é baseado em naipes diferentes
+    return suits.size;
+  }
+
+  function maiaHandQuality(hand) {
+    // heurística simples: soma de potenciais de run/set
+    let score = 0;
+    for (const c of hand) {
+      score += countUsefulNeighborsRun(hand, c);
+      score += countUsefulSetPotential(hand, c);
+    }
+    // bônus: se já fecha, quality absurda
+    if (hand.length === 9 && isWinningExact(hand)) score += 1000;
+    if (hand.length === 10 && canCloseWithOneDiscard(hand).ok) score += 900;
+    return score;
+  }
+
+  function shouldMaiaTakeDiscard(hand, discardCard) {
+    if (!discardCard) return false;
+    if (penalizadoMaia) return false;
+
+    // nunca joga fora coringa, então pegar coringa do lixo é quase sempre bom
+    if (cardIsCoringa(discardCard)) return true;
+
+    const base = maiaHandQuality(hand);
+
+    const testHand = hand.slice();
+    testHand.push(discardCard);
+
+    // se com 10 ela passa a conseguir fechar, pega!
+    if (testHand.length === 10 && canCloseWithOneDiscard(testHand).ok) return true;
+
+    // se melhora qualidade de forma clara, pega
+    const after = maiaHandQuality(testHand);
+    return after > base + 6;
+  }
+
+  function chooseMaiaDiscardIndex(hand) {
+    // quanto maior o “ruim”, mais provável descartar
+    let bestIdx = 0;
+    let bestBad = -Infinity;
+
+    const jokersCount = hand.filter(cardIsCoringa).length;
+
+    for (let i = 0; i < hand.length; i++) {
+      const c = hand[i];
+
+      // coringa: quase nunca descarta
+      if (cardIsCoringa(c)) {
+        const bad = jokersCount > 1 ? -30 : -80;
+        if (bad > bestBad) {
+          bestBad = bad;
+          bestIdx = i;
+        }
+        continue;
+      }
+
+      const setPot = countUsefulSetPotential(hand, c);
+      const runPot = countUsefulNeighborsRun(hand, c);
+
+      // se participa bastante de joguinhos, é bom, então “bad” baixo
+      let bad = 10 - (setPot * 3 + runPot * 2);
+
+      // cartas do meio (6,7,8) geralmente conectam mais
+      const r = rankIndex(c.val);
+      if (r >= 4 && r <= 8) bad -= 2;
+
+      // A e K são perigosas (isolam fácil) mas A pode entrar em Q-K-A
+      if (r === 12) bad += 2;
+      if (r === 0) {
+        // se tiver Q ou K do mesmo naipe, A é útil
+        const hasQ = hand.some((x) => !cardIsCoringa(x) && x.suit === c.suit && rankIndex(x.val) === 11);
+        const hasK = hand.some((x) => !cardIsCoringa(x) && x.suit === c.suit && rankIndex(x.val) === 12);
+        if (!(hasQ && hasK)) bad += 1;
+      }
+
+      // preferir descartar carta que faz a mão ficar mais próxima de fechar
+      const test = hand.slice();
+      test.splice(i, 1);
+      if (test.length === 9 && isWinningExact(test)) bad -= 20;
+
+      if (bad > bestBad) {
+        bestBad = bad;
+        bestIdx = i;
+      }
+    }
+
+    return bestIdx;
+  }
+
+  /* =========================
+     ESTADO DO JOGO
   ========================= */
   let pontos = { toto: 0, maia: 0 };
   let proximoComeca = "toto";
@@ -499,7 +747,7 @@
   let lixo = [];
 
   let turno = "toto";
-  let fase = "COMPRA"; // "COMPRA" | "DESCARTE" | "WAIT" | "CONFERINDO"
+  let fase = "COMPRA"; // COMPRA | DESCARTE | WAIT | CONFERINDO
   let selIdx = null;
 
   let penalizadoToto = false;
@@ -507,12 +755,10 @@
 
   let ultimaCompraOrigemToto = null;
   let ultimaCompraIdToto = null;
-
   let ultimaCompraOrigemMaia = null;
   let ultimaCompraIdMaia = null;
 
   let animBuyCardId = null;
-
   let pendenteMaia = null;
 
   // zoeira
@@ -571,7 +817,7 @@
   }
 
   /* =========================
-     ZOEIRA (aparece só quando Maia joga coringa fora)
+     ZOEIRA
   ========================= */
   function hideZueira() {
     zueiraArmed = false;
@@ -583,11 +829,9 @@
 
   function showZueiraForFewSeconds() {
     if (fase === "CONFERINDO") return;
-
     zueiraArmed = true;
     ui.btnZueira.classList.remove("hidden");
     ui.btnZueira.classList.add("pisca");
-
     if (zueiraTimeout) clearTimeout(zueiraTimeout);
     zueiraTimeout = setTimeout(() => hideZueira(), 6000);
   }
@@ -595,14 +839,10 @@
   function executarZoeira() {
     if (!zueiraArmed) return;
     hideZueira();
-
-    const msgHum = falaRandom(falas.zueiraHumano);
-    ui.fala.innerText = msgHum;
+    ui.fala.innerText = falaRandom(falas.zueiraHumano);
     risadinha();
-
     setTimeout(() => {
-      const msgM = falaRandom(falas.zueiraMaia);
-      ui.fala.innerText = msgM;
+      ui.fala.innerText = falaRandom(falas.zueiraMaia);
       som(680, 0.06, 0.04);
     }, 850);
   }
@@ -613,10 +853,8 @@
   function setTurnUI() {
     ui.plToto.classList.toggle("vez", turno === "toto");
     ui.plMaia.classList.toggle("vez", turno === "maia");
-
     const bloqueiaMesa = turno === "maia" || fase === "CONFERINDO";
     ui.mesa.classList.toggle("mesa-bloqueada", bloqueiaMesa);
-
     ui.overlay.style.pointerEvents = ui.overlay.classList.contains("hidden") ? "none" : "auto";
   }
 
@@ -630,10 +868,9 @@
     if (quem === "toto") {
       if (!ultimaCompraIdToto || ultimaCompraOrigemToto !== "monte") return false;
       return maoToto.some((c) => c.id === ultimaCompraIdToto);
-    } else {
-      if (!ultimaCompraIdMaia || ultimaCompraOrigemMaia !== "monte") return false;
-      return maoMaia.some((c) => c.id === ultimaCompraIdMaia);
     }
+    if (!ultimaCompraIdMaia || ultimaCompraOrigemMaia !== "monte") return false;
+    return maoMaia.some((c) => c.id === ultimaCompraIdMaia);
   }
 
   function podeBaterTotoAgora() {
@@ -665,7 +902,6 @@
   function limparConfetes() {
     ui.confetti.innerHTML = "";
   }
-
   function soltarConfetes(qtd = 44) {
     ui.confetti.innerHTML = "";
     const w = window.innerWidth;
@@ -722,7 +958,6 @@
   }
 
   function mostrarCartasMaia(cards) {
-    // ✅ agora organiza pra ficar “conferível” (trincas/seqs lado a lado)
     const ordered = buildDisplayOrderForMaia(cards, pendenteMaia);
     ui.maiaCards.innerHTML = ordered.map(renderMiniCard).join("");
   }
@@ -810,8 +1045,7 @@
         carta = deck.pop();
         origem = "monte";
       } else {
-        const area = ui.lixoArea;
-        if (area.lastChild) area.removeChild(area.lastChild);
+        if (ui.lixoArea.lastChild) ui.lixoArea.removeChild(ui.lixoArea.lastChild);
       }
     } else {
       carta = deck.pop();
@@ -838,19 +1072,13 @@
     lixo.push(desc);
     addCartaAoLixo(desc);
 
-    if (quem === "maia" && cardIsCoringa(desc)) {
-      showZueiraForFewSeconds();
-    }
-
+    if (quem === "maia" && cardIsCoringa(desc)) showZueiraForFewSeconds();
     return desc;
   }
 
-  function escolherDescarteMaia() {
-    let idx = maoMaia.findIndex((c) => !cardIsCoringa(c));
-    if (idx < 0) idx = 0;
-    return idx;
-  }
-
+  /* =========================
+     Partida
+  ========================= */
   function iniciarPartida() {
     hideZueira();
 
@@ -877,6 +1105,8 @@
     ultimaCompraOrigemMaia = null;
     ultimaCompraIdMaia = null;
 
+    pendenteMaia = null;
+
     renderizar();
 
     if (turno === "toto") {
@@ -888,10 +1118,44 @@
   }
 
   /* =========================
-     Maia joga (IA simples)
+     Maia joga (IA aprimorada)
   ========================= */
   function maiaPodeComprarLixo() {
     return !penalizadoMaia;
+  }
+
+  function maiaPodeBaterAgora() {
+    if (fase === "CONFERINDO") return false;
+    if (turno !== "maia") return false;
+
+    // ela pode “bater” tanto com 9 (antes de comprar) quanto com 10 (após comprar)
+    if (maoMaia.length === 9) return true;
+    if (maoMaia.length === 10) return true;
+    return false;
+  }
+
+  function abrirConferenciaMaia(tamanho, validoReal, res10 = null) {
+    fase = "CONFERINDO";
+    pendenteMaia = {
+      mao: maoMaia.slice(),
+      tamanho,
+      validoReal,
+      res10,
+      temCartaMonte: jogadorTemCartaDoMonte("maia"),
+    };
+
+    falar(falaRandom(falas.juiz));
+    mostrarCartasMaia(pendenteMaia.mao);
+
+    abrirOverlay({
+      icone: "🧾",
+      titulo: tamanho === 9 ? "MAIA DISSE: BATI! (9)" : "MAIA DISSE: BATI!",
+      subtitulo: "Confere as cartas e dá o veredito:",
+      confete: false,
+      modo: "veredito",
+    });
+
+    atualizarBloqueios();
   }
 
   function turnoDaMaia() {
@@ -901,76 +1165,53 @@
     renderizar();
 
     setTimeout(() => {
-      // tentativa (às vezes blefa) com 9
-      const ok9Real = isWinningExact(maoMaia);
-      const ok9Penalty = !penalizadoMaia || jogadorTemCartaDoMonte("maia");
+      // 1) Se fechar com 9 e (se penalizada) tiver carta do MONTE, ela bate de verdade
+      if (maoMaia.length === 9 && maiaPodeBaterAgora()) {
+        const ok9 = isWinningExact(maoMaia);
+        const okPenalty = !penalizadoMaia || jogadorTemCartaDoMonte("maia");
+        const validoReal = ok9 && okPenalty;
 
-      if (maoMaia.length === 9 && Math.random() < 0.35) {
-        fase = "CONFERINDO";
-        pendenteMaia = {
-          mao: maoMaia.slice(),
-          tamanho: 9,
-          validoReal: ok9Real && ok9Penalty,
-          temCartaMonte: jogadorTemCartaDoMonte("maia"),
-        };
+        if (validoReal) {
+          abrirConferenciaMaia(9, true, null);
+          return;
+        }
 
-        falar(falaRandom(falas.juiz));
-        mostrarCartasMaia(pendenteMaia.mao);
-
-        abrirOverlay({
-          icone: "🧾",
-          titulo: "MAIA DISSE: BATI! (9)",
-          subtitulo: "Confere as cartas e dá o veredito:",
-          confete: false,
-          modo: "veredito",
-        });
-
-        atualizarBloqueios();
-        return;
+        // blefe opcional (desligado por padrão)
+        if (MAIA_BLUFF_ENABLED && Math.random() < MAIA_BLUFF_CHANCE) {
+          abrirConferenciaMaia(9, false, null);
+          return;
+        }
       }
 
-      // compra
-      const querLixo = Math.random() > 0.55;
-      const origem = querLixo && maiaPodeComprarLixo() && lixo.length > 0 ? "lixo" : "monte";
+      // 2) Decide compra: lixo só se melhorar mão
+      const topDiscard = lixo.length ? lixo[lixo.length - 1] : null;
+      const querLixo = topDiscard && maiaPodeComprarLixo() && shouldMaiaTakeDiscard(maoMaia, topDiscard);
+      const origem = querLixo ? "lixo" : "monte";
       comprarCarta(origem, "maia");
 
       fase = "DESCARTE";
       renderizar();
 
       setTimeout(() => {
+        // 3) Se com 10 dá pra fechar, ela bate de verdade
         const res10 = canCloseWithOneDiscard(maoMaia);
         const okPenalty = !penalizadoMaia || jogadorTemCartaDoMonte("maia");
         const validoReal10 = res10.ok && okPenalty;
 
-        // tentativa (às vezes blefa) com 10
-        if (Math.random() < 0.36) {
-          fase = "CONFERINDO";
-          pendenteMaia = {
-            mao: maoMaia.slice(),
-            tamanho: 10,
-            validoReal: validoReal10,
-            res10,
-            temCartaMonte: jogadorTemCartaDoMonte("maia"),
-          };
-
-          falar(falaRandom(falas.juiz));
-          mostrarCartasMaia(pendenteMaia.mao);
-
-          abrirOverlay({
-            icone: "🧾",
-            titulo: "MAIA DISSE: BATI!",
-            subtitulo: "Confere as cartas e dá o veredito:",
-            confete: false,
-            modo: "veredito",
-          });
-
-          atualizarBloqueios();
+        if (validoReal10) {
+          abrirConferenciaMaia(10, true, res10);
           return;
         }
 
-        // não bateu: descarta e passa
-        const idxDesc = escolherDescarteMaia();
-        descartarCarta("maia", idxDesc);
+        // blefe opcional (desligado por padrão)
+        if (MAIA_BLUFF_ENABLED && Math.random() < MAIA_BLUFF_CHANCE) {
+          abrirConferenciaMaia(10, false, res10);
+          return;
+        }
+
+        // 4) Não fechou: descarta com lógica
+        const idx = chooseMaiaDiscardIndex(maoMaia);
+        descartarCarta("maia", idx);
 
         turno = "toto";
         fase = "COMPRA";
@@ -985,9 +1226,6 @@
 
   /* =========================
      Veredito do jogador sobre a Maia
-     - Maia bateu certo: pontua e reinicia
-     - Maia bateu errado: ninguém pontua, penaliza Maia, continua a mesma partida
-     - Cartas na conferência ficam organizadas (trinca/seq) quando a batida é real
   ========================= */
   function resolverVeredito(aceitou) {
     if (!pendenteMaia) return;
@@ -995,9 +1233,7 @@
     const real = pendenteMaia.validoReal === true;
     const juizErrou = aceitou !== real;
 
-    if (juizErrou) {
-      setTimeout(() => falar(falaRandom(falas.sarroJuiz)), 220);
-    }
+    if (juizErrou) setTimeout(() => falar(falaRandom(falas.sarroJuiz)), 220);
 
     if (real) {
       pontos.maia++;
@@ -1025,14 +1261,14 @@
       return;
     }
 
-    // Maia blefou/errou: ninguém pontua, penaliza e segue a mesma partida
+    // Maia errou/blefou: ninguém pontua, penaliza e segue a partida
     penalizadoMaia = true;
     saveState();
 
-    // se ela tinha 10 cartas, descarta 1 pra voltar ao fluxo
     if (pendenteMaia.tamanho === 10 && maoMaia.length === 10) {
-      const idxDesc = escolherDescarteMaia();
-      descartarCarta("maia", idxDesc);
+      // se ela disse bati com 10 e não valeu, ela precisa descartar e seguir o jogo
+      const idx = chooseMaiaDiscardIndex(maoMaia);
+      descartarCarta("maia", idx);
       ultimaCompraOrigemMaia = null;
       ultimaCompraIdMaia = null;
     }
@@ -1054,12 +1290,9 @@
 
     setTimeout(() => {
       fecharOverlay();
-
-      // Maia queimou a vez tentando bater: passa pro Totó
       turno = "toto";
       fase = "COMPRA";
       selIdx = null;
-
       renderizar();
       falar(falaRandom(falas.suaVez));
     }, 850);
@@ -1101,11 +1334,6 @@
     setTimeout(turnoDaMaia, 650);
   }
 
-  /* =========================
-     BATIDA do Totó
-     - Se bateu certo: pontua e reinicia
-     - Se bateu errado: ninguém pontua, penaliza Totó, continua a mesma partida e passa a vez para Maia
-  ========================= */
   function jogadorBater() {
     if (!podeBaterTotoAgora()) {
       aplicarTremidaBatiErro();
@@ -1191,11 +1419,8 @@
       fase = "WAIT";
       setTimeout(() => {
         fecharOverlay();
-
-        // Maia tira sarro 😄
         falar(falaRandom(falas.sarroToto));
 
-        // passa a vez
         turno = "maia";
         fase = "COMPRA";
         selIdx = null;
@@ -1210,9 +1435,10 @@
   }
 
   /* =========================
-     Eventos
+     Eventos (compatível com HTML antigo e novo)
   ========================= */
   function bindUI() {
+    // 1) Novo padrão: data-acao
     document.addEventListener("click", (e) => {
       const el = e.target.closest("[data-acao]");
       if (!el) return;
@@ -1230,14 +1456,17 @@
       if (acao === "bati") jogadorBater();
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter" && e.key !== " ") return;
-      const el = document.activeElement?.closest?.("[data-acao]");
-      if (!el) return;
-      e.preventDefault();
-      el.click();
+    // 2) Fallback: IDs clássicos
+    ui.btnCmd.addEventListener("click", () => {
+      if (fase === "COMPRA") jogadorComprar("monte");
+      else jogadorDescartar();
     });
+    ui.btnBati.addEventListener("click", () => jogadorBater());
 
+    ui.slotMonte.addEventListener("click", () => jogadorComprar("monte"));
+    ui.slotLixo.addEventListener("click", () => jogadorComprar("lixo"));
+
+    // overlay
     ui.btnClose.addEventListener("click", () => fecharOverlay());
     ui.btnAgain.addEventListener("click", () => {
       fecharOverlay();
