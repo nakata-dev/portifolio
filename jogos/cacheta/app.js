@@ -164,6 +164,8 @@
   const naipes = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" };
   const valores = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
   const suitOrder = { clubs: 0, spades: 1, hearts: 2, diamonds: 3 };
+
+  // Sequência só vai até Q-K-A (sem wrap tipo K-A-2)
   const ALLOW_QKA_ONLY = true;
 
   let nextId = 1;
@@ -190,6 +192,7 @@
     deck.sort(() => Math.random() - 0.5);
   }
 
+  // Regra: trinca não pode ter naipe repetido (exceto coringa, que ignora naipe)
   function hasDuplicateSuit(cards) {
     const s = new Set();
     for (const c of cards) {
@@ -370,14 +373,22 @@
   }
 
   /* =========================
-     IA DA MAIA (bloqueada no tutorial)
+     IA DA MAIA (AGORA COMPETITIVA ~80%)
   ========================= */
+  const MAIA_SKILL = 0.8; // 0..1  (0.5 = ok, 0.8 = forte, 0.95 = cruel)
   const MAIA_BLUFF_ENABLED = false;
   const MAIA_BLUFF_CHANCE = 0.06;
 
+  function rand() {
+    return Math.random();
+  }
+  function clamp01(x) {
+    return Math.max(0, Math.min(1, x));
+  }
+
   function countUsefulNeighborsRun(hand, card) {
     if (!card) return 0;
-    if (cardIsCoringa(card)) return 5;
+    if (cardIsCoringa(card)) return 6;
 
     const r = rankIndex(card.val);
     const s = card.suit;
@@ -387,11 +398,12 @@
 
     let score = 0;
 
-    if (r - 1 >= 0 && hasRankSuit(r - 1)) score++;
-    if (r - 2 >= 0 && hasRankSuit(r - 2)) score++;
-    if (r + 1 <= 12 && hasRankSuit(r + 1)) score++;
-    if (r + 2 <= 12 && hasRankSuit(r + 2)) score++;
+    if (r - 1 >= 0 && hasRankSuit(r - 1)) score += 2;
+    if (r - 2 >= 0 && hasRankSuit(r - 2)) score += 1;
+    if (r + 1 <= 12 && hasRankSuit(r + 1)) score += 2;
+    if (r + 2 <= 12 && hasRankSuit(r + 2)) score += 1;
 
+    // Q-K-A
     if (ALLOW_QKA_ONLY) {
       if (r === 11) {
         if (hasRankSuit(12)) score += 2;
@@ -412,84 +424,205 @@
 
   function countUsefulSetPotential(hand, card) {
     if (!card) return 0;
-    if (cardIsCoringa(card)) return 6;
+    if (cardIsCoringa(card)) return 7;
 
     const r = card.val;
     const same = hand.filter((c) => !cardIsCoringa(c) && c.val === r);
+    // set forte = mesmo rank com muitos naipes distintos (regra: não repetir naipe)
     const suits = new Set(same.map((c) => c.suit));
     return suits.size;
   }
 
-  function maiaHandQuality(hand) {
-    let score = 0;
-    for (const c of hand) {
-      score += countUsefulNeighborsRun(hand, c);
-      score += countUsefulSetPotential(hand, c);
+  function estimateOpponentHelp(card, oppHand) {
+    // Quanto essa carta ajudaria o Totó (para Maia evitar jogar no lixo).
+    if (!card) return 0;
+    if (cardIsCoringa(card)) return 30;
+
+    let help = 0;
+
+    // Ajuda a set (mesmo valor e naipe diferente)
+    const sameRank = oppHand.filter((c) => !cardIsCoringa(c) && c.val === card.val);
+    if (sameRank.length >= 1) {
+      const suits = new Set(sameRank.map((c) => c.suit));
+      if (!suits.has(card.suit)) help += 8;
+      else help += 3; // naipe repetido não serve pra set, mas ainda pode servir pra run
     }
-    if (hand.length === 9 && isWinningExact(hand)) score += 1000;
-    if (hand.length === 10 && canCloseWithOneDiscard(hand).ok) score += 900;
+
+    // Ajuda a run (mesmo naipe vizinho)
+    const r = rankIndex(card.val);
+    const s = card.suit;
+    const has = (ri) => oppHand.some((c) => !cardIsCoringa(c) && c.suit === s && rankIndex(c.val) === ri);
+    if (has(r - 1)) help += 6;
+    if (has(r + 1)) help += 6;
+    if (has(r - 2)) help += 2;
+    if (has(r + 2)) help += 2;
+
+    // Meio de sequência tende a ser pior pra dar
+    if (r >= 4 && r <= 8) help += 2;
+
+    // Q-K-A sinergia
+    if (ALLOW_QKA_ONLY) {
+      if (r === 11 && (has(12) || has(0))) help += 4;
+      if (r === 12 && (has(11) || has(0))) help += 4;
+      if (r === 0 && (has(11) || has(12))) help += 4;
+    }
+
+    return help;
+  }
+
+  function maiaHandQuality(hand) {
+    // qualidade geral + bônus por proximidade de fechar
+    if (!Array.isArray(hand)) return -999;
+
+    // fechar direto
+    if (hand.length === 9 && isWinningExact(hand)) return 5000;
+
+    // se tem 10 e fechar com um descarte, super alto
+    if (hand.length === 10) {
+      const c10 = canCloseWithOneDiscard(hand);
+      if (c10.ok) return 4200;
+    }
+
+    let score = 0;
+    let jokers = 0;
+
+    for (const c of hand) {
+      if (cardIsCoringa(c)) {
+        jokers++;
+        continue;
+      }
+      score += countUsefulNeighborsRun(hand, c);
+      score += countUsefulSetPotential(hand, c) * 2.2;
+    }
+
+    // valoriza coringa na mão (não jogar fora!)
+    score += jokers * 22;
+
+    // bônus por diversidade de naipes em ranks repetidos (ajuda set válido)
+    const byVal = new Map();
+    for (const c of hand) {
+      if (!c || cardIsCoringa(c)) continue;
+      if (!byVal.has(c.val)) byVal.set(c.val, new Set());
+      byVal.get(c.val).add(c.suit);
+    }
+    for (const [, suits] of byVal.entries()) {
+      const n = suits.size;
+      if (n >= 2) score += 6 + n * 2;
+      if (n >= 3) score += 12;
+    }
+
+    // leve preferência por cartas do meio (melhor conectividade)
+    for (const c of hand) {
+      if (!c || cardIsCoringa(c)) continue;
+      const r = rankIndex(c.val);
+      if (r >= 4 && r <= 8) score += 1.2;
+    }
+
     return score;
   }
 
-  function shouldMaiaTakeDiscard(hand, discardCard) {
-    if (!discardCard) return false;
-    if (penalizadoMaia) return false;
-    if (cardIsCoringa(discardCard)) return true;
-
-    const base = maiaHandQuality(hand);
-    const testHand = hand.slice();
-    testHand.push(discardCard);
-
-    if (testHand.length === 10 && canCloseWithOneDiscard(testHand).ok) return true;
-
-    const after = maiaHandQuality(testHand);
-    return after > base + 6;
-  }
-
-  function chooseMaiaDiscardIndex(hand) {
+  function bestAfterDiscardQuality(hand10) {
+    let bestQ = -Infinity;
     let bestIdx = 0;
-    let bestBad = -Infinity;
-    const jokersCount = hand.filter(cardIsCoringa).length;
 
-    for (let i = 0; i < hand.length; i++) {
-      const c = hand[i];
-
-      if (cardIsCoringa(c)) {
-        const bad = jokersCount > 1 ? -30 : -80;
-        if (bad > bestBad) {
-          bestBad = bad;
-          bestIdx = i;
-        }
-        continue;
-      }
-
-      const setPot = countUsefulSetPotential(hand, c);
-      const runPot = countUsefulNeighborsRun(hand, c);
-
-      let bad = 10 - (setPot * 3 + runPot * 2);
-
-      const r = rankIndex(c.val);
-      if (r >= 4 && r <= 8) bad -= 2;
-      if (r === 12) bad += 2;
-
-      if (r === 0) {
-        const hasQ = hand.some(
-          (x) => !cardIsCoringa(x) && x.suit === c.suit && rankIndex(x.val) === 11
-        );
-        const hasK = hand.some(
-          (x) => !cardIsCoringa(x) && x.suit === c.suit && rankIndex(x.val) === 12
-        );
-        if (!(hasQ && hasK)) bad += 1;
-      }
-
-      const test = hand.slice();
-      test.splice(i, 1);
-      if (test.length === 9 && isWinningExact(test)) bad -= 20;
-
-      if (bad > bestBad) {
-        bestBad = bad;
+    for (let i = 0; i < hand10.length; i++) {
+      const test = hand10.slice();
+      test.splice(i, 1); // volta para 9
+      const q = maiaHandQuality(test);
+      if (q > bestQ) {
+        bestQ = q;
         bestIdx = i;
       }
+    }
+
+    return { bestQ, bestIdx };
+  }
+
+  function shouldMaiaTakeDiscard(hand9, discardCard) {
+    if (!discardCard) return false;
+    if (penalizadoMaia) return false;
+
+    // coringa: quase sempre pega
+    if (cardIsCoringa(discardCard)) return true;
+
+    // defesa: se Totó está na zona de fechar, Maia fica mais cuidadosa com lixo
+    const totoThreat =
+      (maoToto.length === 10 && turno === "maia") || (maoToto.length === 9 && turno === "maia" && fase === "COMPRA");
+
+    const baseQ = maiaHandQuality(hand9);
+
+    // Simula pegar lixo (fica com 10) e escolher melhor descarte
+    const withDiscard = hand9.slice();
+    withDiscard.push(discardCard);
+    const simTake = bestAfterDiscardQuality(withDiscard);
+
+    // ganho real
+    let gain = simTake.bestQ - baseQ;
+
+    // penaliza pegar lixo que ajuda o Totó (não entregar jogo)
+    const helpToToto = estimateOpponentHelp(discardCard, maoToto);
+    gain -= helpToToto * (totoThreat ? 0.9 : 0.55);
+
+    // threshold dinâmico por skill e ameaça
+    const baseTh = 8; // mínimo pra valer a pena
+    const skillAdj = (1 - MAIA_SKILL) * 10; // quanto menor a skill, mais "impulsiva"
+    const threatAdj = totoThreat ? 6 : 0;
+
+    const threshold = baseTh + threatAdj - skillAdj;
+
+    // Um toque humano: às vezes erra (20% de imperfeição aproximada)
+    const noise = (rand() - 0.5) * (1 - MAIA_SKILL) * 18;
+    gain += noise;
+
+    return gain >= threshold;
+  }
+
+  function chooseMaiaDiscardIndex(hand10) {
+    // Maia descarta pensando:
+    // 1) maximizar qualidade da mão final (9 cartas)
+    // 2) minimizar ajuda ao Totó via lixo
+    // 3) nunca queimar coringa à toa
+
+    let bestIdx = 0;
+    let bestScore = -Infinity;
+
+    const totoThreat =
+      (maoToto.length === 10 && turno === "maia") || (maoToto.length === 9 && turno === "maia" && fase === "COMPRA");
+
+    for (let i = 0; i < hand10.length; i++) {
+      const c = hand10[i];
+
+      // base: qualidade após descartar i
+      const test9 = hand10.slice();
+      test9.splice(i, 1);
+      let score = maiaHandQuality(test9);
+
+      // evita jogar coringa fora
+      if (cardIsCoringa(c)) score -= 160 + (totoThreat ? 60 : 0);
+
+      // evita dar carta que ajuda Totó no lixo
+      const help = estimateOpponentHelp(c, maoToto);
+      score -= help * (totoThreat ? 1.15 : 0.75);
+
+      // evita descartar carta "central" (mais conectável), principalmente em ameaça
+      if (c && !cardIsCoringa(c)) {
+        const r = rankIndex(c.val);
+        if (r >= 4 && r <= 8) score -= totoThreat ? 5 : 2;
+      }
+
+      // leve aleatoriedade controlada (para não virar robô previsível)
+      const noise = (rand() - 0.5) * (1 - MAIA_SKILL) * 12;
+      score += noise;
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestIdx = i;
+      }
+    }
+
+    // pequena chance de “erro humano” (bem pequena na skill 0.8)
+    if (rand() < (1 - MAIA_SKILL) * 0.25) {
+      return Math.floor(rand() * hand10.length);
     }
 
     return bestIdx;
@@ -909,13 +1042,14 @@
     setTimeout(() => {
       if (turno !== "maia") return;
 
+      // 1) Se ela já está com 9 e fecha, ela pede conferência
       if (maoMaia.length === 9) {
         const ok9 = isWinningExact(maoMaia);
         const okPenalty = !penalizadoMaia || jogadorTemCartaDoMonte("maia");
         const validoReal = ok9 && okPenalty;
 
         if (validoReal) {
-          pendenteMaia = { mao: maoMaia.slice(), validoReal: true };
+          pendenteMaia = { mao: maoMaia.slice(), validoReal: true, tipo: "9", falta: null };
           falar(falaRandom(falas.juiz));
           mostrarCartasMaia(pendenteMaia.mao);
           abrirOverlay({
@@ -931,11 +1065,39 @@
         }
       }
 
+      // 2) Decide compra: lixo vs monte com simulação
       const topDiscard = lixo.length ? lixo[lixo.length - 1] : null;
       const querLixo = topDiscard && maiaPodeComprarLixo() && shouldMaiaTakeDiscard(maoMaia, topDiscard);
       const origem = querLixo ? "lixo" : "monte";
       comprarCarta(origem, "maia");
 
+      // 3) Se com 10 dá pra fechar com 1 descarte, ela pode "bater (10)" e pedir conferência
+      if (maoMaia.length === 10) {
+        const res10 = canCloseWithOneDiscard(maoMaia);
+        const okPenalty = !penalizadoMaia || jogadorTemCartaDoMonte("maia");
+        const valido10 = res10.ok && okPenalty;
+
+        // com skill alta, ela não deixa passar batida de 10
+        if (valido10 && MAIA_SKILL >= 0.65) {
+          pendenteMaia = { mao: maoMaia.slice(), validoReal: true, tipo: "10", falta: res10.discard };
+          falar(falaRandom(falas.juiz));
+          mostrarCartasMaia(pendenteMaia.mao);
+
+          const suitSym = naipes[res10.discard.suit] || "";
+          abrirOverlay({
+            icone: "🧾",
+            titulo: "MAIA DISSE: BATI! (10)",
+            subtitulo: `Confere. Ela fecha se descartar ${res10.discard.val}${suitSym}.`,
+            confete: false,
+            modo: "veredito",
+          });
+          fase = "CONFERINDO";
+          atualizarBloqueios();
+          return;
+        }
+      }
+
+      // 4) Se não bateu, descarta profissionalmente
       fase = "DESCARTE";
       renderizar();
 
@@ -972,10 +1134,18 @@
       penalizadoMaia = false;
       atualizarPlacar();
 
+      let extra = "Boa conferência. Ela fechou mesmo 😼";
+      if (pendenteMaia.tipo === "10" && pendenteMaia.falta) {
+        const suitSym = naipes[pendenteMaia.falta.suit] || "";
+        extra = `Ela fechou. Com 10, só faltava descartar ${pendenteMaia.falta.val}${suitSym} 😼`;
+      } else if (!aceitou) {
+        extra = "Você duvidou… mas ela fechou 😼";
+      }
+
       abrirOverlay({
         icone: "🏆",
         titulo: "MAIA FECHOU! 🏆",
-        subtitulo: aceitou ? "Boa conferência. Ela fechou mesmo 😼" : "Você duvidou… mas ela fechou 😼",
+        subtitulo: extra,
         confete: true,
         modo: "default",
       });
@@ -1404,47 +1574,36 @@
 
   /* ==========================================================
      ✅ CORRIGIDO: retângulo e bolinha sem “puxar” um ao outro
-     - Retângulo por TOP/LEFT com clamp
-     - Respeita popup em cima/baixo
-     - Bolinha “grudada” no topo final do retângulo
   ========================================================== */
   function applyHoleToRect(r, pad = 12) {
-    // tamanho do retângulo (com padding)
     const w = Math.max(64, r.width + pad * 2);
     const h = Math.max(64, r.height + pad * 2);
 
-    // TOP/LEFT do retângulo (mais previsível)
     let left = r.left + r.width / 2 - w / 2;
     let top = r.top + r.height / 2 - h / 2;
 
-    const margin = 10; // margem das bordas da tela
-    const safeGap = 14; // espaço mínimo entre popup e retângulo
+    const margin = 10;
+    const safeGap = 14;
 
-    // clamp inicial na tela
     left = Math.max(margin, Math.min(window.innerWidth - w - margin, left));
     top = Math.max(margin, Math.min(window.innerHeight - h - margin, top));
 
-    // respeita o popup (se está em cima ou embaixo)
     const popRect = ui.tutPop?.getBoundingClientRect?.();
     if (popRect && popRect.width > 0 && popRect.height > 0) {
       const popOnTop = popRect.top < window.innerHeight * 0.35;
       const popOnBottom = popRect.bottom > window.innerHeight * 0.65;
 
       if (popOnBottom) {
-        // popup embaixo: retângulo não pode entrar na área do popup
         const maxTop = popRect.top - safeGap - h;
         top = Math.min(top, maxTop);
       } else if (popOnTop) {
-        // popup em cima: retângulo deve ficar abaixo do popup
         const minTop = popRect.bottom + safeGap;
         top = Math.max(top, minTop);
       }
 
-      // clamp de novo após empurrões
       top = Math.max(margin, Math.min(window.innerHeight - h - margin, top));
     }
 
-    // seu CSS do hole normalmente usa translate(-50%, -50%), então enviamos centro
     const cx = left + w / 2;
     const cy = top + h / 2;
 
@@ -1453,12 +1612,11 @@
     ui.tutHole.style.left = `${cx}px`;
     ui.tutHole.style.top = `${cy}px`;
 
-    // bolinha “presa” ao topo final do retângulo
     if (tutPointer) {
       tutPointer.style.display = "block";
       tutPointer.style.left = `${cx}px`;
 
-      const POINTER_GAP = 18; // aumenta = sobe | diminui = desce
+      const POINTER_GAP = 18;
       const pointerTop = top - POINTER_GAP;
       tutPointer.style.top = `${Math.max(24, pointerTop)}px`;
     }
