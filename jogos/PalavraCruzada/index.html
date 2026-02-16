@@ -12,7 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
 
   <link rel="stylesheet" href="styles.css" />
-  <script src="app.js" defer></script>
+  <script src="game.js" defer></script>
 </head>
 
 <body>
@@ -61,6 +61,16 @@
         <div class="clue-panel" aria-label="Dica atual">
           <p class="clue-label">Dica</p>
           <p class="clue-text" id="clueText">Toque em uma célula para selecionar uma palavra.</p>
+
+          <!-- ✅ NOVO: ações simples para terceira idade -->
+          <div class="clue-actions" aria-label="Ações de ajuda">
+            <button class="btn btn-secondary btn-hint" id="hintBtn" type="button" aria-label="Mostrar uma letra de dica">
+              Mostrar dica (1 letra)
+            </button>
+            <p class="muted hint-note" id="hintNote" aria-live="polite">
+              Revela uma letra e deixa travada.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -75,7 +85,6 @@
           aria-colcount="9">
         </div>
 
-        <!-- Input acessível para teclado mobile (precisa estar “no viewport” no iOS) -->
         <input
           id="hiddenInput"
           class="sr-input"

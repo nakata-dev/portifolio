@@ -4,18 +4,14 @@
   --text: #f2f2f2;
   --muted: rgba(242,242,242,0.72);
 
-  --accent: #00e5ff;          /* neon */
-  --accent2: #7c4dff;         /* neon roxo */
+  --accent: #00e5ff;
+  --accent2: #7c4dff;
   --danger: #ff5a78;
 
-  --surface: rgba(255,255,255,0.06);
-  --surface2: rgba(255,255,255,0.10);
   --border: rgba(255,255,255,0.14);
-
   --shadow: 0 16px 40px rgba(0,0,0,0.40);
   --radius: 18px;
 
-  /* Responsivo: evita “apertar” em telas pequenas */
   --gridMax: min(520px, 92vw);
   --gridGap: clamp(6px, 1.2vw, 10px);
 
@@ -34,7 +30,6 @@ body{
   line-height: 1.5;
   overflow-x: hidden;
 
-  /* Minimalista com neon suave */
   background:
     radial-gradient(900px 520px at 15% 0%, rgba(0,229,255,0.12), transparent 62%),
     radial-gradient(820px 520px at 95% 20%, rgba(124,77,255,0.10), transparent 60%),
@@ -113,7 +108,6 @@ body{
   white-space: nowrap;
 }
 
-/* moedas */
 .hud-coins{ align-items: center; gap: 8px; }
 .coin-emoji{ filter: drop-shadow(0 10px 24px rgba(0,229,255,0.18)); }
 #coinLabel{ font-weight: 900; letter-spacing: 0.02em; }
@@ -174,6 +168,20 @@ body{
   line-height: 1.35;
 }
 
+/* ✅ NOVO: área de ações de dica */
+.clue-actions{
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+.hint-note{
+  margin: 0;
+  font-size: 0.96rem;
+}
+.btn-hint{
+  width: 100%;
+}
+
 /* GRID CARD */
 .grid-card{
   position: relative;
@@ -204,7 +212,7 @@ body{
   background: rgba(0,0,0,0.06);
 }
 
-/* CÉLULAS (tap-friendly + neon) */
+/* CÉLULAS */
 .cell{
   position: relative;
   width: 100%;
@@ -233,10 +241,7 @@ body{
   border-color: rgba(0,229,255,0.28);
   background: rgba(0,229,255,0.06);
 }
-
-.cell:active{
-  transform: scale(0.98);
-}
+.cell:active{ transform: scale(0.98); }
 
 .cell:focus-visible{
   box-shadow: var(--focus);
@@ -286,11 +291,9 @@ body{
   color: rgba(242,242,242,0.78);
 }
 
-.cell .letter{
-  transform: translateY(1px);
-}
+.cell .letter{ transform: translateY(1px); }
 
-/* Input para teclado mobile: precisa existir “aqui”, não fora da tela */
+/* Input mobile: fica dentro do viewport */
 .sr-input{
   position: absolute;
   left: 10px;
@@ -475,17 +478,11 @@ body{
   letter-spacing: 0.02em;
 }
 
-/* Responsive */
 @media (max-width: 420px){
   .header-inner{ flex-direction: column; align-items: flex-start; }
   .hud{ width: 100%; justify-content: flex-start; }
   .hud-pill{ width: 100%; justify-content: center; }
   .logotipo{ width: 64px; height: 64px; }
-}
-
-@media (max-width: 360px){
-  .worksheet{ padding: 12px; }
-  .cell{ border-radius: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce){

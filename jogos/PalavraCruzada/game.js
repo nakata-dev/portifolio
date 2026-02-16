@@ -1,10 +1,7 @@
-/* app.js */
+/* game.js */
 /* =========================================================
-  Crossword Elite - app.js (MOBILE FIX + LUPA + UX SÊNIOR)
-  ✅ Teclado mobile confiável (input dentro do viewport + captura por "input")
-  ✅ Lupa em toque prolongado (ajuda 3ª idade)
-  ✅ Neon/pulsar para foco (visual mais claro)
-  ✅ Limpeza de timeouts/FX ao trocar nível (evita “vazamento”)
+  Crossword Elite - game.js (MOBILE FIX + LAYOUT + LUPA + DICAS)
+  ✅ Botão de dica: revela 1 letra e trava (acessível para terceira idade)
 ========================================================= */
 
 const $ = (s) => document.querySelector(s);
@@ -34,6 +31,8 @@ const UI = {
   coinLabel: $("#coinLabel"),
 
   clueText: $("#clueText"),
+  hintBtn: $("#hintBtn"),
+  hintNote: $("#hintNote"),
 
   pauseOverlay: $("#pauseOverlay"),
   pauseCloseBtn: $("#pauseCloseBtn"),
@@ -52,6 +51,20 @@ const UI = {
   loupeNum: $("#loupeNum"),
   loupeDir: $("#loupeDir"),
 };
+
+/* ======= FAIL-SAFE VISÍVEL ======= */
+function showFatal(msg){
+  if (UI.clueText) UI.clueText.textContent = `⚠️ ${msg}`;
+  try { console.error(msg); } catch {}
+}
+window.addEventListener("error", (e) => {
+  const m = e?.message ? String(e.message) : "Erro inesperado";
+  showFatal(`Falha ao iniciar o jogo: ${m}`);
+});
+window.addEventListener("unhandledrejection", (e) => {
+  const m = e?.reason ? String(e.reason) : "Erro inesperado";
+  showFatal(`Falha ao iniciar o jogo: ${m}`);
+});
 
 function sanitizeWord(str){
   return String(str || "")
@@ -157,6 +170,11 @@ function spawnCoin(fromEl, toEl, delayMs = 0){
   const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const dur = reduce ? 0 : 520;
 
+  if (!coin.animate){
+    setTimeout(() => coin.remove(), delayMs + 20);
+    return;
+  }
+
   const anim = coin.animate(
     [
       { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
@@ -180,6 +198,11 @@ function spawnSpark(fromEl){
 
   const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const dur = reduce ? 0 : 420;
+
+  if (!spark.animate){
+    setTimeout(() => spark.remove(), 50);
+    return;
+  }
 
   const driftX = (Math.random() * 60 - 30);
   const driftY = - (40 + Math.random() * 40);
@@ -388,13 +411,15 @@ const state = {
   winShown: false,
   coins: 0,
 
-  // anti-“vazamento” de efeitos
   fxTimeouts: [],
 
   // lupa
   loupeOn: false,
   loupeHoldId: null,
   lastPointerType: "mouse",
+
+  // dica
+  hintBusy: false,
 };
 
 /* =========================================================
@@ -426,9 +451,6 @@ function buildLevel(level){
 
       const cell = cellAt(rr,cc);
       cell.isBlock = false;
-
-      // Se houver cruzamento, mantém a primeira solução.
-      // (Evita quebrar nível. Se quiser, posso transformar isso em validação rígida.)
       if (!cell.solution) cell.solution = ans[i];
     }
   }
@@ -521,7 +543,7 @@ function renderGrid(){
 }
 
 /* =========================================================
-  SELEÇÃO + DICA
+  SELEÇÃO + DICA (texto)
 ========================================================= */
 function getWordsAtCell(r,c){
   const list = [];
@@ -561,7 +583,6 @@ function setActiveCell(r,c, preferToggle=false){
     candidates.find(w => w.dir === "across") ||
     candidates[0];
 
-  // 2º toque na mesma célula alterna direção (ótimo no mobile)
   if (preferToggle && candidates.length >= 2){
     const other = candidates.find(w => w.dir !== chosen.dir);
     if (other) chosen = other;
@@ -574,9 +595,12 @@ function setActiveCell(r,c, preferToggle=false){
 }
 
 function focusInput(){
-  // Mobile: foco precisa acontecer em gesto do usuário
   if (!UI.hiddenInput) return;
-  UI.hiddenInput.focus({ preventScroll: true });
+  try{
+    UI.hiddenInput.focus({ preventScroll: true });
+  }catch{
+    UI.hiddenInput.focus();
+  }
 }
 
 function clearCellClasses(){
@@ -616,7 +640,7 @@ function updateClue(){
 }
 
 /* =========================================================
-  LUPA (toque prolongado)
+  LUPA
 ========================================================= */
 function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
 
@@ -639,7 +663,6 @@ function hideLoupe(){
 function moveLoupe(x, y){
   if (!UI.loupe || !state.loupeOn) return;
 
-  // posiciona um pouco acima do dedo pra não atrapalhar
   const w = 128;
   const h = 128;
   const px = clamp(x, 10 + w/2, window.innerWidth - 10 - w/2);
@@ -818,7 +841,7 @@ function handleKeyDown(e){
   }
 }
 
-/* Captura confiável para teclado virtual (iOS/Android) */
+/* Teclado virtual (iOS/Android) */
 function handleMobileInput(){
   if (state.paused) return;
   if (!UI.hiddenInput) return;
@@ -827,11 +850,9 @@ function handleMobileInput(){
   const raw = UI.hiddenInput.value || "";
   if (!raw) return;
 
-  // pega o último caractere inserido
   const last = raw.slice(-1);
   UI.hiddenInput.value = "";
 
-  // alguns teclados inserem espaços/pontuação
   const ch = sanitizeWord(last);
   if (!ch) return;
 
@@ -843,15 +864,99 @@ function handleMobileInput(){
   updateLoupe();
 }
 
-function handleMobileBeforeInput(e){
-  // Em alguns iOS, antes do input ajuda a bloquear coisas estranhas
+/* =========================================================
+  DICA (BOTÃO)
+========================================================= */
+function lockCell(r, c){
+  const cell = cellAt(r,c);
+  if (!cell || cell.isBlock) return;
+  cell.locked = true;
+
+  const el = state.cellEls[r]?.[c];
+  if (el){
+    el.classList.add("locked");
+    el.classList.remove("wrong");
+  }
+}
+
+function findHintTargetWord(){
+  // 1) palavra ativa
+  const active = getActiveWord();
+  if (active && !active.done) return active;
+
+  // 2) primeira palavra não concluída
+  return state.words.find(w => !w.done) || null;
+}
+
+function revealOneLetterInWord(w){
+  if (!w) return false;
+
+  // prioriza célula vazia e não travada
+  for (const p of w.cells){
+    const cell = cellAt(p.r, p.c);
+    if (!cell || cell.isBlock) continue;
+    if (cell.locked) continue;
+    if (!cell.value){
+      // revela letra correta
+      setLetter(p.r, p.c, cell.solution);
+      lockCell(p.r, p.c);
+      state.activeCell = { r: p.r, c: p.c };
+      setDirection(w.dir);
+      setActiveWord(w);
+      updateHighlights();
+      return true;
+    }
+  }
+
+  // se não houver vazias, tenta corrigir uma errada
+  for (const p of w.cells){
+    const cell = cellAt(p.r, p.c);
+    if (!cell || cell.isBlock) continue;
+    if (cell.locked) continue;
+    if (cell.value && cell.value !== cell.solution){
+      setLetter(p.r, p.c, cell.solution);
+      lockCell(p.r, p.c);
+      state.activeCell = { r: p.r, c: p.c };
+      setDirection(w.dir);
+      setActiveWord(w);
+      updateHighlights();
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function useHint(){
   if (state.paused) return;
-  if (!state.activeCell) return;
-  // não impede por padrão, só deixa o fluxo normal
+  if (state.winShown) return;
+  if (state.hintBusy) return;
+
+  const w = findHintTargetWord();
+  if (!w){
+    setText(UI.hintNote, "Não há mais dicas. Você já completou tudo! ✅");
+    return;
+  }
+
+  state.hintBusy = true;
+  const ok = revealOneLetterInWord(w);
+
+  if (ok){
+    setText(UI.hintNote, "Letra revelada ✅ (travada)");
+    playChime("word");
+    validateWords();
+    updateLoupe();
+    focusInput();
+  } else {
+    setText(UI.hintNote, "Esta palavra já está completa. Tente outra célula/palavra.");
+  }
+
+  // pequena “trava” para evitar toques repetidos acidentais
+  setTimeout(() => { state.hintBusy = false; }, 260);
 }
 
 /* =========================================================
-  RECOMPENSAS
+  RECOMPENSAS + VALIDAÇÃO
 ========================================================= */
 function rewardWord(w){
   const amount = Math.max(3, Math.min(8, w.answer.length));
@@ -887,9 +992,6 @@ function rewardLevel(){
   }
 }
 
-/* =========================================================
-  VALIDAÇÃO
-========================================================= */
 function validateWords(){
   let justCompleted = [];
 
@@ -957,7 +1059,6 @@ function setPaused(p){
     focusInput();
   }
 }
-function togglePause(){ setPaused(!state.paused); }
 
 /* overlays */
 function showWin(){
@@ -995,6 +1096,8 @@ function loadLevel(index){
 
   if (UI.winOverlay) UI.winOverlay.hidden = true;
   if (UI.pauseOverlay) UI.pauseOverlay.hidden = true;
+
+  if (UI.hintNote) setText(UI.hintNote, "Revela uma letra e deixa travada.");
 
   buildLevel(level);
   renderGrid();
@@ -1062,10 +1165,8 @@ function onGridPointerDown(e){
   const c = Number(btn.dataset.c);
   if (!inBounds(r,c) || cellAt(r,c).isBlock) return;
 
-  // garante foco do teclado em gesto direto (mobile)
   setActiveCell(r,c, false);
 
-  // toque prolongado = lupa (mobile/tablet)
   if (state.lastPointerType === "touch"){
     if (state.loupeHoldId) clearTimeout(state.loupeHoldId);
     state.loupeHoldId = setTimeout(() => {
@@ -1083,15 +1184,12 @@ function onGridPointerMove(e){
 function onGridPointerUp(){
   if (state.loupeHoldId) clearTimeout(state.loupeHoldId);
   state.loupeHoldId = null;
-
-  // Se a lupa estiver aberta, fecha ao soltar
   if (state.loupeOn) hideLoupe();
 }
 
 function bindUI(){
   on(UI.grid, "click", onGridClick);
 
-  // pointer events para lupa + foco mobile
   on(UI.grid, "pointerdown", onGridPointerDown, { passive: true });
   on(UI.grid, "pointermove", onGridPointerMove, { passive: true });
   on(UI.grid, "pointerup", onGridPointerUp, { passive: true });
@@ -1104,17 +1202,15 @@ function bindUI(){
   on(UI.winResetBtn, "click", () => { closeWin(); resetLevel(); });
   on(UI.winNextBtn, "click", () => { closeWin(); nextLevel(); });
 
-  // teclado físico
   document.addEventListener("keydown", handleKeyDown);
 
-  // teclado virtual (mobile)
-  on(UI.hiddenInput, "beforeinput", handleMobileBeforeInput);
   on(UI.hiddenInput, "input", handleMobileInput);
-
-  // backspace no teclado virtual costuma vir em keydown do input
   on(UI.hiddenInput, "keydown", (e) => {
     if (e.key === "Backspace") handleKeyDown(e);
   });
+
+  // ✅ BOTÃO DE DICA
+  on(UI.hintBtn, "click", useHint);
 
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
@@ -1126,7 +1222,6 @@ function bindUI(){
     if (document.hidden) setPaused(true);
   });
 
-  // iOS: desbloqueia áudio no 1º toque
   const unlock = () => {
     const ac = audioContext();
     if (!ac) return;
@@ -1146,9 +1241,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /* =========================================================
   CHANGE LOG
 =========================================================
-
-index.html → script agora aponta para app.js + adicionada seção de ajuda (3ª idade) + elemento da lupa → corrigir consistência do projeto e melhorar entendimento/UX no mobile
-styles.css → grid/células mais legíveis e “tap-friendly”, neon/pulsar no foco, layout mais minimalista, lupa estilizada → melhor leitura e interação em 360–1024px+
-app.js → captura de teclado virtual via evento input (iOS/Android), lupa por toque prolongado, limpeza de timeouts de FX ao trocar nível → corrige falhas em celular/tablet e evita efeitos vazando
-
+index.html → adicionou botão “Mostrar dica (1 letra)” + texto explicativo → permite concluir mesmo com dificuldade
+styles.css → estilos para área de ações e botão de dica (tap-friendly) → melhora acessibilidade e clareza
+game.js → implementou useHint(): revela 1 letra correta e trava a célula → evita bloqueio do usuário e mantém progresso
 */
