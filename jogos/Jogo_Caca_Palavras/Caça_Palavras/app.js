@@ -2,23 +2,29 @@
    Caça-Palavras PRO (Clean) - PATCH 2026
    ✅ Android sem travar (geração assíncrona)
    ✅ 100 níveis 5..8, 9 palavras, 8 direções
-   ✅ Garantia de 9 palavras com fallback
-   ✅ Cores por palavra (melhor para idosos)
-   ✅ NOVO: som leve + moedas (sem arquivos, sem travar)
+   ✅ Garantia de 9 palavras com fallback seguro
+   ✅ Cores por palavra (melhor leitura)
+   ✅ Som leve + moedas (sem arquivos, sem travar)
+
+   FIX (bug nível 50+):
+   ✅ bancos por tamanho (palavras curtas em grids pequenos)
+   ✅ limite de tamanho por grid (ex.: 7x7 <= 6 letras)
+   ✅ renderWords silencioso durante "Gerando..."
 ========================== */
 
 const LS_KEY = "wordsearch_pro_v1";
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3; // ⬅️ bump por causa da lógica/bancos novos
 
 const DIRS = [
   [1, 0], [-1, 0], [0, 1], [0, -1],
   [1, 1], [-1, -1], [1, -1], [-1, 1]
 ];
 
-const MAX_BOARD_RETRIES = 90;
-const MAX_WORD_ATTEMPTS = 220;
+// Mantém leve no Android
+const MAX_BOARD_RETRIES = 110;
+const MAX_WORD_ATTEMPTS = 260;
 const YIELD_EVERY = 6;
-const FALLBACK_SETS_TRIES = 22;
+const FALLBACK_SETS_TRIES = 40;
 
 const $ = (id) => document.getElementById(id);
 
@@ -86,6 +92,21 @@ function pickDeterministicUnique(arr, n, seed) {
 }
 
 /* =========================
+   Limites de tamanho por grid
+   (9 palavras em grids pequenos exige palavras menores)
+========================= */
+const MAX_LEN_BY_SIZE = {
+  5: 3, // 5x5: 9 palavras só fica estável com 2-3 letras
+  6: 4, // 6x6: 3-4 letras
+  7: 6, // 7x7: até 6 letras
+  8: 7, // 8x8: até 7 letras
+};
+
+function maxLenFor(size) {
+  return MAX_LEN_BY_SIZE[size] ?? size;
+}
+
+/* =========================
    Cores por palavra (alto contraste)
 ========================= */
 const WORD_COLORS = [
@@ -114,51 +135,77 @@ function hashWordToColor(word) {
 }
 
 /* =========================
-   Bancos + níveis 100
+   Bancos por tamanho (curtos)
 ========================= */
-function sanitizeBank(list) {
-  return list.map(sanitizeWord).filter(Boolean);
+function sanitizeBank(list, size) {
+  const maxLen = maxLenFor(size);
+  return list
+    .map(sanitizeWord)
+    .filter(Boolean)
+    .filter(w => w.length >= 2 && w.length <= maxLen);
 }
 
+// 5x5: 2-3 letras (banco grande)
+const WORD_BANK_5 = sanitizeBank([
+  "SOL","MAR","LUA","RIO","DIA","NOZ","PAZ","SOM","SAL","CHA","MEL","CEU","ECO","VOZ","AVE","FIM",
+  "COR","AZU","VER","RUA","CAS","LAR","DOM","FOI","SIM","NAO","TEU","MEU","NOS","TUA","UMA","DOU",
+  "AR","IR","LA","RE","MI","DO","UM","DOIS","TRES"
+], 5);
+
+// 6x6: 2-4 letras (misto)
+const WORD_BANK_6 = sanitizeBank([
+  "GATO","URSO","SAPO","PATO","LOBO","LEAO","RATO","AVIAO","BOLA","DADO","CARTA","JOGO",
+  "PRAIA","ONDA","SOL","MAR","VENTO","NEVE","CHUVA","NOITE","DIA","CALMA","FOCO","PAZ",
+  "CASA","RUA","PONTE","MAPA","LAGO","RIO","ILHA","PORTO"
+], 6);
+
+// 7x7: 3-6 letras (bem mais “encaixável”)
+const WORD_BANK_7 = sanitizeBank([
+  "AMOR","PAZ","CALMA","FOCO","TEMPO","SAUDE","FORCA","ALEGRI","RISOS","CUIDAR","BONDAD",
+  "ESCOLA","ALUNO","PROF","ARTE","CIENCI","LEITUR","LIVRO","CANETA","LAPIS","REGUA",
+  "JARDIM","FOLHA","RAIZ","TRONCO","SEMENT","FRUTO","NATURE",
+  "VIAGEM","MAPA","RUMO","TRILHA","PONTE","CIDADE","BAIRRO",
+  "MUSICA","RITMO","NOTA","CANTO","PALCO",
+  "TERRA","MARTE","VENUS","SATURNO","ORBITA","COMETA","ESTRE"
+], 7).map(w => w.slice(0, maxLenFor(7))); // garante maxLen (6)
+
+// 8x8: 4-7 letras (já permite mais variedade)
+const WORD_BANK_8 = sanitizeBank([
+  "AMIZADE","FAMILIA","SORRISO","CUIDADO","BONDADE","ENERGIA","CALMA","FOCO","HABITO","ROTINA",
+  "LEITURA","ESTUDO","APRENDER","MEMORIA","IDEIA","CORAGEM","SUCESSO","PROGRESS",
+  "AVENTURA","VIAGEM","CAMINHO","BUSSOLA","TRILHA","MONTANH",
+  "INTERNET","SENHA","REDE","DADOS","SITE","EMAIL","NUVEM",
+  "LOGICA","CODIGO","FUNCAO","EVENTO","SISTEMA","DEBUG"
+], 8).map(w => w.slice(0, maxLenFor(8))); // maxLen 7
+
 const WORD_BANKS = {
-  5: sanitizeBank([
-    "SOL","MAR","LUA","RIO","DIA","NOZ","PAZ","SOM","SAL","CHA","MEL","CEU","ECO","VOZ","AVE","FIM",
-    "COR","AZUL","VER","ROXO","NEVE","FOGO","AR","LA","RE","MAO","PE","TE",
-    "OURO","VIDA","ALMA","LUZ","RUA","CASA"
-  ]).filter(w => w.length >= 2 && w.length <= 5),
-
-  6: sanitizeBank([
-    "GATO","URSO","BOLA","PRAIA","ONDA","BARCO","FOLHA","RAIZ","FOCO","CALMA","SAUDE","FORCA",
-    "DADO","CARTA","JANELA","MANGA","MELAO","ESCOLA","AMOR","RISOS","TEMPO","NORTE","SUL"
-  ]).filter(w => w.length >= 3 && w.length <= 6),
-
-  7: sanitizeBank([
-    "AMIZADE","FAMILIA","SORRISO","CUIDADO","BONDADE","ENERGIA","ESTUDAR","LEITURA","CANETA",
-    "CADERNO","MOCHILA","CIENCIA","PLANETA","GALAXIA","ORBITA","COMETA","ESTRELA",
-    "JARDIM","SEMENTE","TRONCO","VIAGEM","CAMINHO","BUSSOLA","NATUREZA"
-  ]).filter(w => w.length >= 3 && w.length <= 7),
-
-  8: sanitizeBank([
-    "PACIENCIA","CORAGEM","PROGRESSO","DISCIPLINA","HABITO","ROTINA","SUCESSO","APRENDER",
-    "ESTUDAR","LEITURA","MEMORIA","AVENTURA","MONTANHA","INTERNET","SEGURANCA",
-    "PROGRAMAR","ALGORITMO","LOGICA","CODIGO","FUNCAO","EVENTO","SISTEMA","DOWNLOAD"
-  ]).filter(w => w.length >= 3 && w.length <= 8),
+  5: WORD_BANK_5,
+  6: WORD_BANK_6,
+  7: WORD_BANK_7,
+  8: WORD_BANK_8,
 };
 
 function buildLevelsBySize(size, count, bank, wordsPerLevel, baseSeed) {
   const out = [];
-  const cleanBank = bank.filter(w => w.length <= size);
+  const maxLen = maxLenFor(size);
+  const cleanBank = bank.filter(w => w.length <= maxLen);
+
+  // se o banco ficar pequeno por algum motivo, não gera lixo
+  if (cleanBank.length < wordsPerLevel) {
+    console.warn("Banco insuficiente para size", size, cleanBank.length);
+  }
 
   for (let i = 0; i < count; i++) {
     const seed = baseSeed + i * 977;
     const picks = pickDeterministicUnique(cleanBank, wordsPerLevel, seed);
 
-    while (picks.length < wordsPerLevel) {
+    // completa com rand seguro
+    while (picks.length < wordsPerLevel && cleanBank.length) {
       const extra = cleanBank[randInt(0, cleanBank.length - 1)];
       if (!picks.includes(extra)) picks.push(extra);
     }
 
-    out.push({ size, words: picks, directions: 8 });
+    out.push({ size, words: picks.slice(0, wordsPerLevel), directions: 8 });
   }
   return out;
 }
@@ -277,6 +324,7 @@ function setSoundPref(on) {
 function loadLevels() {
   const data = readAllStorage();
 
+  // ✅ migração forçada se schema mudou (evita mix de níveis antigos)
   if (Number(data.schemaVersion || 0) !== SCHEMA_VERSION) {
     const fresh = safeClone(DEFAULT_LEVELS);
     writeAllStorage({
@@ -314,14 +362,14 @@ function validateLevels(arr) {
     lvl.words.forEach(w => {
       const s = sanitizeWord(w);
       if (!s) throw new Error("word vazia");
-      if (s.length > lvl.size) throw new Error(`word grande demais no nível ${idx + 1}: ${s}`);
+      if (s.length > maxLenFor(lvl.size)) throw new Error(`word grande demais no nível ${idx + 1}: ${s}`);
     });
     if (lvl.directions != null && lvl.directions !== 8) throw new Error("directions deve ser 8");
   });
 }
 
 /* =========================
-   Som (Web Audio) - super leve
+   Som (Web Audio) - leve
 ========================= */
 let soundOn = getSoundPref();
 let audioCtx = null;
@@ -349,7 +397,6 @@ async function unlockAudioIfNeeded() {
 
   try {
     if (ctx.state === "suspended") await ctx.resume();
-    // “ping” inaudível curtinho só para garantir inicialização
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     gain.gain.value = 0.00001;
@@ -360,9 +407,7 @@ async function unlockAudioIfNeeded() {
     osc.start();
     osc.stop(ctx.currentTime + 0.01);
     audioUnlocked = true;
-  } catch {
-    // se falhar, só não toca som
-  }
+  } catch {}
 }
 
 function playBeep(freq, durMs, type = "sine", vol = 0.035) {
@@ -391,14 +436,12 @@ function playBeep(freq, durMs, type = "sine", vol = 0.035) {
 }
 
 function sfxFound() {
-  // arpejo curtinho (som de “moedinha”)
   playBeep(880, 70, "triangle", 0.03);
   setTimeout(() => playBeep(1175, 70, "triangle", 0.028), 55);
   setTimeout(() => playBeep(1568, 90, "triangle", 0.026), 110);
 }
 
 function sfxComplete() {
-  // sequência um pouco maior (fim do nível)
   playBeep(784, 90, "sine", 0.03);
   setTimeout(() => playBeep(988, 90, "sine", 0.03), 90);
   setTimeout(() => playBeep(1175, 110, "sine", 0.03), 180);
@@ -454,7 +497,6 @@ function spawnCoinNearElement(domEl, kind = "coin") {
 }
 
 function spawnCoinsCelebration() {
-  // máximo 3 moedas, com delays pequenos
   const base = boardEl?.getBoundingClientRect?.();
   const x0 = base ? base.left + base.width * 0.5 : window.innerWidth * 0.5;
   const y0 = base ? base.top + base.height * 0.45 : window.innerHeight * 0.35;
@@ -503,7 +545,6 @@ startLevel(levelIndex);
    UI
 ========================= */
 function wireUI() {
-  // ✅ primeira interação desbloqueia som (política do navegador)
   const unlock = () => unlockAudioIfNeeded();
   window.addEventListener("pointerdown", unlock, { passive: true });
   window.addEventListener("keydown", unlock, { passive: true });
@@ -623,11 +664,11 @@ async function startLevel(index, opts = {}) {
   grid = Array.from({ length: size }, () => Array(size).fill(""));
   placements = [];
   renderBoard(size);
-  renderWords([]);
+  renderWords([], { silent: true }); // ✅ não polui durante carregamento
   updateProgress();
 
   const override = getOverrideWords(index);
-  const baseWords = override && Array.isArray(override) && override.length === 9
+  const baseWords = (override && Array.isArray(override) && override.length === 9)
     ? override
     : (level.words || []).map(sanitizeWord).filter(Boolean).slice(0, 9);
 
@@ -644,7 +685,7 @@ async function startLevel(index, opts = {}) {
     grid = Array.from({ length: size }, () => Array(size).fill(""));
     placements = [];
     renderBoard(size);
-    renderWords([]);
+    renderWords([], { silent: false });
     updateProgress();
     toast("❌ Não consegui montar este nível. Toque em Reiniciar.");
     locked = false;
@@ -660,7 +701,7 @@ async function startLevel(index, opts = {}) {
     wordColorMap.set(w, hashWordToColor(w));
   }
 
-  renderWords(placements.map(p => p.word));
+  renderWords(placements.map(p => p.word), { silent: true });
   updateProgress();
 
   toast("Boa sorte! 😄");
@@ -681,24 +722,28 @@ function nextLevel() {
    Geração + fallback
 ========================= */
 async function generateBoardGuaranteedWithFallback({ size, words, levelIndex, token }) {
-  const clean = words.map(sanitizeWord).filter(Boolean).slice(0, 9);
+  const maxLen = maxLenFor(size);
+
+  const clean = words.map(sanitizeWord).filter(Boolean).slice(0, 9).map(w => w.slice(0, maxLen));
   if (clean.length !== 9) return { ok: false, usedFallback: false, words: clean };
 
+  // tenta com as palavras do nível
   let ok = await generateBoardGuaranteedAsync({ size, words: clean, token });
   if (token !== genToken) return { ok: false, usedFallback: false, words: clean };
   if (ok) return { ok: true, usedFallback: false, words: clean };
 
-  const bank = WORD_BANKS[size] || [];
-  if (!bank.length) return { ok: false, usedFallback: false, words: clean };
+  // fallback: tenta conjuntos mais fáceis (do banco adequado)
+  const bank = (WORD_BANKS[size] || []).filter(w => w.length <= maxLen);
+  if (bank.length < 9) return { ok: false, usedFallback: false, words: clean };
 
   for (let t = 0; t < FALLBACK_SETS_TRIES; t++) {
     if (token !== genToken) return { ok: false, usedFallback: false, words: clean };
 
-    const seed = 100000 + (size * 999) + (levelIndex * 37) + (t * 7919);
+    const seed = 200000 + (size * 999) + (levelIndex * 37) + (t * 7919);
     const alt = pickDeterministicUnique(bank, 9, seed);
 
     if (alt.length !== 9) continue;
-    if (alt.some(w => w.length > size)) continue;
+    if (alt.some(w => w.length > maxLen)) continue;
 
     ok = await generateBoardGuaranteedAsync({ size, words: alt, token });
     if (token !== genToken) return { ok: false, usedFallback: false, words: clean };
@@ -712,7 +757,7 @@ async function generateBoardGuaranteedWithFallback({ size, words, levelIndex, to
 }
 
 async function generateBoardGuaranteedAsync({ size, words, token }) {
-  for (const w of words) if (!w || w.length > size) return false;
+  for (const w of words) if (!w || w.length > maxLenFor(size)) return false;
 
   const allowedDirs = buildAllowedDirs(8);
   const wordsSorted = [...words].sort((a, b) => b.length - a.length);
@@ -884,8 +929,10 @@ function renderBoard(size) {
   }
 }
 
-function renderWords(words) {
+function renderWords(words, opts = {}) {
+  const silent = !!opts.silent;
   wordListEl.innerHTML = "";
+
   const cleanWords = (words || []).map(sanitizeWord).filter(Boolean);
 
   cleanWords.forEach(w => {
@@ -900,7 +947,9 @@ function renderWords(words) {
     wordListEl.appendChild(span);
   });
 
-  if (cleanWords.length === 0) toast("⚠ Nenhuma palavra disponível neste nível.");
+  if (!silent && cleanWords.length === 0) {
+    toast("⚠ Nenhuma palavra disponível neste nível.");
+  }
 }
 
 /* =========================
@@ -972,19 +1021,16 @@ function validateSelection() {
 
     const color = wordColorMap.get(match.word) || hashWordToColor(match.word);
 
-    // pinta tabuleiro
     selectedCells.forEach(c => {
       c.classList.remove("active");
       c.classList.add("found");
       c.style.setProperty("--wcolor", color);
     });
 
-    // pinta tag
     const tag = document.querySelector(`[data-word="${match.word}"]`);
     if (tag) tag.style.setProperty("--wcolor", color);
     tag?.classList.add("found");
 
-    // ✅ FX + SOM (leves)
     sfxFound();
     spawnCoinNearElement(selectedCells[selectedCells.length - 1], "coin");
 
@@ -1010,7 +1056,6 @@ function updateProgress() {
     const elapsed = Math.floor((Date.now() - startTime) / 1000);
     saveBestTime(levelIndex, elapsed);
 
-    // ✅ fim do nível: som + moedas (bem leve)
     sfxComplete();
     spawnCoinsCelebration();
 
