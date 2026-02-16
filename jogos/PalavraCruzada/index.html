@@ -1,8 +1,9 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Palavra Cruzada</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,14 +12,14 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
 
   <link rel="stylesheet" href="styles.css" />
-  <script src="game.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 
 <body>
   <header class="app-header">
     <div class="container header-inner">
-      <div class="brand" aria-label="Crossword Elite">
-        <img class="logotipo" src="logo/Logo_Palavras_Cruzadas.png" alt="palavra cruzada com lápis" />
+      <div class="brand" aria-label="Palavra Cruzada">
+        <img class="logotipo" src="logo/Logo_Palavras_Cruzadas.png" alt="Palavra cruzada com lápis" />
       </div>
 
       <div class="hud" aria-label="Status do jogo">
@@ -48,14 +49,18 @@
 
       <div class="worksheet-head">
         <div class="worksheet-title">
-          <h2 id="sheetTitle">Complete a cruzadinha</h2>
-          <p class="muted" id="sheetRule">Toque e digite. Toque 2x na mesma célula para alternar direção.</p>
+          <h1 id="sheetTitle" class="title">Complete a cruzadinha</h1>
+          <p class="muted" id="sheetRule">
+            Toque em uma célula e digite. Toque 2x na mesma célula para alternar a direção (horizontal/vertical).
+          </p>
+          <p class="muted helper" id="sheetHelper">
+            Dica: se estiver difícil enxergar, mantenha o dedo pressionado. Uma lupa vai mostrar a célula em destaque.
+          </p>
         </div>
 
-        <!-- ✅ DICA EM EVIDÊNCIA (SEM PAINEL POLUINDO) -->
         <div class="clue-panel" aria-label="Dica atual">
           <p class="clue-label">Dica</p>
-          <p class="clue-text" id="clueText">Clique em uma célula para selecionar uma palavra.</p>
+          <p class="clue-text" id="clueText">Toque em uma célula para selecionar uma palavra.</p>
         </div>
       </div>
 
@@ -65,10 +70,12 @@
           class="grid"
           role="grid"
           aria-label="Grade de palavras cruzadas"
+          aria-describedby="sheetRule sheetHelper"
           aria-rowcount="9"
           aria-colcount="9">
         </div>
 
+        <!-- Input acessível para teclado mobile (precisa estar “no viewport” no iOS) -->
         <input
           id="hiddenInput"
           class="sr-input"
@@ -106,6 +113,15 @@
   </div>
 
   <div id="fxLayer" class="fx-layer" aria-hidden="true"></div>
+
+  <!-- Lupa (mobile) -->
+  <div id="loupe" class="loupe" aria-hidden="true" hidden>
+    <div class="loupe-inner">
+      <div class="loupe-num" id="loupeNum"> </div>
+      <div class="loupe-letter" id="loupeLetter"> </div>
+      <div class="loupe-dir" id="loupeDir"> </div>
+    </div>
+  </div>
 
   <footer class="app-footer">
     <div class="container footer-inner">
