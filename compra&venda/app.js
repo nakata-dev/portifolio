@@ -1206,19 +1206,7 @@
       }
     };
 
-    // renderDetail / renderForm continuam iguais ao seu arquivo anterior
-    // Para manter este arquivo compacto aqui, eu mantive tudo igual à versão que te enviei,
-    // apenas sem alterar o comportamento, e o Manual é independente.
-
-    // ⚠️ Importante: como você pediu o arquivo inteiro e substituível, o resto do código
-    // (Receipt, IO, form helpers, wire) permanece exatamente como antes e está abaixo.
-
     const renderDetail = (txId) => {
-      // (igual ao seu app.js anterior)
-      // Para não “enganar” com um meio arquivo, eu mantive a mesma implementação completa
-      // do detalhe/recibo no app.js que você já recebeu, incluindo PDF completo, abatimento e juros.
-      // Aqui eu reaproveito exatamente a versão anterior.
-      // ----
       const state = App.getState();
       const tx = App.getTransaction(txId);
       const detailCard = $("#detailCard");
@@ -1869,15 +1857,19 @@
       }
     };
 
+    /* =========================================================
+       ✅ FIX MOBILE PDF/PRINT
+       - Remove window.open (bloqueado em Android/WebView)
+       - Usa iframe invisível no mesmo documento (mais confiável)
+       - afterprint + fallback de timeout para limpeza
+    ========================================================= */
     const print = () => {
       const { html } = buildDoc();
       if (!html) return;
 
-      const w = window.open("", "_blank");
-      if (!w) {
-        UI.toast("Pop-up bloqueado. Permita pop-ups para salvar PDF.", "warn", { ttl: 6500 });
-        return;
-      }
+      // Limpa impressão anterior se ficou algum iframe preso
+      const prev = document.getElementById("cvpro-print-frame");
+      if (prev) prev.remove();
 
       const css = `
         :root { color-scheme: light; }
@@ -1898,8 +1890,7 @@
         @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
       `;
 
-      w.document.open();
-      w.document.write(`
+      const doc = `
         <!doctype html>
         <html lang="pt-BR">
           <head>
@@ -1910,14 +1901,61 @@
           </head>
           <body>
             <div class="page">${html}</div>
-            <script>
-              window.onload = () => { setTimeout(() => { window.focus(); window.print(); }, 50); };
-              window.onafterprint = () => { setTimeout(() => window.close(), 150); };
-            </script>
           </body>
         </html>
-      `);
-      w.document.close();
+      `;
+
+      const iframe = document.createElement("iframe");
+      iframe.id = "cvpro-print-frame";
+      iframe.setAttribute("title", "Impressão");
+      // fora da tela, mas presente no DOM
+      iframe.style.position = "fixed";
+      iframe.style.right = "0";
+      iframe.style.bottom = "0";
+      iframe.style.width = "0";
+      iframe.style.height = "0";
+      iframe.style.border = "0";
+      iframe.style.opacity = "0";
+      iframe.style.pointerEvents = "none";
+
+      const cleanup = () => {
+        try { window.removeEventListener("afterprint", cleanup); } catch {}
+        try { iframe.remove(); } catch {}
+      };
+
+      // Alguns navegadores disparam afterprint na janela principal
+      window.addEventListener("afterprint", cleanup, { once: true });
+
+      iframe.onload = () => {
+        const w = iframe.contentWindow;
+        if (!w) {
+          UI.toast("Falha ao preparar impressão.", "bad");
+          cleanup();
+          return;
+        }
+
+        // afterprint dentro do iframe (quando disponível)
+        try { w.onafterprint = () => cleanup(); } catch {}
+
+        // Em mobile, às vezes precisa de um pequeno delay pra “assentar” layout
+        window.setTimeout(() => {
+          try {
+            w.focus();
+            w.print();
+          } catch {
+            UI.toast("Impressão bloqueada. Tente novamente.", "warn", { ttl: 6500 });
+            cleanup();
+          }
+        }, 80);
+
+        // fallback duro (caso afterprint não dispare)
+        window.setTimeout(() => cleanup(), 15000);
+      };
+
+      // srcdoc é mais simples e evita depender de document.write
+      iframe.srcdoc = doc;
+
+      document.body.appendChild(iframe);
     };
 
     return { open, close, render, copy, share, print };
@@ -2107,7 +2145,6 @@
 
     $("#menuBtn").addEventListener("click", () => {
       UI.openOverlay("menu");
-      // ✅ garante manual dentro do burger menu sempre que abrir
       Manual.ensureInMenu();
     });
 
@@ -2467,7 +2504,6 @@
     Views.renderSettingsMeta();
     setFormDefaults();
 
-    // ✅ também injeta o manual ao carregar (caso o menu abra já pronto)
     Manual.ensureInMenu();
   }
 
