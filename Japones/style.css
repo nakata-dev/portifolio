@@ -32,6 +32,10 @@
 
   --headerH: 68px;
   --footerH: 50px;
+
+  /* ✅ NOVO: conforto de leitura (ajuste fino) */
+  --jpSize: clamp(24px, 5.4vw, 36px);
+  --ptSize: clamp(16px, 3.6vw, 20px);
 }
 
 *{ box-sizing:border-box; }
@@ -39,7 +43,7 @@ html,body{ height:100%; }
 body{
   margin:0;
   color:var(--text);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Arial, sans-serif;
   background:
     radial-gradient(900px 600px at 15% -10%, rgba(122,167,255,.22), transparent 60%),
     radial-gradient(700px 560px at 110% 10%, rgba(255,134,200,.14), transparent 55%),
@@ -306,16 +310,12 @@ body{
     radial-gradient(240px 140px at 25% 25%, rgba(255,255,255,.10), transparent 60%),
     rgba(255,255,255,.04);
 }
-select.selectBtn{
-  color: var(--text);
-}
+select.selectBtn{ color: var(--text); }
 select.selectBtn option{
   background: #0b1020;
   color: #eef3ff;
 }
-select.selectBtn:focus{
-  outline: none;
-}
+select.selectBtn:focus{ outline: none; }
 .selectBtn{
   background-image:
     linear-gradient(45deg, transparent 50%, rgba(238,243,255,.70) 50%),
@@ -374,6 +374,48 @@ select.selectBtn:focus{
   white-space: nowrap;
 }
 
+/* ✅ NOVO: leitura mais confortável */
+.kana{
+  margin-top: 8px;
+  font-size: var(--jpSize);
+  line-height: 1.28;
+  font-weight: 950;
+  letter-spacing: .2px;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+.pt{
+  margin-top: 10px;
+  font-size: var(--ptSize);
+  line-height: 1.45;
+  color: rgba(238,243,255,.92);
+  font-weight: 850;
+  text-wrap: balance;
+}
+.kana ruby{ ruby-position: over; ruby-align: center; }
+.kana rt{
+  font-size: .60em;
+  line-height: 1;
+  color: rgba(238,243,255,.82);
+  font-weight: 950;
+  letter-spacing: .1px;
+  position: relative;
+  top: -0.18em;
+  padding: 0 .10em;
+}
+.kana ruby{ padding: 0 1px; border-radius: 10px; }
+.kana ruby:hover{ background: rgba(255,255,255,.06); }
+
+/* ✅ NOVO: ouvir tão importante quanto repetir */
+.actionGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.actionGrid .btn,
+.actionGrid .primaryAction{
+  width:100%;
+}
 .primaryAction{
   width: 100%;
   height: 64px;
@@ -392,13 +434,18 @@ select.selectBtn:focus{
 }
 .primaryAction:active{ transform: translateY(1px) scale(.99); }
 
-.primaryRow{
-  display:flex;
-  justify-content:flex-start;
-  width:100%;
-}
-.primaryRow .primaryAction{
-  width: min(420px, 100%);
+.btn--listen{
+  height: 64px;
+  border-radius: 22px;
+  border: 1px solid rgba(122,167,255,.35);
+  background:
+    radial-gradient(260px 140px at 22% 24%, rgba(255,255,255,.16), transparent 62%),
+    linear-gradient(135deg, rgba(122,167,255,.70), rgba(183,155,255,.35), rgba(255,134,200,.20));
+  color: #061117;
+  font-weight: 1000;
+  font-size: 17px;
+  letter-spacing: .15px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.26);
 }
 
 /* ---------- pills ---------- */
@@ -498,10 +545,7 @@ select.selectBtn:focus{
   padding: 4px 8px;
   border-radius: 999px;
 }
-.topicChevron{
-  font-weight:1000;
-  opacity:.9;
-}
+.topicChevron{ font-weight:1000; opacity:.9; }
 
 .topicBody{
   display:flex;
@@ -538,10 +582,7 @@ select.selectBtn:focus{
   gap:10px;
 }
 
-.reorderLeft{
-  min-width:0;
-  flex:1;
-}
+.reorderLeft{ min-width:0; flex:1; }
 
 .dragHandle{
   width: 38px;
@@ -587,20 +628,6 @@ select.selectBtn:focus{
   background: rgba(37,211,102,.16);
   outline: 1px solid rgba(37,211,102,.28);
 }
-
-.kana ruby{ ruby-position: over; ruby-align: center; }
-.kana rt{
-  font-size: .56em;
-  line-height: 1;
-  color: rgba(238,243,255,.78);
-  font-weight: 900;
-  letter-spacing: .1px;
-  position: relative;
-  top: -0.18em;
-  padding: 0 .10em;
-}
-.kana ruby{ padding: 0 1px; border-radius: 10px; }
-.kana ruby:hover{ background: rgba(255,255,255,.06); }
 
 .sheet{
   border-radius: 18px;
@@ -693,7 +720,7 @@ select.selectBtn:focus{
 }
 .miniBtn:active{ transform: translateY(1px) scale(.99); }
 
-/* ✅ NOVO: painel do timer + call alinhado à direita (como na seta) */
+/* painel do timer + call alinhado à direita */
 .studyDock{
   display:flex;
   justify-content:flex-end;
@@ -925,9 +952,7 @@ input.btn, textarea.btn{
     width: 100%;
     justify-content:flex-end;
   }
-  .manageBtns .btn{
-    width: 110px;
-  }
+  .manageBtns .btn{ width: 110px; }
 
   .topicName{ max-width: 52vw; }
 
@@ -935,8 +960,8 @@ input.btn, textarea.btn{
   .studyRight{ width: 100%; max-width: 100%; }
   .studyTimer{ width: 100%; }
 
-  .primaryRow{ justify-content:flex-start; }
-  .primaryRow .primaryAction{ width: 100%; }
+  /* ✅ actionGrid vira coluna no celular */
+  .actionGrid{ grid-template-columns: 1fr; }
 
   .topicTools{
     flex-wrap: wrap;
@@ -947,13 +972,8 @@ input.btn, textarea.btn{
     align-items: stretch;
     gap: 10px;
   }
-  .reorderLeft{
-    width: 100%;
-  }
-  .manageBtns{
-    justify-content: flex-end;
-    width: 100%;
-  }
+  .reorderLeft{ width: 100%; }
+  .manageBtns{ justify-content: flex-end; width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -1023,9 +1043,7 @@ input.btn, textarea.btn{
   gap:10px;
   margin-bottom: 8px;
 }
-.projBar{
-  height: 12px;
-}
+.projBar{ height: 12px; }
 .projTxt{
   margin-top: 8px;
   color: rgba(238,243,255,.70);
@@ -1138,9 +1156,7 @@ input.btn, textarea.btn{
   gap: 10px;
   width: 44%;
 }
-.skillBar{
-  height: 10px;
-}
+.skillBar{ height: 10px; }
 
 @media (max-width: 420px){
   .tlNodes{
@@ -1149,7 +1165,5 @@ input.btn, textarea.btn{
     padding-bottom: 8px;
     scroll-snap-type: x mandatory;
   }
-  .tlNode{
-    scroll-snap-align: start;
-  }
+  .tlNode{ scroll-snap-align: start; }
 }

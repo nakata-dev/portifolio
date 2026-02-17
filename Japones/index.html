@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#070a11" />
   <title>NIHONGO321</title>
-  <link rel="stylesheet" href="./style.css" />
+
+  <!-- cache-bust pra GitHub Pages/mobile não segurar versão velha -->
+  <link rel="stylesheet" href="./style.css?v=3.1.0" />
   <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
 </head>
 
@@ -41,6 +43,7 @@
 
   <div class="toast" id="toast" aria-live="polite"></div>
 
-  <script src="./script.js" defer></script>
+  <!-- cache-bust pra JS -->
+  <script src="./script.js?v=3.1.0" defer></script>
 </body>
 </html>
