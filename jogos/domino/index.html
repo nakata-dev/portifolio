@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Dominó Clássico (Dupla-Seis)</title>
+  <meta name="description" content="Dominó clássico Dupla-Seis (0–6). Humano vs IA. Responsivo, acessível e fluido." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Pular para o jogo</a>
+
+  <div class="app" id="app">
+    <header class="topbar" role="banner">
+      <div class="topbar__left">
+        <div class="brand" aria-label="Dominó clássico">
+          <span class="brand__dot" aria-hidden="true"></span>
+          <span class="brand__text">Dominó</span>
+        </div>
+        <div class="turnpill" id="turnPill" aria-live="polite" aria-atomic="true">
+          <span class="turnpill__label" id="turnLabel">Sua vez</span>
+        </div>
+      </div>
+
+      <div class="topbar__right">
+        <button class="btn btn--ghost" id="helpBtn" type="button" aria-haspopup="dialog" aria-controls="helpModal">
+          Ajuda
+        </button>
+        <button class="btn btn--ghost" id="restartBtn" type="button">
+          Reiniciar
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="main" role="main">
+      <section class="statusbar" aria-label="Status do jogo">
+        <div class="statusbar__row">
+          <div class="ends" aria-live="polite" aria-atomic="true">
+            <span class="ends__label">Pontas:</span>
+            <span class="ends__value" id="endsValue">—</span>
+          </div>
+
+          <div class="sound">
+            <label class="toggle" for="soundToggle">
+              <span class="toggle__text">Som</span>
+              <input id="soundToggle" type="checkbox" />
+              <span class="toggle__ui" aria-hidden="true"></span>
+              <span class="toggle__state" id="soundState" aria-live="polite">Off</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="statusbar__row statusbar__row--msg">
+          <div class="msg" id="message" role="status" aria-live="polite" aria-atomic="true">
+            Selecione uma peça e encaixe números iguais nas pontas.
+          </div>
+        </div>
+      </section>
+
+      <section class="table" aria-label="Mesa do dominó">
+        <div class="table__meta">
+          <div class="pile" aria-label="Monte de compra">
+            <div class="pile__count">
+              Monte: <strong id="boneyardCount">0</strong>
+            </div>
+            <button class="btn btn--primary" id="drawBtn" type="button" disabled>
+              Comprar
+            </button>
+          </div>
+
+          <div class="aihand" aria-label="Peças na mão da IA">
+            IA: <strong id="aiCount">7</strong>
+          </div>
+        </div>
+
+        <div class="table__board" id="boardWrap">
+          <div class="endcap endcap--left" id="leftEndCap" aria-hidden="true">
+            <span class="endcap__chip" id="leftEndChip">—</span>
+            <span class="endcap__hint" id="leftEndHint">Esquerda</span>
+          </div>
+
+          <div class="board" id="board" role="list" aria-label="Linha de peças na mesa"></div>
+
+          <div class="endcap endcap--right" id="rightEndCap" aria-hidden="true">
+            <span class="endcap__chip" id="rightEndChip">—</span>
+            <span class="endcap__hint" id="rightEndHint">Direita</span>
+          </div>
+        </div>
+
+        <div class="sidepick" id="sidePicker" role="group" aria-label="Escolha a ponta para jogar" hidden>
+          <div class="sidepick__card">
+            <div class="sidepick__title">Escolha onde encaixar</div>
+            <div class="sidepick__subtitle" id="sidePickerSub">Esta peça serve nas duas pontas.</div>
+            <div class="sidepick__actions">
+              <button class="btn btn--primary" id="playLeftBtn" type="button">Esquerda</button>
+              <button class="btn btn--primary" id="playRightBtn" type="button">Direita</button>
+              <button class="btn btn--ghost" id="cancelPickBtn" type="button">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="hand" aria-label="Sua mão">
+        <div class="hand__header">
+          <div class="hand__title">Suas peças</div>
+          <div class="hand__hint" id="handHint">Toque numa peça para ver onde ela encaixa.</div>
+        </div>
+
+        <div class="hand__scroller" id="handScroller" role="list" aria-label="Peças do jogador (rolagem horizontal)"></div>
+      </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+      Copyright @ 2026 - Bruno Y. H. Nakata
+    </footer>
+  </div>
+
+  <div class="modal" id="tutorialModal" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" hidden>
+    <div class="modal__backdrop" data-close="tutorial"></div>
+    <div class="modal__panel" role="document">
+      <div class="modal__header">
+        <h2 class="modal__title" id="tutorialTitle">Como jogar (rápido)</h2>
+        <button class="iconbtn" type="button" id="skipTutorialBtn" aria-label="Pular tutorial">Pular</button>
+      </div>
+
+      <div class="modal__body">
+        <ol class="steps" id="tutorialSteps">
+          <li class="steps__item">
+            <div class="steps__num">1</div>
+            <div class="steps__text">
+              <strong>Encaixe números iguais nas pontas</strong><br />
+              Toque numa peça. As pontas possíveis vão brilhar.
+            </div>
+          </li>
+          <li class="steps__item">
+            <div class="steps__num">2</div>
+            <div class="steps__text">
+              <strong>Sem jogada? Compre</strong><br />
+              Se nada encaixar, use <em>Comprar</em>. Se a peça servir, você joga na mesma vez.
+            </div>
+          </li>
+          <li class="steps__item">
+            <div class="steps__num">3</div>
+            <div class="steps__text">
+              <strong>Ganha quem zerar</strong><br />
+              Se travar e o monte acabar, vence quem tiver a menor soma na mão.
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--primary" id="nextTutorialBtn" type="button">Começar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+    <div class="modal__backdrop" data-close="help"></div>
+    <div class="modal__panel" role="document">
+      <div class="modal__header">
+        <h2 class="modal__title" id="helpTitle">Ajuda</h2>
+        <button class="iconbtn" type="button" data-close="help" aria-label="Fechar ajuda">Fechar</button>
+      </div>
+
+      <div class="modal__body">
+        <div class="help">
+          <p><strong>Objetivo:</strong> jogar todas as suas peças.</p>
+          <p><strong>Regra:</strong> você só pode jogar se uma ponta da peça tiver o mesmo número da ponta aberta da mesa.</p>
+          <p><strong>Sem jogada:</strong> compre 1 peça do monte. Se encaixar, você pode jogar na mesma vez. Se não encaixar, passa.</p>
+          <p><strong>Fim:</strong> vence quem zera a mão. Se travar (ninguém joga e o monte acabou), vence quem tiver a <strong>menor soma</strong> na mão.</p>
+          <hr />
+          <p class="small">Dica: toque numa peça para ver as pontas brilhando. Se ela servir dos dois lados, escolha Esquerda/Direita.</p>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--primary" type="button" data-close="help">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="resultTitle" hidden>
+    <div class="modal__backdrop" data-close="result"></div>
+    <div class="modal__panel" role="document">
+      <div class="modal__header">
+        <h2 class="modal__title" id="resultTitle">Fim da rodada</h2>
+        <button class="iconbtn" type="button" data-close="result" aria-label="Fechar resultado">Fechar</button>
+      </div>
+
+      <div class="modal__body">
+        <div class="result">
+          <div class="result__big" id="resultBig">—</div>
+          <div class="result__small" id="resultSmall">—</div>
+        </div>
+      </div>
+
+      <div class="modal__footer">
+        <button class="btn btn--primary" id="playAgainBtn" type="button">Jogar novamente</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
