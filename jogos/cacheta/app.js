@@ -660,6 +660,9 @@
   // tutorial autoplayer flag
   let TUT_AUTOPLAY = false;
 
+  // ✅ FIX: se o Totó "blefar" (bater errado) com 10 cartas, ele precisa descartar 1 antes de passar a vez
+  let forcarDescarteToto = false;
+
   const falas = {
     confere: [
       "MAIA: Espera… deixa eu ver suas cartas!",
@@ -700,6 +703,12 @@
       "MAIA: Tá… fui pega no pulo 😅",
       "MAIA: Aff… eu viajei. Tá bom, tá bom 😼",
       "MAIA: Ok… essa foi feia kkk 😭",
+    ],
+    // ✅ novo: instrução clara quando precisa descartar após blefe com 10
+    forcaDescarte: [
+      "MAIA: Não fechou. Agora descarta 1 carta pra voltar a 9 e eu jogo 😼",
+      "MAIA: Blefou. Descarta 1 carta e passa a vez 😏",
+      "MAIA: Aí não… descarta 1 carta primeiro. Depois é minha vez 😼",
     ],
   };
 
@@ -776,6 +785,7 @@
 
   function podeBaterTotoAgora() {
     if (turno !== "toto" || fase === "CONFERINDO") return false;
+    if (forcarDescarteToto) return false; // ✅ fix: não pode bater enquanto precisa descartar
     if (fase === "DESCARTE" && maoToto.length === 10) return true;
     if (fase === "COMPRA" && maoToto.length === 9) return true;
     return false;
@@ -897,7 +907,8 @@
 
     ui.maoArea.innerHTML = "";
     const mao = maoToto;
-    const esp = Math.min(32, (window.innerWidth - 80) / (mao.length - 1));
+    const espBase = mao.length > 1 ? (window.innerWidth - 80) / (mao.length - 1) : 0;
+    const esp = mao.length > 1 ? Math.min(32, espBase) : 0;
 
     mao.forEach((c, i) => {
       const w = document.createElement("div");
@@ -1015,6 +1026,9 @@
     ultimaCompraIdMaia = null;
 
     pendenteMaia = null;
+
+    // ✅ reset do fluxo de descarte forçado
+    forcarDescarteToto = false;
 
     renderizar();
 
@@ -1199,6 +1213,13 @@
     if (turno !== "toto" || fase !== "COMPRA" || fase === "CONFERINDO") return;
     if (tutorial.open && !TUT_AUTOPLAY) return;
 
+    // ✅ FIX: se precisa descartar para voltar a 9, não deixa comprar
+    if (forcarDescarteToto) {
+      falar(falaRandom(falas.forcaDescarte));
+      somErro();
+      return;
+    }
+
     if (origem === "lixo" && !podeComprarDoLixoToto()) {
       falar(falaRandom(falas.puni));
       somErro();
@@ -1219,6 +1240,21 @@
 
     descartarCarta("toto", selIdx);
     selIdx = null;
+
+    // ✅ FIX: descarte obrigatório após blefe com 10 cartas
+    if (forcarDescarteToto) {
+      forcarDescarteToto = false;
+
+      turno = "maia";
+      fase = "COMPRA";
+      hideZueira();
+      renderizar();
+
+      falar(falaRandom(falas.vezMaia));
+      if (!tutorial.open) setTimeout(turnoDaMaia, 650);
+
+      return;
+    }
 
     // tutorial: mantém a vez do Totó
     if (tutorial.open) {
@@ -1327,6 +1363,23 @@
         fecharOverlay();
         falar(falaRandom(falas.sarroToto));
 
+        // ✅ FIX: se o Totó tentou bater com 10 cartas e errou,
+        // ele precisa descartar 1 carta para voltar a 9 antes de passar a vez.
+        if (!tutorial.open && maoToto.length === 10) {
+          forcarDescarteToto = true;
+
+          turno = "toto";
+          fase = "DESCARTE";
+
+          // deixa uma carta selecionada para facilitar o descarte (UX)
+          if (selIdx === null && maoToto.length) selIdx = maoToto.length - 1;
+
+          renderizar();
+          falar(falaRandom(falas.forcaDescarte));
+          return;
+        }
+
+        // fluxo antigo (quando não é o caso de 10 cartas, ou quando está no tutorial)
         turno = "maia";
         fase = "COMPRA";
         selIdx = null;
