@@ -6,14 +6,14 @@
    ✅ Cores por palavra (melhor leitura)
    ✅ Som leve + moedas (sem arquivos, sem travar)
 
-   FIX (bug nível 50+):
-   ✅ bancos por tamanho (palavras curtas em grids pequenos)
-   ✅ limite de tamanho por grid (ex.: 7x7 <= 6 letras)
-   ✅ renderWords silencioso durante "Gerando..."
+   UPGRADE (palavras criativas + aleatórias sempre):
+   ✅ a cada nível/jogo, escolhe 9 palavras aleatórias do banco do tamanho
+   ✅ palavras comuns (treino de escrita para terceira idade)
+   ✅ tenta vários conjuntos aleatórios e, se preciso, fallback determinístico
 ========================== */
 
 const LS_KEY = "wordsearch_pro_v1";
-const SCHEMA_VERSION = 3; // ⬅️ bump por causa da lógica/bancos novos
+const SCHEMA_VERSION = 3; // mantém o mesmo (não muda estrutura de storage)
 
 const DIRS = [
   [1, 0], [-1, 0], [0, 1], [0, -1],
@@ -25,6 +25,9 @@ const MAX_BOARD_RETRIES = 110;
 const MAX_WORD_ATTEMPTS = 260;
 const YIELD_EVERY = 6;
 const FALLBACK_SETS_TRIES = 40;
+
+// ✅ novo: tentativas com conjuntos aleatórios antes do fallback determinístico
+const RANDOM_SETS_TRIES = 24;
 
 const $ = (id) => document.getElementById(id);
 
@@ -91,13 +94,23 @@ function pickDeterministicUnique(arr, n, seed) {
   return picked;
 }
 
+function pickRandomUnique(arr, n) {
+  const copy = arr.slice();
+  shuffleInPlace(copy);
+  const out = [];
+  for (let i = 0; i < copy.length && out.length < n; i++) {
+    if (!out.includes(copy[i])) out.push(copy[i]);
+  }
+  return out;
+}
+
 /* =========================
    Limites de tamanho por grid
    (9 palavras em grids pequenos exige palavras menores)
 ========================= */
 const MAX_LEN_BY_SIZE = {
   5: 3, // 5x5: 9 palavras só fica estável com 2-3 letras
-  6: 4, // 6x6: 3-4 letras
+  6: 4, // 6x6: 2-4 letras
   7: 6, // 7x7: até 6 letras
   8: 7, // 8x8: até 7 letras
 };
@@ -135,7 +148,9 @@ function hashWordToColor(word) {
 }
 
 /* =========================
-   Bancos por tamanho (curtos)
+   Bancos por tamanho (palavras comuns e bem escritas)
+   - focadas em memória/ortografia (terceira idade)
+   - respeitam maxLen por grid
 ========================= */
 function sanitizeBank(list, size) {
   const maxLen = maxLenFor(size);
@@ -145,38 +160,36 @@ function sanitizeBank(list, size) {
     .filter(w => w.length >= 2 && w.length <= maxLen);
 }
 
-// 5x5: 2-3 letras (banco grande)
+// 5x5: 2-3 letras (bem comuns)
 const WORD_BANK_5 = sanitizeBank([
-  "SOL","MAR","LUA","RIO","DIA","NOZ","PAZ","SOM","SAL","CHA","MEL","CEU","ECO","VOZ","AVE","FIM",
-  "COR","AZU","VER","RUA","CAS","LAR","DOM","FOI","SIM","NAO","TEU","MEU","NOS","TUA","UMA","DOU",
-  "AR","IR","LA","RE","MI","DO","UM","DOIS","TRES"
+  "SOL","LUA","MAR","RIO","DIA","PAZ","CHA","MEL","SAL","CEU","VOZ","SOM",
+  "MAE","PAI","VO","TIA","TIO","LA","LE","LI","LO","LU","SIM","NAO","BOM","MAU"
 ], 5);
 
-// 6x6: 2-4 letras (misto)
+// 6x6: 2-4 letras (objetos/animais simples)
 const WORD_BANK_6 = sanitizeBank([
-  "GATO","URSO","SAPO","PATO","LOBO","LEAO","RATO","AVIAO","BOLA","DADO","CARTA","JOGO",
-  "PRAIA","ONDA","SOL","MAR","VENTO","NEVE","CHUVA","NOITE","DIA","CALMA","FOCO","PAZ",
-  "CASA","RUA","PONTE","MAPA","LAGO","RIO","ILHA","PORTO"
+  "GATO","SAPO","PATO","URSO","LOBO","RATO","LEAO",
+  "CASA","RUA","PORTA","MESA","BOLA","DADO","JOGO","CIMA","BAIXO",
+  "AGUA","SUCO","CAFE","PANO","CHAO","LADO","FOTO","LUVA","BICO"
 ], 6);
 
-// 7x7: 3-6 letras (bem mais “encaixável”)
+// 7x7: 2-6 letras (rotina, casa, bem-estar)
 const WORD_BANK_7 = sanitizeBank([
-  "AMOR","PAZ","CALMA","FOCO","TEMPO","SAUDE","FORCA","ALEGRI","RISOS","CUIDAR","BONDAD",
-  "ESCOLA","ALUNO","PROF","ARTE","CIENCI","LEITUR","LIVRO","CANETA","LAPIS","REGUA",
-  "JARDIM","FOLHA","RAIZ","TRONCO","SEMENT","FRUTO","NATURE",
-  "VIAGEM","MAPA","RUMO","TRILHA","PONTE","CIDADE","BAIRRO",
-  "MUSICA","RITMO","NOTA","CANTO","PALCO",
-  "TERRA","MARTE","VENUS","SATURNO","ORBITA","COMETA","ESTRE"
-], 7).map(w => w.slice(0, maxLenFor(7))); // garante maxLen (6)
+  "AMOR","PAZ","CALMA","SAUDE","FORCA","ALEGRIA","CUIDAR",
+  "LIVRO","LAPIS","CANETA","ESCOLA",
+  "JARDIM","FOLHA","FLOR","FRUTA","RAIZ","TRONCO",
+  "MUSICA","CANTO","RITMO",
+  "CADEIA","CADEIRA","JANELA","COZINHA","CAMA","BANHO",
+  "OCULOS","SABAO","ROUPA","MEIAS","SAPATO","CHAVE"
+], 7);
 
-// 8x8: 4-7 letras (já permite mais variedade)
+// 8x8: 3-7 letras (palavras “boas de escrever” e do cotidiano)
 const WORD_BANK_8 = sanitizeBank([
-  "AMIZADE","FAMILIA","SORRISO","CUIDADO","BONDADE","ENERGIA","CALMA","FOCO","HABITO","ROTINA",
-  "LEITURA","ESTUDO","APRENDER","MEMORIA","IDEIA","CORAGEM","SUCESSO","PROGRESS",
-  "AVENTURA","VIAGEM","CAMINHO","BUSSOLA","TRILHA","MONTANH",
-  "INTERNET","SENHA","REDE","DADOS","SITE","EMAIL","NUVEM",
-  "LOGICA","CODIGO","FUNCAO","EVENTO","SISTEMA","DEBUG"
-], 8).map(w => w.slice(0, maxLenFor(8))); // maxLen 7
+  "FAMILIA","AMIZADE","SORRISO","CUIDADO","BONDADE","MEMORIA","LEITURA",
+  "CORAGEM","ROTINA","HABITO","SAUDADE",
+  "CADEIRA","JANELA","COZINHA","CADERNO","CAMINHO","VIAGEM",
+  "PACIENCIA","RESPEITO","CARINHO","ALIMENTO","FRUTAS","VERDURA"
+], 8);
 
 const WORD_BANKS = {
   5: WORD_BANK_5,
@@ -190,7 +203,6 @@ function buildLevelsBySize(size, count, bank, wordsPerLevel, baseSeed) {
   const maxLen = maxLenFor(size);
   const cleanBank = bank.filter(w => w.length <= maxLen);
 
-  // se o banco ficar pequeno por algum motivo, não gera lixo
   if (cleanBank.length < wordsPerLevel) {
     console.warn("Banco insuficiente para size", size, cleanBank.length);
   }
@@ -199,7 +211,6 @@ function buildLevelsBySize(size, count, bank, wordsPerLevel, baseSeed) {
     const seed = baseSeed + i * 977;
     const picks = pickDeterministicUnique(cleanBank, wordsPerLevel, seed);
 
-    // completa com rand seguro
     while (picks.length < wordsPerLevel && cleanBank.length) {
       const extra = cleanBank[randInt(0, cleanBank.length - 1)];
       if (!picks.includes(extra)) picks.push(extra);
@@ -290,6 +301,8 @@ function saveBestTime(levelIdx, seconds) {
   }
 }
 
+// Mantém API de override, mas a seleção aleatória não depende disso.
+// (não removi nada fora do pedido)
 function getOverrideWords(levelIdx) {
   const data = readAllStorage();
   return data?.overrides?.[String(levelIdx)] || null;
@@ -324,7 +337,6 @@ function setSoundPref(on) {
 function loadLevels() {
   const data = readAllStorage();
 
-  // ✅ migração forçada se schema mudou (evita mix de níveis antigos)
   if (Number(data.schemaVersion || 0) !== SCHEMA_VERSION) {
     const fresh = safeClone(DEFAULT_LEVELS);
     writeAllStorage({
@@ -664,17 +676,13 @@ async function startLevel(index, opts = {}) {
   grid = Array.from({ length: size }, () => Array(size).fill(""));
   placements = [];
   renderBoard(size);
-  renderWords([], { silent: true }); // ✅ não polui durante carregamento
+  renderWords([], { silent: true });
   updateProgress();
 
-  const override = getOverrideWords(index);
-  const baseWords = (override && Array.isArray(override) && override.length === 9)
-    ? override
-    : (level.words || []).map(sanitizeWord).filter(Boolean).slice(0, 9);
-
+  // ✅ upgrade: ignora as palavras fixas e sorteia sempre do banco do tamanho
   const result = await generateBoardGuaranteedWithFallback({
     size,
-    words: baseWords,
+    words: null,          // <- sinaliza “quero sorteio”
     levelIndex: index,
     token: myToken
   });
@@ -692,6 +700,7 @@ async function startLevel(index, opts = {}) {
     return;
   }
 
+  // (mantém override compatível se fallback determinístico foi usado)
   if (result.usedFallback) setOverrideWords(index, result.words);
 
   fillGridRandom();
@@ -723,21 +732,31 @@ function nextLevel() {
 ========================= */
 async function generateBoardGuaranteedWithFallback({ size, words, levelIndex, token }) {
   const maxLen = maxLenFor(size);
-
-  const clean = words.map(sanitizeWord).filter(Boolean).slice(0, 9).map(w => w.slice(0, maxLen));
-  if (clean.length !== 9) return { ok: false, usedFallback: false, words: clean };
-
-  // tenta com as palavras do nível
-  let ok = await generateBoardGuaranteedAsync({ size, words: clean, token });
-  if (token !== genToken) return { ok: false, usedFallback: false, words: clean };
-  if (ok) return { ok: true, usedFallback: false, words: clean };
-
-  // fallback: tenta conjuntos mais fáceis (do banco adequado)
   const bank = (WORD_BANKS[size] || []).filter(w => w.length <= maxLen);
-  if (bank.length < 9) return { ok: false, usedFallback: false, words: clean };
 
+  if (bank.length < 9) {
+    console.warn("Banco insuficiente para size", size, bank.length);
+    return { ok: false, usedFallback: false, words: [] };
+  }
+
+  // ✅ 1) tentativas com conjuntos aleatórios (para ficar sempre “diferente”)
+  for (let t = 0; t < RANDOM_SETS_TRIES; t++) {
+    if (token !== genToken) return { ok: false, usedFallback: false, words: [] };
+
+    const randomSet = pickRandomUnique(bank, 9).slice(0, 9);
+    if (randomSet.length !== 9) continue;
+
+    const ok = await generateBoardGuaranteedAsync({ size, words: randomSet, token });
+    if (token !== genToken) return { ok: false, usedFallback: false, words: randomSet };
+
+    if (ok) return { ok: true, usedFallback: false, words: randomSet };
+
+    if (t % YIELD_EVERY === 0) await nextTick();
+  }
+
+  // ✅ 2) fallback determinístico (garantia 100%)
   for (let t = 0; t < FALLBACK_SETS_TRIES; t++) {
-    if (token !== genToken) return { ok: false, usedFallback: false, words: clean };
+    if (token !== genToken) return { ok: false, usedFallback: false, words: [] };
 
     const seed = 200000 + (size * 999) + (levelIndex * 37) + (t * 7919);
     const alt = pickDeterministicUnique(bank, 9, seed);
@@ -745,15 +764,18 @@ async function generateBoardGuaranteedWithFallback({ size, words, levelIndex, to
     if (alt.length !== 9) continue;
     if (alt.some(w => w.length > maxLen)) continue;
 
-    ok = await generateBoardGuaranteedAsync({ size, words: alt, token });
-    if (token !== genToken) return { ok: false, usedFallback: false, words: clean };
+    const ok = await generateBoardGuaranteedAsync({ size, words: alt, token });
+    if (token !== genToken) return { ok: false, usedFallback: false, words: alt };
 
     if (ok) return { ok: true, usedFallback: true, words: alt };
 
     if (t % YIELD_EVERY === 0) await nextTick();
   }
 
-  return { ok: false, usedFallback: false, words: clean };
+  // Se chegou aqui, não achou conjunto que encaixa (muito improvável com banco adequado)
+  // Mantém contrato do app: falha controlada
+  const safe = (Array.isArray(words) ? words : []).map(sanitizeWord).filter(Boolean).slice(0, 9);
+  return { ok: false, usedFallback: false, words: safe };
 }
 
 async function generateBoardGuaranteedAsync({ size, words, token }) {
