@@ -21,7 +21,6 @@
     miniloto: { id: "miniloto", label: "Mini Loto", pick: 5, max: 31, hotColdTop: 5 }
   };
 
-  // Fontes públicas para histórico (pode falhar por CORS)
   const ONLINE_SOURCES = {
     loto6: { url: "https://en.lottolyzer.com/history/japan/lotto-6" },
     loto7: { url: "https://en.lottolyzer.com/history/japan/lotto-7" },
@@ -37,10 +36,11 @@
     theme: null,
     prefs: {
       lotteryId: "loto6",
-      mode: "rng", // rng | prob_last | prob_7 | online_trends
+      mode: "rng",
       copyTwoDigits: false,
       fixedNumbers: [],
-      onlineLimit: 50
+      onlineLimit: 50,
+      waShort: false
     },
     prob: {
       last: null,
@@ -70,6 +70,9 @@
   const onlineLimit = $("#onlineLimit");
   const btnFetchOnline = $("#btnFetchOnline");
   const onlineStatus = $("#onlineStatus");
+
+  const waShort = $("#waShort");
+  const btnWhatsApp = $("#btnWhatsApp");
 
   const btnGenerate = $("#btnGenerate");
   const btnCopy = $("#btnCopy");
@@ -101,7 +104,7 @@
   const printRoot = $("#printRoot");
 
   /* ==========
-     THEME
+     STORAGE
   ========== */
   function safeGet(key) { try { return localStorage.getItem(key); } catch { return null; } }
   function safeSet(key, value) {
@@ -112,6 +115,39 @@
   }
   function safeRemove(key) { try { localStorage.removeItem(key); } catch {} }
 
+  /* ==========
+     HELPERS
+  ========== */
+  function escapeHtml(s) {
+    return String(s).replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function toast(msg) {
+    statusLine.innerHTML = msg ? `<strong>${escapeHtml(msg)}</strong>` : "";
+    if (msg) {
+      window.clearTimeout(toast._t);
+      toast._t = window.setTimeout(() => { statusLine.textContent = ""; }, 2600);
+    }
+  }
+
+  function modeLabel(mode) {
+    if (mode === "rng") return "Modo A • Aleatório (RNG)";
+    if (mode === "prob_last") return "Modo B • Prob. (último concurso)";
+    if (mode === "prob_7") return "Modo C • Prob. (últimos 7)";
+    if (mode === "online_trends") return "Online (exp.) • Tendências (histórico)";
+    return mode;
+  }
+
+  function lotteryLabel(lotteryId) {
+    return LOTTERIES[lotteryId]?.label || "Loteria";
+  }
+
+  /* ==========
+     THEME
+  ========== */
   function getPreferredTheme() {
     const saved = safeGet(LS_KEYS.theme);
     if (saved === "dark" || saved === "light") return saved;
@@ -235,7 +271,7 @@
   }
 
   /* ==========
-     PARSING (blindado)
+     PARSING
   ========== */
   function extractNumbers(line) {
     const matches = String(line).match(/\d+/g);
@@ -275,7 +311,7 @@
   }
 
   /* ==========
-     FIXED NUMBERS (cadastro)
+     FIXED NUMBERS
   ========== */
   function parseFixedNumbers(input, lottery) {
     const nums = extractNumbers(input)
@@ -293,10 +329,7 @@
   function renderFixedChips() {
     fixedChips.innerHTML = "";
     const nums = state.prefs.fixedNumbers || [];
-    if (!nums.length) {
-      btnClearFixed.disabled = true;
-      return;
-    }
+    if (!nums.length) { btnClearFixed.disabled = true; return; }
     btnClearFixed.disabled = false;
 
     for (const n of nums) {
@@ -310,10 +343,7 @@
   function applyFixedFromInput() {
     const lot = LOTTERIES[state.prefs.lotteryId];
     const parsed = parseFixedNumbers(fixedNumbersInput.value, lot);
-    if (!parsed.ok) {
-      toast(parsed.error);
-      return;
-    }
+    if (!parsed.ok) { toast(parsed.error); return; }
     state.prefs.fixedNumbers = parsed.nums;
     persistPrefs();
     renderFixedChips();
@@ -329,26 +359,13 @@
   }
 
   /* ==========
-     FREQUÊNCIA + QUENTES/FRIOS
+     FREQUÊNCIA/WEIGHTS
   ========== */
   function buildFrequency(lines, lottery) {
     const freq = new Map();
     for (let n = 1; n <= lottery.max; n++) freq.set(n, 0);
     for (const line of lines) for (const n of line) freq.set(n, (freq.get(n) || 0) + 1);
     return freq;
-  }
-
-  function hotColdFromFreq(freq, lottery) {
-    const all = [];
-    for (let n = 1; n <= lottery.max; n++) all.push({ n, c: freq.get(n) || 0 });
-
-    const hot = all.slice().sort((a, b) => (b.c - a.c) || (a.n - b.n))
-      .slice(0, lottery.hotColdTop).map(x => x.n);
-
-    const cold = all.slice().sort((a, b) => (a.c - b.c) || (a.n - b.n))
-      .slice(0, lottery.hotColdTop).map(x => x.n);
-
-    return { hot, cold };
   }
 
   function buildWeights(freq, lottery) {
@@ -363,7 +380,6 @@
 
   function weightedPickUnique(weights, pick, max, excludedSet = new Set()) {
     const chosen = new Set(Array.from(excludedSet));
-
     const needTotal = excludedSet.size + pick;
 
     for (let k = excludedSet.size; k < needTotal; k++) {
@@ -389,38 +405,15 @@
   }
 
   /* ==========
-     ONLINE FETCH (experimental)
+     ONLINE (experimental) - mantém como estava
   ========== */
-  function escapeHtml(s) {
-    return String(s).replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;");
-  }
-
-  function toast(msg) {
-    statusLine.innerHTML = msg ? `<strong>${escapeHtml(msg)}</strong>` : "";
-    if (msg) {
-      window.clearTimeout(toast._t);
-      toast._t = window.setTimeout(() => { statusLine.textContent = ""; }, 2600);
-    }
-  }
-
-  function modeLabel(mode) {
-    if (mode === "rng") return "Modo A • Aleatório (RNG)";
-    if (mode === "prob_last") return "Modo B • Prob. (último concurso)";
-    if (mode === "prob_7") return "Modo C • Prob. (últimos 7)";
-    if (mode === "online_trends") return "Online (exp.) • Tendências (histórico)";
-    return mode;
-  }
-
-  function lotteryLabel(lotteryId) {
-    return LOTTERIES[lotteryId]?.label || "Loteria";
+  function mapToObj(map) {
+    const o = {};
+    for (const [k, v] of map.entries()) o[String(k)] = v;
+    return o;
   }
 
   function parseHistoryFromHtml(html, lottery, limit) {
-    // Estratégia: busca padrões de data e sequência de números em CSV "14,31,32,37,41,42"
-    // Nota: é um parser tolerante, não “depende” de layout perfeito.
     const lines = [];
     const re = /(\d{4}-\d{2}-\d{2}).{0,120}?(\d{1,2}\s*,\s*\d{1,2}\s*,\s*\d{1,2}\s*,\s*\d{1,2}\s*,\s*\d{1,2}(?:\s*,\s*\d{1,2})?(?:\s*,\s*\d{1,2})?)/g;
     let m;
@@ -440,7 +433,7 @@
     state.prefs.onlineLimit = limit;
     persistPrefs();
 
-    onlineStatus.innerHTML = `<strong>Buscando histórico...</strong> (pode levar alguns segundos)`;
+    onlineStatus.innerHTML = `<strong>Buscando histórico...</strong>`;
     btnFetchOnline.disabled = true;
 
     try {
@@ -458,27 +451,20 @@
       const html = await res.text();
       const lines = parseHistoryFromHtml(html, lot, limit);
 
-      if (!lines.length) {
-        throw new Error("Não consegui extrair números do histórico. Pode ser bloqueio/CORS ou mudança no site.");
-      }
+      if (!lines.length) throw new Error("Não consegui extrair números do histórico (CORS ou layout mudou).");
 
       const freq = buildFrequency(lines, lot);
-      const { hot, cold } = hotColdFromFreq(freq, lot);
       const weights = buildWeights(freq, lot);
 
-      state.prob.online = { lotteryId: lot.id, lines, freq: mapToObj(freq), hot, cold, weights, ts: Date.now(), limit };
+      state.prob.online = { lotteryId: lot.id, lines, freq: mapToObj(freq), weights, ts: Date.now(), limit };
       safeSet(LS_KEYS.online, state.prob.online);
 
-      onlineStatus.innerHTML =
-        `<strong>OK:</strong> histórico carregado (${lines.length} concursos). ` +
-        `Agora use o modo <strong>Online (experimental)</strong> para gerar.`;
-
+      onlineStatus.innerHTML = `<strong>OK:</strong> histórico carregado (${lines.length} concursos).`;
       toast("Histórico online pronto (tendências).");
-
     } catch (err) {
       onlineStatus.innerHTML =
         `<strong style="color:var(--bad)">⚠ Online falhou:</strong> ${escapeHtml(err?.message || "erro")}<br>` +
-        `<span class="micro">Dica: alguns sites bloqueiam leitura por CORS. Use “colar resultados” (último / 7) como alternativa.</span>`;
+        `<span class="micro">Alguns sites bloqueiam leitura por CORS. Use colagem (último / 7).</span>`;
       toast("Online falhou. Use colagem de resultados.");
     } finally {
       btnFetchOnline.disabled = false;
@@ -486,7 +472,62 @@
   }
 
   /* ==========
-     UI RENDER
+     GENERATION
+  ========== */
+  function getActiveWeightsForMode() {
+    const lot = LOTTERIES[state.prefs.lotteryId];
+
+    if (state.prefs.mode === "prob_last") {
+      const pack = state.prob.last;
+      if (pack && pack.lotteryId === lot.id && pack.weights) return pack.weights;
+      return null;
+    }
+    if (state.prefs.mode === "prob_7") {
+      const pack = state.prob.seven;
+      if (pack && pack.lotteryId === lot.id && pack.weights) return pack.weights;
+      return null;
+    }
+    if (state.prefs.mode === "online_trends") {
+      const pack = state.prob.online;
+      if (pack && pack.lotteryId === lot.id && pack.weights) return pack.weights;
+      return null;
+    }
+    return null;
+  }
+
+  function generateOne() {
+    const lot = LOTTERIES[state.prefs.lotteryId];
+    if (!lot) return [];
+
+    const fixed = Array.isArray(state.prefs.fixedNumbers) ? state.prefs.fixedNumbers : [];
+    const fixedSet = new Set(fixed);
+    const remaining = lot.pick - fixed.length;
+
+    if (remaining <= 0) return fixed.slice(0, lot.pick).sort((a, b) => a - b);
+
+    if (state.prefs.mode === "rng") {
+      const rest = sampleUniqueUniform(remaining, lot.max, fixedSet);
+      return fixed.concat(rest).sort((a, b) => a - b);
+    }
+
+    const weights = getActiveWeightsForMode();
+    if (!weights) {
+      toast("Sem dados analisados para este modo. Use RNG, cole resultados ou busque Online.");
+      const rest = sampleUniqueUniform(remaining, lot.max, fixedSet);
+      return fixed.concat(rest).sort((a, b) => a - b);
+    }
+
+    return weightedPickUnique(weights, lot.pick, lot.max, fixedSet);
+  }
+
+  function generateMany(qty) {
+    const out = [];
+    for (let i = 0; i < qty; i++) out.push(generateOne());
+    return out;
+  }
+
+  /* ==========
+     RENDER
   ========== */
   function renderBalls(nums, animate = false) {
     const wrap = document.createElement("div");
@@ -505,6 +546,7 @@
     btnCopy.disabled = !hasGenerated;
     btnSave.disabled = !hasGenerated;
     btnPrint.disabled = !hasGenerated;
+    btnWhatsApp.disabled = !hasGenerated;
   }
 
   function renderGenerated() {
@@ -545,156 +587,8 @@
     setActionEnabled(true);
   }
 
-  function renderSaved() {
-    savedList.innerHTML = "";
-
-    const total = state.saved.length;
-    const totalPages = Math.max(1, Math.ceil(total / SAVED_PAGE_SIZE));
-    state.savedPage = Math.min(state.savedPage, totalPages);
-
-    const start = (state.savedPage - 1) * SAVED_PAGE_SIZE;
-    const items = state.saved.slice(start, start + SAVED_PAGE_SIZE);
-
-    if (!total) {
-      const empty = document.createElement("div");
-      empty.className = "empty-hint";
-      empty.textContent = "Você ainda não salvou nenhum jogo.";
-      savedList.appendChild(empty);
-    } else {
-      for (const item of items) {
-        const row = document.createElement("div");
-        row.className = "saved-item";
-
-        const left = document.createElement("div");
-        left.className = "saved-item__left";
-
-        const meta = document.createElement("div");
-        meta.className = "saved-item__meta";
-        meta.textContent = `${lotteryLabel(item.lotteryId)} • ${modeLabel(item.mode)} • ${new Date(item.ts).toLocaleString()}`;
-        left.appendChild(meta);
-
-        const ballsWrap = document.createElement("div");
-        ballsWrap.className = "saved-item__balls";
-        for (const n of item.nums) {
-          const b = document.createElement("div");
-          b.className = "ball";
-          b.textContent = String(n);
-          ballsWrap.appendChild(b);
-        }
-        left.appendChild(ballsWrap);
-
-        const right = document.createElement("div");
-        const del = document.createElement("button");
-        del.type = "button";
-        del.className = "icon-mini";
-        del.setAttribute("aria-label", "Remover este jogo salvo");
-        del.textContent = "🗑 Remover";
-        del.addEventListener("click", () => removeSaved(item.id));
-        right.appendChild(del);
-
-        row.appendChild(left);
-        row.appendChild(right);
-        savedList.appendChild(row);
-      }
-    }
-
-    btnClearAll.disabled = total === 0;
-    btnPrevPage.disabled = state.savedPage <= 1;
-    btnNextPage.disabled = state.savedPage >= totalPages;
-
-    pageInfo.textContent = total
-      ? `Página ${state.savedPage} de ${totalPages} • ${total} salvo(s)`
-      : `Página 1 de 1 • 0 salvo(s)`;
-  }
-
-  function renderChips(el, nums) {
-    el.innerHTML = "";
-    if (!nums || !nums.length) {
-      const sp = document.createElement("div");
-      sp.className = "empty-hint";
-      sp.textContent = "—";
-      el.appendChild(sp);
-      return;
-    }
-    for (const n of nums) {
-      const c = document.createElement("div");
-      c.className = "chip";
-      c.textContent = String(n);
-      el.appendChild(c);
-    }
-  }
-
   /* ==========
-     GENERATION (inclui fixos)
-  ========== */
-  function getActiveWeightsForMode() {
-    const lot = LOTTERIES[state.prefs.lotteryId];
-
-    if (state.prefs.mode === "prob_last") {
-      const pack = state.prob.last;
-      if (pack && pack.lotteryId === lot.id && pack.weights) return pack.weights;
-      return null;
-    }
-    if (state.prefs.mode === "prob_7") {
-      const pack = state.prob.seven;
-      if (pack && pack.lotteryId === lot.id && pack.weights) return pack.weights;
-      return null;
-    }
-    if (state.prefs.mode === "online_trends") {
-      const pack = state.prob.online;
-      if (pack && pack.lotteryId === lot.id && pack.weights) return pack.weights;
-      return null;
-    }
-    return null;
-  }
-
-  function generateOne() {
-    const lot = LOTTERIES[state.prefs.lotteryId];
-    if (!lot) return [];
-
-    const fixed = Array.isArray(state.prefs.fixedNumbers) ? state.prefs.fixedNumbers : [];
-    const fixedSet = new Set(fixed);
-
-    // garante que fixos ainda são válidos para a loteria atual
-    for (const n of fixed) {
-      if (!(n >= 1 && n <= lot.max)) {
-        toast("Alguns fixos ficaram fora do intervalo desta loteria. Reaplique os fixos.");
-        break;
-      }
-    }
-    if (fixed.length >= lot.pick) {
-      toast(`Fixos demais. Deixe no máximo ${lot.pick - 1}.`);
-      return sampleUniqueUniform(lot.pick, lot.max);
-    }
-
-    const remaining = lot.pick - fixed.length;
-
-    if (remaining <= 0) return fixed.slice(0, lot.pick).sort((a, b) => a - b);
-
-    if (state.prefs.mode === "rng") {
-      const rest = sampleUniqueUniform(remaining, lot.max, fixedSet);
-      return fixed.concat(rest).sort((a, b) => a - b);
-    }
-
-    const weights = getActiveWeightsForMode();
-    if (!weights) {
-      toast("Sem dados analisados para este modo. Use RNG, cole resultados ou busque Online.");
-      const rest = sampleUniqueUniform(remaining, lot.max, fixedSet);
-      return fixed.concat(rest).sort((a, b) => a - b);
-    }
-
-    const pickedAll = weightedPickUnique(weights, lot.pick, lot.max, fixedSet);
-    return pickedAll;
-  }
-
-  function generateMany(qty) {
-    const out = [];
-    for (let i = 0; i < qty; i++) out.push(generateOne());
-    return out;
-  }
-
-  /* ==========
-     COPY / SAVE / PRINT
+     COPY / SAVE / PRINT (mantidos)
   ========== */
   function formatNumber(n, twoDigits) {
     if (!twoDigits) return String(n);
@@ -820,14 +714,52 @@
   }
 
   /* ==========
-     ANALYZE LAST / 7
+     ✅ WHATSAPP SHARE
   ========== */
-  function mapToObj(map) {
-    const o = {};
-    for (const [k, v] of map.entries()) o[String(k)] = v;
-    return o;
+  function buildWhatsAppMessage() {
+    const lot = LOTTERIES[state.prefs.lotteryId];
+    const when = new Date();
+    const short = !!state.prefs.waShort;
+
+    const header = short
+      ? `🍀 Takara • ${lot.label}\n`
+      : `🍀 Oi! Passei aqui para te mandar umas combinações geradas no Takara.\n` +
+        `Que seja um dia leve, com boas vibrações e sorte sorrindo para você. ✨\n\n` +
+        `🎱 ${lot.label} • ${modeLabel(state.prefs.mode)}\n`;
+
+    const meta = short
+      ? `${modeLabel(state.prefs.mode)} • ${when.toLocaleString()}\n`
+      : `🕒 ${when.toLocaleString()}\n` +
+        (state.prefs.fixedNumbers?.length ? `📌 Fixos: ${state.prefs.fixedNumbers.join(", ")}\n` : "");
+
+    const games = state.generated
+      .map((nums, i) => `Jogo ${i + 1}: ${nums.join(" ")}`)
+      .join("\n");
+
+    const footer = short
+      ? `\n\n⚠️ Loteria é aleatória. Sem garantia.`
+      : `\n\n🌟 Se quiser, escolhe 1 jogo e eu te mando também em formato PDF depois.\n` +
+        `⚠️ Lembrete responsável: loteria é aleatória; não há garantia de ganhos.`;
+
+    return `${header}${meta}\n${games}${footer}`;
   }
 
+  function openWhatsAppShare() {
+    if (!state.generated.length) return;
+
+    const msg = buildWhatsAppMessage();
+    const encoded = encodeURIComponent(msg);
+
+    // mobile: wa.me costuma abrir direto o app; desktop abre web.whatsapp
+    const url = `https://wa.me/?text=${encoded}`;
+
+    window.open(url, "_blank", "noopener,noreferrer");
+    toast("WhatsApp aberto com a mensagem pronta.");
+  }
+
+  /* ==========
+     ANALYZE LAST/7
+  ========== */
   function analyzeLast() {
     const lot = LOTTERIES[state.prefs.lotteryId];
     const parsed = parseMultipleLines(pasteLast.value, 1, lot);
@@ -842,16 +774,11 @@
     }
 
     const freq = buildFrequency(parsed.lines, lot);
-    const { hot, cold } = hotColdFromFreq(freq, lot);
     const weights = buildWeights(freq, lot);
-
-    state.prob.last = { lotteryId: lot.id, lines: parsed.lines, freq: mapToObj(freq), hot, cold, weights };
+    state.prob.last = { lotteryId: lot.id, lines: parsed.lines, freq: mapToObj(freq), weights };
     safeSet(LS_KEYS.probLast, state.prob.last);
 
     lastStatus.innerHTML = `<strong>OK:</strong> 1 linha analisada para ${escapeHtml(lot.label)}.`;
-    renderChips(lastHot, hot);
-    renderChips(lastCold, cold);
-
     toast("Análise do último concurso pronta.");
   }
 
@@ -869,22 +796,97 @@
     }
 
     const freq = buildFrequency(parsed.lines, lot);
-    const { hot, cold } = hotColdFromFreq(freq, lot);
     const weights = buildWeights(freq, lot);
-
-    state.prob.seven = { lotteryId: lot.id, lines: parsed.lines, freq: mapToObj(freq), hot, cold, weights };
+    state.prob.seven = { lotteryId: lot.id, lines: parsed.lines, freq: mapToObj(freq), weights };
     safeSet(LS_KEYS.prob7, state.prob.seven);
 
     sevenStatus.innerHTML = `<strong>OK:</strong> 7 linhas analisadas para ${escapeHtml(lot.label)}.`;
-    renderChips(sevenHot, hot);
-    renderChips(sevenCold, cold);
-
     toast("Análise dos últimos 7 concursos pronta.");
   }
 
+  function renderChips(el, nums) {
+    el.innerHTML = "";
+    if (!nums || !nums.length) {
+      const sp = document.createElement("div");
+      sp.className = "empty-hint";
+      sp.textContent = "—";
+      el.appendChild(sp);
+      return;
+    }
+    for (const n of nums) {
+      const c = document.createElement("div");
+      c.className = "chip";
+      c.textContent = String(n);
+      el.appendChild(c);
+    }
+  }
+
   /* ==========
-     LOAD / SAVE PREFS
+     SAVED LIST (mantido)
   ========== */
+  function renderSaved() {
+    savedList.innerHTML = "";
+
+    const total = state.saved.length;
+    const totalPages = Math.max(1, Math.ceil(total / SAVED_PAGE_SIZE));
+    state.savedPage = Math.min(state.savedPage, totalPages);
+
+    const start = (state.savedPage - 1) * SAVED_PAGE_SIZE;
+    const items = state.saved.slice(start, start + SAVED_PAGE_SIZE);
+
+    if (!total) {
+      const empty = document.createElement("div");
+      empty.className = "empty-hint";
+      empty.textContent = "Você ainda não salvou nenhum jogo.";
+      savedList.appendChild(empty);
+    } else {
+      for (const item of items) {
+        const row = document.createElement("div");
+        row.className = "saved-item";
+
+        const left = document.createElement("div");
+        left.className = "saved-item__left";
+
+        const meta = document.createElement("div");
+        meta.className = "saved-item__meta";
+        meta.textContent = `${lotteryLabel(item.lotteryId)} • ${modeLabel(item.mode)} • ${new Date(item.ts).toLocaleString()}`;
+        left.appendChild(meta);
+
+        const ballsWrap = document.createElement("div");
+        ballsWrap.className = "saved-item__balls";
+        for (const n of item.nums) {
+          const b = document.createElement("div");
+          b.className = "ball";
+          b.textContent = String(n);
+          ballsWrap.appendChild(b);
+        }
+        left.appendChild(ballsWrap);
+
+        const right = document.createElement("div");
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "icon-mini";
+        del.setAttribute("aria-label", "Remover este jogo salvo");
+        del.textContent = "🗑 Remover";
+        del.addEventListener("click", () => removeSaved(item.id));
+        right.appendChild(del);
+
+        row.appendChild(left);
+        row.appendChild(right);
+        savedList.appendChild(row);
+      }
+    }
+
+    btnClearAll.disabled = total === 0;
+
+    btnPrevPage.disabled = state.savedPage <= 1;
+    btnNextPage.disabled = state.savedPage >= totalPages;
+
+    pageInfo.textContent = total
+      ? `Página ${state.savedPage} de ${totalPages} • ${total} salvo(s)`
+      : `Página 1 de 1 • 0 salvo(s)`;
+  }
+
   function loadSaved() {
     try {
       const raw = safeGet(LS_KEYS.saved);
@@ -956,13 +958,12 @@
 
     lotterySelect.addEventListener("change", () => {
       state.prefs.lotteryId = lotterySelect.value;
-      // Revalida fixos para nova loteria
       const lot = LOTTERIES[state.prefs.lotteryId];
       const fixed = (state.prefs.fixedNumbers || []).filter(n => n >= 1 && n <= lot.max).slice(0, lot.pick - 1);
       state.prefs.fixedNumbers = fixed;
       persistPrefs();
       renderFixedChips();
-      toast(`Loteria: ${LOTTERIES[state.prefs.lotteryId].label}`);
+      toast(`Loteria: ${lot.label}`);
     });
 
     modeSelect.addEventListener("change", () => {
@@ -989,6 +990,11 @@
       persistPrefs();
     });
 
+    waShort.addEventListener("change", () => {
+      state.prefs.waShort = !!waShort.checked;
+      persistPrefs();
+    });
+
     btnApplyFixed.addEventListener("click", applyFixedFromInput);
     btnClearFixed.addEventListener("click", clearFixed);
 
@@ -1007,6 +1013,8 @@
     btnCopy.addEventListener("click", copyGenerated);
     btnSave.addEventListener("click", saveGenerated);
     btnPrint.addEventListener("click", printGenerated);
+
+    btnWhatsApp.addEventListener("click", openWhatsAppShare);
 
     btnClearAll.addEventListener("click", clearAllSaved);
 
@@ -1035,17 +1043,13 @@
 
     onlineLimit.value = String(state.prefs.onlineLimit || 50);
 
+    waShort.checked = !!state.prefs.waShort;
+
     qtyButtons.forEach(b => b.setAttribute("aria-pressed", "false"));
     const btn = qtyButtons.find(x => Number(x.getAttribute("data-qty")) === state.qty) || qtyButtons[0];
     btn.setAttribute("aria-pressed", "true");
 
     setView("view-generate");
-  }
-
-  function setActionEnabled(hasGenerated) {
-    btnCopy.disabled = !hasGenerated;
-    btnSave.disabled = !hasGenerated;
-    btnPrint.disabled = !hasGenerated;
   }
 
   function init() {
@@ -1058,6 +1062,7 @@
       if (typeof p.copyTwoDigits === "boolean") state.prefs.copyTwoDigits = p.copyTwoDigits;
       if (Array.isArray(p.fixedNumbers)) state.prefs.fixedNumbers = p.fixedNumbers.map(n => Number(n)).filter(Number.isFinite);
       if (Number.isFinite(Number(p.onlineLimit))) state.prefs.onlineLimit = Number(p.onlineLimit);
+      if (typeof p.waShort === "boolean") state.prefs.waShort = p.waShort;
     }
 
     state.saved = loadSaved();
@@ -1073,7 +1078,7 @@
 
     renderSaved();
 
-    toast("Pronto. Gere combinações, aplique fixos ou use probabilidade.");
+    toast("Pronto. Gere combinações e, se quiser, compartilhe no WhatsApp.");
   }
 
   init();

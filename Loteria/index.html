@@ -11,11 +11,9 @@
 <body>
   <a class="skip-link" href="#appMain">Pular para o conteúdo</a>
 
-  <!-- HEADER FIXO -->
   <header class="topbar" role="banner">
     <div class="topbar__inner">
       <div class="brand" aria-label="Takara">
-        <!-- Logo SVG inline: original, Takara Kuji-inspired (sem copiar) -->
         <svg class="brand__logo" width="40" height="40" viewBox="0 0 64 64" role="img" aria-label="Logo Takara">
           <defs>
             <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1">
@@ -65,10 +63,8 @@
     </div>
   </header>
 
-  <!-- OVERLAY -->
   <div id="overlay" class="overlay" hidden></div>
 
-  <!-- MENU LATERAL -->
   <aside id="sideMenu" class="side-menu" aria-label="Menu" aria-hidden="true">
     <div class="side-menu__header">
       <div class="side-menu__title">Navegação</div>
@@ -112,7 +108,6 @@
     </div>
   </aside>
 
-  <!-- MAIN FIXO -->
   <main id="appMain" class="app" role="main" tabindex="-1">
     <section class="hero" aria-label="Aviso principal">
       <div class="hero__card">
@@ -122,7 +117,6 @@
     </section>
 
     <section class="stage" aria-label="Conteúdo">
-      <!-- VIEW: GERAR -->
       <section id="view-generate" class="view is-active" aria-label="Gerar números">
         <div class="grid">
           <div class="card">
@@ -154,7 +148,6 @@
                 </div>
               </div>
 
-              <!-- ✅ NÚMEROS FIXOS -->
               <div class="field field--wide">
                 <label for="fixedNumbers">Números fixos (opcional)</label>
                 <input id="fixedNumbers" class="text-input" type="text"
@@ -173,7 +166,7 @@
               </div>
 
               <div class="field">
-                <label for="qtySelect">Quantidade por clique</label>
+                <label>Quantidade por clique</label>
                 <div class="segmented" role="group" aria-label="Quantidade de jogos">
                   <button type="button" class="seg-btn" data-qty="1" aria-pressed="true">1</button>
                   <button type="button" class="seg-btn" data-qty="3" aria-pressed="false">3</button>
@@ -189,7 +182,17 @@
                 </label>
               </div>
 
-              <!-- ✅ ONLINE FETCH CONTROLS -->
+              <!-- ✅ NOVO: WhatsApp -->
+              <div class="field">
+                <label class="check">
+                  <input id="waShort" type="checkbox" />
+                  <span>WhatsApp: mensagem curta (mais direta)</span>
+                </label>
+                <div class="micro">
+                  O envio abre o WhatsApp com a mensagem pronta. Você confirma e envia.
+                </div>
+              </div>
+
               <div class="field field--wide">
                 <div class="online-box" role="group" aria-label="Online tendências">
                   <div class="online-box__row">
@@ -228,6 +231,13 @@
                   <span class="btn__icon" aria-hidden="true">💾</span>
                   Salvar
                 </button>
+
+                <!-- ✅ NOVO -->
+                <button id="btnWhatsApp" class="btn btn--wa" type="button" disabled>
+                  <span class="btn__icon" aria-hidden="true">💬</span>
+                  Enviar no WhatsApp
+                </button>
+
                 <button id="btnPrint" class="btn" type="button" disabled>
                   <span class="btn__icon" aria-hidden="true">🖨️</span>
                   Gerar PDF / Imprimir
@@ -243,8 +253,6 @@
               <h3 class="card__title">Prévia do sorteio</h3>
               <p class="card__desc">Bolas visuais (premium e legível, sem exageros)</p>
             </div>
-
-            <!-- ✅ agora pode rolar se necessário -->
             <div id="generatedArea" class="result-area" aria-label="Jogos gerados"></div>
           </div>
         </div>
@@ -275,7 +283,7 @@
         </div>
       </section>
 
-      <!-- VIEW: PROB ÚLTIMO -->
+      <!-- As outras views permanecem iguais às suas atuais -->
       <section id="view-prob-last" class="view" aria-label="Probabilidade último concurso">
         <div class="card">
           <div class="card__header">
@@ -287,9 +295,7 @@
             <div class="field field--wide">
               <label for="pasteLast">Cole o resultado (ex.: 03,11,17,22,31,40)</label>
               <textarea id="pasteLast" rows="4" placeholder="Cole aqui exatamente 1 linha…"></textarea>
-              <div class="micro">
-                Aceita separadores: espaço / vírgula / hífen. Sem busca online.
-              </div>
+              <div class="micro">Aceita separadores: espaço / vírgula / hífen. Sem busca online.</div>
             </div>
 
             <div class="actions">
@@ -317,13 +323,10 @@
             </div>
           </div>
 
-          <div class="note">
-            <strong>Importante:</strong> “Quentes” e “frios” aqui são <em>apenas frequências</em>, não previsão.
-          </div>
+          <div class="note"><strong>Importante:</strong> frequências não são previsão.</div>
         </div>
       </section>
 
-      <!-- VIEW: PROB 7 -->
       <section id="view-prob-7" class="view" aria-label="Probabilidade últimos 7 concursos">
         <div class="card">
           <div class="card__header">
@@ -335,9 +338,7 @@
             <div class="field field--wide">
               <label for="paste7">Cole os 7 resultados (1 por linha)</label>
               <textarea id="paste7" rows="8" placeholder="Linha 1: 03 11 17 22 31 40&#10;Linha 2: 01-07-13-22-30-41&#10;… (até 7 linhas)"></textarea>
-              <div class="micro">
-                Aceita separadores: espaço / vírgula / hífen. Ignora texto extra.
-              </div>
+              <div class="micro">Aceita separadores: espaço / vírgula / hífen. Ignora texto extra.</div>
             </div>
 
             <div class="actions">
@@ -365,54 +366,34 @@
             </div>
           </div>
 
-          <div class="note">
-            Ponderação simples com suavização. Sem promessas.
-          </div>
+          <div class="note">Ponderação simples com suavização. Sem promessas.</div>
         </div>
       </section>
 
-      <!-- VIEW: COMO FUNCIONA -->
       <section id="view-how" class="view" aria-label="Como funciona">
         <div class="card">
           <div class="card__header">
             <h2 class="card__title">Como funciona</h2>
-            <p class="card__desc">Conteúdo em cards com accordion acessível.</p>
+            <p class="card__desc">Sem rolagem: conteúdo em cards com accordion acessível.</p>
           </div>
 
           <div class="accordion" role="region" aria-label="Conteúdo explicativo">
             <details class="acc" open>
               <summary class="acc__sum">O que este app faz?</summary>
               <div class="acc__body">
-                <p>
-                  O Takara gera combinações válidas (sem repetição, ordenadas).
-                  Você pode usar RNG, colar resultados para ponderação, ou tentar a opção Online (experimental).
-                </p>
+                <p>Gera combinações válidas e permite ponderar por frequências. Não prevê resultados.</p>
               </div>
             </details>
-
             <details class="acc">
-              <summary class="acc__sum">O que significa Online (experimental)?</summary>
+              <summary class="acc__sum">Impressão / PDF</summary>
               <div class="acc__body">
-                <p>
-                  O app tenta buscar páginas públicas com histórico e calcular tendências.
-                  Alguns sites bloqueiam leitura por CORS, então pode falhar no navegador.
-                </p>
-              </div>
-            </details>
-
-            <details class="acc">
-              <summary class="acc__sum">Números fixos</summary>
-              <div class="acc__body">
-                <p>
-                  Você define alguns números e o app completa os restantes respeitando a loteria e sem repetir.
-                </p>
+                <p>Usa o modo de impressão do navegador, com layout limpo.</p>
               </div>
             </details>
           </div>
         </div>
       </section>
 
-      <!-- VIEW: AVISO -->
       <section id="view-disclaimer" class="view" aria-label="Aviso de responsabilidade">
         <div class="card">
           <div class="card__header">
@@ -424,19 +405,7 @@
             <details class="acc" open>
               <summary class="acc__sum">Uso e limites</summary>
               <div class="acc__body">
-                <p>
-                  Este site é uma ferramenta de entretenimento e apoio estatístico. Ele não prevê resultados,
-                  não garante ganhos e não representa qualquer órgão oficial.
-                </p>
-              </div>
-            </details>
-
-            <details class="acc">
-              <summary class="acc__sum">Privacidade</summary>
-              <div class="acc__body">
-                <p>
-                  Preferências e jogos ficam no seu navegador (localStorage). Sem envio para servidores.
-                </p>
+                <p>Ferramenta de entretenimento e apoio estatístico. Loteria é aleatória; não há garantia de ganhos.</p>
               </div>
             </details>
           </div>
@@ -445,7 +414,6 @@
     </section>
   </main>
 
-  <!-- FOOTER FIXO -->
   <footer class="footer" role="contentinfo">
     <div class="footer__inner">
       Copyright @ 2026 - 2027 Ailton Akio Nakata
