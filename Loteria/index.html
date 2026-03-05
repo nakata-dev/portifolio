@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Takara • Gerador de Loterias do Japão</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#appMain">Pular para o conteúdo</a>
+
+  <!-- HEADER FIXO -->
+  <header class="topbar" role="banner">
+    <div class="topbar__inner">
+      <div class="brand" aria-label="Takara">
+        <!-- Logo SVG inline: original, Takara Kuji-inspired (sem copiar) -->
+        <svg class="brand__logo" width="40" height="40" viewBox="0 0 64 64" role="img" aria-label="Logo Takara">
+          <defs>
+            <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--blue-700)"/>
+              <stop offset="1" stop-color="var(--blue-900)"/>
+            </linearGradient>
+            <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--gold-400)"/>
+              <stop offset="1" stop-color="var(--gold-600)"/>
+            </linearGradient>
+            <radialGradient id="gGlow" cx="30%" cy="30%" r="70%">
+              <stop offset="0" stop-color="rgba(255,255,255,.55)"/>
+              <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="28" fill="url(#gBlue)" />
+          <circle cx="32" cy="32" r="28" fill="url(#gGlow)" />
+          <circle cx="32" cy="32" r="25.5" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
+
+          <path d="M20 20h24v6H35v22h-6V26H20z" fill="url(#gGold)" opacity=".95"/>
+          <path d="M46.7 18.4l1.7 3.5 3.8.6-2.7 2.7.7 3.8-3.5-1.9-3.5 1.9.7-3.8-2.7-2.7 3.8-.6z"
+                fill="var(--red-500)" opacity=".95"/>
+        </svg>
+
+        <div class="brand__text">
+          <div class="brand__name">Takara</div>
+          <div class="brand__tag">Simulação visual • entretenimento & apoio estatístico</div>
+        </div>
+      </div>
+
+      <div class="topbar__actions">
+        <button id="themeToggle" class="icon-btn" type="button"
+                aria-label="Alternar modo escuro/claro" aria-pressed="false">
+          <span class="icon" aria-hidden="true">🌙</span>
+          <span class="icon-btn__text">Modo</span>
+        </button>
+
+        <button id="menuBtn" class="icon-btn icon-btn--burger" type="button"
+                aria-label="Abrir menu" aria-expanded="false" aria-controls="sideMenu">
+          <span class="burger" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="icon-btn__text">Menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- OVERLAY -->
+  <div id="overlay" class="overlay" hidden></div>
+
+  <!-- MENU LATERAL -->
+  <aside id="sideMenu" class="side-menu" aria-label="Menu" aria-hidden="true">
+    <div class="side-menu__header">
+      <div class="side-menu__title">Navegação</div>
+      <button id="menuCloseBtn" class="icon-btn" type="button" aria-label="Fechar menu">
+        <span class="icon" aria-hidden="true">✕</span>
+        <span class="icon-btn__text">Fechar</span>
+      </button>
+    </div>
+
+    <nav class="side-menu__nav" aria-label="Seções">
+      <button class="nav-item" type="button" data-view="view-generate">
+        <span class="nav-item__icon" aria-hidden="true">🎱</span>
+        <span class="nav-item__text">Gerar números</span>
+      </button>
+
+      <button class="nav-item" type="button" data-view="view-prob-last">
+        <span class="nav-item__icon" aria-hidden="true">📌</span>
+        <span class="nav-item__text">Probabilidade: último concurso</span>
+      </button>
+
+      <button class="nav-item" type="button" data-view="view-prob-7">
+        <span class="nav-item__icon" aria-hidden="true">📊</span>
+        <span class="nav-item__text">Probabilidade: últimos 7</span>
+      </button>
+
+      <button class="nav-item" type="button" data-view="view-how">
+        <span class="nav-item__icon" aria-hidden="true">🧭</span>
+        <span class="nav-item__text">Como funciona</span>
+      </button>
+
+      <button class="nav-item" type="button" data-view="view-disclaimer">
+        <span class="nav-item__icon" aria-hidden="true">⚠️</span>
+        <span class="nav-item__text">Aviso de responsabilidade</span>
+      </button>
+    </nav>
+
+    <div class="side-menu__footer">
+      <div class="mini-note">
+        Dica: use <kbd>ESC</kbd> para fechar o menu.
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN FIXO -->
+  <main id="appMain" class="app" role="main" tabindex="-1">
+    <section class="hero" aria-label="Aviso principal">
+      <div class="hero__card">
+        <div class="hero__title">Ferramenta de entretenimento e apoio estatístico.</div>
+        <div class="hero__subtitle">Loteria é aleatória; não há garantia de ganhos.</div>
+      </div>
+    </section>
+
+    <section class="stage" aria-label="Conteúdo">
+      <!-- VIEW: GERAR -->
+      <section id="view-generate" class="view is-active" aria-label="Gerar números">
+        <div class="grid">
+          <div class="card">
+            <div class="card__header">
+              <h2 class="card__title">Gerar combinações</h2>
+              <p class="card__desc">Sua combinação gerada • simulação visual do sorteio</p>
+            </div>
+
+            <div class="form">
+              <div class="field">
+                <label for="lotterySelect">Loteria</label>
+                <select id="lotterySelect">
+                  <option value="loto6">Loto 6 (6 números • 1–43)</option>
+                  <option value="loto7">Loto 7 (7 números • 1–37)</option>
+                  <option value="miniloto">Mini Loto (5 números • 1–31)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="modeSelect">Modo de geração</label>
+                <select id="modeSelect">
+                  <option value="rng">Modo A • Aleatório (RNG)</option>
+                  <option value="prob_last">Modo B • Probabilidade (último concurso)</option>
+                  <option value="prob_7">Modo C • Probabilidade (últimos 7 concursos)</option>
+                  <option value="online_trends">Online (experimental) • Tendências (histórico)</option>
+                </select>
+                <div class="micro">
+                  Online pode falhar por bloqueio do navegador (CORS). Se falhar, use os modos “colar resultados”.
+                </div>
+              </div>
+
+              <!-- ✅ NÚMEROS FIXOS -->
+              <div class="field field--wide">
+                <label for="fixedNumbers">Números fixos (opcional)</label>
+                <input id="fixedNumbers" class="text-input" type="text"
+                       placeholder="Ex.: 7, 13, 22 (o app completa o restante)" inputmode="numeric" />
+                <div class="fixed-row">
+                  <button id="btnApplyFixed" class="btn btn--ghost" type="button">
+                    <span class="btn__icon" aria-hidden="true">📌</span>
+                    Aplicar fixos
+                  </button>
+                  <button id="btnClearFixed" class="btn btn--ghost" type="button" disabled>
+                    <span class="btn__icon" aria-hidden="true">🧽</span>
+                    Limpar fixos
+                  </button>
+                </div>
+                <div id="fixedChips" class="chips chips--tight" aria-label="Fixos aplicados"></div>
+              </div>
+
+              <div class="field">
+                <label for="qtySelect">Quantidade por clique</label>
+                <div class="segmented" role="group" aria-label="Quantidade de jogos">
+                  <button type="button" class="seg-btn" data-qty="1" aria-pressed="true">1</button>
+                  <button type="button" class="seg-btn" data-qty="3" aria-pressed="false">3</button>
+                  <button type="button" class="seg-btn" data-qty="5" aria-pressed="false">5</button>
+                  <button type="button" class="seg-btn" data-qty="10" aria-pressed="false">10</button>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="check">
+                  <input id="copyTwoDigits" type="checkbox" />
+                  <span>Copiar com 2 dígitos (ex.: 03 11 17)</span>
+                </label>
+              </div>
+
+              <!-- ✅ ONLINE FETCH CONTROLS -->
+              <div class="field field--wide">
+                <div class="online-box" role="group" aria-label="Online tendências">
+                  <div class="online-box__row">
+                    <div class="online-box__title">Online (experimental) • usar histórico público</div>
+                    <div class="online-box__pill" aria-hidden="true">⚡</div>
+                  </div>
+
+                  <div class="online-box__row online-box__row--controls">
+                    <label class="inline" for="onlineLimit">Qtde de concursos</label>
+                    <select id="onlineLimit">
+                      <option value="30">30</option>
+                      <option value="50" selected>50</option>
+                      <option value="100">100</option>
+                    </select>
+
+                    <button id="btnFetchOnline" class="btn btn--primary" type="button">
+                      <span class="btn__icon" aria-hidden="true">🌐</span>
+                      Buscar histórico agora
+                    </button>
+                  </div>
+
+                  <div id="onlineStatus" class="status" role="status" aria-live="polite"></div>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button id="btnGenerate" class="btn btn--primary" type="button">
+                  <span class="btn__icon" aria-hidden="true">🎲</span>
+                  Gerar
+                </button>
+                <button id="btnCopy" class="btn" type="button" disabled>
+                  <span class="btn__icon" aria-hidden="true">📋</span>
+                  Copiar
+                </button>
+                <button id="btnSave" class="btn" type="button" disabled>
+                  <span class="btn__icon" aria-hidden="true">💾</span>
+                  Salvar
+                </button>
+                <button id="btnPrint" class="btn" type="button" disabled>
+                  <span class="btn__icon" aria-hidden="true">🖨️</span>
+                  Gerar PDF / Imprimir
+                </button>
+              </div>
+
+              <div id="statusLine" class="status" role="status" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="card card--result">
+            <div class="card__header">
+              <h3 class="card__title">Prévia do sorteio</h3>
+              <p class="card__desc">Bolas visuais (premium e legível, sem exageros)</p>
+            </div>
+
+            <!-- ✅ agora pode rolar se necessário -->
+            <div id="generatedArea" class="result-area" aria-label="Jogos gerados"></div>
+          </div>
+        </div>
+
+        <div class="grid grid--bottom">
+          <div class="card card--saved">
+            <div class="card__header card__header--row">
+              <div>
+                <h3 class="card__title">Meus jogos salvos</h3>
+                <p class="card__desc">Sem rolagem do body: paginação + área com rolagem interna se precisar</p>
+              </div>
+              <div class="card__tools">
+                <button id="btnClearAll" class="btn btn--danger" type="button" disabled>
+                  <span class="btn__icon" aria-hidden="true">🧹</span>
+                  Limpar tudo
+                </button>
+              </div>
+            </div>
+
+            <div id="savedList" class="saved-list" aria-label="Lista de jogos salvos"></div>
+
+            <div class="pager" aria-label="Paginação de salvos">
+              <button id="btnPrevPage" class="btn btn--ghost" type="button" disabled>◀ Anterior</button>
+              <div id="pageInfo" class="pager__info" aria-live="polite"></div>
+              <button id="btnNextPage" class="btn btn--ghost" type="button" disabled>Próxima ▶</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: PROB ÚLTIMO -->
+      <section id="view-prob-last" class="view" aria-label="Probabilidade último concurso">
+        <div class="card">
+          <div class="card__header">
+            <h2 class="card__title">Probabilidade • último concurso</h2>
+            <p class="card__desc">Cole 1 linha com o resultado. O app extrai apenas números e ignora texto extra.</p>
+          </div>
+
+          <div class="form">
+            <div class="field field--wide">
+              <label for="pasteLast">Cole o resultado (ex.: 03,11,17,22,31,40)</label>
+              <textarea id="pasteLast" rows="4" placeholder="Cole aqui exatamente 1 linha…"></textarea>
+              <div class="micro">
+                Aceita separadores: espaço / vírgula / hífen. Sem busca online.
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="btnAnalyzeLast" class="btn btn--primary" type="button">
+                <span class="btn__icon" aria-hidden="true">🔎</span>
+                Analisar
+              </button>
+              <button class="btn" type="button" data-jump="view-generate">
+                <span class="btn__icon" aria-hidden="true">🎱</span>
+                Ir para Gerar
+              </button>
+            </div>
+
+            <div id="lastStatus" class="status" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="split">
+            <div class="mini-card">
+              <div class="mini-card__title">Quentes</div>
+              <div id="lastHot" class="chips" aria-label="Números quentes do último concurso"></div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card__title">Frios</div>
+              <div id="lastCold" class="chips" aria-label="Números frios do último concurso"></div>
+            </div>
+          </div>
+
+          <div class="note">
+            <strong>Importante:</strong> “Quentes” e “frios” aqui são <em>apenas frequências</em>, não previsão.
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: PROB 7 -->
+      <section id="view-prob-7" class="view" aria-label="Probabilidade últimos 7 concursos">
+        <div class="card">
+          <div class="card__header">
+            <h2 class="card__title">Probabilidade • últimos 7 concursos</h2>
+            <p class="card__desc">Cole exatamente 7 linhas. O app calcula frequências e pondera a geração.</p>
+          </div>
+
+          <div class="form">
+            <div class="field field--wide">
+              <label for="paste7">Cole os 7 resultados (1 por linha)</label>
+              <textarea id="paste7" rows="8" placeholder="Linha 1: 03 11 17 22 31 40&#10;Linha 2: 01-07-13-22-30-41&#10;… (até 7 linhas)"></textarea>
+              <div class="micro">
+                Aceita separadores: espaço / vírgula / hífen. Ignora texto extra.
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="btnAnalyze7" class="btn btn--primary" type="button">
+                <span class="btn__icon" aria-hidden="true">📈</span>
+                Analisar
+              </button>
+              <button class="btn" type="button" data-jump="view-generate">
+                <span class="btn__icon" aria-hidden="true">🎱</span>
+                Ir para Gerar
+              </button>
+            </div>
+
+            <div id="sevenStatus" class="status" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="split">
+            <div class="mini-card">
+              <div class="mini-card__title">Quentes (Top)</div>
+              <div id="sevenHot" class="chips" aria-label="Números quentes dos últimos 7 concursos"></div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card__title">Frios (Top)</div>
+              <div id="sevenCold" class="chips" aria-label="Números frios dos últimos 7 concursos"></div>
+            </div>
+          </div>
+
+          <div class="note">
+            Ponderação simples com suavização. Sem promessas.
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: COMO FUNCIONA -->
+      <section id="view-how" class="view" aria-label="Como funciona">
+        <div class="card">
+          <div class="card__header">
+            <h2 class="card__title">Como funciona</h2>
+            <p class="card__desc">Conteúdo em cards com accordion acessível.</p>
+          </div>
+
+          <div class="accordion" role="region" aria-label="Conteúdo explicativo">
+            <details class="acc" open>
+              <summary class="acc__sum">O que este app faz?</summary>
+              <div class="acc__body">
+                <p>
+                  O Takara gera combinações válidas (sem repetição, ordenadas).
+                  Você pode usar RNG, colar resultados para ponderação, ou tentar a opção Online (experimental).
+                </p>
+              </div>
+            </details>
+
+            <details class="acc">
+              <summary class="acc__sum">O que significa Online (experimental)?</summary>
+              <div class="acc__body">
+                <p>
+                  O app tenta buscar páginas públicas com histórico e calcular tendências.
+                  Alguns sites bloqueiam leitura por CORS, então pode falhar no navegador.
+                </p>
+              </div>
+            </details>
+
+            <details class="acc">
+              <summary class="acc__sum">Números fixos</summary>
+              <div class="acc__body">
+                <p>
+                  Você define alguns números e o app completa os restantes respeitando a loteria e sem repetir.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: AVISO -->
+      <section id="view-disclaimer" class="view" aria-label="Aviso de responsabilidade">
+        <div class="card">
+          <div class="card__header">
+            <h2 class="card__title">Aviso de responsabilidade</h2>
+            <p class="card__desc">Clareza máxima, sem prometer ganhos.</p>
+          </div>
+
+          <div class="accordion" role="region" aria-label="Aviso legal e de uso">
+            <details class="acc" open>
+              <summary class="acc__sum">Uso e limites</summary>
+              <div class="acc__body">
+                <p>
+                  Este site é uma ferramenta de entretenimento e apoio estatístico. Ele não prevê resultados,
+                  não garante ganhos e não representa qualquer órgão oficial.
+                </p>
+              </div>
+            </details>
+
+            <details class="acc">
+              <summary class="acc__sum">Privacidade</summary>
+              <div class="acc__body">
+                <p>
+                  Preferências e jogos ficam no seu navegador (localStorage). Sem envio para servidores.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- FOOTER FIXO -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__inner">
+      Copyright @ 2026 - 2027 Ailton Akio Nakata
+    </div>
+  </footer>
+
+  <section id="printRoot" class="print-root" aria-hidden="true"></section>
+
+  <script src="app.js"></script>
+</body>
+</html>
