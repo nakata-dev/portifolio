@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="color-scheme" content="light dark" />
-  <title>Takara • Gerador de Loterias do Japão</title>
+  <title>Loteria</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -13,8 +13,8 @@
 
   <header class="topbar" role="banner">
     <div class="topbar__inner">
-      <div class="brand" aria-label="Takara">
-        <svg class="brand__logo" width="40" height="40" viewBox="0 0 64 64" role="img" aria-label="Logo Takara">
+      <div class="brand" aria-label="Takara Brasil">
+        <svg class="brand__logo" width="40" height="40" viewBox="0 0 64 64" role="img" aria-label="Logo Takara Brasil">
           <defs>
             <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stop-color="var(--blue-700)"/>
@@ -23,6 +23,10 @@
             <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stop-color="var(--gold-400)"/>
               <stop offset="1" stop-color="var(--gold-600)"/>
+            </linearGradient>
+            <linearGradient id="gGreen" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--green-400)"/>
+              <stop offset="1" stop-color="var(--green-600)"/>
             </linearGradient>
             <radialGradient id="gGlow" cx="30%" cy="30%" r="70%">
               <stop offset="0" stop-color="rgba(255,255,255,.55)"/>
@@ -34,14 +38,13 @@
           <circle cx="32" cy="32" r="28" fill="url(#gGlow)" />
           <circle cx="32" cy="32" r="25.5" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
 
-          <path d="M20 20h24v6H35v22h-6V26H20z" fill="url(#gGold)" opacity=".95"/>
-          <path d="M46.7 18.4l1.7 3.5 3.8.6-2.7 2.7.7 3.8-3.5-1.9-3.5 1.9.7-3.8-2.7-2.7 3.8-.6z"
-                fill="var(--red-500)" opacity=".95"/>
+          <path d="M19 20h26v6H35v22h-6V26H19z" fill="url(#gGold)" opacity=".95"/>
+          <path d="M44 40c0 5-4 9-9 9h-2V31h2c5 0 9 4 9 9z" fill="url(#gGreen)" opacity=".95"/>
         </svg>
 
         <div class="brand__text">
-          <div class="brand__name">Takara</div>
-          <div class="brand__tag">Simulação visual • entretenimento & apoio estatístico</div>
+          <div class="brand__name">Loteria</div>
+          <div class="brand__tag">Loterias CAIXA</div>
         </div>
       </div>
 
@@ -54,9 +57,7 @@
 
         <button id="menuBtn" class="icon-btn icon-btn--burger" type="button"
                 aria-label="Abrir menu" aria-expanded="false" aria-controls="sideMenu">
-          <span class="burger" aria-hidden="true">
-            <span></span><span></span><span></span>
-          </span>
+          <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
           <span class="icon-btn__text">Menu</span>
         </button>
       </div>
@@ -126,11 +127,15 @@
 
             <div class="form">
               <div class="field">
-                <label for="lotterySelect">Loteria</label>
+                <label for="lotterySelect">Loteria (CAIXA)</label>
                 <select id="lotterySelect">
-                  <option value="loto6">Loto 6 (6 números • 1–43)</option>
-                  <option value="loto7">Loto 7 (7 números • 1–37)</option>
-                  <option value="miniloto">Mini Loto (5 números • 1–31)</option>
+                  <option value="megasena">Mega-Sena (6 números • 1–60)</option>
+                  <option value="quina">Quina (5 números • 1–80)</option>
+                  <option value="lotofacil">Lotofácil (15 números • 1–25)</option>
+                  <option value="lotomania">Lotomania (50 números • 1–100)</option>
+                  <option value="duplasena">Dupla Sena (6 números • 1–50)</option>
+                  <option value="timemania">Timemania (7 números • 1–80)</option>
+                  <option value="diadesorte">Dia de Sorte (7 números • 1–31)</option>
                 </select>
               </div>
 
@@ -140,14 +145,13 @@
                   <option value="rng">Modo A • Aleatório (RNG)</option>
                   <option value="prob_last">Modo B • Probabilidade (último concurso)</option>
                   <option value="prob_7">Modo C • Probabilidade (últimos 7 concursos)</option>
-                  <option value="online_trends">Online (experimental) • Tendências (histórico)</option>
+                  <option value="online_trends">Online (experimental) • Tendências (CAIXA)</option>
                 </select>
                 <div class="micro">
-                  Online pode falhar por bloqueio do navegador (CORS). Se falhar, use os modos “colar resultados”.
+                  Online usa dados públicos da CAIXA. Se falhar, use os modos “colar resultados”.
                 </div>
               </div>
 
-              <!-- ✅ NOVO: Painel que “faz o modo Probabilidade funcionar” -->
               <div id="probSummary" class="prob-summary" role="region" aria-label="Resumo de probabilidades" hidden>
                 <div class="prob-summary__top">
                   <div class="prob-summary__title">Resumo do modo Probabilidade</div>
@@ -170,9 +174,7 @@
                     <span class="btn__icon" aria-hidden="true">🔎</span>
                     Abrir análise
                   </button>
-                  <div class="micro">
-                    Dica: após analisar, volte aqui e clique em <strong>Gerar</strong> para usar a ponderação.
-                  </div>
+                  <div class="micro">Depois de analisar, volte e clique em <strong>Gerar</strong>.</div>
                 </div>
               </div>
 
@@ -218,19 +220,24 @@
                 <div class="micro">O envio abre o WhatsApp com a mensagem pronta. Você confirma e envia.</div>
               </div>
 
+              <!-- ✅ Microcopy melhorada -->
               <div class="field field--wide">
-                <div class="online-box" role="group" aria-label="Online tendências">
+                <div class="online-box" role="group" aria-label="Online tendências CAIXA">
                   <div class="online-box__row">
-                    <div class="online-box__title">Online (experimental) • usar histórico público</div>
+                    <div class="online-box__title">Carregar histórico (para o modo Online)</div>
                     <div class="online-box__pill" aria-hidden="true">⚡</div>
+                  </div>
+
+                  <div class="micro">
+                    Fluxo: <strong>1) Buscar histórico</strong> → <strong>2) Selecionar “Online”</strong> → <strong>3) Gerar</strong>
                   </div>
 
                   <div class="online-box__row online-box__row--controls">
                     <label class="inline" for="onlineLimit">Qtde de concursos</label>
                     <select id="onlineLimit">
-                      <option value="30">30</option>
-                      <option value="50" selected>50</option>
-                      <option value="100">100</option>
+                      <option value="7">7</option>
+                      <option value="15">15</option>
+                      <option value="30" selected>30</option>
                     </select>
 
                     <button id="btnFetchOnline" class="btn btn--primary" type="button">
@@ -240,6 +247,9 @@
                   </div>
 
                   <div id="onlineStatus" class="status" role="status" aria-live="polite"></div>
+                  <div class="micro">
+                    Dica: no <strong>Modo A (RNG)</strong>, você não precisa carregar histórico.
+                  </div>
                 </div>
               </div>
 
@@ -305,7 +315,7 @@
         </div>
       </section>
 
-      <!-- VIEW: PROB ÚLTIMO -->
+      <!-- PROB LAST -->
       <section id="view-prob-last" class="view" aria-label="Probabilidade último concurso">
         <div class="card">
           <div class="card__header">
@@ -315,7 +325,7 @@
 
           <div class="form">
             <div class="field field--wide">
-              <label for="pasteLast">Cole o resultado (ex.: 05,15,14,26,33,42)</label>
+              <label for="pasteLast">Cole o resultado</label>
               <textarea id="pasteLast" rows="4" placeholder="Cole aqui exatamente 1 linha…"></textarea>
               <div class="micro">Aceita separadores: espaço / vírgula / hífen. Sem busca online.</div>
             </div>
@@ -349,7 +359,7 @@
         </div>
       </section>
 
-      <!-- VIEW: PROB 7 -->
+      <!-- PROB 7 -->
       <section id="view-prob-7" class="view" aria-label="Probabilidade últimos 7 concursos">
         <div class="card">
           <div class="card__header">
@@ -360,7 +370,7 @@
           <div class="form">
             <div class="field field--wide">
               <label for="paste7">Cole os 7 resultados (1 por linha)</label>
-              <textarea id="paste7" rows="8" placeholder="Linha 1: 03 11 17 22 31 40&#10;Linha 2: 01-07-13-22-30-41&#10;…"></textarea>
+              <textarea id="paste7" rows="8" placeholder="Linha 1: ...&#10;Linha 2: ...&#10;..."></textarea>
               <div class="micro">Aceita separadores: espaço / vírgula / hífen. Ignora texto extra.</div>
             </div>
 
@@ -393,26 +403,72 @@
         </div>
       </section>
 
-      <!-- VIEW: COMO FUNCIONA -->
+      <!-- ✅ COMO FUNCIONA: agora explica “Buscar histórico agora” -->
       <section id="view-how" class="view" aria-label="Como funciona">
         <div class="card">
           <div class="card__header">
             <h2 class="card__title">Como funciona</h2>
-            <p class="card__desc">O Takara organiza combinações e usa frequências. Não prevê resultados.</p>
+            <p class="card__desc">Guia rápido para entender quando usar cada função.</p>
           </div>
 
           <div class="accordion" role="region" aria-label="Conteúdo explicativo">
             <details class="acc" open>
-              <summary class="acc__sum">O que este app faz?</summary>
+              <summary class="acc__sum">O que o Takara Brasil faz?</summary>
               <div class="acc__body">
-                <p>Gera combinações válidas e permite ponderar por frequências. Sem promessas.</p>
+                <p>
+                  Ele gera combinações válidas para as loterias da CAIXA (sem repetição e ordenadas),
+                  e permite ponderar a geração por frequência (“quentes/frios”). Isso é apoio estatístico,
+                  não previsão.
+                </p>
               </div>
             </details>
+
+            <details class="acc">
+              <summary class="acc__sum">Buscar histórico agora: para que serve?</summary>
+              <div class="acc__body">
+                <p>
+                  Esse botão <strong>carrega dados</strong> (concursos anteriores) para o modo
+                  <strong>Online (experimental)</strong>.
+                  Sem carregar, o modo Online não tem base para calcular “quentes/frios” e a ponderação.
+                </p>
+                <p><strong>Fluxo certo:</strong></p>
+                <p>1) Clique em <strong>Buscar histórico agora</strong>,</p>
+                <p>2) Selecione <strong>Modo: Online (experimental)</strong>,</p>
+                <p>3) Clique em <strong>Gerar</strong>.</p>
+                <p>
+                  <strong>Quando usar:</strong> quando você quer uma geração baseada em tendências dos últimos concursos (7/15/30).<br/>
+                  <strong>Quando não precisa:</strong> no <strong>Modo A (RNG)</strong>, que é aleatório puro.
+                </p>
+              </div>
+            </details>
+
+            <details class="acc">
+              <summary class="acc__sum">Probabilidade por colagem: último / 7 concursos</summary>
+              <div class="acc__body">
+                <p>
+                  Se você não quiser usar Online, você pode colar resultados manualmente.
+                  O botão <strong>Analisar</strong> calcula frequências e deixa o modo B/C pronto para gerar.
+                </p>
+              </div>
+            </details>
+
+            <details class="acc">
+              <summary class="acc__sum">Fixos, salvar, PDF e WhatsApp</summary>
+              <div class="acc__body">
+                <p>
+                  Você pode fixar alguns números e deixar o app completar o resto.
+                  Depois, copie, salve no navegador, gere PDF/Imprimir ou envie no WhatsApp com uma mensagem positiva.
+                </p>
+              </div>
+            </details>
+          </div>
+
+          <div class="note">
+            <strong>Importante:</strong> loteria é aleatória; não há garantia de ganhos.
           </div>
         </div>
       </section>
 
-      <!-- VIEW: AVISO -->
       <section id="view-disclaimer" class="view" aria-label="Aviso de responsabilidade">
         <div class="card">
           <div class="card__header">
@@ -423,7 +479,7 @@
             <details class="acc" open>
               <summary class="acc__sum">Uso e limites</summary>
               <div class="acc__body">
-                <p>Ferramenta de entretenimento e apoio estatístico. Sem garantia.</p>
+                <p>Ferramenta de entretenimento e apoio estatístico. Sem promessas.</p>
               </div>
             </details>
           </div>
