@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>AgroVendas</title>
+  <link rel="icon" type="image/png" href="agrofavicon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="agrovendas.png" alt="Logo AgroVendas" class="brand-logo" />
+      <div class="brand-text">
+        <strong>AgroVendas</strong>
+        <span>Controle profissional de uvas e frutas</span>
+      </div>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir navegação">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
+      <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+      <button class="nav-btn" data-tab="agricultores">Agricultores</button>
+      <button class="nav-btn" data-tab="compradores">Compradores</button>
+      <button class="nav-btn" data-tab="produtos">Produtos</button>
+      <button class="nav-btn" data-tab="entregas">Entregas</button>
+      <button class="nav-btn" data-tab="pagamentos">Pagamentos</button>
+      <button class="nav-btn" data-tab="historico">Histórico</button>
+      <button class="nav-btn" data-tab="relatorios">Relatórios</button>
+    </nav>
+  </header>
+
+  <main class="app-shell">
+    <section class="tab-panel active" id="tab-dashboard">
+      <div class="hero-card">
+        <div>
+          <h1>Painel panorâmico</h1>
+          <p>Visão rápida das entregas, pagamentos e saldos do negócio.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-secondary" id="resetDemoBtn">Inserir dados de exemplo</button>
+          <button class="btn btn-danger" id="clearDataBtn">Limpar tudo</button>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <div class="field">
+          <label for="dashboardPeriodo">Período</label>
+          <select id="dashboardPeriodo">
+            <option value="hoje">Hoje</option>
+            <option value="semana">Esta semana</option>
+            <option value="mes">Este mês</option>
+            <option value="geral">Geral</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cards-grid" id="dashboardCards"></div>
+
+      <div class="panel-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Destaques</h2>
+          </div>
+          <div id="dashboardHighlights" class="highlights-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Últimas entregas</h2>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Agricultor</th>
+                  <th>Comprador</th>
+                  <th>Produto</th>
+                  <th>Kg</th>
+                  <th>Bruto</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardRecentDeliveries"></tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-agricultores">
+      <div class="section-header">
+        <div>
+          <h1>Agricultores / produtores</h1>
+          <p>Cadastre, edite e acompanhe seus produtores.</p>
+        </div>
+      </div>
+
+      <div class="panel form-panel">
+        <div class="panel-head">
+          <h2 id="agricultorFormTitle">Novo agricultor</h2>
+        </div>
+        <form id="agricultorForm" class="form-grid">
+          <input type="hidden" id="agricultorId" />
+          <div class="field">
+            <label for="agricultorNome">Nome completo</label>
+            <input id="agricultorNome" required />
+          </div>
+          <div class="field">
+            <label for="agricultorApelido">Apelido / identificação curta</label>
+            <input id="agricultorApelido" />
+          </div>
+          <div class="field">
+            <label for="agricultorTelefone">Telefone</label>
+            <input id="agricultorTelefone" />
+          </div>
+          <div class="field field-span-2">
+            <label for="agricultorObs">Observações</label>
+            <textarea id="agricultorObs" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit">Salvar agricultor</button>
+            <button class="btn btn-ghost" type="button" id="cancelAgricultorEdit">Cancelar edição</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Lista de agricultores</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Apelido</th>
+                <th>Telefone</th>
+                <th>Total bruto</th>
+                <th>Pago</th>
+                <th>Pendente</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="agricultoresTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-compradores">
+      <div class="section-header">
+        <div>
+          <h1>Compradores / atravessadores</h1>
+          <p>Controle quem recebe e paga cada mercadoria.</p>
+        </div>
+      </div>
+
+      <div class="panel form-panel">
+        <div class="panel-head">
+          <h2 id="compradorFormTitle">Novo comprador</h2>
+        </div>
+        <form id="compradorForm" class="form-grid">
+          <input type="hidden" id="compradorId" />
+          <div class="field">
+            <label for="compradorNome">Nome</label>
+            <input id="compradorNome" required />
+          </div>
+          <div class="field">
+            <label for="compradorTelefone">Telefone</label>
+            <input id="compradorTelefone" />
+          </div>
+          <div class="field field-span-2">
+            <label for="compradorObs">Observações</label>
+            <textarea id="compradorObs" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit">Salvar comprador</button>
+            <button class="btn btn-ghost" type="button" id="cancelCompradorEdit">Cancelar edição</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Lista de compradores</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Total bruto</th>
+                <th>Pago</th>
+                <th>Pendente</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="compradoresTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-produtos">
+      <div class="section-header">
+        <div>
+          <h1>Produtos</h1>
+          <p>Gerencie uvas e outras frutas com cadastro dinâmico.</p>
+        </div>
+      </div>
+
+      <div class="panel form-panel">
+        <div class="panel-head">
+          <h2 id="produtoFormTitle">Novo produto</h2>
+        </div>
+        <form id="produtoForm" class="form-grid">
+          <input type="hidden" id="produtoId" />
+          <div class="field">
+            <label for="produtoNome">Nome do produto</label>
+            <input id="produtoNome" required />
+          </div>
+          <div class="field">
+            <label for="produtoCategoria">Categoria</label>
+            <select id="produtoCategoria" required>
+              <option value="Uva">Uva</option>
+              <option value="Fruta">Fruta</option>
+            </select>
+          </div>
+          <div class="field field-span-2">
+            <label for="produtoObs">Observações</label>
+            <textarea id="produtoObs" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit">Salvar produto</button>
+            <button class="btn btn-ghost" type="button" id="cancelProdutoEdit">Cancelar edição</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Produtos cadastrados</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Observações</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="produtosTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-entregas">
+      <div class="section-header">
+        <div>
+          <h1>Lançamento de entregas</h1>
+          <p>Registre cada entrega com peso, preço e rastreabilidade total.</p>
+        </div>
+      </div>
+
+      <div class="panel form-panel">
+        <div class="panel-head">
+          <h2 id="entregaFormTitle">Nova entrega</h2>
+        </div>
+        <form id="entregaForm" class="form-grid">
+          <input type="hidden" id="entregaId" />
+
+          <div class="field">
+            <label for="entregaAgricultor">Agricultor</label>
+            <select id="entregaAgricultor" required></select>
+          </div>
+
+          <div class="field">
+            <label for="entregaComprador">Comprador</label>
+            <select id="entregaComprador" required></select>
+          </div>
+
+          <div class="field">
+            <label for="entregaProduto">Produto</label>
+            <select id="entregaProduto" required></select>
+          </div>
+
+          <div class="field">
+            <label for="entregaData">Data</label>
+            <input id="entregaData" type="date" required />
+          </div>
+
+          <div class="field">
+            <label for="entregaHora">Hora</label>
+            <input id="entregaHora" type="time" required />
+          </div>
+
+          <div class="field">
+            <label for="entregaCaixas">Quantidade de caixas</label>
+            <input id="entregaCaixas" type="number" min="0" step="1" required />
+          </div>
+
+          <div class="field">
+            <label for="entregaPesoCaixa">Peso por caixa (kg)</label>
+            <input id="entregaPesoCaixa" type="number" min="0" step="0.01" />
+          </div>
+
+          <div class="field">
+            <label for="entregaPesoTotal">Peso total (kg)</label>
+            <input id="entregaPesoTotal" type="number" min="0" step="0.01" required />
+          </div>
+
+          <div class="field">
+            <label for="entregaValorKg">Valor por kg (R$)</label>
+            <input id="entregaValorKg" type="number" min="0" step="0.01" required />
+          </div>
+
+          <div class="field">
+            <label for="entregaValorBruto">Valor bruto total (R$)</label>
+            <input id="entregaValorBruto" type="number" min="0" step="0.01" required />
+          </div>
+
+          <div class="field field-span-2">
+            <label for="entregaObs">Observações</label>
+            <textarea id="entregaObs" rows="3"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn" type="submit">Salvar entrega</button>
+            <button class="btn btn-ghost" type="button" id="cancelEntregaEdit">Cancelar edição</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Entregas registradas</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data/Hora</th>
+                <th>Agricultor</th>
+                <th>Comprador</th>
+                <th>Produto</th>
+                <th>Caixas</th>
+                <th>Kg</th>
+                <th>Bruto</th>
+                <th>Pago</th>
+                <th>Pendente</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="entregasTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-pagamentos">
+      <div class="section-header">
+        <div>
+          <h1>Lançamento de pagamentos</h1>
+          <p>Vincule pagamentos às entregas corretas com clareza e saldo atualizado.</p>
+        </div>
+      </div>
+
+      <div class="panel form-panel">
+        <div class="panel-head">
+          <h2 id="pagamentoFormTitle">Novo pagamento</h2>
+        </div>
+        <form id="pagamentoForm" class="form-grid">
+          <input type="hidden" id="pagamentoId" />
+
+          <div class="field">
+            <label for="pagamentoComprador">Comprador pagador</label>
+            <select id="pagamentoComprador" required></select>
+          </div>
+
+          <div class="field">
+            <label for="pagamentoAgricultor">Agricultor beneficiado</label>
+            <select id="pagamentoAgricultor" required></select>
+          </div>
+
+          <div class="field">
+            <label for="pagamentoProduto">Produto referente</label>
+            <select id="pagamentoProduto">
+              <option value="">Todos os produtos</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="pagamentoData">Data do pagamento</label>
+            <input id="pagamentoData" type="date" required />
+          </div>
+
+          <div class="field">
+            <label for="pagamentoHora">Hora do pagamento</label>
+            <input id="pagamentoHora" type="time" required />
+          </div>
+
+          <div class="field">
+            <label for="pagamentoValor">Valor pago (R$)</label>
+            <input id="pagamentoValor" type="number" min="0" step="0.01" required />
+          </div>
+
+          <div class="field field-span-2">
+            <label for="pagamentoObs">Observações</label>
+            <textarea id="pagamentoObs" rows="3"></textarea>
+          </div>
+
+          <div class="field field-span-2">
+            <div class="inline-head">
+              <label>Entregas vinculadas</label>
+              <button class="btn btn-secondary small" type="button" id="atualizarEntregasPagBtn">Atualizar lista</button>
+            </div>
+            <div id="paymentDeliveryPicker" class="delivery-picker empty">
+              Selecione comprador e agricultor para ver entregas pendentes.
+            </div>
+          </div>
+
+          <div class="field field-span-2 info-box" id="paymentPreviewBox">
+            Valor selecionado será distribuído nas entregas marcadas em ordem cronológica.
+          </div>
+
+          <div class="form-actions">
+            <button class="btn" type="submit">Salvar pagamento</button>
+            <button class="btn btn-ghost" type="button" id="cancelPagamentoEdit">Cancelar edição</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Pagamentos registrados</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data/Hora</th>
+                <th>Comprador</th>
+                <th>Agricultor</th>
+                <th>Produto</th>
+                <th>Valor</th>
+                <th>Referência</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="pagamentosTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-historico">
+      <div class="section-header">
+        <div>
+          <h1>Histórico e filtros</h1>
+          <p>Consulte rapidamente por período, pessoa, produto e status.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Filtros do histórico</h2>
+        </div>
+        <div class="filter-grid">
+          <div class="field">
+            <label for="histTipoPeriodo">Período</label>
+            <select id="histTipoPeriodo">
+              <option value="todos">Todos</option>
+              <option value="dia">Dia</option>
+              <option value="semana">Semana</option>
+              <option value="mes">Mês</option>
+              <option value="personalizado">Personalizado</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="histDataInicio">Data inicial</label>
+            <input id="histDataInicio" type="date" />
+          </div>
+          <div class="field">
+            <label for="histDataFim">Data final</label>
+            <input id="histDataFim" type="date" />
+          </div>
+          <div class="field">
+            <label for="histAgricultor">Agricultor</label>
+            <select id="histAgricultor"></select>
+          </div>
+          <div class="field">
+            <label for="histComprador">Comprador</label>
+            <select id="histComprador"></select>
+          </div>
+          <div class="field">
+            <label for="histProduto">Produto</label>
+            <select id="histProduto"></select>
+          </div>
+          <div class="field">
+            <label for="histStatus">Status</label>
+            <select id="histStatus">
+              <option value="">Todos</option>
+              <option value="pendente">Pendente</option>
+              <option value="parcialmente paga">Parcialmente paga</option>
+              <option value="paga">Paga</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="histOrdenacao">Ordenação</label>
+            <select id="histOrdenacao">
+              <option value="recentes">Mais recentes primeiro</option>
+              <option value="antigos">Mais antigos primeiro</option>
+            </select>
+          </div>
+          <div class="field actions-inline">
+            <button class="btn" type="button" id="aplicarFiltrosBtn">Aplicar filtros</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Entregas filtradas</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data/Hora</th>
+                <th>Agricultor</th>
+                <th>Comprador</th>
+                <th>Produto</th>
+                <th>Caixas</th>
+                <th>Kg</th>
+                <th>Bruto</th>
+                <th>Pago</th>
+                <th>Pendente</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historicoEntregasTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Pagamentos filtrados</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data/Hora</th>
+                <th>Comprador</th>
+                <th>Agricultor</th>
+                <th>Produto</th>
+                <th>Valor</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody id="historicoPagamentosTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-relatorios">
+      <div class="section-header">
+        <div>
+          <h1>Relatórios e compartilhamento</h1>
+          <p>Gere romaneio, relatório acumulado e envie um comprovante claro da operação.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Configuração do relatório</h2>
+        </div>
+        <div class="filter-grid">
+          <div class="field">
+            <label for="reportType">Tipo</label>
+            <select id="reportType">
+              <option value="diario">Relatório diário / romaneio</option>
+              <option value="geral">Relatório geral acumulado</option>
+              <option value="agricultor">Relatório por agricultor</option>
+              <option value="comprador">Relatório por comprador</option>
+              <option value="produto">Relatório por produto</option>
+              <option value="periodo">Relatório por período</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="reportDate">Data</label>
+            <input id="reportDate" type="date" />
+          </div>
+          <div class="field">
+            <label for="reportStartDate">Data inicial</label>
+            <input id="reportStartDate" type="date" />
+          </div>
+          <div class="field">
+            <label for="reportEndDate">Data final</label>
+            <input id="reportEndDate" type="date" />
+          </div>
+          <div class="field">
+            <label for="reportAgricultor">Agricultor</label>
+            <select id="reportAgricultor"></select>
+          </div>
+          <div class="field">
+            <label for="reportComprador">Comprador</label>
+            <select id="reportComprador"></select>
+          </div>
+          <div class="field">
+            <label for="reportProduto">Produto</label>
+            <select id="reportProduto"></select>
+          </div>
+          <div class="field actions-inline">
+            <button class="btn" type="button" id="generateReportBtn">Gerar relatório</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Prévia do relatório</h2>
+          <div class="panel-actions">
+            <button class="btn btn-secondary" id="printReportBtn" type="button">Gerar PDF / Imprimir</button>
+            <button class="btn btn-secondary" id="shareReportBtn" type="button">Compartilhar relatório</button>
+            <button class="btn btn-secondary" id="shareSummaryBtn" type="button">Compartilhar venda/recebimento</button>
+          </div>
+        </div>
+        <div id="reportPreview" class="report-preview">
+          Gere um relatório para visualizar aqui.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Copyright @ 2026 - Ailton A. Nakata
+  </footer>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
