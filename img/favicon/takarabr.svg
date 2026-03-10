@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0077C8"></stop>
+      <stop offset="1" stop-color="#005CA9"></stop>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF0A6"></stop>
+      <stop offset="1" stop-color="#FDC300"></stop>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22C55E"></stop>
+      <stop offset="1" stop-color="#009B3A"></stop>
+    </linearGradient>
+    <radialGradient id="glow" cx="30%" cy="30%" r="70%">
+      <stop offset="0" stop-color="rgba(255,255,255,.55)"></stop>
+      <stop offset="1" stop-color="rgba(255,255,255,0)"></stop>
+    </radialGradient>
+  </defs>
+
+  <!-- base -->
+  <circle cx="32" cy="32" r="28" fill="url(#bg)"></circle>
+  <circle cx="32" cy="32" r="28" fill="url(#glow)"></circle>
+  <circle cx="32" cy="32" r="25.5" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5"></circle>
+
+  <!-- "T" -->
+  <path d="M19 20h26v6H35v22h-6V26H19z" fill="url(#gold)" opacity=".98"></path>
+
+  <!-- "B" estilizado -->
+  <path d="M44 40c0 5-4 9-9 9h-2V31h2c5 0 9 4 9 9z" fill="url(#green)" opacity=".98"></path>
+</svg>
