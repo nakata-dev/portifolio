@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STORAGE_KEY = "agrovendas_db_v1";
+  const STORAGE_KEY = "agrovendas_db_v2";
   const DEFAULT_PRODUCTS = [
     { name: "Benitaka", category: "Uva", default: true },
     { name: "Itália", category: "Uva", default: true },
@@ -34,12 +34,15 @@
     const now = new Date().toISOString();
     return {
       meta: {
-        version: 1,
+        version: 2,
         createdAt: now,
         updatedAt: now
       },
       settings: {
-        lastTab: "dashboard"
+        lastTab: "dashboard",
+        theme: "light",
+        profile: "",
+        onboardingDone: false
       },
       agricultores: [],
       compradores: [],
@@ -225,6 +228,81 @@
     populateSelect($("#reportProduto"), state.produtos, "Todos", x => `${x.name} (${x.category})`);
   }
 
+  function sum(arr, field) {
+    return round2(arr.reduce((acc, item) => acc + Number(item[field] || 0), 0));
+  }
+
+  function topBy(arr, keyFn, numericField = "totalWeight") {
+    const map = new Map();
+    arr.forEach(item => {
+      const key = keyFn(item);
+      const value = Number(item[numericField] || 0);
+      map.set(key, (map.get(key) || 0) + value);
+    });
+    let best = null;
+    map.forEach((total, key) => {
+      if (!best || total > best.total) best = { key, total };
+    });
+    return best;
+  }
+
+  function filterByNamedPeriod(items, period) {
+    const today = new Date();
+    const ymd = nowDate();
+    if (period === "geral") return items;
+
+    return items.filter(item => {
+      const d = new Date(`${item.date}T00:00:00`);
+      if (period === "hoje") return item.date === ymd;
+      if (period === "semana") {
+        const first = new Date(today);
+        const day = first.getDay() || 7;
+        first.setDate(first.getDate() - day + 1);
+        first.setHours(0, 0, 0, 0);
+        const last = new Date(first);
+        last.setDate(last.getDate() + 6);
+        last.setHours(23, 59, 59, 999);
+        return d >= first && d <= last;
+      }
+      if (period === "mes") {
+        return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+      }
+      return true;
+    });
+  }
+
+  function getProfileMeta() {
+    const profile = state.settings.profile || "ambos";
+    if (profile === "vendedor") {
+      return {
+        label: "Vendedor / produtor",
+        subtitle: "Acompanhe entregas, valores a receber e compradores responsáveis.",
+        helper: "Foco em recebimentos e saldo a receber."
+      };
+    }
+    if (profile === "comprador") {
+      return {
+        label: "Comprador / atravessador",
+        subtitle: "Acompanhe recebimentos, pagamentos realizados e pendências de quitação.",
+        helper: "Foco em pagamentos e saldo a pagar."
+      };
+    }
+    return {
+      label: "Visão completa",
+      subtitle: "Painel geral com entregas, pagamentos e saldos do negócio.",
+      helper: "Visão panorâmica com vendedor e comprador."
+    };
+  }
+
+  function updateProfileUI() {
+    const meta = getProfileMeta();
+    $("#dashboardTitle").textContent = meta.label === "Visão completa" ? "Painel panorâmico" : `Painel ${meta.label.toLowerCase()}`;
+    $("#dashboardSubtitle").textContent = meta.subtitle;
+    $("#profileBadgeText").textContent = meta.label;
+    $("#profileHelperText").textContent = meta.helper;
+    $("#currentProfileLabel").textContent = meta.label;
+  }
+
   function renderDashboard() {
     const period = $("#dashboardPeriodo").value || "hoje";
     const deliveries = filterByNamedPeriod(state.entregas, period);
@@ -233,12 +311,12 @@
     const totalDeliveriesDay = deliveries.length;
     const totalKg = sum(deliveries, "totalWeight");
     const totalGross = sum(deliveries, "grossValue");
-    const totalPaidOnDeliveries = deliveries.reduce((sum, entrega) => sum + calcEntregaPaid(entrega.id), 0);
-    const totalPending = deliveries.reduce((sum, entrega) => sum + calcEntregaPending(entrega), 0);
+    const totalPaidOnDeliveries = deliveries.reduce((sumValue, entrega) => sumValue + calcEntregaPaid(entrega.id), 0);
+    const totalPending = deliveries.reduce((sumValue, entrega) => sumValue + calcEntregaPending(entrega), 0);
 
     const grossAll = sum(state.entregas, "grossValue");
     const paidAll = sum(state.pagamentos, "amount");
-    const pendingAll = state.entregas.reduce((sum, entrega) => sum + calcEntregaPending(entrega), 0);
+    const pendingAll = state.entregas.reduce((sumValue, entrega) => sumValue + calcEntregaPending(entrega), 0);
 
     const cards = [
       ["Entregas no período", totalDeliveriesDay, false],
@@ -282,6 +360,7 @@
     `;
 
     const recent = [...state.entregas].sort(compareDateTimeDesc).slice(0, 8);
+
     $("#dashboardRecentDeliveries").innerHTML = recent.length ? recent.map(entrega => `
       <tr>
         <td>${formatDate(entrega.date)}</td>
@@ -293,49 +372,40 @@
         <td>${statusBadge(calcEntregaStatus(entrega))}</td>
       </tr>
     `).join("") : `<tr><td colspan="7">Nenhuma entrega registrada.</td></tr>`;
-  }
 
-  function sum(arr, field) {
-    return round2(arr.reduce((acc, item) => acc + Number(item[field] || 0), 0));
-  }
+    $("#dashboardRecentDeliveriesCards").innerHTML = recent.length ? recent.map(entrega => {
+      const status = calcEntregaStatus(entrega);
+      return `
+        <article class="mobile-data-card">
+          <div class="mobile-data-card-head">
+            <div class="mobile-data-card-title">
+              <strong>${escapeHTML(getProdutoById(entrega.productId)?.name || "-")}</strong>
+              <small>${formatDateTime(entrega.date, entrega.time)}</small>
+            </div>
+            ${statusBadge(status)}
+          </div>
 
-  function topBy(arr, keyFn, numericField = "totalWeight") {
-    const map = new Map();
-    arr.forEach(item => {
-      const key = keyFn(item);
-      const value = Number(item[numericField] || 0);
-      map.set(key, (map.get(key) || 0) + value);
-    });
-    let best = null;
-    map.forEach((total, key) => {
-      if (!best || total > best.total) best = { key, total };
-    });
-    return best;
-  }
-
-  function filterByNamedPeriod(items, period) {
-    const today = new Date();
-    const ymd = nowDate();
-    if (period === "geral") return items;
-
-    return items.filter(item => {
-      const d = new Date(`${item.date}T00:00:00`);
-      if (period === "hoje") return item.date === ymd;
-      if (period === "semana") {
-        const first = new Date(today);
-        const day = first.getDay() || 7;
-        first.setDate(first.getDate() - day + 1);
-        first.setHours(0, 0, 0, 0);
-        const last = new Date(first);
-        last.setDate(last.getDate() + 6);
-        last.setHours(23, 59, 59, 999);
-        return d >= first && d <= last;
-      }
-      if (period === "mes") {
-        return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
-      }
-      return true;
-    });
+          <div class="mobile-data-grid">
+            <div>
+              <span>Agricultor</span>
+              <strong>${escapeHTML(getAgricultorById(entrega.farmerId)?.name || "-")}</strong>
+            </div>
+            <div>
+              <span>Comprador</span>
+              <strong>${escapeHTML(getCompradorById(entrega.buyerId)?.name || "-")}</strong>
+            </div>
+            <div>
+              <span>Peso</span>
+              <strong>${numberBR(entrega.totalWeight)} kg</strong>
+            </div>
+            <div>
+              <span>Valor bruto</span>
+              <strong>${money(entrega.grossValue)}</strong>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("") : `<article class="mobile-data-card"><div class="mobile-data-card-title"><strong>Nenhuma entrega registrada</strong><small>Cadastre uma entrega para visualizar aqui.</small></div></article>`;
   }
 
   function renderAgricultores() {
@@ -416,7 +486,9 @@
 
   function renderEntregas() {
     const tbody = $("#entregasTable");
+    const cards = $("#entregasCards");
     const items = [...state.entregas].sort(compareDateTimeDesc);
+
     tbody.innerHTML = items.length ? items.map(entrega => {
       const paid = calcEntregaPaid(entrega.id);
       const pending = calcEntregaPending(entrega);
@@ -443,11 +515,63 @@
         </tr>
       `;
     }).join("") : `<tr><td colspan="12">Nenhuma entrega registrada.</td></tr>`;
+
+    cards.innerHTML = items.length ? items.map(entrega => {
+      const paid = calcEntregaPaid(entrega.id);
+      const pending = calcEntregaPending(entrega);
+      const status = calcEntregaStatus(entrega);
+
+      return `
+        <article class="mobile-data-card">
+          <div class="mobile-data-card-head">
+            <div class="mobile-data-card-title">
+              <strong>${escapeHTML(getProdutoById(entrega.productId)?.name || "-")}</strong>
+              <small>${escapeHTML(entrega.id)} • ${formatDateTime(entrega.date, entrega.time)}</small>
+            </div>
+            ${statusBadge(status)}
+          </div>
+
+          <div class="mobile-data-grid">
+            <div>
+              <span>Agricultor</span>
+              <strong>${escapeHTML(getAgricultorById(entrega.farmerId)?.name || "-")}</strong>
+            </div>
+            <div>
+              <span>Comprador</span>
+              <strong>${escapeHTML(getCompradorById(entrega.buyerId)?.name || "-")}</strong>
+            </div>
+            <div>
+              <span>Caixas</span>
+              <strong>${numberBR(entrega.boxes, 0)}</strong>
+            </div>
+            <div>
+              <span>Peso total</span>
+              <strong>${numberBR(entrega.totalWeight)} kg</strong>
+            </div>
+            <div>
+              <span>Valor bruto</span>
+              <strong>${money(entrega.grossValue)}</strong>
+            </div>
+            <div>
+              <span>Pago / Pendente</span>
+              <strong>${money(paid)} / ${money(pending)}</strong>
+            </div>
+          </div>
+
+          <div class="mobile-card-actions">
+            <button class="mini-btn" data-edit-entrega="${entrega.id}">Editar</button>
+            <button class="mini-btn delete" data-delete-entrega="${entrega.id}">Excluir</button>
+          </div>
+        </article>
+      `;
+    }).join("") : `<article class="mobile-data-card"><div class="mobile-data-card-title"><strong>Nenhuma entrega registrada</strong><small>As entregas lançadas aparecerão aqui.</small></div></article>`;
   }
 
   function renderPagamentos() {
     const tbody = $("#pagamentosTable");
+    const cards = $("#pagamentosCards");
     const items = [...state.pagamentos].sort(compareDateTimeDesc);
+
     tbody.innerHTML = items.length ? items.map(pagamento => {
       const productName = pagamento.productId ? getProdutoById(pagamento.productId)?.name : "Diversos";
       const ref = (pagamento.allocations || []).map(a => a.deliveryId).join(", ");
@@ -469,6 +593,47 @@
         </tr>
       `;
     }).join("") : `<tr><td colspan="8">Nenhum pagamento registrado.</td></tr>`;
+
+    cards.innerHTML = items.length ? items.map(pagamento => {
+      const productName = pagamento.productId ? getProdutoById(pagamento.productId)?.name : "Diversos";
+      const ref = (pagamento.allocations || []).map(a => a.deliveryId).join(", ");
+
+      return `
+        <article class="mobile-data-card">
+          <div class="mobile-data-card-head">
+            <div class="mobile-data-card-title">
+              <strong>${money(pagamento.amount)}</strong>
+              <small>${escapeHTML(pagamento.id)} • ${formatDateTime(pagamento.date, pagamento.time)}</small>
+            </div>
+            <span class="badge paid">Pago</span>
+          </div>
+
+          <div class="mobile-data-grid">
+            <div>
+              <span>Comprador</span>
+              <strong>${escapeHTML(getCompradorById(pagamento.buyerId)?.name || "-")}</strong>
+            </div>
+            <div>
+              <span>Agricultor</span>
+              <strong>${escapeHTML(getAgricultorById(pagamento.farmerId)?.name || "-")}</strong>
+            </div>
+            <div>
+              <span>Produto</span>
+              <strong>${escapeHTML(productName || "-")}</strong>
+            </div>
+            <div>
+              <span>Referência</span>
+              <strong>${escapeHTML(ref || "-")}</strong>
+            </div>
+          </div>
+
+          <div class="mobile-card-actions">
+            <button class="mini-btn" data-share-pagamento="${pagamento.id}">Compartilhar</button>
+            <button class="mini-btn delete" data-delete-pagamento="${pagamento.id}">Excluir</button>
+          </div>
+        </article>
+      `;
+    }).join("") : `<article class="mobile-data-card"><div class="mobile-data-card-title"><strong>Nenhum pagamento registrado</strong><small>Os pagamentos lançados aparecerão aqui.</small></div></article>`;
   }
 
   function applyEntregaCalculations() {
@@ -498,13 +663,83 @@
     $("#reportEndDate").value = nowDate();
   }
 
+  function openDrawer() {
+    $("#drawer").hidden = false;
+    $("#appBackdrop").hidden = false;
+    document.body.classList.add("drawer-open");
+  }
+
+  function closeDrawer() {
+    $("#drawer").hidden = true;
+    $("#appBackdrop").hidden = true;
+    document.body.classList.remove("drawer-open");
+  }
+
+  function openOnboarding() {
+    $("#onboardingOverlay").hidden = false;
+    $("#appBackdrop").hidden = false;
+    document.body.classList.add("modal-open");
+  }
+
+  function closeOnboarding() {
+    $("#onboardingOverlay").hidden = true;
+    $("#appBackdrop").hidden = true;
+    document.body.classList.remove("modal-open");
+  }
+
+  function applyTheme() {
+    const theme = state.settings.theme || "light";
+    document.body.classList.toggle("dark", theme === "dark");
+    if ($("#themeToggleDrawer")) $("#themeToggleDrawer").checked = theme === "dark";
+  }
+
+  function toggleTheme() {
+    state.settings.theme = state.settings.theme === "dark" ? "light" : "dark";
+    saveDB();
+    applyTheme();
+    showToast(state.settings.theme === "dark" ? "Modo escuro ativado." : "Modo claro ativado.", "info");
+  }
+
+  function setProfile(profile) {
+    state.settings.profile = profile;
+    state.settings.onboardingDone = true;
+    saveDB();
+    updateProfileUI();
+    renderDashboard();
+    closeOnboarding();
+    showToast("Perfil inicial definido com sucesso.");
+  }
+
   function bindEvents() {
-    $("#menuToggle").addEventListener("click", () => {
-      $("#mainNav").classList.toggle("open");
+    $("#menuToggle").addEventListener("click", openDrawer);
+    $("#openDrawerBtn").addEventListener("click", openDrawer);
+    $("#bottomMoreBtn").addEventListener("click", openDrawer);
+    $("#closeDrawerBtn").addEventListener("click", closeDrawer);
+    $("#appBackdrop").addEventListener("click", () => {
+      closeDrawer();
+    });
+
+    $("#themeToggleBtn").addEventListener("click", toggleTheme);
+    $("#themeToggleDrawer").addEventListener("change", toggleTheme);
+
+    $("#changeProfileBtn").addEventListener("click", () => {
+      closeDrawer();
+      openOnboarding();
     });
 
     $$(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => openTab(btn.dataset.tab));
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab;
+        if (tab) openTab(tab);
+      });
+    });
+
+    $$("[data-go-tab]").forEach(btn => {
+      btn.addEventListener("click", () => openTab(btn.dataset.goTab));
+    });
+
+    $$("[data-role-choice]").forEach(btn => {
+      btn.addEventListener("click", () => setProfile(btn.dataset.roleChoice));
     });
 
     $("#dashboardPeriodo").addEventListener("change", renderDashboard);
@@ -561,14 +796,19 @@
     if (t.matches("[data-share-pagamento]")) sharePagamento(t.dataset.sharePagamento);
   }
 
+  function syncActiveNav(tab) {
+    $$(".nav-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.tab === tab);
+    });
+  }
+
   function openTab(tab) {
     state.settings.lastTab = tab;
     saveDB();
     $$(".tab-panel").forEach(p => p.classList.remove("active"));
-    $$(".nav-btn").forEach(p => p.classList.remove("active"));
-    $(`#tab-${tab}`).classList.add("active");
-    $(`.nav-btn[data-tab="${tab}"]`)?.classList.add("active");
-    $("#mainNav").classList.remove("open");
+    $(`#tab-${tab}`)?.classList.add("active");
+    syncActiveNav(tab);
+    closeDrawer();
 
     if (tab === "historico") renderHistorico();
     if (tab === "relatorios") generateReport();
@@ -701,18 +941,20 @@
       Object.assign(item, payload, { updatedAt: new Date().toISOString() });
       showToast("Entrega atualizada com sucesso.");
     } else {
+      const newId = uid("ENT");
       state.entregas.push({
-        id: uid("ENT"),
+        id: newId,
         ...payload,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
-      showToast("Entrega registrada com sucesso.");
+      showToast(`Entrega ${newId} registrada com sucesso.`);
     }
 
     saveDB();
     resetEntregaForm();
     rerender();
+    openTab("entregas");
   }
 
   function onSubmitPagamento(e) {
@@ -772,8 +1014,9 @@
       time
     });
 
+    const newId = uid("PAG");
     state.pagamentos.push({
-      id: uid("PAG"),
+      id: newId,
       buyerId,
       farmerId,
       productId,
@@ -790,7 +1033,8 @@
     saveDB();
     resetPagamentoForm();
     rerender();
-    showToast("Pagamento registrado com sucesso.");
+    openTab("pagamentos");
+    showToast(`Pagamento ${newId} registrado com sucesso.`);
   }
 
   function buildPaymentDescription({ buyerId, farmerId, productId, allocations, date, time }) {
@@ -1395,6 +1639,7 @@
 
   function rerender() {
     refreshAllSelects();
+    updateProfileUI();
     renderDashboard();
     renderAgricultores();
     renderCompradores();
@@ -1409,6 +1654,7 @@
   function clearAllData() {
     if (!confirm("Tem certeza que deseja apagar todos os dados do sistema?")) return;
     const fresh = createInitialDB();
+    fresh.settings.theme = state.settings.theme || "light";
     Object.keys(state).forEach(key => delete state[key]);
     Object.assign(state, fresh);
     saveDB();
@@ -1419,6 +1665,7 @@
     resetEntregaForm();
     resetPagamentoForm();
     rerender();
+    openOnboarding();
     showToast("Todos os dados foram apagados.", "info");
   }
 
@@ -1524,9 +1771,16 @@
   function init() {
     setupFormsDefaults();
     bindEvents();
+    applyTheme();
     refreshAllSelects();
     rerender();
     openTab(state.settings.lastTab || "dashboard");
+
+    if (!state.settings.onboardingDone || !state.settings.profile) {
+      openOnboarding();
+    } else {
+      closeOnboarding();
+    }
   }
 
   init();

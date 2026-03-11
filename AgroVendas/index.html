@@ -4,55 +4,141 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>AgroVendas</title>
-  <link rel="icon" type="image/png" href="agrofavicon.png" />
+  <link rel="icon" type="image/png" href="../img/thumbs/agrofavicon.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="app-backdrop" id="appBackdrop" hidden></div>
+
+  <div class="onboarding-overlay" id="onboardingOverlay" hidden>
+    <div class="onboarding-card">
+      <div class="onboarding-badge">Bem-vindo ao AgroVendas</div>
+      <h1>Como você vai usar o sistema?</h1>
+      <p>
+        Escolha um perfil inicial para deixar a experiência mais clara, rápida e útil no dia a dia.
+      </p>
+
+      <div class="profile-choice-grid">
+        <button class="profile-choice" data-role-choice="vendedor">
+          <span class="profile-icon">🍇</span>
+          <strong>Sou vendedor / produtor</strong>
+          <small>Foco em entregas, valores a receber e compradores.</small>
+        </button>
+
+        <button class="profile-choice" data-role-choice="comprador">
+          <span class="profile-icon">📦</span>
+          <strong>Sou comprador / atravessador</strong>
+          <small>Foco em recebimentos, pagamentos e pendências.</small>
+        </button>
+
+        <button class="profile-choice" data-role-choice="ambos">
+          <span class="profile-icon">🤝</span>
+          <strong>Uso os dois modos</strong>
+          <small>Visão completa com painel panorâmico geral.</small>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="drawer" id="drawer" aria-label="Menu lateral" hidden>
+    <div class="drawer-head">
+      <div>
+        <strong>Mais opções</strong>
+        <span>Áreas administrativas e relatórios</span>
+      </div>
+      <button class="icon-btn" id="closeDrawerBtn" aria-label="Fechar menu">✕</button>
+    </div>
+
+    <div class="drawer-links">
+      <button class="drawer-link nav-btn" data-tab="agricultores">Agricultores</button>
+      <button class="drawer-link nav-btn" data-tab="compradores">Compradores</button>
+      <button class="drawer-link nav-btn" data-tab="produtos">Produtos</button>
+      <button class="drawer-link nav-btn" data-tab="historico">Histórico</button>
+      <button class="drawer-link nav-btn" data-tab="relatorios">Relatórios</button>
+    </div>
+
+    <div class="drawer-section">
+      <label class="switch-row" for="themeToggleDrawer">
+        <span>
+          <strong>Modo escuro</strong>
+          <small>Mais conforto visual em ambientes escuros.</small>
+        </span>
+        <input type="checkbox" id="themeToggleDrawer" />
+      </label>
+    </div>
+
+    <div class="drawer-section">
+      <div class="drawer-profile-box">
+        <strong>Perfil atual</strong>
+        <span id="currentProfileLabel">Ambos</span>
+      </div>
+      <button class="btn btn-ghost full" id="changeProfileBtn" type="button">Trocar perfil inicial</button>
+    </div>
+  </aside>
+
   <header class="topbar">
     <div class="brand">
-      <img src="agrovendas.png" alt="Logo AgroVendas" class="brand-logo" />
+      <img src="../img/thumbs/agrofavicon.png" alt="Logo AgroVendas" class="brand-logo" />
       <div class="brand-text">
         <strong>AgroVendas</strong>
         <span>Controle profissional de uvas e frutas</span>
       </div>
     </div>
 
-    <button class="menu-toggle" id="menuToggle" aria-label="Abrir navegação">☰</button>
-
-    <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
-      <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
-      <button class="nav-btn" data-tab="agricultores">Agricultores</button>
-      <button class="nav-btn" data-tab="compradores">Compradores</button>
-      <button class="nav-btn" data-tab="produtos">Produtos</button>
-      <button class="nav-btn" data-tab="entregas">Entregas</button>
-      <button class="nav-btn" data-tab="pagamentos">Pagamentos</button>
-      <button class="nav-btn" data-tab="historico">Histórico</button>
-      <button class="nav-btn" data-tab="relatorios">Relatórios</button>
-    </nav>
+    <div class="topbar-actions">
+      <button class="icon-btn theme-btn" id="themeToggleBtn" aria-label="Alternar modo escuro">◐</button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir navegação">☰</button>
+    </div>
   </header>
+
+  <nav class="quick-nav" aria-label="Navegação rápida principal">
+    <button class="quick-nav-btn nav-btn active" data-tab="dashboard">Início</button>
+    <button class="quick-nav-btn nav-btn" data-tab="entregas">Entregas</button>
+    <button class="quick-nav-btn nav-btn" data-tab="pagamentos">Pagamentos</button>
+    <button class="quick-nav-btn nav-btn" data-tab="historico">Histórico</button>
+    <button class="quick-nav-btn more-btn" id="openDrawerBtn" type="button">Mais</button>
+  </nav>
 
   <main class="app-shell">
     <section class="tab-panel active" id="tab-dashboard">
-      <div class="hero-card">
-        <div>
-          <h1>Painel panorâmico</h1>
-          <p>Visão rápida das entregas, pagamentos e saldos do negócio.</p>
+      <div class="hero-card hero-card-premium">
+        <div class="hero-left">
+          <div class="hero-kicker">Painel gerencial</div>
+          <h1 id="dashboardTitle">Painel panorâmico</h1>
+          <p id="dashboardSubtitle">Visão rápida das entregas, pagamentos e saldos do negócio.</p>
+
+          <div class="hero-quick-actions">
+            <button class="btn" data-go-tab="entregas">Nova entrega</button>
+            <button class="btn btn-secondary" data-go-tab="pagamentos">Novo pagamento</button>
+            <button class="btn btn-ghost" data-go-tab="historico">Ver pendências</button>
+          </div>
         </div>
-        <div class="hero-actions">
-          <button class="btn btn-secondary" id="resetDemoBtn">Inserir dados de exemplo</button>
-          <button class="btn btn-danger" id="clearDataBtn">Limpar tudo</button>
+
+        <div class="hero-right">
+          <div class="profile-pulse-card">
+            <span class="profile-pill-label">Perfil ativo</span>
+            <strong id="profileBadgeText">Ambos</strong>
+            <small id="profileHelperText">Visão completa do negócio.</small>
+          </div>
         </div>
       </div>
 
-      <div class="filters-bar">
-        <div class="field">
-          <label for="dashboardPeriodo">Período</label>
-          <select id="dashboardPeriodo">
-            <option value="hoje">Hoje</option>
-            <option value="semana">Esta semana</option>
-            <option value="mes">Este mês</option>
-            <option value="geral">Geral</option>
-          </select>
+      <div class="top-tools-row">
+        <div class="filters-bar">
+          <div class="field compact-field">
+            <label for="dashboardPeriodo">Período</label>
+            <select id="dashboardPeriodo">
+              <option value="hoje">Hoje</option>
+              <option value="semana">Esta semana</option>
+              <option value="mes">Este mês</option>
+              <option value="geral">Geral</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn btn-secondary" id="resetDemoBtn">Inserir dados de exemplo</button>
+          <button class="btn btn-danger" id="clearDataBtn">Limpar tudo</button>
         </div>
       </div>
 
@@ -70,7 +156,10 @@
           <div class="panel-head">
             <h2>Últimas entregas</h2>
           </div>
-          <div class="table-wrap">
+
+          <div class="mobile-card-list" id="dashboardRecentDeliveriesCards"></div>
+
+          <div class="table-wrap desktop-table">
             <table>
               <thead>
                 <tr>
@@ -342,7 +431,10 @@
         <div class="panel-head">
           <h2>Entregas registradas</h2>
         </div>
-        <div class="table-wrap">
+
+        <div class="mobile-card-list" id="entregasCards"></div>
+
+        <div class="table-wrap desktop-table">
           <table>
             <thead>
               <tr>
@@ -370,7 +462,7 @@
       <div class="section-header">
         <div>
           <h1>Lançamento de pagamentos</h1>
-          <p>Vincule pagamentos às entregas corretas com clareza e saldo atualizado.</p>
+          <p>Selecione comprador e beneficiário para ver as entregas em ordem de data e registrar o pagamento com forma de recebimento.</p>
         </div>
       </div>
 
@@ -378,8 +470,10 @@
         <div class="panel-head">
           <h2 id="pagamentoFormTitle">Novo pagamento</h2>
         </div>
+
         <form id="pagamentoForm" class="form-grid">
           <input type="hidden" id="pagamentoId" />
+          <input type="hidden" id="pagamentoEntregaSelecionada" />
 
           <div class="field">
             <label for="pagamentoComprador">Comprador pagador</label>
@@ -392,9 +486,43 @@
           </div>
 
           <div class="field">
-            <label for="pagamentoProduto">Produto referente</label>
-            <select id="pagamentoProduto">
+            <label for="pagamentoProdutoFiltro">Filtrar produto</label>
+            <select id="pagamentoProdutoFiltro">
               <option value="">Todos os produtos</option>
+            </select>
+          </div>
+
+          <div class="field field-span-2">
+            <div class="inline-head">
+              <label>Entregas encontradas</label>
+              <button class="btn btn-secondary small" type="button" id="atualizarEntregasPagBtn">Atualizar lista</button>
+            </div>
+            <div id="paymentDeliveryPicker" class="delivery-picker empty">
+              Selecione comprador e agricultor para ver entregas em ordem de data.
+            </div>
+          </div>
+
+          <div class="field field-span-2">
+            <div id="selectedDeliveryBox" class="selected-delivery-box empty">
+              Escolha uma entrega pendente clicando em <strong>Pagar</strong>.
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="pagamentoProduto">Produto referente</label>
+            <select id="pagamentoProduto" disabled>
+              <option value="">Selecione uma entrega</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="pagamentoMetodo">Forma de pagamento</label>
+            <select id="pagamentoMetodo" required>
+              <option value="">Selecione</option>
+              <option value="Pix">Pix</option>
+              <option value="Cheque">Cheque</option>
+              <option value="Depósito">Depósito</option>
+              <option value="Transferência">Transferência</option>
             </select>
           </div>
 
@@ -413,23 +541,18 @@
             <input id="pagamentoValor" type="number" min="0" step="0.01" required />
           </div>
 
+          <div class="field">
+            <label for="pagamentoSaldoAtual">Saldo pendente da entrega</label>
+            <input id="pagamentoSaldoAtual" type="text" readonly />
+          </div>
+
           <div class="field field-span-2">
             <label for="pagamentoObs">Observações</label>
             <textarea id="pagamentoObs" rows="3"></textarea>
           </div>
 
-          <div class="field field-span-2">
-            <div class="inline-head">
-              <label>Entregas vinculadas</label>
-              <button class="btn btn-secondary small" type="button" id="atualizarEntregasPagBtn">Atualizar lista</button>
-            </div>
-            <div id="paymentDeliveryPicker" class="delivery-picker empty">
-              Selecione comprador e agricultor para ver entregas pendentes.
-            </div>
-          </div>
-
           <div class="field field-span-2 info-box" id="paymentPreviewBox">
-            Valor selecionado será distribuído nas entregas marcadas em ordem cronológica.
+            Escolha uma entrega pendente. O valor sugerido será o saldo atual da entrega.
           </div>
 
           <div class="form-actions">
@@ -443,7 +566,10 @@
         <div class="panel-head">
           <h2>Pagamentos registrados</h2>
         </div>
-        <div class="table-wrap">
+
+        <div class="mobile-card-list" id="pagamentosCards"></div>
+
+        <div class="table-wrap desktop-table">
           <table>
             <thead>
               <tr>
@@ -452,6 +578,7 @@
                 <th>Comprador</th>
                 <th>Agricultor</th>
                 <th>Produto</th>
+                <th>Forma</th>
                 <th>Valor</th>
                 <th>Referência</th>
                 <th>Ações</th>
@@ -565,6 +692,7 @@
                 <th>Comprador</th>
                 <th>Agricultor</th>
                 <th>Produto</th>
+                <th>Forma</th>
                 <th>Valor</th>
                 <th>Descrição</th>
               </tr>
@@ -648,6 +776,25 @@
   <footer class="footer">
     Copyright @ 2026 - Ailton A. Nakata
   </footer>
+
+  <div class="bottom-nav">
+    <button class="bottom-nav-btn nav-btn active" data-tab="dashboard">
+      <span>⌂</span>
+      <small>Início</small>
+    </button>
+    <button class="bottom-nav-btn nav-btn" data-tab="entregas">
+      <span>📥</span>
+      <small>Entregas</small>
+    </button>
+    <button class="bottom-nav-btn nav-btn" data-tab="pagamentos">
+      <span>💸</span>
+      <small>Pagamentos</small>
+    </button>
+    <button class="bottom-nav-btn" id="bottomMoreBtn" type="button">
+      <span>☰</span>
+      <small>Mais</small>
+    </button>
+  </div>
 
   <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
 
