@@ -71,7 +71,13 @@
       compradores: Array.isArray(db.compradores) ? db.compradores : [],
       produtos: Array.isArray(db.produtos) && db.produtos.length ? db.produtos : base.produtos,
       entregas: Array.isArray(db.entregas) ? db.entregas : [],
-      pagamentos: Array.isArray(db.pagamentos) ? db.pagamentos : []
+      pagamentos: Array.isArray(db.pagamentos)
+        ? db.pagamentos.map(item => ({
+            paymentMethod: "",
+            allocations: [],
+            ...item
+          }))
+        : []
     };
     merged.meta.updatedAt = new Date().toISOString();
     return merged;
@@ -137,13 +143,12 @@
 
   function showToast(message, type = "success") {
     const stack = $("#toastStack");
+    if (!stack) return;
     const el = document.createElement("div");
     el.className = `toast ${type}`;
     el.textContent = message;
     stack.appendChild(el);
-    setTimeout(() => {
-      el.remove();
-    }, 3500);
+    setTimeout(() => el.remove(), 3500);
   }
 
   function getAgricultorById(id) {
@@ -217,7 +222,13 @@
 
     populateSelect($("#pagamentoComprador"), state.compradores, "Selecione", x => x.name);
     populateSelect($("#pagamentoAgricultor"), state.agricultores, "Selecione", x => x.name);
-    populateSelect($("#pagamentoProduto"), state.produtos, "Todos os produtos", x => `${x.name} (${x.category})`);
+    populateSelect($("#pagamentoProdutoFiltro"), state.produtos, "Todos os produtos", x => `${x.name} (${x.category})`);
+
+    const pagamentoProduto = $("#pagamentoProduto");
+    if (pagamentoProduto) {
+      pagamentoProduto.innerHTML = '<option value="">Selecione uma entrega</option>';
+      pagamentoProduto.disabled = true;
+    }
 
     populateSelect($("#histAgricultor"), state.agricultores, "Todos", x => x.name);
     populateSelect($("#histComprador"), state.compradores, "Todos", x => x.name);
@@ -296,15 +307,28 @@
 
   function updateProfileUI() {
     const meta = getProfileMeta();
-    $("#dashboardTitle").textContent = meta.label === "Visão completa" ? "Painel panorâmico" : `Painel ${meta.label.toLowerCase()}`;
-    $("#dashboardSubtitle").textContent = meta.subtitle;
-    $("#profileBadgeText").textContent = meta.label;
-    $("#profileHelperText").textContent = meta.helper;
-    $("#currentProfileLabel").textContent = meta.label;
+    const title = $("#dashboardTitle");
+    const subtitle = $("#dashboardSubtitle");
+    const badge = $("#profileBadgeText");
+    const helper = $("#profileHelperText");
+    const current = $("#currentProfileLabel");
+
+    if (title) title.textContent = meta.label === "Visão completa" ? "Painel panorâmico" : `Painel ${meta.label.toLowerCase()}`;
+    if (subtitle) subtitle.textContent = meta.subtitle;
+    if (badge) badge.textContent = meta.label;
+    if (helper) helper.textContent = meta.helper;
+    if (current) current.textContent = meta.label;
   }
 
   function renderDashboard() {
-    const period = $("#dashboardPeriodo").value || "hoje";
+    const periodo = $("#dashboardPeriodo");
+    const cardsWrap = $("#dashboardCards");
+    const highlights = $("#dashboardHighlights");
+    const recentTable = $("#dashboardRecentDeliveries");
+    const recentCards = $("#dashboardRecentDeliveriesCards");
+    if (!periodo || !cardsWrap || !highlights || !recentTable || !recentCards) return;
+
+    const period = periodo.value || "hoje";
     const deliveries = filterByNamedPeriod(state.entregas, period);
     const payments = filterByNamedPeriod(state.pagamentos, period);
 
@@ -329,7 +353,7 @@
       ["Pendente acumulado", money(pendingAll), true]
     ];
 
-    $("#dashboardCards").innerHTML = cards.map(([label, value, isMoney]) => `
+    cardsWrap.innerHTML = cards.map(([label, value, isMoney]) => `
       <article class="metric-card">
         <span class="metric-label">${label}</span>
         <div class="metric-value ${isMoney ? "is-money" : ""}">${value}</div>
@@ -340,7 +364,7 @@
     const bestFarmer = topBy(deliveries, x => x.farmerId, "totalWeight");
     const bestBuyer = topBy(deliveries, x => x.buyerId, "totalWeight");
 
-    $("#dashboardHighlights").innerHTML = `
+    highlights.innerHTML = `
       <div class="highlight-item">
         <strong>Produto mais vendido</strong>
         <span>${bestProduct ? `${getProdutoById(bestProduct.key)?.name || "-"} • ${numberBR(bestProduct.total)} kg` : "Sem dados no período"}</span>
@@ -361,7 +385,7 @@
 
     const recent = [...state.entregas].sort(compareDateTimeDesc).slice(0, 8);
 
-    $("#dashboardRecentDeliveries").innerHTML = recent.length ? recent.map(entrega => `
+    recentTable.innerHTML = recent.length ? recent.map(entrega => `
       <tr>
         <td>${formatDate(entrega.date)}</td>
         <td>${escapeHTML(getAgricultorById(entrega.farmerId)?.name || "-")}</td>
@@ -373,7 +397,7 @@
       </tr>
     `).join("") : `<tr><td colspan="7">Nenhuma entrega registrada.</td></tr>`;
 
-    $("#dashboardRecentDeliveriesCards").innerHTML = recent.length ? recent.map(entrega => {
+    recentCards.innerHTML = recent.length ? recent.map(entrega => {
       const status = calcEntregaStatus(entrega);
       return `
         <article class="mobile-data-card">
@@ -410,6 +434,7 @@
 
   function renderAgricultores() {
     const tbody = $("#agricultoresTable");
+    if (!tbody) return;
     tbody.innerHTML = state.agricultores.length ? state.agricultores.map(item => {
       const totals = getAgricultorTotals(item.id);
       return `
@@ -440,6 +465,7 @@
 
   function renderCompradores() {
     const tbody = $("#compradoresTable");
+    if (!tbody) return;
     tbody.innerHTML = state.compradores.length ? state.compradores.map(item => {
       const totals = getCompradorTotals(item.id);
       return `
@@ -469,6 +495,7 @@
 
   function renderProdutos() {
     const tbody = $("#produtosTable");
+    if (!tbody) return;
     tbody.innerHTML = state.produtos.length ? state.produtos.map(item => `
       <tr>
         <td>${escapeHTML(item.name)}</td>
@@ -487,6 +514,8 @@
   function renderEntregas() {
     const tbody = $("#entregasTable");
     const cards = $("#entregasCards");
+    if (!tbody || !cards) return;
+
     const items = [...state.entregas].sort(compareDateTimeDesc);
 
     tbody.innerHTML = items.length ? items.map(entrega => {
@@ -570,6 +599,8 @@
   function renderPagamentos() {
     const tbody = $("#pagamentosTable");
     const cards = $("#pagamentosCards");
+    if (!tbody || !cards) return;
+
     const items = [...state.pagamentos].sort(compareDateTimeDesc);
 
     tbody.innerHTML = items.length ? items.map(pagamento => {
@@ -582,6 +613,7 @@
           <td>${escapeHTML(getCompradorById(pagamento.buyerId)?.name || "-")}</td>
           <td>${escapeHTML(getAgricultorById(pagamento.farmerId)?.name || "-")}</td>
           <td>${escapeHTML(productName || "-")}</td>
+          <td>${escapeHTML(pagamento.paymentMethod || "-")}</td>
           <td>${money(pagamento.amount)}</td>
           <td>${escapeHTML(ref || "-")}</td>
           <td>
@@ -592,7 +624,7 @@
           </td>
         </tr>
       `;
-    }).join("") : `<tr><td colspan="8">Nenhum pagamento registrado.</td></tr>`;
+    }).join("") : `<tr><td colspan="9">Nenhum pagamento registrado.</td></tr>`;
 
     cards.innerHTML = items.length ? items.map(pagamento => {
       const productName = pagamento.productId ? getProdutoById(pagamento.productId)?.name : "Diversos";
@@ -605,7 +637,7 @@
               <strong>${money(pagamento.amount)}</strong>
               <small>${escapeHTML(pagamento.id)} • ${formatDateTime(pagamento.date, pagamento.time)}</small>
             </div>
-            <span class="badge paid">Pago</span>
+            <span class="badge paid">${escapeHTML(pagamento.paymentMethod || "Pago")}</span>
           </div>
 
           <div class="mobile-data-grid">
@@ -620,6 +652,10 @@
             <div>
               <span>Produto</span>
               <strong>${escapeHTML(productName || "-")}</strong>
+            </div>
+            <div>
+              <span>Forma</span>
+              <strong>${escapeHTML(pagamento.paymentMethod || "-")}</strong>
             </div>
             <div>
               <span>Referência</span>
@@ -637,11 +673,12 @@
   }
 
   function applyEntregaCalculations() {
-    const caixas = Number($("#entregaCaixas").value || 0);
-    const pesoCx = Number($("#entregaPesoCaixa").value || 0);
+    const caixas = Number($("#entregaCaixas")?.value || 0);
+    const pesoCx = Number($("#entregaPesoCaixa")?.value || 0);
     const totalWeightField = $("#entregaPesoTotal");
-    const valorKg = Number($("#entregaValorKg").value || 0);
+    const valorKg = Number($("#entregaValorKg")?.value || 0);
     const brutoField = $("#entregaValorBruto");
+    if (!totalWeightField || !brutoField) return;
 
     if (caixas > 0 && pesoCx > 0) {
       totalWeightField.value = round2(caixas * pesoCx);
@@ -654,36 +691,36 @@
   }
 
   function setupFormsDefaults() {
-    $("#entregaData").value = nowDate();
-    $("#entregaHora").value = nowTime();
-    $("#pagamentoData").value = nowDate();
-    $("#pagamentoHora").value = nowTime();
-    $("#reportDate").value = nowDate();
-    $("#reportStartDate").value = nowDate();
-    $("#reportEndDate").value = nowDate();
+    if ($("#entregaData")) $("#entregaData").value = nowDate();
+    if ($("#entregaHora")) $("#entregaHora").value = nowTime();
+    if ($("#pagamentoData")) $("#pagamentoData").value = nowDate();
+    if ($("#pagamentoHora")) $("#pagamentoHora").value = nowTime();
+    if ($("#reportDate")) $("#reportDate").value = nowDate();
+    if ($("#reportStartDate")) $("#reportStartDate").value = nowDate();
+    if ($("#reportEndDate")) $("#reportEndDate").value = nowDate();
   }
 
   function openDrawer() {
-    $("#drawer").hidden = false;
-    $("#appBackdrop").hidden = false;
+    if ($("#drawer")) $("#drawer").hidden = false;
+    if ($("#appBackdrop")) $("#appBackdrop").hidden = false;
     document.body.classList.add("drawer-open");
   }
 
   function closeDrawer() {
-    $("#drawer").hidden = true;
-    $("#appBackdrop").hidden = true;
+    if ($("#drawer")) $("#drawer").hidden = true;
+    if ($("#appBackdrop")) $("#appBackdrop").hidden = true;
     document.body.classList.remove("drawer-open");
   }
 
   function openOnboarding() {
-    $("#onboardingOverlay").hidden = false;
-    $("#appBackdrop").hidden = false;
+    if ($("#onboardingOverlay")) $("#onboardingOverlay").hidden = false;
+    if ($("#appBackdrop")) $("#appBackdrop").hidden = false;
     document.body.classList.add("modal-open");
   }
 
   function closeOnboarding() {
-    $("#onboardingOverlay").hidden = true;
-    $("#appBackdrop").hidden = true;
+    if ($("#onboardingOverlay")) $("#onboardingOverlay").hidden = true;
+    if ($("#appBackdrop")) $("#appBackdrop").hidden = true;
     document.body.classList.remove("modal-open");
   }
 
@@ -711,18 +748,16 @@
   }
 
   function bindEvents() {
-    $("#menuToggle").addEventListener("click", openDrawer);
-    $("#openDrawerBtn").addEventListener("click", openDrawer);
-    $("#bottomMoreBtn").addEventListener("click", openDrawer);
-    $("#closeDrawerBtn").addEventListener("click", closeDrawer);
-    $("#appBackdrop").addEventListener("click", () => {
-      closeDrawer();
-    });
+    $("#menuToggle")?.addEventListener("click", openDrawer);
+    $("#openDrawerBtn")?.addEventListener("click", openDrawer);
+    $("#bottomMoreBtn")?.addEventListener("click", openDrawer);
+    $("#closeDrawerBtn")?.addEventListener("click", closeDrawer);
+    $("#appBackdrop")?.addEventListener("click", closeDrawer);
 
-    $("#themeToggleBtn").addEventListener("click", toggleTheme);
-    $("#themeToggleDrawer").addEventListener("change", toggleTheme);
+    $("#themeToggleBtn")?.addEventListener("click", toggleTheme);
+    $("#themeToggleDrawer")?.addEventListener("change", toggleTheme);
 
-    $("#changeProfileBtn").addEventListener("click", () => {
+    $("#changeProfileBtn")?.addEventListener("click", () => {
       closeDrawer();
       openOnboarding();
     });
@@ -742,37 +777,37 @@
       btn.addEventListener("click", () => setProfile(btn.dataset.roleChoice));
     });
 
-    $("#dashboardPeriodo").addEventListener("change", renderDashboard);
+    $("#dashboardPeriodo")?.addEventListener("change", renderDashboard);
 
-    $("#agricultorForm").addEventListener("submit", onSubmitAgricultor);
-    $("#compradorForm").addEventListener("submit", onSubmitComprador);
-    $("#produtoForm").addEventListener("submit", onSubmitProduto);
-    $("#entregaForm").addEventListener("submit", onSubmitEntrega);
-    $("#pagamentoForm").addEventListener("submit", onSubmitPagamento);
+    $("#agricultorForm")?.addEventListener("submit", onSubmitAgricultor);
+    $("#compradorForm")?.addEventListener("submit", onSubmitComprador);
+    $("#produtoForm")?.addEventListener("submit", onSubmitProduto);
+    $("#entregaForm")?.addEventListener("submit", onSubmitEntrega);
+    $("#pagamentoForm")?.addEventListener("submit", onSubmitPagamento);
 
-    $("#cancelAgricultorEdit").addEventListener("click", resetAgricultorForm);
-    $("#cancelCompradorEdit").addEventListener("click", resetCompradorForm);
-    $("#cancelProdutoEdit").addEventListener("click", resetProdutoForm);
-    $("#cancelEntregaEdit").addEventListener("click", resetEntregaForm);
-    $("#cancelPagamentoEdit").addEventListener("click", resetPagamentoForm);
+    $("#cancelAgricultorEdit")?.addEventListener("click", resetAgricultorForm);
+    $("#cancelCompradorEdit")?.addEventListener("click", resetCompradorForm);
+    $("#cancelProdutoEdit")?.addEventListener("click", resetProdutoForm);
+    $("#cancelEntregaEdit")?.addEventListener("click", resetEntregaForm);
+    $("#cancelPagamentoEdit")?.addEventListener("click", resetPagamentoForm);
 
     ["#entregaCaixas", "#entregaPesoCaixa", "#entregaPesoTotal", "#entregaValorKg"].forEach(sel => {
-      $(sel).addEventListener("input", applyEntregaCalculations);
+      $(sel)?.addEventListener("input", applyEntregaCalculations);
     });
 
-    $("#atualizarEntregasPagBtn").addEventListener("click", renderPaymentDeliveryPicker);
-    $("#pagamentoComprador").addEventListener("change", renderPaymentDeliveryPicker);
-    $("#pagamentoAgricultor").addEventListener("change", renderPaymentDeliveryPicker);
-    $("#pagamentoProduto").addEventListener("change", renderPaymentDeliveryPicker);
-    $("#pagamentoValor").addEventListener("input", updatePaymentPreview);
+    $("#atualizarEntregasPagBtn")?.addEventListener("click", renderPaymentDeliveryPicker);
+    $("#pagamentoComprador")?.addEventListener("change", renderPaymentDeliveryPicker);
+    $("#pagamentoAgricultor")?.addEventListener("change", renderPaymentDeliveryPicker);
+    $("#pagamentoProdutoFiltro")?.addEventListener("change", renderPaymentDeliveryPicker);
+    $("#pagamentoValor")?.addEventListener("input", updatePaymentPreview);
 
-    $("#aplicarFiltrosBtn").addEventListener("click", renderHistorico);
-    $("#generateReportBtn").addEventListener("click", generateReport);
-    $("#printReportBtn").addEventListener("click", printCurrentReport);
-    $("#shareReportBtn").addEventListener("click", shareCurrentReport);
-    $("#shareSummaryBtn").addEventListener("click", shareCurrentSummary);
-    $("#clearDataBtn").addEventListener("click", clearAllData);
-    $("#resetDemoBtn").addEventListener("click", loadDemoData);
+    $("#aplicarFiltrosBtn")?.addEventListener("click", renderHistorico);
+    $("#generateReportBtn")?.addEventListener("click", generateReport);
+    $("#printReportBtn")?.addEventListener("click", printCurrentReport);
+    $("#shareReportBtn")?.addEventListener("click", shareCurrentReport);
+    $("#shareSummaryBtn")?.addEventListener("click", shareCurrentSummary);
+    $("#clearDataBtn")?.addEventListener("click", clearAllData);
+    $("#resetDemoBtn")?.addEventListener("click", loadDemoData);
 
     document.addEventListener("click", onGlobalClick);
   }
@@ -816,18 +851,18 @@
 
   function onSubmitAgricultor(e) {
     e.preventDefault();
-    const id = $("#agricultorId").value;
+    const id = $("#agricultorId")?.value || "";
     const payload = {
-      name: $("#agricultorNome").value.trim(),
-      shortName: $("#agricultorApelido").value.trim(),
-      phone: $("#agricultorTelefone").value.trim(),
-      notes: $("#agricultorObs").value.trim()
+      name: $("#agricultorNome")?.value.trim() || "",
+      shortName: $("#agricultorApelido")?.value.trim() || "",
+      phone: $("#agricultorTelefone")?.value.trim() || "",
+      notes: $("#agricultorObs")?.value.trim() || ""
     };
     if (!payload.name) return showToast("Informe o nome do agricultor.", "error");
 
     if (id) {
       const item = getAgricultorById(id);
-      Object.assign(item, payload, { updatedAt: new Date().toISOString() });
+      if (item) Object.assign(item, payload, { updatedAt: new Date().toISOString() });
       showToast("Agricultor atualizado com sucesso.");
     } else {
       state.agricultores.push({
@@ -846,17 +881,17 @@
 
   function onSubmitComprador(e) {
     e.preventDefault();
-    const id = $("#compradorId").value;
+    const id = $("#compradorId")?.value || "";
     const payload = {
-      name: $("#compradorNome").value.trim(),
-      phone: $("#compradorTelefone").value.trim(),
-      notes: $("#compradorObs").value.trim()
+      name: $("#compradorNome")?.value.trim() || "",
+      phone: $("#compradorTelefone")?.value.trim() || "",
+      notes: $("#compradorObs")?.value.trim() || ""
     };
     if (!payload.name) return showToast("Informe o nome do comprador.", "error");
 
     if (id) {
       const item = getCompradorById(id);
-      Object.assign(item, payload, { updatedAt: new Date().toISOString() });
+      if (item) Object.assign(item, payload, { updatedAt: new Date().toISOString() });
       showToast("Comprador atualizado com sucesso.");
     } else {
       state.compradores.push({
@@ -875,11 +910,11 @@
 
   function onSubmitProduto(e) {
     e.preventDefault();
-    const id = $("#produtoId").value;
+    const id = $("#produtoId")?.value || "";
     const payload = {
-      name: $("#produtoNome").value.trim(),
-      category: $("#produtoCategoria").value,
-      notes: $("#produtoObs").value.trim()
+      name: $("#produtoNome")?.value.trim() || "",
+      category: $("#produtoCategoria")?.value || "Uva",
+      notes: $("#produtoObs")?.value.trim() || ""
     };
     if (!payload.name) return showToast("Informe o nome do produto.", "error");
 
@@ -888,7 +923,7 @@
 
     if (id) {
       const item = getProdutoById(id);
-      Object.assign(item, payload, { updatedAt: new Date().toISOString() });
+      if (item) Object.assign(item, payload, { updatedAt: new Date().toISOString() });
       showToast("Produto atualizado com sucesso.");
     } else {
       state.produtos.push({
@@ -913,19 +948,19 @@
       return showToast("Cadastre agricultor, comprador e produto antes de lançar uma entrega.", "error");
     }
 
-    const id = $("#entregaId").value;
+    const id = $("#entregaId")?.value || "";
     const payload = {
-      farmerId: $("#entregaAgricultor").value,
-      buyerId: $("#entregaComprador").value,
-      productId: $("#entregaProduto").value,
-      date: $("#entregaData").value,
-      time: $("#entregaHora").value,
-      boxes: Number($("#entregaCaixas").value || 0),
-      weightPerBox: Number($("#entregaPesoCaixa").value || 0),
-      totalWeight: Number($("#entregaPesoTotal").value || 0),
-      pricePerKg: Number($("#entregaValorKg").value || 0),
-      grossValue: Number($("#entregaValorBruto").value || 0),
-      notes: $("#entregaObs").value.trim()
+      farmerId: $("#entregaAgricultor")?.value || "",
+      buyerId: $("#entregaComprador")?.value || "",
+      productId: $("#entregaProduto")?.value || "",
+      date: $("#entregaData")?.value || "",
+      time: $("#entregaHora")?.value || "",
+      boxes: Number($("#entregaCaixas")?.value || 0),
+      weightPerBox: Number($("#entregaPesoCaixa")?.value || 0),
+      totalWeight: Number($("#entregaPesoTotal")?.value || 0),
+      pricePerKg: Number($("#entregaValorKg")?.value || 0),
+      grossValue: Number($("#entregaValorBruto")?.value || 0),
+      notes: $("#entregaObs")?.value.trim() || ""
     };
 
     if (!payload.farmerId || !payload.buyerId || !payload.productId || !payload.date || !payload.time) {
@@ -938,7 +973,7 @@
 
     if (id) {
       const item = getEntregaById(id);
-      Object.assign(item, payload, { updatedAt: new Date().toISOString() });
+      if (item) Object.assign(item, payload, { updatedAt: new Date().toISOString() });
       showToast("Entrega atualizada com sucesso.");
     } else {
       const newId = uid("ENT");
@@ -960,17 +995,18 @@
   function onSubmitPagamento(e) {
     e.preventDefault();
 
-    const id = $("#pagamentoId").value;
-    const buyerId = $("#pagamentoComprador").value;
-    const farmerId = $("#pagamentoAgricultor").value;
-    const productId = $("#pagamentoProduto").value || "";
-    const date = $("#pagamentoData").value;
-    const time = $("#pagamentoHora").value;
-    const amount = Number($("#pagamentoValor").value || 0);
-    const notes = $("#pagamentoObs").value.trim();
+    const id = $("#pagamentoId")?.value || "";
+    const buyerId = $("#pagamentoComprador")?.value || "";
+    const farmerId = $("#pagamentoAgricultor")?.value || "";
+    const productId = $("#pagamentoProduto")?.value || "";
+    const paymentMethod = $("#pagamentoMetodo")?.value || "";
+    const date = $("#pagamentoData")?.value || "";
+    const time = $("#pagamentoHora")?.value || "";
+    const amount = Number($("#pagamentoValor")?.value || 0);
+    const notes = $("#pagamentoObs")?.value.trim() || "";
 
-    if (!buyerId || !farmerId || !date || !time || amount <= 0) {
-      return showToast("Preencha comprador, agricultor, data, hora e valor pago.", "error");
+    if (!buyerId || !farmerId || !paymentMethod || !date || !time || amount <= 0) {
+      return showToast("Preencha comprador, agricultor, forma de pagamento, data, hora e valor pago.", "error");
     }
 
     if (id) {
@@ -1005,10 +1041,12 @@
       return showToast("O valor informado excede o saldo das entregas selecionadas.", "error");
     }
 
+    const selectedProductId = getSelectedPaymentProductId(candidateDeliveries);
     const description = buildPaymentDescription({
       buyerId,
       farmerId,
-      productId,
+      productId: selectedProductId,
+      paymentMethod,
       allocations,
       date,
       time
@@ -1019,7 +1057,8 @@
       id: newId,
       buyerId,
       farmerId,
-      productId,
+      productId: selectedProductId,
+      paymentMethod,
       date,
       time,
       amount: round2(amount),
@@ -1037,24 +1076,30 @@
     showToast(`Pagamento ${newId} registrado com sucesso.`);
   }
 
-  function buildPaymentDescription({ buyerId, farmerId, productId, allocations, date, time }) {
+  function getSelectedPaymentProductId(deliveries) {
+    const ids = [...new Set(deliveries.map(item => item?.productId).filter(Boolean))];
+    return ids.length === 1 ? ids[0] : "";
+  }
+
+  function buildPaymentDescription({ buyerId, farmerId, productId, paymentMethod, allocations, date, time }) {
     const buyer = getCompradorById(buyerId)?.name || "Comprador";
     const farmer = getAgricultorById(farmerId)?.name || "Agricultor";
     const product = productId ? getProdutoById(productId)?.name : null;
     const firstDelivery = allocations[0] ? getEntregaById(allocations[0].deliveryId) : null;
 
     if (allocations.length === 1 && firstDelivery) {
-      return `Pagamento referente à ${product || getProdutoById(firstDelivery.productId)?.name || "mercadoria"} entregue por ${farmer} em ${formatDate(firstDelivery.date)} às ${firstDelivery.time}, pago por ${buyer} em ${formatDate(date)} às ${time}.`;
+      return `Pagamento em ${paymentMethod} referente à ${product || getProdutoById(firstDelivery.productId)?.name || "mercadoria"} entregue por ${farmer} em ${formatDate(firstDelivery.date)} às ${firstDelivery.time}, pago por ${buyer} em ${formatDate(date)} às ${time}.`;
     }
 
-    return `Pagamento referente a ${allocations.length} entrega(s) ${product ? `de ${product} ` : ""}do agricultor ${farmer}, pago por ${buyer} em ${formatDate(date)} às ${time}.`;
+    return `Pagamento em ${paymentMethod} referente a ${allocations.length} entrega(s) ${product ? `de ${product} ` : ""}do agricultor ${farmer}, pago por ${buyer} em ${formatDate(date)} às ${time}.`;
   }
 
   function renderPaymentDeliveryPicker() {
-    const buyerId = $("#pagamentoComprador").value;
-    const farmerId = $("#pagamentoAgricultor").value;
-    const productId = $("#pagamentoProduto").value;
+    const buyerId = $("#pagamentoComprador")?.value || "";
+    const farmerId = $("#pagamentoAgricultor")?.value || "";
+    const productId = $("#pagamentoProdutoFiltro")?.value || "";
     const box = $("#paymentDeliveryPicker");
+    if (!box) return;
 
     if (!buyerId || !farmerId) {
       box.className = "delivery-picker empty";
@@ -1088,7 +1133,7 @@
           <input type="checkbox" name="paymentDelivery" value="${entrega.id}">
           <div>
             <strong>${entrega.id} • ${produto}</strong>
-            <small>${formatDateTime(entrega.date, entrega.time)} • ${numberBR(entrega.totalWeight)} kg • Saldo ${money(pending)}</small>
+            <small>${formatDateTime(entrega.date, entrega.time)} • ${numberBR(entrega.totalWeight)} kg • Bruto ${money(entrega.grossValue)} • Saldo ${money(pending)}</small>
           </div>
         </label>
       `;
@@ -1102,16 +1147,29 @@
   }
 
   function updatePaymentPreview() {
-    const amount = Number($("#pagamentoValor").value || 0);
+    const amount = Number($("#pagamentoValor")?.value || 0);
     const checked = $$('input[name="paymentDelivery"]:checked');
     const preview = $("#paymentPreviewBox");
+    const selectedBox = $("#selectedDeliveryBox");
+    const saldoAtual = $("#pagamentoSaldoAtual");
+    const entregaSelecionadaInput = $("#pagamentoEntregaSelecionada");
+    const pagamentoProduto = $("#pagamentoProduto");
 
-    if (!checked.length || amount <= 0) {
-      preview.textContent = "Valor selecionado será distribuído nas entregas marcadas em ordem cronológica.";
+    if (!preview || !selectedBox || !saldoAtual || !entregaSelecionadaInput || !pagamentoProduto) return;
+
+    if (!checked.length) {
+      preview.textContent = "Escolha uma entrega pendente. O valor sugerido será o saldo atual da entrega.";
+      selectedBox.className = "selected-delivery-box empty";
+      selectedBox.innerHTML = 'Escolha uma entrega pendente clicando em <strong>Pagar</strong>.';
+      saldoAtual.value = "";
+      entregaSelecionadaInput.value = "";
+      pagamentoProduto.innerHTML = '<option value="">Selecione uma entrega</option>';
+      pagamentoProduto.disabled = true;
       return;
     }
 
     const deliveries = checked.map(el => getEntregaById(el.value)).filter(Boolean).sort(compareDateTimeAsc);
+    const totalPending = round2(deliveries.reduce((acc, entrega) => acc + calcEntregaPending(entrega), 0));
     let remaining = round2(amount);
     const parts = [];
 
@@ -1123,16 +1181,45 @@
       parts.push(`${entrega.id}: ${money(alloc)}`);
     });
 
-    preview.textContent = remaining > 0
-      ? `Saldo excedente detectado. Distribuição parcial: ${parts.join(" | ")}. Ainda sobra ${money(remaining)} acima do saldo disponível.`
-      : `Distribuição prevista: ${parts.join(" | ")}.`;
+    const selectedProductId = getSelectedPaymentProductId(deliveries);
+    entregaSelecionadaInput.value = deliveries.map(item => item.id).join(", ");
+    saldoAtual.value = money(totalPending);
+    pagamentoProduto.disabled = false;
+    pagamentoProduto.innerHTML = selectedProductId
+      ? `<option value="${selectedProductId}">${escapeHTML(getProdutoById(selectedProductId)?.name || "Produto selecionado")}</option>`
+      : '<option value="">Diversos produtos vinculados</option>';
+    pagamentoProduto.value = selectedProductId || "";
+
+    selectedBox.className = "selected-delivery-box";
+    selectedBox.innerHTML = deliveries.map(entrega => {
+      const produto = getProdutoById(entrega.productId)?.name || "-";
+      const agricultor = getAgricultorById(entrega.farmerId)?.name || "-";
+      const comprador = getCompradorById(entrega.buyerId)?.name || "-";
+      return `
+        <article class="selected-delivery-item">
+          <strong>${escapeHTML(entrega.id)} • ${escapeHTML(produto)}</strong>
+          <small>${formatDateTime(entrega.date, entrega.time)} • ${escapeHTML(agricultor)} → ${escapeHTML(comprador)}</small>
+          <small>Caixas: ${numberBR(entrega.boxes, 0)} • Peso: ${numberBR(entrega.totalWeight)} kg • Bruto: ${money(entrega.grossValue)} • Saldo: ${money(calcEntregaPending(entrega))}</small>
+        </article>
+      `;
+    }).join("");
+
+    preview.textContent = amount <= 0
+      ? `Saldo disponível nas entregas marcadas: ${money(totalPending)}. Informe o valor pago para ver a distribuição.`
+      : remaining > 0
+        ? `Saldo excedente detectado. Distribuição parcial: ${parts.join(" | ")}. Ainda sobra ${money(remaining)} acima do saldo disponível.`
+        : `Distribuição prevista: ${parts.join(" | ")}. Total selecionado: ${money(totalPending)}.`;
   }
 
   function renderHistorico() {
+    const entregaTable = $("#historicoEntregasTable");
+    const pagamentoTable = $("#historicoPagamentosTable");
+    if (!entregaTable || !pagamentoTable) return;
+
     const deliveries = getFilteredDeliveries();
     const payments = getFilteredPayments(deliveries.map(x => x.id));
 
-    $("#historicoEntregasTable").innerHTML = deliveries.length ? deliveries.map(entrega => `
+    entregaTable.innerHTML = deliveries.length ? deliveries.map(entrega => `
       <tr>
         <td>${formatDateTime(entrega.date, entrega.time)}</td>
         <td>${escapeHTML(getAgricultorById(entrega.farmerId)?.name || "-")}</td>
@@ -1147,27 +1234,28 @@
       </tr>
     `).join("") : `<tr><td colspan="10">Nenhuma entrega encontrada para os filtros.</td></tr>`;
 
-    $("#historicoPagamentosTable").innerHTML = payments.length ? payments.map(p => `
+    pagamentoTable.innerHTML = payments.length ? payments.map(p => `
       <tr>
         <td>${formatDateTime(p.date, p.time)}</td>
         <td>${escapeHTML(getCompradorById(p.buyerId)?.name || "-")}</td>
         <td>${escapeHTML(getAgricultorById(p.farmerId)?.name || "-")}</td>
         <td>${escapeHTML((p.productId ? getProdutoById(p.productId)?.name : "Diversos") || "-")}</td>
+        <td>${escapeHTML(p.paymentMethod || "-")}</td>
         <td>${money(p.amount)}</td>
         <td>${escapeHTML(p.description || "-")}</td>
       </tr>
-    `).join("") : `<tr><td colspan="6">Nenhum pagamento encontrado para os filtros.</td></tr>`;
+    `).join("") : `<tr><td colspan="7">Nenhum pagamento encontrado para os filtros.</td></tr>`;
   }
 
   function getFilteredDeliveries() {
-    const tipoPeriodo = $("#histTipoPeriodo").value;
-    const dataInicio = $("#histDataInicio").value;
-    const dataFim = $("#histDataFim").value;
-    const agricultor = $("#histAgricultor").value;
-    const comprador = $("#histComprador").value;
-    const produto = $("#histProduto").value;
-    const status = $("#histStatus").value;
-    const ordenacao = $("#histOrdenacao").value;
+    const tipoPeriodo = $("#histTipoPeriodo")?.value || "todos";
+    const dataInicio = $("#histDataInicio")?.value || "";
+    const dataFim = $("#histDataFim")?.value || "";
+    const agricultor = $("#histAgricultor")?.value || "";
+    const comprador = $("#histComprador")?.value || "";
+    const produto = $("#histProduto")?.value || "";
+    const status = $("#histStatus")?.value || "";
+    const ordenacao = $("#histOrdenacao")?.value || "recentes";
 
     let items = [...state.entregas];
 
@@ -1185,13 +1273,13 @@
   }
 
   function getFilteredPayments(filteredDeliveryIds = []) {
-    const tipoPeriodo = $("#histTipoPeriodo").value;
-    const dataInicio = $("#histDataInicio").value;
-    const dataFim = $("#histDataFim").value;
-    const agricultor = $("#histAgricultor").value;
-    const comprador = $("#histComprador").value;
-    const produto = $("#histProduto").value;
-    const ordenacao = $("#histOrdenacao").value;
+    const tipoPeriodo = $("#histTipoPeriodo")?.value || "todos";
+    const dataInicio = $("#histDataInicio")?.value || "";
+    const dataFim = $("#histDataFim")?.value || "";
+    const agricultor = $("#histAgricultor")?.value || "";
+    const comprador = $("#histComprador")?.value || "";
+    const produto = $("#histProduto")?.value || "";
+    const ordenacao = $("#histOrdenacao")?.value || "recentes";
     const filteredSet = new Set(filteredDeliveryIds);
 
     let items = [...state.pagamentos].filter(p => {
@@ -1237,29 +1325,21 @@
     return true;
   }
 
-  function generateReport() {
-    const type = $("#reportType").value;
-    const date = $("#reportDate").value;
-    const startDate = $("#reportStartDate").value;
-    const endDate = $("#reportEndDate").value;
-    const farmerId = $("#reportAgricultor").value;
-    const buyerId = $("#reportComprador").value;
-    const productId = $("#reportProduto").value;
+  function getReportData() {
+    const type = $("#reportType")?.value || "diario";
+    const date = $("#reportDate")?.value || "";
+    const startDate = $("#reportStartDate")?.value || "";
+    const endDate = $("#reportEndDate")?.value || "";
+    const farmerId = $("#reportAgricultor")?.value || "";
+    const buyerId = $("#reportComprador")?.value || "";
+    const productId = $("#reportProduto")?.value || "";
 
     let deliveries = [...state.entregas];
 
-    if (type === "diario" && date) {
-      deliveries = deliveries.filter(x => x.date === date);
-    }
-    if (type === "agricultor" && farmerId) {
-      deliveries = deliveries.filter(x => x.farmerId === farmerId);
-    }
-    if (type === "comprador" && buyerId) {
-      deliveries = deliveries.filter(x => x.buyerId === buyerId);
-    }
-    if (type === "produto" && productId) {
-      deliveries = deliveries.filter(x => x.productId === productId);
-    }
+    if (type === "diario" && date) deliveries = deliveries.filter(x => x.date === date);
+    if (type === "agricultor" && farmerId) deliveries = deliveries.filter(x => x.farmerId === farmerId);
+    if (type === "comprador" && buyerId) deliveries = deliveries.filter(x => x.buyerId === buyerId);
+    if (type === "produto" && productId) deliveries = deliveries.filter(x => x.productId === productId);
     if (type === "periodo") {
       if (startDate) deliveries = deliveries.filter(x => x.date >= startDate);
       if (endDate) deliveries = deliveries.filter(x => x.date <= endDate);
@@ -1268,7 +1348,9 @@
     deliveries.sort(compareDateTimeDesc);
 
     const deliveryIds = new Set(deliveries.map(x => x.id));
-    const payments = state.pagamentos.filter(p => (p.allocations || []).some(a => deliveryIds.has(a.deliveryId)));
+    const payments = state.pagamentos
+      .filter(p => (p.allocations || []).some(a => deliveryIds.has(a.deliveryId)))
+      .sort(compareDateTimeDesc);
 
     const totalGross = sum(deliveries, "grossValue");
     const totalPaid = round2(deliveries.reduce((acc, entrega) => acc + calcEntregaPaid(entrega.id), 0));
@@ -1283,19 +1365,37 @@
     if (type === "produto") subtitle = `Relatório do produto ${getProdutoById(productId)?.name || "-"}`;
     if (type === "periodo") subtitle = `Relatório do período ${formatDate(startDate)} até ${formatDate(endDate)}`;
 
+    return {
+      type,
+      subtitle,
+      deliveries,
+      payments,
+      totalGross,
+      totalPaid,
+      totalPending,
+      totalKg,
+      totalBoxes
+    };
+  }
+
+  function generateReport() {
+    const preview = $("#reportPreview");
+    if (!preview) return;
+    const report = getReportData();
+
     const html = `
       <div class="report-sheet" data-report-built="true">
         <h3>AgroVendas</h3>
-        <p>${subtitle}</p>
+        <p>${report.subtitle}</p>
 
         <div class="report-meta">
           <div class="report-box">
             <strong>Entregas</strong>
-            <span>${deliveries.length}</span>
+            <span>${report.deliveries.length}</span>
           </div>
           <div class="report-box">
             <strong>Pagamentos relacionados</strong>
-            <span>${payments.length}</span>
+            <span>${report.payments.length}</span>
           </div>
           <div class="report-box">
             <strong>Emissão</strong>
@@ -1306,27 +1406,27 @@
         <div class="report-totals">
           <div class="report-box">
             <strong>Total em caixas</strong>
-            <span>${numberBR(totalBoxes, 0)}</span>
+            <span>${numberBR(report.totalBoxes, 0)}</span>
           </div>
           <div class="report-box">
             <strong>Total em kg</strong>
-            <span>${numberBR(totalKg)} kg</span>
+            <span>${numberBR(report.totalKg)} kg</span>
           </div>
           <div class="report-box">
             <strong>Total bruto</strong>
-            <span>${money(totalGross)}</span>
+            <span>${money(report.totalGross)}</span>
           </div>
           <div class="report-box">
             <strong>Total pago</strong>
-            <span>${money(totalPaid)}</span>
+            <span>${money(report.totalPaid)}</span>
           </div>
           <div class="report-box">
             <strong>Total pendente</strong>
-            <span>${money(totalPending)}</span>
+            <span>${money(report.totalPending)}</span>
           </div>
           <div class="report-box">
             <strong>Status geral</strong>
-            <span>${totalPending <= 0 && deliveries.length ? "Liquidado" : "Com saldo pendente"}</span>
+            <span>${report.totalPending <= 0 && report.deliveries.length ? "Liquidado" : "Com saldo pendente"}</span>
           </div>
         </div>
 
@@ -1348,7 +1448,7 @@
               </tr>
             </thead>
             <tbody>
-              ${deliveries.length ? deliveries.map(entrega => `
+              ${report.deliveries.length ? report.deliveries.map(entrega => `
                 <tr>
                   <td>${formatDateTime(entrega.date, entrega.time)}</td>
                   <td>${escapeHTML(getAgricultorById(entrega.farmerId)?.name || "-")}</td>
@@ -1369,11 +1469,13 @@
       </div>
     `;
 
-    $("#reportPreview").innerHTML = html;
+    preview.innerHTML = html;
   }
 
   function printCurrentReport() {
-    const content = $("#reportPreview").innerHTML.trim();
+    const preview = $("#reportPreview");
+    if (!preview) return;
+    const content = preview.innerHTML.trim();
     if (!content || !content.includes("report-sheet")) {
       return showToast("Gere um relatório antes de imprimir.", "error");
     }
@@ -1410,15 +1512,27 @@
     win.document.close();
   }
 
+  function buildReportText(report) {
+    const lines = [
+      "AgroVendas",
+      report.subtitle,
+      `Entregas: ${report.deliveries.length}`,
+      `Pagamentos relacionados: ${report.payments.length}`,
+      `Total em caixas: ${numberBR(report.totalBoxes, 0)}`,
+      `Total em kg: ${numberBR(report.totalKg)} kg`,
+      `Total bruto: ${money(report.totalGross)}`,
+      `Total pago: ${money(report.totalPaid)}`,
+      `Total pendente: ${money(report.totalPending)}`
+    ];
+    return lines.join("\n");
+  }
+
   async function shareCurrentReport() {
-    const content = $("#reportPreview").textContent.trim();
-    if (!content || content === "Gere um relatório para visualizar aqui.") {
+    const report = getReportData();
+    if (!report.deliveries.length && !report.payments.length) {
       return showToast("Gere um relatório antes de compartilhar.", "error");
     }
-
-    const message = `Olá, segue o relatório/romaneio referente às entregas realizadas. No documento constam os produtos entregues, pesos, valores e pagamentos relacionados. Obrigado.\n\nResumo:\n${content.slice(0, 1200)}`;
-
-    await shareText(message, "Relatório AgroVendas");
+    await shareText(buildReportText(report), "Relatório AgroVendas");
   }
 
   async function shareCurrentSummary() {
@@ -1431,6 +1545,13 @@
       const farmer = getAgricultorById(entrega.farmerId)?.name || "-";
       const buyer = getCompradorById(entrega.buyerId)?.name || "-";
       const product = getProdutoById(entrega.productId)?.name || "-";
+      const paymentDetails = state.pagamentos
+        .filter(payment => (payment.allocations || []).some(a => a.deliveryId === entrega.id))
+        .map(payment => {
+          const allocation = (payment.allocations || []).find(a => a.deliveryId === entrega.id);
+          return `${payment.id} (${payment.paymentMethod || "-"}) ${money(allocation?.amount || 0)} em ${formatDateTime(payment.date, payment.time)}`;
+        });
+
       return [
         `Entrega ${entrega.id}`,
         `Agricultor: ${farmer}`,
@@ -1442,13 +1563,13 @@
         `Valor bruto: ${money(entrega.grossValue)}`,
         `Valor pago: ${money(calcEntregaPaid(entrega.id))}`,
         `Saldo pendente: ${money(calcEntregaPending(entrega))}`,
-        `Data/Hora: ${formatDateTime(entrega.date, entrega.time)}`
+        `Data/Hora: ${formatDateTime(entrega.date, entrega.time)}`,
+        `Pagamentos: ${paymentDetails.length ? paymentDetails.join(" | ") : "Sem pagamento registrado"}`
       ].join(" | ");
     });
 
     const message =
-      `Olá, segue o comprovante resumido de venda/recebimento. ` +
-      `As informações abaixo mostram entregas, valores e saldos com transparência.\n\n` +
+      "Olá, segue o comprovante resumido de venda e recebimento.\n\n" +
       lines.join("\n\n");
 
     await shareText(message, "Resumo AgroVendas");
@@ -1461,17 +1582,39 @@
     const buyer = getCompradorById(p.buyerId)?.name || "-";
     const farmer = getAgricultorById(p.farmerId)?.name || "-";
     const product = p.productId ? getProdutoById(p.productId)?.name : "Diversos";
+    const allocationsText = (p.allocations || []).map((allocation, index) => {
+      const entrega = getEntregaById(allocation.deliveryId);
+      if (!entrega) return `Venda ${index + 1}: entrega não encontrada.`;
+      const entregaProduto = getProdutoById(entrega.productId)?.name || "-";
+      return [
+        `Venda ${index + 1}`,
+        `Entrega: ${entrega.id}`,
+        `Produto: ${entregaProduto}`,
+        `Data/Hora da venda: ${formatDateTime(entrega.date, entrega.time)}`,
+        `Caixas: ${numberBR(entrega.boxes, 0)}`,
+        `Peso total: ${numberBR(entrega.totalWeight)} kg`,
+        `Valor por kg: ${money(entrega.pricePerKg)}`,
+        `Valor bruto: ${money(entrega.grossValue)}`,
+        `Pago neste registro: ${money(allocation.amount)}`,
+        `Saldo atual da entrega: ${money(calcEntregaPending(entrega))}`
+      ].join("\n");
+    }).join("\n\n------------------------------\n\n");
+
     const message = [
-      "Olá, segue o comprovante do pagamento registrado no AgroVendas.",
+      "Olá, segue o registro detalhado deste pagamento no AgroVendas.",
       "",
+      "DADOS DO PAGAMENTO",
       `Pagamento: ${p.id}`,
       `Comprador: ${buyer}`,
       `Agricultor: ${farmer}`,
       `Produto: ${product}`,
-      `Data/Hora: ${formatDateTime(p.date, p.time)}`,
+      `Forma de pagamento: ${p.paymentMethod || "-"}`,
+      `Data/Hora do pagamento: ${formatDateTime(p.date, p.time)}`,
       `Valor pago: ${money(p.amount)}`,
       `Descrição: ${p.description || "-"}`,
-      `Entregas vinculadas: ${(p.allocations || []).map(a => a.deliveryId).join(", ")}`
+      "",
+      "VENDAS VINCULADAS",
+      allocationsText || "Nenhuma venda vinculada."
     ].join("\n");
 
     await shareText(message, `Pagamento ${p.id}`);
@@ -1497,12 +1640,12 @@
   function editAgricultor(id) {
     const item = getAgricultorById(id);
     if (!item) return;
-    $("#agricultorId").value = item.id;
-    $("#agricultorNome").value = item.name || "";
-    $("#agricultorApelido").value = item.shortName || "";
-    $("#agricultorTelefone").value = item.phone || "";
-    $("#agricultorObs").value = item.notes || "";
-    $("#agricultorFormTitle").textContent = "Editar agricultor";
+    if ($("#agricultorId")) $("#agricultorId").value = item.id;
+    if ($("#agricultorNome")) $("#agricultorNome").value = item.name || "";
+    if ($("#agricultorApelido")) $("#agricultorApelido").value = item.shortName || "";
+    if ($("#agricultorTelefone")) $("#agricultorTelefone").value = item.phone || "";
+    if ($("#agricultorObs")) $("#agricultorObs").value = item.notes || "";
+    if ($("#agricultorFormTitle")) $("#agricultorFormTitle").textContent = "Editar agricultor";
     openTab("agricultores");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -1510,11 +1653,11 @@
   function editComprador(id) {
     const item = getCompradorById(id);
     if (!item) return;
-    $("#compradorId").value = item.id;
-    $("#compradorNome").value = item.name || "";
-    $("#compradorTelefone").value = item.phone || "";
-    $("#compradorObs").value = item.notes || "";
-    $("#compradorFormTitle").textContent = "Editar comprador";
+    if ($("#compradorId")) $("#compradorId").value = item.id;
+    if ($("#compradorNome")) $("#compradorNome").value = item.name || "";
+    if ($("#compradorTelefone")) $("#compradorTelefone").value = item.phone || "";
+    if ($("#compradorObs")) $("#compradorObs").value = item.notes || "";
+    if ($("#compradorFormTitle")) $("#compradorFormTitle").textContent = "Editar comprador";
     openTab("compradores");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -1522,11 +1665,11 @@
   function editProduto(id) {
     const item = getProdutoById(id);
     if (!item) return;
-    $("#produtoId").value = item.id;
-    $("#produtoNome").value = item.name || "";
-    $("#produtoCategoria").value = item.category || "Uva";
-    $("#produtoObs").value = item.notes || "";
-    $("#produtoFormTitle").textContent = "Editar produto";
+    if ($("#produtoId")) $("#produtoId").value = item.id;
+    if ($("#produtoNome")) $("#produtoNome").value = item.name || "";
+    if ($("#produtoCategoria")) $("#produtoCategoria").value = item.category || "Uva";
+    if ($("#produtoObs")) $("#produtoObs").value = item.notes || "";
+    if ($("#produtoFormTitle")) $("#produtoFormTitle").textContent = "Editar produto";
     openTab("produtos");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -1534,19 +1677,19 @@
   function editEntrega(id) {
     const item = getEntregaById(id);
     if (!item) return;
-    $("#entregaId").value = item.id;
-    $("#entregaAgricultor").value = item.farmerId || "";
-    $("#entregaComprador").value = item.buyerId || "";
-    $("#entregaProduto").value = item.productId || "";
-    $("#entregaData").value = item.date || nowDate();
-    $("#entregaHora").value = item.time || nowTime();
-    $("#entregaCaixas").value = item.boxes || "";
-    $("#entregaPesoCaixa").value = item.weightPerBox || "";
-    $("#entregaPesoTotal").value = item.totalWeight || "";
-    $("#entregaValorKg").value = item.pricePerKg || "";
-    $("#entregaValorBruto").value = item.grossValue || "";
-    $("#entregaObs").value = item.notes || "";
-    $("#entregaFormTitle").textContent = "Editar entrega";
+    if ($("#entregaId")) $("#entregaId").value = item.id;
+    if ($("#entregaAgricultor")) $("#entregaAgricultor").value = item.farmerId || "";
+    if ($("#entregaComprador")) $("#entregaComprador").value = item.buyerId || "";
+    if ($("#entregaProduto")) $("#entregaProduto").value = item.productId || "";
+    if ($("#entregaData")) $("#entregaData").value = item.date || nowDate();
+    if ($("#entregaHora")) $("#entregaHora").value = item.time || nowTime();
+    if ($("#entregaCaixas")) $("#entregaCaixas").value = item.boxes || "";
+    if ($("#entregaPesoCaixa")) $("#entregaPesoCaixa").value = item.weightPerBox || "";
+    if ($("#entregaPesoTotal")) $("#entregaPesoTotal").value = item.totalWeight || "";
+    if ($("#entregaValorKg")) $("#entregaValorKg").value = item.pricePerKg || "";
+    if ($("#entregaValorBruto")) $("#entregaValorBruto").value = item.grossValue || "";
+    if ($("#entregaObs")) $("#entregaObs").value = item.notes || "";
+    if ($("#entregaFormTitle")) $("#entregaFormTitle").textContent = "Editar entrega";
     openTab("entregas");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -1600,40 +1743,53 @@
   }
 
   function resetAgricultorForm() {
-    $("#agricultorForm").reset();
-    $("#agricultorId").value = "";
-    $("#agricultorFormTitle").textContent = "Novo agricultor";
+    $("#agricultorForm")?.reset();
+    if ($("#agricultorId")) $("#agricultorId").value = "";
+    if ($("#agricultorFormTitle")) $("#agricultorFormTitle").textContent = "Novo agricultor";
   }
 
   function resetCompradorForm() {
-    $("#compradorForm").reset();
-    $("#compradorId").value = "";
-    $("#compradorFormTitle").textContent = "Novo comprador";
+    $("#compradorForm")?.reset();
+    if ($("#compradorId")) $("#compradorId").value = "";
+    if ($("#compradorFormTitle")) $("#compradorFormTitle").textContent = "Novo comprador";
   }
 
   function resetProdutoForm() {
-    $("#produtoForm").reset();
-    $("#produtoId").value = "";
-    $("#produtoCategoria").value = "Uva";
-    $("#produtoFormTitle").textContent = "Novo produto";
+    $("#produtoForm")?.reset();
+    if ($("#produtoId")) $("#produtoId").value = "";
+    if ($("#produtoCategoria")) $("#produtoCategoria").value = "Uva";
+    if ($("#produtoFormTitle")) $("#produtoFormTitle").textContent = "Novo produto";
   }
 
   function resetEntregaForm() {
-    $("#entregaForm").reset();
-    $("#entregaId").value = "";
-    $("#entregaFormTitle").textContent = "Nova entrega";
-    $("#entregaData").value = nowDate();
-    $("#entregaHora").value = nowTime();
+    $("#entregaForm")?.reset();
+    if ($("#entregaId")) $("#entregaId").value = "";
+    if ($("#entregaFormTitle")) $("#entregaFormTitle").textContent = "Nova entrega";
+    if ($("#entregaData")) $("#entregaData").value = nowDate();
+    if ($("#entregaHora")) $("#entregaHora").value = nowTime();
   }
 
   function resetPagamentoForm() {
-    $("#pagamentoForm").reset();
-    $("#pagamentoId").value = "";
-    $("#pagamentoFormTitle").textContent = "Novo pagamento";
-    $("#pagamentoData").value = nowDate();
-    $("#pagamentoHora").value = nowTime();
-    $("#paymentDeliveryPicker").className = "delivery-picker empty";
-    $("#paymentDeliveryPicker").textContent = "Selecione comprador e agricultor para ver entregas pendentes.";
+    $("#pagamentoForm")?.reset();
+    if ($("#pagamentoId")) $("#pagamentoId").value = "";
+    if ($("#pagamentoFormTitle")) $("#pagamentoFormTitle").textContent = "Novo pagamento";
+    if ($("#pagamentoData")) $("#pagamentoData").value = nowDate();
+    if ($("#pagamentoHora")) $("#pagamentoHora").value = nowTime();
+    if ($("#paymentDeliveryPicker")) {
+      $("#paymentDeliveryPicker").className = "delivery-picker empty";
+      $("#paymentDeliveryPicker").textContent = "Selecione comprador e agricultor para ver entregas pendentes.";
+    }
+    if ($("#selectedDeliveryBox")) {
+      $("#selectedDeliveryBox").className = "selected-delivery-box empty";
+      $("#selectedDeliveryBox").innerHTML = 'Escolha uma entrega pendente clicando em <strong>Pagar</strong>.';
+    }
+    if ($("#pagamentoSaldoAtual")) $("#pagamentoSaldoAtual").value = "";
+    if ($("#pagamentoEntregaSelecionada")) $("#pagamentoEntregaSelecionada").value = "";
+    if ($("#pagamentoProdutoFiltro")) $("#pagamentoProdutoFiltro").value = "";
+    if ($("#pagamentoProduto")) {
+      $("#pagamentoProduto").innerHTML = '<option value="">Selecione uma entrega</option>';
+      $("#pagamentoProduto").disabled = true;
+    }
     updatePaymentPreview();
   }
 
@@ -1685,6 +1841,8 @@
     const benitaka = state.produtos.find(p => p.name === "Benitaka");
     const pitaya = state.produtos.find(p => p.name === "Pitaya");
     const nubia = state.produtos.find(p => p.name === "Núbia");
+
+    if (!benitaka || !pitaya || !nubia) return showToast("Produtos padrão não encontrados.", "error");
 
     const ent1 = {
       id: uid("ENT"),
@@ -1744,11 +1902,12 @@
       buyerId: buyer1.id,
       farmerId: farmer1.id,
       productId: benitaka.id,
+      paymentMethod: "Pix",
       date: nowDate(),
       time: "16:00",
       amount: 1500,
       notes: "Pagamento parcial",
-      description: `Pagamento referente à uva Benitaka entregue por ${farmer1.name} em ${formatDate(ent1.date)} às ${ent1.time}.`,
+      description: `Pagamento em Pix referente à uva Benitaka entregue por ${farmer1.name} em ${formatDate(ent1.date)} às ${ent1.time}.`,
       allocations: [{ deliveryId: ent1.id, amount: 1500 }],
       createdAt: now,
       updatedAt: now
