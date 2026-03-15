@@ -1,15 +1,16 @@
 (() => {
   "use strict";
 
-  const SCHEMA_VERSION = 2;
-  const STORAGE_KEY = "cvpro:data:v2";
+  const SCHEMA_VERSION = 3;
+  const STORAGE_KEY = "cvpro:data:v3";
   const RATES_TTL_MS = 12 * 60 * 60 * 1000;
 
   const CURRENCIES = ["BRL", "USD", "JPY"];
   const SIGNS = { BRL: "R$", USD: "US$", JPY: "¥" };
 
   const DEFAULT_LOAN_RATE = 0.0067; // 0,67% ao mês (0,5% + TR estimada)
-  const LOAN_RATE_LABEL = "Juros de Poupança (0,5% + TR)";
+  const DEFAULT_INTEREST_TYPE = "poupanca";
+  const INTEREST_TYPES = ["poupanca", "simples", "compostos"];
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -25,6 +26,13 @@
   const safeUUID = () => {
     if (globalThis.crypto?.randomUUID) return crypto.randomUUID();
     return `id_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+  };
+
+  const safeClone = (value) => {
+    try {
+      if (typeof structuredClone === "function") return structuredClone(value);
+    } catch {}
+    return JSON.parse(JSON.stringify(value));
   };
 
   const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
@@ -133,6 +141,30 @@
     return Math.max(0, months);
   };
 
+  const normalizeInterestType = (value) => INTEREST_TYPES.includes(value) ? value : DEFAULT_INTEREST_TYPE;
+
+  const getInterestTypeLabel = (type) => {
+    const t = normalizeInterestType(type);
+    if (t === "simples") return "Juros Simples";
+    if (t === "compostos") return "Juros Compostos";
+    return "Juros de Poupança";
+  };
+
+  const getInterestTypeHint = (type) => {
+    const t = normalizeInterestType(type);
+    if (t === "simples") return "Calcula sobre o valor base, sem juros sobre juros.";
+    if (t === "compostos") return "Calcula mês a mês sobre o saldo corrigido.";
+    return "Usa a taxa mensal informada como estimativa no modo poupança.";
+  };
+
+  const getInterestTypeLongLabel = (tx) => {
+    const type = normalizeInterestType(tx?.interestType);
+    const rate = Number.isFinite(tx?.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE;
+    if (type === "simples") return `Juros Simples (${(rate * 100).toFixed(2).replace(".", ",")}% ao mês)`;
+    if (type === "compostos") return `Juros Compostos (${(rate * 100).toFixed(2).replace(".", ",")}% ao mês)`;
+    return "Juros de Poupança (estimativa mensal)";
+  };
+
   /* ---------------- Storage ---------------- */
   const Storage = (() => {
     const defaultData = () => ({
@@ -145,9 +177,7 @@
       const v = Number(data?.schemaVersion ?? 0);
       if (!v) return defaultData();
 
-      if (v === SCHEMA_VERSION) return data;
-
-      let d = structuredClone(data);
+      let d = safeClone(data);
 
       if (v === 1) {
         d.schemaVersion = 2;
@@ -155,12 +185,44 @@
         d.transactions = Array.isArray(d.transactions) ? d.transactions : [];
 
         d.transactions = d.transactions.map(tx => {
-          const t = structuredClone(tx);
+          const t = safeClone(tx);
           if (!t.type) t.type = "venda";
           if (t.type === "emprestimo" && (t.loanRate == null)) t.loanRate = DEFAULT_LOAN_RATE;
           return t;
         });
+      }
 
+      if (Number(d.schemaVersion) === 2) {
+        d.settings = d.settings ?? defaultData().settings;
+        d.transactions = Array.isArray(d.transactions) ? d.transactions : [];
+
+        d.transactions = d.transactions.map(tx => {
+          const t = safeClone(tx);
+          if (t.type === "emprestimo") {
+            if (t.loanRate == null) t.loanRate = DEFAULT_LOAN_RATE;
+            t.interestType = normalizeInterestType(t.interestType);
+          } else {
+            t.interestType = null;
+          }
+          return t;
+        });
+
+        d.schemaVersion = 3;
+      }
+
+      if (Number(d.schemaVersion) === SCHEMA_VERSION) {
+        d.settings = d.settings ?? defaultData().settings;
+        d.transactions = Array.isArray(d.transactions) ? d.transactions : [];
+        d.transactions = d.transactions.map(tx => {
+          const t = safeClone(tx);
+          if (t.type === "emprestimo") {
+            if (t.loanRate == null) t.loanRate = DEFAULT_LOAN_RATE;
+            t.interestType = normalizeInterestType(t.interestType);
+          } else {
+            t.interestType = null;
+          }
+          return t;
+        });
         return d;
       }
 
@@ -169,8 +231,15 @@
 
     const load = () => {
       try {
-        const raw2 = localStorage.getItem(STORAGE_KEY);
-        if (raw2) return migrate(JSON.parse(raw2));
+        const raw3 = localStorage.getItem(STORAGE_KEY);
+        if (raw3) return migrate(JSON.parse(raw3));
+
+        const raw2 = localStorage.getItem("cvpro:data:v2");
+        if (raw2) {
+          const migrated = migrate(JSON.parse(raw2));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+          return migrated;
+        }
 
         const raw1 = localStorage.getItem("cvpro:data:v1");
         if (raw1) {
@@ -515,6 +584,7 @@
       }
 
       if (draft.type === "emprestimo") {
+        if (!INTEREST_TYPES.includes(draft.interestType)) errors.interestType = "Selecione o tipo de juros.";
         if (draft.loanRate != null && !Number.isFinite(draft.loanRate)) errors.loanRate = "Taxa inválida.";
         if (draft.loanRate != null && draft.loanRate < 0) errors.loanRate = "Taxa não pode ser negativa.";
       }
@@ -605,21 +675,31 @@
     };
 
     const loanInterestAccrued = (tx, asOfISO = todayISODate()) => {
-      if (tx.type !== "emprestimo") return { months: 0, rate: 0, interest: 0, base: 0, since: null };
+      if (tx.type !== "emprestimo") {
+        return { months: 0, rate: 0, interest: 0, base: 0, since: null, interestType: DEFAULT_INTEREST_TYPE };
+      }
+
       const overdue = overdueInstallments(tx, asOfISO);
-      if (!overdue.length) return { months: 0, rate: (Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE), interest: 0, base: sumByStatus(tx, "pendente"), since: null };
+      const interestType = normalizeInterestType(tx.interestType);
+      const rate = Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE;
+      const base = sumByStatus(tx, "pendente");
+
+      if (!overdue.length) return { months: 0, rate, interest: 0, base, since: null, interestType };
 
       overdue.sort((a, b) => (a.dueDate || "").localeCompare(b.dueDate || ""));
       const since = overdue[0]?.dueDate || null;
-
       const months = since ? monthsBetween(since, asOfISO) : 0;
-      if (!months) return { months: 0, rate: (Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE), interest: 0, base: sumByStatus(tx, "pendente"), since };
 
-      const base = sumByStatus(tx, "pendente");
-      const rate = Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE;
-      const interest = base * rate * months;
+      if (!months) return { months: 0, rate, interest: 0, base, since, interestType };
 
-      return { months, rate, interest, base, since };
+      let interest = 0;
+      if (interestType === "simples") {
+        interest = base * rate * months;
+      } else {
+        interest = base * (Math.pow(1 + rate, months) - 1);
+      }
+
+      return { months, rate, interest, base, since, interestType };
     };
 
     const applyAbatement = (tx, amountRaw, paidAtISO = todayISODate()) => {
@@ -849,13 +929,13 @@
               <details class="manual-card">
                 <summary id="m-loan"><span class="manual-ico">🏦</span> Empréstimos e juros transparentes</summary>
                 <div class="content">
-                  <p>Em <strong>Empréstimo</strong>, o sistema calcula juros de atraso com transparência:</p>
+                  <p>Agora você pode escolher no formulário entre <strong>Juros de Poupança</strong>, <strong>Juros Simples</strong> ou <strong>Juros Compostos</strong>.</p>
                   <ol class="manual-steps">
-                    <li>Pagou até o vencimento? <strong>juros = 0</strong>.</li>
-                    <li>Passou do vencimento? juros somam ao saldo restante com base no atraso.</li>
-                    <li>No relatório, aparece claro: <strong>${escapeHTML(LOAN_RATE_LABEL)}</strong>.</li>
+                    <li><strong>Poupança:</strong> usa a taxa mensal informada como estimativa no modo poupança.</li>
+                    <li><strong>Simples:</strong> calcula sobre o valor base, sem acumular juros sobre juros.</li>
+                    <li><strong>Compostos:</strong> calcula mês a mês sobre o saldo corrigido.</li>
                   </ol>
-                  <div class="manual-tip"><strong>Taxa padrão configurada:</strong> ${ratePct}% ao mês (estimativa). Se quiser, você pode editar a taxa no campo do empréstimo.</div>
+                  <div class="manual-tip"><strong>Taxa padrão sugerida:</strong> ${ratePct}% ao mês. Você pode editar a taxa e o tipo em cada empréstimo.</div>
                 </div>
               </details>
 
@@ -942,6 +1022,33 @@
   const Views = (() => {
     const main = $("#main");
     let pendingOpenDetailId = null;
+
+    const updateInterestTypeHelp = () => {
+      const sel = $("#interestType");
+      const hint = $("#interestTypeHint");
+      if (!sel || !hint) return;
+      hint.textContent = getInterestTypeHint(sel.value);
+    };
+
+    const ensureInterestTypeField = () => {
+      const loanRateField = $("#loanRateField");
+      if (!loanRateField || $("#interestType")) return;
+
+      const block = document.createElement("div");
+      block.className = "interest-type-block";
+      block.style.marginBottom = "12px";
+      block.innerHTML = `
+        <label for="interestType">Tipo de juros</label>
+        <select id="interestType" name="interestType">
+          <option value="poupanca">Juros de Poupança</option>
+          <option value="simples">Juros Simples</option>
+          <option value="compostos">Juros Compostos</option>
+        </select>
+        <div class="hint" id="interestTypeHint">${escapeHTML(getInterestTypeHint(DEFAULT_INTEREST_TYPE))}</div>
+        <div class="error" id="err-interestType" role="alert"></div>
+      `;
+      loanRateField.prepend(block);
+    };
 
     const show = (route) => {
       const map = {
@@ -1255,7 +1362,7 @@
 
       const interestInfo = (tx.type === "emprestimo")
         ? Domain.loanInterestAccrued(tx, todayISODate())
-        : { months: 0, rate: 0, interest: 0, base: 0, since: null };
+        : { months: 0, rate: 0, interest: 0, base: 0, since: null, interestType: DEFAULT_INTEREST_TYPE };
 
       const convInterest = (tx.type === "emprestimo")
         ? Rates.convert(interestInfo.interest, tx.currency, display, rates)
@@ -1265,21 +1372,23 @@
         ? Rates.convert(prog.pendingSum + interestInfo.interest, tx.currency, display, rates)
         : null;
 
+      const currentInterestLabel = getInterestTypeLongLabel(tx);
+
       const loanBlock = (tx.type !== "emprestimo") ? "" : `
         <div class="box">
           <div class="k">Rendimento mensal estimado</div>
           <div class="v">${formatCurrency(convYield && convYield.ok ? convYield.value : loanYield, (convYield && convYield.ok) ? display : tx.currency)} ${(convYield && convYield.ok) ? "" : "⚠"}</div>
-          <div class="hint">Taxa: ${((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2).replace(".", ",")}% ao mês (estimativa)</div>
+          <div class="hint">Tipo: ${escapeHTML(getInterestTypeLabel(tx.interestType))} • Taxa: ${((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2).replace(".", ",")}% ao mês</div>
         </div>
       `;
 
       const interestBlock = (tx.type !== "emprestimo") ? "" : `
         <div class="box">
-          <div class="k">${escapeHTML(LOAN_RATE_LABEL)}</div>
+          <div class="k">${escapeHTML(currentInterestLabel)}</div>
           <div class="v">${interestInfo.months ? formatCurrency(convInterest && convInterest.ok ? convInterest.value : interestInfo.interest, (convInterest && convInterest.ok) ? display : tx.currency) : formatCurrency(0, display)}</div>
           <div class="hint">
             ${interestInfo.months
-              ? `Atraso: ${interestInfo.months} mês(es) (desde ${formatDateBR(interestInfo.since)}) • Base: ${formatCurrency(Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? Rates.convert(interestInfo.base, tx.currency, display, rates).value : interestInfo.base, Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? display : tx.currency)} • Taxa: ${(interestInfo.rate * 100).toFixed(2).replace(".", ",")}%`
+              ? `Atraso: ${interestInfo.months} mês(es) (desde ${formatDateBR(interestInfo.since)}) • Base: ${formatCurrency(Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? Rates.convert(interestInfo.base, tx.currency, display, rates).value : interestInfo.base, Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? display : tx.currency)} • Regra: ${escapeHTML(getInterestTypeLabel(interestInfo.interestType))}`
               : `Sem atraso: pagando até o vencimento, não há cobrança de juros sobre o saldo restante.`
             }
           </div>
@@ -1389,6 +1498,8 @@
     };
 
     const renderForm = () => {
+      ensureInterestTypeField();
+
       const state = App.getState();
       $("#displayCurrency").value = state.settings.displayCurrency;
 
@@ -1404,6 +1515,7 @@
       const t = $("#type").value || "";
       $("#loanRateField").hidden = t !== "emprestimo";
 
+      updateInterestTypeHelp();
       updateInstallmentPreview();
     };
 
@@ -1461,7 +1573,19 @@
         `Prévia: ${inst.length} parcela(s). 1ª: ${formatDateBR(first.dueDate)} • Última: ${formatDateBR(last.dueDate)} • Última parcela: ${lastValue}.`;
     };
 
-    return { show, routeFromHash, goToDetail, renderDashboard, renderTransactions, renderDetail, renderForm, renderSettingsMeta, updateInstallmentPreview };
+    return {
+      show,
+      routeFromHash,
+      goToDetail,
+      renderDashboard,
+      renderTransactions,
+      renderDetail,
+      renderForm,
+      renderSettingsMeta,
+      updateInstallmentPreview,
+      ensureInterestTypeField,
+      updateInterestTypeHelp
+    };
   })();
 
   /* ---------------- Receipt / Report ---------------- */
@@ -1516,7 +1640,7 @@
 
       const interestInfo = (tx.type === "emprestimo") ? Domain.loanInterestAccrued(tx, todayISODate()) : null;
       const extra = (tx.type === "emprestimo" && interestInfo && interestInfo.months)
-        ? `Obs.: há juros por atraso (${LOAN_RATE_LABEL}) informados no relatório.`
+        ? `Obs.: há juros por atraso no modelo ${getInterestTypeLabel(tx.interestType)} informados no relatório.`
         : "";
 
       return [
@@ -1573,7 +1697,7 @@
 
         const interestInfo = (tx.type === "emprestimo")
           ? Domain.loanInterestAccrued(tx, todayISODate())
-          : { months: 0, rate: 0, interest: 0, base: 0, since: null };
+          : { months: 0, rate: 0, interest: 0, base: 0, since: null, interestType: DEFAULT_INTEREST_TYPE };
 
         const convInterest = (tx.type === "emprestimo")
           ? Rates.convert(interestInfo.interest, tx.currency, display, rates)
@@ -1592,17 +1716,17 @@
           <div class="box">
             <div class="k">Rendimento mensal estimado</div>
             <div class="v">${formatCurrency(convYield && convYield.ok ? convYield.value : loanYield, (convYield && convYield.ok) ? display : tx.currency)} ${(convYield && convYield.ok) ? "" : "⚠"}</div>
-            <div class="muted">Taxa: ${((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2).replace(".", ",")}% ao mês (estimativa)</div>
+            <div class="muted">Tipo: ${escapeHTML(getInterestTypeLabel(tx.interestType))} • Taxa: ${((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2).replace(".", ",")}% ao mês</div>
           </div>
         `;
 
         const interestBlock = (tx.type !== "emprestimo") ? "" : `
           <div class="box">
-            <div class="k">${escapeHTML(LOAN_RATE_LABEL)}</div>
+            <div class="k">${escapeHTML(getInterestTypeLongLabel(tx))}</div>
             <div class="v">${interestInfo.months ? formatCurrency(convInterest && convInterest.ok ? convInterest.value : interestInfo.interest, (convInterest && convInterest.ok) ? display : tx.currency) : formatCurrency(0, display)}</div>
             <div class="muted">
               ${interestInfo.months
-                ? `Atraso: ${interestInfo.months} mês(es) (desde ${formatDateBR(interestInfo.since)}) • Base: ${formatCurrency(Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? Rates.convert(interestInfo.base, tx.currency, display, rates).value : interestInfo.base, Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? display : tx.currency)} • Taxa: ${(interestInfo.rate * 100).toFixed(2).replace(".", ",")}%`
+                ? `Atraso: ${interestInfo.months} mês(es) (desde ${formatDateBR(interestInfo.since)}) • Base: ${formatCurrency(Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? Rates.convert(interestInfo.base, tx.currency, display, rates).value : interestInfo.base, Rates.convert(interestInfo.base, tx.currency, display, rates).ok ? display : tx.currency)} • Regra: ${escapeHTML(getInterestTypeLabel(interestInfo.interestType))}`
                 : `Sem atraso: pagando até o vencimento, não há cobrança de juros sobre o saldo restante.`
               }
             </div>
@@ -1689,13 +1813,14 @@
         if (tx.type === "emprestimo") {
           const rate = Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE;
           const info = Domain.loanInterestAccrued(tx, todayISODate());
+          textLines.push(`Tipo de juros: ${getInterestTypeLabel(tx.interestType)}`);
           if (info.months) {
             const ci = Rates.convert(info.interest, tx.currency, display, rates);
             const ctot = Rates.convert(prog.pendingSum + info.interest, tx.currency, display, rates);
-            textLines.push(`${LOAN_RATE_LABEL}: ${formatCurrency(ci.ok ? ci.value : info.interest, ci.ok ? display : tx.currency)} (${info.months} mês(es), taxa ${String((rate * 100).toFixed(2)).replace(".", ",")}%)`);
+            textLines.push(`${getInterestTypeLongLabel(tx)}: ${formatCurrency(ci.ok ? ci.value : info.interest, ci.ok ? display : tx.currency)} (${info.months} mês(es), taxa ${String((rate * 100).toFixed(2)).replace(".", ",")}%)`);
             textLines.push(`Em aberto (com juros): ${formatCurrency(ctot.ok ? ctot.value : (prog.pendingSum + info.interest), ctot.ok ? display : tx.currency)}`);
           } else {
-            textLines.push(`${LOAN_RATE_LABEL}: 0 (pagamento em dia)`);
+            textLines.push(`${getInterestTypeLongLabel(tx)}: 0 (pagamento em dia)`);
           }
         }
 
@@ -1857,17 +1982,10 @@
       }
     };
 
-    /* =========================================================
-       ✅ FIX MOBILE PDF/PRINT
-       - Remove window.open (bloqueado em Android/WebView)
-       - Usa iframe invisível no mesmo documento (mais confiável)
-       - afterprint + fallback de timeout para limpeza
-    ========================================================= */
     const print = () => {
       const { html } = buildDoc();
       if (!html) return;
 
-      // Limpa impressão anterior se ficou algum iframe preso
       const prev = document.getElementById("cvpro-print-frame");
       if (prev) prev.remove();
 
@@ -1908,7 +2026,6 @@
       const iframe = document.createElement("iframe");
       iframe.id = "cvpro-print-frame";
       iframe.setAttribute("title", "Impressão");
-      // fora da tela, mas presente no DOM
       iframe.style.position = "fixed";
       iframe.style.right = "0";
       iframe.style.bottom = "0";
@@ -1923,7 +2040,6 @@
         try { iframe.remove(); } catch {}
       };
 
-      // Alguns navegadores disparam afterprint na janela principal
       window.addEventListener("afterprint", cleanup, { once: true });
 
       iframe.onload = () => {
@@ -1934,10 +2050,8 @@
           return;
         }
 
-        // afterprint dentro do iframe (quando disponível)
         try { w.onafterprint = () => cleanup(); } catch {}
 
-        // Em mobile, às vezes precisa de um pequeno delay pra “assentar” layout
         window.setTimeout(() => {
           try {
             w.focus();
@@ -1948,13 +2062,10 @@
           }
         }, 80);
 
-        // fallback duro (caso afterprint não dispare)
         window.setTimeout(() => cleanup(), 15000);
       };
 
-      // srcdoc é mais simples e evita depender de document.write
       iframe.srcdoc = doc;
-
       document.body.appendChild(iframe);
     };
 
@@ -2026,6 +2137,8 @@
   }
 
   function setFormDefaults() {
+    Views.ensureInterestTypeField();
+
     $("#agreementDate").value = todayISODate();
     $("#numInstallments").value = "";
     $("#dueDay").value = "";
@@ -2034,12 +2147,16 @@
     $("#counterpartyDoc").value = "";
     $("#installmentValue").value = "";
     $("#loanRate").value = "0,67";
+    if ($("#interestType")) $("#interestType").value = DEFAULT_INTEREST_TYPE;
+    Views.updateInterestTypeHelp();
     clearErrors();
     const fm = $("#formMeta");
     if (fm) fm.textContent = "";
   }
 
   function populateForm(tx) {
+    Views.ensureInterestTypeField();
+
     $("#txId").value = tx.id;
     $("#type").value = tx.type;
     $("#item").value = tx.item;
@@ -2052,6 +2169,13 @@
     $("#loanRate").value = tx.type === "emprestimo"
       ? String(((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2)).replace(".", ",")
       : "0,67";
+
+    if ($("#interestType")) {
+      $("#interestType").value = tx.type === "emprestimo"
+        ? normalizeInterestType(tx.interestType)
+        : DEFAULT_INTEREST_TYPE;
+    }
+    Views.updateInterestTypeHelp();
 
     const pm = tx.paymentMode || "avista";
     $$("input[name='paymentMode']").forEach(r => r.checked = (r.value === pm));
@@ -2111,6 +2235,10 @@
       ? (Number.isFinite(loanRatePct) && loanRatePct > 0 ? (loanRatePct / 100) : DEFAULT_LOAN_RATE)
       : null;
 
+    const interestType = type === "emprestimo"
+      ? normalizeInterestType($("#interestType")?.value || DEFAULT_INTEREST_TYPE)
+      : null;
+
     return {
       id: existing?.id || safeUUID(),
       type, item, counterpartyName, counterpartyDoc,
@@ -2119,6 +2247,7 @@
       frequency: paymentMode === "parcelado" ? frequency : null,
       notes,
       loanRate,
+      interestType,
       createdAt: existing?.createdAt || nowISO(),
       updatedAt: nowISO(),
       _numInstallments: paymentMode === "parcelado" ? numInstallments : null,
@@ -2133,6 +2262,7 @@
     UI.setFieldError("counterpartyName", errors.counterpartyName || "");
     UI.setFieldError("totalValue", errors.totalValue || "");
     UI.setFieldError("agreementDate", errors.agreementDate || "");
+    UI.setFieldError("interestType", errors.interestType || "");
     UI.setFieldError("numInstallments", errors.numInstallments || "");
     UI.setFieldError("dueDay", errors.dueDay || "");
     UI.setFieldError("installmentValue", errors.installmentValue || "");
@@ -2140,6 +2270,8 @@
 
   /* ---------------- Wiring ---------------- */
   function wire() {
+    Views.ensureInterestTypeField();
+
     window.addEventListener("hashchange", () => Views.show(Views.routeFromHash()));
     Views.show(Views.routeFromHash());
 
@@ -2231,6 +2363,12 @@
       const t = $("#type").value;
       $("#loanRateField").hidden = t !== "emprestimo";
       if (t === "emprestimo" && !$("#loanRate").value.trim()) $("#loanRate").value = "0,67";
+      if (t === "emprestimo" && $("#interestType")) $("#interestType").value = $("#interestType").value || DEFAULT_INTEREST_TYPE;
+      Views.updateInterestTypeHelp();
+    });
+
+    $("#interestType")?.addEventListener("change", () => {
+      Views.updateInterestTypeHelp();
     });
 
     $("#txForm").addEventListener("submit", (e) => {
@@ -2255,6 +2393,7 @@
         dueDay: draft._dueDay || 0,
         installmentValue: draft._installmentValue,
         loanRate: draft.loanRate,
+        interestType: draft.interestType,
       };
 
       if (draft.paymentMode === "parcelado" && draft._numInstallments != null && Number.isNaN(draft._numInstallments)) {
@@ -2313,6 +2452,7 @@
         })),
         notes: draft.notes,
         loanRate: draft.type === "emprestimo" ? (Number.isFinite(draft.loanRate) ? draft.loanRate : DEFAULT_LOAN_RATE) : null,
+        interestType: draft.type === "emprestimo" ? normalizeInterestType(draft.interestType) : null,
         createdAt: draft.createdAt,
         updatedAt: draft.updatedAt,
       };
@@ -2492,6 +2632,7 @@
         }),
         notes: "Você pode editar ou excluir este exemplo.",
         loanRate: DEFAULT_LOAN_RATE,
+        interestType: DEFAULT_INTEREST_TYPE,
         createdAt: nowISO(),
         updatedAt: nowISO(),
       };

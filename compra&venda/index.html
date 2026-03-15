@@ -33,7 +33,6 @@
     </nav>
   </header>
 
-  <!-- Menu overlay -->
   <div class="overlay" id="menuOverlay" hidden>
     <div class="overlay-scrim" data-close="menu" tabindex="-1" aria-hidden="true"></div>
 
@@ -76,7 +75,6 @@
   <main id="main" class="app-main" role="main" tabindex="-1">
     <div class="toast-wrap" aria-live="polite" aria-relevant="additions" aria-atomic="false" id="toastWrap"></div>
 
-    <!-- Dashboard -->
     <section class="view" id="view-dashboard" data-view="dashboard" hidden>
       <header class="view-header">
         <h1 class="view-title">Dashboard</h1>
@@ -128,7 +126,6 @@
       </div>
     </section>
 
-    <!-- Transactions -->
     <section class="view" id="view-transactions" data-view="transactions" hidden>
       <header class="view-header">
         <h1 class="view-title">Transações</h1>
@@ -213,7 +210,6 @@
       </div>
     </section>
 
-    <!-- Form -->
     <section class="view" id="view-form" data-view="form" hidden>
       <header class="view-header">
         <h1 class="view-title" id="formTitle">Nova transação</h1>
@@ -283,9 +279,23 @@
             </div>
 
             <div class="field" id="loanRateField" hidden>
-              <label for="loanRate">Rendimento mensal estimado (opcional)</label>
-              <input id="loanRate" name="loanRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
-              <div class="hint">Padrão sugerido: 0,67% ao mês (0,5% + TR estimada).</div>
+              <div class="row row-2 loan-row">
+                <div class="field loan-field">
+                  <label for="loanInterestType">Tipo de juros</label>
+                  <select id="loanInterestType" name="loanInterestType">
+                    <option value="poupanca">Juros de Poupança</option>
+                    <option value="simples">Juros Simples</option>
+                    <option value="compostos">Juros Compostos</option>
+                  </select>
+                  <div class="hint" id="loanTypeHint">Usa a taxa mensal informada como referência do cálculo.</div>
+                </div>
+
+                <div class="field loan-field">
+                  <label for="loanRate">Rendimento mensal estimado (opcional)</label>
+                  <input id="loanRate" name="loanRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
+                  <div class="hint">Informe a taxa ao mês em porcentagem. Ex.: 0,67 ou 2,00.</div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -333,8 +343,7 @@
                   <div class="error" id="err-installmentValue" role="alert"></div>
                 </div>
                 <div class="field">
-                  <label for="spacer2"> </label>
-                  <div class="hint" style="margin-top:10px">Ideal quando o cliente define um valor fixo por mês.</div>
+                  <div class="hint spacer-hint">Ideal quando o cliente define um valor fixo por mês.</div>
                 </div>
               </div>
 
@@ -358,7 +367,6 @@
     </section>
   </main>
 
-  <!-- ✅ Receipt Overlay (corrigido: body rolável interno + footer fixo) -->
   <div class="overlay" id="receiptOverlay" hidden>
     <div class="overlay-scrim" data-close="receipt" tabindex="-1" aria-hidden="true"></div>
 
