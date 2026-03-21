@@ -81,7 +81,6 @@
               <div class="sum-v" id="sumIncome">¥0</div>
             </div>
 
-            <!-- ✅ ADICIONADO: id para o card do saldo (usado pelo money-effects.js/app.js) -->
             <div class="sum-item" id="sumBalanceCard">
               <div class="sum-k">Saldo</div>
               <div class="sum-v" id="sumBalance">¥0</div>
@@ -93,16 +92,20 @@
           <div class="year-grid" id="yearGrid" aria-label="Calendário anual"></div>
 
           <div class="month-area hidden" id="monthArea">
-            <div class="dow">
-              <div>Dom</div>
-              <div>Seg</div>
-              <div>Ter</div>
-              <div>Qua</div>
-              <div>Qui</div>
-              <div>Sex</div>
-              <div>Sáb</div>
+            <div class="month-scroll-x" aria-label="Área rolável horizontal do calendário mensal">
+              <div class="month-scroll-inner">
+                <div class="dow">
+                  <div>Dom</div>
+                  <div>Seg</div>
+                  <div>Ter</div>
+                  <div>Qua</div>
+                  <div>Qui</div>
+                  <div>Sex</div>
+                  <div>Sáb</div>
+                </div>
+                <div class="month-grid" id="monthGrid" aria-label="Calendário mensal"></div>
+              </div>
             </div>
-            <div class="month-grid" id="monthGrid" aria-label="Calendário mensal"></div>
           </div>
         </div>
 
@@ -139,9 +142,7 @@
             </div>
           </div>
 
-          <!-- Projeções do mês (bruto/líquido) -->
-          <div class="summary-bar" id="financeProjectionBar"
-            style="margin-top:10px; grid-template-columns: repeat(4, 1fr);">
+          <div class="summary-bar" id="financeProjectionBar" style="margin-top:10px; grid-template-columns: repeat(4, 1fr);">
             <div class="sum-item">
               <div class="sum-k">Bruto (real)</div>
               <div class="sum-v" id="projGrossReal">¥0</div>
@@ -160,7 +161,6 @@
             </div>
           </div>
 
-          <!-- Filters only for Entries mode -->
           <div class="panel-row" id="financeFiltersRow" style="margin-top:10px;">
             <div class="chips" role="tablist" aria-label="Filtros do financeiro">
               <button class="chip chip-active" data-fin-filter="all" role="tab" aria-selected="true">Tudo</button>
@@ -171,7 +171,6 @@
             </div>
           </div>
 
-          <!-- Top summary: always visible -->
           <div class="finance-top">
             <div class="big-metric">
               <div class="big-k" id="finBigLabel">Saldo do mês</div>
@@ -191,7 +190,6 @@
             </div>
           </div>
 
-          <!-- Extra metrics for Budget mode -->
           <div class="summary-bar hidden" id="budgetSummaryBar" style="margin-top:10px;">
             <div class="sum-item">
               <div class="sum-k">Fixas</div>
@@ -212,7 +210,6 @@
           </div>
         </div>
 
-        <!-- Entries mode -->
         <div id="financeEntriesWrap" class="finance-wrap">
           <div class="list-area" id="financeList" aria-label="Lista de lançamentos"></div>
 
@@ -223,7 +220,6 @@
           </div>
         </div>
 
-        <!-- Budget mode -->
         <div id="financeBudgetWrap" class="finance-wrap hidden">
           <div class="list-area" aria-label="Despesas fixas e variáveis">
             <div class="list" id="budgetLists"></div>
@@ -307,6 +303,10 @@
         </div>
 
         <div class="drawer-items">
+          <button class="drawer-item" data-open="tutorial">
+            <i class="fa-regular fa-circle-question"></i>
+            <span>Tutorial rápido</span>
+          </button>
           <button class="drawer-item" data-open="settings">
             <i class="fa-solid fa-gear"></i>
             <span>Configurações</span>
