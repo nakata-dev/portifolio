@@ -70,14 +70,15 @@ function normalizeName(s) {
    - hiragana \u3040-\u309F
    - katakana \u30A0-\u30FF
    - kanji (CJK) \u4E00-\u9FFF
+   - letras latinas comuns usadas em jap (GB, Wi-Fi etc)
+   - números half/full width
    - espaço normal e japonês
-   - números
    - pontuação básica
    - furigana manual com chaves: { }
    - parênteses japoneses: （ ）
 */
 const JP_ALLOWED_RE =
-  /^[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF 　。、！？・ー\-~!?.,:;()（）「」『』【】［］…\n\r\t0-9{}]*$/;
+  /^[A-Za-z\uFF21-\uFF3A\uFF41-\uFF5A\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF 　。、！？・ー\-~!?.,:;()（）「」『』【】［］…\n\r\t0-9\uFF10-\uFF19{}%％＋+／/＝=＆&・'’"”“#＃]*$/;
 
 function isValidJP(text) {
   if (typeof text !== "string") return false;
@@ -217,8 +218,8 @@ function defaultState() {
       index: 0,
       phraseId: null,
       callMode: false,
+      callBusy: false,
 
-      // filtro opcional (pra ficar organizado)
       topicFilter: "ALL",
 
       study: { day: todayKey(), totalMs: 0, running: false, runStartAt: null }
@@ -226,7 +227,7 @@ function defaultState() {
 
     ui: {
       lastToast: "",
-      collapsedTopics: {} // { [topicId]: true/false }
+      collapsedTopics: {}
     }
   };
 }
@@ -237,7 +238,6 @@ let STATE = loadState();
 function migrateToV3(st) {
   if (!st || !st.app) return defaultState();
 
-  // 1) cria estruturas
   st.app.schemaVersion = 3;
 
   st.bank ||= {};
@@ -249,49 +249,42 @@ function migrateToV3(st) {
 
   st.session ||= {};
   st.session.topicFilter ||= "ALL";
+  st.session.callBusy ||= false;
 
-  // 2) garante tópico default
   let def = st.bank.topics.find(t => t.id === "topic_default");
   if (!def) {
     def = defaultTopic();
     st.bank.topics.unshift(def);
   }
 
-  // 3) garante topicId em frases
   for (const p of st.bank.phrases) {
     if (!p.topicId) p.topicId = def.id;
   }
 
-  // 4) stats extras
   st.stats ||= {};
   st.stats.listens ||= 0;
   st.stats.calls ||= 0;
 
-  // 5) habit
   st.habit ||= { firstDay: null, days: {} };
   st.habit.days ||= {};
 
-  // 6) session study
   st.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
 
   return st;
 }
 
 function loadState() {
-  // tenta v3 primeiro
   let raw = localStorage.getItem(LS_KEY);
   if (raw) {
     const parsed = safeJSONParse(raw);
     if (parsed && parsed.app?.schemaVersion === 3) return parsed;
   }
 
-  // tenta chaves antigas (v2)
   const legacyRaw = localStorage.getItem("jp_105x_v2");
   if (legacyRaw) {
     const parsed = safeJSONParse(legacyRaw);
     if (parsed && parsed.app) {
       const migrated = migrateToV3(parsed);
-      // salva já em v3
       localStorage.setItem(LS_KEY, JSON.stringify(migrated));
       return migrated;
     }
@@ -307,6 +300,7 @@ function saveState() {
 
 /* ---------- audio / haptics ---------- */
 let audioCtx = null;
+let callFlowState = { busy: false, token: 0, timers: [] };
 
 function unlockAudio() {
   if (STATE.prefs.audio.unlocked) return;
@@ -357,6 +351,22 @@ function vibrate(pattern = [10]) {
   if (!STATE.prefs.haptics.enabled) return;
   if (!navigator.vibrate) return;
   navigator.vibrate(pattern);
+}
+
+function clearCallFlow() {
+  callFlowState.token += 1;
+  callFlowState.busy = false;
+  callFlowState.timers.forEach(id => clearTimeout(id));
+  callFlowState.timers = [];
+  STATE.session.callBusy = false;
+  try { speechSynthesis.cancel(); } catch {}
+  const sheet = $("#cycleSheet");
+  if (sheet && sheet.dataset.mode === "call") {
+    sheet.style.display = "none";
+    sheet.innerHTML = "";
+    delete sheet.dataset.mode;
+  }
+  saveState();
 }
 
 /* ---------- UI helpers ---------- */
@@ -469,7 +479,6 @@ function createTopic(name) {
   const n = normalizeName(name);
   if (!n) return null;
 
-  // evita duplicatas “quase iguais”
   const exists = STATE.bank.topics.some(t => t.name.toLowerCase() === n.toLowerCase());
   if (exists) return null;
 
@@ -487,19 +496,15 @@ function deleteTopic(topicId) {
   const def = ensureDefaultTopic();
   if (topicId === def.id) return false;
 
-  // move frases pro default
   for (const p of STATE.bank.phrases) {
     if (p.topicId === topicId) p.topicId = def.id;
   }
 
-  // remove tópico
   const idx = STATE.bank.topics.findIndex(t => t.id === topicId);
   if (idx >= 0) STATE.bank.topics.splice(idx, 1);
 
-  // remove collapse state
   if (STATE.ui?.collapsedTopics) delete STATE.ui.collapsedTopics[topicId];
 
-  // se filtro estava nesse tópico, volta pra ALL
   if (STATE.session.topicFilter === topicId) STATE.session.topicFilter = "ALL";
 
   saveState();
@@ -573,6 +578,8 @@ function nextPhrase() {
   const q = STATE.session.queue;
   if (!q.length) return;
 
+  clearCallFlow();
+
   STATE.session.index = clamp(STATE.session.index + 1, 0, q.length - 1);
   STATE.session.phraseId = q[STATE.session.index];
   resetCountForPhrase(STATE.session.phraseId);
@@ -583,6 +590,8 @@ function skipPhrase() {
   const q = STATE.session.queue;
   const current = STATE.session.phraseId;
   if (!current || !q.length) return;
+
+  clearCallFlow();
 
   const idx = STATE.session.index;
   q.splice(idx, 1);
@@ -695,6 +704,8 @@ function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
 }
 
 function speakWithKaraoke(jpRaw, rate, kanaEl) {
+  if (callFlowState.busy) return;
+
   const plain = jpStripFurigana(jpRaw);
 
   STATE.stats.listens = (STATE.stats.listens || 0) + 1;
@@ -712,7 +723,17 @@ function speakWithKaraoke(jpRaw, rate, kanaEl) {
 
 /* ---------- call and response ---------- */
 function callAndResponse(jpRaw, rate, kanaEl, onDone) {
+  if (callFlowState.busy) {
+    toast("espera o ciclo de chamada terminar ✅");
+    beep("tuk");
+    return;
+  }
+
   const plain = jpStripFurigana(jpRaw);
+  const token = ++callFlowState.token;
+  callFlowState.busy = true;
+  STATE.session.callBusy = true;
+  saveState();
 
   STATE.stats.calls = (STATE.stats.calls || 0) + 1;
   habitBump(todayKey(), "calls", 1);
@@ -720,21 +741,41 @@ function callAndResponse(jpRaw, rate, kanaEl, onDone) {
   const ok = ttsSpeak(
     plain,
     rate,
-    () => karaokePlay(kanaEl, plain, rate),
+    () => {
+      if (token !== callFlowState.token) return;
+      karaokePlay(kanaEl, plain, rate);
+    },
     () => {}
   );
 
   const t = estimateDurationMs(plain, rate);
-  setTimeout(() => showNowYouSheet(onDone), t + 90);
+  const id = setTimeout(() => {
+    if (token !== callFlowState.token) return;
+    showNowYouSheet(token, () => {
+      if (token !== callFlowState.token) return;
+      callFlowState.busy = false;
+      STATE.session.callBusy = false;
+      saveState();
+      onDone && onDone();
+    });
+  }, t + 90);
 
-  if (!ok) toast("sem audio. mas da pra treinar lendo.");
+  callFlowState.timers.push(id);
+
+  if (!ok) {
+    callFlowState.busy = false;
+    STATE.session.callBusy = false;
+    saveState();
+    toast("sem audio. mas da pra treinar lendo.");
+  }
 }
 
-function showNowYouSheet(onDone) {
+function showNowYouSheet(token, onDone) {
   const sheet = $("#cycleSheet");
   if (!sheet) return;
 
   sheet.style.display = "block";
+  sheet.dataset.mode = "call";
   sheet.innerHTML = `
     <div class="stamp">agora voce ✅</div>
     <div class="small">repete em voz alta. sem pressa.</div>
@@ -746,17 +787,22 @@ function showNowYouSheet(onDone) {
 
   let c = 2;
   const tick = () => {
+    if (token !== callFlowState.token) return;
     c--;
     const el = $("#nyCount");
     if (el) el.textContent = String(Math.max(0, c));
     if (c <= 0) {
       sheet.style.display = "none";
+      sheet.innerHTML = "";
+      delete sheet.dataset.mode;
       onDone && onDone();
       return;
     }
-    setTimeout(tick, 1000);
+    const id = setTimeout(tick, 1000);
+    callFlowState.timers.push(id);
   };
-  setTimeout(tick, 1000);
+  const id = setTimeout(tick, 1000);
+  callFlowState.timers.push(id);
 }
 
 /* ---------- 105X engine ---------- */
@@ -765,6 +811,8 @@ function onRepeat() {
 
   const pid = STATE.session.phraseId;
   if (!pid) return;
+
+  clearCallFlow();
 
   const p = getPhrase(pid);
   if (!p) return;
@@ -824,6 +872,7 @@ function showCycleSheet(masteredNow) {
   const sheet = $("#cycleSheet");
   if (!sheet) return;
   sheet.style.display = "block";
+  delete sheet.dataset.mode;
 
   const msg = masteredNow
     ? "frase dominada. voce ficou mais rico ✅"
@@ -1263,7 +1312,6 @@ function renderHome() {
   if (sel) {
     sel.addEventListener("change", () => {
       STATE.session.topicFilter = sel.value;
-      // reinicia fila se sessão já estiver ativa
       if (STATE.session.inProgress) {
         STATE.session.queue = buildQueue();
         STATE.session.index = 0;
@@ -1302,13 +1350,60 @@ function renderTopicMiniPills(selectedId) {
   `;
 }
 
+function render105xEmptyState() {
+  const currentFilter = STATE.session.topicFilter || "ALL";
+  const label = currentFilter === "ALL" ? "tudo" : topicName(currentFilter);
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="studyTop">
+          <div class="badge">105x</div>
+          <div class="studyTimer" aria-label="tempo de estudo">
+            <div class="studyTimerRow">
+              <div class="studyTime"><span class="ic">⏱</span> <span id="studyTime">00:00</span></div>
+              <div class="studyHint">meta 10:00</div>
+            </div>
+            <div class="studyBar"><div class="studyFill" id="studyFill"></div></div>
+          </div>
+          <div class="studyActions">
+            <button class="miniBtn" title="skills" aria-label="skills" data-nav="#/skills">🏅</button>
+            <button class="miniBtn" title="editar frases" aria-label="editar frases" data-nav="#/manage">✏️</button>
+          </div>
+        </div>
+
+        ${renderTopicMiniPills(currentFilter)}
+
+        <div class="sheet stack">
+          <div class="badge">sem frases neste filtro</div>
+          <div class="small">agora: ${escapeHTML(label)}</div>
+          <div class="small">adicione frases nesse topico ou volte o treino para “tudo”.</div>
+
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="topicFilter" data-id="ALL">treinar tudo</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/edit">cadastrar frase</button>
+          </div>
+
+          <div class="row">
+            <button class="btn" data-nav="#/manage">gerenciar topicos</button>
+            <button class="btn" data-nav="#/home">sair</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+
+  startStudyTimerIfOn105x();
+  ensureBackTopButton();
+  updateBackTopVisibility();
+}
+
 function render105x() {
   if (!STATE.session.inProgress) {
     startAuto();
     return;
   }
 
-  // se filtro mudou e fila ficou vazia
   if (!STATE.session.queue || !STATE.session.queue.length) {
     STATE.session.queue = buildQueue();
     STATE.session.index = 0;
@@ -1320,6 +1415,11 @@ function render105x() {
     STATE.session.phraseId = STATE.session.queue[0];
     STATE.session.index = 0;
     saveState();
+  }
+
+  if (!STATE.session.queue.length || !STATE.session.phraseId) {
+    render105xEmptyState();
+    return;
   }
 
   const curPhrase = getPhrase(STATE.session.phraseId);
@@ -1364,7 +1464,7 @@ function render105x() {
             </div>
           </div>
 
-          <div class="stack" style="flex:1; min-width: 200px">
+          <div class="stack" style="flex:1; min-width: 0">
             <div class="kana" id="kanaLine"></div>
             <div class="pt" id="ptLine"></div>
 
@@ -1430,7 +1530,6 @@ function renderPhraseListOnly() {
   const byTopic = new Map();
   const phrases = phrasesByFilter();
 
-  // agrupa mantendo a ordem dos tópicos
   const topics = STATE.bank.topics || [];
   for (const t of topics) byTopic.set(t.id, []);
   byTopic.set("_missing", []);
@@ -1542,7 +1641,7 @@ function render105xBodyOnly() {
   nw.innerHTML = renderNewWords(p.newWords || []);
 
   const sheet = $("#cycleSheet");
-  if (sheet && sheet.style.display === "block" && count > 1) {
+  if (sheet && sheet.style.display === "block" && count > 1 && sheet.dataset.mode !== "call") {
     sheet.style.display = "none";
   }
 }
@@ -1605,12 +1704,12 @@ function renderEdit(editingId = null) {
 
           <div class="sep"></div>
 
-          <div class="small">jp (aceita kanji. furigana manual: 仕事{しごと}. parênteses （ ） ok)</div>
-          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 私{わたし} の名前{なまえ} は あきおです。" value="${escapeHTML(jpVal)}" />
+          <div class="small">jp (aceita kanji, numeros, GB, Wi-Fi, 8時30分. furigana manual: 仕事{しごと})</div>
+          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 30GBの固定プランはありますか。" value="${escapeHTML(jpVal)}" />
           <div class="small">pt</div>
-          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: meu nome é Akio." value="${escapeHTML(ptVal)}" />
+          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: existe um plano fixo de 30 GB?" value="${escapeHTML(ptVal)}" />
           <div class="small">palavras novas (opcional) formato: jp=pt, jp=pt</div>
-          <input id="inNW" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 名前{なまえ}=nome" value="${escapeHTML(nwVal)}" />
+          <input id="inNW" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 30GB=30 gigas, 固定=fixo" value="${escapeHTML(nwVal)}" />
 
           <button class="btn btn--ok btn--full" data-action="${editing ? "saveEdit" : "addPhrase"}" data-id="${editing ? editing.id : ""}">
             ${editing ? "salvar alteracoes" : "salvar frase"}
@@ -1857,7 +1956,6 @@ function validateAndLoadBackup(parsed, msgEl) {
     return false;
   }
 
-  // valida jp
   for (const p of st.bank.phrases) {
     if (!isValidJP(p.jp || "")) {
       msgEl.textContent = "backup tem jp invalido.";
@@ -1867,7 +1965,6 @@ function validateAndLoadBackup(parsed, msgEl) {
     }
   }
 
-  // migra pra v3 caso venha de versões antigas
   const migrated = migrateToV3(st);
 
   STATE = migrated;
@@ -1887,6 +1984,7 @@ document.addEventListener("click", (e) => {
   if (!btn) return;
 
   if (btn.dataset.nav) {
+    if (btn.dataset.nav !== "#/105x") clearCallFlow();
     nav(btn.dataset.nav);
     return;
   }
@@ -1918,6 +2016,7 @@ document.addEventListener("click", (e) => {
     const id = btn.dataset.id;
     if (!id) return;
     if (!STATE.session.inProgress) startAuto();
+    clearCallFlow();
     setPhraseById(id);
     toast("frase carregada ✅");
     beep("pop");
@@ -1940,8 +2039,9 @@ document.addEventListener("click", (e) => {
     const id = btn.dataset.id;
     if (!id) return;
 
+    clearCallFlow();
+
     STATE.session.topicFilter = id;
-    // refaz fila
     STATE.session.queue = buildQueue();
     STATE.session.index = 0;
     STATE.session.phraseId = STATE.session.queue[0] || null;
@@ -1956,6 +2056,7 @@ document.addEventListener("click", (e) => {
 
   if (act === "toggleCall") {
     unlockAudio();
+    clearCallFlow();
     STATE.session.callMode = !STATE.session.callMode;
     saveState();
     toast(STATE.session.callMode ? "call and response: on" : "call and response: off");
@@ -1997,7 +2098,6 @@ document.addEventListener("click", (e) => {
     toast("topico criado ✅");
     beep("ding");
 
-    // seleciona automaticamente
     const sel = $("#topicSel");
     if (sel) {
       sel.innerHTML = (STATE.bank.topics || []).map(t => `<option value="${t.id}" ${t.id===topic.id?"selected":""}>${escapeHTML(t.name)}</option>`).join("");
@@ -2057,7 +2157,7 @@ document.addEventListener("click", (e) => {
     const topicId = ($("#topicSel")?.value || ensureDefaultTopic().id);
 
     if (!jp || !pt) { msg.textContent = "preencha jp e pt."; toast("faltou jp/pt"); beep("tuk"); return; }
-    if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou （ ）"; toast("jp invalido"); beep("tuk"); return; }
+    if (!isValidJP(jp)) { msg.textContent = "jp invalido. agora aceita numeros, GB, Wi-Fi e furigana."; toast("jp invalido"); beep("tuk"); return; }
     for (const w of nw) {
       if (!isValidJP(w.jp)) { msg.textContent = "palavra nova jp invalida."; toast("palavra invalida"); beep("tuk"); return; }
     }
@@ -2065,7 +2165,6 @@ document.addEventListener("click", (e) => {
     const t = now();
     const id = uid("ph");
 
-    // topo da lista (como você pediu)
     STATE.bank.phrases.unshift({ id, jp, pt, newWords: nw, topicId, createdAt:t, updatedAt:t });
     STATE.progress[id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
 
@@ -2111,7 +2210,7 @@ document.addEventListener("click", (e) => {
     const topicId = ($("#topicSel")?.value || ensureDefaultTopic().id);
 
     if (!jp || !pt) { msg.textContent = "preencha jp e pt."; toast("faltou jp/pt"); beep("tuk"); return; }
-    if (!isValidJP(jp)) { msg.textContent = "jp invalido. dica: 仕事{しごと} ou （ ）"; toast("jp invalido"); beep("tuk"); return; }
+    if (!isValidJP(jp)) { msg.textContent = "jp invalido. agora aceita numeros, GB, Wi-Fi e furigana."; toast("jp invalido"); beep("tuk"); return; }
     for (const w of nw) {
       if (!isValidJP(w.jp)) { msg.textContent = "palavra nova jp invalida."; toast("palavra invalida"); beep("tuk"); return; }
     }
@@ -2147,13 +2246,15 @@ document.addEventListener("click", (e) => {
 
     if (route() === "#/manage") renderManage();
     if (route() === "#/105x") {
-      render105xBodyOnly();
-      renderPhraseListOnly();
+      if (!STATE.session.queue.length || !STATE.session.phraseId) render105x();
+      else {
+        render105xBodyOnly();
+        renderPhraseListOnly();
+      }
     }
     return;
   }
 
-  /* ---------- BACKUP: export/import ---------- */
   if (act === "exportCopy" || act === "exportFile") {
     const msg = $("#backupMsg");
     const payload = { schema: "jp_105x_backup_v1", exportedAt: new Date().toISOString(), state: STATE };
@@ -2174,7 +2275,6 @@ document.addEventListener("click", (e) => {
       return;
     }
 
-    // exportFile
     const d = new Date();
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -2207,7 +2307,6 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  /* ---------- settings ---------- */
   if (act === "toggleSound") {
     unlockAudio();
     STATE.prefs.audio.enabled = !STATE.prefs.audio.enabled;
@@ -2228,6 +2327,7 @@ document.addEventListener("click", (e) => {
   }
 
   if (act === "reset") {
+    clearCallFlow();
     localStorage.removeItem(LS_KEY);
     localStorage.removeItem("jp_105x_v2");
     STATE = defaultState();
@@ -2289,14 +2389,13 @@ document.addEventListener("change", (e) => {
   }
 });
 
-/* ---------- hash change ---------- */
 window.addEventListener("hashchange", () => {
+  clearCallFlow();
   render();
   startStudyTimerIfOn105x();
   updateBackTopVisibility();
 });
 
-/* ---------- boot ---------- */
 (function init() {
   ensureDefaultTopic();
   refreshHUD();
