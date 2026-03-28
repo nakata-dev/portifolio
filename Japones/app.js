@@ -148,15 +148,34 @@ function defaultTopic() {
 
 function defaultTopicNames() {
   return [
+    /* =========================================================
+       FAÇA UPGRADE DE SEUS TEMAS AQUI
+       - adicione novos nomes de tópicos
+       - remova apenas se souber o impacto
+       - mantenha cada tema entre aspas e separado por vírgula
+       ========================================================= */
     "Frases aleatórias",
     "No aeroporto",
+    "Na prefeitura",
     "No correio",
     "Na fábrica",
     "No restaurante",
     "No mercado",
     "Na loja de carros",
     "No konbini",
-    "Na farmácia"
+    "Na farmácia",
+    "No hospital",
+    "No trem / estação",
+    "No banco",
+    "No celular / internet",
+    "Emergência",
+    "No trabalho",
+    "No RH",
+    "Em casa / apartamento",
+    "Lixo e reciclagem"
+    /* =========================================================
+       FINAL DO TRECHO DE UPGRADE DOS TEMAS
+       ========================================================= */
   ];
 }
 
@@ -191,14 +210,37 @@ function topicIdMapFromTopics(topics) {
   return map;
 }
 
+function getTopicIdSafe(topicIds, topicName, fallbackId = "topic_default") {
+  const target = String(topicName || "").trim().toLowerCase();
+
+  for (const key in topicIds) {
+    if (String(key || "").trim().toLowerCase() === target) {
+      return topicIds[key];
+    }
+  }
+
+  return fallbackId;
+}
+
 /* ---------- seed ---------- */
-/* Trecho do código que pode ser substituido por frases em japonês */
 
 function seedPhrases(topicIds) {
   const t = now();
   const def = topicIds["Frases aleatórias"] || "topic_default";
+  const prefeitura = getTopicIdSafe(topicIds, "Na prefeitura", def);
 
   return [
+    /* =========================================================
+       FAÇA UPGRADE DE SUAS FRASES AQUI
+       - este é o bloco principal de frases da biblioteca
+       - cada frase segue a estrutura:
+         { id:"...", jp:"...", pt:"...", newWords:[{jp:"...", pt:"..."}], topicId:..., createdAt:t, updatedAt:t }
+       - em "newWords", você pode adicionar vocabulário útil daquela frase
+       - para frases do tema padrão, use topicId:def
+       - para frases de tema específico, use:
+         topicId:topicIds["Nome do tema"]
+       ========================================================= */
+
     { id:"ph_001", jp:"おはよう", pt:"bom dia", newWords:[{jp:"おはよう", pt:"bom dia"}], topicId:def, createdAt:t, updatedAt:t },
     { id:"ph_002", jp:"おつかれさま", pt:"bom trabalho / valeu pelo esforço", newWords:[{jp:"おつかれさま", pt:"bom trabalho"}], topicId:def, createdAt:t, updatedAt:t },
     { id:"ph_003", jp:"きょうは つかれた", pt:"hoje eu estou cansado", newWords:[{jp:"きょう",pt:"hoje"},{jp:"つかれた",pt:"cansado"}], topicId:def, createdAt:t, updatedAt:t },
@@ -220,6 +262,16 @@ function seedPhrases(topicIds) {
     { id:"ph_019", jp:"もう いい", pt:"já está bom / pode parar", newWords:[{jp:"もう",pt:"já"},{jp:"いい",pt:"bom"}], topicId:def, createdAt:t, updatedAt:t },
     { id:"ph_020", jp:"あとで はなそう", pt:"vamos falar depois", newWords:[{jp:"あとで",pt:"depois"},{jp:"はなそう",pt:"vamos falar"}], topicId:def, createdAt:t, updatedAt:t },
 
+    /* =========================================================
+       FAÇA UPGRADE DAS FRASES NOVAS POR TEMA AQUI
+       - abaixo ficam exemplos de frases vinculadas a temas específicos
+       - para criar novas frases temáticas, siga este padrão:
+         topicId:topicIds["No aeroporto"]
+         topicId:topicIds["No correio"]
+         topicId:topicIds["Na fábrica"]
+         etc.
+       ========================================================= */
+
     { id:"ph_021", jp:"パスポートを 見{み}せても いいですか。", pt:"posso mostrar o passaporte?", newWords:[{jp:"パスポート",pt:"passaporte"},{jp:"見せる",pt:"mostrar"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
     { id:"ph_022", jp:"この荷物{にもつ}を 送りたいです。", pt:"quero enviar esta bagagem / encomenda.", newWords:[{jp:"荷物",pt:"bagagem / encomenda"},{jp:"送る",pt:"enviar"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
     { id:"ph_023", jp:"今日{きょう}の ラインは どこですか。", pt:"onde é a linha de hoje?", newWords:[{jp:"今日",pt:"hoje"},{jp:"ライン",pt:"linha de produção"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
@@ -229,11 +281,407 @@ function seedPhrases(topicIds) {
     { id:"ph_027", jp:"レジ袋{ぶくろ}は いりません。", pt:"não preciso de sacola.", newWords:[{jp:"レジ袋",pt:"sacola do caixa"},{jp:"いりません",pt:"não preciso"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
     { id:"ph_028", jp:"のどが 痛{いた}いです。", pt:"minha garganta está doendo.", newWords:[{jp:"のど",pt:"garganta"},{jp:"痛い",pt:"doendo"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
     { id:"ph_029", jp:"日本語{にほんご}が あまり わかりません。", pt:"eu não entendo muito japonês.", newWords:[{jp:"日本語",pt:"língua japonesa"},{jp:"あまり",pt:"não muito"}], topicId:def, createdAt:t, updatedAt:t },
-    { id:"ph_030", jp:"もう少{すこ}し ゆっくり 話{はな}して ください。", pt:"por favor, fale um pouco mais devagar.", newWords:[{jp:"もう少し",pt:"um pouco mais"},{jp:"話して",pt:"falar"}], topicId:def, createdAt:t, updatedAt:t }
+    { id:"ph_030", jp:"もう少{すこ}し ゆっくり 話{はな}して ください。", pt:"por favor, fale um pouco mais devagar.", newWords:[{jp:"もう少し",pt:"um pouco mais"},{jp:"話して",pt:"falar"}], topicId:def, createdAt:t, updatedAt:t },
+
+    { id:"ph_031", jp:"搭乗口{とうじょうぐち}は どこですか。", pt:"onde fica o portão de embarque?", newWords:[{jp:"搭乗口",pt:"portão de embarque"},{jp:"どこ",pt:"onde"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO AEROPORTO*/
+
+{ id:"ph_032", jp:"この便{びん}は 何時{なんじ}に 出発{しゅっぱつ}しますか。", pt:"a que horas este voo parte?", newWords:[{jp:"便",pt:"voo"},{jp:"出発",pt:"partida / sair"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_033", jp:"チェックインカウンターは どこですか。", pt:"onde fica o balcão de check-in?", newWords:[{jp:"チェックインカウンター",pt:"balcão de check-in"},{jp:"どこ",pt:"onde"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_034", jp:"荷物{にもつ}を 預{あず}けたいです。", pt:"quero despachar a bagagem.", newWords:[{jp:"荷物",pt:"bagagem"},{jp:"預ける",pt:"despachar / deixar guardado"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_035", jp:"機内持{きないも}ち込{こ}みは できますか。", pt:"posso levar isso na bagagem de mão?", newWords:[{jp:"機内持ち込み",pt:"bagagem de mão"},{jp:"できますか",pt:"pode / é possível?"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_036", jp:"この飛行機{ひこうき}は 遅{おく}れていますか。", pt:"este avião está atrasado?", newWords:[{jp:"飛行機",pt:"avião"},{jp:"遅れる",pt:"atrasar"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_037", jp:"入国審査{にゅうこくしんさ}は どこですか。", pt:"onde fica a imigração?", newWords:[{jp:"入国審査",pt:"imigração / controle de entrada"},{jp:"どこ",pt:"onde"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_038", jp:"乗{の}り継{つ}ぎの 時間{じかん}は ありますか。", pt:"há tempo para a conexão?", newWords:[{jp:"乗り継ぎ",pt:"conexão"},{jp:"時間",pt:"tempo"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_039", jp:"このゲートで 合{あ}っていますか。", pt:"é neste portão mesmo?", newWords:[{jp:"ゲート",pt:"portão"},{jp:"合っている",pt:"estar correto"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+{ id:"ph_040", jp:"到着口{とうちゃくぐち}は どこですか。", pt:"onde fica a área de chegada?", newWords:[{jp:"到着口",pt:"área / portão de chegada"},{jp:"どこ",pt:"onde"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO CORREIO*/
+
+{ id:"ph_041", jp:"この荷物{にもつ}を 送りたいです。", pt:"quero enviar esta encomenda.", newWords:[{jp:"荷物",pt:"encomenda / pacote"},{jp:"送る",pt:"enviar"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_042", jp:"ブラジルまで 送{おく}れますか。", pt:"pode enviar para o Brasil?", newWords:[{jp:"ブラジル",pt:"Brasil"},{jp:"送れますか",pt:"pode enviar?"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_043", jp:"送料{そうりょう}は いくらですか。", pt:"quanto custa o frete?", newWords:[{jp:"送料",pt:"frete"},{jp:"いくら",pt:"quanto"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_044", jp:"いちばん 安{やす}い 方法{ほうほう}で お願{ねが}いします。", pt:"quero a forma mais barata, por favor.", newWords:[{jp:"安い",pt:"barato"},{jp:"方法",pt:"forma / método"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_045", jp:"何日{なんにち}ぐらいで 届{とど}きますか。", pt:"em quantos dias mais ou menos chega?", newWords:[{jp:"何日ぐらい",pt:"em quantos dias mais ou menos"},{jp:"届く",pt:"chegar / ser entregue"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_046", jp:"追跡番号{ついせきばんごう}は ありますか。", pt:"tem número de rastreamento?", newWords:[{jp:"追跡番号",pt:"número de rastreamento"},{jp:"ありますか",pt:"tem?"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_047", jp:"この箱{はこ}を 使{つか}っても いいですか。", pt:"posso usar esta caixa?", newWords:[{jp:"箱",pt:"caixa"},{jp:"使う",pt:"usar"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_048", jp:"伝票{でんぴょう}の 書{か}き方{かた}を 教{おし}えて ください。", pt:"por favor, me ensine como preencher o formulário de envio.", newWords:[{jp:"伝票",pt:"formulário / etiqueta de envio"},{jp:"書き方",pt:"modo de escrever / preencher"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_049", jp:"こわれものです。", pt:"é frágil.", newWords:[{jp:"こわれもの",pt:"frágil"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+{ id:"ph_050", jp:"今日中{きょうじゅう}に 発送{はっそう}できますか。", pt:"consegue enviar ainda hoje?", newWords:[{jp:"今日中",pt:"ainda hoje / dentro de hoje"},{jp:"発送",pt:"envio / despacho"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO FÁBRICA*/
+
+{ id:"ph_051", jp:"今日{きょう}の 持{も}ち場{ば}は どこですか。", pt:"qual é o meu posto de hoje?", newWords:[{jp:"持ち場",pt:"posto de trabalho"},{jp:"今日",pt:"hoje"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_052", jp:"この作業{さぎょう}を もう一度{いちど} 教{おし}えて ください。", pt:"por favor, me ensine este trabalho mais uma vez.", newWords:[{jp:"作業",pt:"trabalho / tarefa"},{jp:"もう一度",pt:"mais uma vez"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_053", jp:"次{つぎ}は 何{なに}を すれば いいですか。", pt:"o que eu devo fazer em seguida?", newWords:[{jp:"次",pt:"seguinte / próximo"},{jp:"何",pt:"o que"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_054", jp:"これは どこに 置{お}けば いいですか。", pt:"onde devo colocar isto?", newWords:[{jp:"置く",pt:"colocar"},{jp:"どこ",pt:"onde"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_055", jp:"この部品{ぶひん}が 足{た}りません。", pt:"está faltando esta peça.", newWords:[{jp:"部品",pt:"peça / componente"},{jp:"足りません",pt:"está faltando"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_056", jp:"機械{きかい}が 止{と}まりました。", pt:"a máquina parou.", newWords:[{jp:"機械",pt:"máquina"},{jp:"止まりました",pt:"parou"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_057", jp:"不良品{ふりょうひん}が 出{で}ました。", pt:"saiu uma peça com defeito.", newWords:[{jp:"不良品",pt:"produto com defeito"},{jp:"出ました",pt:"apareceu / saiu"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_058", jp:"トイレに 行{い}っても いいですか。", pt:"posso ir ao banheiro?", newWords:[{jp:"トイレ",pt:"banheiro"},{jp:"行ってもいいですか",pt:"posso ir?"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_059", jp:"休憩{きゅうけい}は 何時{なんじ}から ですか。", pt:"a que horas começa o intervalo?", newWords:[{jp:"休憩",pt:"intervalo / descanso"},{jp:"何時",pt:"que horas"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+{ id:"ph_060", jp:"手伝{てつだ}って もらえますか。", pt:"você pode me ajudar?", newWords:[{jp:"手伝って",pt:"ajudar"},{jp:"もらえますか",pt:"pode fazer para mim?"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO RESTAURANTE*/
+
+{ id:"ph_061", jp:"2人{ふたり}です。", pt:"somos duas pessoas.", newWords:[{jp:"2人",pt:"duas pessoas"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_062", jp:"空{あ}いている 席{せき}は ありますか。", pt:"tem mesa disponível?", newWords:[{jp:"空いている",pt:"livre / disponível"},{jp:"席",pt:"assento / mesa"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_063", jp:"メニューを お願{ねが}いします。", pt:"o cardápio, por favor.", newWords:[{jp:"メニュー",pt:"cardápio"},{jp:"お願いします",pt:"por favor"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_064", jp:"おすすめは 何{なん}ですか。", pt:"qual é a recomendação da casa?", newWords:[{jp:"おすすめ",pt:"recomendação"},{jp:"何",pt:"o que / qual"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_065", jp:"これを 1つ お願{ねが}いします。", pt:"quero um deste, por favor.", newWords:[{jp:"これ",pt:"isto"},{jp:"1つ",pt:"um"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_066", jp:"水{みず}を ください。", pt:"água, por favor.", newWords:[{jp:"水",pt:"água"},{jp:"ください",pt:"por favor / me dê"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_067", jp:"辛{から}く しないで ください。", pt:"por favor, não faça picante.", newWords:[{jp:"辛く",pt:"picante"},{jp:"しないでください",pt:"não faça / não coloque"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_068", jp:"持{も}ち帰{かえ}り できますか。", pt:"posso levar para viagem?", newWords:[{jp:"持ち帰り",pt:"para viagem / levar embora"},{jp:"できますか",pt:"é possível?"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_069", jp:"お会計{かいけい}を お願{ねが}いします。", pt:"a conta, por favor.", newWords:[{jp:"お会計",pt:"conta / pagamento"},{jp:"お願いします",pt:"por favor"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+{ id:"ph_070", jp:"カードは 使{つか}えますか。", pt:"posso pagar com cartão?", newWords:[{jp:"カード",pt:"cartão"},{jp:"使えますか",pt:"pode usar?"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO MERCADO*/
+
+{ id:"ph_071", jp:"これは いくらですか。", pt:"quanto custa isto?", newWords:[{jp:"これ",pt:"isto"},{jp:"いくら",pt:"quanto"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_072", jp:"もう少{すこ}し 安{やす}いのは ありますか。", pt:"tem algum um pouco mais barato?", newWords:[{jp:"もう少し",pt:"um pouco mais"},{jp:"安い",pt:"barato"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_073", jp:"いちばん 人気{にんき}の 商品{しょうひん}は どれですか。", pt:"qual é o produto mais popular?", newWords:[{jp:"人気",pt:"popular"},{jp:"商品",pt:"produto"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_074", jp:"卵{たまご}は どこですか。", pt:"onde ficam os ovos?", newWords:[{jp:"卵",pt:"ovos"},{jp:"どこ",pt:"onde"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_075", jp:"この肉{にく}は ブラジル産{さん}ですか。", pt:"esta carne é do Brasil?", newWords:[{jp:"肉",pt:"carne"},{jp:"ブラジル産",pt:"produto do Brasil"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_076", jp:"賞味期限{しょうみきげん}は いつですか。", pt:"qual é a data de validade?", newWords:[{jp:"賞味期限",pt:"data de validade"},{jp:"いつ",pt:"quando"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_077", jp:"袋{ふくろ}は いりません。", pt:"não preciso de sacola.", newWords:[{jp:"袋",pt:"sacola"},{jp:"いりません",pt:"não preciso"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_078", jp:"これを 別々{べつべつ}に 包装{ほうそう}して ください。", pt:"por favor, embale isto separadamente.", newWords:[{jp:"別々",pt:"separadamente"},{jp:"包装",pt:"embalagem"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_079", jp:"このポイントカードは 使{つか}えますか。", pt:"posso usar este cartão de pontos?", newWords:[{jp:"ポイントカード",pt:"cartão de pontos"},{jp:"使えますか",pt:"pode usar?"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+{ id:"ph_080", jp:"支払{しはら}いは 現金{げんきん}だけですか。", pt:"o pagamento é só em dinheiro?", newWords:[{jp:"支払い",pt:"pagamento"},{jp:"現金",pt:"dinheiro em espécie"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NA LOJA DE CARROS*/
+
+{ id:"ph_081", jp:"この車{くるま}の 走行距離{そうこうきょり}は どのくらいですか。", pt:"qual é a quilometragem deste carro?", newWords:[{jp:"車",pt:"carro"},{jp:"走行距離",pt:"quilometragem"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_082", jp:"修復歴{しゅうふくれき}は ありますか。", pt:"ele tem histórico de reparo / batida?", newWords:[{jp:"修復歴",pt:"histórico de reparo / batida"},{jp:"ありますか",pt:"tem?"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_083", jp:"車検{しゃけん}は いつまでですか。", pt:"até quando vai o shaken deste carro?", newWords:[{jp:"車検",pt:"inspeção veicular / shaken"},{jp:"いつまで",pt:"até quando"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_084", jp:"試乗{しじょう}できますか。", pt:"posso fazer um test drive?", newWords:[{jp:"試乗",pt:"test drive"},{jp:"できますか",pt:"é possível?"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_085", jp:"燃費{ねんぴ}は どのくらいですか。", pt:"como é o consumo de combustível?", newWords:[{jp:"燃費",pt:"consumo de combustível"},{jp:"どのくらい",pt:"quanto / aproximadamente"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_086", jp:"総額{そうがく}は いくらに なりますか。", pt:"qual fica o valor total no fim?", newWords:[{jp:"総額",pt:"valor total"},{jp:"いくら",pt:"quanto"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_087", jp:"分割払{ぶんかつばら}いは できますか。", pt:"posso pagar parcelado?", newWords:[{jp:"分割払い",pt:"pagamento parcelado"},{jp:"できますか",pt:"é possível?"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_088", jp:"保証{ほしょう}は ついていますか。", pt:"ele vem com garantia?", newWords:[{jp:"保証",pt:"garantia"},{jp:"ついていますか",pt:"vem com / está incluído?"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_089", jp:"名義変更{めいぎへんこう}の 手続{てつづ}きも お願{ねが}いできますか。", pt:"vocês também podem cuidar da transferência de nome?", newWords:[{jp:"名義変更",pt:"transferência de propriedade / nome"},{jp:"手続き",pt:"procedimento / trâmite"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+{ id:"ph_090", jp:"この車{くるま}は すぐに 納車{のうしゃ}できますか。", pt:"este carro pode ser entregue logo?", newWords:[{jp:"納車",pt:"entrega do carro"},{jp:"すぐに",pt:"logo / rapidamente"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NA LOJA DE KONBINI*/
+
+{ id:"ph_091", jp:"温{あたた}めて ください。", pt:"por favor, aqueça isto.", newWords:[{jp:"温めて",pt:"aquecer"},{jp:"ください",pt:"por favor"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_092", jp:"お箸{はし}を 1膳{いちぜん} お願{ねが}いします。", pt:"um par de hashis, por favor.", newWords:[{jp:"お箸",pt:"hashis"},{jp:"1膳",pt:"um par de hashis"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_093", jp:"スプーンを つけて ください。", pt:"por favor, coloque uma colher.", newWords:[{jp:"スプーン",pt:"colher"},{jp:"つけてください",pt:"coloque / inclua"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_094", jp:"この支払{しはら}いは どこで しますか。", pt:"onde eu faço este pagamento?", newWords:[{jp:"支払い",pt:"pagamento"},{jp:"どこ",pt:"onde"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_095", jp:"公共料金{こうきょうりょうきん}も 払{はら}えますか。", pt:"também posso pagar contas públicas aqui?", newWords:[{jp:"公共料金",pt:"contas públicas / utilidades"},{jp:"払えますか",pt:"posso pagar?"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_096", jp:"ATMは どこに ありますか。", pt:"onde fica o caixa eletrônico?", newWords:[{jp:"ATM",pt:"caixa eletrônico"},{jp:"ありますか",pt:"tem / existe?"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_097", jp:"この商品{しょうひん}は 売{う}り切{き}れですか。", pt:"este produto está esgotado?", newWords:[{jp:"商品",pt:"produto"},{jp:"売り切れ",pt:"esgotado"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_098", jp:"いちばん 人気{にんき}の おにぎりは どれですか。", pt:"qual onigiri é o mais popular?", newWords:[{jp:"人気",pt:"popular"},{jp:"おにぎり",pt:"bolinho de arroz"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_099", jp:"袋{ふくろ}は 別{べつ}で お願{ねが}いします。", pt:"quero a sacola separada, por favor.", newWords:[{jp:"袋",pt:"sacola"},{jp:"別",pt:"separado"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+{ id:"ph_100", jp:"レシートを ください。", pt:"por favor, me dê o recibo.", newWords:[{jp:"レシート",pt:"recibo"},{jp:"ください",pt:"por favor / me dê"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NA LOJA DE FARMÁCIA*/
+
+{ id:"ph_101", jp:"風邪薬{かぜぐすり}は ありますか。", pt:"vocês têm remédio para resfriado?", newWords:[{jp:"風邪薬",pt:"remédio para resfriado"},{jp:"ありますか",pt:"tem?"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_102", jp:"頭{あたま}が 痛{いた}いです。", pt:"estou com dor de cabeça.", newWords:[{jp:"頭",pt:"cabeça"},{jp:"痛い",pt:"doendo"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_103", jp:"熱{ねつ}が あります。", pt:"estou com febre.", newWords:[{jp:"熱",pt:"febre"},{jp:"あります",pt:"tenho / estou com"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_104", jp:"咳{せき}が 止{と}まりません。", pt:"a tosse não para.", newWords:[{jp:"咳",pt:"tosse"},{jp:"止まりません",pt:"não para"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_105", jp:"のどが 痛{いた}いです。", pt:"estou com dor de garganta.", newWords:[{jp:"のど",pt:"garganta"},{jp:"痛い",pt:"doendo"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_106", jp:"お腹{なか}の 薬{くすり}は ありますか。", pt:"vocês têm remédio para o estômago?", newWords:[{jp:"お腹",pt:"barriga / estômago"},{jp:"薬",pt:"remédio"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_107", jp:"眠気{ねむけ}の 少{すく}ない 薬{くすり}が いいです。", pt:"prefiro um remédio que dê pouco sono.", newWords:[{jp:"眠気",pt:"sono / sonolência"},{jp:"少ない",pt:"pouco"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_108", jp:"1日{いちにち}に 何回{なんかい} 飲{の}めば いいですか。", pt:"quantas vezes por dia devo tomar?", newWords:[{jp:"1日",pt:"por dia"},{jp:"何回",pt:"quantas vezes"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_109", jp:"食後{しょくご}に 飲{の}みますか。", pt:"é para tomar depois da refeição?", newWords:[{jp:"食後",pt:"depois da refeição"},{jp:"飲みますか",pt:"toma?"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+{ id:"ph_110", jp:"この薬{くすり}は いくらですか。", pt:"quanto custa este remédio?", newWords:[{jp:"薬",pt:"remédio"},{jp:"いくら",pt:"quanto"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NA PREFEITURA*/
+
+{ id:"ph_111", jp:"住所変更{じゅうしょへんこう}の 手続{てつづ}きは どこですか。", pt:"onde faço o procedimento de mudança de endereço?", newWords:[{jp:"住所変更",pt:"mudança de endereço"},{jp:"手続き",pt:"procedimento / trâmite"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_112", jp:"この書類{しょるい}の 書{か}き方{かた}を 教{おし}えて ください。", pt:"por favor, me ensine como preencher este documento.", newWords:[{jp:"書類",pt:"documento"},{jp:"書き方",pt:"modo de preencher / escrever"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_113", jp:"住民票{じゅうみんひょう}を 取{と}りたいです。", pt:"quero tirar um comprovante de residência.", newWords:[{jp:"住民票",pt:"comprovante / registro de residência"},{jp:"取る",pt:"tirar / obter"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_114", jp:"必要{ひつよう}な ものは 何{なに}ですか。", pt:"o que é necessário trazer?", newWords:[{jp:"必要",pt:"necessário"},{jp:"何",pt:"o que"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_115", jp:"保険証{ほけんしょう}の 手続{てつづ}きも ここで できますか。", pt:"também posso fazer aqui o procedimento do cartão do seguro?", newWords:[{jp:"保険証",pt:"cartão do seguro de saúde"},{jp:"できますか",pt:"é possível fazer?"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_116", jp:"マイナンバーカードの 申請{しんせい}を したいです。", pt:"quero solicitar o cartão My Number.", newWords:[{jp:"マイナンバーカード",pt:"cartão My Number"},{jp:"申請",pt:"solicitação / pedido"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_117", jp:"通訳{つうやく}が いなくても 大丈夫{だいじょうぶ}ですか。", pt:"dá para fazer isso mesmo sem intérprete?", newWords:[{jp:"通訳",pt:"intérprete"},{jp:"大丈夫",pt:"sem problema / tudo bem"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_118", jp:"番号札{ばんごうふだ}は どこで 取{と}りますか。", pt:"onde eu pego a senha de atendimento?", newWords:[{jp:"番号札",pt:"senha / ticket de atendimento"},{jp:"取ります",pt:"pegar / retirar"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_119", jp:"この手続{てつづ}きは 今日中{きょうじゅう}に 終{お}わりますか。", pt:"esse procedimento termina ainda hoje?", newWords:[{jp:"今日中",pt:"ainda hoje"},{jp:"終わりますか",pt:"termina?"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+{ id:"ph_120", jp:"次{つぎ}に 何{なに}を すれば いいですか。", pt:"o que eu devo fazer em seguida?", newWords:[{jp:"次",pt:"seguinte / próximo"},{jp:"何",pt:"o que"}], topicId:topicIds["Na prefeitura"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO HOSPITAL*/
+
+{ id:"ph_121", jp:"予約{よやく}を したいです。", pt:"quero marcar uma consulta.", newWords:[{jp:"予約",pt:"reserva / agendamento"},{jp:"したいです",pt:"quero fazer"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_122", jp:"保険証{ほけんしょう}を 持{も}って います。", pt:"eu trouxe o cartão do seguro.", newWords:[{jp:"保険証",pt:"cartão do seguro de saúde"},{jp:"持っている",pt:"estar com / trazer"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_123", jp:"どこが 痛{いた}いですかと 聞{き}かれたら、 お腹{なか}が 痛{いた}いですと 言{い}います。", pt:"se perguntarem onde dói, eu digo que estou com dor de barriga.", newWords:[{jp:"どこが痛いですか",pt:"onde dói?"},{jp:"お腹が痛いです",pt:"estou com dor de barriga"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_124", jp:"昨日{きのう}から 熱{ねつ}が あります。", pt:"estou com febre desde ontem.", newWords:[{jp:"昨日から",pt:"desde ontem"},{jp:"熱",pt:"febre"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_125", jp:"咳{せき}と のどの 痛{いた}みが あります。", pt:"estou com tosse e dor de garganta.", newWords:[{jp:"咳",pt:"tosse"},{jp:"のどの痛み",pt:"dor de garganta"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_126", jp:"薬{くすり}は いつ 飲{の}めば いいですか。", pt:"quando devo tomar o remédio?", newWords:[{jp:"薬",pt:"remédio"},{jp:"いつ",pt:"quando"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_127", jp:"食後{しょくご}に 飲{の}みますか。", pt:"é para tomar depois da refeição?", newWords:[{jp:"食後",pt:"depois da refeição"},{jp:"飲みますか",pt:"toma?"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_128", jp:"仕事{しごと}を 休{やす}むための 診断書{しんだんしょ}が 必要{ひつよう}です。", pt:"preciso de um atestado para faltar ao trabalho.", newWords:[{jp:"診断書",pt:"atestado / laudo médico"},{jp:"必要",pt:"necessário"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_129", jp:"次{つぎ}の 診察{しんさつ}は いつですか。", pt:"quando é a próxima consulta?", newWords:[{jp:"次",pt:"próximo"},{jp:"診察",pt:"consulta / atendimento médico"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+{ id:"ph_130", jp:"会計{かいけい}は どこで しますか。", pt:"onde faço o pagamento?", newWords:[{jp:"会計",pt:"pagamento / caixa"},{jp:"どこ",pt:"onde"}], topicId:topicIds["No hospital"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO NO TREM / ESTAÇÃO*/
+
+{ id:"ph_131", jp:"この電車{でんしゃ}は 福井{ふくい}に 行{い}きますか。", pt:"este trem vai para Fukui?", newWords:[{jp:"電車",pt:"trem"},{jp:"行きますか",pt:"vai?"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_132", jp:"この電車{でんしゃ}は 急行{きゅうこう}ですか。", pt:"este trem é expresso?", newWords:[{jp:"急行",pt:"trem expresso"},{jp:"電車",pt:"trem"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_133", jp:"何番線{なんばんせん}ですか。", pt:"é na plataforma número qual?", newWords:[{jp:"何番線",pt:"qual plataforma / linha"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_134", jp:"次{つぎ}の 電車{でんしゃ}は 何時{なんじ}ですか。", pt:"a que horas é o próximo trem?", newWords:[{jp:"次",pt:"próximo"},{jp:"何時",pt:"que horas"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_135", jp:"ここで 乗{の}り換{か}えですか。", pt:"é aqui que faz baldeação?", newWords:[{jp:"乗り換え",pt:"baldeação / transferência"},{jp:"ここ",pt:"aqui"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_136", jp:"切符{きっぷ}は どこで 買{か}いますか。", pt:"onde compro a passagem?", newWords:[{jp:"切符",pt:"passagem / bilhete"},{jp:"買います",pt:"comprar"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_137", jp:"ICカードは 使{つか}えますか。", pt:"posso usar cartão IC?", newWords:[{jp:"ICカード",pt:"cartão IC"},{jp:"使えますか",pt:"pode usar?"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_138", jp:"この電車{でんしゃ}は 各駅停車{かくえきていしゃ}ですか。", pt:"este trem para em todas as estações?", newWords:[{jp:"各駅停車",pt:"trem local / para em todas"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_139", jp:"出口{でぐち}は どちらですか。", pt:"qual é a saída?", newWords:[{jp:"出口",pt:"saída"},{jp:"どちら",pt:"qual direção / qual lado"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+{ id:"ph_140", jp:"この 電車{でんしゃ}は 遅{おく}れていますか。", pt:"este trem está atrasado?", newWords:[{jp:"遅れる",pt:"atrasar"},{jp:"電車",pt:"trem"}], topicId:topicIds["No trem / estação"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO NO BANCO*/
+
+{ id:"ph_141", jp:"口座{こうざ}を 作{つく}りたいです。", pt:"quero abrir uma conta bancária.", newWords:[{jp:"口座",pt:"conta bancária"},{jp:"作りたい",pt:"quero abrir / criar"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_142", jp:"必要{ひつよう}な 書類{しょるい}は 何{なに}ですか。", pt:"quais documentos são necessários?", newWords:[{jp:"必要",pt:"necessário"},{jp:"書類",pt:"documentos"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_143", jp:"お金{かね}を 引{ひ}き出{だ}したいです。", pt:"quero sacar dinheiro.", newWords:[{jp:"お金",pt:"dinheiro"},{jp:"引き出す",pt:"sacar"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_144", jp:"お金{かね}を 入金{にゅうきん}したいです。", pt:"quero depositar dinheiro.", newWords:[{jp:"入金",pt:"depósito"},{jp:"お金",pt:"dinheiro"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_145", jp:"振込{ふりこみ}は できますか。", pt:"posso fazer uma transferência?", newWords:[{jp:"振込",pt:"transferência bancária"},{jp:"できますか",pt:"é possível?"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_146", jp:"残高{ざんだか}を 確認{かくにん}したいです。", pt:"quero verificar o saldo.", newWords:[{jp:"残高",pt:"saldo"},{jp:"確認",pt:"confirmar / verificar"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_147", jp:"暗証番号{あんしょうばんごう}を 忘{わす}れました。", pt:"esqueci minha senha.", newWords:[{jp:"暗証番号",pt:"senha / PIN"},{jp:"忘れました",pt:"esqueci"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_148", jp:"キャッシュカードが 使{つか}えません。", pt:"meu cartão bancário não está funcionando.", newWords:[{jp:"キャッシュカード",pt:"cartão bancário / ATM"},{jp:"使えません",pt:"não funciona / não pode usar"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_149", jp:"通帳{つうちょう}を 再発行{さいはっこう}できますか。", pt:"posso pedir a reemissão da caderneta bancária?", newWords:[{jp:"通帳",pt:"caderneta / passbook bancário"},{jp:"再発行",pt:"reemissão"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+{ id:"ph_150", jp:"手数料{てすうりょう}は いくらですか。", pt:"qual é a taxa?", newWords:[{jp:"手数料",pt:"taxa / tarifa"},{jp:"いくら",pt:"quanto"}], topicId:topicIds["No banco"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO CELULAR / INTERNET*/
+
+{ id:"ph_151", jp:"SIMカードを 買{か}いたいです。", pt:"quero comprar um chip SIM.", newWords:[{jp:"SIMカード",pt:"chip SIM"},{jp:"買いたい",pt:"quero comprar"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_152", jp:"おすすめの プランは どれですか。", pt:"qual plano você recomenda?", newWords:[{jp:"おすすめ",pt:"recomendação"},{jp:"プラン",pt:"plano"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_153", jp:"30GBの 固定{こてい}プランは ありますか。", pt:"tem um plano fixo de 30 GB?", newWords:[{jp:"固定",pt:"fixo"},{jp:"プラン",pt:"plano"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_154", jp:"通話{つうわ}も できますか。", pt:"também dá para fazer ligações?", newWords:[{jp:"通話",pt:"ligação / chamada"},{jp:"できますか",pt:"é possível?"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_155", jp:"月額料金{げつがくりょうきん}は いくらですか。", pt:"qual é o valor mensal?", newWords:[{jp:"月額料金",pt:"mensalidade"},{jp:"いくら",pt:"quanto"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_156", jp:"契約期間{けいやくきかん}は どのくらいですか。", pt:"qual é o período do contrato?", newWords:[{jp:"契約期間",pt:"período de contrato"},{jp:"どのくらい",pt:"quanto / aproximadamente"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_157", jp:"解約{かいやく}するとき、 手数料{てすうりょう}は かかりますか。", pt:"se eu cancelar, há taxa?", newWords:[{jp:"解約",pt:"cancelamento"},{jp:"手数料",pt:"taxa"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_158", jp:"インターネットが 遅{おそ}いです。", pt:"a internet está lenta.", newWords:[{jp:"インターネット",pt:"internet"},{jp:"遅い",pt:"lenta"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_159", jp:"Wi-Fiに 接続{せつぞく}できません。", pt:"não consigo conectar no Wi-Fi.", newWords:[{jp:"接続",pt:"conexão"},{jp:"できません",pt:"não consigo"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+{ id:"ph_160", jp:"このスマホは SIMフリーですか。", pt:"este celular é desbloqueado?", newWords:[{jp:"スマホ",pt:"celular / smartphone"},{jp:"SIMフリー",pt:"desbloqueado para qualquer operadora"}], topicId:topicIds["No celular / internet"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NA EMERGÊNCIA*/
+
+{ id:"ph_161", jp:"助{たす}けて ください。", pt:"por favor, me ajude.", newWords:[{jp:"助けて",pt:"me ajude"},{jp:"ください",pt:"por favor"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_162", jp:"救急車{きゅうきゅうしゃ}を 呼{よ}んで ください。", pt:"por favor, chame uma ambulância.", newWords:[{jp:"救急車",pt:"ambulância"},{jp:"呼んで",pt:"chamar"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_163", jp:"警察{けいさつ}を 呼{よ}んで ください。", pt:"por favor, chame a polícia.", newWords:[{jp:"警察",pt:"polícia"},{jp:"呼んで",pt:"chamar"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_164", jp:"気分{きぶん}が 悪{わる}いです。", pt:"estou passando mal.", newWords:[{jp:"気分",pt:"condição / sensação física"},{jp:"悪い",pt:"ruim"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_165", jp:"倒{たお}れた 人{ひと}が います。", pt:"tem uma pessoa caída.", newWords:[{jp:"倒れた",pt:"caída / desmaiada"},{jp:"人",pt:"pessoa"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_166", jp:"事故{じこ}が ありました。", pt:"houve um acidente.", newWords:[{jp:"事故",pt:"acidente"},{jp:"ありました",pt:"houve / aconteceu"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_167", jp:"火事{かじ}です。", pt:"é um incêndio.", newWords:[{jp:"火事",pt:"incêndio"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_168", jp:"財布{さいふ}を なくしました。", pt:"perdi minha carteira.", newWords:[{jp:"財布",pt:"carteira"},{jp:"なくしました",pt:"perdi"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_169", jp:"道{みち}に 迷{まよ}いました。", pt:"estou perdido.", newWords:[{jp:"道",pt:"caminho / rua"},{jp:"迷いました",pt:"me perdi"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+{ id:"ph_170", jp:"日本語{にほんご}が あまり 話{はな}せません。 ゆっくり お願{ねが}いします。", pt:"eu não falo muito japonês. por favor, fale devagar.", newWords:[{jp:"日本語",pt:"língua japonesa"},{jp:"ゆっくり",pt:"devagar"}], topicId:topicIds["Emergência"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO TRABALHO*/
+
+{ id:"ph_171", jp:"今日{きょう}も よろしく お 願{ねが}いします。", pt:"conto com você hoje também / vamos trabalhar bem hoje.", newWords:[{jp:"今日",pt:"hoje"},{jp:"よろしくお願いします",pt:"conto com você / por favor"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_172", jp:"少{すこ}し 遅{おく}れます。", pt:"vou me atrasar um pouco.", newWords:[{jp:"少し",pt:"um pouco"},{jp:"遅れます",pt:"vou me atrasar"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_173", jp:"体調{たいちょう}が 悪{わる}いです。", pt:"não estou me sentindo bem.", newWords:[{jp:"体調",pt:"condição física / saúde"},{jp:"悪い",pt:"ruim"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_174", jp:"今日は 休{やす}ませて ください。", pt:"por favor, deixe-me faltar hoje.", newWords:[{jp:"今日",pt:"hoje"},{jp:"休ませてください",pt:"deixe-me faltar / descansar"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_175", jp:"この仕事{しごと}を 確認{かくにん}して ください。", pt:"por favor, confira este trabalho.", newWords:[{jp:"仕事",pt:"trabalho"},{jp:"確認",pt:"confirmar / conferir"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_176", jp:"すみません、もう一度{いちど} 説明{せつめい}して ください。", pt:"desculpe, por favor explique mais uma vez.", newWords:[{jp:"もう一度",pt:"mais uma vez"},{jp:"説明",pt:"explicação"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_177", jp:"これは まだ 終{お}わって いません。", pt:"isto ainda não terminou.", newWords:[{jp:"まだ",pt:"ainda"},{jp:"終わっていません",pt:"não terminou"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_178", jp:"手伝{てつだ}って もらえますか。", pt:"você pode me ajudar?", newWords:[{jp:"手伝って",pt:"ajudar"},{jp:"もらえますか",pt:"pode fazer para mim?"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_179", jp:"次{つぎ}は 何{なに}を すれば いいですか。", pt:"o que devo fazer em seguida?", newWords:[{jp:"次",pt:"próximo / seguinte"},{jp:"何",pt:"o que"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+{ id:"ph_180", jp:"お先{さき}に 失礼{しつれい}します。", pt:"com licença, estou saindo antes.", newWords:[{jp:"お先に失礼します",pt:"estou saindo antes / com licença"}], topicId:topicIds["No trabalho"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO RH*/
+
+{ id:"ph_181", jp:"給料明細{きゅうりょうめいさい}を 確認{かくにん}したいです。", pt:"quero conferir meu holerite.", newWords:[{jp:"給料明細",pt:"holerite / demonstrativo de pagamento"},{jp:"確認",pt:"confirmar / conferir"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_182", jp:"この控除{こうじょ}は 何{なん}ですか。", pt:"o que é este desconto?", newWords:[{jp:"控除",pt:"desconto / dedução"},{jp:"何",pt:"o que"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_183", jp:"有給休暇{ゆうきゅうきゅうか}を 申請{しんせい}したいです。", pt:"quero solicitar férias pagas.", newWords:[{jp:"有給休暇",pt:"férias pagas / folga remunerada"},{jp:"申請",pt:"solicitação / pedido"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_184", jp:"欠勤{けっきん}の 連絡{れんらく}を したいです。", pt:"quero avisar uma falta.", newWords:[{jp:"欠勤",pt:"falta ao trabalho"},{jp:"連絡",pt:"aviso / contato"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_185", jp:"社会保険{しゃかいほけん}について 教{おし}えて ください。", pt:"por favor, me explique sobre o seguro social.", newWords:[{jp:"社会保険",pt:"seguro social"},{jp:"教えてください",pt:"por favor, explique / ensine"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_186", jp:"年末調整{ねんまつちょうせい}の 書類{しょるい}は いつまでですか。", pt:"até quando devo entregar os documentos do ajuste de fim de ano?", newWords:[{jp:"年末調整",pt:"ajuste de imposto de fim de ano"},{jp:"書類",pt:"documentos"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_187", jp:"住所変更{じゅうしょへんこう}の 手続{てつづ}きを したいです。", pt:"quero fazer o procedimento de mudança de endereço.", newWords:[{jp:"住所変更",pt:"mudança de endereço"},{jp:"手続き",pt:"procedimento / trâmite"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_188", jp:"銀行口座{ぎんこうこうざ}を 変更{へんこう}したいです。", pt:"quero alterar minha conta bancária.", newWords:[{jp:"銀行口座",pt:"conta bancária"},{jp:"変更",pt:"alteração / mudar"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_189", jp:"残業時間{ざんぎょうじかん}を 確認{かくにん}したいです。", pt:"quero conferir minhas horas extras.", newWords:[{jp:"残業時間",pt:"horas extras"},{jp:"確認",pt:"conferir / verificar"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+{ id:"ph_190", jp:"退職{たいしょく}するときの 手続{てつづ}きは どうなりますか。", pt:"como funciona o procedimento em caso de desligamento?", newWords:[{jp:"退職",pt:"desligamento / sair da empresa"},{jp:"手続き",pt:"procedimento"}], topicId:topicIds["No RH"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS NO RH*/
+
+{ id:"ph_191", jp:"電気{でんき}が つきません。", pt:"a luz não acende.", newWords:[{jp:"電気",pt:"luz / eletricidade"},{jp:"つきません",pt:"não acende"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_192", jp:"水{みず}が 出{で}ません。", pt:"não está saindo água.", newWords:[{jp:"水",pt:"água"},{jp:"出ません",pt:"não sai"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_193", jp:"お湯{ゆ}が 出{で}ません。", pt:"não está saindo água quente.", newWords:[{jp:"お湯",pt:"água quente"},{jp:"出ません",pt:"não sai"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_194", jp:"エアコンが 動{うご}きません。", pt:"o ar-condicionado não está funcionando.", newWords:[{jp:"エアコン",pt:"ar-condicionado"},{jp:"動きません",pt:"não funciona"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_195", jp:"鍵{かぎ}を なくしました。", pt:"perdi a chave.", newWords:[{jp:"鍵",pt:"chave"},{jp:"なくしました",pt:"perdi"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_196", jp:"ドアが 閉{し}まりません。", pt:"a porta não fecha.", newWords:[{jp:"ドア",pt:"porta"},{jp:"閉まりません",pt:"não fecha"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_197", jp:"トイレが 詰{つ}まりました。", pt:"o vaso sanitário entupiu.", newWords:[{jp:"トイレ",pt:"banheiro / vaso"},{jp:"詰まりました",pt:"entupiu"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_198", jp:"水漏{みずも}れしています。", pt:"há vazamento de água.", newWords:[{jp:"水漏れ",pt:"vazamento de água"},{jp:"しています",pt:"está acontecendo"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_199", jp:"修理{しゅうり}を お願{ねが}いしたいです。", pt:"quero solicitar um reparo.", newWords:[{jp:"修理",pt:"reparo / conserto"},{jp:"お願いしたい",pt:"quero solicitar"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+{ id:"ph_200", jp:"いつ 来{き}てもらえますか。", pt:"quando alguém pode vir aqui?", newWords:[{jp:"いつ",pt:"quando"},{jp:"来てもらえますか",pt:"pode vir?"}], topicId:topicIds["Em casa / apartamento"], createdAt:t, updatedAt:t },
+
+/*10 FRASES UTEIS SOBRE LIXO E RECICLAGEM */
+{ id:"ph_201", jp:"燃{も}える ごみの 日{ひ}は いつですか。", pt:"quando é o dia do lixo queimável?", newWords:[{jp:"燃えるごみ",pt:"lixo queimável"},{jp:"日",pt:"dia"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_202", jp:"燃{も}えない ごみは どこに 出{だ}せば いいですか。", pt:"onde devo descartar o lixo não queimável?", newWords:[{jp:"燃えないごみ",pt:"lixo não queimável"},{jp:"出せばいいですか",pt:"onde devo colocar / descartar?"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_203", jp:"ペットボトルは ここで いいですか。", pt:"as garrafas PET podem ser colocadas aqui?", newWords:[{jp:"ペットボトル",pt:"garrafa PET"},{jp:"ここでいいですか",pt:"pode ser aqui?"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_204", jp:"空{あ}き缶{かん}と 空{あ}き瓶{びん}は 別々{べつべつ}ですか。", pt:"latas vazias e garrafas vazias são separadas?", newWords:[{jp:"空き缶",pt:"lata vazia"},{jp:"空き瓶",pt:"garrafa vazia"},{jp:"別々",pt:"separadamente"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_205", jp:"このごみ袋{ぶくろ}で 大丈夫{だいじょうぶ}ですか。", pt:"esta sacola de lixo está correta?", newWords:[{jp:"ごみ袋",pt:"saco de lixo"},{jp:"大丈夫",pt:"está ok / correto"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_206", jp:"粗大{そだい}ごみは どうやって 捨{す}てますか。", pt:"como descarto lixo de grande porte?", newWords:[{jp:"粗大ごみ",pt:"lixo de grande porte"},{jp:"捨てますか",pt:"como joga fora?"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_207", jp:"このごみは 分別{ぶんべつ}が 必要{ひつよう}ですか。", pt:"este lixo precisa ser separado?", newWords:[{jp:"分別",pt:"separação de lixo"},{jp:"必要",pt:"necessário"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_208", jp:"ごみ収集日{しゅうしゅうび}の カレンダーは ありますか。", pt:"tem um calendário dos dias de coleta de lixo?", newWords:[{jp:"ごみ収集日",pt:"dia de coleta do lixo"},{jp:"カレンダー",pt:"calendário"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_209", jp:"段ボールは いつ 出{だ}せますか。", pt:"quando posso colocar o papelão para fora?", newWords:[{jp:"段ボール",pt:"papelão"},{jp:"いつ",pt:"quando"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+
+{ id:"ph_210", jp:"電池{でんち}は どこに 捨{す}てれば いいですか。", pt:"onde devo descartar pilhas?", newWords:[{jp:"電池",pt:"pilha / bateria"},{jp:"捨てればいいですか",pt:"onde devo descartar?"}], topicId:topicIds["Lixo e reciclagem"], createdAt:t, updatedAt:t },
+/* =========================================================
+       FINAL DO TRECHO DE UPGRADE DAS FRASES
+       ========================================================= */
   ];
 }
-
-/* ---------- Final de frases novas ---------- */
 
 function ensureCoreContentV3(st) {
   st.bank ||= {};
@@ -311,6 +759,7 @@ function defaultState() {
   const topics = seedTopics();
   const topicIds = topicIdMapFromTopics(topics);
   const phrases = seedPhrases(topicIds);
+
 
   const progress = {};
   for (const p of phrases) {
