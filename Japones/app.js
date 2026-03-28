@@ -129,6 +129,7 @@ function jpToRubyHTML(raw) {
 }
 
 /* ---------- topics ---------- */
+
 function topicPalette() {
   return [
     "tRose", "tViolet", "tBlue", "tCyan", "tGreen", "tAmber", "tPink", "tMint"
@@ -145,38 +146,171 @@ function defaultTopic() {
   return { id: "topic_default", name: "Frases aleatórias", color: "tViolet", createdAt: t, updatedAt: t };
 }
 
-/* ---------- seed (20 frases) ---------- */
-function seedPhrases(topicId) {
-  const t = now();
+function defaultTopicNames() {
   return [
-    { id:"ph_001", jp:"おはよう", pt:"bom dia", newWords:[{jp:"おはよう", pt:"bom dia"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_002", jp:"おつかれさま", pt:"bom trabalho / valeu pelo esforço", newWords:[{jp:"おつかれさま", pt:"bom trabalho"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_003", jp:"きょうは つかれた", pt:"hoje eu estou cansado", newWords:[{jp:"きょう",pt:"hoje"},{jp:"つかれた",pt:"cansado"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_004", jp:"ねむい", pt:"estou com sono", newWords:[{jp:"ねむい",pt:"com sono"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_005", jp:"いま いそがしい", pt:"agora estou ocupado", newWords:[{jp:"いま",pt:"agora"},{jp:"いそがしい",pt:"ocupado"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_006", jp:"ちょっと まって", pt:"espera um pouco", newWords:[{jp:"ちょっと",pt:"um pouco"},{jp:"まって",pt:"espera"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_007", jp:"だいじょうぶ", pt:"tudo bem / está ok", newWords:[{jp:"だいじょうぶ",pt:"tudo bem"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_008", jp:"もういちど おねがい", pt:"de novo, por favor", newWords:[{jp:"もういちど",pt:"mais uma vez"},{jp:"おねがい",pt:"por favor"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_009", jp:"ゆっくり おねがい", pt:"devagar, por favor", newWords:[{jp:"ゆっくり",pt:"devagar"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_010", jp:"わからない", pt:"nao entendi / nao sei", newWords:[{jp:"わからない",pt:"nao entendi"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_011", jp:"これ どこ", pt:"onde fica isto?", newWords:[{jp:"これ",pt:"isto"},{jp:"どこ",pt:"onde"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_012", jp:"これ なに", pt:"o que e isto?", newWords:[{jp:"なに",pt:"o que"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_013", jp:"たすけて", pt:"me ajuda", newWords:[{jp:"たすけて",pt:"me ajuda"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_014", jp:"あぶない", pt:"perigoso", newWords:[{jp:"あぶない",pt:"perigoso"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_015", jp:"きをつけて", pt:"cuidado", newWords:[{jp:"きをつけて",pt:"cuidado"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_016", jp:"ここで まって", pt:"espera aqui", newWords:[{jp:"ここ",pt:"aqui"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_017", jp:"これを つかう", pt:"usar isto", newWords:[{jp:"つかう",pt:"usar"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_018", jp:"それは だめ", pt:"isso nao pode", newWords:[{jp:"それ",pt:"isso"},{jp:"だめ",pt:"nao pode"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_019", jp:"もう いい", pt:"ja esta bom / pode parar", newWords:[{jp:"もう",pt:"ja"},{jp:"いい",pt:"bom"}], topicId, createdAt:t, updatedAt:t },
-    { id:"ph_020", jp:"あとで はなそう", pt:"vamos falar depois", newWords:[{jp:"あとで",pt:"depois"},{jp:"はなそう",pt:"vamos falar"}], topicId, createdAt:t, updatedAt:t }
+    "Frases aleatórias",
+    "No aeroporto",
+    "No correio",
+    "Na fábrica",
+    "No restaurante",
+    "No mercado",
+    "Na loja de carros",
+    "No konbini",
+    "Na farmácia"
   ];
 }
 
-/* ---------- state ---------- */
+function slugifyTopicName(name) {
+  return String(name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function makeCoreTopic(name, index) {
+  const t = now();
+  const isDefault = name === "Frases aleatórias";
+  return {
+    id: isDefault ? "topic_default" : `topic_${slugifyTopicName(name)}`,
+    name,
+    color: isDefault ? "tViolet" : pickTopicColor(index),
+    createdAt: t,
+    updatedAt: t
+  };
+}
+
+function seedTopics() {
+  return defaultTopicNames().map((name, i) => makeCoreTopic(name, i));
+}
+
+function topicIdMapFromTopics(topics) {
+  const map = {};
+  for (const t of topics) map[t.name] = t.id;
+  return map;
+}
+
+/* ---------- seed ---------- */
+/* Trecho do código que pode ser substituido por frases em japonês */
+
+function seedPhrases(topicIds) {
+  const t = now();
+  const def = topicIds["Frases aleatórias"] || "topic_default";
+
+  return [
+    { id:"ph_001", jp:"おはよう", pt:"bom dia", newWords:[{jp:"おはよう", pt:"bom dia"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_002", jp:"おつかれさま", pt:"bom trabalho / valeu pelo esforço", newWords:[{jp:"おつかれさま", pt:"bom trabalho"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_003", jp:"きょうは つかれた", pt:"hoje eu estou cansado", newWords:[{jp:"きょう",pt:"hoje"},{jp:"つかれた",pt:"cansado"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_004", jp:"ねむい", pt:"estou com sono", newWords:[{jp:"ねむい",pt:"com sono"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_005", jp:"いま いそがしい", pt:"agora estou ocupado", newWords:[{jp:"いま",pt:"agora"},{jp:"いそがしい",pt:"ocupado"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_006", jp:"ちょっと まって", pt:"espera um pouco", newWords:[{jp:"ちょっと",pt:"um pouco"},{jp:"まって",pt:"espera"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_007", jp:"だいじょうぶ", pt:"tudo bem / está ok", newWords:[{jp:"だいじょうぶ",pt:"tudo bem"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_008", jp:"もういちど おねがい", pt:"de novo, por favor", newWords:[{jp:"もういちど",pt:"mais uma vez"},{jp:"おねがい",pt:"por favor"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_009", jp:"ゆっくり おねがい", pt:"devagar, por favor", newWords:[{jp:"ゆっくり",pt:"devagar"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_010", jp:"わからない", pt:"não entendi / não sei", newWords:[{jp:"わからない",pt:"não entendi"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_011", jp:"これ どこ", pt:"onde fica isto?", newWords:[{jp:"これ",pt:"isto"},{jp:"どこ",pt:"onde"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_012", jp:"これ なに", pt:"o que é isto?", newWords:[{jp:"なに",pt:"o que"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_013", jp:"たすけて", pt:"me ajuda", newWords:[{jp:"たすけて",pt:"me ajuda"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_014", jp:"あぶない", pt:"perigoso", newWords:[{jp:"あぶない",pt:"perigoso"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_015", jp:"きをつけて", pt:"cuidado", newWords:[{jp:"きをつけて",pt:"cuidado"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_016", jp:"ここで まって", pt:"espera aqui", newWords:[{jp:"ここ",pt:"aqui"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_017", jp:"これを つかう", pt:"usar isto", newWords:[{jp:"つかう",pt:"usar"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_018", jp:"それは だめ", pt:"isso não pode", newWords:[{jp:"それ",pt:"isso"},{jp:"だめ",pt:"não pode"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_019", jp:"もう いい", pt:"já está bom / pode parar", newWords:[{jp:"もう",pt:"já"},{jp:"いい",pt:"bom"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_020", jp:"あとで はなそう", pt:"vamos falar depois", newWords:[{jp:"あとで",pt:"depois"},{jp:"はなそう",pt:"vamos falar"}], topicId:def, createdAt:t, updatedAt:t },
+
+    { id:"ph_021", jp:"パスポートを 見{み}せても いいですか。", pt:"posso mostrar o passaporte?", newWords:[{jp:"パスポート",pt:"passaporte"},{jp:"見せる",pt:"mostrar"}], topicId:topicIds["No aeroporto"], createdAt:t, updatedAt:t },
+    { id:"ph_022", jp:"この荷物{にもつ}を 送りたいです。", pt:"quero enviar esta bagagem / encomenda.", newWords:[{jp:"荷物",pt:"bagagem / encomenda"},{jp:"送る",pt:"enviar"}], topicId:topicIds["No correio"], createdAt:t, updatedAt:t },
+    { id:"ph_023", jp:"今日{きょう}の ラインは どこですか。", pt:"onde é a linha de hoje?", newWords:[{jp:"今日",pt:"hoje"},{jp:"ライン",pt:"linha de produção"}], topicId:topicIds["Na fábrica"], createdAt:t, updatedAt:t },
+    { id:"ph_024", jp:"おすすめは 何{なん}ですか。", pt:"qual é a recomendação da casa?", newWords:[{jp:"おすすめ",pt:"recomendação"},{jp:"何",pt:"o que / qual"}], topicId:topicIds["No restaurante"], createdAt:t, updatedAt:t },
+    { id:"ph_025", jp:"この野菜{やさい}は いくらですか。", pt:"quanto custa este legume?", newWords:[{jp:"野菜",pt:"legume / verdura"},{jp:"いくら",pt:"quanto"}], topicId:topicIds["No mercado"], createdAt:t, updatedAt:t },
+    { id:"ph_026", jp:"中古車{ちゅうこしゃ}を 見{み}たいです。", pt:"quero ver carros usados.", newWords:[{jp:"中古車",pt:"carro usado"},{jp:"見たい",pt:"quero ver"}], topicId:topicIds["Na loja de carros"], createdAt:t, updatedAt:t },
+    { id:"ph_027", jp:"レジ袋{ぶくろ}は いりません。", pt:"não preciso de sacola.", newWords:[{jp:"レジ袋",pt:"sacola do caixa"},{jp:"いりません",pt:"não preciso"}], topicId:topicIds["No konbini"], createdAt:t, updatedAt:t },
+    { id:"ph_028", jp:"のどが 痛{いた}いです。", pt:"minha garganta está doendo.", newWords:[{jp:"のど",pt:"garganta"},{jp:"痛い",pt:"doendo"}], topicId:topicIds["Na farmácia"], createdAt:t, updatedAt:t },
+    { id:"ph_029", jp:"日本語{にほんご}が あまり わかりません。", pt:"eu não entendo muito japonês.", newWords:[{jp:"日本語",pt:"língua japonesa"},{jp:"あまり",pt:"não muito"}], topicId:def, createdAt:t, updatedAt:t },
+    { id:"ph_030", jp:"もう少{すこ}し ゆっくり 話{はな}して ください。", pt:"por favor, fale um pouco mais devagar.", newWords:[{jp:"もう少し",pt:"um pouco mais"},{jp:"話して",pt:"falar"}], topicId:def, createdAt:t, updatedAt:t }
+  ];
+}
+
+/* ---------- Final de frases novas ---------- */
+
+function ensureCoreContentV3(st) {
+  st.bank ||= {};
+  st.bank.topics ||= [];
+  st.bank.phrases ||= [];
+  st.progress ||= {};
+  st.ui ||= {};
+  st.ui.collapsedTopics ||= {};
+  st.stats ||= {};
+  st.stats.listens ||= 0;
+  st.stats.calls ||= 0;
+  st.habit ||= { firstDay: null, days: {} };
+  st.habit.days ||= {};
+  st.session ||= {};
+  st.session.topicFilter ||= "ALL";
+  st.session.callBusy ||= false;
+  st.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
+
+  const existingByName = new Map();
+  for (const t of st.bank.topics) {
+    existingByName.set(String(t.name || "").toLowerCase(), t);
+  }
+
+  const coreTopics = seedTopics();
+  for (let i = 0; i < coreTopics.length; i++) {
+    const ct = coreTopics[i];
+    const key = ct.name.toLowerCase();
+    if (!existingByName.has(key)) {
+      st.bank.topics.push({
+        id: ct.id,
+        name: ct.name,
+        color: ct.color,
+        createdAt: now(),
+        updatedAt: now()
+      });
+      existingByName.set(key, ct);
+    }
+  }
+
+  let def = st.bank.topics.find(t => t.id === "topic_default");
+  if (!def) {
+    const fallback = st.bank.topics.find(t => String(t.name || "").toLowerCase() === "frases aleatórias");
+    if (fallback) {
+      fallback.id = "topic_default";
+      def = fallback;
+    } else {
+      def = defaultTopic();
+      st.bank.topics.unshift(def);
+    }
+  }
+
+  const topicIds = topicIdMapFromTopics(st.bank.topics);
+  const corePhrases = seedPhrases(topicIds);
+  const existingPhraseIds = new Set(st.bank.phrases.map(p => p.id));
+
+  for (const phrase of corePhrases) {
+    if (!existingPhraseIds.has(phrase.id)) {
+      st.bank.phrases.push(phrase);
+      st.progress[phrase.id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
+    }
+  }
+
+  for (const p of st.bank.phrases) {
+    if (!p.topicId) p.topicId = def.id;
+    if (!st.progress[p.id]) {
+      st.progress[p.id] = { status:"training", cycleStart:14, count:14, masteredAt:null, history:[] };
+    }
+  }
+
+  return st;
+}
+
 function defaultState() {
   const t = now();
-  const top = defaultTopic();
-  const phrases = seedPhrases(top.id);
+  const topics = seedTopics();
+  const topicIds = topicIdMapFromTopics(topics);
+  const phrases = seedPhrases(topicIds);
 
   const progress = {};
   for (const p of phrases) {
@@ -206,7 +340,7 @@ function defaultState() {
     },
 
     bank: {
-      topics: [top],
+      topics,
       phrases
     },
 
@@ -270,14 +404,18 @@ function migrateToV3(st) {
 
   st.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
 
-  return st;
+  return ensureCoreContentV3(st);
 }
 
 function loadState() {
   let raw = localStorage.getItem(LS_KEY);
   if (raw) {
     const parsed = safeJSONParse(raw);
-    if (parsed && parsed.app?.schemaVersion === 3) return parsed;
+    if (parsed && parsed.app?.schemaVersion === 3) {
+      const ensured = ensureCoreContentV3(parsed);
+      localStorage.setItem(LS_KEY, JSON.stringify(ensured));
+      return ensured;
+    }
   }
 
   const legacyRaw = localStorage.getItem("jp_105x_v2");
@@ -1089,7 +1227,7 @@ function skillBars() {
   const listening = clamp((sum.totalMin / (30 * 6)) * 0.65 + (sum.listens / 80) * 0.35, 0, 1);
   const speaking = clamp((sum.calls / 80), 0, 1);
   const repetition = clamp((sum.cycles / 120), 0, 1);
-  const vocab = clamp(((STATE.stats.phrasesMastered || 0) / 20) * 0.55 + (sum.totalMin / (30 * 10)) * 0.45, 0, 1);
+  const vocab = clamp(((STATE.stats.phrasesMastered || 0) / 30) * 0.55 + (sum.totalMin / (30 * 10)) * 0.45, 0, 1);
   const confidence = clamp((repetition * 0.35 + listening * 0.25 + vocab * 0.20 + speaking * 0.20), 0, 1);
 
   return [
