@@ -773,23 +773,6 @@ select.selectBtn option{
   text-align:left;
 }
 
-.kana ruby{
-  ruby-position:over;
-  ruby-align:center;
-  padding:0 1px;
-  border-radius:10px;
-}
-
-.kana rt{
-  font-size:.60em;
-  line-height:1;
-  color:var(--muted);
-  font-weight:950;
-  position:relative;
-  top:-0.18em;
-  padding:0 .10em;
-}
-
 .trainActionsBar{
   display:grid;
   grid-template-columns:minmax(0,1fr) auto;
@@ -827,6 +810,19 @@ select.selectBtn option{
   margin-bottom:6px;
   font-weight:1000;
   color:var(--text-soft);
+}
+
+.newWordsCard ruby{
+  ruby-position:over;
+  ruby-align:center;
+}
+
+.newWordsCard rt{
+  font-size:.62em;
+  line-height:1;
+  color:var(--muted);
+  font-weight:900;
+  padding:0 .08em;
 }
 
 .encourage{

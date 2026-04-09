@@ -1,9 +1,9 @@
 /* =========================================================
-   NIHONGO321 · APP V4.2
-   foco em conforto, clareza e utilidade no Japão real
+   NIHONGO321 v6
+   Produto real com camada Premium, missões e cronograma
    ========================================================= */
 
-const LS_KEY = "nihongo321_v42";
+const LS_KEY = "nihongo321_v6";
 
 /* ---------- helpers ---------- */
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -38,12 +38,21 @@ function fmtMMSS(ms) {
   return `${mm}:${ss}`;
 }
 
-function normalizeName(s) {
-  return String(s || "").trim().replace(/\s+/g, " ").slice(0, 60);
-}
-
 function sum1to(n) {
   return (n * (n + 1)) / 2;
+}
+
+function normalizeName(s) {
+  return String(s || "").trim().replace(/\s+/g, " ").slice(0, 80);
+}
+
+function route() {
+  const h = location.hash || "#/home";
+  return h.startsWith("#/") ? h : "#/home";
+}
+
+function nav(hash) {
+  location.hash = hash;
 }
 
 function downloadTextFile(filename, text, mime = "application/json") {
@@ -58,16 +67,7 @@ function downloadTextFile(filename, text, mime = "application/json") {
   setTimeout(() => URL.revokeObjectURL(url), 1800);
 }
 
-function route() {
-  const h = location.hash || "#/home";
-  return h.startsWith("#/") ? h : "#/home";
-}
-
-function nav(hash) {
-  location.hash = hash;
-}
-
-/* ---------- jp validation ---------- */
+/* ---------- JP validation ---------- */
 const JP_ALLOWED_RE =
   /^[A-Za-z\uFF21-\uFF3A\uFF41-\uFF5A\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF 　。、！？・ー\-~!?.,:;()（）「」『』【】［］…\n\r\t0-9\uFF10-\uFF19{}%％＋+／/＝=＆&・'’"”“#＃]*$/;
 
@@ -115,23 +115,22 @@ function jpToRubyHTML(raw) {
   return out;
 }
 
+/* frase principal sem furigana */
 function setKanaLine(el, rawText) {
   if (!el) return;
-  if (jpHasFurigana(rawText)) {
-    el.innerHTML = jpToRubyHTML(rawText);
-    return;
-  }
-  el.textContent = rawText || "";
+  el.textContent = jpStripFurigana(rawText || "");
 }
 
-/* ---------- topics ---------- */
+/* =========================================================
+   TOPICS / MISSIONS
+   ========================================================= */
 function topicPalette() {
-  return ["tViolet", "tBlue", "tCyan", "tGreen", "tAmber", "tPink", "tMint", "tRose"];
+  return ["warm", "sage", "accent"];
 }
 
-function pickTopicColor(i) {
-  const p = topicPalette();
-  return p[i % p.length];
+function pickTopicTone(i) {
+  const tones = topicPalette();
+  return tones[i % tones.length];
 }
 
 function slugifyTopicName(name) {
@@ -143,8 +142,8 @@ function slugifyTopicName(name) {
     .replace(/^_+|_+$/g, "");
 }
 
-function defaultTopicNames() {
-  return [
+function seedTopics() {
+  const names = [
     "Frases aleatórias",
     "Na fábrica",
     "No mercado",
@@ -163,14 +162,12 @@ function defaultTopicNames() {
     "Emergência",
     "No trabalho"
   ];
-}
 
-function seedTopics() {
   const t = now();
-  return defaultTopicNames().map((name, i) => ({
+  return names.map((name, i) => ({
     id: name === "Frases aleatórias" ? "topic_default" : `topic_${slugifyTopicName(name)}`,
     name,
-    color: name === "Frases aleatórias" ? "tViolet" : pickTopicColor(i),
+    tone: name === "Frases aleatórias" ? "accent" : pickTopicTone(i),
     createdAt: t,
     updatedAt: t
   }));
@@ -182,90 +179,385 @@ function topicIdMapFromTopics(topics) {
   return map;
 }
 
-function getTopic(id) {
-  return (STATE.bank.topics || []).find(t => t.id === id) || null;
+/* =========================================================
+   PREMIUM STRUCTURE
+   ========================================================= */
+function seedPremiumProgram() {
+  return {
+    blocks: [
+      {
+        id: "block_1",
+        title: "Destravamento funcional",
+        subtitle: "Parar de congelar e continuar a interação mesmo sem entender tudo",
+        weeks: [1,2,3,4,5,6,7,8]
+      },
+      {
+        id: "block_2",
+        title: "Japonês de ambiente profissional",
+        subtitle: "Entender melhor orientações, correções e situações mais exigentes",
+        weeks: [9,10,11,12,13,14,15,16]
+      },
+      {
+        id: "block_3",
+        title: "Saída da bolha da fábrica",
+        subtitle: "Ganhar linguagem para crescer, se posicionar e abrir portas",
+        weeks: [17,18,19,20,21,22,23,24]
+      }
+    ],
+
+    tracks: [
+      {
+        id: "track_listening",
+        title: "Destravar a escuta",
+        objective: "Entender intenção, comando e direção mesmo sem captar cada palavra"
+      },
+      {
+        id: "track_response",
+        title: "Responder sem travar",
+        objective: "Ganhar respostas curtas e funcionais para manter a conversa viva"
+      },
+      {
+        id: "track_supervisor",
+        title: "Japonês de supervisor e instrução",
+        objective: "Lidar melhor com orientação, correção e mudança de tarefa"
+      },
+      {
+        id: "track_hr",
+        title: "Japonês de RH e crescimento",
+        objective: "Resolver vida profissional com mais autonomia"
+      },
+      {
+        id: "track_contact",
+        title: "Japonês de atendimento e contato humano",
+        objective: "Sustentar interações com pessoas fora do padrão mecânico"
+      },
+      {
+        id: "track_transition",
+        title: "Japonês para entrevista e transição",
+        objective: "Ter linguagem suficiente para buscar algo melhor"
+      }
+    ],
+
+    weeks: [
+      {
+        number: 1,
+        blockId: "block_1",
+        trackId: "track_listening",
+        title: "Sobreviver à fala rápida",
+        mission: "Começar a captar intenção quando o japonês vier corrido",
+        goal: "Reconhecer palavras-chave em instruções curtas e não congelar",
+        result: "Você percebe melhor a direção da fala, mesmo sem entender tudo",
+        focus: ["fala rápida", "palavras-chave", "intenção"],
+        phraseIds: ["ph_001","ph_002","ph_003","ph_006"]
+      },
+      {
+        number: 2,
+        blockId: "block_1",
+        trackId: "track_response",
+        title: "Pedir repetição e confirmação",
+        mission: "Continuar a interação quando a compreensão falhar",
+        goal: "Usar frases para pedir repetição, confirmar e ganhar tempo",
+        result: "Você cria ponte em vez de silêncio",
+        focus: ["pedir repetição", "confirmar", "ganhar tempo"],
+        phraseIds: ["ph_003","ph_004","ph_006","ph_007"]
+      },
+      {
+        number: 3,
+        blockId: "block_1",
+        trackId: "track_response",
+        title: "Responder curto e natural",
+        mission: "Parar de soar travado nas respostas básicas",
+        goal: "Ter respostas curtas que seguram a conversa",
+        result: "Interações simples ficam mais fluidas",
+        focus: ["respostas curtas", "ritmo", "naturalidade"],
+        phraseIds: ["ph_001","ph_002","ph_007","ph_008"]
+      },
+      {
+        number: 4,
+        blockId: "block_1",
+        trackId: "track_supervisor",
+        title: "Ordens e comandos comuns",
+        mission: "Entender melhor quando alguém orienta ou manda fazer algo",
+        goal: "Captar verbos operacionais e direção de tarefa",
+        result: "Você se perde menos no ambiente de trabalho",
+        focus: ["ordens", "verbos", "tarefa"],
+        phraseIds: ["ph_005","ph_006","ph_007","ph_008"]
+      },
+      {
+        number: 5,
+        blockId: "block_1",
+        trackId: "track_supervisor",
+        title: "Correção, erro e aviso",
+        mission: "Entender quando algo precisa mudar",
+        goal: "Captar sinais de correção, ajuste e alerta",
+        result: "Você sofre menos com feedback rápido",
+        focus: ["erro", "alerta", "ajuste"],
+        phraseIds: ["ph_006","ph_007","ph_008","ph_031"]
+      },
+      {
+        number: 6,
+        blockId: "block_1",
+        trackId: "track_supervisor",
+        title: "Confirmar tarefa com segurança",
+        mission: "Parar de seguir no escuro",
+        goal: "Aprender a confirmar o que precisa fazer",
+        result: "Você trabalha com mais clareza",
+        focus: ["confirmação", "clareza", "tarefa"],
+        phraseIds: ["ph_005","ph_006","ph_007","ph_030"]
+      },
+      {
+        number: 7,
+        blockId: "block_1",
+        trackId: "track_listening",
+        title: "Escuta de japonês comprimido",
+        mission: "Acostumar o ouvido com a fala real",
+        goal: "Reduzir o choque quando o nativo não fala devagar",
+        result: "A fala real assusta menos",
+        focus: ["fala real", "som comprimido", "ouvido"],
+        phraseIds: ["ph_003","ph_004","ph_005","ph_030"]
+      },
+      {
+        number: 8,
+        blockId: "block_1",
+        trackId: "track_listening",
+        title: "Revisão de destravamento",
+        mission: "Consolidar o primeiro grande passo",
+        goal: "Fixar o que te ajuda a continuar sem congelar",
+        result: "Você sente a primeira virada prática",
+        focus: ["revisão", "consolidação", "continuidade"],
+        phraseIds: ["ph_001","ph_003","ph_005","ph_006","ph_007","ph_008"]
+      },
+      {
+        number: 9,
+        blockId: "block_2",
+        trackId: "track_supervisor",
+        title: "Japonês de supervisor",
+        mission: "Entender melhor quem orienta seu trabalho",
+        goal: "Capacitar sua escuta para instruções mais objetivas",
+        result: "Você acompanha melhor orientações no ambiente profissional",
+        focus: ["supervisor", "orientação", "escuta"],
+        phraseIds: ["ph_005","ph_006","ph_007","ph_030"]
+      },
+      {
+        number: 10,
+        blockId: "block_2",
+        trackId: "track_supervisor",
+        title: "Mudança de tarefa e prioridade",
+        mission: "Lidar com redirecionamento sem travar",
+        goal: "Entender quando a tarefa muda ou ganha urgência",
+        result: "Você reage melhor a mudanças de direção",
+        focus: ["mudança", "prioridade", "reação"],
+        phraseIds: ["ph_005","ph_006","ph_007","ph_030"]
+      },
+      {
+        number: 11,
+        blockId: "block_2",
+        trackId: "track_supervisor",
+        title: "Qualidade, erro e correção",
+        mission: "Entender melhor feedback técnico",
+        goal: "Captar quando algo está errado e precisa ser corrigido",
+        result: "Você reduz ruído em situações de correção",
+        focus: ["qualidade", "erro", "correção"],
+        phraseIds: ["ph_006","ph_008","ph_031"]
+      },
+      {
+        number: 12,
+        blockId: "block_2",
+        trackId: "track_hr",
+        title: "RH e vida funcional na empresa",
+        mission: "Resolver temas importantes da vida profissional",
+        goal: "Ganhar autonomia para falar sobre salário, faltas e ajustes",
+        result: "Você depende menos de terceiros",
+        focus: ["RH", "documentos", "autonomia"],
+        phraseIds: ["ph_024","ph_030","ph_031","ph_032"]
+      },
+      {
+        number: 13,
+        blockId: "block_2",
+        trackId: "track_hr",
+        title: "Postura verbal profissional",
+        mission: "Soar mais funcional e mais seguro",
+        goal: "Melhorar o tom para ambientes mais exigentes",
+        result: "Sua presença verbal fica mais forte",
+        focus: ["tom", "postura", "segurança"],
+        phraseIds: ["ph_001","ph_002","ph_024","ph_030"]
+      },
+      {
+        number: 14,
+        blockId: "block_2",
+        trackId: "track_supervisor",
+        title: "Treinamento e explicação de processo",
+        mission: "Acompanhar melhor explicações mais longas",
+        goal: "Segurar atenção e extrair o principal",
+        result: "Você acompanha melhor instruções de processo",
+        focus: ["treinamento", "processo", "atenção"],
+        phraseIds: ["ph_005","ph_006","ph_007","ph_024"]
+      },
+      {
+        number: 15,
+        blockId: "block_2",
+        trackId: "track_response",
+        title: "Perguntas e respostas de rotina profissional",
+        mission: "Sustentar mini diálogos no trabalho",
+        goal: "Ganhar fluidez em trocas curtas e úteis",
+        result: "A interação profissional fica menos travada",
+        focus: ["diálogo", "troca curta", "rotina"],
+        phraseIds: ["ph_001","ph_002","ph_005","ph_030"]
+      },
+      {
+        number: 16,
+        blockId: "block_2",
+        trackId: "track_hr",
+        title: "Revisão profissional",
+        mission: "Consolidar o japonês de ambiente funcional",
+        goal: "Fortalecer linguagem de trabalho e crescimento",
+        result: "Você sente mais valor profissional no seu japonês",
+        focus: ["revisão", "trabalho", "crescimento"],
+        phraseIds: ["ph_024","ph_030","ph_031","ph_032"]
+      },
+      {
+        number: 17,
+        blockId: "block_3",
+        trackId: "track_transition",
+        title: "Apresentação pessoal melhor",
+        mission: "Ganhar linguagem para se posicionar melhor",
+        goal: "Treinar frases para se apresentar com mais clareza",
+        result: "Você começa a sair do japonês puramente operacional",
+        focus: ["apresentação", "clareza", "posição"],
+        phraseIds: ["ph_001","ph_002","ph_030"]
+      },
+      {
+        number: 18,
+        blockId: "block_3",
+        trackId: "track_transition",
+        title: "Explicar experiência de trabalho",
+        mission: "Transformar vivência em linguagem útil",
+        goal: "Falar melhor sobre rotina e experiência",
+        result: "Sua história começa a ganhar forma verbal",
+        focus: ["experiência", "rotina", "trabalho"],
+        phraseIds: ["ph_005","ph_024","ph_030"]
+      },
+      {
+        number: 19,
+        blockId: "block_3",
+        trackId: "track_transition",
+        title: "Entrevista básica",
+        mission: "Ter chão para começar a buscar algo melhor",
+        goal: "Responder perguntas comuns com mais segurança",
+        result: "Você se sente mais preparado para novas portas",
+        focus: ["entrevista", "resposta", "segurança"],
+        phraseIds: ["ph_001","ph_002","ph_030","ph_031"]
+      },
+      {
+        number: 20,
+        blockId: "block_3",
+        trackId: "track_contact",
+        title: "Atendimento e contato humano",
+        mission: "Lidar melhor com interações abertas",
+        goal: "Entender e responder em contato mais humano",
+        result: "Você sai do padrão puramente mecânico",
+        focus: ["atendimento", "contato", "interação"],
+        phraseIds: ["ph_009","ph_012","ph_013","ph_025"]
+      },
+      {
+        number: 21,
+        blockId: "block_3",
+        trackId: "track_contact",
+        title: "Resolver problemas verbalmente",
+        mission: "Explicar, pedir ajuda e corrigir mal-entendidos",
+        goal: "Ganhar ferramentas para situações imprevistas",
+        result: "Você se vira melhor fora do script",
+        focus: ["problema", "explicação", "ajuda"],
+        phraseIds: ["ph_016","ph_018","ph_026","ph_028"]
+      },
+      {
+        number: 22,
+        blockId: "block_3",
+        trackId: "track_listening",
+        title: "Escuta profissional mais natural",
+        mission: "Acompanhar fala menos mastigada",
+        goal: "Aumentar resistência ao japonês real",
+        result: "O ouvido fica mais preparado para ambientes melhores",
+        focus: ["escuta natural", "resistência", "ambiente profissional"],
+        phraseIds: ["ph_003","ph_004","ph_024","ph_025"]
+      },
+      {
+        number: 23,
+        blockId: "block_3",
+        trackId: "track_response",
+        title: "Segurança verbal",
+        mission: "Responder com menos medo",
+        goal: "Sentir mais chão ao falar com nativos",
+        result: "Você transmite mais presença e menos congelamento",
+        focus: ["segurança", "resposta", "presença"],
+        phraseIds: ["ph_001","ph_002","ph_003","ph_007"]
+      },
+      {
+        number: 24,
+        blockId: "block_3",
+        trackId: "track_transition",
+        title: "Revisão e plano de avanço",
+        mission: "Fechar a primeira grande travessia",
+        goal: "Consolidar o caminho do japonês de sobrevivência ao japonês que abre portas",
+        result: "Você enxerga o Premium como jornada real de crescimento",
+        focus: ["revisão", "avanço", "transição"],
+        phraseIds: ["ph_024","ph_025","ph_030","ph_031","ph_032"]
+      }
+    ]
+  };
 }
 
-function topicName(id) {
-  return getTopic(id)?.name || "Sem contexto";
-}
-
-function ensureDefaultTopic() {
-  let def = (STATE.bank.topics || []).find(t => t.id === "topic_default");
-  if (!def) {
-    def = {
-      id: "topic_default",
-      name: "Frases aleatórias",
-      color: "tViolet",
-      createdAt: now(),
-      updatedAt: now()
-    };
-    STATE.bank.topics.unshift(def);
-  }
-  return def;
-}
-
-/* ---------- seed phrases ---------- */
+/* =========================================================
+   CONTENT
+   ========================================================= */
 function seedPhrases(topicIds) {
   const t = now();
+
   return [
-    { id:"ph_001", jp:"おはようございます。", pt:"bom dia.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"cumprimento básico do dia", comfortHint:"comece leve. só ouvir já conta.", newWords:[{jp:"おはようございます", pt:"bom dia"}], createdAt:t, updatedAt:t },
-    { id:"ph_002", jp:"お疲{つか}れ様{さま}です。", pt:"bom trabalho / obrigado pelo esforço.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"muito útil no trabalho", comfortHint:"frase muito usada no cotidiano japonês.", newWords:[{jp:"お疲れ様です", pt:"bom trabalho"}], createdAt:t, updatedAt:t },
-    { id:"ph_003", jp:"もう一度{いちど} お願{ねが}いします。", pt:"mais uma vez, por favor.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"quando você não entendeu", comfortHint:"ótima frase para ganhar tempo com educação.", newWords:[{jp:"もう一度", pt:"mais uma vez"}], createdAt:t, updatedAt:t },
-    { id:"ph_004", jp:"ゆっくり お願{ねが}いします。", pt:"devagar, por favor.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"quando falam rápido demais", comfortHint:"uma das frases mais úteis do app.", newWords:[{jp:"ゆっくり", pt:"devagar"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_005", jp:"今日{きょう}の 持{も}ち場{ば}は どこですか。", pt:"qual é o meu posto de hoje?", topicId:topicIds["Na fábrica"], priority:5, useHint:"para começar o turno", comfortHint:"isso pode te ajudar já no início do expediente.", newWords:[{jp:"持ち場", pt:"posto de trabalho"}], createdAt:t, updatedAt:t },
-    { id:"ph_006", jp:"この作業{さぎょう}を もう一度{いちど} 教{おし}えて ください。", pt:"por favor, me ensine esta tarefa mais uma vez.", topicId:topicIds["Na fábrica"], priority:5, useHint:"quando a tarefa não ficou clara", comfortHint:"não precisa adivinhar. peça de novo.", newWords:[{jp:"作業", pt:"tarefa"}], createdAt:t, updatedAt:t },
-    { id:"ph_007", jp:"次{つぎ}は 何{なに}を すれば いいですか。", pt:"o que eu devo fazer em seguida?", topicId:topicIds["Na fábrica"], priority:5, useHint:"quando terminou a etapa atual", comfortHint:"ótima frase para manter o fluxo do trabalho.", newWords:[{jp:"次", pt:"seguinte / próximo"}], createdAt:t, updatedAt:t },
-    { id:"ph_008", jp:"機械{きかい}が 止{と}まりました。", pt:"a máquina parou.", topicId:topicIds["Na fábrica"], priority:5, useHint:"situação urgente na linha", comfortHint:"frase curta e muito importante.", newWords:[{jp:"機械", pt:"máquina"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_009", jp:"これは いくらですか。", pt:"quanto custa isto?", topicId:topicIds["No mercado"], priority:5, useHint:"compras do dia a dia", comfortHint:"frase simples e muito útil.", newWords:[{jp:"いくら", pt:"quanto"}], createdAt:t, updatedAt:t },
-    { id:"ph_010", jp:"賞味期限{しょうみきげん}は いつですか。", pt:"qual é a data de validade?", topicId:topicIds["No mercado"], priority:5, useHint:"na hora de escolher produto", comfortHint:"boa para compras mais seguras.", newWords:[{jp:"賞味期限", pt:"validade"}], createdAt:t, updatedAt:t },
-    { id:"ph_011", jp:"袋{ふくろ}は いりません。", pt:"não preciso de sacola.", topicId:topicIds["No mercado"], priority:4, useHint:"caixa e autoatendimento", comfortHint:"frase rápida para o caixa.", newWords:[{jp:"袋", pt:"sacola"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_012", jp:"温{あたた}めて ください。", pt:"por favor, aqueça isto.", topicId:topicIds["No konbini"], priority:5, useHint:"marmita ou lanche no konbini", comfortHint:"super útil no dia a dia.", newWords:[{jp:"温めて", pt:"aquecer"}], createdAt:t, updatedAt:t },
-    { id:"ph_013", jp:"レシートを ください。", pt:"por favor, me dê o recibo.", topicId:topicIds["No konbini"], priority:4, useHint:"caixa", comfortHint:"frase simples e clara.", newWords:[{jp:"レシート", pt:"recibo"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_014", jp:"住所変更{じゅうしょへんこう}の 手続{てつづ}きは どこですか。", pt:"onde faço o procedimento de mudança de endereço?", topicId:topicIds["Na prefeitura"], priority:5, useHint:"mudança de endereço", comfortHint:"frase de sobrevivência burocrática.", newWords:[{jp:"住所変更", pt:"mudança de endereço"}], createdAt:t, updatedAt:t },
-    { id:"ph_015", jp:"必要{ひつよう}な ものは 何{なに}ですか。", pt:"o que é necessário trazer?", topicId:topicIds["Na prefeitura"], priority:5, useHint:"antes de iniciar procedimento", comfortHint:"evita viagem perdida.", newWords:[{jp:"必要", pt:"necessário"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_016", jp:"この荷物{にもつ}を 送{おく}りたいです。", pt:"quero enviar esta encomenda.", topicId:topicIds["No correio"], priority:5, useHint:"envio no balcão", comfortHint:"boa para começar o atendimento.", newWords:[{jp:"荷物", pt:"encomenda"}], createdAt:t, updatedAt:t },
-    { id:"ph_017", jp:"送料{そうりょう}は いくらですか。", pt:"quanto custa o frete?", topicId:topicIds["No correio"], priority:5, useHint:"antes de fechar envio", comfortHint:"ajuda a decidir rápido.", newWords:[{jp:"送料", pt:"frete"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_018", jp:"予約{よやく}を したいです。", pt:"quero marcar uma consulta.", topicId:topicIds["No hospital"], priority:5, useHint:"marcação inicial", comfortHint:"frase essencial para saúde.", newWords:[{jp:"予約", pt:"agendamento"}], createdAt:t, updatedAt:t },
-    { id:"ph_019", jp:"昨日{きのう}から 熱{ねつ}が あります。", pt:"estou com febre desde ontem.", topicId:topicIds["No hospital"], priority:5, useHint:"explicar sintoma", comfortHint:"fale isso com calma. é uma frase importante.", newWords:[{jp:"熱", pt:"febre"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_020", jp:"風邪薬{かぜぐすり}は ありますか。", pt:"vocês têm remédio para resfriado?", topicId:topicIds["Na farmácia"], priority:5, useHint:"compra rápida na farmácia", comfortHint:"frase muito útil em dias difíceis.", newWords:[{jp:"風邪薬", pt:"remédio para resfriado"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_021", jp:"口座{こうざ}を 作{つく}りたいです。", pt:"quero abrir uma conta bancária.", topicId:topicIds["No banco"], priority:4, useHint:"atendimento bancário", comfortHint:"frase de base para o banco.", newWords:[{jp:"口座", pt:"conta bancária"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_022", jp:"この電車{でんしゃ}は 福井{ふくい}に 行{い}きますか。", pt:"este trem vai para Fukui?", topicId:topicIds["No trem / estação"], priority:5, useHint:"deslocamento no dia a dia", comfortHint:"ótima frase para não se perder.", newWords:[{jp:"電車", pt:"trem"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_023", jp:"搭乗口{とうじょうぐち}は どこですか。", pt:"onde fica o portão de embarque?", topicId:topicIds["No aeroporto"], priority:4, useHint:"embarque", comfortHint:"curta e objetiva.", newWords:[{jp:"搭乗口", pt:"portão de embarque"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_024", jp:"給料明細{きゅうりょうめいさい}を 確認{かくにん}したいです。", pt:"quero conferir meu holerite.", topicId:topicIds["No RH"], priority:4, useHint:"falar com RH", comfortHint:"boa para resolver coisas do trabalho.", newWords:[{jp:"給料明細", pt:"holerite"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_025", jp:"30GBの 固定{こてい}プランは ありますか。", pt:"tem um plano fixo de 30 GB?", topicId:topicIds["No celular / internet"], priority:5, useHint:"loja de celular", comfortHint:"muito útil para contrato de plano.", newWords:[{jp:"固定", pt:"fixo"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_026", jp:"修理{しゅうり}を お願{ねが}いしたいです。", pt:"quero solicitar um reparo.", topicId:topicIds["Em casa / apartamento"], priority:4, useHint:"problema no apartamento", comfortHint:"frase boa para falar com a administração.", newWords:[{jp:"修理", pt:"reparo"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_027", jp:"燃{も}える ごみの 日{ひ}は いつですか。", pt:"quando é o dia do lixo queimável?", topicId:topicIds["Lixo e reciclagem"], priority:3, useHint:"vida no apartamento", comfortHint:"ajuda muito no começo da vida no Japão.", newWords:[{jp:"燃えるごみ", pt:"lixo queimável"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_028", jp:"助{たす}けて ください。", pt:"por favor, me ajude.", topicId:topicIds["Emergência"], priority:5, useHint:"situação urgente", comfortHint:"frase curta e muito importante.", newWords:[{jp:"助けて", pt:"me ajude"}], createdAt:t, updatedAt:t },
-    { id:"ph_029", jp:"救急車{きゅうきゅうしゃ}を 呼{よ}んで ください。", pt:"por favor, chame uma ambulância.", topicId:topicIds["Emergência"], priority:5, useHint:"emergência real", comfortHint:"vale muito a pena revisar esta frase.", newWords:[{jp:"救急車", pt:"ambulância"}], createdAt:t, updatedAt:t },
-
-    { id:"ph_030", jp:"少{すこ}し 遅{おく}れます。", pt:"vou me atrasar um pouco.", topicId:topicIds["No trabalho"], priority:5, useHint:"avisar no trabalho", comfortHint:"muito útil na vida real.", newWords:[{jp:"遅れます", pt:"vou me atrasar"}], createdAt:t, updatedAt:t },
-    { id:"ph_031", jp:"体調{たいちょう}が 悪{わる}いです。", pt:"não estou me sentindo bem.", topicId:topicIds["No trabalho"], priority:5, useHint:"quando o corpo não está bem", comfortHint:"frase importante para dias difíceis.", newWords:[{jp:"体調", pt:"condição física"}], createdAt:t, updatedAt:t },
-    { id:"ph_032", jp:"今日は 休{やす}ませて ください。", pt:"por favor, deixe-me faltar hoje.", topicId:topicIds["No trabalho"], priority:5, useHint:"quando precisa descansar", comfortHint:"frase sensível e importante.", newWords:[{jp:"休ませてください", pt:"deixe-me faltar"}], createdAt:t, updatedAt:t }
+    { id:"ph_001", jp:"おはようございます。", pt:"bom dia.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"cumprimento básico do dia", comfortHint:"Comece leve. Só ouvir já conta.", newWords:[{jp:"おはようございます", pt:"bom dia"}], createdAt:t, updatedAt:t },
+    { id:"ph_002", jp:"お疲{つか}れ様{さま}です。", pt:"bom trabalho / obrigado pelo esforço.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"muito útil no trabalho", comfortHint:"Essa frase ajuda você a entrar melhor no ritmo social do Japão.", newWords:[{jp:"疲{つか}れ", pt:"cansaço / esforço"},{jp:"様{さま}", pt:"forma respeitosa"}], createdAt:t, updatedAt:t },
+    { id:"ph_003", jp:"もう一度{いちど} お願{ねが}いします。", pt:"mais uma vez, por favor.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"quando você não entendeu", comfortHint:"Pedir repetição é inteligência, não fraqueza.", newWords:[{jp:"一度{いちど}", pt:"uma vez"},{jp:"お願{ねが}いします", pt:"por favor"}], createdAt:t, updatedAt:t },
+    { id:"ph_004", jp:"ゆっくり お願{ねが}いします。", pt:"devagar, por favor.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"quando falam rápido demais", comfortHint:"Uma das frases mais valiosas para continuar a interação.", newWords:[{jp:"ゆっくり", pt:"devagar"},{jp:"お願{ねが}いします", pt:"por favor"}], createdAt:t, updatedAt:t },
+    { id:"ph_005", jp:"今日{きょう}の 持{も}ち場{ば}は どこですか。", pt:"qual é o meu posto de hoje?", topicId:topicIds["Na fábrica"], priority:5, useHint:"para começar o turno", comfortHint:"Ótima frase para iniciar o dia com clareza.", newWords:[{jp:"今日{きょう}", pt:"hoje"},{jp:"持{も}ち場{ば}", pt:"posto de trabalho"}], createdAt:t, updatedAt:t },
+    { id:"ph_006", jp:"この作業{さぎょう}を もう一度{いちど} 教{おし}えて ください。", pt:"por favor, me ensine esta tarefa mais uma vez.", topicId:topicIds["Na fábrica"], priority:5, useHint:"quando a tarefa não ficou clara", comfortHint:"Não precisa adivinhar. Peça de novo com clareza.", newWords:[{jp:"作業{さぎょう}", pt:"tarefa"},{jp:"教{おし}えて", pt:"ensinar / explicar"}], createdAt:t, updatedAt:t },
+    { id:"ph_007", jp:"次{つぎ}は 何{なに}を すれば いいですか。", pt:"o que eu devo fazer em seguida?", topicId:topicIds["Na fábrica"], priority:5, useHint:"quando terminou a etapa atual", comfortHint:"Isso ajuda você a manter o fluxo sem ficar perdido.", newWords:[{jp:"次{つぎ}", pt:"seguinte / próximo"},{jp:"何{なに}", pt:"o que"}], createdAt:t, updatedAt:t },
+    { id:"ph_008", jp:"機械{きかい}が 止{と}まりました。", pt:"a máquina parou.", topicId:topicIds["Na fábrica"], priority:5, useHint:"situação urgente na linha", comfortHint:"Frase curta e muito importante.", newWords:[{jp:"機械{きかい}", pt:"máquina"},{jp:"止{と}まりました", pt:"parou"}], createdAt:t, updatedAt:t },
+    { id:"ph_009", jp:"これは いくらですか。", pt:"quanto custa isto?", topicId:topicIds["No mercado"], priority:5, useHint:"compras do dia a dia", comfortHint:"Frase simples, clara e muito útil.", newWords:[{jp:"いくら", pt:"quanto"}], createdAt:t, updatedAt:t },
+    { id:"ph_010", jp:"賞味期限{しょうみきげん}は いつですか。", pt:"qual é a data de validade?", topicId:topicIds["No mercado"], priority:5, useHint:"na hora de escolher produto", comfortHint:"Boa para compras mais seguras.", newWords:[{jp:"賞味期限{しょうみきげん}", pt:"validade"}], createdAt:t, updatedAt:t },
+    { id:"ph_011", jp:"袋{ふくろ}は いりません。", pt:"não preciso de sacola.", topicId:topicIds["No mercado"], priority:4, useHint:"caixa e autoatendimento", comfortHint:"Frase rápida para o caixa.", newWords:[{jp:"袋{ふくろ}", pt:"sacola"}], createdAt:t, updatedAt:t },
+    { id:"ph_012", jp:"温{あたた}めて ください。", pt:"por favor, aqueça isto.", topicId:topicIds["No konbini"], priority:5, useHint:"marmita ou lanche", comfortHint:"Muito útil para o dia a dia corrido.", newWords:[{jp:"温{あたた}めて", pt:"aquecer"}], createdAt:t, updatedAt:t },
+    { id:"ph_013", jp:"レシートを ください。", pt:"por favor, me dê o recibo.", topicId:topicIds["No konbini"], priority:4, useHint:"caixa", comfortHint:"Frase curta que resolve rápido.", newWords:[{jp:"レシート", pt:"recibo"}], createdAt:t, updatedAt:t },
+    { id:"ph_014", jp:"住所変更{じゅうしょへんこう}の 手続{てつづ}きは どこですか。", pt:"onde faço o procedimento de mudança de endereço?", topicId:topicIds["Na prefeitura"], priority:5, useHint:"mudança de endereço", comfortHint:"Frase de sobrevivência burocrática.", newWords:[{jp:"住所変更{じゅうしょへんこう}", pt:"mudança de endereço"},{jp:"手続{てつづ}き", pt:"procedimento"}], createdAt:t, updatedAt:t },
+    { id:"ph_015", jp:"必要{ひつよう}な ものは 何{なに}ですか。", pt:"o que é necessário trazer?", topicId:topicIds["Na prefeitura"], priority:5, useHint:"antes de iniciar procedimento", comfortHint:"Evita viagem perdida.", newWords:[{jp:"必要{ひつよう}", pt:"necessário"},{jp:"何{なに}", pt:"o que"}], createdAt:t, updatedAt:t },
+    { id:"ph_016", jp:"この荷物{にもつ}を 送{おく}りたいです。", pt:"quero enviar esta encomenda.", topicId:topicIds["No correio"], priority:5, useHint:"envio no balcão", comfortHint:"Boa para começar o atendimento com clareza.", newWords:[{jp:"荷物{にもつ}", pt:"encomenda"},{jp:"送{おく}りたい", pt:"quero enviar"}], createdAt:t, updatedAt:t },
+    { id:"ph_017", jp:"送料{そうりょう}は いくらですか。", pt:"quanto custa o frete?", topicId:topicIds["No correio"], priority:5, useHint:"antes de fechar envio", comfortHint:"Ajuda a decidir rápido.", newWords:[{jp:"送料{そうりょう}", pt:"frete"}], createdAt:t, updatedAt:t },
+    { id:"ph_018", jp:"予約{よやく}を したいです。", pt:"quero marcar uma consulta.", topicId:topicIds["No hospital"], priority:5, useHint:"marcação inicial", comfortHint:"Essencial para saúde.", newWords:[{jp:"予約{よやく}", pt:"agendamento"}], createdAt:t, updatedAt:t },
+    { id:"ph_019", jp:"昨日{きのう}から 熱{ねつ}が あります。", pt:"estou com febre desde ontem.", topicId:topicIds["No hospital"], priority:5, useHint:"explicar sintoma", comfortHint:"Fale isso com calma. É uma frase importante.", newWords:[{jp:"昨日{きのう}", pt:"ontem"},{jp:"熱{ねつ}", pt:"febre"}], createdAt:t, updatedAt:t },
+    { id:"ph_020", jp:"風邪薬{かぜぐすり}は ありますか。", pt:"vocês têm remédio para resfriado?", topicId:topicIds["Na farmácia"], priority:5, useHint:"compra rápida na farmácia", comfortHint:"Muito útil em dias difíceis.", newWords:[{jp:"風邪薬{かぜぐすり}", pt:"remédio para resfriado"}], createdAt:t, updatedAt:t },
+    { id:"ph_021", jp:"口座{こうざ}を 作{つく}りたいです。", pt:"quero abrir uma conta bancária.", topicId:topicIds["No banco"], priority:4, useHint:"atendimento bancário", comfortHint:"Boa frase base para o banco.", newWords:[{jp:"口座{こうざ}", pt:"conta bancária"}], createdAt:t, updatedAt:t },
+    { id:"ph_022", jp:"この電車{でんしゃ}は 福井{ふくい}に 行{い}きますか。", pt:"este trem vai para Fukui?", topicId:topicIds["No trem / estação"], priority:5, useHint:"deslocamento diário", comfortHint:"Ótima frase para não se perder.", newWords:[{jp:"電車{でんしゃ}", pt:"trem"},{jp:"行{い}きますか", pt:"vai?"}], createdAt:t, updatedAt:t },
+    { id:"ph_023", jp:"搭乗口{とうじょうぐち}は どこですか。", pt:"onde fica o portão de embarque?", topicId:topicIds["No aeroporto"], priority:4, useHint:"embarque", comfortHint:"Curta e objetiva.", newWords:[{jp:"搭乗口{とうじょうぐち}", pt:"portão de embarque"}], createdAt:t, updatedAt:t },
+    { id:"ph_024", jp:"給料明細{きゅうりょうめいさい}を 確認{かくにん}したいです。", pt:"quero conferir meu holerite.", topicId:topicIds["No RH"], priority:4, useHint:"falar com RH", comfortHint:"Boa para resolver sua vida profissional.", newWords:[{jp:"給料明細{きゅうりょうめいさい}", pt:"holerite"},{jp:"確認{かくにん}", pt:"conferir"}], createdAt:t, updatedAt:t },
+    { id:"ph_025", jp:"30GBの 固定{こてい}プランは ありますか。", pt:"tem um plano fixo de 30 GB?", topicId:topicIds["No celular / internet"], priority:5, useHint:"loja de celular", comfortHint:"Muito útil para contrato de plano.", newWords:[{jp:"固定{こてい}", pt:"fixo"},{jp:"プラン", pt:"plano"}], createdAt:t, updatedAt:t },
+    { id:"ph_026", jp:"修理{しゅうり}を お願{ねが}いしたいです。", pt:"quero solicitar um reparo.", topicId:topicIds["Em casa / apartamento"], priority:4, useHint:"problema no apartamento", comfortHint:"Boa para falar com a administração.", newWords:[{jp:"修理{しゅうり}", pt:"reparo"},{jp:"お願{ねが}いしたい", pt:"quero solicitar"}], createdAt:t, updatedAt:t },
+    { id:"ph_027", jp:"燃{も}える ごみの 日{ひ}は いつですか。", pt:"quando é o dia do lixo queimável?", topicId:topicIds["Lixo e reciclagem"], priority:3, useHint:"vida no apartamento", comfortHint:"Ajuda muito no começo da vida no Japão.", newWords:[{jp:"燃{も}える ごみ", pt:"lixo queimável"}], createdAt:t, updatedAt:t },
+    { id:"ph_028", jp:"助{たす}けて ください。", pt:"por favor, me ajude.", topicId:topicIds["Emergência"], priority:5, useHint:"situação urgente", comfortHint:"Frase curta e muito importante.", newWords:[{jp:"助{たす}けて", pt:"me ajude"}], createdAt:t, updatedAt:t },
+    { id:"ph_029", jp:"救急車{きゅうきゅうしゃ}を 呼{よ}んで ください。", pt:"por favor, chame uma ambulância.", topicId:topicIds["Emergência"], priority:5, useHint:"emergência real", comfortHint:"Vale muito a pena revisar esta frase.", newWords:[{jp:"救急車{きゅうきゅうしゃ}", pt:"ambulância"}], createdAt:t, updatedAt:t },
+    { id:"ph_030", jp:"少{すこ}し 遅{おく}れます。", pt:"vou me atrasar um pouco.", topicId:topicIds["No trabalho"], priority:5, useHint:"avisar no trabalho", comfortHint:"Muito útil na vida real.", newWords:[{jp:"少{すこ}し", pt:"um pouco"},{jp:"遅{おく}れます", pt:"vou me atrasar"}], createdAt:t, updatedAt:t },
+    { id:"ph_031", jp:"体調{たいちょう}が 悪{わる}いです。", pt:"não estou me sentindo bem.", topicId:topicIds["No trabalho"], priority:5, useHint:"quando o corpo não está bem", comfortHint:"Frase importante para dias difíceis.", newWords:[{jp:"体調{たいちょう}", pt:"condição física"},{jp:"悪{わる}い", pt:"ruim"}], createdAt:t, updatedAt:t },
+    { id:"ph_032", jp:"今日は 休{やす}ませて ください。", pt:"por favor, deixe-me faltar hoje.", topicId:topicIds["No trabalho"], priority:5, useHint:"quando precisa descansar", comfortHint:"Frase sensível e importante.", newWords:[{jp:"休{やす}ませて", pt:"deixe faltar / descansar"}], createdAt:t, updatedAt:t }
   ];
 }
 
-/* ---------- default / migrate ---------- */
+/* =========================================================
+   STATE
+   ========================================================= */
 function defaultState() {
   const t = now();
   const topics = seedTopics();
   const topicIds = topicIdMapFromTopics(topics);
   const phrases = seedPhrases(topicIds);
+  const premium = seedPremiumProgram();
 
   const progress = {};
   for (const p of phrases) {
@@ -282,9 +574,19 @@ function defaultState() {
     };
   }
 
+  const premiumWeekProgress = {};
+  for (const w of premium.weeks) {
+    premiumWeekProgress[w.number] = {
+      status: "locked",
+      startedAt: null,
+      finishedAt: null
+    };
+  }
+  premiumWeekProgress[1].status = "active";
+
   return {
     app: {
-      schemaVersion: 42,
+      schemaVersion: 6,
       createdAt: t,
       updatedAt: t
     },
@@ -310,10 +612,13 @@ function defaultState() {
       topics,
       phrases
     },
+    premium,
     progress,
+    premiumWeekProgress,
     session: {
       currentPhraseId: phrases[0]?.id || null,
       currentContextId: "ALL",
+      currentPremiumWeek: 1,
       callMode: false,
       callBusy: false,
       study: {
@@ -331,21 +636,25 @@ function defaultState() {
 
 function migrateState(st) {
   if (!st?.app) return defaultState();
-  st.app.schemaVersion = 42;
 
-  st.bank ||= {};
-  st.bank.topics ||= [];
-  st.bank.phrases ||= [];
-  st.progress ||= {};
-  st.stats ||= {};
-  st.habit ||= { firstDay: null, days: {} };
+  const fresh = defaultState();
+
+  st.app.schemaVersion = 6;
+  st.prefs ||= fresh.prefs;
+  st.stats ||= fresh.stats;
+  st.habit ||= fresh.habit;
   st.habit.days ||= {};
-  st.prefs ||= {};
-  st.session ||= {};
-  st.ui ||= {};
+  st.bank ||= fresh.bank;
+  st.bank.topics ||= fresh.bank.topics;
+  st.bank.phrases ||= fresh.bank.phrases;
+  st.progress ||= {};
+  st.session ||= fresh.session;
+  st.ui ||= { lastToast: "" };
+  st.premium ||= fresh.premium;
+  st.premiumWeekProgress ||= fresh.premiumWeekProgress;
 
-  st.prefs.audio ||= { enabled: true, volume: 0.35, unlocked: false };
-  st.prefs.haptics ||= { enabled: true };
+  st.prefs.audio ||= fresh.prefs.audio;
+  st.prefs.haptics ||= fresh.prefs.haptics;
   st.prefs.tiredMode ??= false;
   st.prefs.onboardingDone ??= false;
 
@@ -357,34 +666,15 @@ function migrateState(st) {
   st.stats.calls ||= 0;
 
   st.session.currentContextId ||= "ALL";
+  st.session.currentPremiumWeek ||= 1;
   st.session.callMode ||= false;
   st.session.callBusy ||= false;
-  st.session.study ||= {
-    day: todayKey(),
-    totalMs: 0,
-    running: false,
-    runStartAt: null
-  };
-
-  if (!st.bank.topics.length) {
-    st.bank.topics = seedTopics();
-  }
+  st.session.study ||= fresh.session.study;
 
   let def = st.bank.topics.find(t => t.id === "topic_default");
-  if (!def) {
-    st.bank.topics.unshift({
-      id: "topic_default",
-      name: "Frases aleatórias",
-      color: "tViolet",
-      createdAt: now(),
-      updatedAt: now()
-    });
-  }
+  if (!def) st.bank.topics.unshift(fresh.bank.topics[0]);
 
-  if (!st.bank.phrases.length) {
-    const topicIds = topicIdMapFromTopics(st.bank.topics);
-    st.bank.phrases = seedPhrases(topicIds);
-  }
+  if (!st.bank.phrases.length) st.bank.phrases = fresh.bank.phrases;
 
   for (const p of st.bank.phrases) {
     p.priority ||= 3;
@@ -412,7 +702,16 @@ function migrateState(st) {
     }
   }
 
-  st.session.currentPhraseId ||= st.bank.phrases[0]?.id || null;
+  for (const w of st.premium.weeks) {
+    if (!st.premiumWeekProgress[w.number]) {
+      st.premiumWeekProgress[w.number] = {
+        status: w.number === 1 ? "active" : "locked",
+        startedAt: null,
+        finishedAt: null
+      };
+    }
+  }
+
   return st;
 }
 
@@ -423,7 +722,7 @@ function loadState() {
     if (parsed?.app) return migrateState(parsed);
   }
 
-  const legacyKeys = ["nihongo321_v4", "jp_105x_v3", "jp_105x_v2"];
+  const legacyKeys = ["nihongo321_v6_beta", "nihongo321_v42", "nihongo321_v4", "jp_105x_v3"];
   for (const key of legacyKeys) {
     const legacyRaw = localStorage.getItem(key);
     if (!legacyRaw) continue;
@@ -442,7 +741,9 @@ function saveState() {
 let STATE = loadState();
 saveState();
 
-/* ---------- audio / haptics ---------- */
+/* =========================================================
+   AUDIO / HAPTICS
+   ========================================================= */
 let audioCtx = null;
 let callFlowState = { busy: false, token: 0, timers: [] };
 
@@ -465,6 +766,7 @@ function unlockAudio() {
 function beep(type = "tap") {
   if (!STATE.prefs.audio.enabled) return;
   if (!STATE.prefs.audio.unlocked) return;
+
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
   } catch {
@@ -485,7 +787,6 @@ function beep(type = "tap") {
 
   o.type = "sine";
   o.frequency.setValueAtTime(freq, t0);
-
   g.gain.setValueAtTime(0.0001, t0);
   g.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol * 0.14), t0 + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
@@ -534,7 +835,6 @@ function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
   u.onstart = () => onStart && onStart();
   u.onend = () => onEnd && onEnd();
   u.onerror = () => onEnd && onEnd();
-
   speechSynthesis.speak(u);
   return true;
 }
@@ -597,7 +897,7 @@ function showNowYouSheet(token, onDone) {
   sheet.style.display = "block";
   sheet.innerHTML = `
     <div class="stamp">agora você ✅</div>
-    <div class="small">repita em voz alta. sem pressa.</div>
+    <div class="small">Repita em voz alta. Sem pressa.</div>
     <div class="row row--between">
       <div class="badge">tempo</div>
       <div class="badge" id="nyCount">2</div>
@@ -623,7 +923,9 @@ function showNowYouSheet(token, onDone) {
   callFlowState.timers.push(id);
 }
 
-/* ---------- habit / timer ---------- */
+/* =========================================================
+   HABIT / TIMER
+   ========================================================= */
 function ensureHabitToday() {
   const k = todayKey();
   STATE.habit ||= { firstDay: null, days: {} };
@@ -724,7 +1026,17 @@ function startStudyTimerIfNeeded() {
   updateStudyUI();
 }
 
-/* ---------- state helpers ---------- */
+/* =========================================================
+   STATE HELPERS
+   ========================================================= */
+function getTopic(id) {
+  return (STATE.bank.topics || []).find(t => t.id === id) || null;
+}
+
+function topicName(id) {
+  return getTopic(id)?.name || "Sem contexto";
+}
+
 function getProg(id) {
   if (!STATE.progress[id]) {
     STATE.progress[id] = {
@@ -744,6 +1056,18 @@ function getProg(id) {
 
 function getPhrase(id) {
   return (STATE.bank.phrases || []).find(p => p.id === id) || null;
+}
+
+function getWeek(number) {
+  return STATE.premium.weeks.find(w => w.number === number) || null;
+}
+
+function getBlock(id) {
+  return STATE.premium.blocks.find(b => b.id === id) || null;
+}
+
+function getTrack(id) {
+  return STATE.premium.tracks.find(t => t.id === id) || null;
 }
 
 function listContexts() {
@@ -856,13 +1180,61 @@ function chooseNextPhraseFromContext(contextId) {
   return list[0] || null;
 }
 
-function ensureCurrentPhrase() {
-  if (!STATE.session.currentPhraseId) {
-    const suggestedContext = getRecommendedContextId();
-    const next = chooseNextPhraseFromContext(suggestedContext) || STATE.bank.phrases[0] || null;
-    STATE.session.currentPhraseId = next?.id || null;
-    if (next) STATE.session.currentContextId = next.topicId || "ALL";
-  }
+function getCurrentPremiumWeek() {
+  return getWeek(STATE.session.currentPremiumWeek) || getWeek(1);
+}
+
+function getPremiumCompletionPct() {
+  const total = STATE.premium.weeks.length;
+  const done = Object.values(STATE.premiumWeekProgress).filter(x => x.status === "done").length;
+  return total ? done / total : 0;
+}
+
+function getCurrentPremiumObjective() {
+  const week = getCurrentPremiumWeek();
+  if (!week) return "Avançar com japonês útil";
+  return week.goal;
+}
+
+function setCurrentPhrase(id) {
+  if (!id) return;
+  STATE.session.currentPhraseId = id;
+  const phrase = getPhrase(id);
+  if (phrase?.topicId) STATE.session.currentContextId = phrase.topicId;
+  markSeen(id);
+  saveState();
+}
+
+function resetCountForPhrase(id) {
+  const pr = getProg(id);
+  const cs = clamp(pr.cycleStart || 14, 1, 14);
+  pr.count = clamp(pr.count || cs, 1, cs);
+}
+
+function gotoNextPhrase() {
+  const current = getPhrase(STATE.session.currentPhraseId);
+  const ctx = current?.topicId || getRecommendedContextId();
+  const list = phrasesByContext(ctx);
+  if (!list.length) return;
+
+  const idx = list.findIndex(x => x.id === current?.id);
+  const next = list[(idx + 1 + list.length) % list.length];
+  setCurrentPhrase(next.id);
+  resetCountForPhrase(next.id);
+  saveState();
+}
+
+function gotoPrevPhrase() {
+  const current = getPhrase(STATE.session.currentPhraseId);
+  const ctx = current?.topicId || getRecommendedContextId();
+  const list = phrasesByContext(ctx);
+  if (!list.length) return;
+
+  const idx = list.findIndex(x => x.id === current?.id);
+  const prev = list[(idx - 1 + list.length) % list.length];
+  setCurrentPhrase(prev.id);
+  resetCountForPhrase(prev.id);
+  saveState();
 }
 
 function toggleFlag(id, field) {
@@ -871,7 +1243,23 @@ function toggleFlag(id, field) {
   saveState();
 }
 
-/* ---------- ui feedback ---------- */
+function unlockNextPremiumWeek(currentNumber) {
+  const current = STATE.premiumWeekProgress[currentNumber];
+  if (current) {
+    current.status = "done";
+    current.finishedAt = current.finishedAt || now();
+  }
+  const next = STATE.premiumWeekProgress[currentNumber + 1];
+  if (next && next.status === "locked") {
+    next.status = "active";
+    next.startedAt = next.startedAt || now();
+  }
+  saveState();
+}
+
+/* =========================================================
+   FEEDBACK
+   ========================================================= */
 const APP = $("#app");
 
 function toast(msg) {
@@ -920,46 +1308,29 @@ function refreshHUD() {
   if (sub) sub.textContent = `${STATE.stats.cyclesDone || 0} ciclos • ${STATE.stats.phrasesMastered || 0} dominadas`;
 }
 
-/* ---------- train engine ---------- */
-function setCurrentPhrase(id) {
-  if (!id) return;
-  STATE.session.currentPhraseId = id;
-  const phrase = getPhrase(id);
-  if (phrase?.topicId) STATE.session.currentContextId = phrase.topicId;
-  markSeen(id);
-  saveState();
-}
-
-function resetCountForPhrase(id) {
-  const pr = getProg(id);
-  const cs = clamp(pr.cycleStart || 14, 1, 14);
-  pr.count = clamp(pr.count || cs, 1, cs);
-}
-
-function gotoNextPhrase() {
-  const current = getPhrase(STATE.session.currentPhraseId);
-  const ctx = current?.topicId || getRecommendedContextId();
-  const list = phrasesByContext(ctx);
-  if (!list.length) return;
-
-  const idx = list.findIndex(x => x.id === current?.id);
-  const next = list[(idx + 1 + list.length) % list.length];
-  setCurrentPhrase(next.id);
-  resetCountForPhrase(next.id);
-  saveState();
-}
-
-function gotoPrevPhrase() {
-  const current = getPhrase(STATE.session.currentPhraseId);
-  const ctx = current?.topicId || getRecommendedContextId();
-  const list = phrasesByContext(ctx);
-  if (!list.length) return;
-
-  const idx = list.findIndex(x => x.id === current?.id);
-  const prev = list[(idx - 1 + list.length) % list.length];
-  setCurrentPhrase(prev.id);
-  resetCountForPhrase(prev.id);
-  saveState();
+/* =========================================================
+   COPY / PRODUCT MESSAGES
+   ========================================================= */
+function getContextMissionLabel(name) {
+  const map = {
+    "Na fábrica": "Sobreviver melhor no turno",
+    "No mercado": "Comprar com mais segurança",
+    "No konbini": "Resolver rápido no caixa",
+    "Na prefeitura": "Resolver documentos sem travar",
+    "No correio": "Enviar sem confusão",
+    "No hospital": "Falar sobre saúde com mais segurança",
+    "Na farmácia": "Comprar remédio com mais clareza",
+    "No banco": "Resolver sua vida financeira",
+    "No trem / estação": "Se deslocar sem se perder",
+    "No aeroporto": "Viajar com mais calma",
+    "No RH": "Falar com o RH com mais segurança",
+    "No celular / internet": "Resolver plano e conexão",
+    "Em casa / apartamento": "Lidar melhor com moradia",
+    "Lixo e reciclagem": "Entender a rotina do prédio",
+    "Emergência": "Ter frases vitais à mão",
+    "No trabalho": "Se comunicar melhor no dia a dia"
+  };
+  return map[name] || "Treino prático para o Japão real";
 }
 
 function getTrainEncouragement(phrase, pr) {
@@ -970,6 +1341,45 @@ function getTrainEncouragement(phrase, pr) {
   return phrase.comfortHint || "Sem pressão. Só continuar já é progresso.";
 }
 
+function getQuickStats() {
+  const today = ensureHabitToday();
+  const day = STATE.habit.days[today] || { ms: 0, cycles: 0 };
+
+  let favorites = 0;
+  let difficult = 0;
+  let urgent = 0;
+  for (const id in STATE.progress) {
+    const pr = STATE.progress[id];
+    if (pr.isFavorite) favorites++;
+    if (pr.isDifficult) difficult++;
+    if (pr.isUrgent) urgent++;
+  }
+
+  return {
+    todayMin: Math.floor((day.ms || 0) / 60000),
+    todayCycles: day.cycles || 0,
+    favorites,
+    difficult,
+    urgent
+  };
+}
+
+function getHomeMessage(stats) {
+  if (!STATE.prefs.onboardingDone) return "Aprenda japonês útil sem se perder.";
+  if (stats.todayMin >= 10) return "Hoje você já fez sua parte. Se quiser, só mantenha o contato.";
+  if (stats.todayMin >= 3) return "Você já começou hoje. Mais um pouco e pronto.";
+  return "Hoje, poucos minutos já podem ajudar muito no Japão real.";
+}
+
+function getHomeSubMessage(stats) {
+  if (stats.urgent > 0) return "Você tem frases marcadas para hoje. Vale revisar antes do trabalho ou da saída.";
+  if (stats.difficult > 0) return "Pode ser um bom dia para treinar o que ainda trava.";
+  return "Abra, ouça, leia, repita e siga. Sem teoria pesada e sem menu confuso.";
+}
+
+/* =========================================================
+   TRAIN ENGINE
+   ========================================================= */
 function onRepeat() {
   unlockAudio();
   const pid = STATE.session.currentPhraseId;
@@ -1011,7 +1421,6 @@ function onRepeat() {
     pr.status = "mastered";
     pr.masteredAt = now();
     STATE.stats.phrasesMastered = (STATE.stats.phrasesMastered || 0) + 1;
-
     addCoins(500);
     floatCoin("+500 🪙");
     beep("level");
@@ -1021,6 +1430,13 @@ function onRepeat() {
 
   pr.count = clamp(pr.cycleStart, 1, 14);
   saveState();
+
+  const week = getCurrentPremiumWeek();
+  if (week && week.phraseIds.includes(p.id) && pr.status === "mastered") {
+    const allDone = week.phraseIds.every(id => getProg(id)?.status === "mastered");
+    if (allDone) unlockNextPremiumWeek(week.number);
+  }
+
   showCycleSheet(masteredNow);
   renderTrainBodyOnly();
 }
@@ -1040,18 +1456,27 @@ function showCycleSheet(masteredNow) {
   `;
 }
 
-/* ---------- render helpers ---------- */
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
 function renderNewWords(list) {
   if (!Array.isArray(list) || !list.length) return "";
+
   return `
     <div class="sheet newWordsCard">
       <div class="small">palavras úteis</div>
-      ${list.map(w => `<div class="small"><b>${escapeHTML(w.jp)}</b> = ${escapeHTML(w.pt)}</div>`).join("")}
+      ${list.map(w => {
+        const jpHtml = jpHasFurigana(w.jp)
+          ? jpToRubyHTML(w.jp)
+          : escapeHTML(w.jp);
+
+        return `<div class="small"><b>${jpHtml}</b> = ${escapeHTML(w.pt)}</div>`;
+      }).join("")}
     </div>
   `;
 }
 
-function contextQuickPills(selected = "ALL") {
+function pills(selected = "ALL") {
   const primary = [
     { id: "URGENT", label: "para hoje" },
     { id: "DIFFICULT", label: "difíceis" },
@@ -1065,64 +1490,6 @@ function contextQuickPills(selected = "ALL") {
       ${primary.map(x => `<button class="pill ${selected === x.id ? "on" : ""}" data-action="setContext" data-id="${x.id}">${x.label}</button>`).join("")}
     </div>
   `;
-}
-
-function getQuickStats() {
-  const today = ensureHabitToday();
-  const day = STATE.habit.days[today] || { ms: 0, cycles: 0 };
-
-  let favorites = 0;
-  let difficult = 0;
-  let urgent = 0;
-  for (const id in STATE.progress) {
-    const pr = STATE.progress[id];
-    if (pr.isFavorite) favorites++;
-    if (pr.isDifficult) difficult++;
-    if (pr.isUrgent) urgent++;
-  }
-
-  return {
-    todayMin: Math.floor((day.ms || 0) / 60000),
-    todayCycles: day.cycles || 0,
-    favorites,
-    difficult,
-    urgent
-  };
-}
-
-function getHomeMessage(stats) {
-  if (!STATE.prefs.onboardingDone) return "Aprenda japonês útil sem se perder.";
-  if (stats.todayMin >= 10) return "Hoje você já fez sua parte. Se quiser, só mantenha o contato.";
-  if (stats.todayMin >= 3) return "Você já começou hoje. Mais um pouco e pronto.";
-  return "Hoje, poucos minutos já podem ajudar muito no Japão real.";
-}
-
-function getHomeSubMessage(stats) {
-  if (stats.urgent > 0) return "Você tem frases marcadas para hoje. Vale revisar antes do trabalho ou da saída.";
-  if (stats.difficult > 0) return "Pode ser um bom dia para treinar o que ainda trava.";
-  return "Abra, ouça, leia, repita e siga. Sem teoria pesada e sem menu confuso.";
-}
-
-function getContextMissionLabel(name) {
-  const map = {
-    "Na fábrica": "Sobreviver melhor no turno",
-    "No mercado": "Comprar com mais segurança",
-    "No konbini": "Resolver rápido no caixa",
-    "Na prefeitura": "Resolver documentos sem travar",
-    "No correio": "Enviar sem confusão",
-    "No hospital": "Falar sobre saúde com mais segurança",
-    "Na farmácia": "Comprar remédio com mais clareza",
-    "No banco": "Resolver sua vida financeira",
-    "No trem / estação": "Se deslocar sem se perder",
-    "No aeroporto": "Viajar com mais calma",
-    "No RH": "Falar com o RH com mais segurança",
-    "No celular / internet": "Resolver plano e conexão",
-    "Em casa / apartamento": "Lidar melhor com moradia",
-    "Lixo e reciclagem": "Entender a rotina do prédio",
-    "Emergência": "Ter frases vitais à mão",
-    "No trabalho": "Se comunicar melhor no dia a dia"
-  };
-  return map[name] || "Treino prático para o Japão real";
 }
 
 function phraseFlagsBar(phraseId) {
@@ -1142,15 +1509,18 @@ function phraseFlagsBar(phraseId) {
   `;
 }
 
-/* ---------- renders ---------- */
+/* =========================================================
+   RENDERS
+   ========================================================= */
 function render() {
   refreshHUD();
-  ensureCurrentPhrase();
 
   const r = route();
   if (r === "#/home") return renderHome();
   if (r === "#/train") return renderTrain();
   if (r === "#/contexts") return renderContexts();
+  if (r === "#/premium") return renderPremiumHub();
+  if (r.startsWith("#/premium-week/")) return renderPremiumWeek(Number(r.split("/").pop()));
   if (r === "#/progress") return renderProgress();
   if (r === "#/settings") return renderSettings();
   if (r === "#/admin") return renderAdmin();
@@ -1164,6 +1534,8 @@ function renderHome() {
   const recommendedContextId = getRecommendedContextId();
   const recommendedContext = getTopic(recommendedContextId);
   const recommendedPhrase = chooseNextPhraseFromContext(recommendedContextId);
+  const currentWeek = getCurrentPremiumWeek();
+  const currentWeekProgress = STATE.premiumWeekProgress[currentWeek.number];
 
   APP.innerHTML = `
     <div class="stack">
@@ -1171,10 +1543,10 @@ function renderHome() {
         <section class="card homeHero stack">
           <div class="badge">comece sem pressão</div>
           <h2 class="h1">Aprenda japonês útil de forma leve.</h2>
-          <p class="heroLead">O NIHONGO321 foi feito para brasileiros no Japão que precisam de frases reais, rápidas e claras para a vida do dia a dia.</p>
+          <p class="p">O NIHONGO321 foi feito para brasileiros no Japão que precisam de frases reais, rápidas e claras para a vida do dia a dia.</p>
           <div class="grid2">
             <button class="bigBtn" data-action="finishOnboarding">entendi, vamos começar</button>
-            <button class="btn btn--ghost btn--full" data-nav="#/contexts">ver contextos</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/premium">ver plano premium</button>
           </div>
         </section>
       ` : ""}
@@ -1182,22 +1554,20 @@ function renderHome() {
       <section class="card homeHero stack">
         <div class="badge">hoje</div>
         <h2 class="h1">${escapeHTML(getHomeMessage(stats))}</h2>
-        <p class="heroLead">${escapeHTML(getHomeSubMessage(stats))}</p>
+        <p class="p">${escapeHTML(getHomeSubMessage(stats))}</p>
 
         <div class="sheet stack">
           <div class="row row--between">
-            <div class="badge">seu ritmo</div>
+            <div class="badge">objetivo do dia</div>
             <div class="badge">${stats.todayMin} min hoje</div>
           </div>
-          <div class="grid2">
-            <div class="item">
-              <p class="itemTitle">${stats.todayCycles}</p>
-              <div class="itemMeta">ciclos hoje</div>
-            </div>
-            <div class="item">
-              <p class="itemTitle">${STATE.stats.phrasesMastered || 0}</p>
-              <div class="itemMeta">frases dominadas</div>
-            </div>
+          <div class="itemTitle">${escapeHTML(getCurrentPremiumObjective())}</div>
+          <div class="small">Semana ${currentWeek.number} • ${escapeHTML(currentWeek.title)}</div>
+          <div class="row">
+            <button class="btn btn--ok" data-nav="#/premium-week/${currentWeek.number}">
+              abrir semana atual
+            </button>
+            <button class="btn btn--ghost" data-nav="#/premium">ver programa</button>
           </div>
         </div>
 
@@ -1205,7 +1575,7 @@ function renderHome() {
 
         <div class="sheet stack">
           <div class="row row--between">
-            <div class="badge">recomendado agora</div>
+            <div class="badge">missão recomendada</div>
             <div class="badge">${recommendedContext ? escapeHTML(recommendedContext.name) : "geral"}</div>
           </div>
 
@@ -1223,7 +1593,28 @@ function renderHome() {
 
           <div class="row">
             <button class="btn btn--ghost" data-action="startRecommendedTrain">treinar agora</button>
-            <button class="btn" data-nav="#/contexts">escolher contexto</button>
+            <button class="btn" data-nav="#/contexts">escolher missão</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">premium</div>
+          <button class="btn btn--ghost" data-nav="#/premium">abrir programa</button>
+        </div>
+
+        <div class="item">
+          <p class="itemTitle">Do japonês de sobrevivência ao japonês que abre portas</p>
+          <div class="itemMeta">${escapeHTML(currentWeek.mission)}</div>
+
+          <div class="pWrap">
+            <div class="pBar"><div class="pFill" style="transform:scaleX(${getPremiumCompletionPct()})"></div></div>
+            <div class="pTxt">${Math.round(getPremiumCompletionPct() * 100)}%</div>
+          </div>
+
+          <div class="small" style="margin-top:8px">
+            status atual: ${currentWeekProgress.status === "done" ? "semana concluída" : currentWeekProgress.status === "active" ? "em andamento" : "bloqueada"}
           </div>
         </div>
       </section>
@@ -1234,7 +1625,7 @@ function renderHome() {
           <button class="btn btn--ghost" data-nav="#/progress">ver progresso</button>
         </div>
 
-        ${contextQuickPills("ALL")}
+        ${pills("ALL")}
 
         <div class="grid2">
           <button class="btn btn--full" data-action="openContext" data-id="URGENT">frases para hoje</button>
@@ -1243,60 +1634,32 @@ function renderHome() {
           <button class="btn btn--full" data-action="openContext" data-id="FAVORITES">salvar o que importa</button>
         </div>
       </section>
-
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">missões práticas</div>
-          <button class="btn" data-nav="#/contexts">ver todas</button>
-        </div>
-
-        <div class="list">
-          ${listContexts().slice(0, 8).map(t => {
-            const stats = getContextProgress(t.id);
-            return `
-              <div class="item">
-                <div class="itemTop">
-                  <div style="min-width:0">
-                    <p class="itemTitle">${escapeHTML(t.name)}</p>
-                    <div class="itemMeta">${escapeHTML(getContextMissionLabel(t.name))}</div>
-                    <div class="pWrap">
-                      <div class="pBar"><div class="pFill" style="transform:scaleX(${stats.pct})"></div></div>
-                      <div class="pTxt">${Math.round(stats.pct * 100)}%</div>
-                    </div>
-                  </div>
-                  <button class="btn btn--ghost" data-action="openContext" data-id="${t.id}">abrir</button>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </section>
     </div>
   `;
 }
 
 function renderTrain() {
-  ensureCurrentPhrase();
-  const phrase = getPhrase(STATE.session.currentPhraseId);
-  if (!phrase) {
+  const current = getPhrase(STATE.session.currentPhraseId || chooseNextPhraseFromContext(getRecommendedContextId())?.id);
+  if (!current) {
     APP.innerHTML = `
       <div class="stack">
         <section class="card stack">
           <div class="badge">sem conteúdo</div>
           <p class="p">Não encontrei frase para treinar agora.</p>
-          <button class="btn btn--ok" data-nav="#/contexts">escolher contexto</button>
+          <button class="btn btn--ok" data-nav="#/contexts">escolher missão</button>
         </section>
       </div>
     `;
     return;
   }
 
-  markSeen(phrase.id);
-  const currentContext = getTopic(phrase.topicId);
+  markSeen(current.id);
+  const currentContext = getTopic(current.topicId);
+  const week = getCurrentPremiumWeek();
 
   APP.innerHTML = `
     <div class="stack">
-      <section class="card stack" id="viewTrainMain">
+      <section class="card stack">
         <div class="studyTop">
           <div class="badge studyModeBadge">${STATE.prefs.tiredMode ? "modo cansado" : "treino"}</div>
 
@@ -1309,30 +1672,26 @@ function renderTrain() {
           </div>
 
           <div class="studyActions">
-            <button class="miniBtn" title="contextos" aria-label="contextos" data-nav="#/contexts">🧭</button>
-            <button class="miniBtn" title="progresso" aria-label="progresso" data-nav="#/progress">🏅</button>
+            <button class="miniBtn" title="missões" aria-label="missões" data-nav="#/contexts">🧭</button>
+            <button class="miniBtn" title="premium" aria-label="premium" data-nav="#/premium">★</button>
           </div>
         </div>
 
         <div class="trainTopRow">
-          <div class="badge ${currentContext ? currentContext.color : "tViolet"}">
-            ${currentContext ? escapeHTML(currentContext.name) : "Sem contexto"}
-          </div>
-
+          <div class="badge">${escapeHTML(currentContext?.name || "Sem contexto")}</div>
           <div class="trainStatusRow">
-            <button class="btn btn--ghost" data-action="toggleCallMode">
-              ${STATE.session.callMode ? "call: on" : "call: off"}
-            </button>
+            <button class="btn btn--ghost" data-action="toggleCallMode">${STATE.session.callMode ? "call: on" : "call: off"}</button>
             <button class="btn--exitSubtle" data-nav="#/home">sair</button>
           </div>
         </div>
 
-        ${contextQuickPills(STATE.session.currentContextId || "ALL")}
-
-        <div class="trainingMood">
-          <p class="trainingMoodTitle">${escapeHTML(getContextMissionLabel(currentContext?.name || ""))}</p>
-          <div class="small">${escapeHTML(phrase.useHint || "Treino curto e útil para situações reais.")}</div>
+        <div class="sheet stack trainingMood">
+          <div class="badge">semana ${week.number}</div>
+          <div class="trainingMoodTitle">${escapeHTML(week.title)}</div>
+          <div class="small">${escapeHTML(week.mission)}</div>
         </div>
+
+        ${pills(STATE.session.currentContextId || "ALL")}
 
         <div class="counterWrap">
           <div class="counter" id="counterBox">
@@ -1346,7 +1705,7 @@ function renderTrain() {
             <div class="phraseArea">
               <div class="phraseMeta">
                 <div class="phraseUse">frase atual</div>
-                <div class="badge">${phrase.priority >= 5 ? "muito útil" : "útil"}</div>
+                <div class="badge">${current.priority >= 5 ? "muito útil" : "útil"}</div>
               </div>
               <div class="kana" id="kanaLine"></div>
               <div class="pt" id="ptLine"></div>
@@ -1357,7 +1716,7 @@ function renderTrain() {
               <button class="btn btn--muted" data-action="speak" data-rate="0.8">ouvir devagar</button>
             </div>
 
-            ${phraseFlagsBar(phrase.id)}
+            ${phraseFlagsBar(current.id)}
           </div>
         </div>
 
@@ -1381,8 +1740,8 @@ function renderTrain() {
       ${!STATE.prefs.tiredMode ? `
         <section class="card stack">
           <div class="row row--between">
-            <div class="badge">continuação do contexto</div>
-            <button class="btn" data-action="openContext" data-id="${phrase.topicId}">ver contexto</button>
+            <div class="badge">continuação da missão</div>
+            <button class="btn btn--ghost" data-nav="#/premium-week/${week.number}">ver semana</button>
           </div>
           <div class="list" id="miniPhraseList"></div>
         </section>
@@ -1400,6 +1759,7 @@ function renderTrain() {
 function renderTrainBodyOnly() {
   const phrase = getPhrase(STATE.session.currentPhraseId);
   if (!phrase) return;
+
   const pr = getProg(phrase.id);
   const cs = clamp(pr.cycleStart || 14, 1, 14);
   const count = clamp(pr.count || cs, 1, cs);
@@ -1423,15 +1783,16 @@ function renderMiniPhraseList() {
   const box = $("#miniPhraseList");
   if (!box) return;
 
-  const current = getPhrase(STATE.session.currentPhraseId);
-  if (!current) return;
-
-  const list = phrasesByContext(current.topicId)
-    .filter(x => x.id !== current.id)
+  const week = getCurrentPremiumWeek();
+  const currentId = STATE.session.currentPhraseId;
+  const list = week.phraseIds
+    .map(id => getPhrase(id))
+    .filter(Boolean)
+    .filter(p => p.id !== currentId)
     .slice(0, 4);
 
   if (!list.length) {
-    box.innerHTML = `<div class="small">sem outras frases neste contexto ainda.</div>`;
+    box.innerHTML = `<div class="small">sem outras frases desta semana ainda.</div>`;
     return;
   }
 
@@ -1456,30 +1817,24 @@ function renderMiniPhraseList() {
   }).join("");
 }
 
-function renderContexts(selectedId = null) {
+function renderContexts() {
   const contexts = listContexts();
-  const headerLabel = selectedId && getTopic(selectedId) ? getTopic(selectedId).name : "contextos";
 
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">${escapeHTML(headerLabel)}</div>
+          <div class="badge">missões práticas</div>
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <h2 class="h1">Escolha uma missão prática para o seu dia.</h2>
-        <p class="heroLead">Aqui os contextos aparecem como situações reais de vida no Japão, não como categorias frias.</p>
+        <h2 class="h1">Escolha o que resolve sua vida hoje.</h2>
+        <p class="p">Aqui os contextos aparecem como missões reais do Japão, não como categorias frias.</p>
 
-        ${contextQuickPills(selectedId || "ALL")}
+        ${pills("ALL")}
       </section>
 
       <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">trilhas de sobrevivência</div>
-          <div class="badge">utilidade real</div>
-        </div>
-
         <div class="list">
           ${contexts.map(t => {
             const stats = getContextProgress(t.id);
@@ -1496,9 +1851,8 @@ function renderContexts(selectedId = null) {
                     </div>
                     ${next ? `<div class="small" style="margin-top:8px">próxima útil: ${escapeHTML(jpStripFurigana(next.jp))}</div>` : ``}
                   </div>
-                  <div class="manageBtns">
+                  <div class="row">
                     <button class="btn btn--ok" data-action="startContextTrain" data-id="${t.id}">treinar</button>
-                    <button class="btn btn--ghost" data-action="previewContext" data-id="${t.id}">ver</button>
                   </div>
                 </div>
               </div>
@@ -1506,48 +1860,160 @@ function renderContexts(selectedId = null) {
           }).join("")}
         </div>
       </section>
-
-      ${selectedId && getTopic(selectedId) ? renderContextDetailBlock(selectedId) : ""}
     </div>
   `;
 }
 
-function renderContextDetailBlock(contextId) {
-  const list = phrasesByContext(contextId).slice(0, 8);
-  if (!list.length) return "";
+function renderPremiumHub() {
+  const pct = getPremiumCompletionPct();
 
-  return `
-    <section class="card stack">
-      <div class="row row--between">
-        <div class="badge">${escapeHTML(topicName(contextId))}</div>
-        <button class="btn btn--ghost" data-action="startContextTrain" data-id="${contextId}">começar por aqui</button>
-      </div>
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card homeHero stack">
+        <div class="row row--between">
+          <div class="badge">premium</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
 
-      <div class="small">${escapeHTML(getContextMissionLabel(topicName(contextId)))}</div>
+        <h2 class="h1">Do japonês de sobrevivência ao japonês que abre portas.</h2>
+        <p class="p">Este programa premium foi pensado como uma virada de chave real para brasileiros no Japão que querem entender melhor nativos e crescer profissionalmente.</p>
 
-      <div class="list">
-        ${list.map(p => {
-          const pr = getProg(p.id);
-          const pct = phraseProgressPct(pr);
-          return `
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">progresso do programa</div>
+            <div class="badge">${Math.round(pct * 100)}%</div>
+          </div>
+          <div class="pWrap">
+            <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+            <div class="pTxt">${Math.round(pct * 100)}%</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">blocos</div>
+        <div class="list">
+          ${STATE.premium.blocks.map(block => `
             <div class="item">
-              <div class="itemTop">
-                <div style="min-width:0">
-                  <p class="itemTitle">${escapeHTML(jpStripFurigana(p.jp))}</p>
-                  <div class="itemMeta">${escapeHTML(p.pt)}</div>
-                  ${p.useHint ? `<div class="small" style="margin-top:8px">útil para: ${escapeHTML(p.useHint)}</div>` : ""}
-                  <div class="pWrap">
-                    <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
-                    <div class="pTxt">${Math.round(pct * 100)}%</div>
+              <p class="itemTitle">${escapeHTML(block.title)}</p>
+              <div class="itemMeta">${escapeHTML(block.subtitle)}</div>
+              <div class="small" style="margin-top:8px">Semanas: ${block.weeks.join(", ")}</div>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">trilhas</div>
+        <div class="list">
+          ${STATE.premium.tracks.map(track => `
+            <div class="item">
+              <p class="itemTitle">${escapeHTML(track.title)}</p>
+              <div class="itemMeta">${escapeHTML(track.objective)}</div>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">cronograma de 24 semanas</div>
+        <div class="list">
+          ${STATE.premium.weeks.map(week => {
+            const prog = STATE.premiumWeekProgress[week.number];
+            const statusLabel =
+              prog.status === "done" ? "concluída" :
+              prog.status === "active" ? "em andamento" :
+              "bloqueada";
+
+            return `
+              <div class="item">
+                <div class="itemTop">
+                  <div style="min-width:0">
+                    <p class="itemTitle">Semana ${week.number} · ${escapeHTML(week.title)}</p>
+                    <div class="itemMeta">${escapeHTML(week.mission)}</div>
+                    <div class="small" style="margin-top:8px">resultado: ${escapeHTML(week.result)}</div>
+                  </div>
+                  <div class="row">
+                    <span class="badge">${statusLabel}</span>
+                    <button class="btn btn--ghost" data-nav="#/premium-week/${week.number}">abrir</button>
                   </div>
                 </div>
-                <button class="btn" data-action="jumpToPhraseAndTrain" data-id="${p.id}">ir</button>
               </div>
-            </div>
-          `;
-        }).join("")}
-      </div>
-    </section>
+            `;
+          }).join("")}
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderPremiumWeek(weekNumber) {
+  const week = getWeek(weekNumber);
+  if (!week) return nav("#/premium");
+
+  const block = getBlock(week.blockId);
+  const track = getTrack(week.trackId);
+  const prog = STATE.premiumWeekProgress[week.number];
+  const phrases = week.phraseIds.map(id => getPhrase(id)).filter(Boolean);
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card homeHero stack">
+        <div class="row row--between">
+          <div class="badge">semana ${week.number}</div>
+          <button class="btn" data-nav="#/premium">voltar</button>
+        </div>
+
+        <h2 class="h1">${escapeHTML(week.title)}</h2>
+        <p class="p">${escapeHTML(week.mission)}</p>
+
+        <div class="sheet stack">
+          <div class="small">bloco: ${escapeHTML(block?.title || "")}</div>
+          <div class="small">trilha: ${escapeHTML(track?.title || "")}</div>
+          <div class="small">objetivo: ${escapeHTML(week.goal)}</div>
+          <div class="small">resultado esperado: ${escapeHTML(week.result)}</div>
+        </div>
+
+        <div class="row">
+          <span class="badge">${prog.status === "done" ? "concluída" : prog.status === "active" ? "em andamento" : "bloqueada"}</span>
+          <button class="btn btn--ok" data-action="startPremiumWeek" data-week="${week.number}">treinar esta semana</button>
+          ${prog.status !== "done" ? `<button class="btn btn--ghost" data-action="completePremiumWeek" data-week="${week.number}">marcar como concluída</button>` : ``}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">foco da semana</div>
+        <div class="row">
+          ${week.focus.map(f => `<span class="badge">${escapeHTML(f)}</span>`).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">frases centrais</div>
+        <div class="list">
+          ${phrases.map(p => {
+            const pr = getProg(p.id);
+            const pct = phraseProgressPct(pr);
+            return `
+              <div class="item">
+                <div class="itemTop">
+                  <div style="min-width:0">
+                    <p class="itemTitle">${escapeHTML(jpStripFurigana(p.jp))}</p>
+                    <div class="itemMeta">${escapeHTML(p.pt)}</div>
+                    ${p.useHint ? `<div class="small" style="margin-top:8px">útil para: ${escapeHTML(p.useHint)}</div>` : ``}
+                    <div class="pWrap">
+                      <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+                      <div class="pTxt">${Math.round(pct * 100)}%</div>
+                    </div>
+                  </div>
+                  <button class="btn btn--ghost" data-action="trainPhraseFromWeek" data-id="${p.id}" data-week="${week.number}">treinar</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </section>
+    </div>
   `;
 }
 
@@ -1562,8 +2028,6 @@ function renderProgress() {
     days.reduce((acc, k) => acc + ((STATE.habit.days[k]?.ms || 0) / 60000), 0)
   );
 
-  const contexts = listContexts();
-
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
@@ -1573,7 +2037,7 @@ function renderProgress() {
         </div>
 
         <h2 class="h1">Seu japonês funcional está ficando mais forte.</h2>
-        <p class="heroLead">Sem parecer painel técnico. Só o que realmente ajuda você a continuar.</p>
+        <p class="p">Sem parecer painel técnico. Só o que realmente ajuda você a continuar.</p>
 
         <div class="grid2">
           <div class="item">
@@ -1597,29 +2061,16 @@ function renderProgress() {
 
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">por missão</div>
-          <button class="btn btn--ghost" data-nav="#/contexts">ver trilhas</button>
+          <div class="badge">progresso premium</div>
+          <button class="btn btn--ghost" data-nav="#/premium">ver programa</button>
         </div>
 
-        <div class="list">
-          ${contexts.map(t => {
-            const s = getContextProgress(t.id);
-            return `
-              <div class="item">
-                <div class="itemTop">
-                  <div style="min-width:0">
-                    <p class="itemTitle">${escapeHTML(t.name)}</p>
-                    <div class="itemMeta">${escapeHTML(getContextMissionLabel(t.name))}</div>
-                    <div class="pWrap">
-                      <div class="pBar"><div class="pFill" style="transform:scaleX(${s.pct})"></div></div>
-                      <div class="pTxt">${Math.round(s.pct * 100)}%</div>
-                    </div>
-                  </div>
-                  <button class="btn btn--ghost" data-action="openContext" data-id="${t.id}">abrir</button>
-                </div>
-              </div>
-            `;
-          }).join("")}
+        <div class="item">
+          <p class="itemTitle">Conclusão do programa</p>
+          <div class="pWrap">
+            <div class="pBar"><div class="pFill" style="transform:scaleX(${getPremiumCompletionPct()})"></div></div>
+            <div class="pTxt">${Math.round(getPremiumCompletionPct() * 100)}%</div>
+          </div>
         </div>
       </section>
     </div>
@@ -1648,8 +2099,6 @@ function renderSettings() {
           <div class="small">o som só toca depois do primeiro toque no app.</div>
         </div>
 
-        <div class="sep"></div>
-
         <div class="row">
           <button class="btn btn--ghost" data-nav="#/admin">área avançada</button>
           <button class="btn btn--bad" data-action="resetAll">resetar tudo</button>
@@ -1668,19 +2117,11 @@ function renderAdmin() {
           <button class="btn" data-nav="#/settings">voltar</button>
         </div>
 
-        <p class="p">Esta área é administrativa. Ela fica fora da navegação principal para o app continuar simples para quem só quer aprender e usar.</p>
+        <p class="p">Área administrativa. Fica fora da navegação principal para o app continuar simples para quem só quer aprender e usar.</p>
 
         <div class="grid2">
           <button class="btn btn--ghost btn--full" data-nav="#/edit">cadastro e edição</button>
           <button class="btn btn--ghost btn--full" data-nav="#/backup">backup e importação</button>
-        </div>
-
-        <div class="sheet stack">
-          <div class="small">atalhos</div>
-          <div class="row">
-            <button class="btn" data-action="exportBackupFile">baixar backup</button>
-            <button class="btn" data-action="copyBackupJson">copiar json</button>
-          </div>
         </div>
       </section>
     </div>
@@ -1702,7 +2143,7 @@ function parseNewWords(input) {
 
 function renderEdit(editingId = null) {
   const editing = editingId ? getPhrase(editingId) : null;
-  const topicId = editing ? editing.topicId : ensureDefaultTopic().id;
+  const topicId = editing ? editing.topicId : "topic_default";
   const nwVal = editing?.newWords?.map(x => `${x.jp}=${x.pt}`).join(", ") || "";
 
   APP.innerHTML = `
@@ -1745,8 +2186,6 @@ function renderEdit(editingId = null) {
             </button>
             ${editing ? `<button class="btn btn--bad btn--full" data-action="deletePhrase" data-id="${editing.id}">excluir frase</button>` : `<button class="btn btn--muted btn--full" data-nav="#/admin">cancelar</button>`}
           </div>
-
-          <div class="small" id="editMsg"></div>
         </div>
       </section>
     </div>
@@ -1768,7 +2207,6 @@ function renderBackup() {
             <button class="btn btn--ok btn--full" data-action="copyBackupJson">copiar json</button>
             <button class="btn btn--ok btn--full" data-action="exportBackupFile">baixar arquivo</button>
           </div>
-          <div class="small">no celular, baixar arquivo costuma ser o modo mais confiável.</div>
         </div>
 
         <div class="sheet stack">
@@ -1788,10 +2226,12 @@ function renderBackup() {
   `;
 }
 
-/* ---------- backup ---------- */
+/* =========================================================
+   BACKUP
+   ========================================================= */
 function buildBackupPayload() {
   return {
-    schema: "nihongo321_backup_v42",
+    schema: "nihongo321_backup_v6",
     exportedAt: new Date().toISOString(),
     state: STATE
   };
@@ -1816,7 +2256,9 @@ function validateAndLoadBackup(parsed, msgEl) {
   return true;
 }
 
-/* ---------- back top ---------- */
+/* =========================================================
+   BACK TO TOP
+   ========================================================= */
 function ensureBackTopButton() {
   if (document.getElementById("backTop")) return;
 
@@ -1857,7 +2299,9 @@ function hookBackTopScroll() {
   }, { passive: true });
 }
 
-/* ---------- global events ---------- */
+/* =========================================================
+   EVENTS
+   ========================================================= */
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -1881,10 +2325,20 @@ document.addEventListener("click", (e) => {
 
   if (act === "startRecommendedTrain") {
     unlockAudio();
-    const ctx = getRecommendedContextId();
-    const next = chooseNextPhraseFromContext(ctx);
+    const week = getCurrentPremiumWeek();
+    const phraseId = week?.phraseIds?.[0] || chooseNextPhraseFromContext(getRecommendedContextId())?.id;
+    if (phraseId) setCurrentPhrase(phraseId);
+    saveState();
+    nav("#/train");
+    return;
+  }
+
+  if (act === "startContextTrain") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    STATE.session.currentContextId = id;
+    const next = chooseNextPhraseFromContext(id);
     if (next) setCurrentPhrase(next.id);
-    STATE.session.currentContextId = next?.topicId || ctx;
     saveState();
     nav("#/train");
     return;
@@ -1901,8 +2355,6 @@ document.addEventListener("click", (e) => {
       const next = chooseNextPhraseFromContext(id === "ALL" ? getRecommendedContextId() : id);
       if (next) setCurrentPhrase(next.id);
       render();
-    } else if (route() === "#/contexts") {
-      renderContexts(id !== "ALL" && !["FAVORITES","DIFFICULT","URGENT","REVIEW"].includes(id) ? id : null);
     } else {
       render();
     }
@@ -1913,29 +2365,6 @@ document.addEventListener("click", (e) => {
     unlockAudio();
     const id = btn.dataset.id;
     if (!id) return;
-
-    if (["FAVORITES", "DIFFICULT", "URGENT", "REVIEW"].includes(id)) {
-      STATE.session.currentContextId = id;
-      const next = chooseNextPhraseFromContext(id);
-      if (next) setCurrentPhrase(next.id);
-      saveState();
-      nav("#/train");
-      return;
-    }
-
-    renderContexts(id);
-    return;
-  }
-
-  if (act === "previewContext") {
-    unlockAudio();
-    renderContexts(btn.dataset.id);
-    return;
-  }
-
-  if (act === "startContextTrain") {
-    unlockAudio();
-    const id = btn.dataset.id;
     STATE.session.currentContextId = id;
     const next = chooseNextPhraseFromContext(id);
     if (next) setCurrentPhrase(next.id);
@@ -1944,9 +2373,45 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  if (act === "startPremiumWeek") {
+    unlockAudio();
+    const n = Number(btn.dataset.week);
+    const week = getWeek(n);
+    if (!week) return;
+    STATE.session.currentPremiumWeek = n;
+    STATE.premiumWeekProgress[n].status = STATE.premiumWeekProgress[n].status === "locked" ? "active" : STATE.premiumWeekProgress[n].status;
+    STATE.premiumWeekProgress[n].startedAt ||= now();
+    setCurrentPhrase(week.phraseIds[0]);
+    saveState();
+    nav("#/train");
+    return;
+  }
+
+  if (act === "completePremiumWeek") {
+    unlockAudio();
+    const n = Number(btn.dataset.week);
+    unlockNextPremiumWeek(n);
+    toast("semana concluída ✅");
+    renderPremiumWeek(n);
+    return;
+  }
+
+  if (act === "trainPhraseFromWeek") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    const week = Number(btn.dataset.week);
+    if (!id) return;
+    STATE.session.currentPremiumWeek = week;
+    setCurrentPhrase(id);
+    saveState();
+    nav("#/train");
+    return;
+  }
+
   if (act === "jumpToPhrase") {
     unlockAudio();
     const id = btn.dataset.id;
+    if (!id) return;
     setCurrentPhrase(id);
     resetCountForPhrase(id);
     saveState();
@@ -1954,16 +2419,6 @@ document.addEventListener("click", (e) => {
     renderMiniPhraseList();
     toast("frase carregada ✅");
     beep("pop");
-    return;
-  }
-
-  if (act === "jumpToPhraseAndTrain") {
-    unlockAudio();
-    const id = btn.dataset.id;
-    setCurrentPhrase(id);
-    resetCountForPhrase(id);
-    saveState();
-    nav("#/train");
     return;
   }
 
@@ -2062,28 +2517,24 @@ document.addEventListener("click", (e) => {
 
   if (act === "saveNewPhrase" || act === "saveEditPhrase") {
     unlockAudio();
-
     const id = btn.dataset.id;
     const editing = act === "saveEditPhrase" ? getPhrase(id) : null;
 
     const jp = ($("#inJp")?.value || "").trim();
     const pt = ($("#inPt")?.value || "").trim();
     const nw = parseNewWords($("#inNW")?.value || "");
-    const topicId = $("#topicSel")?.value || ensureDefaultTopic().id;
+    const topicId = $("#topicSel")?.value || "topic_default";
     const priority = Number($("#prioritySel")?.value || 3);
     const useHint = ($("#inUseHint")?.value || "").trim();
     const comfortHint = ($("#inComfortHint")?.value || "").trim();
-    const msg = $("#editMsg");
 
     if (!jp || !pt) {
-      if (msg) msg.textContent = "preencha jp e pt.";
       toast("faltou jp/pt");
       beep("tuk");
       return;
     }
 
     if (!isValidJP(jp)) {
-      if (msg) msg.textContent = "jp inválido.";
       toast("jp inválido");
       beep("tuk");
       return;
@@ -2128,7 +2579,7 @@ document.addEventListener("click", (e) => {
       };
       saveState();
       toast("frase salva ✅");
-      renderEdit();
+      nav("#/admin");
     }
     return;
   }
@@ -2273,9 +2724,10 @@ window.addEventListener("hashchange", () => {
   updateBackTopVisibility();
 });
 
-/* ---------- init ---------- */
+/* =========================================================
+   INIT
+   ========================================================= */
 (function init() {
-  ensureDefaultTopic();
   ensureHabitToday();
   syncHabitMs();
   refreshHUD();
