@@ -2,96 +2,44 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
-  <meta name="theme-color" content="#17171b" />
-  <meta
-    name="description"
-    content="NIHONGO321 é um app de japonês funcional para brasileiros no Japão. Aprenda frases úteis, evolua com missões e avance com um plano premium real."
-  />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#070a11" />
+  <meta name="description" content="Nihongo321 - Japonês funcional para brasileiros no Japão. Ouça, repita e use frases reais do cotidiano." />
+  <title>NIHONGO321</title>
 
-  <title>NIHONGO321 · Japonês útil para o Japão real</title>
-
-  <link rel="icon" href="./img/favicon.png" type="image/png" />
-  <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
-  <link rel="stylesheet" href="./style.css?v=6.0.0" />
+  <link rel="stylesheet" href="./styles.css?v=4.0.0" />
+  <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
 </head>
 
 <body>
-  <a class="skip-link" href="#app">Pular para o conteúdo</a>
-
-  <div class="shell">
-    <header class="topbar" role="banner">
-      <div class="brand" aria-label="Marca NIHONGO321">
-        <div class="logo" aria-hidden="true"></div>
-
-        <div class="brandText">
-          <p class="brandEyebrow">Japonês funcional</p>
-          <h1 class="brandTitle">NIHONGO321</h1>
-          <p class="brandSub" id="subStatus">0 ciclos • 0 dominadas</p>
-        </div>
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="brandText">
+        <div class="brandTitle">NIHONGO321</div>
+        <div class="brandSub" id="subStatus">0 ciclos • 0 dominadas</div>
       </div>
+    </div>
 
-      <nav class="hud" aria-label="Ações rápidas">
-        <div class="hudItem" title="Moedas">
-          <span class="hudIcon" aria-hidden="true">🪙</span>
-          <span id="hudCoinsVal">0</span>
-        </div>
+    <div class="hud" aria-label="HUD">
+      <div class="hudItem" title="moedas">
+        <span class="hudIcon">🪙</span>
+        <span id="hudCoinsVal">0</span>
+      </div>
+      <button class="hudBtn" id="hudSound" title="som" aria-label="som">🔊</button>
+      <button class="hudBtn" id="hudVibe" title="vibração" aria-label="vibração">📳</button>
+      <button class="hudBtn" title="ajustes" aria-label="ajustes" data-nav="#/settings">⚙️</button>
+    </div>
+  </header>
 
-        <button
-          class="hudBtn"
-          id="hudSound"
-          type="button"
-          aria-label="Alternar som"
-          title="Som"
-        >
-          🔊
-        </button>
+  <main class="app" id="app" role="main"></main>
 
-        <button
-          class="hudBtn"
-          id="hudVibe"
-          type="button"
-          aria-label="Alternar vibração"
-          title="Vibração"
-        >
-          📳
-        </button>
+  <footer class="footerbar" role="contentinfo">
+    <div class="footerText">Copyright @ 2026 - Ailton A. Nakata</div>
+  </footer>
 
-        <button
-          class="hudBtn"
-          id="hudSettings"
-          type="button"
-          aria-label="Abrir ajustes"
-          title="Ajustes"
-          onclick="location.hash='#/settings'"
-        >
-          ⚙️
-        </button>
-      </nav>
-    </header>
+  <div class="toast" id="toast" aria-live="polite"></div>
 
-    <main
-      id="app"
-      class="app"
-      role="main"
-      tabindex="-1"
-      aria-live="polite"
-      aria-busy="false"
-    ></main>
-
-    <footer class="footerbar" role="contentinfo">
-      <div class="footerText">NIHONGO321 · Feito para brasileiros no Japão</div>
-    </footer>
-  </div>
-
-  <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
-
-  <script src="./app.js?v=6.0.0" defer></script>
+  <script src="./app.js?v=4.0.0" defer></script>
 </body>
 </html>
