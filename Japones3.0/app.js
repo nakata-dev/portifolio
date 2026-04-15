@@ -1,9 +1,38 @@
 /* =========================================================
    NIHONGO321 v6
-   Produto real com camada Premium, missões e cronograma
+   app.js completo, ampliado e aprimorado
+   - vitrine mais clara
+   - grátis x premium mais convincente
+   - Sensei IA (modo premium/demo)
+   - treino 105x
+   - gerenciamento, backup, skills
    ========================================================= */
 
-const LS_KEY = "nihongo321_v6";
+const LS_KEY = "jp_105x_v6";
+
+/* ========= CONFIG COMERCIAL ========= */
+const SALES = {
+  monthlyPrice: "¥980",
+  semiannualPrice: "¥4.980 / 6 meses",
+  checkoutUrl: "https://SEU-CHECKOUT-AQUI",
+  appStoreUrl: "https://apps.apple.com/",
+  playStoreUrl: "https://play.google.com/store",
+  supportEmail: "seuemail@exemplo.com"
+};
+
+const PREMIUM_TOPIC_IDS = new Set([
+  "topic_factory",
+  "topic_airport",
+  "topic_post",
+  "topic_cityhall",
+  "topic_konbini",
+  "topic_market",
+  "topic_bike",
+  "topic_cinema",
+  "topic_department",
+  "topic_trip",
+  "topic_qa"
+]);
 
 /* ---------- helpers ---------- */
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -20,7 +49,11 @@ const escapeHTML = (s) =>
     .replaceAll('"', "&quot;");
 
 function safeJSONParse(str) {
-  try { return JSON.parse(str); } catch { return null; }
+  try {
+    return JSON.parse(str);
+  } catch {
+    return null;
+  }
 }
 
 function todayKey() {
@@ -31,28 +64,25 @@ function todayKey() {
   return `${y}-${m}-${dd}`;
 }
 
-function fmtMMSS(ms) {
-  const total = Math.floor(ms / 1000);
-  const mm = String(Math.floor(total / 60)).padStart(2, "0");
-  const ss = String(total % 60).padStart(2, "0");
-  return `${mm}:${ss}`;
+function fmtHMSDays(ms) {
+  const totalSec = Math.max(0, Math.floor(ms / 1000));
+  const days = Math.floor(totalSec / 86400);
+  const rem = totalSec % 86400;
+  const hh = String(Math.floor(rem / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((rem % 3600) / 60)).padStart(2, "0");
+  const ss = String(rem % 60).padStart(2, "0");
+  return `${hh}:${mm}:${ss} (${days}d)`;
 }
 
-function sum1to(n) {
-  return (n * (n + 1)) / 2;
+function fmtDateShort(ts) {
+  const d = new Date(ts);
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}`;
 }
 
-function normalizeName(s) {
-  return String(s || "").trim().replace(/\s+/g, " ").slice(0, 80);
-}
-
-function route() {
-  const h = location.hash || "#/home";
-  return h.startsWith("#/") ? h : "#/home";
-}
-
-function nav(hash) {
-  location.hash = hash;
+function addDaysTS(ts, days) {
+  return ts + days * 24 * 60 * 60 * 1000;
 }
 
 function downloadTextFile(filename, text, mime = "application/json") {
@@ -64,10 +94,45 @@ function downloadTextFile(filename, text, mime = "application/json") {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1800);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
-/* ---------- JP validation ---------- */
+function normalizeName(s) {
+  return String(s || "").trim().replace(/\s+/g, " ").slice(0, 50);
+}
+
+function uniqueArray(arr) {
+  return Array.from(new Set(arr.filter(Boolean)));
+}
+
+/* ---------- rota ---------- */
+function routeInfo() {
+  const h = location.hash || "#/landing";
+  const raw = h.startsWith("#/") ? h.slice(2) : "landing";
+  const [pathRaw, q] = raw.split("?");
+  const path = `#/${pathRaw || "landing"}`;
+  const params = {};
+
+  if (q) {
+    for (const part of q.split("&")) {
+      const [k, v] = part.split("=");
+      if (!k) continue;
+      params[decodeURIComponent(k)] = decodeURIComponent(v || "");
+    }
+  }
+
+  return { path, params };
+}
+
+function route() {
+  return routeInfo().path;
+}
+
+function nav(hash) {
+  location.hash = hash;
+}
+
+/* ---------- validação JP ---------- */
 const JP_ALLOWED_RE =
   /^[A-Za-z\uFF21-\uFF3A\uFF41-\uFF5A\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF 　。、！？・ー\-~!?.,:;()（）「」『』【】［］…\n\r\t0-9\uFF10-\uFF19{}%％＋+／/＝=＆&・'’"”“#＃]*$/;
 
@@ -87,6 +152,9 @@ function isValidJP(text) {
 
 /* ---------- furigana ---------- */
 const FURI_RE = /([^{}\s]+)\{([^{}]+)\}/g;
+const HIRAGANA_RE = /^[\u3040-\u309Fー\s]+$/;
+const KATAKANA_RE = /^[\u30A0-\u30FFー\s]+$/;
+const KANJI_RE = /[\u4E00-\u9FFF]/;
 
 function jpStripFurigana(raw) {
   return String(raw || "").replace(FURI_RE, (_, base) => base);
@@ -97,505 +165,794 @@ function jpHasFurigana(raw) {
   return FURI_RE.test(String(raw || ""));
 }
 
-function jpToRubyHTML(raw) {
-  const s = String(raw || "");
-  FURI_RE.lastIndex = 0;
-
-  let out = "";
-  let last = 0;
-  let m;
-  while ((m = FURI_RE.exec(s)) !== null) {
-    const [full, base, reading] = m;
-    const i = m.index;
-    out += escapeHTML(s.slice(last, i));
-    out += `<ruby>${escapeHTML(base)}<rt>${escapeHTML(reading.trim())}</rt></ruby>`;
-    last = i + full.length;
-  }
-  out += escapeHTML(s.slice(last));
-  return out;
+function jpToInlineFurigana(raw) {
+  return String(raw || "").replace(FURI_RE, (_, base, reading) => `${base} (${reading.trim()})`);
 }
 
-/* frase principal sem furigana */
-function setKanaLine(el, rawText) {
-  if (!el) return;
-  el.textContent = jpStripFurigana(rawText || "");
+function explainWordType(raw) {
+  const clean = String(raw || "").trim();
+  if (!clean) return "Vocabulário";
+  if (jpHasFurigana(clean)) return "Kanji";
+  const plain = jpStripFurigana(clean);
+  if (KANJI_RE.test(plain)) return "Kanji";
+  if (HIRAGANA_RE.test(plain)) return "Hiragana";
+  if (KATAKANA_RE.test(plain)) return "Katakana";
+  return "Vocabulário";
 }
 
-/* =========================================================
-   TOPICS / MISSIONS
-   ========================================================= */
+function formatWordExplanation(word) {
+  const raw = String(word?.jp || "").trim();
+  const pt = String(word?.pt || "").trim();
+  const label = explainWordType(raw);
+  const value = jpHasFurigana(raw) ? jpToInlineFurigana(raw) : jpStripFurigana(raw);
+  return `${label}: ${value} = ${pt}`;
+}
+
+/* ---------- tópicos / seed ---------- */
 function topicPalette() {
-  return ["warm", "sage", "accent"];
+  return ["tRose", "tViolet", "tBlue", "tCyan", "tGreen", "tAmber", "tPink", "tMint"];
 }
 
-function pickTopicTone(i) {
-  const tones = topicPalette();
-  return tones[i % tones.length];
+function pickTopicColor(i) {
+  const p = topicPalette();
+  return p[i % p.length];
 }
 
-function slugifyTopicName(name) {
-  return String(name || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
-}
-
-function seedTopics() {
-  const names = [
-    "Frases aleatórias",
-    "Na fábrica",
-    "No mercado",
-    "No konbini",
-    "Na prefeitura",
-    "No correio",
-    "No hospital",
-    "Na farmácia",
-    "No banco",
-    "No trem / estação",
-    "No aeroporto",
-    "No RH",
-    "No celular / internet",
-    "Em casa / apartamento",
-    "Lixo e reciclagem",
-    "Emergência",
-    "No trabalho"
-  ];
-
+function defaultTopic() {
   const t = now();
-  return names.map((name, i) => ({
-    id: name === "Frases aleatórias" ? "topic_default" : `topic_${slugifyTopicName(name)}`,
-    name,
-    tone: name === "Frases aleatórias" ? "accent" : pickTopicTone(i),
+  return {
+    id: "topic_default",
+    name: "Frases aleatórias",
+    color: "tViolet",
     createdAt: t,
     updatedAt: t
-  }));
-}
-
-function topicIdMapFromTopics(topics) {
-  const map = {};
-  for (const t of topics) map[t.name] = t.id;
-  return map;
-}
-
-/* =========================================================
-   PREMIUM STRUCTURE
-   ========================================================= */
-function seedPremiumProgram() {
-  return {
-    blocks: [
-      {
-        id: "block_1",
-        title: "Destravamento funcional",
-        subtitle: "Parar de congelar e continuar a interação mesmo sem entender tudo",
-        weeks: [1,2,3,4,5,6,7,8]
-      },
-      {
-        id: "block_2",
-        title: "Japonês de ambiente profissional",
-        subtitle: "Entender melhor orientações, correções e situações mais exigentes",
-        weeks: [9,10,11,12,13,14,15,16]
-      },
-      {
-        id: "block_3",
-        title: "Saída da bolha da fábrica",
-        subtitle: "Ganhar linguagem para crescer, se posicionar e abrir portas",
-        weeks: [17,18,19,20,21,22,23,24]
-      }
-    ],
-
-    tracks: [
-      {
-        id: "track_listening",
-        title: "Destravar a escuta",
-        objective: "Entender intenção, comando e direção mesmo sem captar cada palavra"
-      },
-      {
-        id: "track_response",
-        title: "Responder sem travar",
-        objective: "Ganhar respostas curtas e funcionais para manter a conversa viva"
-      },
-      {
-        id: "track_supervisor",
-        title: "Japonês de supervisor e instrução",
-        objective: "Lidar melhor com orientação, correção e mudança de tarefa"
-      },
-      {
-        id: "track_hr",
-        title: "Japonês de RH e crescimento",
-        objective: "Resolver vida profissional com mais autonomia"
-      },
-      {
-        id: "track_contact",
-        title: "Japonês de atendimento e contato humano",
-        objective: "Sustentar interações com pessoas fora do padrão mecânico"
-      },
-      {
-        id: "track_transition",
-        title: "Japonês para entrevista e transição",
-        objective: "Ter linguagem suficiente para buscar algo melhor"
-      }
-    ],
-
-    weeks: [
-      {
-        number: 1,
-        blockId: "block_1",
-        trackId: "track_listening",
-        title: "Sobreviver à fala rápida",
-        mission: "Começar a captar intenção quando o japonês vier corrido",
-        goal: "Reconhecer palavras-chave em instruções curtas e não congelar",
-        result: "Você percebe melhor a direção da fala, mesmo sem entender tudo",
-        focus: ["fala rápida", "palavras-chave", "intenção"],
-        phraseIds: ["ph_001","ph_002","ph_003","ph_006"]
-      },
-      {
-        number: 2,
-        blockId: "block_1",
-        trackId: "track_response",
-        title: "Pedir repetição e confirmação",
-        mission: "Continuar a interação quando a compreensão falhar",
-        goal: "Usar frases para pedir repetição, confirmar e ganhar tempo",
-        result: "Você cria ponte em vez de silêncio",
-        focus: ["pedir repetição", "confirmar", "ganhar tempo"],
-        phraseIds: ["ph_003","ph_004","ph_006","ph_007"]
-      },
-      {
-        number: 3,
-        blockId: "block_1",
-        trackId: "track_response",
-        title: "Responder curto e natural",
-        mission: "Parar de soar travado nas respostas básicas",
-        goal: "Ter respostas curtas que seguram a conversa",
-        result: "Interações simples ficam mais fluidas",
-        focus: ["respostas curtas", "ritmo", "naturalidade"],
-        phraseIds: ["ph_001","ph_002","ph_007","ph_008"]
-      },
-      {
-        number: 4,
-        blockId: "block_1",
-        trackId: "track_supervisor",
-        title: "Ordens e comandos comuns",
-        mission: "Entender melhor quando alguém orienta ou manda fazer algo",
-        goal: "Captar verbos operacionais e direção de tarefa",
-        result: "Você se perde menos no ambiente de trabalho",
-        focus: ["ordens", "verbos", "tarefa"],
-        phraseIds: ["ph_005","ph_006","ph_007","ph_008"]
-      },
-      {
-        number: 5,
-        blockId: "block_1",
-        trackId: "track_supervisor",
-        title: "Correção, erro e aviso",
-        mission: "Entender quando algo precisa mudar",
-        goal: "Captar sinais de correção, ajuste e alerta",
-        result: "Você sofre menos com feedback rápido",
-        focus: ["erro", "alerta", "ajuste"],
-        phraseIds: ["ph_006","ph_007","ph_008","ph_031"]
-      },
-      {
-        number: 6,
-        blockId: "block_1",
-        trackId: "track_supervisor",
-        title: "Confirmar tarefa com segurança",
-        mission: "Parar de seguir no escuro",
-        goal: "Aprender a confirmar o que precisa fazer",
-        result: "Você trabalha com mais clareza",
-        focus: ["confirmação", "clareza", "tarefa"],
-        phraseIds: ["ph_005","ph_006","ph_007","ph_030"]
-      },
-      {
-        number: 7,
-        blockId: "block_1",
-        trackId: "track_listening",
-        title: "Escuta de japonês comprimido",
-        mission: "Acostumar o ouvido com a fala real",
-        goal: "Reduzir o choque quando o nativo não fala devagar",
-        result: "A fala real assusta menos",
-        focus: ["fala real", "som comprimido", "ouvido"],
-        phraseIds: ["ph_003","ph_004","ph_005","ph_030"]
-      },
-      {
-        number: 8,
-        blockId: "block_1",
-        trackId: "track_listening",
-        title: "Revisão de destravamento",
-        mission: "Consolidar o primeiro grande passo",
-        goal: "Fixar o que te ajuda a continuar sem congelar",
-        result: "Você sente a primeira virada prática",
-        focus: ["revisão", "consolidação", "continuidade"],
-        phraseIds: ["ph_001","ph_003","ph_005","ph_006","ph_007","ph_008"]
-      },
-      {
-        number: 9,
-        blockId: "block_2",
-        trackId: "track_supervisor",
-        title: "Japonês de supervisor",
-        mission: "Entender melhor quem orienta seu trabalho",
-        goal: "Capacitar sua escuta para instruções mais objetivas",
-        result: "Você acompanha melhor orientações no ambiente profissional",
-        focus: ["supervisor", "orientação", "escuta"],
-        phraseIds: ["ph_005","ph_006","ph_007","ph_030"]
-      },
-      {
-        number: 10,
-        blockId: "block_2",
-        trackId: "track_supervisor",
-        title: "Mudança de tarefa e prioridade",
-        mission: "Lidar com redirecionamento sem travar",
-        goal: "Entender quando a tarefa muda ou ganha urgência",
-        result: "Você reage melhor a mudanças de direção",
-        focus: ["mudança", "prioridade", "reação"],
-        phraseIds: ["ph_005","ph_006","ph_007","ph_030"]
-      },
-      {
-        number: 11,
-        blockId: "block_2",
-        trackId: "track_supervisor",
-        title: "Qualidade, erro e correção",
-        mission: "Entender melhor feedback técnico",
-        goal: "Captar quando algo está errado e precisa ser corrigido",
-        result: "Você reduz ruído em situações de correção",
-        focus: ["qualidade", "erro", "correção"],
-        phraseIds: ["ph_006","ph_008","ph_031"]
-      },
-      {
-        number: 12,
-        blockId: "block_2",
-        trackId: "track_hr",
-        title: "RH e vida funcional na empresa",
-        mission: "Resolver temas importantes da vida profissional",
-        goal: "Ganhar autonomia para falar sobre salário, faltas e ajustes",
-        result: "Você depende menos de terceiros",
-        focus: ["RH", "documentos", "autonomia"],
-        phraseIds: ["ph_024","ph_030","ph_031","ph_032"]
-      },
-      {
-        number: 13,
-        blockId: "block_2",
-        trackId: "track_hr",
-        title: "Postura verbal profissional",
-        mission: "Soar mais funcional e mais seguro",
-        goal: "Melhorar o tom para ambientes mais exigentes",
-        result: "Sua presença verbal fica mais forte",
-        focus: ["tom", "postura", "segurança"],
-        phraseIds: ["ph_001","ph_002","ph_024","ph_030"]
-      },
-      {
-        number: 14,
-        blockId: "block_2",
-        trackId: "track_supervisor",
-        title: "Treinamento e explicação de processo",
-        mission: "Acompanhar melhor explicações mais longas",
-        goal: "Segurar atenção e extrair o principal",
-        result: "Você acompanha melhor instruções de processo",
-        focus: ["treinamento", "processo", "atenção"],
-        phraseIds: ["ph_005","ph_006","ph_007","ph_024"]
-      },
-      {
-        number: 15,
-        blockId: "block_2",
-        trackId: "track_response",
-        title: "Perguntas e respostas de rotina profissional",
-        mission: "Sustentar mini diálogos no trabalho",
-        goal: "Ganhar fluidez em trocas curtas e úteis",
-        result: "A interação profissional fica menos travada",
-        focus: ["diálogo", "troca curta", "rotina"],
-        phraseIds: ["ph_001","ph_002","ph_005","ph_030"]
-      },
-      {
-        number: 16,
-        blockId: "block_2",
-        trackId: "track_hr",
-        title: "Revisão profissional",
-        mission: "Consolidar o japonês de ambiente funcional",
-        goal: "Fortalecer linguagem de trabalho e crescimento",
-        result: "Você sente mais valor profissional no seu japonês",
-        focus: ["revisão", "trabalho", "crescimento"],
-        phraseIds: ["ph_024","ph_030","ph_031","ph_032"]
-      },
-      {
-        number: 17,
-        blockId: "block_3",
-        trackId: "track_transition",
-        title: "Apresentação pessoal melhor",
-        mission: "Ganhar linguagem para se posicionar melhor",
-        goal: "Treinar frases para se apresentar com mais clareza",
-        result: "Você começa a sair do japonês puramente operacional",
-        focus: ["apresentação", "clareza", "posição"],
-        phraseIds: ["ph_001","ph_002","ph_030"]
-      },
-      {
-        number: 18,
-        blockId: "block_3",
-        trackId: "track_transition",
-        title: "Explicar experiência de trabalho",
-        mission: "Transformar vivência em linguagem útil",
-        goal: "Falar melhor sobre rotina e experiência",
-        result: "Sua história começa a ganhar forma verbal",
-        focus: ["experiência", "rotina", "trabalho"],
-        phraseIds: ["ph_005","ph_024","ph_030"]
-      },
-      {
-        number: 19,
-        blockId: "block_3",
-        trackId: "track_transition",
-        title: "Entrevista básica",
-        mission: "Ter chão para começar a buscar algo melhor",
-        goal: "Responder perguntas comuns com mais segurança",
-        result: "Você se sente mais preparado para novas portas",
-        focus: ["entrevista", "resposta", "segurança"],
-        phraseIds: ["ph_001","ph_002","ph_030","ph_031"]
-      },
-      {
-        number: 20,
-        blockId: "block_3",
-        trackId: "track_contact",
-        title: "Atendimento e contato humano",
-        mission: "Lidar melhor com interações abertas",
-        goal: "Entender e responder em contato mais humano",
-        result: "Você sai do padrão puramente mecânico",
-        focus: ["atendimento", "contato", "interação"],
-        phraseIds: ["ph_009","ph_012","ph_013","ph_025"]
-      },
-      {
-        number: 21,
-        blockId: "block_3",
-        trackId: "track_contact",
-        title: "Resolver problemas verbalmente",
-        mission: "Explicar, pedir ajuda e corrigir mal-entendidos",
-        goal: "Ganhar ferramentas para situações imprevistas",
-        result: "Você se vira melhor fora do script",
-        focus: ["problema", "explicação", "ajuda"],
-        phraseIds: ["ph_016","ph_018","ph_026","ph_028"]
-      },
-      {
-        number: 22,
-        blockId: "block_3",
-        trackId: "track_listening",
-        title: "Escuta profissional mais natural",
-        mission: "Acompanhar fala menos mastigada",
-        goal: "Aumentar resistência ao japonês real",
-        result: "O ouvido fica mais preparado para ambientes melhores",
-        focus: ["escuta natural", "resistência", "ambiente profissional"],
-        phraseIds: ["ph_003","ph_004","ph_024","ph_025"]
-      },
-      {
-        number: 23,
-        blockId: "block_3",
-        trackId: "track_response",
-        title: "Segurança verbal",
-        mission: "Responder com menos medo",
-        goal: "Sentir mais chão ao falar com nativos",
-        result: "Você transmite mais presença e menos congelamento",
-        focus: ["segurança", "resposta", "presença"],
-        phraseIds: ["ph_001","ph_002","ph_003","ph_007"]
-      },
-      {
-        number: 24,
-        blockId: "block_3",
-        trackId: "track_transition",
-        title: "Revisão e plano de avanço",
-        mission: "Fechar a primeira grande travessia",
-        goal: "Consolidar o caminho do japonês de sobrevivência ao japonês que abre portas",
-        result: "Você enxerga o Premium como jornada real de crescimento",
-        focus: ["revisão", "avanço", "transição"],
-        phraseIds: ["ph_024","ph_025","ph_030","ph_031","ph_032"]
-      }
-    ]
   };
 }
 
-/* =========================================================
-   CONTENT
-   ========================================================= */
-function seedPhrases(topicIds) {
+const TOPIC_SEEDS = [
+  {
+    id: "topic_default",
+    name: "Frases aleatórias",
+    color: "tViolet",
+    phrases: [
+      {
+        id: "seed_random_001",
+        jp: "大丈夫{だいじょうぶ} です。ゆっくり お願{ねが}いします。",
+        pt: "Está tudo bem. Devagar, por favor.",
+        newWords: [
+          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" },
+          { jp: "ゆっくり", pt: "devagar" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_random_002",
+        jp: "今{いま} は 少{すこ}し 忙{いそが}しいです。",
+        pt: "Agora estou um pouco ocupado.",
+        newWords: [
+          { jp: "今{いま}", pt: "agora" },
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "忙{いそが}しい", pt: "ocupado" }
+        ]
+      },
+      {
+        id: "seed_random_003",
+        jp: "もう 一度{いちど} 言{い}って ください。",
+        pt: "Por favor, diga mais uma vez.",
+        newWords: [
+          { jp: "もう", pt: "mais / novamente" },
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "言{い}って", pt: "dizer" }
+        ]
+      },
+      {
+        id: "seed_random_004",
+        jp: "今日{きょう} は ここで 待{ま}って います。",
+        pt: "Hoje vou esperar aqui.",
+        newWords: [
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "ここ", pt: "aqui" },
+          { jp: "待{ま}って", pt: "esperar" }
+        ]
+      },
+      {
+        id: "seed_random_005",
+        jp: "それは 今{いま} は できません。",
+        pt: "Isso não pode ser feito agora.",
+        newWords: [
+          { jp: "それ", pt: "isso" },
+          { jp: "今{いま}", pt: "agora" },
+          { jp: "できません", pt: "não pode / não consegue" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_factory",
+    name: "Na Fábrica",
+    color: "tRose",
+    phrases: [
+      {
+        id: "seed_factory_001",
+        jp: "この 機械{きかい} は もう 動{うご}いて いますか。",
+        pt: "Esta máquina já está funcionando?",
+        newWords: [
+          { jp: "機械{きかい}", pt: "máquina" },
+          { jp: "動{うご}いて", pt: "funcionando / movendo" },
+          { jp: "もう", pt: "já" }
+        ]
+      },
+      {
+        id: "seed_factory_002",
+        jp: "安全{あんぜん} 手袋{てぶくろ} を つけて ください。",
+        pt: "Por favor, coloque as luvas de segurança.",
+        newWords: [
+          { jp: "安全{あんぜん}", pt: "segurança" },
+          { jp: "手袋{てぶくろ}", pt: "luvas" },
+          { jp: "ください", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_factory_003",
+        jp: "今日{きょう} の 生産{せいさん} 数{すう} は いくつ ですか。",
+        pt: "Qual é a quantidade de produção de hoje?",
+        newWords: [
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "生産{せいさん}", pt: "produção" },
+          { jp: "数{すう}", pt: "quantidade / número" }
+        ]
+      },
+      {
+        id: "seed_factory_004",
+        jp: "この 箱{はこ} を あちらへ 運{はこ}んで ください。",
+        pt: "Leve esta caixa para lá, por favor.",
+        newWords: [
+          { jp: "箱{はこ}", pt: "caixa" },
+          { jp: "あちら", pt: "lá" },
+          { jp: "運{はこ}んで", pt: "levar / transportar" }
+        ]
+      },
+      {
+        id: "seed_factory_005",
+        jp: "ライン を 止{と}めても いいですか。",
+        pt: "Posso parar a linha?",
+        newWords: [
+          { jp: "ライン", pt: "linha" },
+          { jp: "止{と}めて", pt: "parar" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_airport",
+    name: "No Aeroporto",
+    color: "tBlue",
+    phrases: [
+      {
+        id: "seed_airport_001",
+        jp: "搭乗口{とうじょうぐち} は どこ ですか。",
+        pt: "Onde é o portão de embarque?",
+        newWords: [
+          { jp: "搭乗口{とうじょうぐち}", pt: "portão de embarque" },
+          { jp: "どこ", pt: "onde" }
+        ]
+      },
+      {
+        id: "seed_airport_002",
+        jp: "この 便{びん} は 何時{なんじ} に 出発{しゅっぱつ} しますか。",
+        pt: "A que horas este voo parte?",
+        newWords: [
+          { jp: "便{びん}", pt: "voo" },
+          { jp: "何時{なんじ}", pt: "que horas" },
+          { jp: "出発{しゅっぱつ}", pt: "partida" }
+        ]
+      },
+      {
+        id: "seed_airport_003",
+        jp: "荷物{にもつ} を 預{あず}けたいです。",
+        pt: "Quero despachar a bagagem.",
+        newWords: [
+          { jp: "荷物{にもつ}", pt: "bagagem" },
+          { jp: "預{あず}けたい", pt: "querer despachar / deixar" }
+        ]
+      },
+      {
+        id: "seed_airport_004",
+        jp: "この パスポート で 大丈夫{だいじょうぶ} ですか。",
+        pt: "Com este passaporte está tudo certo?",
+        newWords: [
+          { jp: "パスポート", pt: "passaporte" },
+          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
+        ]
+      },
+      {
+        id: "seed_airport_005",
+        jp: "入国審査{にゅうこくしんさ} は あちら です。",
+        pt: "A imigração é por ali.",
+        newWords: [
+          { jp: "入国審査{にゅうこくしんさ}", pt: "imigração" },
+          { jp: "あちら", pt: "por ali" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_post",
+    name: "No correio",
+    color: "tAmber",
+    phrases: [
+      {
+        id: "seed_post_001",
+        jp: "この 荷物{にもつ} を ブラジル へ 送{おく}りたいです。",
+        pt: "Quero enviar esta encomenda para o Brasil.",
+        newWords: [
+          { jp: "荷物{にもつ}", pt: "encomenda / bagagem" },
+          { jp: "ブラジル", pt: "Brasil" },
+          { jp: "送{おく}りたい", pt: "querer enviar" }
+        ]
+      },
+      {
+        id: "seed_post_002",
+        jp: "速達{そくたつ} で お願{ねが}いします。",
+        pt: "Por favor, por envio expresso.",
+        newWords: [
+          { jp: "速達{そくたつ}", pt: "envio expresso" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_post_003",
+        jp: "切手{きって} は どこで 買{か}えますか。",
+        pt: "Onde posso comprar selo?",
+        newWords: [
+          { jp: "切手{きって}", pt: "selo" },
+          { jp: "買{か}えますか", pt: "posso comprar?" }
+        ]
+      },
+      {
+        id: "seed_post_004",
+        jp: "この 用紙{ようし} に 名前{なまえ} を 書{か}いて ください。",
+        pt: "Por favor, escreva seu nome neste formulário.",
+        newWords: [
+          { jp: "用紙{ようし}", pt: "formulário / folha" },
+          { jp: "名前{なまえ}", pt: "nome" },
+          { jp: "書{か}いて", pt: "escrever" }
+        ]
+      },
+      {
+        id: "seed_post_005",
+        jp: "追跡番号{ついせきばんごう} は ありますか。",
+        pt: "Tem número de rastreio?",
+        newWords: [
+          { jp: "追跡番号{ついせきばんごう}", pt: "número de rastreio" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_cityhall",
+    name: "Na Prefeitura",
+    color: "tCyan",
+    phrases: [
+      {
+        id: "seed_cityhall_001",
+        jp: "住民票{じゅうみんひょう} を 取{と}りたいです。",
+        pt: "Quero tirar o comprovante de residência.",
+        newWords: [
+          { jp: "住民票{じゅうみんひょう}", pt: "comprovante de residência" },
+          { jp: "取{と}りたい", pt: "querer tirar / obter" }
+        ]
+      },
+      {
+        id: "seed_cityhall_002",
+        jp: "この 書類{しょるい} は どこへ 出{だ}しますか。",
+        pt: "Onde entrego este documento?",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "出{だ}しますか", pt: "entregar / apresentar" }
+        ]
+      },
+      {
+        id: "seed_cityhall_003",
+        jp: "保険証{ほけんしょう} の 更新{こうしん} を したいです。",
+        pt: "Quero renovar o cartão do seguro.",
+        newWords: [
+          { jp: "保険証{ほけんしょう}", pt: "cartão do seguro" },
+          { jp: "更新{こうしん}", pt: "renovação" }
+        ]
+      },
+      {
+        id: "seed_cityhall_004",
+        jp: "番号札{ばんごうふだ} を 取{と}って ください。",
+        pt: "Por favor, pegue uma senha.",
+        newWords: [
+          { jp: "番号札{ばんごうふだ}", pt: "senha / ticket de atendimento" },
+          { jp: "取{と}って", pt: "pegar" }
+        ]
+      },
+      {
+        id: "seed_cityhall_005",
+        jp: "担当者{たんとうしゃ} は 何時{なんじ} に 戻{もど}りますか。",
+        pt: "A que horas o responsável volta?",
+        newWords: [
+          { jp: "担当者{たんとうしゃ}", pt: "responsável / atendente" },
+          { jp: "何時{なんじ}", pt: "que horas" },
+          { jp: "戻{もど}りますか", pt: "volta?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_konbini",
+    name: "No Konbini",
+    color: "tMint",
+    phrases: [
+      {
+        id: "seed_konbini_001",
+        jp: "レジ袋{ぶくろ} は 要{い}りません。",
+        pt: "Não preciso de sacola.",
+        newWords: [
+          { jp: "レジ袋{ぶくろ}", pt: "sacola" },
+          { jp: "要{い}りません", pt: "não preciso" }
+        ]
+      },
+      {
+        id: "seed_konbini_002",
+        jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
+        pt: "Por favor, aqueça este bentô.",
+        newWords: [
+          { jp: "お弁当{べんとう}", pt: "marmita / bentô" },
+          { jp: "温{あたた}めて", pt: "aquecer" }
+        ]
+      },
+      {
+        id: "seed_konbini_003",
+        jp: "公共料金{こうきょうりょうきん} を 払{はら}いたいです。",
+        pt: "Quero pagar a conta pública.",
+        newWords: [
+          { jp: "公共料金{こうきょうりょうきん}", pt: "conta pública" },
+          { jp: "払{はら}いたい", pt: "querer pagar" }
+        ]
+      },
+      {
+        id: "seed_konbini_004",
+        jp: "コピー機{き} は 使{つか}えますか。",
+        pt: "Posso usar a copiadora?",
+        newWords: [
+          { jp: "コピー機{き}", pt: "copiadora" },
+          { jp: "使{つか}えますか", pt: "posso usar?" }
+        ]
+      },
+      {
+        id: "seed_konbini_005",
+        jp: "電子{でんし} マネー で 払{はら}えますか。",
+        pt: "Posso pagar com dinheiro eletrônico?",
+        newWords: [
+          { jp: "電子{でんし}", pt: "eletrônico" },
+          { jp: "マネー", pt: "dinheiro" },
+          { jp: "払{はら}えますか", pt: "posso pagar?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_market",
+    name: "No Mercado",
+    color: "tGreen",
+    phrases: [
+      {
+        id: "seed_market_001",
+        jp: "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
+        pt: "Este produto está esgotado?",
+        newWords: [
+          { jp: "商品{しょうひん}", pt: "produto" },
+          { jp: "売{う}り切{き}れ", pt: "esgotado" }
+        ]
+      },
+      {
+        id: "seed_market_002",
+        jp: "賞味期限{しょうみきげん} は いつ ですか。",
+        pt: "Qual é a data de validade?",
+        newWords: [
+          { jp: "賞味期限{しょうみきげん}", pt: "data de validade" },
+          { jp: "いつ", pt: "quando" }
+        ]
+      },
+      {
+        id: "seed_market_003",
+        jp: "この 野菜{やさい} は いくら ですか。",
+        pt: "Quanto custa este legume?",
+        newWords: [
+          { jp: "野菜{やさい}", pt: "legume / verdura" },
+          { jp: "いくら", pt: "quanto" }
+        ]
+      },
+      {
+        id: "seed_market_004",
+        jp: "安{やす}い 牛乳{ぎゅうにゅう} は ありますか。",
+        pt: "Tem leite mais barato?",
+        newWords: [
+          { jp: "安{やす}い", pt: "barato" },
+          { jp: "牛乳{ぎゅうにゅう}", pt: "leite" }
+        ]
+      },
+      {
+        id: "seed_market_005",
+        jp: "カード で 支払{しはら}えますか。",
+        pt: "Posso pagar com cartão?",
+        newWords: [
+          { jp: "カード", pt: "cartão" },
+          { jp: "支払{しはら}えますか", pt: "posso pagar?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_bike",
+    name: "Na Loja de Bicicletas",
+    color: "tPink",
+    phrases: [
+      {
+        id: "seed_bike_001",
+        jp: "チェーン が 外{はず}れました。見{み}て もらえますか。",
+        pt: "A corrente soltou. Pode dar uma olhada?",
+        newWords: [
+          { jp: "チェーン", pt: "corrente" },
+          { jp: "外{はず}れました", pt: "soltou / saiu" },
+          { jp: "見{み}て", pt: "ver / olhar" }
+        ]
+      },
+      {
+        id: "seed_bike_002",
+        jp: "パンク 修理{しゅうり} は いくら ですか。",
+        pt: "Quanto custa o conserto do pneu furado?",
+        newWords: [
+          { jp: "パンク", pt: "pneu furado" },
+          { jp: "修理{しゅうり}", pt: "conserto" },
+          { jp: "いくら", pt: "quanto" }
+        ]
+      },
+      {
+        id: "seed_bike_003",
+        jp: "ブレーキ を 調整{ちょうせい} して ください。",
+        pt: "Por favor, ajuste o freio.",
+        newWords: [
+          { jp: "ブレーキ", pt: "freio" },
+          { jp: "調整{ちょうせい}", pt: "ajuste" },
+          { jp: "ください", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_bike_004",
+        jp: "空気{くうき} を 入{い}れたいです。",
+        pt: "Quero colocar ar.",
+        newWords: [
+          { jp: "空気{くうき}", pt: "ar" },
+          { jp: "入{い}れたい", pt: "querer colocar" }
+        ]
+      },
+      {
+        id: "seed_bike_005",
+        jp: "この 自転車{じてんしゃ} は いつ 受{う}け取{と}れますか。",
+        pt: "Quando posso retirar esta bicicleta?",
+        newWords: [
+          { jp: "自転車{じてんしゃ}", pt: "bicicleta" },
+          { jp: "いつ", pt: "quando" },
+          { jp: "受{う}け取{と}れますか", pt: "posso retirar?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_cinema",
+    name: "No Cinema",
+    color: "tBlue",
+    phrases: [
+      {
+        id: "seed_cinema_001",
+        jp: "次{つぎ} の 上映{じょうえい} は 何時{なんじ} ですか。",
+        pt: "A que horas é a próxima sessão?",
+        newWords: [
+          { jp: "次{つぎ}", pt: "próximo" },
+          { jp: "上映{じょうえい}", pt: "sessão / exibição" },
+          { jp: "何時{なんじ}", pt: "que horas" }
+        ]
+      },
+      {
+        id: "seed_cinema_002",
+        jp: "この 映画{えいが} は 日本語字幕{にほんごじまく} が ありますか。",
+        pt: "Este filme tem legenda em japonês?",
+        newWords: [
+          { jp: "映画{えいが}", pt: "filme" },
+          { jp: "日本語字幕{にほんごじまく}", pt: "legenda em japonês" }
+        ]
+      },
+      {
+        id: "seed_cinema_003",
+        jp: "チケット を 二枚{にまい} お願{ねが}いします。",
+        pt: "Dois ingressos, por favor.",
+        newWords: [
+          { jp: "チケット", pt: "ingresso" },
+          { jp: "二枚{にまい}", pt: "duas unidades" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_cinema_004",
+        jp: "飲み物{のみもの} は どこで 買{か}いますか。",
+        pt: "Onde compro bebida?",
+        newWords: [
+          { jp: "飲み物{のみもの}", pt: "bebida" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "買{か}いますか", pt: "compro?" }
+        ]
+      },
+      {
+        id: "seed_cinema_005",
+        jp: "この 席{せき} で 大丈夫{だいじょうぶ} です。",
+        pt: "Este assento está ótimo para mim.",
+        newWords: [
+          { jp: "席{せき}", pt: "assento" },
+          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / está ótimo" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_department",
+    name: "Na Loja de Departamentos",
+    color: "tAmber",
+    phrases: [
+      {
+        id: "seed_department_001",
+        jp: "この サイズ は ありますか。",
+        pt: "Tem este tamanho?",
+        newWords: [
+          { jp: "サイズ", pt: "tamanho" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_department_002",
+        jp: "試着室{しちゃくしつ} は どこ ですか。",
+        pt: "Onde fica o provador?",
+        newWords: [
+          { jp: "試着室{しちゃくしつ}", pt: "provador" },
+          { jp: "どこ", pt: "onde" }
+        ]
+      },
+      {
+        id: "seed_department_003",
+        jp: "別{べつ} の 色{いろ} を 見{み}たいです。",
+        pt: "Quero ver outra cor.",
+        newWords: [
+          { jp: "別{べつ}", pt: "outra / diferente" },
+          { jp: "色{いろ}", pt: "cor" },
+          { jp: "見{み}たい", pt: "querer ver" }
+        ]
+      },
+      {
+        id: "seed_department_004",
+        jp: "返品{へんぴん} は できますか。",
+        pt: "Posso devolver?",
+        newWords: [
+          { jp: "返品{へんぴん}", pt: "devolução" },
+          { jp: "できますか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_department_005",
+        jp: "会計{かいけい} は 何階{なんがい} ですか。",
+        pt: "Em que andar fica o caixa?",
+        newWords: [
+          { jp: "会計{かいけい}", pt: "caixa / pagamento" },
+          { jp: "何階{なんがい}", pt: "qual andar" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_trip",
+    name: "Na Viagem",
+    color: "tGreen",
+    phrases: [
+      {
+        id: "seed_trip_001",
+        jp: "この 電車{でんしゃ} は 名古屋{なごや} へ 行{い}きますか。",
+        pt: "Este trem vai para Nagoya?",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "名古屋{なごや}", pt: "Nagoya" },
+          { jp: "行{い}きますか", pt: "vai?" }
+        ]
+      },
+      {
+        id: "seed_trip_002",
+        jp: "ホテル まで どう やって 行{い}きますか。",
+        pt: "Como chego até o hotel?",
+        newWords: [
+          { jp: "ホテル", pt: "hotel" },
+          { jp: "どう やって", pt: "como" },
+          { jp: "行{い}きますか", pt: "chego / vou?" }
+        ]
+      },
+      {
+        id: "seed_trip_003",
+        jp: "この 地図{ちず} を 見{み}せて も いいですか。",
+        pt: "Posso mostrar este mapa?",
+        newWords: [
+          { jp: "地図{ちず}", pt: "mapa" },
+          { jp: "見{み}せて", pt: "mostrar" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_trip_004",
+        jp: "写真{しゃしん} を 撮{と}って も いいですか。",
+        pt: "Posso tirar uma foto?",
+        newWords: [
+          { jp: "写真{しゃしん}", pt: "foto" },
+          { jp: "撮{と}って", pt: "tirar (foto)" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_trip_005",
+        jp: "次{つぎ} の バス は いつ 来{き}ますか。",
+        pt: "Quando vem o próximo ônibus?",
+        newWords: [
+          { jp: "次{つぎ}", pt: "próximo" },
+          { jp: "バス", pt: "ônibus" },
+          { jp: "来{き}ますか", pt: "vem?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "topic_qa",
+    name: "Perguntas e Respostas",
+    color: "tRose",
+    phrases: [
+      {
+        id: "seed_qa_001",
+        jp: "お名前{なまえ} は 何{なん} ですか。",
+        pt: "Qual é o seu nome?",
+        newWords: [
+          { jp: "名前{なまえ}", pt: "nome" },
+          { jp: "何{なん}", pt: "qual / o que" }
+        ]
+      },
+      {
+        id: "seed_qa_002",
+        jp: "はい、わかりました。",
+        pt: "Sim, entendi.",
+        newWords: [
+          { jp: "はい", pt: "sim" },
+          { jp: "わかりました", pt: "entendi" }
+        ]
+      },
+      {
+        id: "seed_qa_003",
+        jp: "いいえ、まだ です。",
+        pt: "Não, ainda não.",
+        newWords: [
+          { jp: "いいえ", pt: "não" },
+          { jp: "まだ", pt: "ainda" }
+        ]
+      },
+      {
+        id: "seed_qa_004",
+        jp: "何時{なんじ} から 始{はじ}まりますか。",
+        pt: "A partir de que horas começa?",
+        newWords: [
+          { jp: "何時{なんじ}", pt: "que horas" },
+          { jp: "始{はじ}まりますか", pt: "começa?" }
+        ]
+      },
+      {
+        id: "seed_qa_005",
+        jp: "あとで 電話{でんわ} しても いいですか。",
+        pt: "Posso ligar depois?",
+        newWords: [
+          { jp: "あとで", pt: "depois" },
+          { jp: "電話{でんわ}", pt: "telefone / ligar" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      }
+    ]
+  }
+];
+
+function ensureSeedCatalog(st) {
   const t = now();
 
-  return [
-    { id:"ph_001", jp:"おはようございます。", pt:"bom dia.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"cumprimento básico do dia", comfortHint:"Comece leve. Só ouvir já conta.", newWords:[{jp:"おはようございます", pt:"bom dia"}], createdAt:t, updatedAt:t },
-    { id:"ph_002", jp:"お疲{つか}れ様{さま}です。", pt:"bom trabalho / obrigado pelo esforço.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"muito útil no trabalho", comfortHint:"Essa frase ajuda você a entrar melhor no ritmo social do Japão.", newWords:[{jp:"疲{つか}れ", pt:"cansaço / esforço"},{jp:"様{さま}", pt:"forma respeitosa"}], createdAt:t, updatedAt:t },
-    { id:"ph_003", jp:"もう一度{いちど} お願{ねが}いします。", pt:"mais uma vez, por favor.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"quando você não entendeu", comfortHint:"Pedir repetição é inteligência, não fraqueza.", newWords:[{jp:"一度{いちど}", pt:"uma vez"},{jp:"お願{ねが}いします", pt:"por favor"}], createdAt:t, updatedAt:t },
-    { id:"ph_004", jp:"ゆっくり お願{ねが}いします。", pt:"devagar, por favor.", topicId:topicIds["Frases aleatórias"], priority:5, useHint:"quando falam rápido demais", comfortHint:"Uma das frases mais valiosas para continuar a interação.", newWords:[{jp:"ゆっくり", pt:"devagar"},{jp:"お願{ねが}いします", pt:"por favor"}], createdAt:t, updatedAt:t },
-    { id:"ph_005", jp:"今日{きょう}の 持{も}ち場{ば}は どこですか。", pt:"qual é o meu posto de hoje?", topicId:topicIds["Na fábrica"], priority:5, useHint:"para começar o turno", comfortHint:"Ótima frase para iniciar o dia com clareza.", newWords:[{jp:"今日{きょう}", pt:"hoje"},{jp:"持{も}ち場{ば}", pt:"posto de trabalho"}], createdAt:t, updatedAt:t },
-    { id:"ph_006", jp:"この作業{さぎょう}を もう一度{いちど} 教{おし}えて ください。", pt:"por favor, me ensine esta tarefa mais uma vez.", topicId:topicIds["Na fábrica"], priority:5, useHint:"quando a tarefa não ficou clara", comfortHint:"Não precisa adivinhar. Peça de novo com clareza.", newWords:[{jp:"作業{さぎょう}", pt:"tarefa"},{jp:"教{おし}えて", pt:"ensinar / explicar"}], createdAt:t, updatedAt:t },
-    { id:"ph_007", jp:"次{つぎ}は 何{なに}を すれば いいですか。", pt:"o que eu devo fazer em seguida?", topicId:topicIds["Na fábrica"], priority:5, useHint:"quando terminou a etapa atual", comfortHint:"Isso ajuda você a manter o fluxo sem ficar perdido.", newWords:[{jp:"次{つぎ}", pt:"seguinte / próximo"},{jp:"何{なに}", pt:"o que"}], createdAt:t, updatedAt:t },
-    { id:"ph_008", jp:"機械{きかい}が 止{と}まりました。", pt:"a máquina parou.", topicId:topicIds["Na fábrica"], priority:5, useHint:"situação urgente na linha", comfortHint:"Frase curta e muito importante.", newWords:[{jp:"機械{きかい}", pt:"máquina"},{jp:"止{と}まりました", pt:"parou"}], createdAt:t, updatedAt:t },
-    { id:"ph_009", jp:"これは いくらですか。", pt:"quanto custa isto?", topicId:topicIds["No mercado"], priority:5, useHint:"compras do dia a dia", comfortHint:"Frase simples, clara e muito útil.", newWords:[{jp:"いくら", pt:"quanto"}], createdAt:t, updatedAt:t },
-    { id:"ph_010", jp:"賞味期限{しょうみきげん}は いつですか。", pt:"qual é a data de validade?", topicId:topicIds["No mercado"], priority:5, useHint:"na hora de escolher produto", comfortHint:"Boa para compras mais seguras.", newWords:[{jp:"賞味期限{しょうみきげん}", pt:"validade"}], createdAt:t, updatedAt:t },
-    { id:"ph_011", jp:"袋{ふくろ}は いりません。", pt:"não preciso de sacola.", topicId:topicIds["No mercado"], priority:4, useHint:"caixa e autoatendimento", comfortHint:"Frase rápida para o caixa.", newWords:[{jp:"袋{ふくろ}", pt:"sacola"}], createdAt:t, updatedAt:t },
-    { id:"ph_012", jp:"温{あたた}めて ください。", pt:"por favor, aqueça isto.", topicId:topicIds["No konbini"], priority:5, useHint:"marmita ou lanche", comfortHint:"Muito útil para o dia a dia corrido.", newWords:[{jp:"温{あたた}めて", pt:"aquecer"}], createdAt:t, updatedAt:t },
-    { id:"ph_013", jp:"レシートを ください。", pt:"por favor, me dê o recibo.", topicId:topicIds["No konbini"], priority:4, useHint:"caixa", comfortHint:"Frase curta que resolve rápido.", newWords:[{jp:"レシート", pt:"recibo"}], createdAt:t, updatedAt:t },
-    { id:"ph_014", jp:"住所変更{じゅうしょへんこう}の 手続{てつづ}きは どこですか。", pt:"onde faço o procedimento de mudança de endereço?", topicId:topicIds["Na prefeitura"], priority:5, useHint:"mudança de endereço", comfortHint:"Frase de sobrevivência burocrática.", newWords:[{jp:"住所変更{じゅうしょへんこう}", pt:"mudança de endereço"},{jp:"手続{てつづ}き", pt:"procedimento"}], createdAt:t, updatedAt:t },
-    { id:"ph_015", jp:"必要{ひつよう}な ものは 何{なに}ですか。", pt:"o que é necessário trazer?", topicId:topicIds["Na prefeitura"], priority:5, useHint:"antes de iniciar procedimento", comfortHint:"Evita viagem perdida.", newWords:[{jp:"必要{ひつよう}", pt:"necessário"},{jp:"何{なに}", pt:"o que"}], createdAt:t, updatedAt:t },
-    { id:"ph_016", jp:"この荷物{にもつ}を 送{おく}りたいです。", pt:"quero enviar esta encomenda.", topicId:topicIds["No correio"], priority:5, useHint:"envio no balcão", comfortHint:"Boa para começar o atendimento com clareza.", newWords:[{jp:"荷物{にもつ}", pt:"encomenda"},{jp:"送{おく}りたい", pt:"quero enviar"}], createdAt:t, updatedAt:t },
-    { id:"ph_017", jp:"送料{そうりょう}は いくらですか。", pt:"quanto custa o frete?", topicId:topicIds["No correio"], priority:5, useHint:"antes de fechar envio", comfortHint:"Ajuda a decidir rápido.", newWords:[{jp:"送料{そうりょう}", pt:"frete"}], createdAt:t, updatedAt:t },
-    { id:"ph_018", jp:"予約{よやく}を したいです。", pt:"quero marcar uma consulta.", topicId:topicIds["No hospital"], priority:5, useHint:"marcação inicial", comfortHint:"Essencial para saúde.", newWords:[{jp:"予約{よやく}", pt:"agendamento"}], createdAt:t, updatedAt:t },
-    { id:"ph_019", jp:"昨日{きのう}から 熱{ねつ}が あります。", pt:"estou com febre desde ontem.", topicId:topicIds["No hospital"], priority:5, useHint:"explicar sintoma", comfortHint:"Fale isso com calma. É uma frase importante.", newWords:[{jp:"昨日{きのう}", pt:"ontem"},{jp:"熱{ねつ}", pt:"febre"}], createdAt:t, updatedAt:t },
-    { id:"ph_020", jp:"風邪薬{かぜぐすり}は ありますか。", pt:"vocês têm remédio para resfriado?", topicId:topicIds["Na farmácia"], priority:5, useHint:"compra rápida na farmácia", comfortHint:"Muito útil em dias difíceis.", newWords:[{jp:"風邪薬{かぜぐすり}", pt:"remédio para resfriado"}], createdAt:t, updatedAt:t },
-    { id:"ph_021", jp:"口座{こうざ}を 作{つく}りたいです。", pt:"quero abrir uma conta bancária.", topicId:topicIds["No banco"], priority:4, useHint:"atendimento bancário", comfortHint:"Boa frase base para o banco.", newWords:[{jp:"口座{こうざ}", pt:"conta bancária"}], createdAt:t, updatedAt:t },
-    { id:"ph_022", jp:"この電車{でんしゃ}は 福井{ふくい}に 行{い}きますか。", pt:"este trem vai para Fukui?", topicId:topicIds["No trem / estação"], priority:5, useHint:"deslocamento diário", comfortHint:"Ótima frase para não se perder.", newWords:[{jp:"電車{でんしゃ}", pt:"trem"},{jp:"行{い}きますか", pt:"vai?"}], createdAt:t, updatedAt:t },
-    { id:"ph_023", jp:"搭乗口{とうじょうぐち}は どこですか。", pt:"onde fica o portão de embarque?", topicId:topicIds["No aeroporto"], priority:4, useHint:"embarque", comfortHint:"Curta e objetiva.", newWords:[{jp:"搭乗口{とうじょうぐち}", pt:"portão de embarque"}], createdAt:t, updatedAt:t },
-    { id:"ph_024", jp:"給料明細{きゅうりょうめいさい}を 確認{かくにん}したいです。", pt:"quero conferir meu holerite.", topicId:topicIds["No RH"], priority:4, useHint:"falar com RH", comfortHint:"Boa para resolver sua vida profissional.", newWords:[{jp:"給料明細{きゅうりょうめいさい}", pt:"holerite"},{jp:"確認{かくにん}", pt:"conferir"}], createdAt:t, updatedAt:t },
-    { id:"ph_025", jp:"30GBの 固定{こてい}プランは ありますか。", pt:"tem um plano fixo de 30 GB?", topicId:topicIds["No celular / internet"], priority:5, useHint:"loja de celular", comfortHint:"Muito útil para contrato de plano.", newWords:[{jp:"固定{こてい}", pt:"fixo"},{jp:"プラン", pt:"plano"}], createdAt:t, updatedAt:t },
-    { id:"ph_026", jp:"修理{しゅうり}を お願{ねが}いしたいです。", pt:"quero solicitar um reparo.", topicId:topicIds["Em casa / apartamento"], priority:4, useHint:"problema no apartamento", comfortHint:"Boa para falar com a administração.", newWords:[{jp:"修理{しゅうり}", pt:"reparo"},{jp:"お願{ねが}いしたい", pt:"quero solicitar"}], createdAt:t, updatedAt:t },
-    { id:"ph_027", jp:"燃{も}える ごみの 日{ひ}は いつですか。", pt:"quando é o dia do lixo queimável?", topicId:topicIds["Lixo e reciclagem"], priority:3, useHint:"vida no apartamento", comfortHint:"Ajuda muito no começo da vida no Japão.", newWords:[{jp:"燃{も}える ごみ", pt:"lixo queimável"}], createdAt:t, updatedAt:t },
-    { id:"ph_028", jp:"助{たす}けて ください。", pt:"por favor, me ajude.", topicId:topicIds["Emergência"], priority:5, useHint:"situação urgente", comfortHint:"Frase curta e muito importante.", newWords:[{jp:"助{たす}けて", pt:"me ajude"}], createdAt:t, updatedAt:t },
-    { id:"ph_029", jp:"救急車{きゅうきゅうしゃ}を 呼{よ}んで ください。", pt:"por favor, chame uma ambulância.", topicId:topicIds["Emergência"], priority:5, useHint:"emergência real", comfortHint:"Vale muito a pena revisar esta frase.", newWords:[{jp:"救急車{きゅうきゅうしゃ}", pt:"ambulância"}], createdAt:t, updatedAt:t },
-    { id:"ph_030", jp:"少{すこ}し 遅{おく}れます。", pt:"vou me atrasar um pouco.", topicId:topicIds["No trabalho"], priority:5, useHint:"avisar no trabalho", comfortHint:"Muito útil na vida real.", newWords:[{jp:"少{すこ}し", pt:"um pouco"},{jp:"遅{おく}れます", pt:"vou me atrasar"}], createdAt:t, updatedAt:t },
-    { id:"ph_031", jp:"体調{たいちょう}が 悪{わる}いです。", pt:"não estou me sentindo bem.", topicId:topicIds["No trabalho"], priority:5, useHint:"quando o corpo não está bem", comfortHint:"Frase importante para dias difíceis.", newWords:[{jp:"体調{たいちょう}", pt:"condição física"},{jp:"悪{わる}い", pt:"ruim"}], createdAt:t, updatedAt:t },
-    { id:"ph_032", jp:"今日は 休{やす}ませて ください。", pt:"por favor, deixe-me faltar hoje.", topicId:topicIds["No trabalho"], priority:5, useHint:"quando precisa descansar", comfortHint:"Frase sensível e importante.", newWords:[{jp:"休{やす}ませて", pt:"deixe faltar / descansar"}], createdAt:t, updatedAt:t }
-  ];
+  st.bank ||= {};
+  st.bank.topics ||= [];
+  st.bank.phrases ||= [];
+  st.progress ||= {};
+
+  const existingTopics = st.bank.topics;
+  const topicNameMap = new Map(existingTopics.map(topic => [String(topic.name || "").toLowerCase(), topic]));
+
+  for (let i = 0; i < TOPIC_SEEDS.length; i++) {
+    const seedTopic = TOPIC_SEEDS[i];
+    let topic = existingTopics.find(x => x.id === seedTopic.id) || topicNameMap.get(seedTopic.name.toLowerCase());
+
+    if (!topic) {
+      topic = {
+        id: seedTopic.id,
+        name: seedTopic.name,
+        color: seedTopic.color || pickTopicColor(i),
+        createdAt: t,
+        updatedAt: t
+      };
+      existingTopics.push(topic);
+      topicNameMap.set(topic.name.toLowerCase(), topic);
+    } else {
+      topic.name = topic.name || seedTopic.name;
+      topic.color = topic.color || seedTopic.color || pickTopicColor(i);
+      topic.updatedAt ||= t;
+      topic.createdAt ||= t;
+      if (!topic.id) topic.id = seedTopic.id;
+    }
+
+    for (const phrase of seedTopic.phrases) {
+      const already = st.bank.phrases.find(p => p.id === phrase.id);
+
+      if (already) {
+        already.topicId = topic.id;
+        already.newWords = Array.isArray(already.newWords) && already.newWords.length
+          ? already.newWords
+          : phrase.newWords;
+        continue;
+      }
+
+      st.bank.phrases.push({
+        id: phrase.id,
+        jp: phrase.jp,
+        pt: phrase.pt,
+        newWords: phrase.newWords || [],
+        topicId: topic.id,
+        createdAt: t,
+        updatedAt: t
+      });
+
+      if (!st.progress[phrase.id]) {
+        st.progress[phrase.id] = {
+          status: "training",
+          cycleStart: 14,
+          count: 14,
+          masteredAt: null,
+          history: []
+        };
+      }
+    }
+  }
+
+  return st;
 }
 
-/* =========================================================
-   STATE
-   ========================================================= */
+/* ---------- state ---------- */
 function defaultState() {
   const t = now();
-  const topics = seedTopics();
-  const topicIds = topicIdMapFromTopics(topics);
-  const phrases = seedPhrases(topicIds);
-  const premium = seedPremiumProgram();
+  const top = defaultTopic();
 
-  const progress = {};
-  for (const p of phrases) {
-    progress[p.id] = {
-      status: "training",
-      cycleStart: 14,
-      count: 14,
-      masteredAt: null,
-      seenAt: null,
-      isFavorite: false,
-      isDifficult: false,
-      isUrgent: false,
-      history: []
-    };
-  }
+  const st = {
+    app: { schemaVersion: 6, createdAt: t, updatedAt: t },
 
-  const premiumWeekProgress = {};
-  for (const w of premium.weeks) {
-    premiumWeekProgress[w.number] = {
-      status: "locked",
-      startedAt: null,
-      finishedAt: null
-    };
-  }
-  premiumWeekProgress[1].status = "active";
-
-  return {
-    app: {
-      schemaVersion: 6,
-      createdAt: t,
-      updatedAt: t
-    },
     prefs: {
       audio: { enabled: true, volume: 0.35, unlocked: false },
-      haptics: { enabled: true },
-      tiredMode: false,
-      onboardingDone: false
+      haptics: { enabled: true }
     },
+
+    monetization: {
+      premiumUnlocked: false,
+      seenPaywall: false
+    },
+
     stats: {
       coins: 0,
       bestCoins: 0,
@@ -604,148 +961,106 @@ function defaultState() {
       listens: 0,
       calls: 0
     },
+
     habit: {
       firstDay: null,
       days: {}
     },
+
+    aiStudio: {
+      history: []
+    },
+
     bank: {
-      topics,
-      phrases
+      topics: [top],
+      phrases: []
     },
-    premium,
-    progress,
-    premiumWeekProgress,
+
+    progress: {},
+
     session: {
-      currentPhraseId: phrases[0]?.id || null,
-      currentContextId: "ALL",
-      currentPremiumWeek: 1,
+      inProgress: false,
+      queue: [],
+      index: 0,
+      phraseId: null,
       callMode: false,
-      callBusy: false,
-      study: {
-        day: todayKey(),
-        totalMs: 0,
-        running: false,
-        runStartAt: null
-      }
+      topicFilter: "ALL",
+      study: { day: todayKey(), totalMs: 0, running: false, runStartAt: null }
     },
+
     ui: {
-      lastToast: ""
+      lastToast: "",
+      collapsedTopics: {}
     }
   };
+
+  return ensureSeedCatalog(st);
 }
 
-function migrateState(st) {
-  if (!st?.app) return defaultState();
-
-  const fresh = defaultState();
+function migrateToV6(st) {
+  if (!st || !st.app) return defaultState();
 
   st.app.schemaVersion = 6;
-  st.prefs ||= fresh.prefs;
-  st.stats ||= fresh.stats;
-  st.habit ||= fresh.habit;
-  st.habit.days ||= {};
-  st.bank ||= fresh.bank;
-  st.bank.topics ||= fresh.bank.topics;
-  st.bank.phrases ||= fresh.bank.phrases;
+  st.bank ||= {};
+  st.bank.topics ||= [];
+  st.bank.phrases ||= [];
   st.progress ||= {};
-  st.session ||= fresh.session;
-  st.ui ||= { lastToast: "" };
-  st.premium ||= fresh.premium;
-  st.premiumWeekProgress ||= fresh.premiumWeekProgress;
+  st.ui ||= {};
+  st.ui.collapsedTopics ||= {};
+  st.session ||= {};
+  st.session.topicFilter ||= "ALL";
+  st.session.study ||= { day: todayKey(), totalMs: 0, running: false, runStartAt: null };
 
-  st.prefs.audio ||= fresh.prefs.audio;
-  st.prefs.haptics ||= fresh.prefs.haptics;
-  st.prefs.tiredMode ??= false;
-  st.prefs.onboardingDone ??= false;
-
-  st.stats.coins ||= 0;
-  st.stats.bestCoins ||= 0;
-  st.stats.cyclesDone ||= 0;
-  st.stats.phrasesMastered ||= 0;
+  st.stats ||= {};
   st.stats.listens ||= 0;
   st.stats.calls ||= 0;
 
-  st.session.currentContextId ||= "ALL";
-  st.session.currentPremiumWeek ||= 1;
-  st.session.callMode ||= false;
-  st.session.callBusy ||= false;
-  st.session.study ||= fresh.session.study;
+  st.habit ||= { firstDay: null, days: {} };
+  st.habit.days ||= {};
+
+  st.monetization ||= { premiumUnlocked: false, seenPaywall: false };
+  st.aiStudio ||= { history: [] };
 
   let def = st.bank.topics.find(t => t.id === "topic_default");
-  if (!def) st.bank.topics.unshift(fresh.bank.topics[0]);
-
-  if (!st.bank.phrases.length) st.bank.phrases = fresh.bank.phrases;
+  if (!def) {
+    def = defaultTopic();
+    st.bank.topics.unshift(def);
+  }
 
   for (const p of st.bank.phrases) {
-    p.priority ||= 3;
-    p.useHint ||= "";
-    p.comfortHint ||= "";
-    p.newWords ||= [];
-    if (!st.progress[p.id]) {
-      st.progress[p.id] = {
-        status: "training",
-        cycleStart: 14,
-        count: 14,
-        masteredAt: null,
-        seenAt: null,
-        isFavorite: false,
-        isDifficult: false,
-        isUrgent: false,
-        history: []
-      };
-    } else {
-      st.progress[p.id].seenAt ||= null;
-      st.progress[p.id].isFavorite ||= false;
-      st.progress[p.id].isDifficult ||= false;
-      st.progress[p.id].isUrgent ||= false;
-      st.progress[p.id].history ||= [];
-    }
+    if (!p.topicId) p.topicId = def.id;
   }
 
-  for (const w of st.premium.weeks) {
-    if (!st.premiumWeekProgress[w.number]) {
-      st.premiumWeekProgress[w.number] = {
-        status: w.number === 1 ? "active" : "locked",
-        startedAt: null,
-        finishedAt: null
-      };
-    }
-  }
-
-  return st;
+  return ensureSeedCatalog(st);
 }
 
 function loadState() {
-  const raw = localStorage.getItem(LS_KEY);
-  if (raw) {
-    const parsed = safeJSONParse(raw);
-    if (parsed?.app) return migrateState(parsed);
-  }
+  const keys = ["jp_105x_v6", "jp_105x_v5", "jp_105x_v4", "jp_105x_v3", "jp_105x_v2"];
 
-  const legacyKeys = ["nihongo321_v6_beta", "nihongo321_v42", "nihongo321_v4", "jp_105x_v3"];
-  for (const key of legacyKeys) {
-    const legacyRaw = localStorage.getItem(key);
-    if (!legacyRaw) continue;
-    const parsed = safeJSONParse(legacyRaw);
-    if (parsed?.app) return migrateState(parsed);
+  for (const key of keys) {
+    const raw = localStorage.getItem(key);
+    if (!raw) continue;
+    const parsed = safeJSONParse(raw);
+    if (parsed && parsed.app) {
+      const migrated = migrateToV6(parsed);
+      localStorage.setItem(LS_KEY, JSON.stringify(migrated));
+      return migrated;
+    }
   }
 
   return defaultState();
 }
+
+let STATE = loadState();
 
 function saveState() {
   STATE.app.updatedAt = now();
   localStorage.setItem(LS_KEY, JSON.stringify(STATE));
 }
 
-let STATE = loadState();
-saveState();
-
-/* =========================================================
-   AUDIO / HAPTICS
-   ========================================================= */
+/* ---------- áudio ---------- */
 let audioCtx = null;
-let callFlowState = { busy: false, token: 0, timers: [] };
+let callBusy = false;
 
 function unlockAudio() {
   if (STATE.prefs.audio.unlocked) return;
@@ -760,26 +1075,23 @@ function unlockAudio() {
     o.start();
     o.stop(audioCtx.currentTime + 0.01);
   } catch {}
+
   saveState();
 }
 
 function beep(type = "tap") {
   if (!STATE.prefs.audio.enabled) return;
   if (!STATE.prefs.audio.unlocked) return;
-
-  try {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-  } catch {
-    return;
-  }
   if (!audioCtx) return;
 
   const vol = clamp(STATE.prefs.audio.volume ?? 0.35, 0, 1);
   const t0 = audioCtx.currentTime;
+
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
 
-  let freq = 220, dur = 0.06;
+  let freq = 220;
+  let dur = 0.06;
   if (type === "ding") { freq = 660; dur = 0.09; }
   if (type === "pop") { freq = 520; dur = 0.05; }
   if (type === "tuk") { freq = 140; dur = 0.06; }
@@ -787,6 +1099,7 @@ function beep(type = "tap") {
 
   o.type = "sine";
   o.frequency.setValueAtTime(freq, t0);
+
   g.gain.setValueAtTime(0.0001, t0);
   g.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol * 0.14), t0 + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
@@ -802,464 +1115,7 @@ function vibrate(pattern = [10]) {
   navigator.vibrate(pattern);
 }
 
-function clearCallFlow() {
-  callFlowState.token += 1;
-  callFlowState.busy = false;
-  callFlowState.timers.forEach(id => clearTimeout(id));
-  callFlowState.timers = [];
-  STATE.session.callBusy = false;
-  try { speechSynthesis.cancel(); } catch {}
-  const sheet = $("#cycleSheet");
-  if (sheet) {
-    sheet.style.display = "none";
-    sheet.innerHTML = "";
-  }
-  saveState();
-}
-
-function estimateDurationMs(text, rate) {
-  const clean = (text || "").replace(/\s+/g, "");
-  const n = clean.length || 1;
-  const base = 110 * n;
-  const r = clamp(rate, 0.6, 1.2);
-  return base / r;
-}
-
-function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
-  if (!("speechSynthesis" in window)) return false;
-  try { speechSynthesis.cancel(); } catch {}
-
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "ja-JP";
-  u.rate = clamp(rate, 0.6, 1.2);
-  u.onstart = () => onStart && onStart();
-  u.onend = () => onEnd && onEnd();
-  u.onerror = () => onEnd && onEnd();
-  speechSynthesis.speak(u);
-  return true;
-}
-
-function speakPhrase(phrase, rate = 1.0, onDone) {
-  if (!phrase) return;
-  const plain = jpStripFurigana(phrase.jp);
-
-  STATE.stats.listens = (STATE.stats.listens || 0) + 1;
-  habitBump("listens", 1);
-
-  const ok = ttsSpeak(plain, rate, null, onDone);
-  if (!ok) toast("sem áudio. mas você ainda pode treinar lendo.");
-}
-
-function callAndResponse(phrase, rate = 1.0, onDone) {
-  if (!phrase) return;
-  if (callFlowState.busy) {
-    toast("espera esse ciclo terminar ✅");
-    beep("tuk");
-    return;
-  }
-
-  const plain = jpStripFurigana(phrase.jp);
-  const token = ++callFlowState.token;
-  callFlowState.busy = true;
-  STATE.session.callBusy = true;
-  STATE.stats.calls = (STATE.stats.calls || 0) + 1;
-  habitBump("calls", 1);
-  saveState();
-
-  const ok = ttsSpeak(plain, rate, null, () => {});
-  if (!ok) {
-    callFlowState.busy = false;
-    STATE.session.callBusy = false;
-    saveState();
-    toast("sem áudio. mas você ainda pode treinar lendo.");
-    return;
-  }
-
-  const t = estimateDurationMs(plain, rate);
-  const id = setTimeout(() => {
-    if (token !== callFlowState.token) return;
-    showNowYouSheet(token, () => {
-      if (token !== callFlowState.token) return;
-      callFlowState.busy = false;
-      STATE.session.callBusy = false;
-      saveState();
-      onDone && onDone();
-    });
-  }, t + 120);
-
-  callFlowState.timers.push(id);
-}
-
-function showNowYouSheet(token, onDone) {
-  const sheet = $("#cycleSheet");
-  if (!sheet) return;
-
-  sheet.style.display = "block";
-  sheet.innerHTML = `
-    <div class="stamp">agora você ✅</div>
-    <div class="small">Repita em voz alta. Sem pressa.</div>
-    <div class="row row--between">
-      <div class="badge">tempo</div>
-      <div class="badge" id="nyCount">2</div>
-    </div>
-  `;
-
-  let c = 2;
-  const tick = () => {
-    if (token !== callFlowState.token) return;
-    c--;
-    const el = $("#nyCount");
-    if (el) el.textContent = String(Math.max(0, c));
-    if (c <= 0) {
-      sheet.style.display = "none";
-      sheet.innerHTML = "";
-      onDone && onDone();
-      return;
-    }
-    const id = setTimeout(tick, 1000);
-    callFlowState.timers.push(id);
-  };
-  const id = setTimeout(tick, 1000);
-  callFlowState.timers.push(id);
-}
-
-/* =========================================================
-   HABIT / TIMER
-   ========================================================= */
-function ensureHabitToday() {
-  const k = todayKey();
-  STATE.habit ||= { firstDay: null, days: {} };
-  STATE.habit.days ||= {};
-  if (!STATE.habit.firstDay) STATE.habit.firstDay = k;
-  if (!STATE.habit.days[k]) {
-    STATE.habit.days[k] = { ms: 0, cycles: 0, listens: 0, calls: 0 };
-  }
-  return k;
-}
-
-function habitBump(field, amount = 1) {
-  const k = ensureHabitToday();
-  STATE.habit.days[k][field] = (STATE.habit.days[k][field] || 0) + amount;
-  saveState();
-}
-
-function ensureStudyDay() {
-  const k = todayKey();
-  STATE.session.study ||= { day: k, totalMs: 0, running: false, runStartAt: null };
-  if (STATE.session.study.day !== k) {
-    STATE.session.study.day = k;
-    STATE.session.study.totalMs = 0;
-    STATE.session.study.running = false;
-    STATE.session.study.runStartAt = null;
-  }
-  ensureHabitToday();
-}
-
-function getStudyMs() {
-  ensureStudyDay();
-  const st = STATE.session.study;
-  const runningAdd = st.running && st.runStartAt ? (now() - st.runStartAt) : 0;
-  return (st.totalMs || 0) + runningAdd;
-}
-
-function syncHabitMs() {
-  const k = ensureHabitToday();
-  STATE.habit.days[k].ms = getStudyMs();
-  saveState();
-}
-
-let timerTickId = null;
-
-function stopTimerTick() {
-  if (timerTickId) {
-    clearInterval(timerTickId);
-    timerTickId = null;
-  }
-}
-
-function updateStudyUI() {
-  const el = $("#studyTime");
-  const fill = $("#studyFill");
-  if (!el || !fill) return;
-
-  const ms = getStudyMs();
-  el.textContent = fmtMMSS(ms);
-
-  const goal = 10 * 60 * 1000;
-  const pct = clamp(ms / goal, 0, 1);
-  fill.style.transform = `scaleX(${pct})`;
-}
-
-function startTimerTick() {
-  if (timerTickId) return;
-  timerTickId = setInterval(() => {
-    updateStudyUI();
-    syncHabitMs();
-  }, 1000);
-}
-
-function startStudyTimerIfNeeded() {
-  ensureStudyDay();
-
-  const onTrain = route() === "#/train";
-  const st = STATE.session.study;
-
-  if (!onTrain) {
-    if (st.running && st.runStartAt) {
-      st.totalMs += now() - st.runStartAt;
-      st.running = false;
-      st.runStartAt = null;
-      saveState();
-    }
-    stopTimerTick();
-    syncHabitMs();
-    return;
-  }
-
-  if (!st.running) {
-    st.running = true;
-    st.runStartAt = now();
-    saveState();
-  }
-
-  startTimerTick();
-  updateStudyUI();
-}
-
-/* =========================================================
-   STATE HELPERS
-   ========================================================= */
-function getTopic(id) {
-  return (STATE.bank.topics || []).find(t => t.id === id) || null;
-}
-
-function topicName(id) {
-  return getTopic(id)?.name || "Sem contexto";
-}
-
-function getProg(id) {
-  if (!STATE.progress[id]) {
-    STATE.progress[id] = {
-      status: "training",
-      cycleStart: 14,
-      count: 14,
-      masteredAt: null,
-      seenAt: null,
-      isFavorite: false,
-      isDifficult: false,
-      isUrgent: false,
-      history: []
-    };
-  }
-  return STATE.progress[id];
-}
-
-function getPhrase(id) {
-  return (STATE.bank.phrases || []).find(p => p.id === id) || null;
-}
-
-function getWeek(number) {
-  return STATE.premium.weeks.find(w => w.number === number) || null;
-}
-
-function getBlock(id) {
-  return STATE.premium.blocks.find(b => b.id === id) || null;
-}
-
-function getTrack(id) {
-  return STATE.premium.tracks.find(t => t.id === id) || null;
-}
-
-function listContexts() {
-  return STATE.bank.topics || [];
-}
-
-function phrasesByContext(contextId = "ALL") {
-  const list = STATE.bank.phrases || [];
-  if (contextId === "ALL") return list;
-  if (contextId === "FAVORITES") return list.filter(p => getProg(p.id).isFavorite);
-  if (contextId === "DIFFICULT") return list.filter(p => getProg(p.id).isDifficult);
-  if (contextId === "URGENT") return list.filter(p => getProg(p.id).isUrgent);
-  if (contextId === "REVIEW") {
-    return list.filter(p => {
-      const pr = getProg(p.id);
-      return pr.seenAt || pr.isFavorite || pr.isDifficult || pr.isUrgent;
-    });
-  }
-  return list.filter(p => p.topicId === contextId);
-}
-
-function phraseProgressPct(pr) {
-  if (!pr) return 0;
-  if (pr.status === "mastered") return 1;
-  const cycleStart = clamp(pr.cycleStart || 14, 1, 14);
-  const count = clamp(pr.count || cycleStart, 1, cycleStart);
-  const total = 105;
-  const remaining = count + sum1to(cycleStart - 1);
-  const done = clamp(total - remaining, 0, total);
-  return done / total;
-}
-
-function markSeen(id) {
-  const pr = getProg(id);
-  pr.seenAt = pr.seenAt || now();
-  saveState();
-}
-
-function addCoins(amount) {
-  STATE.stats.coins = (STATE.stats.coins || 0) + amount;
-  STATE.stats.bestCoins = Math.max(STATE.stats.bestCoins || 0, STATE.stats.coins);
-  saveState();
-  refreshHUD();
-}
-
-function getContextProgress(contextId) {
-  const list = phrasesByContext(contextId);
-  if (!list.length) return { total: 0, mastered: 0, pct: 0 };
-
-  let mastered = 0;
-  for (const p of list) {
-    if (getProg(p.id).status === "mastered") mastered++;
-  }
-  return {
-    total: list.length,
-    mastered,
-    pct: mastered / list.length
-  };
-}
-
-function getRecommendedContextId() {
-  const all = listContexts();
-  let best = null;
-
-  for (const t of all) {
-    const list = phrasesByContext(t.id);
-    if (!list.length) continue;
-
-    let score = 0;
-    for (const p of list) {
-      const pr = getProg(p.id);
-      if (pr.status !== "mastered") score += (p.priority || 3);
-      if (pr.isUrgent) score += 6;
-      if (pr.isDifficult) score += 4;
-      if (pr.isFavorite) score += 2;
-    }
-
-    if (!best || score > best.score) {
-      best = { id: t.id, score };
-    }
-  }
-
-  return best?.id || "ALL";
-}
-
-function chooseNextPhraseFromContext(contextId) {
-  const list = phrasesByContext(contextId)
-    .slice()
-    .sort((a, b) => {
-      const pa = getProg(a.id);
-      const pb = getProg(b.id);
-
-      const sa =
-        (pa.isUrgent ? 1000 : 0) +
-        (pa.isDifficult ? 400 : 0) +
-        (pa.status !== "mastered" ? 200 : 0) +
-        (a.priority || 3) * 10 -
-        phraseProgressPct(pa) * 50;
-
-      const sb =
-        (pb.isUrgent ? 1000 : 0) +
-        (pb.isDifficult ? 400 : 0) +
-        (pb.status !== "mastered" ? 200 : 0) +
-        (b.priority || 3) * 10 -
-        phraseProgressPct(pb) * 50;
-
-      return sb - sa;
-    });
-
-  return list[0] || null;
-}
-
-function getCurrentPremiumWeek() {
-  return getWeek(STATE.session.currentPremiumWeek) || getWeek(1);
-}
-
-function getPremiumCompletionPct() {
-  const total = STATE.premium.weeks.length;
-  const done = Object.values(STATE.premiumWeekProgress).filter(x => x.status === "done").length;
-  return total ? done / total : 0;
-}
-
-function getCurrentPremiumObjective() {
-  const week = getCurrentPremiumWeek();
-  if (!week) return "Avançar com japonês útil";
-  return week.goal;
-}
-
-function setCurrentPhrase(id) {
-  if (!id) return;
-  STATE.session.currentPhraseId = id;
-  const phrase = getPhrase(id);
-  if (phrase?.topicId) STATE.session.currentContextId = phrase.topicId;
-  markSeen(id);
-  saveState();
-}
-
-function resetCountForPhrase(id) {
-  const pr = getProg(id);
-  const cs = clamp(pr.cycleStart || 14, 1, 14);
-  pr.count = clamp(pr.count || cs, 1, cs);
-}
-
-function gotoNextPhrase() {
-  const current = getPhrase(STATE.session.currentPhraseId);
-  const ctx = current?.topicId || getRecommendedContextId();
-  const list = phrasesByContext(ctx);
-  if (!list.length) return;
-
-  const idx = list.findIndex(x => x.id === current?.id);
-  const next = list[(idx + 1 + list.length) % list.length];
-  setCurrentPhrase(next.id);
-  resetCountForPhrase(next.id);
-  saveState();
-}
-
-function gotoPrevPhrase() {
-  const current = getPhrase(STATE.session.currentPhraseId);
-  const ctx = current?.topicId || getRecommendedContextId();
-  const list = phrasesByContext(ctx);
-  if (!list.length) return;
-
-  const idx = list.findIndex(x => x.id === current?.id);
-  const prev = list[(idx - 1 + list.length) % list.length];
-  setCurrentPhrase(prev.id);
-  resetCountForPhrase(prev.id);
-  saveState();
-}
-
-function toggleFlag(id, field) {
-  const pr = getProg(id);
-  pr[field] = !pr[field];
-  saveState();
-}
-
-function unlockNextPremiumWeek(currentNumber) {
-  const current = STATE.premiumWeekProgress[currentNumber];
-  if (current) {
-    current.status = "done";
-    current.finishedAt = current.finishedAt || now();
-  }
-  const next = STATE.premiumWeekProgress[currentNumber + 1];
-  if (next && next.status === "locked") {
-    next.status = "active";
-    next.startedAt = next.startedAt || now();
-  }
-  saveState();
-}
-
-/* =========================================================
-   FEEDBACK
-   ========================================================= */
+/* ---------- ui base ---------- */
 const APP = $("#app");
 
 function toast(msg) {
@@ -1268,7 +1124,7 @@ function toast(msg) {
   el.textContent = msg;
   el.classList.add("on");
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => el.classList.remove("on"), 1500);
+  toast._t = setTimeout(() => el.classList.remove("on"), 1400);
   STATE.ui.lastToast = msg;
   saveState();
 }
@@ -1308,86 +1164,493 @@ function refreshHUD() {
   if (sub) sub.textContent = `${STATE.stats.cyclesDone || 0} ciclos • ${STATE.stats.phrasesMastered || 0} dominadas`;
 }
 
-/* =========================================================
-   COPY / PRODUCT MESSAGES
-   ========================================================= */
-function getContextMissionLabel(name) {
-  const map = {
-    "Na fábrica": "Sobreviver melhor no turno",
-    "No mercado": "Comprar com mais segurança",
-    "No konbini": "Resolver rápido no caixa",
-    "Na prefeitura": "Resolver documentos sem travar",
-    "No correio": "Enviar sem confusão",
-    "No hospital": "Falar sobre saúde com mais segurança",
-    "Na farmácia": "Comprar remédio com mais clareza",
-    "No banco": "Resolver sua vida financeira",
-    "No trem / estação": "Se deslocar sem se perder",
-    "No aeroporto": "Viajar com mais calma",
-    "No RH": "Falar com o RH com mais segurança",
-    "No celular / internet": "Resolver plano e conexão",
-    "Em casa / apartamento": "Lidar melhor com moradia",
-    "Lixo e reciclagem": "Entender a rotina do prédio",
-    "Emergência": "Ter frases vitais à mão",
-    "No trabalho": "Se comunicar melhor no dia a dia"
-  };
-  return map[name] || "Treino prático para o Japão real";
+/* ---------- premium ---------- */
+function isPremiumUnlocked() {
+  return !!STATE.monetization?.premiumUnlocked;
 }
 
-function getTrainEncouragement(phrase, pr) {
-  if (pr.status === "mastered") return "Essa frase já ficou forte. Agora é só manter viva.";
-  if (pr.isUrgent) return "Boa escolha. Essa pode realmente te ajudar hoje.";
-  if (pr.isDifficult) return "Vai sem pressa. Frase difícil melhora com repetição calma.";
-  if ((phrase.priority || 3) >= 5) return "Essa é daquelas frases que fazem diferença no Japão real.";
-  return phrase.comfortHint || "Sem pressão. Só continuar já é progresso.";
+function isTopicPremium(topicId) {
+  return PREMIUM_TOPIC_IDS.has(topicId);
 }
 
-function getQuickStats() {
-  const today = ensureHabitToday();
-  const day = STATE.habit.days[today] || { ms: 0, cycles: 0 };
+function canAccessTopic(topicId) {
+  if (!isTopicPremium(topicId)) return true;
+  return isPremiumUnlocked();
+}
 
-  let favorites = 0;
-  let difficult = 0;
-  let urgent = 0;
-  for (const id in STATE.progress) {
-    const pr = STATE.progress[id];
-    if (pr.isFavorite) favorites++;
-    if (pr.isDifficult) difficult++;
-    if (pr.isUrgent) urgent++;
+function openCheckout() {
+  if (SALES.checkoutUrl && SALES.checkoutUrl.startsWith("http")) {
+    window.open(SALES.checkoutUrl, "_blank", "noopener,noreferrer");
+    return;
+  }
+  toast("edite o checkoutUrl no app.js");
+}
+
+function markPremiumDemoUnlock() {
+  STATE.monetization.premiumUnlocked = true;
+  saveState();
+  refreshHUD();
+}
+
+function showPremiumLockedMessage(topicId) {
+  const name = topicName(topicId);
+  toast(`${name} é premium 🔒`);
+  STATE.monetization.seenPaywall = true;
+  saveState();
+  nav("#/premium");
+}
+
+/* ---------- habit ---------- */
+function ensureHabitToday() {
+  const k = todayKey();
+  STATE.habit ||= { firstDay: null, days: {} };
+  STATE.habit.days ||= {};
+
+  if (!STATE.habit.firstDay) STATE.habit.firstDay = k;
+
+  if (!STATE.habit.days[k]) {
+    STATE.habit.days[k] = { ms: 0, cycles: 0, listens: 0, calls: 0 };
   }
 
-  return {
-    todayMin: Math.floor((day.ms || 0) / 60000),
-    todayCycles: day.cycles || 0,
-    favorites,
-    difficult,
-    urgent
+  return k;
+}
+
+function syncHabitMs() {
+  const k = ensureHabitToday();
+  const ms = getStudyMs();
+  STATE.habit.days[k].ms = ms;
+  saveState();
+}
+
+function habitBump(_key, field, amount = 1) {
+  const k = ensureHabitToday();
+  STATE.habit.days[k][field] = (STATE.habit.days[k][field] || 0) + amount;
+  saveState();
+}
+
+/* ---------- tópicos ---------- */
+function getTopic(id) {
+  return (STATE.bank.topics || []).find(t => t.id === id) || null;
+}
+
+function topicName(id) {
+  return getTopic(id)?.name || "Sem tópico";
+}
+
+function ensureDefaultTopic() {
+  let def = STATE.bank.topics.find(t => t.id === "topic_default");
+  if (!def) {
+    def = defaultTopic();
+    STATE.bank.topics.unshift(def);
+    saveState();
+  }
+  return def;
+}
+
+function ensurePhrasesHaveValidTopic() {
+  ensureSeedCatalog(STATE);
+  const def = ensureDefaultTopic();
+  const topics = new Set((STATE.bank.topics || []).map(t => t.id));
+  let changed = false;
+
+  for (const p of (STATE.bank.phrases || [])) {
+    if (!p.topicId || !topics.has(p.topicId)) {
+      p.topicId = def.id;
+      changed = true;
+    }
+  }
+
+  if (changed) saveState();
+}
+
+function createTopic(name) {
+  const n = normalizeName(name);
+  if (!n) return null;
+
+  const exists = STATE.bank.topics.some(t => t.name.toLowerCase() === n.toLowerCase());
+  if (exists) return null;
+
+  const t = now();
+  const id = uid("topic");
+  const color = pickTopicColor(STATE.bank.topics.length);
+
+  const topic = { id, name: n, color, createdAt: t, updatedAt: t };
+  STATE.bank.topics.unshift(topic);
+  saveState();
+  return topic;
+}
+
+function createTopicIfMissing(name) {
+  const n = normalizeName(name);
+  if (!n) return ensureDefaultTopic();
+
+  let existing = STATE.bank.topics.find(t => t.name.toLowerCase() === n.toLowerCase());
+  if (existing) return existing;
+
+  const created = createTopic(n);
+  return created || ensureDefaultTopic();
+}
+
+function deleteTopic(topicId) {
+  const def = ensureDefaultTopic();
+  if (topicId === def.id) return false;
+
+  for (const p of STATE.bank.phrases) {
+    if (p.topicId === topicId) p.topicId = def.id;
+  }
+
+  const idx = STATE.bank.topics.findIndex(t => t.id === topicId);
+  if (idx >= 0) STATE.bank.topics.splice(idx, 1);
+
+  if (STATE.ui?.collapsedTopics) delete STATE.ui.collapsedTopics[topicId];
+  if (STATE.session.topicFilter === topicId) STATE.session.topicFilter = "ALL";
+
+  saveState();
+  return true;
+}
+
+function topicPhraseIds(topicId) {
+  return (STATE.bank.phrases || []).filter(p => p.topicId === topicId).map(p => p.id);
+}
+
+function clearTopic(topicId) {
+  const ids = new Set(topicPhraseIds(topicId));
+  if (!ids.size) return 0;
+
+  STATE.bank.phrases = STATE.bank.phrases.filter(p => !ids.has(p.id));
+  for (const id of ids) delete STATE.progress[id];
+
+  if (Array.isArray(STATE.session.queue) && STATE.session.queue.length) {
+    STATE.session.queue = STATE.session.queue.filter(x => !ids.has(x));
+  }
+
+  if (ids.has(STATE.session.phraseId)) {
+    STATE.session.phraseId = STATE.session.queue[0] || null;
+    STATE.session.index = 0;
+  }
+
+  saveState();
+  return ids.size;
+}
+
+/* ---------- fila ---------- */
+function getProg(id) {
+  if (!STATE.progress[id]) {
+    STATE.progress[id] = {
+      status: "training",
+      cycleStart: 14,
+      count: 14,
+      masteredAt: null,
+      history: []
+    };
+  }
+  return STATE.progress[id];
+}
+
+function phrasesByFilter() {
+  const tf = STATE.session.topicFilter || "ALL";
+
+  if (tf === "ALL") {
+    return STATE.bank.phrases.filter(p => canAccessTopic(p.topicId));
+  }
+
+  return STATE.bank.phrases.filter(p => p.topicId === tf && canAccessTopic(p.topicId));
+}
+
+function buildQueue() {
+  const list = phrasesByFilter();
+  const training = [];
+  const mastered = [];
+
+  for (const p of list) {
+    const pr = getProg(p.id);
+    (pr.status === "mastered" ? mastered : training).push(p.id);
+  }
+
+  return training.concat(mastered);
+}
+
+function startAuto() {
+  unlockAudio();
+  STATE.session.inProgress = true;
+  STATE.session.queue = buildQueue();
+  STATE.session.index = 0;
+  STATE.session.phraseId = STATE.session.queue[0] || null;
+  saveState();
+  refreshHUD();
+  nav("#/105x");
+}
+
+function getPhrase(id) {
+  return STATE.bank.phrases.find(p => p.id === id) || null;
+}
+
+function resetCountForPhrase(id) {
+  const pr = getProg(id);
+  const cs = clamp(pr.cycleStart || 14, 1, 14);
+  pr.count = cs;
+  saveState();
+}
+
+function setPhraseById(id) {
+  const idx = STATE.session.queue.indexOf(id);
+  STATE.session.phraseId = id;
+  if (idx >= 0) STATE.session.index = idx;
+  resetCountForPhrase(id);
+  saveState();
+}
+
+function addCoins(amount) {
+  STATE.stats.coins = (STATE.stats.coins || 0) + amount;
+  STATE.stats.bestCoins = Math.max(STATE.stats.bestCoins || 0, STATE.stats.coins);
+  saveState();
+  refreshHUD();
+}
+
+function nextPhrase() {
+  const q = STATE.session.queue;
+  if (!q.length) {
+    toast("sem frases neste filtro");
+    return false;
+  }
+
+  const next = STATE.session.index + 1;
+  if (next >= q.length) {
+    toast("você já está na última frase ✅");
+    beep("tuk");
+    return false;
+  }
+
+  STATE.session.index = next;
+  STATE.session.phraseId = q[STATE.session.index];
+  resetCountForPhrase(STATE.session.phraseId);
+  saveState();
+  return true;
+}
+
+function prevPhrase() {
+  const q = STATE.session.queue;
+  if (!q.length) return false;
+
+  const prev = STATE.session.index - 1;
+  if (prev < 0) {
+    toast("você já está na primeira frase ✅");
+    beep("tuk");
+    return false;
+  }
+
+  STATE.session.index = prev;
+  STATE.session.phraseId = q[STATE.session.index];
+  resetCountForPhrase(STATE.session.phraseId);
+  saveState();
+  return true;
+}
+
+function skipPhrase() {
+  const q = STATE.session.queue;
+  const current = STATE.session.phraseId;
+  if (!current || !q.length) return;
+
+  const idx = STATE.session.index;
+  q.splice(idx, 1);
+  q.push(current);
+
+  STATE.session.index = clamp(idx, 0, q.length - 1);
+  STATE.session.phraseId = q[STATE.session.index];
+
+  resetCountForPhrase(STATE.session.phraseId);
+  saveState();
+
+  toast("pulou. suave. próxima ✅");
+  beep("tuk");
+}
+
+/* ---------- progresso ---------- */
+function sum1to(n) {
+  return (n * (n + 1)) / 2;
+}
+
+function phraseProgressPct(pr) {
+  if (!pr) return 0;
+  if (pr.status === "mastered") return 1;
+
+  const cycleStart = clamp(pr.cycleStart || 14, 1, 14);
+  const count = clamp(pr.count || cycleStart, 1, cycleStart);
+
+  const total = 105;
+  const remaining = count + sum1to(cycleStart - 1);
+  const done = clamp(total - remaining, 0, total);
+
+  return done / total;
+}
+
+/* ---------- áudio de fala ---------- */
+function segmentText(text) {
+  return [...String(text || "")];
+}
+
+function setKanaLine(el, rawText) {
+  const plain = jpStripFurigana(rawText);
+  const segs = segmentText(plain);
+  el.innerHTML = segs.map((s, i) => `<span class="kseg" data-idx="${i}">${escapeHTML(s)}</span>`).join("");
+}
+
+function estimateDurationMs(text, rate) {
+  const clean = (text || "").replace(/\s+/g, "");
+  const n = clean.length || 1;
+  const base = 110 * n;
+  const r = clamp(rate, 0.6, 1.2);
+  return base / r;
+}
+
+function karaokePlay(el, rawText, rate) {
+  const segEls = el.querySelectorAll(".kseg");
+  if (!segEls || segEls.length === 0) return;
+
+  segEls.forEach(sp => sp.classList.remove("on"));
+
+  const plain = jpStripFurigana(rawText);
+  const segs = segmentText(plain);
+  const dur = estimateDurationMs(plain, rate);
+  const n = segs.length || 1;
+  const step = dur / n;
+
+  let idx = 0;
+  const t0 = now();
+  karaokePlay._kill?.();
+
+  let raf = null;
+
+  const tick = () => {
+    const elapsed = now() - t0;
+    const target = clamp(Math.floor(elapsed / step), 0, n);
+
+    while (idx < target) {
+      const sp = el.querySelector(`.kseg[data-idx="${idx}"]`);
+      if (sp) sp.classList.add("on");
+      idx++;
+    }
+
+    if (idx < n) raf = requestAnimationFrame(tick);
+  };
+
+  raf = requestAnimationFrame(tick);
+
+  karaokePlay._kill = () => {
+    if (raf) cancelAnimationFrame(raf);
+    karaokePlay._kill = null;
   };
 }
 
-function getHomeMessage(stats) {
-  if (!STATE.prefs.onboardingDone) return "Aprenda japonês útil sem se perder.";
-  if (stats.todayMin >= 10) return "Hoje você já fez sua parte. Se quiser, só mantenha o contato.";
-  if (stats.todayMin >= 3) return "Você já começou hoje. Mais um pouco e pronto.";
-  return "Hoje, poucos minutos já podem ajudar muito no Japão real.";
+function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
+  if (!("speechSynthesis" in window)) return false;
+
+  try {
+    speechSynthesis.cancel();
+  } catch {}
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = clamp(rate, 0.6, 1.2);
+  u.onstart = () => onStart && onStart();
+  u.onend = () => onEnd && onEnd();
+  u.onerror = () => onEnd && onEnd();
+
+  speechSynthesis.speak(u);
+  return true;
 }
 
-function getHomeSubMessage(stats) {
-  if (stats.urgent > 0) return "Você tem frases marcadas para hoje. Vale revisar antes do trabalho ou da saída.";
-  if (stats.difficult > 0) return "Pode ser um bom dia para treinar o que ainda trava.";
-  return "Abra, ouça, leia, repita e siga. Sem teoria pesada e sem menu confuso.";
+function speakWithKaraoke(jpRaw, rate, kanaEl) {
+  const plain = jpStripFurigana(jpRaw);
+  STATE.stats.listens = (STATE.stats.listens || 0) + 1;
+  habitBump(todayKey(), "listens", 1);
+
+  const ok = ttsSpeak(
+    plain,
+    rate,
+    () => karaokePlay(kanaEl, plain, rate),
+    () => {}
+  );
+
+  if (!ok) toast("sem áudio. mas dá pra treinar lendo.");
 }
 
-/* =========================================================
-   TRAIN ENGINE
-   ========================================================= */
+function callAndResponse(jpRaw, rate, kanaEl, onDone) {
+  if (callBusy) {
+    toast("espera o ciclo terminar ✅");
+    return;
+  }
+
+  callBusy = true;
+
+  const plain = jpStripFurigana(jpRaw);
+  STATE.stats.calls = (STATE.stats.calls || 0) + 1;
+  habitBump(todayKey(), "calls", 1);
+
+  const ok = ttsSpeak(
+    plain,
+    rate,
+    () => karaokePlay(kanaEl, plain, rate),
+    () => {}
+  );
+
+  const t = estimateDurationMs(plain, rate);
+
+  setTimeout(() => {
+    showNowYouSheet(() => {
+      callBusy = false;
+      onDone && onDone();
+    });
+  }, t + 90);
+
+  if (!ok) {
+    callBusy = false;
+    toast("sem áudio. mas dá pra treinar lendo.");
+  }
+}
+
+function showNowYouSheet(onDone) {
+  const sheet = $("#cycleSheet");
+  if (!sheet) return;
+
+  sheet.style.display = "block";
+  sheet.innerHTML = `
+    <div class="stamp">agora você ✅</div>
+    <div class="small">repete em voz alta. sem pressa.</div>
+    <div class="row row--between">
+      <div class="badge">tempo</div>
+      <div class="badge" id="nyCount">2</div>
+    </div>
+  `;
+
+  let c = 2;
+
+  const tick = () => {
+    c--;
+    const el = $("#nyCount");
+    if (el) el.textContent = String(Math.max(0, c));
+
+    if (c <= 0) {
+      sheet.style.display = "none";
+      onDone && onDone();
+      return;
+    }
+
+    setTimeout(tick, 1000);
+  };
+
+  setTimeout(tick, 1000);
+}
+
+/* ---------- engine ---------- */
 function onRepeat() {
   unlockAudio();
-  const pid = STATE.session.currentPhraseId;
+
+  const pid = STATE.session.phraseId;
+  if (!pid) return;
+
   const p = getPhrase(pid);
   if (!p) return;
-
-  clearCallFlow();
-  markSeen(pid);
 
   const pr = getProg(pid);
   const cs = clamp(pr.cycleStart || 14, 1, 14);
@@ -1399,13 +1662,14 @@ function onRepeat() {
     saveState();
     beep("pop");
     vibrate([8]);
-    renderTrainBodyOnly();
+    render105xBodyOnly();
+    renderPhraseListOnly();
     return;
   }
 
   pr.history.push({ at: now(), event: "cycle_done", cycleStart: cs });
   STATE.stats.cyclesDone = (STATE.stats.cyclesDone || 0) + 1;
-  habitBump("cycles", 1);
+  habitBump(todayKey(), "cycles", 1);
 
   addCoins(100);
   floatCoin("+100 🪙");
@@ -1417,666 +1681,1570 @@ function onRepeat() {
   else pr.cycleStart = 1;
 
   let masteredNow = false;
+
   if (pr.cycleStart === 1 && pr.status !== "mastered") {
     pr.status = "mastered";
     pr.masteredAt = now();
     STATE.stats.phrasesMastered = (STATE.stats.phrasesMastered || 0) + 1;
+
     addCoins(500);
     floatCoin("+500 🪙");
     beep("level");
     vibrate([10, 40, 10]);
+
     masteredNow = true;
   }
 
   pr.count = clamp(pr.cycleStart, 1, 14);
   saveState();
 
-  const week = getCurrentPremiumWeek();
-  if (week && week.phraseIds.includes(p.id) && pr.status === "mastered") {
-    const allDone = week.phraseIds.every(id => getProg(id)?.status === "mastered");
-    if (allDone) unlockNextPremiumWeek(week.number);
-  }
-
   showCycleSheet(masteredNow);
-  renderTrainBodyOnly();
+  render105xBodyOnly();
+  renderPhraseListOnly();
 }
 
 function showCycleSheet(masteredNow) {
   const sheet = $("#cycleSheet");
   if (!sheet) return;
+
   sheet.style.display = "block";
+
+  const msg = masteredNow
+    ? "frase dominada. sua memória foi treinada mais uma vez ✅"
+    : "ciclo fechado. mais 100 moedas 🪙";
+
   sheet.innerHTML = `
     <div class="stamp">parabéns 👏</div>
-    <div class="small">
-      ${masteredNow ? "Você dominou uma frase que pode fazer diferença no seu dia." : "Mais um ciclo fechado. Você está fortalecendo algo útil de verdade."}
-    </div>
+    <div class="small">${escapeHTML(msg)}</div>
     <div class="row">
-      <button class="btn btn--ok btn--full" data-action="nextPhrase">continuar ▶</button>
+      <button class="btn btn--ok btn--full" data-action="next">próxima frase ▶</button>
     </div>
   `;
 }
 
-/* =========================================================
-   RENDER HELPERS
-   ========================================================= */
+/* ---------- timer ---------- */
+let timerTickId = null;
+
+function ensureStudyDay() {
+  const k = todayKey();
+
+  if (!STATE.session.study) {
+    STATE.session.study = { day: k, totalMs: 0, running: false, runStartAt: null };
+  }
+
+  if (STATE.session.study.day !== k) {
+    STATE.session.study.day = k;
+    STATE.session.study.totalMs = 0;
+    STATE.session.study.running = false;
+    STATE.session.study.runStartAt = null;
+    saveState();
+  }
+
+  ensureHabitToday();
+}
+
+function startStudyTimerIfOn105x() {
+  ensureStudyDay();
+
+  const on105x = route() === "#/105x";
+  const st = STATE.session.study;
+
+  if (!on105x) {
+    if (st.running && st.runStartAt) {
+      st.totalMs += now() - st.runStartAt;
+      st.running = false;
+      st.runStartAt = null;
+      saveState();
+    }
+    stopTimerTick();
+    syncHabitMs();
+    return;
+  }
+
+  if (!st.running) {
+    st.running = true;
+    st.runStartAt = now();
+    saveState();
+  }
+
+  startTimerTick();
+  updateStudyUI();
+}
+
+function stopTimerTick() {
+  if (timerTickId) {
+    clearInterval(timerTickId);
+    timerTickId = null;
+  }
+}
+
+function startTimerTick() {
+  if (timerTickId) return;
+
+  timerTickId = setInterval(() => {
+    updateStudyUI();
+    syncHabitMs();
+  }, 1000);
+}
+
+function getStudyMs() {
+  ensureStudyDay();
+  const st = STATE.session.study;
+  const runningAdd = st.running && st.runStartAt ? (now() - st.runStartAt) : 0;
+  return (st.totalMs || 0) + runningAdd;
+}
+
+function updateStudyUI() {
+  const el = $("#studyTime");
+  const fill = $("#studyFill");
+  if (!el || !fill) return;
+
+  const ms = getStudyMs();
+  el.textContent = fmtHMSDays(ms);
+
+  const goal = 10 * 60 * 1000;
+  const pct = clamp(ms / goal, 0, 1);
+  fill.style.transform = `scaleX(${pct})`;
+}
+
+/* ---------- render helpers ---------- */
 function renderNewWords(list) {
-  if (!Array.isArray(list) || !list.length) return "";
+  if (!Array.isArray(list) || list.length === 0) return "";
+
+  const rows = list
+    .map(w => `<div class="small">${escapeHTML(formatWordExplanation(w))}</div>`)
+    .join("");
 
   return `
-    <div class="sheet newWordsCard">
-      <div class="small">palavras úteis</div>
-      ${list.map(w => {
-        const jpHtml = jpHasFurigana(w.jp)
-          ? jpToRubyHTML(w.jp)
-          : escapeHTML(w.jp);
-
-        return `<div class="small"><b>${jpHtml}</b> = ${escapeHTML(w.pt)}</div>`;
-      }).join("")}
+    <div class="sheet">
+      <div class="small" style="font-weight:1000;margin-bottom:6px">explicação</div>
+      ${rows}
     </div>
   `;
 }
 
-function pills(selected = "ALL") {
-  const primary = [
-    { id: "URGENT", label: "para hoje" },
-    { id: "DIFFICULT", label: "difíceis" },
-    { id: "FAVORITES", label: "favoritas" },
-    { id: "REVIEW", label: "revisão" }
-  ];
+function renderTopicMiniPills(selectedId) {
+  const topics = STATE.bank.topics || [];
 
   return `
     <div class="topicPills">
-      <button class="pill ${selected === "ALL" ? "on" : ""}" data-action="setContext" data-id="ALL">tudo</button>
-      ${primary.map(x => `<button class="pill ${selected === x.id ? "on" : ""}" data-action="setContext" data-id="${x.id}">${x.label}</button>`).join("")}
+      <button class="pill ${selectedId === "ALL" ? "on" : ""}" data-action="topicFilter" data-id="ALL">tudo</button>
+      ${topics.map(t => `
+        <button class="pill ${t.id === selectedId ? "on" : ""} ${t.color} ${isTopicPremium(t.id) ? "isPremium" : ""}" data-action="topicFilter" data-id="${t.id}">
+          ${escapeHTML(t.name)}
+        </button>
+      `).join("")}
     </div>
   `;
 }
 
-function phraseFlagsBar(phraseId) {
-  const pr = getProg(phraseId);
+function renderTopicHeader(topic, count, collapsed) {
+  const premiumMark = isTopicPremium(topic.id) ? " 🔒" : "";
   return `
-    <div class="row">
-      <button class="btn ${pr.isFavorite ? "btn--ghost" : "btn--muted"}" data-action="toggleFavorite" data-id="${phraseId}">
-        ${pr.isFavorite ? "★ favorita" : "☆ favorita"}
-      </button>
-      <button class="btn ${pr.isDifficult ? "btn--ghost" : "btn--muted"}" data-action="toggleDifficult" data-id="${phraseId}">
-        ${pr.isDifficult ? "● difícil" : "○ difícil"}
-      </button>
-      <button class="btn ${pr.isUrgent ? "btn--ghost" : "btn--muted"}" data-action="toggleUrgent" data-id="${phraseId}">
-        ${pr.isUrgent ? "⚑ para hoje" : "⚐ para hoje"}
-      </button>
+    <button class="topicHdr ${topic.color}" data-action="toggleTopic" data-id="${topic.id}">
+      <span class="topicHdrL">
+        <span class="topicDot"></span>
+        <span class="topicName">${escapeHTML(topic.name)}${premiumMark}</span>
+        <span class="topicCount">${count}</span>
+      </span>
+      <span class="topicChevron">${collapsed ? "▾" : "▴"}</span>
+    </button>
+  `;
+}
+
+/* ---------- landing ---------- */
+function renderLanding() {
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card heroCard stack">
+        <div class="badge">japonês funcional para quem não tem tempo</div>
+        <h1 class="heroTitle">Aprenda o japonês que muda sua vida no Japão, mesmo cansado depois do trabalho.</h1>
+        <p class="heroLead">
+          O Nihongo321 treina sua memória, sua escuta e sua repetição com frases reais para fábrica, mercado, hospital, prefeitura, konbini e vida prática.
+        </p>
+
+        <div class="heroActions">
+          <button class="bigBtn" data-nav="#/home">testar grátis agora</button>
+          <button class="btn btn--ghost btn--full" data-nav="#/premium">ver premium</button>
+        </div>
+
+        <div class="heroMiniStats">
+          <div class="statCard">
+            <div class="statVal">105x</div>
+            <div class="statLbl">método de repetição</div>
+          </div>
+          <div class="statCard">
+            <div class="statVal">5 min</div>
+            <div class="statLbl">treino possível</div>
+          </div>
+          <div class="statCard">
+            <div class="statVal">Sensei IA</div>
+            <div class="statLbl">material sob medida</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">o que o cliente sente</div>
+          <div class="badge">logo no primeiro clique</div>
+        </div>
+
+        <div class="valueGrid">
+          <div class="valueCard">
+            <div class="valueIcon">⏳</div>
+            <h3 class="valueTitle">sem tempo para estudar?</h3>
+            <p class="valueText">O app foi pensado para quem chega cansado do turno e ainda assim quer crescer, aprender e se sentir mais capaz no Japão.</p>
+          </div>
+
+          <div class="valueCard">
+            <div class="valueIcon">🧠</div>
+            <h3 class="valueTitle">memória fraca para idioma?</h3>
+            <p class="valueText">O método 105x trabalha repetição guiada, reforço mental e treino contínuo de memorização funcional.</p>
+          </div>
+
+          <div class="valueCard">
+            <div class="valueIcon">🗣️</div>
+            <h3 class="valueTitle">japonês que serve de verdade</h3>
+            <p class="valueText">Nada de conteúdo solto. Aqui o foco é falar melhor no mercado, no hospital, na fábrica e no cotidiano real.</p>
+          </div>
+
+          <div class="valueCard">
+            <div class="valueIcon">🤖</div>
+            <h3 class="valueTitle">Sensei IA no premium</h3>
+            <p class="valueText">O usuário pede um tema da própria vida e recebe material no formato ideal para estudar dentro do app.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">grátis x premium</div>
+          <div class="badge">claro e confiável</div>
+        </div>
+
+        <div class="planGrid">
+          <div class="planCard">
+            <div class="planTop">
+              <h3 class="planName">Grátis</h3>
+              <span class="planTag">entrada</span>
+            </div>
+            <div class="planPrice">¥0 <small>/ para começar</small></div>
+            <p class="planSub">Ideal para sentir o método e ver valor no primeiro uso.</p>
+            <ul class="planList">
+              <li>treino 105x liberado</li>
+              <li>frases aleatórias para começar hoje</li>
+              <li>ouvir, repetir e memorizar</li>
+              <li>backup local do seu progresso</li>
+            </ul>
+            <div class="planFooter">
+              <button class="btn btn--full" data-nav="#/home">começar grátis</button>
+            </div>
+          </div>
+
+          <div class="planCard premium">
+            <div class="planTop">
+              <h3 class="planName">Premium</h3>
+              <span class="planTag">mais valor</span>
+            </div>
+            <div class="planPrice">${SALES.monthlyPrice} <small>/ mês</small></div>
+            <p class="planSub">Para quem quer aprender japonês focado na própria realidade.</p>
+            <ul class="planList">
+              <li>packs por situação real do Japão</li>
+              <li>fábrica, prefeitura, aeroporto, viagem e mais</li>
+              <li>Sensei IA para criar material sob medida</li>
+              <li>mais clareza, mais retenção e mais evolução</li>
+            </ul>
+            <div class="planFooter">
+              <button class="btn btn--ok btn--full" data-nav="#/premium">ver premium</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ctaBand stack">
+        <div class="badge">sinta a diferença</div>
+        <h2 class="h2">Você não precisa de mais teoria. Precisa de treino certo, repetição certa e frases certas.</h2>
+        <p class="p">Esse app existe para devolver ao brasileiro no Japão a sensação de crescimento, clareza e utilidade real no dia a dia.</p>
+        <div class="storeGrid">
+          <a class="storeBtn" href="${escapeHTML(SALES.playStoreUrl)}" target="_blank" rel="noopener noreferrer">
+            <span class="ic">▶</span><span>Google Play</span>
+          </a>
+          <a class="storeBtn" href="${escapeHTML(SALES.appStoreUrl)}" target="_blank" rel="noopener noreferrer">
+            <span class="ic"></span><span>App Store</span>
+          </a>
+        </div>
+      </section>
     </div>
   `;
 }
 
-/* =========================================================
-   RENDERS
-   ========================================================= */
-function render() {
-  refreshHUD();
-
-  const r = route();
-  if (r === "#/home") return renderHome();
-  if (r === "#/train") return renderTrain();
-  if (r === "#/contexts") return renderContexts();
-  if (r === "#/premium") return renderPremiumHub();
-  if (r.startsWith("#/premium-week/")) return renderPremiumWeek(Number(r.split("/").pop()));
-  if (r === "#/progress") return renderProgress();
-  if (r === "#/settings") return renderSettings();
-  if (r === "#/admin") return renderAdmin();
-  if (r === "#/edit") return renderEdit();
-  if (r === "#/backup") return renderBackup();
-  return nav("#/home");
-}
-
-function renderHome() {
-  const stats = getQuickStats();
-  const recommendedContextId = getRecommendedContextId();
-  const recommendedContext = getTopic(recommendedContextId);
-  const recommendedPhrase = chooseNextPhraseFromContext(recommendedContextId);
-  const currentWeek = getCurrentPremiumWeek();
-  const currentWeekProgress = STATE.premiumWeekProgress[currentWeek.number];
+/* ---------- premium ---------- */
+function renderPremium() {
+  const unlocked = isPremiumUnlocked();
 
   APP.innerHTML = `
     <div class="stack">
-      ${!STATE.prefs.onboardingDone ? `
-        <section class="card homeHero stack">
-          <div class="badge">comece sem pressão</div>
-          <h2 class="h1">Aprenda japonês útil de forma leve.</h2>
-          <p class="p">O NIHONGO321 foi feito para brasileiros no Japão que precisam de frases reais, rápidas e claras para a vida do dia a dia.</p>
-          <div class="grid2">
-            <button class="bigBtn" data-action="finishOnboarding">entendi, vamos começar</button>
-            <button class="btn btn--ghost btn--full" data-nav="#/premium">ver plano premium</button>
-          </div>
-        </section>
-      ` : ""}
+      <section class="premiumHero stack">
+        <div class="badge">premium</div>
+        <h1 class="h1">Desbloqueie o app que estuda com a sua realidade.</h1>
+        <p class="p">
+          O premium libera os tópicos práticos e o Sensei IA, para transformar necessidades reais da sua rotina em material de treino pronto.
+        </p>
 
-      <section class="card homeHero stack">
-        <div class="badge">hoje</div>
-        <h2 class="h1">${escapeHTML(getHomeMessage(stats))}</h2>
-        <p class="p">${escapeHTML(getHomeSubMessage(stats))}</p>
-
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">objetivo do dia</div>
-            <div class="badge">${stats.todayMin} min hoje</div>
-          </div>
-          <div class="itemTitle">${escapeHTML(getCurrentPremiumObjective())}</div>
-          <div class="small">Semana ${currentWeek.number} • ${escapeHTML(currentWeek.title)}</div>
-          <div class="row">
-            <button class="btn btn--ok" data-nav="#/premium-week/${currentWeek.number}">
-              abrir semana atual
-            </button>
-            <button class="btn btn--ghost" data-nav="#/premium">ver programa</button>
-          </div>
-        </div>
-
-        <button class="bigBtn" data-action="startRecommendedTrain">COMEÇAR TREINO</button>
-
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">missão recomendada</div>
-            <div class="badge">${recommendedContext ? escapeHTML(recommendedContext.name) : "geral"}</div>
-          </div>
-
-          ${recommendedContext ? `<div class="small">${escapeHTML(getContextMissionLabel(recommendedContext.name))}</div>` : ""}
-
-          ${recommendedPhrase ? `
-            <div class="item">
-              <p class="itemTitle">${escapeHTML(jpStripFurigana(recommendedPhrase.jp))}</p>
-              <div class="itemMeta">${escapeHTML(recommendedPhrase.pt)}</div>
-              ${recommendedPhrase.useHint ? `<div class="small" style="margin-top:8px">útil para: ${escapeHTML(recommendedPhrase.useHint)}</div>` : ""}
+        <div class="planGrid">
+          <div class="planCard premium">
+            <div class="planTop">
+              <h3 class="planName">Mensal</h3>
+              <span class="planTag">assinatura</span>
             </div>
-          ` : `
-            <div class="small">Seu próximo treino vai aparecer aqui.</div>
-          `}
-
-          <div class="row">
-            <button class="btn btn--ghost" data-action="startRecommendedTrain">treinar agora</button>
-            <button class="btn" data-nav="#/contexts">escolher missão</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">premium</div>
-          <button class="btn btn--ghost" data-nav="#/premium">abrir programa</button>
-        </div>
-
-        <div class="item">
-          <p class="itemTitle">Do japonês de sobrevivência ao japonês que abre portas</p>
-          <div class="itemMeta">${escapeHTML(currentWeek.mission)}</div>
-
-          <div class="pWrap">
-            <div class="pBar"><div class="pFill" style="transform:scaleX(${getPremiumCompletionPct()})"></div></div>
-            <div class="pTxt">${Math.round(getPremiumCompletionPct() * 100)}%</div>
+            <div class="planPrice">${SALES.monthlyPrice}<small>/ mês</small></div>
+            <p class="planSub">Entrada leve para testar o app completo.</p>
+            <ul class="planList">
+              <li>todos os packs premium</li>
+              <li>Sensei IA</li>
+              <li>mais retenção e mais evolução</li>
+            </ul>
+            <div class="planFooter">
+              <button class="btn btn--ok btn--full" data-action="checkout">assinar agora</button>
+            </div>
           </div>
 
-          <div class="small" style="margin-top:8px">
-            status atual: ${currentWeekProgress.status === "done" ? "semana concluída" : currentWeekProgress.status === "active" ? "em andamento" : "bloqueada"}
+          <div class="planCard">
+            <div class="planTop">
+              <h3 class="planName">Semestral</h3>
+              <span class="planTag">economia</span>
+            </div>
+            <div class="planPrice">${SALES.semiannualPrice}<small>/ foco</small></div>
+            <p class="planSub">Melhor para compromisso e receita previsível.</p>
+            <ul class="planList">
+              <li>mais estabilidade no estudo</li>
+              <li>mais tempo para sentir resultado real</li>
+              <li>mais valor por cliente</li>
+            </ul>
+            <div class="planFooter">
+              <button class="btn btn--full" data-action="checkout">quero esse plano</button>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">atalhos úteis</div>
-          <button class="btn btn--ghost" data-nav="#/progress">ver progresso</button>
+        <div class="lockCard">
+          <h3 class="lockTitle">O que entra no premium</h3>
+          <p class="lockText">
+            Fábrica, aeroporto, correio, prefeitura, konbini, mercado, loja de bicicletas, cinema, loja de departamentos, viagem, perguntas práticas e o novo Sensei IA.
+          </p>
         </div>
 
-        ${pills("ALL")}
-
-        <div class="grid2">
-          <button class="btn btn--full" data-action="openContext" data-id="URGENT">frases para hoje</button>
-          <button class="btn btn--full" data-action="openContext" data-id="REVIEW">revisar o que já vi</button>
-          <button class="btn btn--full" data-action="openContext" data-id="DIFFICULT">focar no que trava</button>
-          <button class="btn btn--full" data-action="openContext" data-id="FAVORITES">salvar o que importa</button>
+        <div class="lockCard">
+          <h3 class="lockTitle">O que o Sensei IA faz</h3>
+          <p class="lockText">
+            Você descreve sua necessidade. O app monta frases úteis, tradução, palavras novas e estrutura pronta para entrar no seu treino.
+          </p>
         </div>
+
+        ${unlocked ? `
+          <div class="sheet stack">
+            <div class="badge">premium liberado nesta demo ✅</div>
+            <div class="grid2">
+              <button class="btn btn--ok btn--full" data-nav="#/sensei">abrir Sensei IA</button>
+              <button class="btn btn--full" data-nav="#/home">ir para o app</button>
+            </div>
+          </div>
+        ` : `
+          <div class="sheet stack">
+            <div class="small">Nesta demo, você pode testar o fluxo premium agora.</div>
+            <div class="grid2">
+              <button class="btn btn--ok btn--full" data-action="checkout">abrir checkout</button>
+              <button class="btn btn--ghost btn--full" data-action="unlockDemoPremium">liberar demo</button>
+            </div>
+          </div>
+        `}
+
+        <div class="small">Suporte: ${escapeHTML(SALES.supportEmail)}</div>
       </section>
     </div>
   `;
 }
 
-function renderTrain() {
-  const current = getPhrase(STATE.session.currentPhraseId || chooseNextPhraseFromContext(getRecommendedContextId())?.id);
-  if (!current) {
+/* ---------- home ---------- */
+function renderHome() {
+  ensurePhrasesHaveValidTopic();
+
+  const topicFilter = STATE.session.topicFilter || "ALL";
+  const filterLabel = topicFilter === "ALL" ? "tudo" : topicName(topicFilter);
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">modo estudo</div>
+          <button class="btn btn--ghost" data-nav="#/landing">página de venda</button>
+        </div>
+
+        <h1 class="h1">✨Super Memória✨</h1>
+        <p class="p">Treino curto, japonês útil e repetição que fortalece sua memória mesmo nos dias mais puxados.</p>
+
+        <button class="bigBtn" id="btnStart">COMEÇAR AGORA</button>
+
+        <div class="sep"></div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">separar por conteúdo</div>
+            <div class="badge">agora: ${escapeHTML(filterLabel)}</div>
+          </div>
+
+          <div class="row">
+            <select class="btn selectBtn" id="topicFilterSel" aria-label="filtro de tópicos">
+              <option value="ALL">tudo</option>
+              ${(STATE.bank.topics || []).map(t => {
+                const locked = isTopicPremium(t.id) && !isPremiumUnlocked();
+                return `<option value="${t.id}" ${t.id === topicFilter ? "selected" : ""}>${escapeHTML(t.name)}${locked ? " 🔒" : ""}</option>`;
+              }).join("")}
+            </select>
+            <button class="btn btn--ghost" data-nav="#/manage">gerenciar</button>
+          </div>
+
+          <div class="small">Escolha um foco ou deixe em “tudo” para continuar evoluindo.</div>
+        </div>
+
+        <div class="row">
+          <button class="btn" data-nav="#/105x">ir pro treino</button>
+          <button class="btn" data-nav="#/edit">cadastro</button>
+          <button class="btn" data-nav="#/backup">backup</button>
+          <button class="btn btn--ghost" data-nav="#/skills">skills</button>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">seu tesouro</div>
+          <div class="badge">🪙 ${STATE.stats.coins || 0}</div>
+        </div>
+        <div class="small">ciclos: ${STATE.stats.cyclesDone || 0} • dominadas: ${STATE.stats.phrasesMastered || 0}</div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">Sensei IA</div>
+          <div class="badge">${isPremiumUnlocked() ? "liberado" : "premium"}</div>
+        </div>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Material feito para a sua necessidade</h3>
+          <p class="lockText">
+            Peça frases para fábrica, chefe, hospital, aluguel, viagem, mercado ou qualquer situação da sua vida no Japão.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/sensei">${isPremiumUnlocked() ? "abrir Sensei IA" : "ver Sensei IA"}</button>
+          <button class="btn btn--full" data-nav="#/premium">${isPremiumUnlocked() ? "ver premium" : "desbloquear premium"}</button>
+        </div>
+      </section>
+
+      ${!isPremiumUnlocked() ? `
+        <section class="card stack">
+          <div class="row row--between">
+            <div class="badge">premium</div>
+            <div class="badge">packs práticos</div>
+          </div>
+          <div class="lockCard">
+            <h3 class="lockTitle">Desbloqueie os tópicos que mais pesam na vida real</h3>
+            <p class="lockText">Fábrica, aeroporto, prefeitura, mercado, konbini, viagem e mais, além do Sensei IA.</p>
+          </div>
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-nav="#/premium">ver premium</button>
+            <button class="btn btn--full" data-nav="#/landing">voltar à vitrine</button>
+          </div>
+        </section>
+      ` : ""}
+    </div>
+  `;
+
+  const startBtn = $("#btnStart");
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      startAuto();
+      toast("vamos. só 1 frase por vez ✅");
+    });
+  }
+
+  const sel = $("#topicFilterSel");
+  if (sel) {
+    sel.addEventListener("change", () => {
+      const chosen = sel.value;
+
+      if (chosen !== "ALL" && isTopicPremium(chosen) && !isPremiumUnlocked()) {
+        showPremiumLockedMessage(chosen);
+        sel.value = STATE.session.topicFilter || "ALL";
+        return;
+      }
+
+      STATE.session.topicFilter = chosen;
+      if (STATE.session.inProgress) {
+        STATE.session.queue = buildQueue();
+        STATE.session.index = 0;
+        STATE.session.phraseId = STATE.session.queue[0] || null;
+      }
+
+      saveState();
+      toast("filtro aplicado ✅");
+      beep("ding");
+      render();
+    });
+  }
+}
+
+/* ---------- Sensei IA ---------- */
+const SENSEI_SCENARIO_BANK = {
+  fabrica: [
+    {
+      jp: "この 作業{さぎょう} を もう 一度{いちど} 教{おし}えて ください。",
+      pt: "Por favor, me ensine este trabalho mais uma vez.",
+      newWords: [
+        { jp: "作業{さぎょう}", pt: "trabalho / tarefa" },
+        { jp: "一度{いちど}", pt: "uma vez" },
+        { jp: "教{おし}えて", pt: "ensinar / explicar" }
+      ]
+    },
+    {
+      jp: "次{つぎ} は 何{なに} を すれば いいですか。",
+      pt: "O que eu devo fazer em seguida?",
+      newWords: [
+        { jp: "次{つぎ}", pt: "próximo / em seguida" },
+        { jp: "何{なに}", pt: "o que" },
+        { jp: "すれば いい", pt: "devo fazer" }
+      ]
+    },
+    {
+      jp: "この 機械{きかい} が 止{と}まりました。",
+      pt: "Esta máquina parou.",
+      newWords: [
+        { jp: "機械{きかい}", pt: "máquina" },
+        { jp: "止{と}まりました", pt: "parou" }
+      ]
+    }
+  ],
+  chefe: [
+    {
+      jp: "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
+      pt: "Estou me sentindo um pouco mal.",
+      newWords: [
+        { jp: "少{すこ}し", pt: "um pouco" },
+        { jp: "体調{たいちょう}", pt: "condição física" },
+        { jp: "悪{わる}い", pt: "ruim" }
+      ]
+    },
+    {
+      jp: "明日{あした} は 少{すこ}し 遅{おく}れる かも しれません。",
+      pt: "Amanhã eu talvez me atrase um pouco.",
+      newWords: [
+        { jp: "明日{あした}", pt: "amanhã" },
+        { jp: "遅{おく}れる", pt: "atrasar" },
+        { jp: "かも しれません", pt: "talvez" }
+      ]
+    },
+    {
+      jp: "この 内容{ないよう} で 合{あ}って いますか。",
+      pt: "Está correto assim?",
+      newWords: [
+        { jp: "内容{ないよう}", pt: "conteúdo / instrução" },
+        { jp: "合{あ}って いますか", pt: "está correto?" }
+      ]
+    }
+  ],
+  hospital: [
+    {
+      jp: "昨日{きのう} から 熱{ねつ} が あります。",
+      pt: "Estou com febre desde ontem.",
+      newWords: [
+        { jp: "昨日{きのう}", pt: "ontem" },
+        { jp: "熱{ねつ}", pt: "febre" }
+      ]
+    },
+    {
+      jp: "のど が 痛{いた}いです。",
+      pt: "Estou com dor de garganta.",
+      newWords: [
+        { jp: "のど", pt: "garganta" },
+        { jp: "痛{いた}い", pt: "doer" }
+      ]
+    },
+    {
+      jp: "薬{くすり} は いつ 飲{の}めば いいですか。",
+      pt: "Quando devo tomar o remédio?",
+      newWords: [
+        { jp: "薬{くすり}", pt: "remédio" },
+        { jp: "いつ", pt: "quando" },
+        { jp: "飲{の}めば いい", pt: "devo tomar" }
+      ]
+    }
+  ],
+  prefeitura: [
+    {
+      jp: "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
+      pt: "Por favor, me ensine como preencher este documento.",
+      newWords: [
+        { jp: "書類{しょるい}", pt: "documento" },
+        { jp: "書{か}き方{かた}", pt: "forma de preencher / escrever" },
+        { jp: "教{おし}えて", pt: "ensinar / explicar" }
+      ]
+    },
+    {
+      jp: "必要{ひつよう} な もの は 何{なに} ですか。",
+      pt: "O que é necessário trazer?",
+      newWords: [
+        { jp: "必要{ひつよう}", pt: "necessário" },
+        { jp: "何{なに}", pt: "o que" }
+      ]
+    },
+    {
+      jp: "この 手続{てつづ}き は 今日中{きょうじゅう} に 終{お}わりますか。",
+      pt: "Este procedimento termina ainda hoje?",
+      newWords: [
+        { jp: "手続{てつづ}き", pt: "procedimento" },
+        { jp: "今日中{きょうじゅう}", pt: "ainda hoje" },
+        { jp: "終{お}わりますか", pt: "termina?" }
+      ]
+    }
+  ],
+  mercado: [
+    {
+      jp: "この 商品{しょうひん} は いくら ですか。",
+      pt: "Quanto custa este produto?",
+      newWords: [
+        { jp: "商品{しょうひん}", pt: "produto" },
+        { jp: "いくら", pt: "quanto" }
+      ]
+    },
+    {
+      jp: "賞味期限{しょうみきげん} は いつ ですか。",
+      pt: "Qual é a data de validade?",
+      newWords: [
+        { jp: "賞味期限{しょうみきげん}", pt: "data de validade" },
+        { jp: "いつ", pt: "quando" }
+      ]
+    },
+    {
+      jp: "袋{ふくろ} は 要{い}りません。",
+      pt: "Não preciso de sacola.",
+      newWords: [
+        { jp: "袋{ふくろ}", pt: "sacola" },
+        { jp: "要{い}りません", pt: "não preciso" }
+      ]
+    }
+  ],
+  konbini: [
+    {
+      jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
+      pt: "Por favor, aqueça este bentô.",
+      newWords: [
+        { jp: "お弁当{べんとう}", pt: "marmita / bentô" },
+        { jp: "温{あたた}めて", pt: "aquecer" }
+      ]
+    },
+    {
+      jp: "レジ袋{ぶくろ} は 要{い}りません。",
+      pt: "Não preciso de sacola.",
+      newWords: [
+        { jp: "レジ袋{ぶくろ}", pt: "sacola" },
+        { jp: "要{い}りません", pt: "não preciso" }
+      ]
+    },
+    {
+      jp: "この 支払{しはら}い は ここで できますか。",
+      pt: "Posso fazer este pagamento aqui?",
+      newWords: [
+        { jp: "支払{しはら}い", pt: "pagamento" },
+        { jp: "ここ", pt: "aqui" },
+        { jp: "できますか", pt: "é possível?" }
+      ]
+    }
+  ],
+  aluguel: [
+    {
+      jp: "水漏{みずも}れ して います。",
+      pt: "Está vazando água.",
+      newWords: [
+        { jp: "水漏{みずも}れ", pt: "vazamento de água" },
+        { jp: "して います", pt: "está acontecendo" }
+      ]
+    },
+    {
+      jp: "修理{しゅうり} を お願{ねが}いしたいです。",
+      pt: "Quero solicitar um reparo.",
+      newWords: [
+        { jp: "修理{しゅうり}", pt: "reparo / conserto" },
+        { jp: "お願{ねが}いしたい", pt: "quero solicitar" }
+      ]
+    },
+    {
+      jp: "いつ 来{き}て もらえますか。",
+      pt: "Quando alguém pode vir aqui?",
+      newWords: [
+        { jp: "いつ", pt: "quando" },
+        { jp: "来{き}て もらえますか", pt: "pode vir?" }
+      ]
+    }
+  ],
+  transporte: [
+    {
+      jp: "この 電車{でんしゃ} は 福井{ふくい} に 行{い}きますか。",
+      pt: "Este trem vai para Fukui?",
+      newWords: [
+        { jp: "電車{でんしゃ}", pt: "trem" },
+        { jp: "福井{ふくい}", pt: "Fukui" },
+        { jp: "行{い}きますか", pt: "vai?" }
+      ]
+    },
+    {
+      jp: "何番線{なんばんせん} ですか。",
+      pt: "É na plataforma número qual?",
+      newWords: [
+        { jp: "何番線{なんばんせん}", pt: "qual plataforma" }
+      ]
+    },
+    {
+      jp: "次{つぎ} の 電車{でんしゃ} は 何時{なんじ} ですか。",
+      pt: "A que horas é o próximo trem?",
+      newWords: [
+        { jp: "次{つぎ}", pt: "próximo" },
+        { jp: "電車{でんしゃ}", pt: "trem" },
+        { jp: "何時{なんじ}", pt: "que horas" }
+      ]
+    }
+  ]
+};
+
+function detectSenseiScenario(text) {
+  const t = String(text || "").toLowerCase();
+
+  if (/(fábrica|fabrica|linha|máquina|maquina|chefe|supervisor|rh|turno|produção|producao)/.test(t)) {
+    if (/(chefe|supervisor)/.test(t)) return "chefe";
+    return "fabrica";
+  }
+  if (/(hospital|dor|febre|remédio|remedio|consulta|garganta|médico|medico)/.test(t)) return "hospital";
+  if (/(prefeitura|documento|my number|mynumber|residência|residencia|endereço|endereco)/.test(t)) return "prefeitura";
+  if (/(mercado|supermercado|preço|preco|compras|validade|legume)/.test(t)) return "mercado";
+  if (/(konbini|convenience|bent[oô]|sacola|caixa|pagamento)/.test(t)) return "konbini";
+  if (/(aluguel|apartamento|vazamento|chave|reparo|manutenção|manutencao|leopalace)/.test(t)) return "aluguel";
+  if (/(trem|ônibus|onibus|estação|estacao|transporte|plataforma|passagem)/.test(t)) return "transporte";
+  return "fabrica";
+}
+
+function buildSenseiTopicName(scenario, customTheme) {
+  const map = {
+    fabrica: "Sensei IA • Fábrica",
+    chefe: "Sensei IA • Chefe",
+    hospital: "Sensei IA • Hospital",
+    prefeitura: "Sensei IA • Prefeitura",
+    mercado: "Sensei IA • Mercado",
+    konbini: "Sensei IA • Konbini",
+    aluguel: "Sensei IA • Moradia",
+    transporte: "Sensei IA • Transporte"
+  };
+
+  const clean = normalizeName(customTheme);
+  if (clean) return `Sensei IA • ${clean}`;
+  return map[scenario] || "Sensei IA • Personalizado";
+}
+
+function buildSenseiCoachLine(goal, level, tone) {
+  const parts = [];
+
+  if (goal) parts.push(`Foco: ${goal}.`);
+  if (level) parts.push(`Nível percebido: ${level}.`);
+  if (tone) parts.push(`Tom desejado: ${tone}.`);
+
+  parts.push("Material pensado para estudo prático, repetição e uso imediato no Japão.");
+  return parts.join(" ");
+}
+
+function cloneSenseiPhrase(base, scenario, index, customTheme) {
+  const topicName = buildSenseiTopicName(scenario, customTheme);
+  return {
+    id: uid("sensei"),
+    jp: base.jp,
+    pt: base.pt,
+    newWords: Array.isArray(base.newWords) ? base.newWords.map(x => ({ ...x })) : [],
+    topicName,
+    createdAt: now(),
+    updatedAt: now()
+  };
+}
+
+function generateSenseiMaterial(payload) {
+  const request = String(payload?.request || "").trim();
+  const level = String(payload?.level || "").trim();
+  const tone = String(payload?.tone || "").trim();
+  const customTheme = String(payload?.theme || "").trim();
+
+  const scenario = detectSenseiScenario(`${request} ${customTheme}`);
+  const bank = SENSEI_SCENARIO_BANK[scenario] || SENSEI_SCENARIO_BANK.fabrica;
+
+  const selected = bank.slice(0, 3).map((base, i) => cloneSenseiPhrase(base, scenario, i, customTheme));
+  const coachLine = buildSenseiCoachLine(request, level, tone);
+
+  return {
+    scenario,
+    topicName: buildSenseiTopicName(scenario, customTheme),
+    coachLine,
+    phrases: selected
+  };
+}
+
+function saveSenseiPackToApp(pack) {
+  const topic = createTopicIfMissing(pack.topicName);
+
+  let added = 0;
+
+  for (const phrase of pack.phrases) {
+    const exists = STATE.bank.phrases.some(p =>
+      jpStripFurigana(p.jp) === jpStripFurigana(phrase.jp) &&
+      p.pt.trim().toLowerCase() === phrase.pt.trim().toLowerCase() &&
+      p.topicId === topic.id
+    );
+
+    if (exists) continue;
+
+    const id = uid("ph");
+    const t = now();
+
+    STATE.bank.phrases.unshift({
+      id,
+      jp: phrase.jp,
+      pt: phrase.pt,
+      newWords: phrase.newWords || [],
+      topicId: topic.id,
+      createdAt: t,
+      updatedAt: t
+    });
+
+    STATE.progress[id] = {
+      status: "training",
+      cycleStart: 14,
+      count: 14,
+      masteredAt: null,
+      history: []
+    };
+
+    added++;
+  }
+
+  STATE.aiStudio ||= { history: [] };
+  STATE.aiStudio.history.unshift({
+    id: uid("aihist"),
+    at: now(),
+    topicName: pack.topicName,
+    coachLine: pack.coachLine,
+    phrases: pack.phrases
+  });
+
+  STATE.aiStudio.history = STATE.aiStudio.history.slice(0, 20);
+
+  if (STATE.session.inProgress) {
+    STATE.session.queue = buildQueue();
+    STATE.session.index = 0;
+    STATE.session.phraseId = STATE.session.queue[0] || null;
+  }
+
+  saveState();
+  return { added, topic };
+}
+
+function renderSenseiHistory() {
+  const hist = STATE.aiStudio?.history || [];
+  if (!hist.length) {
+    return `
+      <div class="sheet stack">
+        <div class="small">Ainda não há materiais criados pelo Sensei IA.</div>
+      </div>
+    `;
+  }
+
+  return hist.slice(0, 5).map(item => `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">${escapeHTML(item.topicName)}</div>
+        <div class="small">${fmtDateShort(item.at)}</div>
+      </div>
+      <div class="small">${escapeHTML(item.coachLine)}</div>
+      <div class="small"><b>${item.phrases.length}</b> frases prontas para o app</div>
+    </div>
+  `).join("");
+}
+
+function renderSensei() {
+  if (!isPremiumUnlocked()) {
     APP.innerHTML = `
       <div class="stack">
         <section class="card stack">
-          <div class="badge">sem conteúdo</div>
-          <p class="p">Não encontrei frase para treinar agora.</p>
-          <button class="btn btn--ok" data-nav="#/contexts">escolher missão</button>
+          <div class="badge">Sensei IA</div>
+          <div class="lockCard">
+            <h3 class="lockTitle">O Sensei IA é premium</h3>
+            <p class="lockText">
+              Ele cria material de estudo com base na sua necessidade real, já no formato ideal para o app.
+            </p>
+          </div>
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-nav="#/premium">ver premium</button>
+            <button class="btn btn--full" data-nav="#/home">voltar</button>
+          </div>
         </section>
       </div>
     `;
     return;
   }
 
-  markSeen(current.id);
-  const currentContext = getTopic(current.topicId);
-  const week = getCurrentPremiumWeek();
-
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
-        <div class="studyTop">
-          <div class="badge studyModeBadge">${STATE.prefs.tiredMode ? "modo cansado" : "treino"}</div>
+        <div class="row row--between">
+          <div class="badge">Sensei IA</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
 
-          <div class="studyTimer" aria-label="tempo de estudo">
-            <div class="studyTimerRow">
-              <div class="studyTime"><span>⏱</span> <span id="studyTime">00:00</span></div>
-              <div class="studyHint">meta 10:00</div>
+        <div class="lockCard">
+          <h3 class="lockTitle">Peça material para a sua vida no Japão</h3>
+          <p class="lockText">
+            Exemplo: “quero frases para falar com meu chefe quando eu estiver cansado”, “preciso ir ao hospital”, “quero falar no mercado sem travar”.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="small">qual a sua necessidade agora?</div>
+          <textarea id="senseiRequest" class="btn" style="height:140px; width:100%; text-align:left; padding:12px; border-radius:18px;" placeholder="ex: preciso de frases para falar com meu chefe na fábrica quando eu não entender a tarefa"></textarea>
+
+          <div class="grid2">
+            <div>
+              <div class="small">nível</div>
+              <select id="senseiLevel" class="btn selectBtn" style="width:100%">
+                <option value="iniciante">iniciante</option>
+                <option value="básico">básico</option>
+                <option value="intermediário">intermediário</option>
+              </select>
             </div>
-            <div class="studyBar"><div class="studyFill" id="studyFill"></div></div>
-          </div>
 
-          <div class="studyActions">
-            <button class="miniBtn" title="missões" aria-label="missões" data-nav="#/contexts">🧭</button>
-            <button class="miniBtn" title="premium" aria-label="premium" data-nav="#/premium">★</button>
-          </div>
-        </div>
-
-        <div class="trainTopRow">
-          <div class="badge">${escapeHTML(currentContext?.name || "Sem contexto")}</div>
-          <div class="trainStatusRow">
-            <button class="btn btn--ghost" data-action="toggleCallMode">${STATE.session.callMode ? "call: on" : "call: off"}</button>
-            <button class="btn--exitSubtle" data-nav="#/home">sair</button>
-          </div>
-        </div>
-
-        <div class="sheet stack trainingMood">
-          <div class="badge">semana ${week.number}</div>
-          <div class="trainingMoodTitle">${escapeHTML(week.title)}</div>
-          <div class="small">${escapeHTML(week.mission)}</div>
-        </div>
-
-        ${pills(STATE.session.currentContextId || "ALL")}
-
-        <div class="counterWrap">
-          <div class="counter" id="counterBox">
-            <div style="text-align:center">
-              <div class="counterVal" id="countVal">-</div>
-              <div class="counterSub" id="cycleSub">ciclo</div>
+            <div>
+              <div class="small">tom</div>
+              <select id="senseiTone" class="btn selectBtn" style="width:100%">
+                <option value="educado">educado</option>
+                <option value="direto e respeitoso">direto e respeitoso</option>
+                <option value="muito simples">muito simples</option>
+              </select>
             </div>
           </div>
 
-          <div class="stack" style="min-width:0">
-            <div class="phraseArea">
-              <div class="phraseMeta">
-                <div class="phraseUse">frase atual</div>
-                <div class="badge">${current.priority >= 5 ? "muito útil" : "útil"}</div>
-              </div>
-              <div class="kana" id="kanaLine"></div>
-              <div class="pt" id="ptLine"></div>
-            </div>
+          <div>
+            <div class="small">nome do tópico que será criado</div>
+            <input id="senseiTheme" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: chefe da fábrica, consulta médica, mercado do dia a dia" />
+          </div>
 
-            <div class="row">
-              <button class="btn btn--muted" data-action="speak" data-rate="1">ouvir normal</button>
-              <button class="btn btn--muted" data-action="speak" data-rate="0.8">ouvir devagar</button>
-            </div>
-
-            ${phraseFlagsBar(current.id)}
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="generateSensei">gerar material</button>
+            <button class="btn btn--full" data-nav="#/premium">ver premium</button>
           </div>
         </div>
 
-        <div class="encourage" id="encourageBox"></div>
-
-        <div class="trainActionsBar">
-          <div class="trainActionMain">
-            <button class="btn btn--ok btn--full" data-action="repeat">repeti e entendi</button>
-          </div>
-
-          <div class="trainNavArrows">
-            <button class="navArrow" data-action="prevPhrase" aria-label="frase anterior">◀</button>
-            <button class="navArrow" data-action="nextPhrase" aria-label="próxima frase">▶</button>
-          </div>
-        </div>
-
-        <div id="newWordsBox"></div>
-        <div id="cycleSheet" class="sheet stack" style="display:none"></div>
+        <div id="senseiOutput" class="stack"></div>
       </section>
 
-      ${!STATE.prefs.tiredMode ? `
-        <section class="card stack">
-          <div class="row row--between">
-            <div class="badge">continuação da missão</div>
-            <button class="btn btn--ghost" data-nav="#/premium-week/${week.number}">ver semana</button>
-          </div>
-          <div class="list" id="miniPhraseList"></div>
-        </section>
-      ` : ""}
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">últimos materiais</div>
+          <div class="small">histórico</div>
+        </div>
+        ${renderSenseiHistory()}
+      </section>
+    </div>
+  `;
+}
+
+function renderSenseiOutput(pack) {
+  const box = $("#senseiOutput");
+  if (!box) return;
+
+  box.innerHTML = `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">${escapeHTML(pack.topicName)}</div>
+        <div class="badge">3 frases</div>
+      </div>
+      <div class="small">${escapeHTML(pack.coachLine)}</div>
+    </div>
+
+    ${pack.phrases.map((p, i) => `
+      <div class="sheet stack" style="text-align:left">
+        <div class="badge">frase ${i + 1}</div>
+        <div class="small"><b>JP:</b> ${escapeHTML(jpStripFurigana(p.jp))}</div>
+        <div class="small"><b>PT:</b> ${escapeHTML(p.pt)}</div>
+        <div class="small" style="font-weight:1000;margin-top:4px">explicação</div>
+        ${(p.newWords || []).map(w => `<div class="small">${escapeHTML(formatWordExplanation(w))}</div>`).join("")}
+      </div>
+    `).join("")}
+
+    <div class="grid2">
+      <button class="btn btn--ok btn--full" data-action="saveSenseiPack">salvar no app</button>
+      <button class="btn btn--full" data-nav="#/manage">gerenciar depois</button>
     </div>
   `;
 
-  renderTrainBodyOnly();
-  renderMiniPhraseList();
-  startStudyTimerIfNeeded();
+  box.dataset.pack = JSON.stringify(pack);
+}
+
+/* ---------- treino 105x ---------- */
+function render105x() {
+  ensurePhrasesHaveValidTopic();
+
+  if (!STATE.session.inProgress) {
+    startAuto();
+    return;
+  }
+
+  if (!STATE.session.queue || !STATE.session.queue.length) {
+    STATE.session.queue = buildQueue();
+    STATE.session.index = 0;
+    STATE.session.phraseId = STATE.session.queue[0] || null;
+    saveState();
+  }
+
+  if (!STATE.session.phraseId && STATE.session.queue.length) {
+    STATE.session.phraseId = STATE.session.queue[0];
+    STATE.session.index = 0;
+    saveState();
+  }
+
+  if (!STATE.session.queue.length || !STATE.session.phraseId) {
+    APP.innerHTML = `
+      <div class="stack">
+        <section class="card stack">
+          <div class="badge">sem frases liberadas neste filtro</div>
+          <div class="small">troque para “tudo”, gere material no Sensei IA ou desbloqueie o premium.</div>
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="topicFilter" data-id="ALL">treinar tudo</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/sensei">abrir Sensei IA</button>
+          </div>
+        </section>
+      </div>
+    `;
+    return;
+  }
+
+  const curPhrase = getPhrase(STATE.session.phraseId);
+  const curTopic = curPhrase ? getTopic(curPhrase.topicId) : null;
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack" id="view105x">
+        <div class="studyTop">
+          <div class="badge">105x</div>
+          <div class="studyActions">
+            <button class="miniBtn" title="skills" aria-label="skills" data-nav="#/skills">🏅</button>
+            <button class="miniBtn" title="editar frases" aria-label="editar frases" data-nav="#/manage">✏️</button>
+            <div class="badge">${STATE.session.callMode ? "chamada on" : "chamada off"}</div>
+          </div>
+        </div>
+
+        <div class="row row--between">
+          <div class="badge ${curTopic ? curTopic.color : "tViolet"}">
+            ${curTopic ? escapeHTML(curTopic.name) : "Sem tópico"}${curTopic && isTopicPremium(curTopic.id) ? " 🔒" : ""}
+          </div>
+          <button class="btn btn--muted" data-nav="#/home">sair</button>
+        </div>
+
+        ${renderTopicMiniPills(STATE.session.topicFilter || "ALL")}
+
+        <div class="studyDock">
+          <div class="studyRight">
+            <div class="studyTimer" aria-label="tempo de estudo">
+              <div class="studyTimerRow">
+                <div class="studyTime"><span class="ic">⏱</span> <span id="studyTime">00:00:00 (0d)</span></div>
+                <div class="studyHint">Tempo Dedicado</div>
+              </div>
+              <div class="studyBar"><div class="studyFill" id="studyFill"></div></div>
+            </div>
+
+            <button class="btn btn--ghost callBtn" data-action="toggleCall">
+              ${STATE.session.callMode ? "call: on" : "call: off"}
+            </button>
+          </div>
+        </div>
+
+        <div class="phraseArea" aria-label="frase em treino">
+          <div class="counterMini" id="counterBox" aria-label="contador">
+            <div class="counterVal" id="countVal">-</div>
+            <div class="counterSub" id="cycleSub">ciclo</div>
+          </div>
+
+          <div class="kana" id="kanaLine"></div>
+          <div class="pt" id="ptLine"></div>
+        </div>
+
+        <div id="newWordsBox"></div>
+
+        <div class="primaryRow">
+          <button class="primaryAction" data-action="repeat">repeti e entendi ✅</button>
+        </div>
+
+        <div class="row">
+          <button class="btn btn--muted" data-action="speak" data-rate="1">ouvir normal</button>
+          <button class="btn btn--muted" data-action="speak" data-rate="0.8">ouvir lento</button>
+          <button class="btn btn--muted" data-action="skip">pular</button>
+        </div>
+
+        <div id="cycleSheet" class="sheet stack" style="display:none"></div>
+
+        <div class="row">
+          <button class="btn" data-action="prev">frase anterior</button>
+          <button class="btn" data-action="next">próxima frase</button>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">todas as frases</div>
+          <div class="small">organizado por tópicos</div>
+        </div>
+        <div class="list" id="phraseList"></div>
+      </section>
+    </div>
+  `;
+
+  render105xBodyOnly();
+  renderPhraseListOnly();
+  startStudyTimerIfOn105x();
   ensureBackTopButton();
   updateBackTopVisibility();
 }
 
-function renderTrainBodyOnly() {
-  const phrase = getPhrase(STATE.session.currentPhraseId);
-  if (!phrase) return;
+function renderPhraseListOnly() {
+  const box = $("#phraseList");
+  if (!box) return;
 
-  const pr = getProg(phrase.id);
+  ensurePhrasesHaveValidTopic();
+
+  const byTopic = new Map();
+  const phrases = phrasesByFilter();
+  const topics = (STATE.bank.topics || []).filter(t => canAccessTopic(t.id));
+
+  for (const t of topics) byTopic.set(t.id, []);
+
+  for (const p of phrases) {
+    if (byTopic.has(p.topicId)) byTopic.get(p.topicId).push(p);
+  }
+
+  const collapsedTopics = STATE.ui.collapsedTopics || {};
+  const frag = document.createDocumentFragment();
+
+  for (const t of topics) {
+    const list = byTopic.get(t.id) || [];
+    if (!list.length) continue;
+
+    const collapsed = !!collapsedTopics[t.id];
+    const wrap = document.createElement("div");
+    wrap.className = "topicGroup";
+
+    wrap.innerHTML = `
+      ${renderTopicHeader(t, list.length, collapsed)}
+      <div class="topicBody ${collapsed ? "isCollapsed" : ""}">
+        ${list.map(x => {
+          const pr = getProg(x.id);
+          const st = pr.status === "mastered" ? "dominada ✓" : "treino";
+          const pct = phraseProgressPct(pr);
+          const pctTxt = Math.round(pct * 100);
+
+          return `
+            <div class="item">
+              <div class="itemTop">
+                <div style="min-width:0;text-align:left">
+                  <p class="itemTitle">${escapeHTML(jpStripFurigana(x.jp))}</p>
+                  <div class="itemMeta">${escapeHTML(x.pt)} • ${st}</div>
+
+                  <div class="pWrap" aria-label="progresso">
+                    <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+                    <div class="pTxt">${pctTxt}%</div>
+                  </div>
+                </div>
+                <button class="btn" data-action="goto" data-id="${x.id}">IR</button>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+
+    frag.appendChild(wrap);
+  }
+
+  box.innerHTML = "";
+  box.appendChild(frag);
+}
+
+function render105xBodyOnly() {
+  const pid = STATE.session.phraseId;
+  const p = getPhrase(pid);
+  const pr = getProg(pid);
+  if (!p) return;
+
   const cs = clamp(pr.cycleStart || 14, 1, 14);
   const count = clamp(pr.count || cs, 1, cs);
 
   const countVal = $("#countVal");
   const cycleSub = $("#cycleSub");
-  const kanaLine = $("#kanaLine");
+  const kanaEl = $("#kanaLine");
   const ptLine = $("#ptLine");
-  const newWordsBox = $("#newWordsBox");
-  const encourageBox = $("#encourageBox");
+  const nw = $("#newWordsBox");
+  const sheet = $("#cycleSheet");
 
   if (countVal) countVal.textContent = String(count);
   if (cycleSub) cycleSub.textContent = `ciclo ${cs} → 1`;
-  if (kanaLine) setKanaLine(kanaLine, phrase.jp);
-  if (ptLine) ptLine.textContent = phrase.pt;
-  if (newWordsBox) newWordsBox.innerHTML = renderNewWords(phrase.newWords || []);
-  if (encourageBox) encourageBox.textContent = getTrainEncouragement(phrase, pr);
+
+  if (kanaEl) setKanaLine(kanaEl, p.jp);
+  if (ptLine) ptLine.textContent = p.pt;
+  if (nw) nw.innerHTML = renderNewWords(p.newWords || []);
+
+  if (sheet && sheet.style.display === "block" && count > 1) {
+    sheet.style.display = "none";
+  }
 }
 
-function renderMiniPhraseList() {
-  const box = $("#miniPhraseList");
-  if (!box) return;
+/* ---------- edit ---------- */
+function parseNewWords(input) {
+  const raw = String(input || "").trim();
+  if (!raw) return [];
 
-  const week = getCurrentPremiumWeek();
-  const currentId = STATE.session.currentPhraseId;
-  const list = week.phraseIds
-    .map(id => getPhrase(id))
-    .filter(Boolean)
-    .filter(p => p.id !== currentId)
-    .slice(0, 4);
+  const parts = raw.split(",").map(s => s.trim()).filter(Boolean);
+  const out = [];
 
-  if (!list.length) {
-    box.innerHTML = `<div class="small">sem outras frases desta semana ainda.</div>`;
-    return;
+  for (const part of parts) {
+    const [jp, pt] = part.split("=").map(s => (s || "").trim());
+    if (!jp || !pt) continue;
+    out.push({ jp, pt });
   }
 
-  box.innerHTML = list.map(p => {
-    const pr = getProg(p.id);
-    const pct = phraseProgressPct(pr);
-    return `
-      <div class="item">
-        <div class="itemTop">
-          <div style="min-width:0">
-            <p class="itemTitle">${escapeHTML(jpStripFurigana(p.jp))}</p>
-            <div class="itemMeta">${escapeHTML(p.pt)}</div>
-            <div class="pWrap">
-              <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
-              <div class="pTxt">${Math.round(pct * 100)}%</div>
-            </div>
-          </div>
-          <button class="btn btn--ghost" data-action="jumpToPhrase" data-id="${p.id}">ir</button>
+  return out;
+}
+
+function renderTopicSelect(selectedId) {
+  const topics = STATE.bank.topics || [];
+  const sel = selectedId || ensureDefaultTopic().id;
+
+  return `
+    <select class="btn selectBtn" id="topicSel" aria-label="selecionar tópico">
+      ${topics.map(t => `<option value="${t.id}" ${t.id === sel ? "selected" : ""}>${escapeHTML(t.name)}</option>`).join("")}
+    </select>
+  `;
+}
+
+function renderEdit(editingId = null) {
+  ensurePhrasesHaveValidTopic();
+
+  const { params } = routeInfo();
+  const preTopic = params.topic ? String(params.topic) : null;
+  const editing = editingId ? getPhrase(editingId) : null;
+
+  const jpVal = editing ? editing.jp : "";
+  const ptVal = editing ? editing.pt : "";
+  const nwVal = editing && Array.isArray(editing.newWords)
+    ? editing.newWords.map(x => `${x.jp}=${x.pt}`).join(", ")
+    : "";
+
+  const topicId = editing
+    ? (editing.topicId || ensureDefaultTopic().id)
+    : (preTopic && getTopic(preTopic) ? preTopic : ensureDefaultTopic().id);
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">${editing ? "editar frase" : "cadastro"}</div>
+          <button class="btn" data-nav="#/home">voltar</button>
         </div>
+
+        <div class="sheet stack">
+          <div class="row row--between" style="gap:10px">
+            <div class="badge">separar por conteúdo</div>
+            <button class="btn btn--ghost" data-nav="#/manage">gerenciar</button>
+          </div>
+
+          ${renderTopicSelect(topicId)}
+
+          <div class="sep"></div>
+
+          <div class="small">jp (aceita kanji. furigana manual: 仕事{しごと}. parênteses （ ） ok)</div>
+          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 私{わたし} の名前{なまえ} は あきおです。" value="${escapeHTML(jpVal)}" />
+          <div class="small">pt</div>
+          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: meu nome é Akio." value="${escapeHTML(ptVal)}" />
+          <div class="small">palavras novas (opcional) formato: jp=pt, jp=pt</div>
+          <input id="inNW" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 名前{なまえ}=nome" value="${escapeHTML(nwVal)}" />
+
+          <button class="btn btn--ok btn--full" data-action="${editing ? "saveEdit" : "addPhrase"}" data-id="${editing ? editing.id : ""}">
+            ${editing ? "salvar alterações" : "salvar frase"}
+          </button>
+
+          ${editing ? `<button class="btn btn--muted btn--full" data-nav="#/manage">voltar pro gerenciar</button>` : ""}
+
+          <div class="small" id="editMsg"></div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+/* ---------- manage ---------- */
+function renderManage() {
+  ensurePhrasesHaveValidTopic();
+
+  const def = ensureDefaultTopic();
+  const topics = STATE.bank.topics || [];
+  const collapsed = STATE.ui.collapsedTopics || {};
+
+  const byTopic = new Map();
+  for (const t of topics) byTopic.set(t.id, []);
+
+  for (const p of STATE.bank.phrases) {
+    if (!byTopic.has(p.topicId)) byTopic.set(def.id, byTopic.get(def.id) || []);
+    (byTopic.get(p.topicId) || byTopic.get(def.id)).push(p);
+  }
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">gerenciar</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
+
+        <div class="sheet stack">
+          <div class="small">criar tópico novo</div>
+          <div class="row" style="gap:10px; flex-wrap:nowrap">
+            <input id="topicNewName2" class="btn" style="flex:1; min-width:0" placeholder="ex: fábrica, segurança, aeroporto..." />
+            <button class="btn btn--ok" data-action="addTopic">adicionar</button>
+          </div>
+          <div class="small" id="topicMsg"></div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="row row--between">
+          <div class="badge">tópicos + frases</div>
+          <button class="btn btn--ghost" data-nav="#/edit">novo cadastro</button>
+        </div>
+
+        <div class="small">furigana em cima usando { }. exemplo: 名前{なまえ}</div>
+
+        <div class="list" id="manageTopics"></div>
+      </section>
+    </div>
+  `;
+
+  const root = $("#manageTopics");
+  const frag = document.createDocumentFragment();
+
+  for (const t of topics) {
+    const list = byTopic.get(t.id) || [];
+    const isCollapsed = !!collapsed[t.id];
+    const canDeleteTopic = t.id !== def.id;
+    const hasPhrases = list.length > 0;
+
+    const wrap = document.createElement("div");
+    wrap.className = "topicGroup";
+
+    const toolsHtml = `
+      <div class="topicTools">
+        <button class="btn btn--ok" data-action="addPhraseToTopic" data-id="${t.id}">adicionar</button>
+        ${hasPhrases ? `<button class="btn btn--muted" data-action="clearTopic" data-id="${t.id}">limpar</button>` : ``}
+        ${canDeleteTopic ? `<button class="btn btn--bad" data-action="deleteTopic" data-id="${t.id}">excluir</button>` : `<span class="badge">fixo</span>`}
       </div>
     `;
-  }).join("");
-}
 
-function renderContexts() {
-  const contexts = listContexts();
+    const bodyHtml = `
+      <div class="topicBody ${isCollapsed ? "isCollapsed" : ""}">
+        ${toolsHtml}
+        ${hasPhrases ? `
+          <div class="reorderList" data-reorder-list="1" data-topic="${t.id}">
+            ${list.map(p => {
+              const pr = getProg(p.id);
+              const st = pr.status === "mastered" ? "dominada ✓" : "treino";
 
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">missões práticas</div>
-          <button class="btn" data-nav="#/home">voltar</button>
-        </div>
-
-        <h2 class="h1">Escolha o que resolve sua vida hoje.</h2>
-        <p class="p">Aqui os contextos aparecem como missões reais do Japão, não como categorias frias.</p>
-
-        ${pills("ALL")}
-      </section>
-
-      <section class="card stack">
-        <div class="list">
-          ${contexts.map(t => {
-            const stats = getContextProgress(t.id);
-            const next = chooseNextPhraseFromContext(t.id);
-            return `
-              <div class="item">
-                <div class="itemTop">
-                  <div style="min-width:0">
-                    <p class="itemTitle">${escapeHTML(t.name)}</p>
-                    <div class="itemMeta">${escapeHTML(getContextMissionLabel(t.name))}</div>
-                    <div class="pWrap">
-                      <div class="pBar"><div class="pFill" style="transform:scaleX(${stats.pct})"></div></div>
-                      <div class="pTxt">${Math.round(stats.pct * 100)}%</div>
+              return `
+                <div class="reorderItem" data-reorder-item="1" data-topic="${t.id}" data-id="${p.id}">
+                  <div class="reorderTop">
+                    <div class="reorderLeft">
+                      <p class="itemTitle">${escapeHTML(jpStripFurigana(p.jp))}</p>
+                      <div class="itemMeta">${escapeHTML(p.pt)} • ${st}</div>
                     </div>
-                    ${next ? `<div class="small" style="margin-top:8px">próxima útil: ${escapeHTML(jpStripFurigana(next.jp))}</div>` : ``}
-                  </div>
-                  <div class="row">
-                    <button class="btn btn--ok" data-action="startContextTrain" data-id="${t.id}">treinar</button>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </section>
-    </div>
-  `;
-}
 
-function renderPremiumHub() {
-  const pct = getPremiumCompletionPct();
-
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card homeHero stack">
-        <div class="row row--between">
-          <div class="badge">premium</div>
-          <button class="btn" data-nav="#/home">voltar</button>
-        </div>
-
-        <h2 class="h1">Do japonês de sobrevivência ao japonês que abre portas.</h2>
-        <p class="p">Este programa premium foi pensado como uma virada de chave real para brasileiros no Japão que querem entender melhor nativos e crescer profissionalmente.</p>
-
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">progresso do programa</div>
-            <div class="badge">${Math.round(pct * 100)}%</div>
-          </div>
-          <div class="pWrap">
-            <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
-            <div class="pTxt">${Math.round(pct * 100)}%</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="badge">blocos</div>
-        <div class="list">
-          ${STATE.premium.blocks.map(block => `
-            <div class="item">
-              <p class="itemTitle">${escapeHTML(block.title)}</p>
-              <div class="itemMeta">${escapeHTML(block.subtitle)}</div>
-              <div class="small" style="margin-top:8px">Semanas: ${block.weeks.join(", ")}</div>
-            </div>
-          `).join("")}
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="badge">trilhas</div>
-        <div class="list">
-          ${STATE.premium.tracks.map(track => `
-            <div class="item">
-              <p class="itemTitle">${escapeHTML(track.title)}</p>
-              <div class="itemMeta">${escapeHTML(track.objective)}</div>
-            </div>
-          `).join("")}
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="badge">cronograma de 24 semanas</div>
-        <div class="list">
-          ${STATE.premium.weeks.map(week => {
-            const prog = STATE.premiumWeekProgress[week.number];
-            const statusLabel =
-              prog.status === "done" ? "concluída" :
-              prog.status === "active" ? "em andamento" :
-              "bloqueada";
-
-            return `
-              <div class="item">
-                <div class="itemTop">
-                  <div style="min-width:0">
-                    <p class="itemTitle">Semana ${week.number} · ${escapeHTML(week.title)}</p>
-                    <div class="itemMeta">${escapeHTML(week.mission)}</div>
-                    <div class="small" style="margin-top:8px">resultado: ${escapeHTML(week.result)}</div>
-                  </div>
-                  <div class="row">
-                    <span class="badge">${statusLabel}</span>
-                    <button class="btn btn--ghost" data-nav="#/premium-week/${week.number}">abrir</button>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-function renderPremiumWeek(weekNumber) {
-  const week = getWeek(weekNumber);
-  if (!week) return nav("#/premium");
-
-  const block = getBlock(week.blockId);
-  const track = getTrack(week.trackId);
-  const prog = STATE.premiumWeekProgress[week.number];
-  const phrases = week.phraseIds.map(id => getPhrase(id)).filter(Boolean);
-
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card homeHero stack">
-        <div class="row row--between">
-          <div class="badge">semana ${week.number}</div>
-          <button class="btn" data-nav="#/premium">voltar</button>
-        </div>
-
-        <h2 class="h1">${escapeHTML(week.title)}</h2>
-        <p class="p">${escapeHTML(week.mission)}</p>
-
-        <div class="sheet stack">
-          <div class="small">bloco: ${escapeHTML(block?.title || "")}</div>
-          <div class="small">trilha: ${escapeHTML(track?.title || "")}</div>
-          <div class="small">objetivo: ${escapeHTML(week.goal)}</div>
-          <div class="small">resultado esperado: ${escapeHTML(week.result)}</div>
-        </div>
-
-        <div class="row">
-          <span class="badge">${prog.status === "done" ? "concluída" : prog.status === "active" ? "em andamento" : "bloqueada"}</span>
-          <button class="btn btn--ok" data-action="startPremiumWeek" data-week="${week.number}">treinar esta semana</button>
-          ${prog.status !== "done" ? `<button class="btn btn--ghost" data-action="completePremiumWeek" data-week="${week.number}">marcar como concluída</button>` : ``}
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="badge">foco da semana</div>
-        <div class="row">
-          ${week.focus.map(f => `<span class="badge">${escapeHTML(f)}</span>`).join("")}
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="badge">frases centrais</div>
-        <div class="list">
-          ${phrases.map(p => {
-            const pr = getProg(p.id);
-            const pct = phraseProgressPct(pr);
-            return `
-              <div class="item">
-                <div class="itemTop">
-                  <div style="min-width:0">
-                    <p class="itemTitle">${escapeHTML(jpStripFurigana(p.jp))}</p>
-                    <div class="itemMeta">${escapeHTML(p.pt)}</div>
-                    ${p.useHint ? `<div class="small" style="margin-top:8px">útil para: ${escapeHTML(p.useHint)}</div>` : ``}
-                    <div class="pWrap">
-                      <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
-                      <div class="pTxt">${Math.round(pct * 100)}%</div>
+                    <div class="row" style="gap:8px">
+                      <div class="dragHandle" title="segure e arraste" aria-label="segure e arraste" data-action="dragHandle">≡</div>
+                      <button class="btn btn--ghost" data-action="editPhrase" data-id="${p.id}">editar</button>
+                      <button class="btn btn--bad" data-action="deletePhrase" data-id="${p.id}">excluir</button>
                     </div>
                   </div>
-                  <button class="btn btn--ghost" data-action="trainPhraseFromWeek" data-id="${p.id}" data-week="${week.number}">treinar</button>
                 </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </section>
-    </div>
-  `;
+              `;
+            }).join("")}
+          </div>
+          <div class="small">dica: segure no ≡ e arraste para ordenar.</div>
+        ` : `
+          <div class="sheet stack">
+            <div class="small">sem frases aqui ainda.</div>
+          </div>
+        `}
+      </div>
+    `;
+
+    wrap.innerHTML = `${renderTopicHeader(t, list.length, isCollapsed)}${bodyHtml}`;
+    frag.appendChild(wrap);
+  }
+
+  root.innerHTML = "";
+  root.appendChild(frag);
+
+  initReorderable();
 }
 
-function renderProgress() {
-  const days = Object.keys(STATE.habit.days || {}).sort();
-  const activeDays = days.filter(k => {
-    const d = STATE.habit.days[k];
-    return ((d.ms || 0) / 60000) >= 2 || (d.cycles || 0) > 0;
-  }).length;
+/* ---------- drag ---------- */
+let DRAG = null;
 
-  const totalMin = Math.floor(
-    days.reduce((acc, k) => acc + ((STATE.habit.days[k]?.ms || 0) / 60000), 0)
-  );
+function initReorderable() {
+  DRAG = null;
+}
 
+function applyTopicOrder(topicId, orderedIds) {
+  if (!topicId || !Array.isArray(orderedIds) || !orderedIds.length) return;
+
+  const set = new Set(orderedIds);
+  const arr = STATE.bank.phrases;
+
+  let firstIndex = -1;
+  for (let i = 0; i < arr.length; i++) {
+    if (set.has(arr[i].id)) {
+      firstIndex = i;
+      break;
+    }
+  }
+
+  if (firstIndex < 0) firstIndex = arr.length;
+
+  const removed = [];
+  const kept = [];
+
+  for (const p of arr) {
+    if (set.has(p.id)) removed.push(p);
+    else kept.push(p);
+  }
+
+  const map = new Map(removed.map(p => [p.id, p]));
+  const ordered = orderedIds.map(id => map.get(id)).filter(Boolean);
+
+  kept.splice(firstIndex, 0, ...ordered);
+  STATE.bank.phrases = kept;
+  saveState();
+}
+
+/* ---------- delete phrase ---------- */
+function deletePhraseById(id) {
+  const idx = STATE.bank.phrases.findIndex(p => p.id === id);
+  if (idx < 0) return false;
+
+  STATE.bank.phrases.splice(idx, 1);
+  delete STATE.progress[id];
+
+  if (Array.isArray(STATE.session.queue) && STATE.session.queue.length) {
+    STATE.session.queue = STATE.session.queue.filter(x => x !== id);
+  }
+
+  if (STATE.session.phraseId === id) {
+    if (!STATE.session.queue.length) {
+      STATE.session.phraseId = null;
+      STATE.session.index = 0;
+    } else {
+      STATE.session.index = clamp(STATE.session.index, 0, STATE.session.queue.length - 1);
+      STATE.session.phraseId = STATE.session.queue[STATE.session.index] || STATE.session.queue[0];
+      resetCountForPhrase(STATE.session.phraseId);
+    }
+  }
+
+  saveState();
+  return true;
+}
+
+/* ---------- backup ---------- */
+function validateAndLoadBackup(parsed, msgEl) {
+  if (!parsed || parsed.schema !== "jp_105x_backup_v1" || !parsed.state) {
+    if (msgEl) msgEl.textContent = "json inválido.";
+    toast("json inválido");
+    beep("tuk");
+    return false;
+  }
+
+  const st = parsed.state;
+  if (!st.bank?.phrases || !Array.isArray(st.bank.phrases)) {
+    if (msgEl) msgEl.textContent = "backup incompleto.";
+    toast("backup incompleto");
+    beep("tuk");
+    return false;
+  }
+
+  for (const p of st.bank.phrases) {
+    if (!isValidJP(p.jp || "")) {
+      if (msgEl) msgEl.textContent = "backup tem jp inválido.";
+      toast("jp inválido no backup");
+      beep("tuk");
+      return false;
+    }
+  }
+
+  STATE = migrateToV6(st);
+  saveState();
+  refreshHUD();
+
+  if (msgEl) msgEl.textContent = "importado ✅";
+  toast("importado ✅");
+  beep("ding");
+  nav("#/home");
+  return true;
+}
+
+function renderBackup() {
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">progresso</div>
+          <div class="badge">backup</div>
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <h2 class="h1">Seu japonês funcional está ficando mais forte.</h2>
-        <p class="p">Sem parecer painel técnico. Só o que realmente ajuda você a continuar.</p>
-
-        <div class="grid2">
-          <div class="item">
-            <p class="itemTitle">${activeDays}</p>
-            <div class="itemMeta">dias ativos</div>
+        <div class="sheet stack">
+          <div class="badge">exportar</div>
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="exportCopy">copiar json</button>
+            <button class="btn btn--ok btn--full" data-action="exportFile">baixar arquivo</button>
           </div>
-          <div class="item">
-            <p class="itemTitle">${totalMin}</p>
-            <div class="itemMeta">minutos estudados</div>
-          </div>
-          <div class="item">
-            <p class="itemTitle">${STATE.stats.cyclesDone || 0}</p>
-            <div class="itemMeta">ciclos concluídos</div>
-          </div>
-          <div class="item">
-            <p class="itemTitle">${STATE.stats.phrasesMastered || 0}</p>
-            <div class="itemMeta">frases dominadas</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">progresso premium</div>
-          <button class="btn btn--ghost" data-nav="#/premium">ver programa</button>
+          <div class="small">No celular, “baixar arquivo” costuma ser o mais confiável.</div>
         </div>
 
-        <div class="item">
-          <p class="itemTitle">Conclusão do programa</p>
-          <div class="pWrap">
-            <div class="pBar"><div class="pFill" style="transform:scaleX(${getPremiumCompletionPct()})"></div></div>
-            <div class="pTxt">${Math.round(getPremiumCompletionPct() * 100)}%</div>
+        <div class="sheet stack">
+          <div class="badge">importar</div>
+          <div class="grid2">
+            <button class="btn btn--muted btn--full" data-action="importText">importar do texto</button>
+            <button class="btn btn--muted btn--full" data-action="importFile">importar arquivo</button>
           </div>
+
+          <input id="fileImport" type="file" accept=".json,application/json" style="display:none" />
+
+          <div class="small">cole aqui para importar</div>
+          <textarea id="importBox" class="btn" style="height:160px; width:100%; text-align:left; padding:12px; border-radius:18px;"></textarea>
+          <div class="small" id="backupMsg"></div>
         </div>
       </section>
     </div>
   `;
 }
 
+/* ---------- settings ---------- */
 function renderSettings() {
   APP.innerHTML = `
     <div class="stack">
@@ -2089,176 +3257,317 @@ function renderSettings() {
         <div class="grid2">
           <button class="btn btn--full" data-action="toggleSound">${STATE.prefs.audio.enabled ? "som: ligado" : "som: desligado"}</button>
           <button class="btn btn--full" data-action="toggleVibe">${STATE.prefs.haptics.enabled ? "vibração: ligada" : "vibração: desligada"}</button>
-          <button class="btn btn--full" data-action="toggleTiredMode">${STATE.prefs.tiredMode ? "modo cansado: ligado" : "modo cansado: desligado"}</button>
-          <button class="btn btn--full" data-action="toggleCallMode">${STATE.session.callMode ? "call and response: ligado" : "call and response: desligado"}</button>
         </div>
 
         <div class="sheet stack">
-          <div class="small">volume do som</div>
+          <div class="small">volume do som (leve)</div>
           <input id="vol" type="range" min="0" max="1" step="0.05" value="${STATE.prefs.audio.volume ?? 0.35}" />
-          <div class="small">o som só toca depois do primeiro toque no app.</div>
+          <div class="small">som só toca depois do primeiro toque.</div>
         </div>
 
-        <div class="row">
-          <button class="btn btn--ghost" data-nav="#/admin">área avançada</button>
-          <button class="btn btn--bad" data-action="resetAll">resetar tudo</button>
+        <div class="sep"></div>
+
+        <div class="sheet stack">
+          <div class="small">demo premium</div>
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="unlockDemoPremium">liberar premium</button>
+            <button class="btn btn--muted btn--full" data-action="lockDemoPremium">bloquear premium</button>
+          </div>
         </div>
+
+        <div class="sep"></div>
+        <button class="btn btn--bad btn--full" data-action="reset">resetar tudo</button>
       </section>
     </div>
   `;
 }
 
-function renderAdmin() {
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">área avançada</div>
-          <button class="btn" data-nav="#/settings">voltar</button>
-        </div>
+/* ---------- skills ---------- */
+const SKILL_PLAN_DAYS = 270;
+const BASE_MIN_PER_DAY = 30;
 
-        <p class="p">Área administrativa. Fica fora da navegação principal para o app continuar simples para quem só quer aprender e usar.</p>
+const RANKS = [
+  { days: 7, name: "Bronze", vibe: "o nihongo não é tão estranho assim", icon: "🥉" },
+  { days: 30, name: "Aço", vibe: "tô começando a achar que eu consigo", icon: "🛡️" },
+  { days: 90, name: "Ouro", vibe: "eu vou aprender nihongo sim", icon: "🥇" },
+  { days: 150, name: "Platina", vibe: "minha boca tá ficando automática", icon: "💠" },
+  { days: 210, name: "Diamante", vibe: "eu já sobrevivo no cotidiano", icon: "💎" },
+  { days: 270, name: "Fluência", vibe: "fluência total. o jogo virou", icon: "🌸" }
+];
 
-        <div class="grid2">
-          <button class="btn btn--ghost btn--full" data-nav="#/edit">cadastro e edição</button>
-          <button class="btn btn--ghost btn--full" data-nav="#/backup">backup e importação</button>
-        </div>
-      </section>
-    </div>
-  `;
+function isStudyDay(dayObj) {
+  if (!dayObj) return false;
+  const mins = (dayObj.ms || 0) / 60000;
+  return mins >= 2 || (dayObj.cycles || 0) > 0;
 }
 
-function parseNewWords(input) {
-  const raw = String(input || "").trim();
-  if (!raw) return [];
-  const parts = raw.split(",").map(s => s.trim()).filter(Boolean);
-  const out = [];
-  for (const part of parts) {
-    const [jp, pt] = part.split("=").map(s => (s || "").trim());
-    if (!jp || !pt) continue;
-    out.push({ jp, pt });
+function habitSummary() {
+  const days = STATE.habit?.days || {};
+  const keys = Object.keys(days).sort();
+
+  let totalMs = 0;
+  let activeDays = 0;
+  let cycles = 0;
+  let listens = 0;
+  let calls = 0;
+
+  for (const k of keys) {
+    const d = days[k];
+    totalMs += d.ms || 0;
+    cycles += d.cycles || 0;
+    listens += d.listens || 0;
+    calls += d.calls || 0;
+    if (isStudyDay(d)) activeDays++;
   }
-  return out;
-}
 
-function renderEdit(editingId = null) {
-  const editing = editingId ? getPhrase(editingId) : null;
-  const topicId = editing ? editing.topicId : "topic_default";
-  const nwVal = editing?.newWords?.map(x => `${x.jp}=${x.pt}`).join(", ") || "";
+  const nowTS = now();
+  const last7 = [];
+  const last30 = [];
 
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">${editing ? "editar frase" : "cadastro"}</div>
-          <button class="btn" data-nav="#/admin">voltar</button>
-        </div>
+  for (let i = 0; i < 30; i++) {
+    const ts = addDaysTS(nowTS, -i);
+    const dk = new Date(ts);
+    const y = dk.getFullYear();
+    const m = String(dk.getMonth() + 1).padStart(2, "0");
+    const dd = String(dk.getDate()).padStart(2, "0");
+    const key = `${y}-${m}-${dd}`;
+    const obj = days[key] || { ms: 0, cycles: 0, listens: 0, calls: 0 };
 
-        <div class="sheet stack">
-          <div class="small">contexto</div>
-          <select class="btn selectBtn" id="topicSel">
-            ${(STATE.bank.topics || []).map(t => `<option value="${t.id}" ${t.id === topicId ? "selected" : ""}>${escapeHTML(t.name)}</option>`).join("")}
-          </select>
+    if (i < 7) last7.push(obj);
+    last30.push(obj);
+  }
 
-          <div class="small">jp</div>
-          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" value="${escapeHTML(editing?.jp || "")}" />
+  const last7Ms = last7.reduce((a, x) => a + (x.ms || 0), 0);
+  const last30Ms = last30.reduce((a, x) => a + (x.ms || 0), 0);
 
-          <div class="small">pt</div>
-          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" value="${escapeHTML(editing?.pt || "")}" />
+  const last7MinPerDay = last7Ms / 60000 / 7;
+  const last30MinPerDay = last30Ms / 60000 / 30;
 
-          <div class="small">palavras úteis (jp=pt, jp=pt)</div>
-          <input id="inNW" class="btn" style="height:56px; width:100%; text-align:left" value="${escapeHTML(nwVal)}" />
-
-          <div class="small">prioridade (1 a 5)</div>
-          <select class="btn selectBtn" id="prioritySel">
-            ${[1,2,3,4,5].map(n => `<option value="${n}" ${(editing?.priority || 3) === n ? "selected" : ""}>${n}</option>`).join("")}
-          </select>
-
-          <div class="small">útil para</div>
-          <input id="inUseHint" class="btn" style="height:56px; width:100%; text-align:left" value="${escapeHTML(editing?.useHint || "")}" />
-
-          <div class="small">mensagem de conforto</div>
-          <input id="inComfortHint" class="btn" style="height:56px; width:100%; text-align:left" value="${escapeHTML(editing?.comfortHint || "")}" />
-
-          <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="${editing ? "saveEditPhrase" : "saveNewPhrase"}" data-id="${editing?.id || ""}">
-              ${editing ? "salvar alterações" : "salvar frase"}
-            </button>
-            ${editing ? `<button class="btn btn--bad btn--full" data-action="deletePhrase" data-id="${editing.id}">excluir frase</button>` : `<button class="btn btn--muted btn--full" data-nav="#/admin">cancelar</button>`}
-          </div>
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-function renderBackup() {
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">backup</div>
-          <button class="btn" data-nav="#/admin">voltar</button>
-        </div>
-
-        <div class="sheet stack">
-          <div class="badge">exportar</div>
-          <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="copyBackupJson">copiar json</button>
-            <button class="btn btn--ok btn--full" data-action="exportBackupFile">baixar arquivo</button>
-          </div>
-        </div>
-
-        <div class="sheet stack">
-          <div class="badge">importar</div>
-          <div class="grid2">
-            <button class="btn btn--muted btn--full" data-action="importBackupText">importar do texto</button>
-            <button class="btn btn--muted btn--full" data-action="triggerImportFile">importar arquivo</button>
-          </div>
-
-          <input id="fileImport" type="file" accept=".json,application/json" style="display:none" />
-          <div class="small">cole o json aqui</div>
-          <textarea id="importBox" class="btn" style="height:160px; width:100%; text-align:left; padding:12px; border-radius:18px;"></textarea>
-          <div class="small" id="backupMsg"></div>
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-/* =========================================================
-   BACKUP
-   ========================================================= */
-function buildBackupPayload() {
   return {
-    schema: "nihongo321_backup_v6",
-    exportedAt: new Date().toISOString(),
-    state: STATE
+    keys,
+    totalMs,
+    totalMin: totalMs / 60000,
+    activeDays,
+    cycles,
+    listens,
+    calls,
+    last7MinPerDay,
+    last30MinPerDay
   };
 }
 
-function validateAndLoadBackup(parsed, msgEl) {
-  if (!parsed || !parsed.state) {
-    if (msgEl) msgEl.textContent = "json inválido.";
-    toast("json inválido");
-    beep("tuk");
-    return false;
+function rankFromActiveDays(activeDays) {
+  let current = RANKS[0];
+  for (const r of RANKS) {
+    if (activeDays >= r.days) current = r;
   }
-
-  STATE = migrateState(parsed.state);
-  saveState();
-  refreshHUD();
-
-  if (msgEl) msgEl.textContent = "importado ✅";
-  toast("importado ✅");
-  beep("ding");
-  nav("#/home");
-  return true;
+  const next = RANKS.find(r => r.days > activeDays) || null;
+  return { current, next };
 }
 
-/* =========================================================
-   BACK TO TOP
-   ========================================================= */
+function overallProgressByMinutes(totalMin) {
+  const totalNeededMin = SKILL_PLAN_DAYS * BASE_MIN_PER_DAY;
+  return clamp(totalMin / totalNeededMin, 0, 1);
+}
+
+function projectedFinishDate(avgMinPerDay) {
+  const sum = habitSummary();
+  const totalNeededMin = SKILL_PLAN_DAYS * BASE_MIN_PER_DAY;
+  const remainingMin = Math.max(0, totalNeededMin - sum.totalMin);
+  if (avgMinPerDay <= 0.1) return null;
+  const daysNeeded = remainingMin / avgMinPerDay;
+  return addDaysTS(now(), Math.ceil(daysNeeded));
+}
+
+function projectedRankDates(avgMinPerDay) {
+  const sum = habitSummary();
+  const dates = [];
+  if (avgMinPerDay <= 0.1) return dates;
+
+  const totalMin = sum.totalMin;
+
+  for (const r of RANKS) {
+    const needMin = r.days * BASE_MIN_PER_DAY;
+    if (totalMin >= needMin) {
+      dates.push({ ...r, done: true, dateTS: null });
+    } else {
+      const rem = needMin - totalMin;
+      const daysNeeded = rem / avgMinPerDay;
+      dates.push({ ...r, done: false, dateTS: addDaysTS(now(), Math.ceil(daysNeeded)) });
+    }
+  }
+
+  return dates;
+}
+
+function skillBars() {
+  const sum = habitSummary();
+
+  const listening = clamp((sum.totalMin / (30 * 6)) * 0.65 + (sum.listens / 80) * 0.35, 0, 1);
+  const speaking = clamp(sum.calls / 80, 0, 1);
+  const repetition = clamp(sum.cycles / 120, 0, 1);
+  const vocab = clamp(((STATE.stats.phrasesMastered || 0) / 20) * 0.55 + (sum.totalMin / (30 * 10)) * 0.45, 0, 1);
+  const confidence = clamp((repetition * 0.35 + listening * 0.25 + vocab * 0.20 + speaking * 0.20), 0, 1);
+
+  return [
+    { name: "audição", val: listening, icon: "🎧", tip: "quanto mais você ouve, menos pensa" },
+    { name: "fala", val: speaking, icon: "🗣️", tip: "call and response deixa a boca solta" },
+    { name: "repetição", val: repetition, icon: "🔁", tip: "o ouro vem do ciclo fechado" },
+    { name: "vocab", val: vocab, icon: "📦", tip: "palavras viram ferramentas" },
+    { name: "confiança", val: confidence, icon: "✨", tip: "a soma silenciosa do dia a dia" }
+  ];
+}
+
+function renderSkills() {
+  const sum = habitSummary();
+  const avg = Math.max(sum.last7MinPerDay, 0);
+  const avgShow = avg > 0.1 ? `${avg.toFixed(1)} min/dia` : "ainda sem ritmo";
+  const { current, next } = rankFromActiveDays(sum.activeDays);
+
+  const prog = overallProgressByMinutes(sum.totalMin);
+  const finish = projectedFinishDate(avg);
+  const dates = projectedRankDates(avg);
+  const bars = skillBars();
+
+  const progPct = Math.round(prog * 100);
+
+  const nextTxt = next
+    ? `próxima: ${next.icon} ${next.name} (${next.days} dias)`
+    : `você chegou: ${current.icon} ${current.name} ✅`;
+
+  const projTxt = finish
+    ? `se continuar no ritmo (${avgShow}), fluência em: ${fmtDateShort(finish)}`
+    : `faz 2 minutinhos hoje e eu te dou a projeção 😉`;
+
+  const timeline = RANKS.map(r => {
+    const done = sum.activeDays >= r.days;
+    return `
+      <div class="tlNode ${done ? "done" : ""}">
+        <div class="tlDot"></div>
+        <div class="tlLbl">${r.icon} ${r.name}</div>
+        <div class="tlMini">${r.days}d</div>
+      </div>
+    `;
+  }).join("");
+
+  const datesList = dates.map(d => {
+    const right = d.done
+      ? `<span class="badge">feito ✅</span>`
+      : `<span class="badge">${d.dateTS ? fmtDateShort(d.dateTS) : "..."}</span>`;
+
+    return `
+      <div class="row row--between" style="gap:10px">
+        <div class="small"><b>${d.icon} ${d.name}</b> <span style="opacity:.8">(${d.days} dias)</span></div>
+        ${right}
+      </div>
+    `;
+  }).join("");
+
+  const barHtml = bars.map(b => {
+    const pct = Math.round(b.val * 100);
+
+    return `
+      <div class="skillRow">
+        <div class="skillLeft">
+          <div class="skillName">${b.icon} ${b.name}</div>
+          <div class="skillTip">${escapeHTML(b.tip)}</div>
+        </div>
+        <div class="skillRight">
+          <div class="pBar skillBar"><div class="pFill" style="transform:scaleX(${b.val})"></div></div>
+          <div class="pTxt">${pct}%</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">skills</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
+
+        <div class="rankCard">
+          <div class="rankBig">
+            <div class="rankIcon">${current.icon}</div>
+            <div>
+              <div class="rankTitle">${current.name}</div>
+              <div class="rankSub">${escapeHTML(current.vibe)}</div>
+            </div>
+          </div>
+
+          <div class="row row--between">
+            <div class="badge">${sum.activeDays} dias vivos</div>
+            <div class="badge">${nextTxt}</div>
+          </div>
+
+          <div class="projWrap">
+            <div class="projTop">
+              <div class="small">progresso até fluência</div>
+              <div class="badge">${progPct}%</div>
+            </div>
+            <div class="pBar projBar"><div class="pFill" style="transform:scaleX(${prog})"></div></div>
+            <div class="small projTxt">${projTxt}</div>
+          </div>
+        </div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">linha do tempo</div>
+            <div class="badge">meta: 9 meses</div>
+          </div>
+          <div class="tlLine">
+            <div class="tlTrack"></div>
+            <div class="tlFill" style="transform:scaleX(${clamp(sum.activeDays / SKILL_PLAN_DAYS, 0, 1)})"></div>
+            <div class="tlNodes">${timeline}</div>
+          </div>
+          <div class="small">dica: “dia vivo” = 2 min ou 1 ciclo. sem culpa.</div>
+        </div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">projeção de ranks</div>
+            <div class="badge">${avgShow}</div>
+          </div>
+          <div class="stack" style="gap:8px">${datesList}</div>
+        </div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">mini skills</div>
+            <div class="badge">panorama</div>
+          </div>
+          <div class="skillGrid">
+            ${barHtml}
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+/* ---------- render principal ---------- */
+function render() {
+  refreshHUD();
+
+  const r = route();
+
+  if (r === "#/landing") return renderLanding();
+  if (r === "#/premium") return renderPremium();
+  if (r === "#/sensei") return renderSensei();
+  if (r === "#/home") return renderHome();
+  if (r === "#/105x") return render105x();
+  if (r === "#/edit") return renderEdit();
+  if (r === "#/manage") return renderManage();
+  if (r === "#/backup") return renderBackup();
+  if (r === "#/settings") return renderSettings();
+  if (r === "#/skills") return renderSkills();
+
+  nav("#/landing");
+}
+
+/* ---------- back to top ---------- */
 function ensureBackTopButton() {
   if (document.getElementById("backTop")) return;
 
@@ -2281,6 +3590,7 @@ function ensureBackTopButton() {
 }
 
 let backTopTicking = false;
+
 function updateBackTopVisibility() {
   const btn = document.getElementById("backTop");
   if (!btn) return;
@@ -2299,126 +3609,78 @@ function hookBackTopScroll() {
   }, { passive: true });
 }
 
-/* =========================================================
-   EVENTS
-   ========================================================= */
+/* ---------- click delegation ---------- */
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
 
   if (btn.dataset.nav) {
-    if (btn.dataset.nav !== "#/train") clearCallFlow();
     nav(btn.dataset.nav);
     return;
   }
 
   const act = btn.dataset.action;
 
-  if (act === "finishOnboarding") {
-    unlockAudio();
-    STATE.prefs.onboardingDone = true;
-    saveState();
-    toast("pronto. agora é treino ✅");
+  if (act === "checkout") {
+    openCheckout();
+    return;
+  }
+
+  if (act === "unlockDemoPremium") {
+    markPremiumDemoUnlock();
+    toast("premium liberado nesta demo ✅");
+    beep("ding");
     render();
     return;
   }
 
-  if (act === "startRecommendedTrain") {
-    unlockAudio();
-    const week = getCurrentPremiumWeek();
-    const phraseId = week?.phraseIds?.[0] || chooseNextPhraseFromContext(getRecommendedContextId())?.id;
-    if (phraseId) setCurrentPhrase(phraseId);
+  if (act === "lockDemoPremium") {
+    STATE.monetization.premiumUnlocked = false;
+    STATE.session.topicFilter = "ALL";
     saveState();
-    nav("#/train");
+    toast("premium bloqueado na demo");
+    render();
     return;
   }
 
-  if (act === "startContextTrain") {
-    unlockAudio();
-    const id = btn.dataset.id;
-    STATE.session.currentContextId = id;
-    const next = chooseNextPhraseFromContext(id);
-    if (next) setCurrentPhrase(next.id);
-    saveState();
-    nav("#/train");
-    return;
-  }
+  if (act === "generateSensei") {
+    const request = ($("#senseiRequest")?.value || "").trim();
+    const level = ($("#senseiLevel")?.value || "iniciante").trim();
+    const tone = ($("#senseiTone")?.value || "educado").trim();
+    const theme = ($("#senseiTheme")?.value || "").trim();
 
-  if (act === "setContext") {
-    unlockAudio();
-    const id = btn.dataset.id;
-    if (!id) return;
-    STATE.session.currentContextId = id;
-    saveState();
-
-    if (route() === "#/train") {
-      const next = chooseNextPhraseFromContext(id === "ALL" ? getRecommendedContextId() : id);
-      if (next) setCurrentPhrase(next.id);
-      render();
-    } else {
-      render();
+    if (!request) {
+      toast("escreva sua necessidade primeiro");
+      beep("tuk");
+      return;
     }
+
+    const pack = generateSenseiMaterial({ request, level, tone, theme });
+    renderSenseiOutput(pack);
+    toast("material gerado ✅");
+    beep("ding");
     return;
   }
 
-  if (act === "openContext") {
-    unlockAudio();
-    const id = btn.dataset.id;
-    if (!id) return;
-    STATE.session.currentContextId = id;
-    const next = chooseNextPhraseFromContext(id);
-    if (next) setCurrentPhrase(next.id);
-    saveState();
-    nav("#/train");
-    return;
-  }
+  if (act === "saveSenseiPack") {
+    const box = $("#senseiOutput");
+    if (!box?.dataset.pack) {
+      toast("gere o material primeiro");
+      beep("tuk");
+      return;
+    }
 
-  if (act === "startPremiumWeek") {
-    unlockAudio();
-    const n = Number(btn.dataset.week);
-    const week = getWeek(n);
-    if (!week) return;
-    STATE.session.currentPremiumWeek = n;
-    STATE.premiumWeekProgress[n].status = STATE.premiumWeekProgress[n].status === "locked" ? "active" : STATE.premiumWeekProgress[n].status;
-    STATE.premiumWeekProgress[n].startedAt ||= now();
-    setCurrentPhrase(week.phraseIds[0]);
-    saveState();
-    nav("#/train");
-    return;
-  }
+    const parsed = safeJSONParse(box.dataset.pack);
+    if (!parsed || !Array.isArray(parsed.phrases)) {
+      toast("não consegui ler o material");
+      beep("tuk");
+      return;
+    }
 
-  if (act === "completePremiumWeek") {
-    unlockAudio();
-    const n = Number(btn.dataset.week);
-    unlockNextPremiumWeek(n);
-    toast("semana concluída ✅");
-    renderPremiumWeek(n);
-    return;
-  }
-
-  if (act === "trainPhraseFromWeek") {
-    unlockAudio();
-    const id = btn.dataset.id;
-    const week = Number(btn.dataset.week);
-    if (!id) return;
-    STATE.session.currentPremiumWeek = week;
-    setCurrentPhrase(id);
-    saveState();
-    nav("#/train");
-    return;
-  }
-
-  if (act === "jumpToPhrase") {
-    unlockAudio();
-    const id = btn.dataset.id;
-    if (!id) return;
-    setCurrentPhrase(id);
-    resetCountForPhrase(id);
-    saveState();
-    renderTrainBodyOnly();
-    renderMiniPhraseList();
-    toast("frase carregada ✅");
-    beep("pop");
+    const result = saveSenseiPackToApp(parsed);
+    toast(`${result.added} frase(s) salvas em ${result.topic.name} ✅`);
+    beep("ding");
+    render();
     return;
   }
 
@@ -2427,221 +3689,362 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if (act === "prevPhrase") {
+  if (act === "skip") {
     unlockAudio();
-    gotoPrevPhrase();
-    render();
-    beep("pop");
+    skipPhrase();
+    render105xBodyOnly();
+    renderPhraseListOnly();
     return;
   }
 
-  if (act === "nextPhrase") {
+  if (act === "prev") {
     unlockAudio();
-    gotoNextPhrase();
-    render();
+    const moved = prevPhrase();
+    if (!moved) return;
     beep("pop");
+    render105xBodyOnly();
+    renderPhraseListOnly();
+    return;
+  }
+
+  if (act === "next") {
+    unlockAudio();
+    const moved = nextPhrase();
+    if (!moved) return;
+    toast("próxima ✅");
+    beep("pop");
+    render105xBodyOnly();
+    renderPhraseListOnly();
+    return;
+  }
+
+  if (act === "goto") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+    if (!STATE.session.inProgress) startAuto();
+    setPhraseById(id);
+    toast("frase carregada ✅");
+    beep("pop");
+    render105xBodyOnly();
+    return;
+  }
+
+  if (act === "toggleTopic") {
+    const id = btn.dataset.id;
+    if (!id) return;
+    STATE.ui.collapsedTopics ||= {};
+    STATE.ui.collapsedTopics[id] = !STATE.ui.collapsedTopics[id];
+    saveState();
+    render();
+    return;
+  }
+
+  if (act === "topicFilter") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    if (id !== "ALL" && isTopicPremium(id) && !isPremiumUnlocked()) {
+      showPremiumLockedMessage(id);
+      return;
+    }
+
+    STATE.session.topicFilter = id;
+    STATE.session.queue = buildQueue();
+    STATE.session.index = 0;
+    STATE.session.phraseId = STATE.session.queue[0] || null;
+
+    saveState();
+    toast(id === "ALL" ? "treino: tudo ✅" : `treino: ${topicName(id)} ✅`);
+    beep("ding");
+    render();
+    return;
+  }
+
+  if (act === "toggleCall") {
+    unlockAudio();
+    STATE.session.callMode = !STATE.session.callMode;
+    saveState();
+    toast(STATE.session.callMode ? "call and response: on" : "call and response: off");
+    render();
     return;
   }
 
   if (act === "speak") {
     unlockAudio();
     const rate = Number(btn.dataset.rate || "1");
-    const phrase = getPhrase(STATE.session.currentPhraseId);
-    if (!phrase) return;
+    const pid = STATE.session.phraseId;
+    const p = getPhrase(pid);
+    const kanaEl = $("#kanaLine");
+    if (!p || !kanaEl) return;
 
-    if (STATE.session.callMode) callAndResponse(phrase, rate);
-    else speakPhrase(phrase, rate);
+    if (STATE.session.callMode) callAndResponse(p.jp, rate, kanaEl, () => {});
+    else speakWithKaraoke(p.jp, rate, kanaEl);
     return;
   }
 
-  if (act === "toggleFavorite") {
+  if (act === "addTopic") {
     unlockAudio();
-    toggleFlag(btn.dataset.id, "isFavorite");
-    render();
-    toast("favorita atualizada ✅");
+    const input = $("#topicNewName2");
+    const msg = $("#topicMsg");
+    if (!input || !msg) return;
+
+    const topic = createTopic(input.value);
+    if (!topic) {
+      msg.textContent = "nome vazio ou já existe.";
+      toast("tópico inválido");
+      beep("tuk");
+      return;
+    }
+
+    input.value = "";
+    msg.textContent = "criado ✅";
+    toast("tópico criado ✅");
+    beep("ding");
+    renderManage();
     return;
   }
 
-  if (act === "toggleDifficult") {
-    unlockAudio();
-    toggleFlag(btn.dataset.id, "isDifficult");
-    render();
-    toast("marcação difícil atualizada ✅");
-    return;
-  }
-
-  if (act === "toggleUrgent") {
-    unlockAudio();
-    toggleFlag(btn.dataset.id, "isUrgent");
-    render();
-    toast("marcação para hoje atualizada ✅");
-    return;
-  }
-
-  if (act === "toggleSound") {
-    unlockAudio();
-    STATE.prefs.audio.enabled = !STATE.prefs.audio.enabled;
-    saveState();
-    refreshHUD();
-    render();
-    toast(STATE.prefs.audio.enabled ? "som ligado" : "som desligado");
-    return;
-  }
-
-  if (act === "toggleVibe") {
-    STATE.prefs.haptics.enabled = !STATE.prefs.haptics.enabled;
-    saveState();
-    refreshHUD();
-    render();
-    toast(STATE.prefs.haptics.enabled ? "vibração ligada" : "vibração desligada");
-    return;
-  }
-
-  if (act === "toggleTiredMode") {
-    STATE.prefs.tiredMode = !STATE.prefs.tiredMode;
-    saveState();
-    render();
-    toast(STATE.prefs.tiredMode ? "modo cansado ligado" : "modo cansado desligado");
-    return;
-  }
-
-  if (act === "toggleCallMode") {
-    unlockAudio();
-    clearCallFlow();
-    STATE.session.callMode = !STATE.session.callMode;
-    saveState();
-    render();
-    toast(STATE.session.callMode ? "call and response ligado" : "call and response desligado");
-    return;
-  }
-
-  if (act === "saveNewPhrase" || act === "saveEditPhrase") {
+  if (act === "deleteTopic") {
     unlockAudio();
     const id = btn.dataset.id;
-    const editing = act === "saveEditPhrase" ? getPhrase(id) : null;
+    if (!id) return;
+
+    const ok = confirm("excluir tópico? as frases vão para Frases aleatórias.");
+    if (!ok) return;
+
+    const done = deleteTopic(id);
+    if (!done) return;
+
+    toast("tópico excluído ✅");
+    beep("tuk");
+    renderManage();
+    return;
+  }
+
+  if (act === "clearTopic") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    const name = topicName(id);
+    const ok = confirm(`apagar todas as frases de "${name}"? (sem desfazer)`);
+    if (!ok) return;
+
+    const n = clearTopic(id);
+    toast(n ? `apagou ${n} frases ✅` : "nada pra apagar");
+    beep(n ? "ding" : "tuk");
+    renderManage();
+    return;
+  }
+
+  if (act === "addPhraseToTopic") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+    nav(`#/edit?topic=${encodeURIComponent(id)}`);
+    return;
+  }
+
+  if (act === "editPhrase") {
+    unlockAudio();
+    const id = btn.dataset.id;
+    if (!id) return;
+    renderEdit(id);
+    return;
+  }
+
+  if (act === "addPhrase") {
+    unlockAudio();
 
     const jp = ($("#inJp")?.value || "").trim();
     const pt = ($("#inPt")?.value || "").trim();
     const nw = parseNewWords($("#inNW")?.value || "");
-    const topicId = $("#topicSel")?.value || "topic_default";
-    const priority = Number($("#prioritySel")?.value || 3);
-    const useHint = ($("#inUseHint")?.value || "").trim();
-    const comfortHint = ($("#inComfortHint")?.value || "").trim();
+    const msg = $("#editMsg");
+    const topicId = ($("#topicSel")?.value || ensureDefaultTopic().id);
 
     if (!jp || !pt) {
+      if (msg) msg.textContent = "preencha jp e pt.";
       toast("faltou jp/pt");
       beep("tuk");
       return;
     }
 
     if (!isValidJP(jp)) {
+      if (msg) msg.textContent = "jp inválido. dica: 仕事{しごと} ou （ ）";
       toast("jp inválido");
       beep("tuk");
       return;
     }
 
-    if (editing) {
-      editing.jp = jp;
-      editing.pt = pt;
-      editing.newWords = nw;
-      editing.topicId = topicId;
-      editing.priority = priority;
-      editing.useHint = useHint;
-      editing.comfortHint = comfortHint;
-      editing.updatedAt = now();
-      saveState();
-      toast("alterado ✅");
-      nav("#/admin");
-    } else {
-      const newId = uid("ph");
-      STATE.bank.phrases.unshift({
-        id: newId,
-        jp,
-        pt,
-        topicId,
-        priority,
-        useHint,
-        comfortHint,
-        newWords: nw,
-        createdAt: now(),
-        updatedAt: now()
-      });
-      STATE.progress[newId] = {
-        status: "training",
-        cycleStart: 14,
-        count: 14,
-        masteredAt: null,
-        seenAt: null,
-        isFavorite: false,
-        isDifficult: false,
-        isUrgent: false,
-        history: []
-      };
-      saveState();
-      toast("frase salva ✅");
-      nav("#/admin");
+    for (const w of nw) {
+      if (!isValidJP(w.jp)) {
+        if (msg) msg.textContent = "palavra nova jp inválida.";
+        toast("palavra inválida");
+        beep("tuk");
+        return;
+      }
     }
+
+    const t = now();
+    const id = uid("ph");
+
+    STATE.bank.phrases.unshift({
+      id,
+      jp,
+      pt,
+      newWords: nw,
+      topicId,
+      createdAt: t,
+      updatedAt: t
+    });
+
+    STATE.progress[id] = {
+      status: "training",
+      cycleStart: 14,
+      count: 14,
+      masteredAt: null,
+      history: []
+    };
+
+    if (STATE.session.inProgress) {
+      STATE.session.queue = buildQueue();
+      STATE.session.index = 0;
+      STATE.session.phraseId = STATE.session.queue[0] || null;
+    }
+
+    saveState();
+    toast("salvo ✅");
+    beep("ding");
+    if (msg) msg.textContent = "salvo ✅";
+
+    const inJp = $("#inJp");
+    const inPt = $("#inPt");
+    const inNW = $("#inNW");
+    if (inJp) inJp.value = "";
+    if (inPt) inPt.value = "";
+    if (inNW) inNW.value = "";
+
+    const { params } = routeInfo();
+    if (params.topic) {
+      nav("#/manage");
+      return;
+    }
+
+    render();
+    return;
+  }
+
+  if (act === "saveEdit") {
+    unlockAudio();
+
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    const p = getPhrase(id);
+    if (!p) return;
+
+    const jp = ($("#inJp")?.value || "").trim();
+    const pt = ($("#inPt")?.value || "").trim();
+    const nw = parseNewWords($("#inNW")?.value || "");
+    const msg = $("#editMsg");
+    const topicId = ($("#topicSel")?.value || ensureDefaultTopic().id);
+
+    if (!jp || !pt) {
+      if (msg) msg.textContent = "preencha jp e pt.";
+      toast("faltou jp/pt");
+      beep("tuk");
+      return;
+    }
+
+    if (!isValidJP(jp)) {
+      if (msg) msg.textContent = "jp inválido. dica: 仕事{しごと} ou （ ）";
+      toast("jp inválido");
+      beep("tuk");
+      return;
+    }
+
+    for (const w of nw) {
+      if (!isValidJP(w.jp)) {
+        if (msg) msg.textContent = "palavra nova jp inválida.";
+        toast("palavra inválida");
+        beep("tuk");
+        return;
+      }
+    }
+
+    p.jp = jp;
+    p.pt = pt;
+    p.newWords = nw;
+    p.topicId = topicId;
+    p.updatedAt = now();
+
+    saveState();
+    toast("alterado ✅");
+    beep("ding");
+    if (msg) msg.textContent = "alterado ✅";
+    nav("#/manage");
     return;
   }
 
   if (act === "deletePhrase") {
     unlockAudio();
+
     const id = btn.dataset.id;
     if (!id) return;
-    const ok = confirm("Excluir esta frase?");
+
+    const ok = confirm("excluir esta frase? (sem desfazer)");
     if (!ok) return;
 
-    const idx = STATE.bank.phrases.findIndex(p => p.id === id);
-    if (idx >= 0) STATE.bank.phrases.splice(idx, 1);
-    delete STATE.progress[id];
+    const removed = deletePhraseById(id);
+    if (!removed) return;
 
-    if (STATE.session.currentPhraseId === id) {
-      STATE.session.currentPhraseId = STATE.bank.phrases[0]?.id || null;
-    }
-
-    saveState();
-    toast("frase excluída ✅");
-    nav("#/admin");
+    toast("excluída ✅");
+    beep("tuk");
+    vibrate([8]);
+    render();
     return;
   }
 
-  if (act === "exportBackupFile") {
-    const payload = buildBackupPayload();
+  if (act === "exportCopy" || act === "exportFile") {
+    const msg = $("#backupMsg");
+    const payload = {
+      schema: "jp_105x_backup_v1",
+      exportedAt: new Date().toISOString(),
+      state: STATE
+    };
     const txt = JSON.stringify(payload, null, 2);
+
+    if (act === "exportCopy") {
+      navigator.clipboard?.writeText(txt).then(() => {
+        if (msg) msg.textContent = "copiado pro clipboard ✅";
+        toast("backup copiado ✅");
+        beep("ding");
+      }).catch(() => {
+        if (msg) msg.textContent = "não deu pra copiar. selecione e copie manualmente.";
+        toast("copie manualmente");
+        beep("tuk");
+        const box = $("#importBox");
+        if (box) box.value = txt;
+      });
+      return;
+    }
+
     const d = new Date();
-    const filename = `nihongo321-backup-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}.json`;
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const filename = `nihongo321-backup-${y}-${m}-${dd}.json`;
+
     downloadTextFile(filename, txt);
+    if (msg) msg.textContent = "baixado ✅ (procure em downloads)";
     toast("backup baixado ✅");
     beep("ding");
     return;
   }
 
-  if (act === "copyBackupJson") {
-    const payload = buildBackupPayload();
-    const txt = JSON.stringify(payload, null, 2);
-
-    navigator.clipboard?.writeText(txt).then(() => {
-      toast("backup copiado ✅");
-      beep("ding");
-    }).catch(() => {
-      const box = $("#importBox");
-      if (box) box.value = txt;
-      toast("copie manualmente");
-      beep("tuk");
-    });
-    return;
-  }
-
-  if (act === "triggerImportFile") {
-    const input = $("#fileImport");
-    if (input) {
-      input.value = "";
-      input.click();
-    }
-    return;
-  }
-
-  if (act === "importBackupText") {
+  if (act === "importText") {
     const box = $("#importBox");
     const msg = $("#backupMsg");
     const raw = (box?.value || "").trim();
@@ -2658,14 +4061,44 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if (act === "resetAll") {
-    clearCallFlow();
+  if (act === "importFile") {
+    const input = $("#fileImport");
+    if (!input) return;
+    input.value = "";
+    input.click();
+    return;
+  }
+
+  if (act === "toggleSound") {
+    unlockAudio();
+    STATE.prefs.audio.enabled = !STATE.prefs.audio.enabled;
+    saveState();
+    toast(STATE.prefs.audio.enabled ? "som ligado" : "som desligado");
+    refreshHUD();
+    render();
+    return;
+  }
+
+  if (act === "toggleVibe") {
+    STATE.prefs.haptics.enabled = !STATE.prefs.haptics.enabled;
+    saveState();
+    toast(STATE.prefs.haptics.enabled ? "vibração ligada" : "vibração desligada");
+    refreshHUD();
+    render();
+    return;
+  }
+
+  if (act === "reset") {
     localStorage.removeItem(LS_KEY);
+    localStorage.removeItem("jp_105x_v5");
+    localStorage.removeItem("jp_105x_v4");
+    localStorage.removeItem("jp_105x_v3");
+    localStorage.removeItem("jp_105x_v2");
     STATE = defaultState();
     saveState();
-    toast("resetado ✅");
+    toast("resetado. seed voltou ✅");
     beep("ding");
-    nav("#/home");
+    nav("#/landing");
     return;
   }
 
@@ -2679,6 +4112,7 @@ document.addEventListener("click", (e) => {
   }
 
   if (btn.id === "hudVibe") {
+    unlockAudio();
     STATE.prefs.haptics.enabled = !STATE.prefs.haptics.enabled;
     saveState();
     refreshHUD();
@@ -2687,57 +4121,138 @@ document.addEventListener("click", (e) => {
   }
 });
 
+/* ---------- drag pointer ---------- */
+document.addEventListener("pointerdown", (e) => {
+  const handle = e.target.closest(".dragHandle");
+  if (!handle) return;
+
+  const item = handle.closest("[data-reorder-item='1']");
+  const list = handle.closest("[data-reorder-list='1']");
+  if (!item || !list) return;
+
+  const topic = item.dataset.topic;
+  if (!topic) return;
+  if (route() !== "#/manage") return;
+
+  e.preventDefault();
+  unlockAudio();
+
+  DRAG = {
+    topic,
+    list,
+    item,
+    pointerId: e.pointerId
+  };
+
+  try { item.setPointerCapture(e.pointerId); } catch {}
+
+  item.classList.add("dragging");
+  vibrate([8]);
+}, { passive: false });
+
+document.addEventListener("pointermove", (e) => {
+  if (!DRAG) return;
+  if (e.pointerId !== DRAG.pointerId) return;
+
+  const { list, item } = DRAG;
+  const y = e.clientY;
+  const items = $$("[data-reorder-item='1']", list).filter(el => el !== item);
+  let target = null;
+
+  for (const it of items) {
+    const r = it.getBoundingClientRect();
+    const mid = r.top + r.height / 2;
+    if (y < mid) {
+      target = it;
+      break;
+    }
+  }
+
+  if (target) list.insertBefore(item, target);
+  else list.appendChild(item);
+}, { passive: true });
+
+document.addEventListener("pointerup", (e) => {
+  if (!DRAG) return;
+  if (e.pointerId !== DRAG.pointerId) return;
+
+  const { list, item, topic } = DRAG;
+  item.classList.remove("dragging");
+
+  const orderedIds = $$("[data-reorder-item='1']", list)
+    .map(el => el.dataset.id)
+    .filter(Boolean);
+
+  applyTopicOrder(topic, orderedIds);
+  toast("ordem salva ✅");
+  beep("ding");
+  DRAG = null;
+}, { passive: true });
+
+document.addEventListener("pointercancel", (e) => {
+  if (!DRAG) return;
+  if (e.pointerId !== DRAG.pointerId) return;
+  try { DRAG.item.classList.remove("dragging"); } catch {}
+  DRAG = null;
+}, { passive: true });
+
+/* ---------- inputs ---------- */
 document.addEventListener("input", (e) => {
   const el = e.target;
-  if (el?.id === "vol") {
-    STATE.prefs.audio.volume = clamp(Number(el.value || 0.35), 0, 1);
+  if (el && el.id === "vol") {
+    const v = Number(el.value);
+    STATE.prefs.audio.volume = clamp(v, 0, 1);
     saveState();
   }
 });
 
 document.addEventListener("change", (e) => {
   const el = e.target;
-  if (el?.id === "fileImport") {
+  if (el && el.id === "fileImport") {
     const msg = $("#backupMsg");
     const file = el.files && el.files[0];
     if (!file) return;
 
     const reader = new FileReader();
+
     reader.onload = () => {
       const text = String(reader.result || "").trim();
       const parsed = safeJSONParse(text);
       validateAndLoadBackup(parsed, msg);
     };
+
     reader.onerror = () => {
-      if (msg) msg.textContent = "não deu para ler o arquivo.";
+      if (msg) msg.textContent = "não deu pra ler o arquivo.";
       toast("erro ao ler arquivo");
       beep("tuk");
     };
+
     reader.readAsText(file);
   }
 });
 
+/* ---------- rota ---------- */
 window.addEventListener("hashchange", () => {
-  clearCallFlow();
   render();
-  startStudyTimerIfNeeded();
+  startStudyTimerIfOn105x();
   updateBackTopVisibility();
 });
 
-/* =========================================================
-   INIT
-   ========================================================= */
+/* ---------- init ---------- */
 (function init() {
-  ensureHabitToday();
-  syncHabitMs();
+  ensureDefaultTopic();
+  ensurePhrasesHaveValidTopic();
   refreshHUD();
 
-  if (!location.hash) nav("#/home");
+  if (!location.hash) nav("#/landing");
 
   ensureBackTopButton();
   hookBackTopScroll();
   updateBackTopVisibility();
 
+  ensureHabitToday();
+  syncHabitMs();
+
   render();
-  startStudyTimerIfNeeded();
+  startStudyTimerIfOn105x();
 })();

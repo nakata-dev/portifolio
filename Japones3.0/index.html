@@ -4,13 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#070a11" />
-  <meta name="description" content="Nihongo321 - Japonês funcional para brasileiros no Japão. Ouça, repita e use frases reais do cotidiano." />
-  <title>NIHONGO321</title>
-
-  <link rel="stylesheet" href="./styles.css?v=4.0.0" />
-  <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
+  <title>NIHONGO321 • Japonês prático para brasileiros no Japão</title>
+  <meta
+    name="description"
+    content="Aprenda japonês útil para fábrica, mercado, hospital, prefeitura e vida real no Japão com poucos minutos por dia. Método 105x para memorizar mesmo com pouco tempo."
+  />
+  <link rel="stylesheet" href="./styles.css?v=5.0.0" />
+  <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
 </head>
-
 <body>
   <header class="topbar" role="banner">
     <div class="brand">
@@ -28,18 +29,264 @@
       </div>
       <button class="hudBtn" id="hudSound" title="som" aria-label="som">🔊</button>
       <button class="hudBtn" id="hudVibe" title="vibração" aria-label="vibração">📳</button>
-      <button class="hudBtn" title="ajustes" aria-label="ajustes" data-nav="#/settings">⚙️</button>
+      <button class="hudBtn" title="ajustes" aria-label="ajustes" onclick="location.hash='#/settings'">⚙️</button>
     </div>
   </header>
 
-  <main class="app" id="app" role="main"></main>
+  <main class="app" id="app" role="main">
+    <section class="card heroCard stack" aria-labelledby="heroTitle">
+      <div class="badge">Japonês útil para brasileiros no Japão</div>
+
+      <h1 class="heroTitle" id="heroTitle">
+        Aprenda japonês prático mesmo sem tempo, sem curso e sem energia depois do trabalho.
+      </h1>
+
+      <p class="heroLead">
+        O NIHONGO321 foi pensado para quem vive cansado, trabalha muito e precisa aprender o japonês que realmente faz diferença na fábrica, no mercado, no hospital, na prefeitura e na vida real.
+      </p>
+
+      <div class="heroActions">
+        <a href="#/home" class="bigBtn" style="display:grid;place-items:center;text-decoration:none;">
+          testar grátis agora
+        </a>
+        <a href="#/premium" class="btn btn--ghost btn--full" style="display:grid;place-items:center;text-decoration:none;">
+          ver versão premium
+        </a>
+      </div>
+
+      <div class="heroMiniStats" aria-label="benefícios principais">
+        <div class="statCard">
+          <div class="statVal">5 min</div>
+          <div class="statLbl">por sessão</div>
+        </div>
+        <div class="statCard">
+          <div class="statVal">105x</div>
+          <div class="statLbl">método de fixação</div>
+        </div>
+        <div class="statCard">
+          <div class="statVal">JP + PT</div>
+          <div class="statLbl">uso real</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card stack" aria-labelledby="doresTitle">
+      <div class="row row--between">
+        <div class="badge">feito para dores reais</div>
+        <div class="badge">sem enrolação</div>
+      </div>
+
+      <h2 class="h2" id="doresTitle">Você não precisa estudar bonito. Precisa aprender o que funciona.</h2>
+
+      <div class="valueGrid">
+        <article class="valueCard">
+          <div class="valueIcon">⏳</div>
+          <h3 class="valueTitle">Pouco tempo</h3>
+          <p class="valueText">
+            Sessões curtas para quem chega do turno sem cabeça para curso longo ou aula cansativa.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">🧠</div>
+          <h3 class="valueTitle">Memória enfraquecida pela rotina</h3>
+          <p class="valueText">
+            O método 105x treina repetição, fixação e confiança para sua mente voltar a aprender.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">🗣️</div>
+          <h3 class="valueTitle">Aprendizado funcional</h3>
+          <p class="valueText">
+            Frases úteis para situações que realmente acontecem na vida de quem mora no Japão.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">🌱</div>
+          <h3 class="valueTitle">Sensação de evolução</h3>
+          <p class="valueText">
+            Cada ciclo concluído ajuda a recuperar foco, memória e gosto por crescer de novo.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="card stack" aria-labelledby="methodTitle">
+      <div class="row row--between">
+        <div class="badge">como funciona</div>
+        <div class="badge">simples de usar</div>
+      </div>
+
+      <h2 class="h2" id="methodTitle">O método 105x transforma repetição em memória útil.</h2>
+
+      <div class="valueGrid">
+        <article class="valueCard">
+          <div class="valueIcon">👂</div>
+          <h3 class="valueTitle">1. Ouça</h3>
+          <p class="valueText">
+            Escute a frase em japonês no ritmo normal ou lento.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">🗣️</div>
+          <h3 class="valueTitle">2. Repita</h3>
+          <p class="valueText">
+            Fale em voz alta e acostume sua boca com o som real do idioma.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">🔁</div>
+          <h3 class="valueTitle">3. Reforce</h3>
+          <p class="valueText">
+            Cada novo ciclo reforça memória, familiaridade e rapidez de resposta.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">✨</div>
+          <h3 class="valueTitle">4. Fixe de verdade</h3>
+          <p class="valueText">
+            Você não apenas vê a frase. Você começa a lembrar dela quando precisa.
+          </p>
+        </article>
+      </div>
+
+      <div class="lockCard">
+        <h3 class="lockTitle">Por que 105 repetições?</h3>
+        <p class="lockText">
+          Porque aprender um idioma também é treino mental. Quanto mais sua mente pratica ouvir, repetir e reconhecer, mais natural o japonês começa a entrar no seu cotidiano.
+        </p>
+      </div>
+    </section>
+
+    <section class="card stack" aria-labelledby="plansTitle">
+      <div class="row row--between">
+        <div class="badge">grátis x premium</div>
+        <div class="badge">claro e direto</div>
+      </div>
+
+      <h2 class="h2" id="plansTitle">Teste grátis. Desbloqueie o premium quando sentir o valor.</h2>
+
+      <div class="planGrid">
+        <article class="planCard" aria-labelledby="freePlanTitle">
+          <div class="planTop">
+            <h3 class="planName" id="freePlanTitle">Grátis</h3>
+            <span class="planTag">entrada</span>
+          </div>
+
+          <div class="planPrice">¥0 <small>/ para começar</small></div>
+          <p class="planSub">Ideal para conhecer o método e sentir o app no primeiro clique.</p>
+
+          <ul class="planList">
+            <li>acesso ao treino 105x</li>
+            <li>frases gratuitas para experimentar</li>
+            <li>ouvir, repetir e memorizar</li>
+            <li>backup local do seu progresso</li>
+          </ul>
+
+          <div class="planFooter">
+            <a href="#/home" class="btn btn--full" style="display:grid;place-items:center;text-decoration:none;">
+              começar grátis
+            </a>
+          </div>
+        </article>
+
+        <article class="planCard premium" aria-labelledby="premiumPlanTitle">
+          <div class="planTop">
+            <h3 class="planName" id="premiumPlanTitle">Premium</h3>
+            <span class="planTag">mais completo</span>
+          </div>
+
+          <div class="planPrice">mais conteúdo <small>/ mais resultado</small></div>
+          <p class="planSub">Para quem quer aprender japonês útil de forma organizada e constante.</p>
+
+          <ul class="planList">
+            <li>packs por situação real do Japão</li>
+            <li>fábrica, mercado, konbini, prefeitura, viagem e mais</li>
+            <li>mais valor percebido logo no início</li>
+            <li>no futuro: criação de material com ajuda de IA</li>
+          </ul>
+
+          <div class="planFooter">
+            <a href="#/premium" class="btn btn--ok btn--full" style="display:grid;place-items:center;text-decoration:none;">
+              ver premium
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="card stack" aria-labelledby="premiumValueTitle">
+      <div class="row row--between">
+        <div class="badge">o que muda no premium</div>
+        <div class="badge">mais utilidade</div>
+      </div>
+
+      <h2 class="h2" id="premiumValueTitle">O premium não existe para enfeitar. Existe para acelerar a vida do aluno.</h2>
+
+      <div class="valueGrid">
+        <article class="valueCard">
+          <div class="valueIcon">🏭</div>
+          <h3 class="valueTitle">Mais temas do cotidiano</h3>
+          <p class="valueText">
+            O aluno entra e já encontra frases separadas por contextos que ele realmente vive.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">📚</div>
+          <h3 class="valueTitle">Mais clareza para estudar</h3>
+          <p class="valueText">
+            Menos confusão, mais organização e sensação de progresso com conteúdo direcionado.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">🤖</div>
+          <h3 class="valueTitle">Futuro com IA</h3>
+          <p class="valueText">
+            O modo premium poderá ajudar o aluno a criar o próprio material no formato ideal do app.
+          </p>
+        </article>
+
+        <article class="valueCard">
+          <div class="valueIcon">💎</div>
+          <h3 class="valueTitle">Maior valor percebido</h3>
+          <p class="valueText">
+            O cliente entende rápido o que ganha pagando e sente mais motivo para continuar.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="ctaBand stack" aria-labelledby="ctaTitle">
+      <div class="badge">comece agora</div>
+      <h2 class="h2" id="ctaTitle">Treine sua memória. Aprenda japonês útil. Volte a sentir evolução.</h2>
+      <p class="p">
+        O NIHONGO321 foi criado para ajudar brasileiros no Japão a aprender mesmo quando a rotina parece roubar todo o tempo, toda a energia e toda a vontade de crescer.
+      </p>
+
+      <div class="heroActions">
+        <a href="#/home" class="bigBtn" style="display:grid;place-items:center;text-decoration:none;">
+          entrar no app
+        </a>
+        <a href="#/premium" class="btn btn--ghost btn--full" style="display:grid;place-items:center;text-decoration:none;">
+          desbloquear premium
+        </a>
+      </div>
+    </section>
+  </main>
 
   <footer class="footerbar" role="contentinfo">
-    <div class="footerText">Copyright @ 2026 - Ailton A. Nakata</div>
+    <div class="footerText">© 2026 Ailton A. Nakata • NIHONGO321</div>
   </footer>
 
   <div class="toast" id="toast" aria-live="polite"></div>
 
-  <script src="./app.js?v=4.0.0" defer></script>
+  <script src="./app.js?v=5.0.0" defer></script>
 </body>
 </html>
