@@ -1,14 +1,15 @@
 /* =========================================================
-   NIHONGO321 v6
-   app.js completo, ampliado e aprimorado
-   - vitrine mais clara
-   - grátis x premium mais convincente
-   - Sensei IA (modo premium/demo)
+   NIHONGO321 v7
+   núcleo consolidado
+   - admin claro
+   - premium mais inequívoco
+   - tutorial passo a passo
+   - Sensei IA
    - treino 105x
-   - gerenciamento, backup, skills
+   - gerenciamento, backup e skills
    ========================================================= */
 
-const LS_KEY = "jp_105x_v6";
+const LS_KEY = "jp_105x_v7";
 
 /* ========= CONFIG COMERCIAL ========= */
 const SALES = {
@@ -18,6 +19,15 @@ const SALES = {
   appStoreUrl: "https://apps.apple.com/",
   playStoreUrl: "https://play.google.com/store",
   supportEmail: "seuemail@exemplo.com"
+};
+
+/* ========= ADMIN TESTE =========
+   ALTERAR ANTES DE PUBLICAR
+*/
+const ADMIN = {
+  passcode: "NAKATA321",
+  hint: "senha de admin para testes internos",
+  label: "modo admin"
 };
 
 const PREMIUM_TOPIC_IDS = new Set([
@@ -99,10 +109,6 @@ function downloadTextFile(filename, text, mime = "application/json") {
 
 function normalizeName(s) {
   return String(s || "").trim().replace(/\s+/g, " ").slice(0, 50);
-}
-
-function uniqueArray(arr) {
-  return Array.from(new Set(arr.filter(Boolean)));
 }
 
 /* ---------- rota ---------- */
@@ -227,42 +233,22 @@ const TOPIC_SEEDS = [
       },
       {
         id: "seed_random_002",
-        jp: "今{いま} は 少{すこ}し 忙{いそが}しいです。",
-        pt: "Agora estou um pouco ocupado.",
-        newWords: [
-          { jp: "今{いま}", pt: "agora" },
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "忙{いそが}しい", pt: "ocupado" }
-        ]
-      },
-      {
-        id: "seed_random_003",
         jp: "もう 一度{いちど} 言{い}って ください。",
         pt: "Por favor, diga mais uma vez.",
         newWords: [
-          { jp: "もう", pt: "mais / novamente" },
+          { jp: "もう", pt: "novamente" },
           { jp: "一度{いちど}", pt: "uma vez" },
           { jp: "言{い}って", pt: "dizer" }
         ]
       },
       {
-        id: "seed_random_004",
+        id: "seed_random_003",
         jp: "今日{きょう} は ここで 待{ま}って います。",
         pt: "Hoje vou esperar aqui.",
         newWords: [
           { jp: "今日{きょう}", pt: "hoje" },
           { jp: "ここ", pt: "aqui" },
           { jp: "待{ま}って", pt: "esperar" }
-        ]
-      },
-      {
-        id: "seed_random_005",
-        jp: "それは 今{いま} は できません。",
-        pt: "Isso não pode ser feito agora.",
-        newWords: [
-          { jp: "それ", pt: "isso" },
-          { jp: "今{いま}", pt: "agora" },
-          { jp: "できません", pt: "não pode / não consegue" }
         ]
       }
     ]
@@ -278,48 +264,16 @@ const TOPIC_SEEDS = [
         pt: "Esta máquina já está funcionando?",
         newWords: [
           { jp: "機械{きかい}", pt: "máquina" },
-          { jp: "動{うご}いて", pt: "funcionando / movendo" },
-          { jp: "もう", pt: "já" }
+          { jp: "動{うご}いて", pt: "funcionando" }
         ]
       },
       {
         id: "seed_factory_002",
-        jp: "安全{あんぜん} 手袋{てぶくろ} を つけて ください。",
-        pt: "Por favor, coloque as luvas de segurança.",
+        jp: "次{つぎ} は 何{なに} を すれば いいですか。",
+        pt: "O que devo fazer em seguida?",
         newWords: [
-          { jp: "安全{あんぜん}", pt: "segurança" },
-          { jp: "手袋{てぶくろ}", pt: "luvas" },
-          { jp: "ください", pt: "por favor" }
-        ]
-      },
-      {
-        id: "seed_factory_003",
-        jp: "今日{きょう} の 生産{せいさん} 数{すう} は いくつ ですか。",
-        pt: "Qual é a quantidade de produção de hoje?",
-        newWords: [
-          { jp: "今日{きょう}", pt: "hoje" },
-          { jp: "生産{せいさん}", pt: "produção" },
-          { jp: "数{すう}", pt: "quantidade / número" }
-        ]
-      },
-      {
-        id: "seed_factory_004",
-        jp: "この 箱{はこ} を あちらへ 運{はこ}んで ください。",
-        pt: "Leve esta caixa para lá, por favor.",
-        newWords: [
-          { jp: "箱{はこ}", pt: "caixa" },
-          { jp: "あちら", pt: "lá" },
-          { jp: "運{はこ}んで", pt: "levar / transportar" }
-        ]
-      },
-      {
-        id: "seed_factory_005",
-        jp: "ライン を 止{と}めても いいですか。",
-        pt: "Posso parar a linha?",
-        newWords: [
-          { jp: "ライン", pt: "linha" },
-          { jp: "止{と}めて", pt: "parar" },
-          { jp: "いいですか", pt: "posso?" }
+          { jp: "次{つぎ}", pt: "seguinte / próximo" },
+          { jp: "何{なに}", pt: "o que" }
         ]
       }
     ]
@@ -334,45 +288,16 @@ const TOPIC_SEEDS = [
         jp: "搭乗口{とうじょうぐち} は どこ ですか。",
         pt: "Onde é o portão de embarque?",
         newWords: [
-          { jp: "搭乗口{とうじょうぐち}", pt: "portão de embarque" },
-          { jp: "どこ", pt: "onde" }
+          { jp: "搭乗口{とうじょうぐち}", pt: "portão de embarque" }
         ]
       },
       {
         id: "seed_airport_002",
-        jp: "この 便{びん} は 何時{なんじ} に 出発{しゅっぱつ} しますか。",
-        pt: "A que horas este voo parte?",
-        newWords: [
-          { jp: "便{びん}", pt: "voo" },
-          { jp: "何時{なんじ}", pt: "que horas" },
-          { jp: "出発{しゅっぱつ}", pt: "partida" }
-        ]
-      },
-      {
-        id: "seed_airport_003",
         jp: "荷物{にもつ} を 預{あず}けたいです。",
         pt: "Quero despachar a bagagem.",
         newWords: [
           { jp: "荷物{にもつ}", pt: "bagagem" },
-          { jp: "預{あず}けたい", pt: "querer despachar / deixar" }
-        ]
-      },
-      {
-        id: "seed_airport_004",
-        jp: "この パスポート で 大丈夫{だいじょうぶ} ですか。",
-        pt: "Com este passaporte está tudo certo?",
-        newWords: [
-          { jp: "パスポート", pt: "passaporte" },
-          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
-        ]
-      },
-      {
-        id: "seed_airport_005",
-        jp: "入国審査{にゅうこくしんさ} は あちら です。",
-        pt: "A imigração é por ali.",
-        newWords: [
-          { jp: "入国審査{にゅうこくしんさ}", pt: "imigração" },
-          { jp: "あちら", pt: "por ali" }
+          { jp: "預{あず}けたい", pt: "querer despachar" }
         ]
       }
     ]
@@ -387,46 +312,16 @@ const TOPIC_SEEDS = [
         jp: "この 荷物{にもつ} を ブラジル へ 送{おく}りたいです。",
         pt: "Quero enviar esta encomenda para o Brasil.",
         newWords: [
-          { jp: "荷物{にもつ}", pt: "encomenda / bagagem" },
-          { jp: "ブラジル", pt: "Brasil" },
+          { jp: "荷物{にもつ}", pt: "encomenda" },
           { jp: "送{おく}りたい", pt: "querer enviar" }
         ]
       },
       {
         id: "seed_post_002",
-        jp: "速達{そくたつ} で お願{ねが}いします。",
-        pt: "Por favor, por envio expresso.",
-        newWords: [
-          { jp: "速達{そくたつ}", pt: "envio expresso" },
-          { jp: "お願{ねが}いします", pt: "por favor" }
-        ]
-      },
-      {
-        id: "seed_post_003",
-        jp: "切手{きって} は どこで 買{か}えますか。",
-        pt: "Onde posso comprar selo?",
-        newWords: [
-          { jp: "切手{きって}", pt: "selo" },
-          { jp: "買{か}えますか", pt: "posso comprar?" }
-        ]
-      },
-      {
-        id: "seed_post_004",
-        jp: "この 用紙{ようし} に 名前{なまえ} を 書{か}いて ください。",
-        pt: "Por favor, escreva seu nome neste formulário.",
-        newWords: [
-          { jp: "用紙{ようし}", pt: "formulário / folha" },
-          { jp: "名前{なまえ}", pt: "nome" },
-          { jp: "書{か}いて", pt: "escrever" }
-        ]
-      },
-      {
-        id: "seed_post_005",
         jp: "追跡番号{ついせきばんごう} は ありますか。",
         pt: "Tem número de rastreio?",
         newWords: [
-          { jp: "追跡番号{ついせきばんごう}", pt: "número de rastreio" },
-          { jp: "ありますか", pt: "tem?" }
+          { jp: "追跡番号{ついせきばんごう}", pt: "número de rastreio" }
         ]
       }
     ]
@@ -441,8 +336,7 @@ const TOPIC_SEEDS = [
         jp: "住民票{じゅうみんひょう} を 取{と}りたいです。",
         pt: "Quero tirar o comprovante de residência.",
         newWords: [
-          { jp: "住民票{じゅうみんひょう}", pt: "comprovante de residência" },
-          { jp: "取{と}りたい", pt: "querer tirar / obter" }
+          { jp: "住民票{じゅうみんひょう}", pt: "comprovante de residência" }
         ]
       },
       {
@@ -451,36 +345,7 @@ const TOPIC_SEEDS = [
         pt: "Onde entrego este documento?",
         newWords: [
           { jp: "書類{しょるい}", pt: "documento" },
-          { jp: "どこ", pt: "onde" },
-          { jp: "出{だ}しますか", pt: "entregar / apresentar" }
-        ]
-      },
-      {
-        id: "seed_cityhall_003",
-        jp: "保険証{ほけんしょう} の 更新{こうしん} を したいです。",
-        pt: "Quero renovar o cartão do seguro.",
-        newWords: [
-          { jp: "保険証{ほけんしょう}", pt: "cartão do seguro" },
-          { jp: "更新{こうしん}", pt: "renovação" }
-        ]
-      },
-      {
-        id: "seed_cityhall_004",
-        jp: "番号札{ばんごうふだ} を 取{と}って ください。",
-        pt: "Por favor, pegue uma senha.",
-        newWords: [
-          { jp: "番号札{ばんごうふだ}", pt: "senha / ticket de atendimento" },
-          { jp: "取{と}って", pt: "pegar" }
-        ]
-      },
-      {
-        id: "seed_cityhall_005",
-        jp: "担当者{たんとうしゃ} は 何時{なんじ} に 戻{もど}りますか。",
-        pt: "A que horas o responsável volta?",
-        newWords: [
-          { jp: "担当者{たんとうしゃ}", pt: "responsável / atendente" },
-          { jp: "何時{なんじ}", pt: "que horas" },
-          { jp: "戻{もど}りますか", pt: "volta?" }
+          { jp: "出{だ}しますか", pt: "entrego?" }
         ]
       }
     ]
@@ -504,36 +369,8 @@ const TOPIC_SEEDS = [
         jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
         pt: "Por favor, aqueça este bentô.",
         newWords: [
-          { jp: "お弁当{べんとう}", pt: "marmita / bentô" },
+          { jp: "お弁当{べんとう}", pt: "bentô" },
           { jp: "温{あたた}めて", pt: "aquecer" }
-        ]
-      },
-      {
-        id: "seed_konbini_003",
-        jp: "公共料金{こうきょうりょうきん} を 払{はら}いたいです。",
-        pt: "Quero pagar a conta pública.",
-        newWords: [
-          { jp: "公共料金{こうきょうりょうきん}", pt: "conta pública" },
-          { jp: "払{はら}いたい", pt: "querer pagar" }
-        ]
-      },
-      {
-        id: "seed_konbini_004",
-        jp: "コピー機{き} は 使{つか}えますか。",
-        pt: "Posso usar a copiadora?",
-        newWords: [
-          { jp: "コピー機{き}", pt: "copiadora" },
-          { jp: "使{つか}えますか", pt: "posso usar?" }
-        ]
-      },
-      {
-        id: "seed_konbini_005",
-        jp: "電子{でんし} マネー で 払{はら}えますか。",
-        pt: "Posso pagar com dinheiro eletrônico?",
-        newWords: [
-          { jp: "電子{でんし}", pt: "eletrônico" },
-          { jp: "マネー", pt: "dinheiro" },
-          { jp: "払{はら}えますか", pt: "posso pagar?" }
         ]
       }
     ]
@@ -557,35 +394,7 @@ const TOPIC_SEEDS = [
         jp: "賞味期限{しょうみきげん} は いつ ですか。",
         pt: "Qual é a data de validade?",
         newWords: [
-          { jp: "賞味期限{しょうみきげん}", pt: "data de validade" },
-          { jp: "いつ", pt: "quando" }
-        ]
-      },
-      {
-        id: "seed_market_003",
-        jp: "この 野菜{やさい} は いくら ですか。",
-        pt: "Quanto custa este legume?",
-        newWords: [
-          { jp: "野菜{やさい}", pt: "legume / verdura" },
-          { jp: "いくら", pt: "quanto" }
-        ]
-      },
-      {
-        id: "seed_market_004",
-        jp: "安{やす}い 牛乳{ぎゅうにゅう} は ありますか。",
-        pt: "Tem leite mais barato?",
-        newWords: [
-          { jp: "安{やす}い", pt: "barato" },
-          { jp: "牛乳{ぎゅうにゅう}", pt: "leite" }
-        ]
-      },
-      {
-        id: "seed_market_005",
-        jp: "カード で 支払{しはら}えますか。",
-        pt: "Posso pagar com cartão?",
-        newWords: [
-          { jp: "カード", pt: "cartão" },
-          { jp: "支払{しはら}えますか", pt: "posso pagar?" }
+          { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
         ]
       }
     ]
@@ -601,8 +410,7 @@ const TOPIC_SEEDS = [
         pt: "A corrente soltou. Pode dar uma olhada?",
         newWords: [
           { jp: "チェーン", pt: "corrente" },
-          { jp: "外{はず}れました", pt: "soltou / saiu" },
-          { jp: "見{み}て", pt: "ver / olhar" }
+          { jp: "外{はず}れました", pt: "soltou" }
         ]
       },
       {
@@ -611,37 +419,7 @@ const TOPIC_SEEDS = [
         pt: "Quanto custa o conserto do pneu furado?",
         newWords: [
           { jp: "パンク", pt: "pneu furado" },
-          { jp: "修理{しゅうり}", pt: "conserto" },
-          { jp: "いくら", pt: "quanto" }
-        ]
-      },
-      {
-        id: "seed_bike_003",
-        jp: "ブレーキ を 調整{ちょうせい} して ください。",
-        pt: "Por favor, ajuste o freio.",
-        newWords: [
-          { jp: "ブレーキ", pt: "freio" },
-          { jp: "調整{ちょうせい}", pt: "ajuste" },
-          { jp: "ください", pt: "por favor" }
-        ]
-      },
-      {
-        id: "seed_bike_004",
-        jp: "空気{くうき} を 入{い}れたいです。",
-        pt: "Quero colocar ar.",
-        newWords: [
-          { jp: "空気{くうき}", pt: "ar" },
-          { jp: "入{い}れたい", pt: "querer colocar" }
-        ]
-      },
-      {
-        id: "seed_bike_005",
-        jp: "この 自転車{じてんしゃ} は いつ 受{う}け取{と}れますか。",
-        pt: "Quando posso retirar esta bicicleta?",
-        newWords: [
-          { jp: "自転車{じてんしゃ}", pt: "bicicleta" },
-          { jp: "いつ", pt: "quando" },
-          { jp: "受{う}け取{と}れますか", pt: "posso retirar?" }
+          { jp: "修理{しゅうり}", pt: "conserto" }
         ]
       }
     ]
@@ -656,47 +434,16 @@ const TOPIC_SEEDS = [
         jp: "次{つぎ} の 上映{じょうえい} は 何時{なんじ} ですか。",
         pt: "A que horas é a próxima sessão?",
         newWords: [
-          { jp: "次{つぎ}", pt: "próximo" },
-          { jp: "上映{じょうえい}", pt: "sessão / exibição" },
-          { jp: "何時{なんじ}", pt: "que horas" }
+          { jp: "上映{じょうえい}", pt: "sessão / exibição" }
         ]
       },
       {
         id: "seed_cinema_002",
-        jp: "この 映画{えいが} は 日本語字幕{にほんごじまく} が ありますか。",
-        pt: "Este filme tem legenda em japonês?",
-        newWords: [
-          { jp: "映画{えいが}", pt: "filme" },
-          { jp: "日本語字幕{にほんごじまく}", pt: "legenda em japonês" }
-        ]
-      },
-      {
-        id: "seed_cinema_003",
         jp: "チケット を 二枚{にまい} お願{ねが}いします。",
         pt: "Dois ingressos, por favor.",
         newWords: [
           { jp: "チケット", pt: "ingresso" },
-          { jp: "二枚{にまい}", pt: "duas unidades" },
-          { jp: "お願{ねが}いします", pt: "por favor" }
-        ]
-      },
-      {
-        id: "seed_cinema_004",
-        jp: "飲み物{のみもの} は どこで 買{か}いますか。",
-        pt: "Onde compro bebida?",
-        newWords: [
-          { jp: "飲み物{のみもの}", pt: "bebida" },
-          { jp: "どこ", pt: "onde" },
-          { jp: "買{か}いますか", pt: "compro?" }
-        ]
-      },
-      {
-        id: "seed_cinema_005",
-        jp: "この 席{せき} で 大丈夫{だいじょうぶ} です。",
-        pt: "Este assento está ótimo para mim.",
-        newWords: [
-          { jp: "席{せき}", pt: "assento" },
-          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / está ótimo" }
+          { jp: "二枚{にまい}", pt: "duas unidades" }
         ]
       }
     ]
@@ -711,8 +458,7 @@ const TOPIC_SEEDS = [
         jp: "この サイズ は ありますか。",
         pt: "Tem este tamanho?",
         newWords: [
-          { jp: "サイズ", pt: "tamanho" },
-          { jp: "ありますか", pt: "tem?" }
+          { jp: "サイズ", pt: "tamanho" }
         ]
       },
       {
@@ -720,36 +466,7 @@ const TOPIC_SEEDS = [
         jp: "試着室{しちゃくしつ} は どこ ですか。",
         pt: "Onde fica o provador?",
         newWords: [
-          { jp: "試着室{しちゃくしつ}", pt: "provador" },
-          { jp: "どこ", pt: "onde" }
-        ]
-      },
-      {
-        id: "seed_department_003",
-        jp: "別{べつ} の 色{いろ} を 見{み}たいです。",
-        pt: "Quero ver outra cor.",
-        newWords: [
-          { jp: "別{べつ}", pt: "outra / diferente" },
-          { jp: "色{いろ}", pt: "cor" },
-          { jp: "見{み}たい", pt: "querer ver" }
-        ]
-      },
-      {
-        id: "seed_department_004",
-        jp: "返品{へんぴん} は できますか。",
-        pt: "Posso devolver?",
-        newWords: [
-          { jp: "返品{へんぴん}", pt: "devolução" },
-          { jp: "できますか", pt: "posso?" }
-        ]
-      },
-      {
-        id: "seed_department_005",
-        jp: "会計{かいけい} は 何階{なんがい} ですか。",
-        pt: "Em que andar fica o caixa?",
-        newWords: [
-          { jp: "会計{かいけい}", pt: "caixa / pagamento" },
-          { jp: "何階{なんがい}", pt: "qual andar" }
+          { jp: "試着室{しちゃくしつ}", pt: "provador" }
         ]
       }
     ]
@@ -765,46 +482,14 @@ const TOPIC_SEEDS = [
         pt: "Este trem vai para Nagoya?",
         newWords: [
           { jp: "電車{でんしゃ}", pt: "trem" },
-          { jp: "名古屋{なごや}", pt: "Nagoya" },
           { jp: "行{い}きますか", pt: "vai?" }
         ]
       },
       {
         id: "seed_trip_002",
-        jp: "ホテル まで どう やって 行{い}きますか。",
-        pt: "Como chego até o hotel?",
-        newWords: [
-          { jp: "ホテル", pt: "hotel" },
-          { jp: "どう やって", pt: "como" },
-          { jp: "行{い}きますか", pt: "chego / vou?" }
-        ]
-      },
-      {
-        id: "seed_trip_003",
-        jp: "この 地図{ちず} を 見{み}せて も いいですか。",
-        pt: "Posso mostrar este mapa?",
-        newWords: [
-          { jp: "地図{ちず}", pt: "mapa" },
-          { jp: "見{み}せて", pt: "mostrar" },
-          { jp: "いいですか", pt: "posso?" }
-        ]
-      },
-      {
-        id: "seed_trip_004",
-        jp: "写真{しゃしん} を 撮{と}って も いいですか。",
-        pt: "Posso tirar uma foto?",
-        newWords: [
-          { jp: "写真{しゃしん}", pt: "foto" },
-          { jp: "撮{と}って", pt: "tirar (foto)" },
-          { jp: "いいですか", pt: "posso?" }
-        ]
-      },
-      {
-        id: "seed_trip_005",
         jp: "次{つぎ} の バス は いつ 来{き}ますか。",
         pt: "Quando vem o próximo ônibus?",
         newWords: [
-          { jp: "次{つぎ}", pt: "próximo" },
           { jp: "バス", pt: "ônibus" },
           { jp: "来{き}ますか", pt: "vem?" }
         ]
@@ -821,8 +506,7 @@ const TOPIC_SEEDS = [
         jp: "お名前{なまえ} は 何{なん} ですか。",
         pt: "Qual é o seu nome?",
         newWords: [
-          { jp: "名前{なまえ}", pt: "nome" },
-          { jp: "何{なん}", pt: "qual / o que" }
+          { jp: "名前{なまえ}", pt: "nome" }
         ]
       },
       {
@@ -830,36 +514,7 @@ const TOPIC_SEEDS = [
         jp: "はい、わかりました。",
         pt: "Sim, entendi.",
         newWords: [
-          { jp: "はい", pt: "sim" },
           { jp: "わかりました", pt: "entendi" }
-        ]
-      },
-      {
-        id: "seed_qa_003",
-        jp: "いいえ、まだ です。",
-        pt: "Não, ainda não.",
-        newWords: [
-          { jp: "いいえ", pt: "não" },
-          { jp: "まだ", pt: "ainda" }
-        ]
-      },
-      {
-        id: "seed_qa_004",
-        jp: "何時{なんじ} から 始{はじ}まりますか。",
-        pt: "A partir de que horas começa?",
-        newWords: [
-          { jp: "何時{なんじ}", pt: "que horas" },
-          { jp: "始{はじ}まりますか", pt: "começa?" }
-        ]
-      },
-      {
-        id: "seed_qa_005",
-        jp: "あとで 電話{でんわ} しても いいですか。",
-        pt: "Posso ligar depois?",
-        newWords: [
-          { jp: "あとで", pt: "depois" },
-          { jp: "電話{でんわ}", pt: "telefone / ligar" },
-          { jp: "いいですか", pt: "posso?" }
         ]
       }
     ]
@@ -941,7 +596,7 @@ function defaultState() {
   const top = defaultTopic();
 
   const st = {
-    app: { schemaVersion: 6, createdAt: t, updatedAt: t },
+    app: { schemaVersion: 7, createdAt: t, updatedAt: t },
 
     prefs: {
       audio: { enabled: true, volume: 0.35, unlocked: false },
@@ -951,6 +606,11 @@ function defaultState() {
     monetization: {
       premiumUnlocked: false,
       seenPaywall: false
+    },
+
+    admin: {
+      unlocked: false,
+      lastLoginAt: null
     },
 
     stats: {
@@ -969,6 +629,12 @@ function defaultState() {
 
     aiStudio: {
       history: []
+    },
+
+    tutorial: {
+      done: false,
+      currentStep: 0,
+      completedAt: null
     },
 
     bank: {
@@ -997,10 +663,10 @@ function defaultState() {
   return ensureSeedCatalog(st);
 }
 
-function migrateToV6(st) {
+function migrateToV7(st) {
   if (!st || !st.app) return defaultState();
 
-  st.app.schemaVersion = 6;
+  st.app.schemaVersion = 7;
   st.bank ||= {};
   st.bank.topics ||= [];
   st.bank.phrases ||= [];
@@ -1020,6 +686,8 @@ function migrateToV6(st) {
 
   st.monetization ||= { premiumUnlocked: false, seenPaywall: false };
   st.aiStudio ||= { history: [] };
+  st.admin ||= { unlocked: false, lastLoginAt: null };
+  st.tutorial ||= { done: false, currentStep: 0, completedAt: null };
 
   let def = st.bank.topics.find(t => t.id === "topic_default");
   if (!def) {
@@ -1035,14 +703,14 @@ function migrateToV6(st) {
 }
 
 function loadState() {
-  const keys = ["jp_105x_v6", "jp_105x_v5", "jp_105x_v4", "jp_105x_v3", "jp_105x_v2"];
+  const keys = ["jp_105x_v7", "jp_105x_v6", "jp_105x_v5", "jp_105x_v4", "jp_105x_v3", "jp_105x_v2"];
 
   for (const key of keys) {
     const raw = localStorage.getItem(key);
     if (!raw) continue;
     const parsed = safeJSONParse(raw);
     if (parsed && parsed.app) {
-      const migrated = migrateToV6(parsed);
+      const migrated = migrateToV7(parsed);
       localStorage.setItem(LS_KEY, JSON.stringify(migrated));
       return migrated;
     }
@@ -1086,7 +754,6 @@ function beep(type = "tap") {
 
   const vol = clamp(STATE.prefs.audio.volume ?? 0.35, 0, 1);
   const t0 = audioCtx.currentTime;
-
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
 
@@ -1164,9 +831,24 @@ function refreshHUD() {
   if (sub) sub.textContent = `${STATE.stats.cyclesDone || 0} ciclos • ${STATE.stats.phrasesMastered || 0} dominadas`;
 }
 
-/* ---------- premium ---------- */
+/* ---------- premium / admin ---------- */
 function isPremiumUnlocked() {
   return !!STATE.monetization?.premiumUnlocked;
+}
+
+function isAdminUnlocked() {
+  return !!STATE.admin?.unlocked;
+}
+
+function unlockAdminSuccess() {
+  STATE.admin.unlocked = true;
+  STATE.admin.lastLoginAt = now();
+  saveState();
+}
+
+function logoutAdmin() {
+  STATE.admin.unlocked = false;
+  saveState();
 }
 
 function isTopicPremium(topicId) {
@@ -1190,6 +872,12 @@ function markPremiumDemoUnlock() {
   STATE.monetization.premiumUnlocked = true;
   saveState();
   refreshHUD();
+}
+
+function markPremiumLocked() {
+  STATE.monetization.premiumUnlocked = false;
+  STATE.session.topicFilter = "ALL";
+  saveState();
 }
 
 function showPremiumLockedMessage(topicId) {
@@ -1225,6 +913,45 @@ function syncHabitMs() {
 function habitBump(_key, field, amount = 1) {
   const k = ensureHabitToday();
   STATE.habit.days[k][field] = (STATE.habit.days[k][field] || 0) + amount;
+  saveState();
+}
+
+/* ---------- tutorial ---------- */
+const TUTORIAL_STEPS = [
+  {
+    title: "Entenda o método",
+    text: "O Nihongo321 usa repetição guiada para treinar memória, ouvido e fala com japonês funcional."
+  },
+  {
+    title: "Comece pelo grátis",
+    text: "A versão grátis serve para provar valor logo no primeiro clique com treino 105x e frases iniciais."
+  },
+  {
+    title: "Use o botão COMEÇAR AGORA",
+    text: "Entre no treino, ouça a frase, leia a tradução e repita em voz alta."
+  },
+  {
+    title: "Toque em ‘repeti e entendi’",
+    text: "Cada toque avança no ciclo. Ao fechar um ciclo, você ganha moedas e treina sua memória."
+  },
+  {
+    title: "Escolha um tópico",
+    text: "Você pode estudar tudo junto ou filtrar por conteúdo específico."
+  },
+  {
+    title: "Use o premium para ir mais longe",
+    text: "No premium ficam os tópicos de vida real e o Sensei IA para criar material focado na sua rotina."
+  }
+];
+
+function tutorialCurrentStep() {
+  return clamp(STATE.tutorial?.currentStep || 0, 0, TUTORIAL_STEPS.length - 1);
+}
+
+function completeTutorial() {
+  STATE.tutorial.done = true;
+  STATE.tutorial.currentStep = TUTORIAL_STEPS.length - 1;
+  STATE.tutorial.completedAt = now();
   saveState();
 }
 
@@ -1461,7 +1188,7 @@ function skipPhrase() {
   resetCountForPhrase(STATE.session.phraseId);
   saveState();
 
-  toast("pulou. suave. próxima ✅");
+  toast("pulou. próxima ✅");
   beep("tuk");
 }
 
@@ -1852,15 +1579,58 @@ function renderTopicHeader(topic, count, collapsed) {
   `;
 }
 
+function renderPlanCompareBox() {
+  return `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">grátis x premium</div>
+        <div class="badge">claro</div>
+      </div>
+
+      <div class="planGrid">
+        <div class="planCard">
+          <div class="planTop">
+            <h3 class="planName">Grátis</h3>
+            <span class="planTag">entrada</span>
+          </div>
+          <div class="planPrice">¥0 <small>/ começar</small></div>
+          <p class="planSub">Para sentir o método no primeiro uso.</p>
+          <ul class="planList">
+            <li>treino 105x</li>
+            <li>frases aleatórias</li>
+            <li>ouvir e repetir</li>
+            <li>backup local</li>
+          </ul>
+        </div>
+
+        <div class="planCard premium">
+          <div class="planTop">
+            <h3 class="planName">Premium</h3>
+            <span class="planTag">mais valor</span>
+          </div>
+          <div class="planPrice">${SALES.monthlyPrice} <small>/ mês</small></div>
+          <p class="planSub">Para estudar com foco na vida real.</p>
+          <ul class="planList">
+            <li>packs por situação real</li>
+            <li>Sensei IA</li>
+            <li>mais material útil</li>
+            <li>mais retenção e evolução</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 /* ---------- landing ---------- */
 function renderLanding() {
   APP.innerHTML = `
     <div class="stack">
       <section class="card heroCard stack">
         <div class="badge">japonês funcional para quem não tem tempo</div>
-        <h1 class="heroTitle">Aprenda o japonês que muda sua vida no Japão, mesmo cansado depois do trabalho.</h1>
+        <h1 class="heroTitle">Aprenda o japonês que faz diferença na vida real, mesmo cansado depois do turno.</h1>
         <p class="heroLead">
-          O Nihongo321 treina sua memória, sua escuta e sua repetição com frases reais para fábrica, mercado, hospital, prefeitura, konbini e vida prática.
+          O Nihongo321 treina memória, repetição e uso prático com frases para fábrica, mercado, hospital, prefeitura, konbini e cotidiano no Japão.
         </p>
 
         <div class="heroActions">
@@ -1886,86 +1656,49 @@ function renderLanding() {
 
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">o que o cliente sente</div>
-          <div class="badge">logo no primeiro clique</div>
+          <div class="badge">dor real do cliente</div>
+          <div class="badge">solução prática</div>
         </div>
 
         <div class="valueGrid">
           <div class="valueCard">
             <div class="valueIcon">⏳</div>
-            <h3 class="valueTitle">sem tempo para estudar?</h3>
-            <p class="valueText">O app foi pensado para quem chega cansado do turno e ainda assim quer crescer, aprender e se sentir mais capaz no Japão.</p>
+            <h3 class="valueTitle">sem tempo para estudar</h3>
+            <p class="valueText">Treino curto e direto para quem chega cansado do trabalho e ainda quer evoluir.</p>
           </div>
 
           <div class="valueCard">
             <div class="valueIcon">🧠</div>
-            <h3 class="valueTitle">memória fraca para idioma?</h3>
-            <p class="valueText">O método 105x trabalha repetição guiada, reforço mental e treino contínuo de memorização funcional.</p>
+            <h3 class="valueTitle">memória sem treino</h3>
+            <p class="valueText">O 105x ajuda a reforçar memorização, repetição e segurança para usar o idioma.</p>
           </div>
 
           <div class="valueCard">
             <div class="valueIcon">🗣️</div>
-            <h3 class="valueTitle">japonês que serve de verdade</h3>
-            <p class="valueText">Nada de conteúdo solto. Aqui o foco é falar melhor no mercado, no hospital, na fábrica e no cotidiano real.</p>
+            <h3 class="valueTitle">nihongo funcional</h3>
+            <p class="valueText">Nada de teoria solta. O foco é falar melhor na vida real do Japão.</p>
           </div>
 
           <div class="valueCard">
             <div class="valueIcon">🤖</div>
-            <h3 class="valueTitle">Sensei IA no premium</h3>
-            <p class="valueText">O usuário pede um tema da própria vida e recebe material no formato ideal para estudar dentro do app.</p>
+            <h3 class="valueTitle">Sensei IA</h3>
+            <p class="valueText">No premium, o usuário pede um tema real e recebe material no formato ideal do app.</p>
           </div>
         </div>
       </section>
 
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">grátis x premium</div>
-          <div class="badge">claro e confiável</div>
-        </div>
-
-        <div class="planGrid">
-          <div class="planCard">
-            <div class="planTop">
-              <h3 class="planName">Grátis</h3>
-              <span class="planTag">entrada</span>
-            </div>
-            <div class="planPrice">¥0 <small>/ para começar</small></div>
-            <p class="planSub">Ideal para sentir o método e ver valor no primeiro uso.</p>
-            <ul class="planList">
-              <li>treino 105x liberado</li>
-              <li>frases aleatórias para começar hoje</li>
-              <li>ouvir, repetir e memorizar</li>
-              <li>backup local do seu progresso</li>
-            </ul>
-            <div class="planFooter">
-              <button class="btn btn--full" data-nav="#/home">começar grátis</button>
-            </div>
-          </div>
-
-          <div class="planCard premium">
-            <div class="planTop">
-              <h3 class="planName">Premium</h3>
-              <span class="planTag">mais valor</span>
-            </div>
-            <div class="planPrice">${SALES.monthlyPrice} <small>/ mês</small></div>
-            <p class="planSub">Para quem quer aprender japonês focado na própria realidade.</p>
-            <ul class="planList">
-              <li>packs por situação real do Japão</li>
-              <li>fábrica, prefeitura, aeroporto, viagem e mais</li>
-              <li>Sensei IA para criar material sob medida</li>
-              <li>mais clareza, mais retenção e mais evolução</li>
-            </ul>
-            <div class="planFooter">
-              <button class="btn btn--ok btn--full" data-nav="#/premium">ver premium</button>
-            </div>
-          </div>
-        </div>
-      </section>
+      ${renderPlanCompareBox()}
 
       <section class="ctaBand stack">
-        <div class="badge">sinta a diferença</div>
+        <div class="badge">comece pelo certo</div>
         <h2 class="h2">Você não precisa de mais teoria. Precisa de treino certo, repetição certa e frases certas.</h2>
-        <p class="p">Esse app existe para devolver ao brasileiro no Japão a sensação de crescimento, clareza e utilidade real no dia a dia.</p>
+        <p class="p">Esse app existe para devolver ao brasileiro no Japão clareza, utilidade e crescimento real no dia a dia.</p>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/tutorial">ver tutorial</button>
+          <button class="btn btn--full" data-nav="#/admin">admin / teste premium</button>
+        </div>
+
         <div class="storeGrid">
           <a class="storeBtn" href="${escapeHTML(SALES.playStoreUrl)}" target="_blank" rel="noopener noreferrer">
             <span class="ic">▶</span><span>Google Play</span>
@@ -1989,8 +1722,24 @@ function renderPremium() {
         <div class="badge">premium</div>
         <h1 class="h1">Desbloqueie o app que estuda com a sua realidade.</h1>
         <p class="p">
-          O premium libera os tópicos práticos e o Sensei IA, para transformar necessidades reais da sua rotina em material de treino pronto.
+          O premium libera os tópicos práticos e o Sensei IA, para transformar necessidades reais da sua rotina em material pronto para treino.
         </p>
+
+        ${renderPlanCompareBox()}
+
+        <div class="lockCard">
+          <h3 class="lockTitle">O que entra no premium</h3>
+          <p class="lockText">
+            Fábrica, aeroporto, correio, prefeitura, konbini, mercado, loja de bicicletas, cinema, loja de departamentos, viagem, perguntas práticas e Sensei IA.
+          </p>
+        </div>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">O que o Sensei IA faz</h3>
+          <p class="lockText">
+            Você descreve sua necessidade. O app monta frases úteis, tradução e palavras novas no formato certo para o seu treino.
+          </p>
+        </div>
 
         <div class="planGrid">
           <div class="planCard premium">
@@ -2001,9 +1750,9 @@ function renderPremium() {
             <div class="planPrice">${SALES.monthlyPrice}<small>/ mês</small></div>
             <p class="planSub">Entrada leve para testar o app completo.</p>
             <ul class="planList">
-              <li>todos os packs premium</li>
+              <li>todos os tópicos premium</li>
               <li>Sensei IA</li>
-              <li>mais retenção e mais evolução</li>
+              <li>mais evolução e retenção</li>
             </ul>
             <div class="planFooter">
               <button class="btn btn--ok btn--full" data-action="checkout">assinar agora</button>
@@ -2016,10 +1765,10 @@ function renderPremium() {
               <span class="planTag">economia</span>
             </div>
             <div class="planPrice">${SALES.semiannualPrice}<small>/ foco</small></div>
-            <p class="planSub">Melhor para compromisso e receita previsível.</p>
+            <p class="planSub">Melhor para compromisso e previsibilidade.</p>
             <ul class="planList">
               <li>mais estabilidade no estudo</li>
-              <li>mais tempo para sentir resultado real</li>
+              <li>mais tempo para sentir resultado</li>
               <li>mais valor por cliente</li>
             </ul>
             <div class="planFooter">
@@ -2028,23 +1777,9 @@ function renderPremium() {
           </div>
         </div>
 
-        <div class="lockCard">
-          <h3 class="lockTitle">O que entra no premium</h3>
-          <p class="lockText">
-            Fábrica, aeroporto, correio, prefeitura, konbini, mercado, loja de bicicletas, cinema, loja de departamentos, viagem, perguntas práticas e o novo Sensei IA.
-          </p>
-        </div>
-
-        <div class="lockCard">
-          <h3 class="lockTitle">O que o Sensei IA faz</h3>
-          <p class="lockText">
-            Você descreve sua necessidade. O app monta frases úteis, tradução, palavras novas e estrutura pronta para entrar no seu treino.
-          </p>
-        </div>
-
         ${unlocked ? `
           <div class="sheet stack">
-            <div class="badge">premium liberado nesta demo ✅</div>
+            <div class="badge">premium liberado ✅</div>
             <div class="grid2">
               <button class="btn btn--ok btn--full" data-nav="#/sensei">abrir Sensei IA</button>
               <button class="btn btn--full" data-nav="#/home">ir para o app</button>
@@ -2055,12 +1790,66 @@ function renderPremium() {
             <div class="small">Nesta demo, você pode testar o fluxo premium agora.</div>
             <div class="grid2">
               <button class="btn btn--ok btn--full" data-action="checkout">abrir checkout</button>
-              <button class="btn btn--ghost btn--full" data-action="unlockDemoPremium">liberar demo</button>
+              <button class="btn btn--ghost btn--full" data-nav="#/admin">usar senha admin</button>
             </div>
           </div>
         `}
 
         <div class="small">Suporte: ${escapeHTML(SALES.supportEmail)}</div>
+      </section>
+    </div>
+  `;
+}
+
+/* ---------- admin ---------- */
+function renderAdmin() {
+  const unlocked = isAdminUnlocked();
+  const premium = isPremiumUnlocked();
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">admin</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Onde a senha é usada</h3>
+          <p class="lockText">
+            É aqui. Nesta área você entra como administrador para testar premium e validar a demo.
+          </p>
+        </div>
+
+        ${unlocked ? `
+          <div class="sheet stack">
+            <div class="badge">admin liberado ✅</div>
+            <div class="small">último login: ${STATE.admin.lastLoginAt ? fmtDateShort(STATE.admin.lastLoginAt) : "agora"}</div>
+
+            <div class="grid2">
+              <button class="btn btn--ok btn--full" data-action="unlockDemoPremium">liberar premium</button>
+              <button class="btn btn--bad btn--full" data-action="lockDemoPremium">bloquear premium</button>
+            </div>
+
+            <div class="grid2">
+              <button class="btn btn--ghost btn--full" data-nav="#/premium">ver premium</button>
+              <button class="btn btn--full" data-nav="#/sensei">abrir Sensei IA</button>
+            </div>
+
+            <div class="small">status premium: ${premium ? "liberado" : "bloqueado"}</div>
+
+            <button class="btn btn--muted btn--full" data-action="logoutAdmin">sair do admin</button>
+          </div>
+        ` : `
+          <div class="sheet stack">
+            <div class="small">Digite a senha de admin para testes internos.</div>
+            <input id="adminPass" class="btn" style="height:56px; text-align:left" type="password" placeholder="senha admin" />
+            <button class="btn btn--ok btn--full" data-action="loginAdmin">entrar como admin</button>
+            <div class="small">senha atual para teste: <b>${escapeHTML(ADMIN.passcode)}</b></div>
+          </div>
+        `}
+
+        <div class="small">Antes de publicar, troque a senha do código e remova a exibição dela nesta tela.</div>
       </section>
     </div>
   `;
@@ -2082,7 +1871,7 @@ function renderHome() {
         </div>
 
         <h1 class="h1">✨Super Memória✨</h1>
-        <p class="p">Treino curto, japonês útil e repetição que fortalece sua memória mesmo nos dias mais puxados.</p>
+        <p class="p">Treino curto, japonês útil e repetição guiada para fortalecer memória e confiança.</p>
 
         <button class="bigBtn" id="btnStart">COMEÇAR AGORA</button>
 
@@ -2143,6 +1932,25 @@ function renderHome() {
         </div>
       </section>
 
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">tutorial</div>
+          <div class="badge">${STATE.tutorial.done ? "concluído" : "recomendado"}</div>
+        </div>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Aprenda a usar o app do jeito certo</h3>
+          <p class="lockText">
+            O tutorial mostra como tirar valor do treino, do premium e do Sensei IA sem se perder.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/tutorial">${STATE.tutorial.done ? "rever tutorial" : "ver tutorial"}</button>
+          <button class="btn btn--ghost btn--full" data-nav="#/admin">admin</button>
+        </div>
+      </section>
+
       ${!isPremiumUnlocked() ? `
         <section class="card stack">
           <div class="row row--between">
@@ -2155,7 +1963,7 @@ function renderHome() {
           </div>
           <div class="grid2">
             <button class="btn btn--ok btn--full" data-nav="#/premium">ver premium</button>
-            <button class="btn btn--full" data-nav="#/landing">voltar à vitrine</button>
+            <button class="btn btn--full" data-nav="#/admin">usar senha admin</button>
           </div>
         </section>
       ` : ""}
@@ -2196,6 +2004,56 @@ function renderHome() {
   }
 }
 
+/* ---------- tutorial ---------- */
+function renderTutorial() {
+  const step = tutorialCurrentStep();
+  const item = TUTORIAL_STEPS[step];
+  const pct = (step + 1) / TUTORIAL_STEPS.length;
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">tutorial</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
+
+        <div class="sheet stack">
+          <div class="row row--between">
+            <div class="badge">passo ${step + 1} de ${TUTORIAL_STEPS.length}</div>
+            <div class="badge">${Math.round(pct * 100)}%</div>
+          </div>
+
+          <h2 class="h2">${escapeHTML(item.title)}</h2>
+          <p class="p">${escapeHTML(item.text)}</p>
+
+          <div class="pWrap" aria-label="progresso tutorial">
+            <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+            <div class="pTxt">${Math.round(pct * 100)}%</div>
+          </div>
+
+          <div class="grid2">
+            <button class="btn btn--muted btn--full" data-action="tutorialPrev">anterior</button>
+            <button class="btn btn--ok btn--full" data-action="tutorialNext">${step >= TUTORIAL_STEPS.length - 1 ? "concluir" : "próximo"}</button>
+          </div>
+        </div>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">atalhos úteis</h3>
+          <p class="lockText">
+            Grátis para provar valor. Premium para aprofundar. Admin para testes. Sensei IA para montar material sob medida.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ghost btn--full" data-nav="#/premium">ver premium</button>
+          <button class="btn btn--full" data-nav="#/sensei">abrir Sensei IA</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 /* ---------- Sensei IA ---------- */
 const SENSEI_SCENARIO_BANK = {
   fabrica: [
@@ -2231,18 +2089,8 @@ const SENSEI_SCENARIO_BANK = {
       jp: "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
       pt: "Estou me sentindo um pouco mal.",
       newWords: [
-        { jp: "少{すこ}し", pt: "um pouco" },
         { jp: "体調{たいちょう}", pt: "condição física" },
         { jp: "悪{わる}い", pt: "ruim" }
-      ]
-    },
-    {
-      jp: "明日{あした} は 少{すこ}し 遅{おく}れる かも しれません。",
-      pt: "Amanhã eu talvez me atrase um pouco.",
-      newWords: [
-        { jp: "明日{あした}", pt: "amanhã" },
-        { jp: "遅{おく}れる", pt: "atrasar" },
-        { jp: "かも しれません", pt: "talvez" }
       ]
     },
     {
@@ -2251,6 +2099,14 @@ const SENSEI_SCENARIO_BANK = {
       newWords: [
         { jp: "内容{ないよう}", pt: "conteúdo / instrução" },
         { jp: "合{あ}って いますか", pt: "está correto?" }
+      ]
+    },
+    {
+      jp: "もう 少{すこ}し ゆっくり お願{ねが}いします。",
+      pt: "Mais devagar, por favor.",
+      newWords: [
+        { jp: "少{すこ}し", pt: "um pouco" },
+        { jp: "ゆっくり", pt: "devagar" }
       ]
     }
   ],
@@ -2276,7 +2132,6 @@ const SENSEI_SCENARIO_BANK = {
       pt: "Quando devo tomar o remédio?",
       newWords: [
         { jp: "薬{くすり}", pt: "remédio" },
-        { jp: "いつ", pt: "quando" },
         { jp: "飲{の}めば いい", pt: "devo tomar" }
       ]
     }
@@ -2287,8 +2142,7 @@ const SENSEI_SCENARIO_BANK = {
       pt: "Por favor, me ensine como preencher este documento.",
       newWords: [
         { jp: "書類{しょるい}", pt: "documento" },
-        { jp: "書{か}き方{かた}", pt: "forma de preencher / escrever" },
-        { jp: "教{おし}えて", pt: "ensinar / explicar" }
+        { jp: "書{か}き方{かた}", pt: "forma de preencher" }
       ]
     },
     {
@@ -2304,8 +2158,7 @@ const SENSEI_SCENARIO_BANK = {
       pt: "Este procedimento termina ainda hoje?",
       newWords: [
         { jp: "手続{てつづ}き", pt: "procedimento" },
-        { jp: "今日中{きょうじゅう}", pt: "ainda hoje" },
-        { jp: "終{お}わりますか", pt: "termina?" }
+        { jp: "今日中{きょうじゅう}", pt: "ainda hoje" }
       ]
     }
   ],
@@ -2322,8 +2175,7 @@ const SENSEI_SCENARIO_BANK = {
       jp: "賞味期限{しょうみきげん} は いつ ですか。",
       pt: "Qual é a data de validade?",
       newWords: [
-        { jp: "賞味期限{しょうみきげん}", pt: "data de validade" },
-        { jp: "いつ", pt: "quando" }
+        { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
       ]
     },
     {
@@ -2340,7 +2192,7 @@ const SENSEI_SCENARIO_BANK = {
       jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
       pt: "Por favor, aqueça este bentô.",
       newWords: [
-        { jp: "お弁当{べんとう}", pt: "marmita / bentô" },
+        { jp: "お弁当{べんとう}", pt: "bentô" },
         { jp: "温{あたた}めて", pt: "aquecer" }
       ]
     },
@@ -2348,8 +2200,7 @@ const SENSEI_SCENARIO_BANK = {
       jp: "レジ袋{ぶくろ} は 要{い}りません。",
       pt: "Não preciso de sacola.",
       newWords: [
-        { jp: "レジ袋{ぶくろ}", pt: "sacola" },
-        { jp: "要{い}りません", pt: "não preciso" }
+        { jp: "レジ袋{ぶくろ}", pt: "sacola" }
       ]
     },
     {
@@ -2357,7 +2208,6 @@ const SENSEI_SCENARIO_BANK = {
       pt: "Posso fazer este pagamento aqui?",
       newWords: [
         { jp: "支払{しはら}い", pt: "pagamento" },
-        { jp: "ここ", pt: "aqui" },
         { jp: "できますか", pt: "é possível?" }
       ]
     }
@@ -2367,23 +2217,20 @@ const SENSEI_SCENARIO_BANK = {
       jp: "水漏{みずも}れ して います。",
       pt: "Está vazando água.",
       newWords: [
-        { jp: "水漏{みずも}れ", pt: "vazamento de água" },
-        { jp: "して います", pt: "está acontecendo" }
+        { jp: "水漏{みずも}れ", pt: "vazamento de água" }
       ]
     },
     {
       jp: "修理{しゅうり} を お願{ねが}いしたいです。",
       pt: "Quero solicitar um reparo.",
       newWords: [
-        { jp: "修理{しゅうり}", pt: "reparo / conserto" },
-        { jp: "お願{ねが}いしたい", pt: "quero solicitar" }
+        { jp: "修理{しゅうり}", pt: "reparo / conserto" }
       ]
     },
     {
       jp: "いつ 来{き}て もらえますか。",
       pt: "Quando alguém pode vir aqui?",
       newWords: [
-        { jp: "いつ", pt: "quando" },
         { jp: "来{き}て もらえますか", pt: "pode vir?" }
       ]
     }
@@ -2394,7 +2241,6 @@ const SENSEI_SCENARIO_BANK = {
       pt: "Este trem vai para Fukui?",
       newWords: [
         { jp: "電車{でんしゃ}", pt: "trem" },
-        { jp: "福井{ふくい}", pt: "Fukui" },
         { jp: "行{い}きますか", pt: "vai?" }
       ]
     },
@@ -2410,7 +2256,6 @@ const SENSEI_SCENARIO_BANK = {
       pt: "A que horas é o próximo trem?",
       newWords: [
         { jp: "次{つぎ}", pt: "próximo" },
-        { jp: "電車{でんしゃ}", pt: "trem" },
         { jp: "何時{なんじ}", pt: "que horas" }
       ]
     }
@@ -2461,7 +2306,7 @@ function buildSenseiCoachLine(goal, level, tone) {
   return parts.join(" ");
 }
 
-function cloneSenseiPhrase(base, scenario, index, customTheme) {
+function cloneSenseiPhrase(base, scenario, customTheme) {
   const topicName = buildSenseiTopicName(scenario, customTheme);
   return {
     id: uid("sensei"),
@@ -2482,8 +2327,7 @@ function generateSenseiMaterial(payload) {
 
   const scenario = detectSenseiScenario(`${request} ${customTheme}`);
   const bank = SENSEI_SCENARIO_BANK[scenario] || SENSEI_SCENARIO_BANK.fabrica;
-
-  const selected = bank.slice(0, 3).map((base, i) => cloneSenseiPhrase(base, scenario, i, customTheme));
+  const selected = bank.slice(0, 3).map((base) => cloneSenseiPhrase(base, scenario, customTheme));
   const coachLine = buildSenseiCoachLine(request, level, tone);
 
   return {
@@ -2496,7 +2340,6 @@ function generateSenseiMaterial(payload) {
 
 function saveSenseiPackToApp(pack) {
   const topic = createTopicIfMissing(pack.topicName);
-
   let added = 0;
 
   for (const phrase of pack.phrases) {
@@ -2589,7 +2432,7 @@ function renderSensei() {
           </div>
           <div class="grid2">
             <button class="btn btn--ok btn--full" data-nav="#/premium">ver premium</button>
-            <button class="btn btn--full" data-nav="#/home">voltar</button>
+            <button class="btn btn--full" data-nav="#/admin">usar senha admin</button>
           </div>
         </section>
       </div>
@@ -2608,7 +2451,7 @@ function renderSensei() {
         <div class="lockCard">
           <h3 class="lockTitle">Peça material para a sua vida no Japão</h3>
           <p class="lockText">
-            Exemplo: “quero frases para falar com meu chefe quando eu estiver cansado”, “preciso ir ao hospital”, “quero falar no mercado sem travar”.
+            Exemplo: “quero frases para falar com meu chefe quando eu não entender a tarefa”, “preciso ir ao hospital”, “quero falar no mercado sem travar”.
           </p>
         </div>
 
@@ -2643,7 +2486,7 @@ function renderSensei() {
 
           <div class="grid2">
             <button class="btn btn--ok btn--full" data-action="generateSensei">gerar material</button>
-            <button class="btn btn--full" data-nav="#/premium">ver premium</button>
+            <button class="btn btn--full" data-nav="#/manage">gerenciar frases</button>
           </div>
         </div>
 
@@ -2686,7 +2529,7 @@ function renderSenseiOutput(pack) {
 
     <div class="grid2">
       <button class="btn btn--ok btn--full" data-action="saveSenseiPack">salvar no app</button>
-      <button class="btn btn--full" data-nav="#/manage">gerenciar depois</button>
+      <button class="btn btn--full" data-nav="#/105x">ir pro treino</button>
     </div>
   `;
 
@@ -2972,10 +2815,10 @@ function renderEdit(editingId = null) {
 
           <div class="sep"></div>
 
-          <div class="small">jp (aceita kanji. furigana manual: 仕事{しごと}. parênteses （ ） ok)</div>
-          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 私{わたし} の名前{なまえ} は あきおです。" value="${escapeHTML(jpVal)}" />
+          <div class="small">jp (aceita furigana manual: 仕事{しごと})</div>
+          <input id="inJp" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 私{わたし} は 今日{きょう} 忙{いそが}しいです。" value="${escapeHTML(jpVal)}" />
           <div class="small">pt</div>
-          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: meu nome é Akio." value="${escapeHTML(ptVal)}" />
+          <input id="inPt" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: hoje estou ocupado." value="${escapeHTML(ptVal)}" />
           <div class="small">palavras novas (opcional) formato: jp=pt, jp=pt</div>
           <input id="inNW" class="btn" style="height:56px; width:100%; text-align:left" placeholder="ex: 名前{なまえ}=nome" value="${escapeHTML(nwVal)}" />
 
@@ -3032,7 +2875,7 @@ function renderManage() {
           <button class="btn btn--ghost" data-nav="#/edit">novo cadastro</button>
         </div>
 
-        <div class="small">furigana em cima usando { }. exemplo: 名前{なまえ}</div>
+        <div class="small">furigana usando { }. exemplo: 名前{なまえ}</div>
 
         <div class="list" id="manageTopics"></div>
       </section>
@@ -3077,7 +2920,7 @@ function renderManage() {
                     </div>
 
                     <div class="row" style="gap:8px">
-                      <div class="dragHandle" title="segure e arraste" aria-label="segure e arraste" data-action="dragHandle">≡</div>
+                      <div class="dragHandle" title="segure e arraste" aria-label="segure e arraste">≡</div>
                       <button class="btn btn--ghost" data-action="editPhrase" data-id="${p.id}">editar</button>
                       <button class="btn btn--bad" data-action="deletePhrase" data-id="${p.id}">excluir</button>
                     </div>
@@ -3086,7 +2929,7 @@ function renderManage() {
               `;
             }).join("")}
           </div>
-          <div class="small">dica: segure no ≡ e arraste para ordenar.</div>
+          <div class="small">segure no ≡ e arraste para ordenar.</div>
         ` : `
           <div class="sheet stack">
             <div class="small">sem frases aqui ainda.</div>
@@ -3197,7 +3040,7 @@ function validateAndLoadBackup(parsed, msgEl) {
     }
   }
 
-  STATE = migrateToV6(st);
+  STATE = migrateToV7(st);
   saveState();
   refreshHUD();
 
@@ -3267,12 +3110,9 @@ function renderSettings() {
 
         <div class="sep"></div>
 
-        <div class="sheet stack">
-          <div class="small">demo premium</div>
-          <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="unlockDemoPremium">liberar premium</button>
-            <button class="btn btn--muted btn--full" data-action="lockDemoPremium">bloquear premium</button>
-          </div>
+        <div class="grid2">
+          <button class="btn btn--ghost btn--full" data-nav="#/tutorial">tutorial</button>
+          <button class="btn btn--ghost btn--full" data-nav="#/admin">admin</button>
         </div>
 
         <div class="sep"></div>
@@ -3522,7 +3362,7 @@ function renderSkills() {
             <div class="tlFill" style="transform:scaleX(${clamp(sum.activeDays / SKILL_PLAN_DAYS, 0, 1)})"></div>
             <div class="tlNodes">${timeline}</div>
           </div>
-          <div class="small">dica: “dia vivo” = 2 min ou 1 ciclo. sem culpa.</div>
+          <div class="small">“dia vivo” = 2 min ou 1 ciclo. sem culpa.</div>
         </div>
 
         <div class="sheet stack">
@@ -3555,6 +3395,8 @@ function render() {
 
   if (r === "#/landing") return renderLanding();
   if (r === "#/premium") return renderPremium();
+  if (r === "#/admin") return renderAdmin();
+  if (r === "#/tutorial") return renderTutorial();
   if (r === "#/sensei") return renderSensei();
   if (r === "#/home") return renderHome();
   if (r === "#/105x") return render105x();
@@ -3626,19 +3468,82 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  if (act === "loginAdmin") {
+    const val = ($("#adminPass")?.value || "").trim();
+    if (!val) {
+      toast("digite a senha admin");
+      beep("tuk");
+      return;
+    }
+
+    if (val !== ADMIN.passcode) {
+      toast("senha incorreta");
+      beep("tuk");
+      return;
+    }
+
+    unlockAdminSuccess();
+    toast("admin liberado ✅");
+    beep("ding");
+    render();
+    return;
+  }
+
+  if (act === "logoutAdmin") {
+    logoutAdmin();
+    toast("admin encerrado");
+    render();
+    return;
+  }
+
   if (act === "unlockDemoPremium") {
+    if (!isAdminUnlocked()) {
+      toast("entre como admin primeiro");
+      beep("tuk");
+      nav("#/admin");
+      return;
+    }
+
     markPremiumDemoUnlock();
-    toast("premium liberado nesta demo ✅");
+    toast("premium liberado ✅");
     beep("ding");
     render();
     return;
   }
 
   if (act === "lockDemoPremium") {
-    STATE.monetization.premiumUnlocked = false;
-    STATE.session.topicFilter = "ALL";
+    if (!isAdminUnlocked()) {
+      toast("entre como admin primeiro");
+      beep("tuk");
+      nav("#/admin");
+      return;
+    }
+
+    markPremiumLocked();
+    toast("premium bloqueado");
+    render();
+    return;
+  }
+
+  if (act === "tutorialPrev") {
+    STATE.tutorial.currentStep = clamp((STATE.tutorial.currentStep || 0) - 1, 0, TUTORIAL_STEPS.length - 1);
     saveState();
-    toast("premium bloqueado na demo");
+    render();
+    return;
+  }
+
+  if (act === "tutorialNext") {
+    const current = tutorialCurrentStep();
+    if (current >= TUTORIAL_STEPS.length - 1) {
+      completeTutorial();
+      toast("tutorial concluído ✅");
+      beep("ding");
+      nav("#/home");
+      return;
+    }
+
+    STATE.tutorial.currentStep = current + 1;
+    saveState();
     render();
     return;
   }
@@ -3829,7 +3734,7 @@ document.addEventListener("click", (e) => {
     if (!id) return;
 
     const name = topicName(id);
-    const ok = confirm(`apagar todas as frases de "${name}"? (sem desfazer)`);
+    const ok = confirm(`apagar todas as frases de "${name}"?`);
     if (!ok) return;
 
     const n = clearTopic(id);
@@ -3872,7 +3777,7 @@ document.addEventListener("click", (e) => {
     }
 
     if (!isValidJP(jp)) {
-      if (msg) msg.textContent = "jp inválido. dica: 仕事{しごと} ou （ ）";
+      if (msg) msg.textContent = "jp inválido.";
       toast("jp inválido");
       beep("tuk");
       return;
@@ -3959,7 +3864,7 @@ document.addEventListener("click", (e) => {
     }
 
     if (!isValidJP(jp)) {
-      if (msg) msg.textContent = "jp inválido. dica: 仕事{しごと} ou （ ）";
+      if (msg) msg.textContent = "jp inválido.";
       toast("jp inválido");
       beep("tuk");
       return;
@@ -3994,7 +3899,7 @@ document.addEventListener("click", (e) => {
     const id = btn.dataset.id;
     if (!id) return;
 
-    const ok = confirm("excluir esta frase? (sem desfazer)");
+    const ok = confirm("excluir esta frase?");
     if (!ok) return;
 
     const removed = deletePhraseById(id);
@@ -4022,7 +3927,7 @@ document.addEventListener("click", (e) => {
         toast("backup copiado ✅");
         beep("ding");
       }).catch(() => {
-        if (msg) msg.textContent = "não deu pra copiar. selecione e copie manualmente.";
+        if (msg) msg.textContent = "não deu pra copiar. copie manualmente.";
         toast("copie manualmente");
         beep("tuk");
         const box = $("#importBox");
@@ -4038,7 +3943,7 @@ document.addEventListener("click", (e) => {
     const filename = `nihongo321-backup-${y}-${m}-${dd}.json`;
 
     downloadTextFile(filename, txt);
-    if (msg) msg.textContent = "baixado ✅ (procure em downloads)";
+    if (msg) msg.textContent = "baixado ✅";
     toast("backup baixado ✅");
     beep("ding");
     return;
@@ -4090,13 +3995,14 @@ document.addEventListener("click", (e) => {
 
   if (act === "reset") {
     localStorage.removeItem(LS_KEY);
+    localStorage.removeItem("jp_105x_v6");
     localStorage.removeItem("jp_105x_v5");
     localStorage.removeItem("jp_105x_v4");
     localStorage.removeItem("jp_105x_v3");
     localStorage.removeItem("jp_105x_v2");
     STATE = defaultState();
     saveState();
-    toast("resetado. seed voltou ✅");
+    toast("resetado ✅");
     beep("ding");
     nav("#/landing");
     return;
