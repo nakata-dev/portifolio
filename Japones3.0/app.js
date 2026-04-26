@@ -1,12 +1,13 @@
 /* =========================================================
    NIHONGO321 v7.6
-   Bloco 2B - confiança visual + onboarding premium
-   - onboarding inicial refinado
-   - premium mais claro, concreto e confiável
-   - CTAs e badges padronizados
-   - estados vazios melhorados
-   - mensagens bloqueadas mais profissionais
-   - sem alteração na lógica central/localStorage
+   Bloco 2C + Bloco 3A
+   - confiança final de produto
+   - retenção leve sem culpa
+   - streak leve
+   - continuidade de treino
+   - lembrete interno
+   - frase do dia com valor diário mais claro
+   - mensagens emocionais após ciclos
    ========================================================= */
 
 const LS_KEY = "jp_105x_v7";
@@ -86,6 +87,15 @@ function todayKey() {
   return `${y}-${m}-${dd}`;
 }
 
+function dateKeyFromOffset(offsetDays = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
+}
+
 function fmtHMSDays(ms) {
   const totalSec = Math.max(0, Math.floor(ms / 1000));
   const days = Math.floor(totalSec / 86400);
@@ -137,6 +147,12 @@ function hashString(s) {
     h |= 0;
   }
   return Math.abs(h);
+}
+
+function pickFromList(list, seedText) {
+  if (!Array.isArray(list) || !list.length) return "";
+  const i = hashString(seedText) % list.length;
+  return list[i];
 }
 
 /* ---------- rota ---------- */
@@ -1014,6 +1030,157 @@ function todayGoalProgress() {
   };
 }
 
+/* ---------- retenção leve ---------- */
+function hasStudyActivity(dayObj) {
+  if (!dayObj) return false;
+
+  const mins = (dayObj.ms || 0) / 60000;
+  const cycles = dayObj.cycles || 0;
+  const listens = dayObj.listens || 0;
+  const calls = dayObj.calls || 0;
+
+  return mins >= 2 || cycles > 0 || listens >= 3 || calls > 0;
+}
+
+function getHabitDay(key) {
+  return STATE.habit?.days?.[key] || null;
+}
+
+function getStreakInfo() {
+  ensureHabitToday();
+
+  const today = todayKey();
+  const todayActive = hasStudyActivity(getHabitDay(today));
+  const yesterdayActive = hasStudyActivity(getHabitDay(dateKeyFromOffset(-1)));
+
+  let streak = 0;
+  let startOffset = todayActive ? 0 : -1;
+
+  for (let offset = startOffset; offset > -370; offset--) {
+    const key = dateKeyFromOffset(offset);
+    const active = hasStudyActivity(getHabitDay(key));
+
+    if (!active) break;
+    streak++;
+  }
+
+  let label = "comece hoje";
+  let message = "Faça 1 ciclo hoje. Pouco já mantém o japonês vivo.";
+
+  if (todayActive && streak <= 1) {
+    label = "hoje já contou";
+    message = "Você já manteve o hábito vivo hoje. Amanhã é só continuar.";
+  }
+
+  if (todayActive && streak > 1) {
+    label = `${streak} dias em ritmo`;
+    message = "Hoje já contou. Volte amanhã para manter essa sequência leve.";
+  }
+
+  if (!todayActive && yesterdayActive && streak > 0) {
+    label = `${streak} dia${streak === 1 ? "" : "s"} em ritmo`;
+    message = "Faça um ciclo hoje para continuar sem peso.";
+  }
+
+  if (!todayActive && !yesterdayActive && streak === 0) {
+    label = "retome com calma";
+    message = "Sem culpa. Um ciclo hoje já recoloca o japonês em movimento.";
+  }
+
+  return {
+    streak,
+    todayActive,
+    yesterdayActive,
+    label,
+    message
+  };
+}
+
+function hasResumeTraining() {
+  if (!STATE.session?.inProgress) return false;
+  if (!STATE.session?.phraseId) return false;
+
+  const p = getPhrase(STATE.session.phraseId);
+  if (!p) return false;
+  if (!canAccessTopic(p.topicId)) return false;
+
+  return true;
+}
+
+function getResumePhrase() {
+  if (!hasResumeTraining()) return null;
+  return getPhrase(STATE.session.phraseId);
+}
+
+function getRetentionNudge() {
+  const streak = getStreakInfo();
+  const goal = todayGoalProgress();
+  const resume = getResumePhrase();
+  const phraseOfDay = getPhraseOfDay();
+
+  if (resume && !goal.done) {
+    return {
+      badge: "continue",
+      title: "Você já tem um treino aberto",
+      text: "Volte exatamente para a frase onde parou. Menos procura, mais prática.",
+      action: "continuar último treino"
+    };
+  }
+
+  if (!streak.todayActive && phraseOfDay) {
+    return {
+      badge: "hoje",
+      title: "A frase do dia está pronta",
+      text: "Quando estiver cansado, comece por ela. Um treino curto já conta.",
+      action: "treinar frase do dia"
+    };
+  }
+
+  if (goal.done) {
+    return {
+      badge: "feito hoje",
+      title: "Hoje você já manteve o ritmo",
+      text: "Amanhã, volte sem recomeçar do zero. Constância leve também dá resultado.",
+      action: "continuar treinando"
+    };
+  }
+
+  return {
+    badge: "ritmo leve",
+    title: "Faça 1 ciclo hoje",
+    text: "Poucos minutos bastam para não deixar o japonês esfriar.",
+    action: "começar treino"
+  };
+}
+
+const CYCLE_REWARD_MESSAGES = [
+  "Ciclo fechado. Essa frase ficou um pouco mais familiar.",
+  "Bom ritmo. Pouco por dia também dá resultado.",
+  "Você manteve o japonês vivo hoje.",
+  "Mais uma repetição útil para a vida no Japão.",
+  "Essa frase já está menos distante.",
+  "Pequeno treino, memória trabalhando."
+];
+
+const MASTERED_REWARD_MESSAGES = [
+  "Frase dominada. Essa já está mais perto da memória automática.",
+  "Muito bom. Uma frase útil ficou mais sua.",
+  "Você fortaleceu uma frase que pode ajudar no Japão.",
+  "Frase concluída. Mais confiança para situações reais.",
+  "Essa frase entrou no seu kit pessoal."
+];
+
+function rewardCycleMessage(masteredNow) {
+  const pid = STATE.session?.phraseId || "";
+  const seed = `${todayKey()}|${pid}|${STATE.stats.cyclesDone || 0}|reward`;
+
+  if (masteredNow) {
+    return pickFromList(MASTERED_REWARD_MESSAGES, seed) || MASTERED_REWARD_MESSAGES[0];
+  }
+
+  return pickFromList(CYCLE_REWARD_MESSAGES, seed) || CYCLE_REWARD_MESSAGES[0];
+}
+
 /* ---------- áudio ---------- */
 let audioCtx = null;
 let callBusy = false;
@@ -1085,6 +1252,7 @@ function vibrate(pattern = [10]) {
   if (!navigator.vibrate) return;
   navigator.vibrate(pattern);
 }
+
 /* ---------- ui base ---------- */
 const APP = $("#app");
 
@@ -1174,7 +1342,7 @@ function openCheckout() {
     return;
   }
 
-  toast("checkout ainda não configurado");
+  toast("configure o checkout antes de vender");
 }
 
 function markPremiumDemoUnlock() {
@@ -1191,7 +1359,7 @@ function markPremiumLocked() {
 
 function showPremiumLockedMessage(topicId) {
   const name = topicName(topicId);
-  toast(`${name} faz parte do premium`);
+  toast(`${name} é premium 🔒`);
   STATE.monetization.seenPaywall = true;
   saveState();
   nav("#/premium");
@@ -1229,28 +1397,28 @@ function habitBump(_key, field, amount = 1) {
 /* ---------- tutorial ---------- */
 const TUTORIAL_STEPS = [
   {
+    title: "Entenda o método",
+    text: "O Nihongo321 usa repetição guiada para treinar memória, ouvido e fala com japonês funcional."
+  },
+  {
     title: "Comece pelo essencial",
-    text: "O grátis já libera o treino 105x, o Pack Essencial Japão, frase do dia, favoritos e meta leve."
+    text: "O grátis já libera treino 105x, Pack Essencial Japão, frase do dia, favoritos e meta leve."
   },
   {
-    title: "Treine uma frase por vez",
-    text: "Ouça a frase, leia a tradução e repita em voz alta. O objetivo é destravar o uso real."
+    title: "Treine sem complicar",
+    text: "Entre no treino, ouça a frase, leia a tradução e repita em voz alta."
   },
   {
-    title: "Feche ciclos pequenos",
+    title: "Feche ciclos",
     text: "Cada toque em “repeti e entendi” aproxima a frase da memória automática."
   },
   {
-    title: "Salve o que importa",
-    text: "Use favoritos para montar seu kit pessoal de frases para trabalho, mercado, prefeitura e rotina."
-  },
-  {
-    title: "Use a frase do dia",
-    text: "Quando estiver cansado, ela evita escolha demais: abra, treine e mantenha o hábito vivo."
+    title: "Salve frases importantes",
+    text: "Use favoritos para guardar frases que podem salvar sua rotina no Japão."
   },
   {
     title: "Avance com o premium",
-    text: "O premium libera mais temas reais e o Sensei IA para criar material sob medida para sua vida no Japão."
+    text: "No premium ficam temas mais específicos e o Sensei IA para criar material sob medida."
   }
 ];
 
@@ -1771,12 +1939,10 @@ function showCycleSheet(masteredNow) {
 
   sheet.style.display = "block";
 
-  const msg = masteredNow
-    ? "Frase dominada. Sua memória ganhou mais força."
-    : "Ciclo fechado. Mais 100 moedas para o seu progresso.";
+  const msg = rewardCycleMessage(masteredNow);
 
   sheet.innerHTML = `
-    <div class="stamp">parabéns 👏</div>
+    <div class="stamp">${masteredNow ? "frase dominada 🌸" : "ciclo fechado 👏"}</div>
     <div class="small">${escapeHTML(msg)}</div>
     <div class="row">
       <button class="btn btn--ok btn--full" data-action="next">próxima frase</button>
@@ -1881,7 +2047,6 @@ function updateStudyUI() {
   const pct = clamp(ms / goal, 0, 1);
   fill.style.transform = `scaleX(${pct})`;
 }
-
 /* ---------- render helpers ---------- */
 function renderNewWords(list) {
   if (!Array.isArray(list) || list.length === 0) return "";
@@ -1913,54 +2078,23 @@ function renderTopicHeader(topic, count, collapsed) {
   `;
 }
 
-function renderTrustStrip() {
-  return `
-    <div class="freeValueStrip" aria-label="pontos de confiança">
-      <div class="freeValuePill">sem cadastro obrigatório</div>
-      <div class="freeValuePill">dados salvos no aparelho</div>
-      <div class="freeValuePill">treino rápido e direto</div>
-    </div>
-  `;
-}
-
-function renderEmptyState(title, text, actionHtml = "") {
-  return `
-    <div class="sheet stack">
-      <div class="badge">nada por aqui ainda</div>
-      <h3 class="h3">${escapeHTML(title)}</h3>
-      <p class="small">${escapeHTML(text)}</p>
-      ${actionHtml}
-    </div>
-  `;
-}
-
-function renderLockedState(title, text, primary = "ver premium") {
-  return `
-    <div class="lockCard">
-      <h3 class="lockTitle">${escapeHTML(title)}</h3>
-      <p class="lockText">${escapeHTML(text)}</p>
-    </div>
-    <button class="btn btn--ok btn--full" data-nav="#/premium">${escapeHTML(primary)}</button>
-  `;
-}
-
 function renderPlanCompareBox() {
   return `
     <div class="sheet stack" style="text-align:left">
       <div class="row row--between">
-        <div class="badge">comparação</div>
-        <div class="badge">sem enrolação</div>
+        <div class="badge">grátis x premium</div>
+        <div class="badge">visão clara</div>
       </div>
 
       <div class="planGrid">
         <div class="planCard">
           <div class="planTop">
             <h3 class="planName">Grátis</h3>
-            <span class="planTag">começar bem</span>
+            <span class="planTag">começar</span>
           </div>
 
           <div class="planPrice">¥0 <small>/ início</small></div>
-          <p class="planSub">Para testar o método e criar o primeiro hábito sem pressão.</p>
+          <p class="planSub">Para sentir o método e criar o primeiro hábito.</p>
 
           <ul class="planList">
             <li>treino 105x</li>
@@ -1975,17 +2109,17 @@ function renderPlanCompareBox() {
         <div class="planCard premium">
           <div class="planTop">
             <h3 class="planName">Premium</h3>
-            <span class="planTag">evoluir com foco</span>
+            <span class="planTag">aprofundar</span>
           </div>
 
           <div class="planPrice">${SALES.monthlyPrice} <small>/ mês</small></div>
-          <p class="planSub">Para treinar mais contextos da vida real e criar material sob medida.</p>
+          <p class="planSub">Para treinar mais situações reais e criar material sob medida.</p>
 
           <ul class="planList">
             <li>temas práticos do Japão</li>
             <li>fábrica, prefeitura, mercado e viagem</li>
-            <li>Sensei IA para situações reais</li>
-            <li>mais repertório para o cotidiano</li>
+            <li>Sensei IA</li>
+            <li>mais contexto para a vida real</li>
           </ul>
         </div>
       </div>
@@ -2019,6 +2153,7 @@ function renderPhraseMiniCard(p, opts = {}) {
   const pctTxt = Math.round(pct * 100);
   const showGo = opts.showGo !== false;
   const title = opts.title || topicName(p.topicId);
+  const actionLabel = opts.actionLabel || "treinar esta frase";
 
   return `
     <div class="sheet stack" style="text-align:left">
@@ -2037,10 +2172,46 @@ function renderPhraseMiniCard(p, opts = {}) {
 
       ${showGo ? `
         <button class="btn btn--ok btn--full" data-action="trainPhrase" data-id="${escapeHTML(p.id)}">
-          treinar esta frase
+          ${escapeHTML(actionLabel)}
         </button>
       ` : ""}
     </div>
+  `;
+}
+
+function renderRetentionCard() {
+  const streak = getStreakInfo();
+  const nudge = getRetentionNudge();
+  const resume = getResumePhrase();
+
+  const resumeText = resume
+    ? `${jpStripFurigana(resume.jp)} • ${resume.pt}`
+    : "A próxima frase já está pronta para começar.";
+
+  const action = resume ? "resumeTraining" : "startTraining";
+  const btnLabel = resume ? "continuar último treino" : nudge.action;
+
+  return `
+    <section class="card stack">
+      <div class="row row--between">
+        <div class="badge">${escapeHTML(nudge.badge)}</div>
+        <div class="badge">${escapeHTML(streak.label)}</div>
+      </div>
+
+      <div class="lockCard">
+        <h3 class="lockTitle">${escapeHTML(nudge.title)}</h3>
+        <p class="lockText">${escapeHTML(nudge.text)}</p>
+      </div>
+
+      <div class="sheet stack" style="text-align:left">
+        <div class="small"><b>continuidade:</b> ${escapeHTML(streak.message)}</div>
+        <div class="small"><b>último foco:</b> ${escapeHTML(resumeText)}</div>
+      </div>
+
+      <button class="btn btn--ok btn--full" data-action="${action}">
+        ${escapeHTML(btnLabel)}
+      </button>
+    </section>
   `;
 }
 
@@ -2052,32 +2223,36 @@ function renderPhraseOfDayCard() {
     <section class="card stack">
       <div class="row row--between">
         <div class="badge">frase do dia</div>
-        <div class="badge">1 treino pronto</div>
+        <div class="badge">treino rápido</div>
       </div>
 
       <div class="lockCard">
-        <h3 class="lockTitle">Comece sem escolher tema</h3>
+        <h3 class="lockTitle">Um ponto de partida para hoje</h3>
         <p class="lockText">
-          Esta frase muda todos os dias e serve para manter o japonês vivo mesmo quando você está cansado.
+          Use esta frase quando estiver cansado ou sem saber por onde começar. Ela transforma o “só vou abrir o app” em um treino real.
         </p>
       </div>
 
-      ${renderPhraseMiniCard(p, { title: topicName(p.topicId) })}
+      ${renderPhraseMiniCard(p, {
+        title: topicName(p.topicId),
+        actionLabel: "treinar frase do dia"
+      })}
     </section>
   `;
 }
 
 function renderDailyGoalCard() {
   const g = todayGoalProgress();
+  const streak = getStreakInfo();
   const pct = Math.round(g.overall * 100);
 
   const title = g.done
     ? "Meta concluída hoje"
-    : "Uma meta pequena para não quebrar o ritmo";
+    : "Meta leve para manter constância";
 
   const text = g.done
-    ? "Você já fez o mínimo que mantém o hábito vivo. Amanhã será mais fácil voltar."
-    : "A meta é leve de propósito: poucos minutos e pelo menos um ciclo para continuar avançando sem peso.";
+    ? "Você já fez o mínimo que mantém o hábito vivo. Amanhã fica mais fácil voltar."
+    : "A meta é pequena de propósito: poucos minutos e pelo menos um ciclo para não deixar o japonês esfriar.";
 
   return `
     <section class="card stack">
@@ -2109,10 +2284,13 @@ function renderDailyGoalCard() {
           <div class="pBar"><div class="pFill" style="transform:scaleX(${g.cyclePct})"></div></div>
           <div class="pTxt">${Math.round(g.cyclePct * 100)}%</div>
         </div>
+
+        <div class="small">${escapeHTML(streak.message)}</div>
       </div>
     </section>
   `;
 }
+
 function renderFavoritesCard() {
   const list = favoritePhrasesAccessible();
 
@@ -2133,11 +2311,11 @@ function renderFavoritesCard() {
       ${
         list.length
           ? list.slice(0, 3).map(p => renderPhraseMiniCard(p, { title: "favorita" })).join("")
-          : renderEmptyState(
-              "Nenhuma frase favorita ainda",
-              "Toque em ☆ durante o treino para montar sua lista pessoal de frases úteis.",
-              `<button class="btn btn--ok btn--full" data-nav="#/105x">abrir treino</button>`
-            )
+          : `
+            <div class="sheet stack">
+              <div class="small">Você ainda não salvou frases favoritas. Toque em ☆ durante o treino para montar sua lista.</div>
+            </div>
+          `
       }
 
       <button class="btn btn--full" data-action="topicFilter" data-id="FAV">
@@ -2181,7 +2359,7 @@ function renderFreeValueCard() {
         <div class="valueCard">
           <div class="valueIcon">☀️</div>
           <h3 class="valueTitle">Frase do dia</h3>
-          <p class="valueText">Um ponto de partida quando bater o cansaço.</p>
+          <p class="valueText">Um treino pronto quando bater o cansaço.</p>
         </div>
 
         <div class="valueCard">
@@ -2232,41 +2410,6 @@ function renderEssentialPackHighlight() {
   `;
 }
 
-function renderOnboardingCard() {
-  return `
-    <section class="card stack">
-      <div class="row row--between">
-        <div class="badge">primeiros passos</div>
-        <div class="badge">3 minutos</div>
-      </div>
-
-      <div class="proofGrid">
-        <article class="proofCard proofCard--soft">
-          <div class="proofKicker">1</div>
-          <h3 class="proofTitle">Escolha um tema</h3>
-          <p class="proofText">Use “tudo” ou comece pelo Pack Essencial Japão.</p>
-        </article>
-
-        <article class="proofCard proofCard--soft">
-          <div class="proofKicker">2</div>
-          <h3 class="proofTitle">Ouça e repita</h3>
-          <p class="proofText">Treine a frase em voz alta para reduzir a trava.</p>
-        </article>
-
-        <article class="proofCard proofCard--soft">
-          <div class="proofKicker">3</div>
-          <h3 class="proofTitle">Feche 1 ciclo</h3>
-          <p class="proofText">Um ciclo por dia já mantém o hábito vivo.</p>
-        </article>
-      </div>
-
-      <button class="btn btn--ghost btn--full" data-nav="#/tutorial">
-        ver tutorial rápido
-      </button>
-    </section>
-  `;
-}
-
 /* ---------- landing ---------- */
 function renderLanding() {
   APP.innerHTML = `
@@ -2284,7 +2427,7 @@ function renderLanding() {
 
         <div class="heroActions">
           <button class="bigBtn" data-nav="#/home">começar grátis</button>
-          <button class="btn btn--ghost btn--full" data-nav="#/premium">ver premium</button>
+          <button class="btn btn--ghost btn--full" data-nav="#/premium">comparar planos</button>
         </div>
 
         <div class="heroMiniStats">
@@ -2301,23 +2444,25 @@ function renderLanding() {
             <div class="statLbl">uso real</div>
           </div>
         </div>
-
-        ${renderTrustStrip()}
       </section>
 
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">por que funciona</div>
-          <div class="badge">simples e prático</div>
+          <div class="badge">feito para dekasseguis</div>
+          <div class="badge">pouco tempo</div>
         </div>
 
-        <h2 class="h2">Você não precisa estudar muito. Precisa repetir o que realmente usa.</h2>
+        <h2 class="h2">Para estudar mesmo depois de um dia pesado.</h2>
+
+        <p class="p">
+          O app foi pensado para brasileiros no Japão que trabalham muito, chegam cansados e precisam de japonês prático para viver melhor.
+        </p>
 
         <div class="valueGrid">
           <div class="valueCard">
             <div class="valueIcon">⏳</div>
             <h3 class="valueTitle">Cabe na rotina</h3>
-            <p class="valueText">Sessões curtas para estudar mesmo depois de um dia pesado.</p>
+            <p class="valueText">Sessões curtas para estudar sem esgotar a cabeça.</p>
           </div>
 
           <div class="valueCard">
@@ -2328,25 +2473,24 @@ function renderLanding() {
 
           <div class="valueCard">
             <div class="valueIcon">🗣️</div>
-            <h3 class="valueTitle">Treina a boca</h3>
-            <p class="valueText">Ouça, leia e repita em voz alta para reduzir a trava.</p>
+            <h3 class="valueTitle">Treina a fala</h3>
+            <p class="valueText">Ouça, leia e repita para reduzir a trava.</p>
           </div>
 
           <div class="valueCard">
             <div class="valueIcon">📍</div>
             <h3 class="valueTitle">Vida no Japão</h3>
-            <p class="valueText">Conteúdo pensado para situações reais, não para teoria solta.</p>
+            <p class="valueText">Fábrica, mercado, prefeitura, transporte e rotina real.</p>
           </div>
         </div>
       </section>
 
-      ${renderOnboardingCard()}
       ${renderPlanCompareBox()}
 
       <section class="ctaBand stack">
-        <div class="badge">comece agora</div>
-        <h2 class="h2">Entre, treine uma frase e sinta o método.</h2>
-        <p class="p">A versão grátis já entrega valor. O premium aprofunda com mais situações reais e Sensei IA.</p>
+        <div class="badge">primeiro treino</div>
+        <h2 class="h2">Abra o app, treine uma frase e sinta o método.</h2>
+        <p class="p">A versão grátis já ajuda hoje. O premium aprofunda com mais situações reais e Sensei IA.</p>
 
         <div class="grid2">
           <button class="btn btn--ok btn--full" data-nav="#/home">entrar no app</button>
@@ -2381,11 +2525,7 @@ function renderPremium() {
   APP.innerHTML = `
     <div class="stack">
       <section class="premiumHero stack">
-        <div class="row row--between">
-          <div class="badge">premium</div>
-          <div class="badge">mais contexto real</div>
-        </div>
-
+        <div class="badge">premium</div>
         <h1 class="h1">Mais temas reais para falar melhor no Japão.</h1>
         <p class="p">
           O premium amplia o treino com situações específicas e Sensei IA para gerar material baseado na sua necessidade.
@@ -2396,28 +2536,34 @@ function renderPremium() {
         <div class="lockCard">
           <h3 class="lockTitle">O que você desbloqueia</h3>
           <p class="lockText">
-            Fábrica, aeroporto, correio, prefeitura, konbini, mercado, bicicleta, cinema, viagem, perguntas práticas e Sensei IA.
+            Fábrica, chefe, prefeitura, konbini, mercado, moradia, transporte, viagem, correio, bicicleta e Sensei IA.
           </p>
         </div>
 
-        <div class="proofGrid">
-          <article class="proofCard proofCard--premium">
-            <div class="proofKicker">temas</div>
-            <h3 class="proofTitle">Situações do cotidiano</h3>
-            <p class="proofText">Mais frases para trabalho, compras, documentos, transporte e viagem.</p>
-          </article>
+        <div class="valueGrid">
+          <div class="valueCard">
+            <div class="valueIcon">🏭</div>
+            <h3 class="valueTitle">Trabalho e chefe</h3>
+            <p class="valueText">Frases para entender tarefas, pedir explicação e responder com respeito.</p>
+          </div>
 
-          <article class="proofCard proofCard--premium">
-            <div class="proofKicker">Sensei IA</div>
-            <h3 class="proofTitle">Material sob medida</h3>
-            <p class="proofText">Crie pequenos packs conforme a situação que você precisa enfrentar.</p>
-          </article>
+          <div class="valueCard">
+            <div class="valueIcon">🏢</div>
+            <h3 class="valueTitle">Prefeitura e documentos</h3>
+            <p class="valueText">Ajuda para situações que exigem calma, clareza e vocabulário prático.</p>
+          </div>
 
-          <article class="proofCard proofCard--premium">
-            <div class="proofKicker">foco</div>
-            <h3 class="proofTitle">Menos estudo solto</h3>
-            <p class="proofText">Treine frases que combinam com a sua vida, não listas aleatórias.</p>
-          </article>
+          <div class="valueCard">
+            <div class="valueIcon">🛒</div>
+            <h3 class="valueTitle">Mercado e konbini</h3>
+            <p class="valueText">Frases simples para compras, pagamentos, sacolas e dúvidas rápidas.</p>
+          </div>
+
+          <div class="valueCard">
+            <div class="valueIcon">🤖</div>
+            <h3 class="valueTitle">Sensei IA</h3>
+            <p class="valueText">Crie material focado na sua rotina, sem depender de conteúdo genérico.</p>
+          </div>
         </div>
 
         <div class="planGrid">
@@ -2469,7 +2615,7 @@ function renderPremium() {
 
         ${unlocked ? `
           <div class="sheet stack">
-            <div class="badge">premium liberado</div>
+            <div class="badge">premium liberado ✅</div>
             <div class="grid2">
               <button class="btn btn--ok btn--full" data-nav="#/sensei">abrir Sensei IA</button>
               <button class="btn btn--full" data-nav="#/home">voltar ao app</button>
@@ -2513,7 +2659,7 @@ function renderAdmin() {
 
         ${unlocked ? `
           <div class="sheet stack">
-            <div class="badge">admin liberado</div>
+            <div class="badge">admin liberado ✅</div>
             <div class="small">último login: ${STATE.admin.lastLoginAt ? fmtDateShort(STATE.admin.lastLoginAt) : "agora"}</div>
 
             <div class="grid2">
@@ -2549,6 +2695,7 @@ function renderHome() {
   const topicFilter = STATE.session.topicFilter || "ALL";
   const filterLabel = topicFilter === "ALL" ? "tudo" : topicName(topicFilter);
   const favCount = favoritePhrasesAccessible().length;
+  const resume = hasResumeTraining();
 
   APP.innerHTML = `
     <div class="stack">
@@ -2563,7 +2710,9 @@ function renderHome() {
           Escolha um tema, ouça a frase, repita em voz alta e avance um ciclo por vez.
         </p>
 
-        <button class="bigBtn" id="btnStart">começar treino</button>
+        <button class="bigBtn" id="btnStart">
+          ${resume ? "continuar último treino" : "começar treino"}
+        </button>
 
         <div class="sep"></div>
 
@@ -2596,6 +2745,12 @@ function renderHome() {
         </div>
       </section>
 
+      ${renderRetentionCard()}
+      ${renderDailyGoalCard()}
+      ${renderPhraseOfDayCard()}
+      ${renderEssentialPackHighlight()}
+      ${renderFavoritesCard()}
+
       <section class="card stack">
         <div class="row row--between">
           <div class="badge">progresso</div>
@@ -2604,11 +2759,6 @@ function renderHome() {
         <div class="small">ciclos: ${STATE.stats.cyclesDone || 0} • dominadas: ${STATE.stats.phrasesMastered || 0}</div>
       </section>
 
-      ${renderOnboardingCard()}
-      ${renderDailyGoalCard()}
-      ${renderPhraseOfDayCard()}
-      ${renderEssentialPackHighlight()}
-      ${renderFavoritesCard()}
       ${renderFreeValueCard()}
 
       <section class="card stack">
@@ -2629,21 +2779,21 @@ function renderHome() {
             ${isPremiumUnlocked() ? "abrir Sensei IA" : "ver Sensei IA"}
           </button>
           <button class="btn btn--full" data-nav="#/premium">
-            ${isPremiumUnlocked() ? "ver premium" : "desbloquear premium"}
+            ${isPremiumUnlocked() ? "ver premium" : "comparar planos"}
           </button>
         </div>
       </section>
 
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">tutorial</div>
-          <div class="badge">${STATE.tutorial.done ? "concluído" : "recomendado"}</div>
+          <div class="badge">suporte</div>
+          <div class="badge">${STATE.tutorial.done ? "tutorial visto" : "recomendado"}</div>
         </div>
 
         <div class="lockCard">
-          <h3 class="lockTitle">Use o app do jeito certo</h3>
+          <h3 class="lockTitle">Use melhor, sem se perder</h3>
           <p class="lockText">
-            Aprenda como treinar, salvar favoritas, usar a frase do dia e entender quando o premium faz sentido.
+            Veja o tutorial, organize suas frases ou faça backup quando quiser proteger seu progresso.
           </p>
         </div>
 
@@ -2651,7 +2801,7 @@ function renderHome() {
           <button class="btn btn--ok btn--full" data-nav="#/tutorial">
             ${STATE.tutorial.done ? "rever tutorial" : "ver tutorial"}
           </button>
-          <button class="btn btn--ghost btn--full" data-nav="#/premium">comparar planos</button>
+          <button class="btn btn--ghost btn--full" data-nav="#/backup">abrir backup</button>
         </div>
       </section>
     </div>
@@ -2660,8 +2810,13 @@ function renderHome() {
   const startBtn = $("#btnStart");
   if (startBtn) {
     startBtn.addEventListener("click", () => {
-      startAuto();
-      toast("treino iniciado");
+      if (hasResumeTraining()) {
+        nav("#/105x");
+        toast("continuando treino");
+      } else {
+        startAuto();
+        toast("treino iniciado");
+      }
     });
   }
 
@@ -2691,7 +2846,6 @@ function renderHome() {
     });
   }
 }
-
 /* ---------- tutorial ---------- */
 function renderTutorial() {
   const step = tutorialCurrentStep();
@@ -2958,6 +3112,7 @@ const SENSEI_SCENARIO_BANK = {
     }
   ]
 };
+
 function detectSenseiScenario(text) {
   const t = String(text || "").toLowerCase();
 
@@ -3102,11 +3257,11 @@ function renderSenseiHistory() {
   const hist = STATE.aiStudio?.history || [];
 
   if (!hist.length) {
-    return renderEmptyState(
-      "Nenhum material criado ainda",
-      "Quando você gerar frases com o Sensei IA, seus últimos materiais aparecem aqui.",
-      ""
-    );
+    return `
+      <div class="sheet stack">
+        <div class="small">Ainda não há materiais criados pelo Sensei IA.</div>
+      </div>
+    `;
   }
 
   return hist.slice(0, 5).map(item => `
@@ -3136,20 +3291,6 @@ function renderSensei() {
             <p class="lockText">
               O Sensei IA é premium. Ele gera material para situações específicas da sua vida no Japão.
             </p>
-          </div>
-
-          <div class="proofGrid">
-            <article class="proofCard proofCard--premium">
-              <div class="proofKicker">foco</div>
-              <h3 class="proofTitle">Você descreve a situação</h3>
-              <p class="proofText">Trabalho, hospital, aluguel, chefe, mercado ou qualquer necessidade real.</p>
-            </article>
-
-            <article class="proofCard proofCard--premium">
-              <div class="proofKicker">resultado</div>
-              <h3 class="proofTitle">O app cria um mini pack</h3>
-              <p class="proofText">Frases curtas com tradução e palavras novas para treinar no 105x.</p>
-            </article>
           </div>
 
           <div class="grid2">
@@ -3295,16 +3436,12 @@ function render105x() {
       <div class="stack">
         <section class="card stack">
           <div class="badge">sem frases neste filtro</div>
-          ${renderEmptyState(
-            "Nada para treinar aqui ainda",
-            "Escolha outro tema, abra o Pack Essencial ou salve frases como favoritas.",
-            `
-              <div class="grid2">
-                <button class="btn btn--ok btn--full" data-action="topicFilter" data-id="ALL">treinar tudo</button>
-                <button class="btn btn--full" data-action="topicFilter" data-id="topic_essential_japan">Pack Essencial</button>
-              </div>
-            `
-          )}
+          <div class="small">Escolha outro tema, abra o Pack Essencial ou salve frases como favoritas.</div>
+
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="topicFilter" data-id="ALL">treinar tudo</button>
+            <button class="btn btn--full" data-action="topicFilter" data-id="topic_essential_japan">Pack Essencial</button>
+          </div>
         </section>
       </div>
     `;
@@ -3355,9 +3492,9 @@ function render105x() {
         </div>
 
         <div class="phraseArea" aria-label="frase em treino">
-          <div class="row row--between" style="gap:10px;align-items:center;">
+          <div class="row row--between" id="phraseTopRow" style="gap:10px;align-items:center;">
             <div class="badge" id="phraseTopicBadge">${escapeHTML(topicName(currentPhrase?.topicId || ""))}</div>
-            <span id="phraseFavSlot">${renderFavoriteButton(STATE.session.phraseId)}</span>
+            <span id="favoriteSlot">${renderFavoriteButton(STATE.session.phraseId)}</span>
           </div>
 
           <div class="counterMini" id="counterBox" aria-label="contador">
@@ -3460,11 +3597,11 @@ function renderPhraseListOnly() {
           </div>
         </div>
       `;
-    }).join("") : renderEmptyState(
-      "Nenhuma favorita neste treino",
-      "Toque em ☆ durante o treino para salvar frases importantes.",
-      ""
-    );
+    }).join("") : `
+      <div class="sheet stack">
+        <div class="small">Você ainda não salvou favoritas. Toque em ☆ durante o treino.</div>
+      </div>
+    `;
     return;
   }
 
@@ -3544,13 +3681,13 @@ function render105xBodyOnly() {
   const nw = $("#newWordsBox");
   const sheet = $("#cycleSheet");
   const topicBadge = $("#phraseTopicBadge");
-  const favSlot = $("#phraseFavSlot");
+  const favoriteSlot = $("#favoriteSlot");
 
   if (countVal) countVal.textContent = String(count);
   if (cycleSub) cycleSub.textContent = `ciclo ${cs} → 1`;
 
   if (topicBadge) topicBadge.textContent = topicName(p.topicId);
-  if (favSlot) favSlot.innerHTML = renderFavoriteButton(pid);
+  if (favoriteSlot) favoriteSlot.innerHTML = renderFavoriteButton(pid);
 
   if (kanaEl) setKanaLine(kanaEl, p.jp);
   if (ptLine) ptLine.textContent = p.pt;
@@ -3760,11 +3897,11 @@ function renderManage() {
             }).join("")}
           </div>
           <div class="small">Segure no ≡ e arraste para ordenar.</div>
-        ` : renderEmptyState(
-          "Tema sem frases",
-          "Adicione uma frase para começar a treinar este tema.",
-          `<button class="btn btn--ok btn--full" data-action="addPhraseToTopic" data-id="${escapeHTML(t.id)}">adicionar frase</button>`
-        )}
+        ` : `
+          <div class="sheet stack">
+            <div class="small">Este tema ainda não tem frases.</div>
+          </div>
+        `}
       </div>
     `;
 
@@ -3986,9 +4123,7 @@ const RANKS = [
 ];
 
 function isStudyDay(dayObj) {
-  if (!dayObj) return false;
-  const mins = (dayObj.ms || 0) / 60000;
-  return mins >= 2 || (dayObj.cycles || 0) > 0;
+  return hasStudyActivity(dayObj);
 }
 
 function habitSummary() {
@@ -4116,6 +4251,7 @@ function skillBars() {
 
 function renderSkills() {
   const sum = habitSummary();
+  const streak = getStreakInfo();
   const avg = Math.max(sum.last7MinPerDay, 0);
   const avgShow = avg > 0.1 ? `${avg.toFixed(1)} min/dia` : "sem ritmo ainda";
   const { current, next } = rankFromActiveDays(sum.activeDays);
@@ -4129,7 +4265,7 @@ function renderSkills() {
 
   const nextTxt = next
     ? `próximo: ${next.icon} ${next.name} (${next.days} dias)`
-    : `rank máximo alcançado`;
+    : `rank máximo alcançado ✅`;
 
   const projTxt = finish
     ? `mantendo ${avgShow}, previsão: ${fmtDateShort(finish)}`
@@ -4195,7 +4331,7 @@ function renderSkills() {
 
           <div class="row row--between">
             <div class="badge">${sum.activeDays} dias ativos</div>
-            <div class="badge">${nextTxt}</div>
+            <div class="badge">${escapeHTML(streak.label)}</div>
           </div>
 
           <div class="projWrap">
@@ -4218,7 +4354,7 @@ function renderSkills() {
             <div class="tlFill" style="transform:scaleX(${clamp(sum.activeDays / SKILL_PLAN_DAYS, 0, 1)})"></div>
             <div class="tlNodes">${timeline}</div>
           </div>
-          <div class="small">Dia ativo = 2 minutos ou 1 ciclo concluído.</div>
+          <div class="small">Dia ativo = 2 minutos, 1 ciclo ou algumas escutas. Sem culpa.</div>
         </div>
 
         <div class="sheet stack">
@@ -4226,7 +4362,7 @@ function renderSkills() {
             <div class="badge">projeção</div>
             <div class="badge">${avgShow}</div>
           </div>
-          <div class="stack" style="gap:8px">${datesList}</div>
+          <div class="stack" style="gap:8px">${datesList || `<div class="small">Treine hoje para começar a projeção.</div>`}</div>
         </div>
 
         <div class="sheet stack">
@@ -4331,14 +4467,25 @@ document.addEventListener("click", (e) => {
     const on = toggleFavorite(id);
     toast(on ? "salvo nos favoritos" : "removido dos favoritos");
     beep(on ? "ding" : "tuk");
+    render();
 
-    if (route() === "#/105x") {
-      render105xBodyOnly();
-      renderPhraseListOnly();
+    return;
+  }
+
+  if (act === "startTraining") {
+    startAuto();
+    toast("treino iniciado");
+    return;
+  }
+
+  if (act === "resumeTraining") {
+    if (hasResumeTraining()) {
+      toast("continuando treino");
+      nav("#/105x");
     } else {
-      render();
+      startAuto();
+      toast("treino iniciado");
     }
-
     return;
   }
 
