@@ -1,11 +1,15 @@
 /* =========================================================
-   NIHONGO321 v7.6
-   Bloco 2C + Bloco 3A
+   NIHONGO321 v7.7
+   Bloco 2C + Bloco 3A + Bloco 3B
    - confiança final de produto
    - retenção leve sem culpa
    - streak leve
    - continuidade de treino
-   - lembrete interno
+   - Sistema Diário de Sobrevivência Linguística
+   - missão do dia
+   - próximo passo inteligente
+   - resumo diário compacto
+   - lembrete interno contextual
    - frase do dia com valor diário mais claro
    - mensagens emocionais após ciclos
    ========================================================= */
@@ -153,6 +157,12 @@ function pickFromList(list, seedText) {
   if (!Array.isArray(list) || !list.length) return "";
   const i = hashString(seedText) % list.length;
   return list[i];
+}
+
+function clampText(text, max = 84) {
+  const clean = String(text || "").replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  return `${clean.slice(0, Math.max(0, max - 1)).trim()}…`;
 }
 
 /* ---------- rota ---------- */
@@ -775,7 +785,7 @@ function defaultState() {
   const top = defaultTopic();
 
   const st = {
-    app: { schemaVersion: 7.6, createdAt: t, updatedAt: t },
+    app: { schemaVersion: 7.7, createdAt: t, updatedAt: t },
 
     prefs: {
       audio: { enabled: true, volume: 0.35, unlocked: false },
@@ -859,7 +869,7 @@ function defaultState() {
 function migrateToV7(st) {
   if (!st || !st.app) return defaultState();
 
-  st.app.schemaVersion = 7.6;
+  st.app.schemaVersion = 7.7;
 
   st.bank ||= {};
   st.bank.topics ||= [];
@@ -1028,157 +1038,6 @@ function todayGoalProgress() {
     overall,
     done: minPct >= 1 && cyclePct >= 1
   };
-}
-
-/* ---------- retenção leve ---------- */
-function hasStudyActivity(dayObj) {
-  if (!dayObj) return false;
-
-  const mins = (dayObj.ms || 0) / 60000;
-  const cycles = dayObj.cycles || 0;
-  const listens = dayObj.listens || 0;
-  const calls = dayObj.calls || 0;
-
-  return mins >= 2 || cycles > 0 || listens >= 3 || calls > 0;
-}
-
-function getHabitDay(key) {
-  return STATE.habit?.days?.[key] || null;
-}
-
-function getStreakInfo() {
-  ensureHabitToday();
-
-  const today = todayKey();
-  const todayActive = hasStudyActivity(getHabitDay(today));
-  const yesterdayActive = hasStudyActivity(getHabitDay(dateKeyFromOffset(-1)));
-
-  let streak = 0;
-  let startOffset = todayActive ? 0 : -1;
-
-  for (let offset = startOffset; offset > -370; offset--) {
-    const key = dateKeyFromOffset(offset);
-    const active = hasStudyActivity(getHabitDay(key));
-
-    if (!active) break;
-    streak++;
-  }
-
-  let label = "comece hoje";
-  let message = "Faça 1 ciclo hoje. Pouco já mantém o japonês vivo.";
-
-  if (todayActive && streak <= 1) {
-    label = "hoje já contou";
-    message = "Você já manteve o hábito vivo hoje. Amanhã é só continuar.";
-  }
-
-  if (todayActive && streak > 1) {
-    label = `${streak} dias em ritmo`;
-    message = "Hoje já contou. Volte amanhã para manter essa sequência leve.";
-  }
-
-  if (!todayActive && yesterdayActive && streak > 0) {
-    label = `${streak} dia${streak === 1 ? "" : "s"} em ritmo`;
-    message = "Faça um ciclo hoje para continuar sem peso.";
-  }
-
-  if (!todayActive && !yesterdayActive && streak === 0) {
-    label = "retome com calma";
-    message = "Sem culpa. Um ciclo hoje já recoloca o japonês em movimento.";
-  }
-
-  return {
-    streak,
-    todayActive,
-    yesterdayActive,
-    label,
-    message
-  };
-}
-
-function hasResumeTraining() {
-  if (!STATE.session?.inProgress) return false;
-  if (!STATE.session?.phraseId) return false;
-
-  const p = getPhrase(STATE.session.phraseId);
-  if (!p) return false;
-  if (!canAccessTopic(p.topicId)) return false;
-
-  return true;
-}
-
-function getResumePhrase() {
-  if (!hasResumeTraining()) return null;
-  return getPhrase(STATE.session.phraseId);
-}
-
-function getRetentionNudge() {
-  const streak = getStreakInfo();
-  const goal = todayGoalProgress();
-  const resume = getResumePhrase();
-  const phraseOfDay = getPhraseOfDay();
-
-  if (resume && !goal.done) {
-    return {
-      badge: "continue",
-      title: "Você já tem um treino aberto",
-      text: "Volte exatamente para a frase onde parou. Menos procura, mais prática.",
-      action: "continuar último treino"
-    };
-  }
-
-  if (!streak.todayActive && phraseOfDay) {
-    return {
-      badge: "hoje",
-      title: "A frase do dia está pronta",
-      text: "Quando estiver cansado, comece por ela. Um treino curto já conta.",
-      action: "treinar frase do dia"
-    };
-  }
-
-  if (goal.done) {
-    return {
-      badge: "feito hoje",
-      title: "Hoje você já manteve o ritmo",
-      text: "Amanhã, volte sem recomeçar do zero. Constância leve também dá resultado.",
-      action: "continuar treinando"
-    };
-  }
-
-  return {
-    badge: "ritmo leve",
-    title: "Faça 1 ciclo hoje",
-    text: "Poucos minutos bastam para não deixar o japonês esfriar.",
-    action: "começar treino"
-  };
-}
-
-const CYCLE_REWARD_MESSAGES = [
-  "Ciclo fechado. Essa frase ficou um pouco mais familiar.",
-  "Bom ritmo. Pouco por dia também dá resultado.",
-  "Você manteve o japonês vivo hoje.",
-  "Mais uma repetição útil para a vida no Japão.",
-  "Essa frase já está menos distante.",
-  "Pequeno treino, memória trabalhando."
-];
-
-const MASTERED_REWARD_MESSAGES = [
-  "Frase dominada. Essa já está mais perto da memória automática.",
-  "Muito bom. Uma frase útil ficou mais sua.",
-  "Você fortaleceu uma frase que pode ajudar no Japão.",
-  "Frase concluída. Mais confiança para situações reais.",
-  "Essa frase entrou no seu kit pessoal."
-];
-
-function rewardCycleMessage(masteredNow) {
-  const pid = STATE.session?.phraseId || "";
-  const seed = `${todayKey()}|${pid}|${STATE.stats.cyclesDone || 0}|reward`;
-
-  if (masteredNow) {
-    return pickFromList(MASTERED_REWARD_MESSAGES, seed) || MASTERED_REWARD_MESSAGES[0];
-  }
-
-  return pickFromList(CYCLE_REWARD_MESSAGES, seed) || CYCLE_REWARD_MESSAGES[0];
 }
 
 /* ---------- áudio ---------- */
@@ -1706,6 +1565,331 @@ function phraseProgressPct(pr) {
   return done / total;
 }
 
+/* ---------- Sistema Diário de Sobrevivência Linguística ---------- */
+function hasStudyActivity(dayObj) {
+  if (!dayObj) return false;
+
+  const mins = (dayObj.ms || 0) / 60000;
+  const cycles = dayObj.cycles || 0;
+  const listens = dayObj.listens || 0;
+  const calls = dayObj.calls || 0;
+
+  return mins >= 2 || cycles > 0 || listens >= 3 || calls > 0;
+}
+
+function getHabitDay(key) {
+  return STATE.habit?.days?.[key] || null;
+}
+
+function getTodaySummary() {
+  const key = ensureHabitToday();
+  const day = STATE.habit.days[key] || { ms: 0, cycles: 0, listens: 0, calls: 0 };
+  const goal = todayGoalProgress();
+
+  return {
+    key,
+    minutes: Math.floor((day.ms || 0) / 60000),
+    minutesRaw: (day.ms || 0) / 60000,
+    cycles: day.cycles || 0,
+    listens: day.listens || 0,
+    calls: day.calls || 0,
+    goal,
+    active: hasStudyActivity(day)
+  };
+}
+
+function getStreakInfo() {
+  ensureHabitToday();
+
+  const today = todayKey();
+  const todayActive = hasStudyActivity(getHabitDay(today));
+  const yesterdayActive = hasStudyActivity(getHabitDay(dateKeyFromOffset(-1)));
+
+  let streak = 0;
+  let startOffset = todayActive ? 0 : -1;
+
+  for (let offset = startOffset; offset > -370; offset--) {
+    const key = dateKeyFromOffset(offset);
+    const active = hasStudyActivity(getHabitDay(key));
+
+    if (!active) break;
+    streak++;
+  }
+
+  let label = "comece hoje";
+  let message = "Faça 1 ciclo hoje. Pouco já mantém o japonês vivo.";
+
+  if (todayActive && streak <= 1) {
+    label = "hoje já contou";
+    message = "Você já manteve o hábito vivo hoje. Amanhã é só continuar.";
+  }
+
+  if (todayActive && streak > 1) {
+    label = `${streak} dias em ritmo`;
+    message = "Hoje já contou. Volte amanhã para manter essa sequência leve.";
+  }
+
+  if (!todayActive && yesterdayActive && streak > 0) {
+    label = `${streak} dia${streak === 1 ? "" : "s"} em ritmo`;
+    message = "Faça um ciclo hoje para continuar sem peso.";
+  }
+
+  if (!todayActive && !yesterdayActive && streak === 0) {
+    label = "retome com calma";
+    message = "Sem culpa. Um ciclo hoje já recoloca o japonês em movimento.";
+  }
+
+  return {
+    streak,
+    todayActive,
+    yesterdayActive,
+    label,
+    message
+  };
+}
+
+function hasResumeTraining() {
+  if (!STATE.session?.inProgress) return false;
+  if (!STATE.session?.phraseId) return false;
+
+  const p = getPhrase(STATE.session.phraseId);
+  if (!p) return false;
+  if (!canAccessTopic(p.topicId)) return false;
+
+  return true;
+}
+
+function getResumePhrase() {
+  if (!hasResumeTraining()) return null;
+  return getPhrase(STATE.session.phraseId);
+}
+
+function getSmartNextAction() {
+  const summary = getTodaySummary();
+  const goal = summary.goal;
+  const favs = favoritePhrasesAccessible();
+  const phraseOfDay = getPhraseOfDay();
+  const resume = getResumePhrase();
+
+  if (resume && !goal.done) {
+    return {
+      id: "resume",
+      badge: "próximo passo",
+      title: "Continue de onde parou",
+      text: "Seu treino já está aberto. Volte para a mesma frase sem precisar escolher nada.",
+      cta: "continuar último treino",
+      action: "resumeTraining"
+    };
+  }
+
+  if (!summary.active && phraseOfDay) {
+    return {
+      id: "phraseOfDay",
+      badge: "melhor começo",
+      title: "Treine a frase do dia",
+      text: "Um ponto de partida rápido para estudar mesmo cansado, sem procurar tema.",
+      cta: "treinar frase do dia",
+      action: "trainPhrase",
+      phraseId: phraseOfDay.id
+    };
+  }
+
+  if (!goal.done && goal.cyclesDone < goal.cycleGoal) {
+    return {
+      id: "cycle",
+      badge: "falta pouco",
+      title: "Feche mais 1 ciclo",
+      text: "Um ciclo já conta como vitória prática para manter o japonês em movimento.",
+      cta: "fechar mais 1 ciclo",
+      action: resume ? "resumeTraining" : "startTraining"
+    };
+  }
+
+  if (!goal.done) {
+    return {
+      id: "minutes",
+      badge: "ritmo do dia",
+      title: "Complete seus minutos leves",
+      text: "A meta é pequena de propósito: estudar pouco, mas voltar com frequência.",
+      cta: resume ? "continuar treino" : "começar treino",
+      action: resume ? "resumeTraining" : "startTraining"
+    };
+  }
+
+  if (goal.done && favs.length) {
+    return {
+      id: "favoriteReview",
+      badge: "missão concluída",
+      title: "Revise uma frase salva",
+      text: "Depois da meta, uma favorita reforça o que realmente importa na sua rotina.",
+      cta: "revisar favoritas",
+      action: "topicFilter",
+      topicId: "FAV"
+    };
+  }
+
+  if (goal.done && !favs.length) {
+    return {
+      id: "saveFavorite",
+      badge: "missão concluída",
+      title: "Salve sua primeira frase importante",
+      text: "Monte seu kit pessoal para trabalho, mercado, prefeitura e situações reais.",
+      cta: "procurar frase útil",
+      action: "topicFilter",
+      topicId: "topic_essential_japan"
+    };
+  }
+
+  return {
+    id: "default",
+    badge: "comece simples",
+    title: "Faça um treino curto",
+    text: "Escolha o Pack Essencial e feche um ciclo. Sem aula longa, sem peso.",
+    cta: "começar treino",
+    action: "startTraining"
+  };
+}
+
+function getDailyMission() {
+  const summary = getTodaySummary();
+  const goal = summary.goal;
+  const favs = favoritePhrasesAccessible();
+  const smart = getSmartNextAction();
+
+  if (!summary.active) {
+    return {
+      badge: "missão de hoje",
+      title: "Faça o mínimo útil",
+      text: "Treine 1 frase, ouça em japonês e feche 1 ciclo. Hoje não precisa ser perfeito.",
+      micro: "Ideal para começar mesmo cansado.",
+      action: smart
+    };
+  }
+
+  if (!goal.done) {
+    const missingCycles = Math.max(0, goal.cycleGoal - goal.cyclesDone);
+    const missingMin = Math.max(0, Math.ceil(goal.minGoal - goal.minutesDoneRaw));
+
+    return {
+      badge: "missão em andamento",
+      title: "Falta pouco para concluir",
+      text: missingCycles > 0
+        ? `Feche mais ${missingCycles} ciclo${missingCycles === 1 ? "" : "s"} para cumprir o mínimo de hoje.`
+        : `Treine mais ${missingMin} min para fechar sua meta leve.`,
+      micro: "Pouco treino ainda é treino.",
+      action: smart
+    };
+  }
+
+  if (goal.done && favs.length) {
+    return {
+      badge: "missão concluída",
+      title: "Hoje você já fez o necessário",
+      text: "Agora, uma revisão curta de favoritas fortalece as frases que servem para sua vida real.",
+      micro: "Sem pressão. O principal já foi feito.",
+      action: smart
+    };
+  }
+
+  return {
+    badge: "missão concluída",
+    title: "Hoje você já manteve o ritmo",
+    text: "Para deixar o app mais seu, salve uma frase importante como favorita.",
+    micro: "Sua lista pessoal começa com uma frase útil.",
+    action: smart
+  };
+}
+
+function getContextualReminder() {
+  const summary = getTodaySummary();
+  const goal = summary.goal;
+  const hour = new Date().getHours();
+  const streak = getStreakInfo();
+
+  if (goal.done) {
+    return {
+      badge: "feito hoje",
+      text: "Missão do dia concluída. Amanhã é só voltar com calma."
+    };
+  }
+
+  if (summary.active && !goal.done) {
+    return {
+      badge: "quase lá",
+      text: "Você já começou. Falta pouco para fechar o mínimo de hoje."
+    };
+  }
+
+  if (!summary.active && streak.yesterdayActive) {
+    return {
+      badge: "sem culpa",
+      text: "Volte com 1 frase para manter o ritmo leve de ontem."
+    };
+  }
+
+  if (hour < 12) {
+    return {
+      badge: "bom começo",
+      text: "Faça o mínimo hoje cedo e deixe o japonês rodando no fundo da memória."
+    };
+  }
+
+  if (hour >= 18) {
+    return {
+      badge: "pós-trabalho",
+      text: "Cansado? Use a frase do dia. É o caminho mais curto."
+    };
+  }
+
+  return {
+    badge: "lembrete leve",
+    text: "Um ciclo já conta. O segredo é voltar sem carregar peso."
+  };
+}
+
+function getRetentionNudge() {
+  const smart = getSmartNextAction();
+  const streak = getStreakInfo();
+
+  return {
+    badge: smart.badge,
+    title: smart.title,
+    text: smart.text,
+    action: smart.cta,
+    streak
+  };
+}
+
+const CYCLE_REWARD_MESSAGES = [
+  "Ciclo fechado. Essa frase ficou um pouco mais familiar.",
+  "Bom ritmo. Pouco por dia também dá resultado.",
+  "Você manteve o japonês vivo hoje.",
+  "Mais uma repetição útil para a vida no Japão.",
+  "Essa frase já está menos distante.",
+  "Pequeno treino, memória trabalhando.",
+  "Você treinou sem precisar de uma aula longa.",
+  "Boa. O japonês de hoje já avançou um pouco."
+];
+
+const MASTERED_REWARD_MESSAGES = [
+  "Frase dominada. Essa já está mais perto da memória automática.",
+  "Muito bom. Uma frase útil ficou mais sua.",
+  "Você fortaleceu uma frase que pode ajudar no Japão.",
+  "Frase concluída. Mais confiança para situações reais.",
+  "Essa frase entrou no seu kit pessoal.",
+  "Excelente. Uma frase prática ganhou lugar na sua memória."
+];
+
+function rewardCycleMessage(masteredNow) {
+  const pid = STATE.session?.phraseId || "";
+  const seed = `${todayKey()}|${pid}|${STATE.stats.cyclesDone || 0}|reward`;
+
+  if (masteredNow) {
+    return pickFromList(MASTERED_REWARD_MESSAGES, seed) || MASTERED_REWARD_MESSAGES[0];
+  }
+
+  return pickFromList(CYCLE_REWARD_MESSAGES, seed) || CYCLE_REWARD_MESSAGES[0];
+}
 /* ---------- áudio de fala ---------- */
 function segmentText(text) {
   return [...String(text || "")];
@@ -1940,10 +2124,15 @@ function showCycleSheet(masteredNow) {
   sheet.style.display = "block";
 
   const msg = rewardCycleMessage(masteredNow);
+  const daily = getTodaySummary();
+  const softLine = daily.goal.done
+    ? "Sua missão do dia já está segura."
+    : "Mais um ciclo aproxima a meta de hoje.";
 
   sheet.innerHTML = `
     <div class="stamp">${masteredNow ? "frase dominada 🌸" : "ciclo fechado 👏"}</div>
     <div class="small">${escapeHTML(msg)}</div>
+    <div class="small">${escapeHTML(softLine)}</div>
     <div class="row">
       <button class="btn btn--ok btn--full" data-action="next">próxima frase</button>
     </div>
@@ -2047,6 +2236,7 @@ function updateStudyUI() {
   const pct = clamp(ms / goal, 0, 1);
   fill.style.transform = `scaleX(${pct})`;
 }
+
 /* ---------- render helpers ---------- */
 function renderNewWords(list) {
   if (!Array.isArray(list) || list.length === 0) return "";
@@ -2078,12 +2268,40 @@ function renderTopicHeader(topic, count, collapsed) {
   `;
 }
 
+function renderSmartActionButton(action, extraClass = "btn btn--ok btn--full") {
+  if (!action) {
+    return `<button class="${extraClass}" data-action="startTraining">começar treino</button>`;
+  }
+
+  if (action.action === "trainPhrase" && action.phraseId) {
+    return `
+      <button class="${extraClass}" data-action="trainPhrase" data-id="${escapeHTML(action.phraseId)}">
+        ${escapeHTML(action.cta || "treinar frase")}
+      </button>
+    `;
+  }
+
+  if (action.action === "topicFilter" && action.topicId) {
+    return `
+      <button class="${extraClass}" data-action="topicFilter" data-id="${escapeHTML(action.topicId)}">
+        ${escapeHTML(action.cta || "abrir tema")}
+      </button>
+    `;
+  }
+
+  return `
+    <button class="${extraClass}" data-action="${escapeHTML(action.action || "startTraining")}">
+      ${escapeHTML(action.cta || "começar treino")}
+    </button>
+  `;
+}
+
 function renderPlanCompareBox() {
   return `
     <div class="sheet stack" style="text-align:left">
       <div class="row row--between">
         <div class="badge">grátis x premium</div>
-        <div class="badge">visão clara</div>
+        <div class="badge">sem pressão</div>
       </div>
 
       <div class="planGrid">
@@ -2094,13 +2312,13 @@ function renderPlanCompareBox() {
           </div>
 
           <div class="planPrice">¥0 <small>/ início</small></div>
-          <p class="planSub">Para sentir o método e criar o primeiro hábito.</p>
+          <p class="planSub">Para criar hábito e treinar o essencial da vida no Japão.</p>
 
           <ul class="planList">
             <li>treino 105x</li>
             <li>Pack Essencial Japão</li>
-            <li>favoritos</li>
             <li>frase do dia</li>
+            <li>favoritos</li>
             <li>meta diária leve</li>
             <li>backup local</li>
           </ul>
@@ -2109,17 +2327,17 @@ function renderPlanCompareBox() {
         <div class="planCard premium">
           <div class="planTop">
             <h3 class="planName">Premium</h3>
-            <span class="planTag">aprofundar</span>
+            <span class="planTag">vida real</span>
           </div>
 
           <div class="planPrice">${SALES.monthlyPrice} <small>/ mês</small></div>
-          <p class="planSub">Para treinar mais situações reais e criar material sob medida.</p>
+          <p class="planSub">Para treinar fábrica, prefeitura, moradia, chefe e criar material sob medida.</p>
 
           <ul class="planList">
-            <li>temas práticos do Japão</li>
-            <li>fábrica, prefeitura, mercado e viagem</li>
-            <li>Sensei IA</li>
-            <li>mais contexto para a vida real</li>
+            <li>temas específicos do Japão</li>
+            <li>frases para situações difíceis</li>
+            <li>Sensei IA para sua rotina</li>
+            <li>mais foco e menos conteúdo genérico</li>
           </ul>
         </div>
       </div>
@@ -2179,6 +2397,118 @@ function renderPhraseMiniCard(p, opts = {}) {
   `;
 }
 
+function renderDailyMissionCard() {
+  const mission = getDailyMission();
+
+  return `
+    <section class="card stack dailyMissionCard">
+      <div class="row row--between">
+        <div class="badge">${escapeHTML(mission.badge)}</div>
+        <div class="badge">sem pensar muito</div>
+      </div>
+
+      <div class="lockCard">
+        <h3 class="lockTitle">${escapeHTML(mission.title)}</h3>
+        <p class="lockText">${escapeHTML(mission.text)}</p>
+      </div>
+
+      <div class="sheet stack" style="text-align:left">
+        <div class="small"><b>por que importa:</b> ${escapeHTML(mission.micro)}</div>
+        <div class="small">O objetivo é manter contato com o japonês real mesmo em dias cansativos.</div>
+      </div>
+
+      ${renderSmartActionButton(mission.action)}
+    </section>
+  `;
+}
+
+function renderDailySummaryCompact() {
+  const summary = getTodaySummary();
+  const g = summary.goal;
+  const pct = Math.round(g.overall * 100);
+  const reminder = getContextualReminder();
+
+  return `
+    <section class="card stack dailySummaryCard">
+      <div class="row row--between">
+        <div class="badge">resumo de hoje</div>
+        <div class="badge">${pct}% da meta</div>
+      </div>
+
+      <div class="valueGrid dailyMiniGrid">
+        <div class="valueCard">
+          <div class="valueIcon">⏱</div>
+          <h3 class="valueTitle">${summary.minutes} min</h3>
+          <p class="valueText">tempo treinado hoje</p>
+        </div>
+
+        <div class="valueCard">
+          <div class="valueIcon">🔁</div>
+          <h3 class="valueTitle">${summary.cycles}</h3>
+          <p class="valueText">ciclos concluídos</p>
+        </div>
+
+        <div class="valueCard">
+          <div class="valueIcon">🎧</div>
+          <h3 class="valueTitle">${summary.listens}</h3>
+          <p class="valueText">escutas feitas</p>
+        </div>
+
+        <div class="valueCard">
+          <div class="valueIcon">🎯</div>
+          <h3 class="valueTitle">${g.done ? "feito" : "em aberto"}</h3>
+          <p class="valueText">status da meta</p>
+        </div>
+      </div>
+
+      <div class="sheet stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">${escapeHTML(reminder.badge)}</div>
+          <div class="small">${summary.cycles} / ${g.cycleGoal} ciclo(s)</div>
+        </div>
+        <div class="small">${escapeHTML(reminder.text)}</div>
+      </div>
+    </section>
+  `;
+}
+
+function renderSmartContinuationCard() {
+  const smart = getSmartNextAction();
+  const resume = getResumePhrase();
+  const summary = getTodaySummary();
+
+  const topic = resume ? topicName(resume.topicId) : "pronto para começar";
+  const phraseText = resume
+    ? `${jpStripFurigana(resume.jp)} • ${resume.pt}`
+    : "Abra o treino e faça uma frase útil agora.";
+
+  return `
+    <section class="card stack smartContinuationCard">
+      <div class="row row--between">
+        <div class="badge">${escapeHTML(smart.badge)}</div>
+        <div class="badge">${summary.goal.done ? "meta ok" : "meta aberta"}</div>
+      </div>
+
+      <div class="lockCard">
+        <h3 class="lockTitle">${escapeHTML(smart.title)}</h3>
+        <p class="lockText">${escapeHTML(smart.text)}</p>
+      </div>
+
+      <div class="sheet stack" style="text-align:left">
+        <div class="small"><b>último tema:</b> ${escapeHTML(topic)}</div>
+        <div class="small"><b>frase atual:</b> ${escapeHTML(clampText(phraseText, 120))}</div>
+
+        <div class="pWrap" aria-label="progresso da meta diária">
+          <div class="pBar"><div class="pFill" style="transform:scaleX(${summary.goal.overall})"></div></div>
+          <div class="pTxt">${Math.round(summary.goal.overall * 100)}%</div>
+        </div>
+      </div>
+
+      ${renderSmartActionButton(smart)}
+    </section>
+  `;
+}
+
 function renderRetentionCard() {
   const streak = getStreakInfo();
   const nudge = getRetentionNudge();
@@ -2205,7 +2535,7 @@ function renderRetentionCard() {
 
       <div class="sheet stack" style="text-align:left">
         <div class="small"><b>continuidade:</b> ${escapeHTML(streak.message)}</div>
-        <div class="small"><b>último foco:</b> ${escapeHTML(resumeText)}</div>
+        <div class="small"><b>último foco:</b> ${escapeHTML(clampText(resumeText, 120))}</div>
       </div>
 
       <button class="btn btn--ok btn--full" data-action="${action}">
@@ -2223,13 +2553,13 @@ function renderPhraseOfDayCard() {
     <section class="card stack">
       <div class="row row--between">
         <div class="badge">frase do dia</div>
-        <div class="badge">treino rápido</div>
+        <div class="badge">ponto de partida</div>
       </div>
 
       <div class="lockCard">
-        <h3 class="lockTitle">Um ponto de partida para hoje</h3>
+        <h3 class="lockTitle">Treino pronto para quando você está cansado</h3>
         <p class="lockText">
-          Use esta frase quando estiver cansado ou sem saber por onde começar. Ela transforma o “só vou abrir o app” em um treino real.
+          Esta frase evita a dúvida de “o que estudar agora?”. Abra, ouça, repita e mantenha contato com o japonês hoje.
         </p>
       </div>
 
@@ -2312,8 +2642,10 @@ function renderFavoritesCard() {
         list.length
           ? list.slice(0, 3).map(p => renderPhraseMiniCard(p, { title: "favorita" })).join("")
           : `
-            <div class="sheet stack">
-              <div class="small">Você ainda não salvou frases favoritas. Toque em ☆ durante o treino para montar sua lista.</div>
+            <div class="emptyState">
+              <div class="emptyIcon">⭐</div>
+              <h3 class="emptyTitle">Nenhuma favorita ainda</h3>
+              <p class="emptyText">Durante o treino, toque em ☆ para montar seu kit pessoal de frases úteis.</p>
             </div>
           `
       }
@@ -2516,7 +2848,6 @@ function renderLanding() {
     </div>
   `;
 }
-
 /* ---------- premium ---------- */
 function renderPremium() {
   const unlocked = isPremiumUnlocked();
@@ -2554,9 +2885,9 @@ function renderPremium() {
           </div>
 
           <div class="valueCard">
-            <div class="valueIcon">🛒</div>
-            <h3 class="valueTitle">Mercado e konbini</h3>
-            <p class="valueText">Frases simples para compras, pagamentos, sacolas e dúvidas rápidas.</p>
+            <div class="valueIcon">🏠</div>
+            <h3 class="valueTitle">Moradia e problemas</h3>
+            <p class="valueText">Frases para vazamento, reparo, aluguel, atendimento e suporte.</p>
           </div>
 
           <div class="valueCard">
@@ -2695,24 +3026,22 @@ function renderHome() {
   const topicFilter = STATE.session.topicFilter || "ALL";
   const filterLabel = topicFilter === "ALL" ? "tudo" : topicName(topicFilter);
   const favCount = favoritePhrasesAccessible().length;
-  const resume = hasResumeTraining();
+  const smart = getSmartNextAction();
 
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">início</div>
+          <div class="badge">painel diário</div>
           <button class="btn btn--ghost" data-nav="#/landing">apresentação</button>
         </div>
 
-        <h1 class="h1">Treine japonês útil hoje.</h1>
+        <h1 class="h1">Seu japonês de hoje, sem complicar.</h1>
         <p class="p">
-          Escolha um tema, ouça a frase, repita em voz alta e avance um ciclo por vez.
+          Abra, siga a missão do dia e faça um avanço pequeno que ajuda na vida real.
         </p>
 
-        <button class="bigBtn" id="btnStart">
-          ${resume ? "continuar último treino" : "começar treino"}
-        </button>
+        ${renderSmartActionButton(smart, "bigBtn")}
 
         <div class="sep"></div>
 
@@ -2736,50 +3065,49 @@ function renderHome() {
 
           <div class="small">Use “tudo” para seguir o fluxo, ou escolha um tema para treinar com foco.</div>
         </div>
-
-        <div class="row">
-          <button class="btn" data-nav="#/105x">abrir treino</button>
-          <button class="btn" data-nav="#/edit">nova frase</button>
-          <button class="btn" data-nav="#/backup">backup</button>
-          <button class="btn btn--ghost" data-nav="#/skills">skills</button>
-        </div>
       </section>
 
-      ${renderRetentionCard()}
-      ${renderDailyGoalCard()}
+      ${renderDailyMissionCard()}
+      ${renderSmartContinuationCard()}
+      ${renderDailySummaryCompact()}
       ${renderPhraseOfDayCard()}
       ${renderEssentialPackHighlight()}
       ${renderFavoritesCard()}
 
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">progresso</div>
+          <div class="badge">progresso geral</div>
           <div class="badge">🪙 ${STATE.stats.coins || 0}</div>
         </div>
         <div class="small">ciclos: ${STATE.stats.cyclesDone || 0} • dominadas: ${STATE.stats.phrasesMastered || 0}</div>
+        <div class="grid2">
+          <button class="btn btn--ghost btn--full" data-nav="#/skills">ver skills</button>
+          <button class="btn btn--full" data-nav="#/105x">abrir treino</button>
+        </div>
       </section>
-
-      ${renderFreeValueCard()}
 
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">Sensei IA</div>
-          <div class="badge">${isPremiumUnlocked() ? "liberado" : "premium"}</div>
+          <div class="badge">premium</div>
+          <div class="badge">${isPremiumUnlocked() ? "liberado" : "opcional"}</div>
         </div>
 
         <div class="lockCard">
-          <h3 class="lockTitle">Material para a sua necessidade</h3>
+          <h3 class="lockTitle">${isPremiumUnlocked() ? "Aprofunde com Sensei IA" : "Quando precisar de situações mais específicas"}</h3>
           <p class="lockText">
-            Crie frases para chefe, fábrica, hospital, aluguel, viagem, mercado ou qualquer situação da sua vida no Japão.
+            ${isPremiumUnlocked()
+              ? "Crie frases para chefe, hospital, aluguel, fábrica ou qualquer situação da sua rotina."
+              : "O grátis cria o hábito. O premium aprofunda fábrica, prefeitura, moradia, chefe, transporte e Sensei IA."
+            }
           </p>
         </div>
 
         <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/sensei">
-            ${isPremiumUnlocked() ? "abrir Sensei IA" : "ver Sensei IA"}
+          <button class="btn btn--ok btn--full" data-nav="${isPremiumUnlocked() ? "#/sensei" : "#/premium"}">
+            ${isPremiumUnlocked() ? "abrir Sensei IA" : "comparar planos"}
           </button>
-          <button class="btn btn--full" data-nav="#/premium">
-            ${isPremiumUnlocked() ? "ver premium" : "comparar planos"}
+          <button class="btn btn--full" data-action="topicFilter" data-id="topic_essential_japan">
+            continuar no grátis
           </button>
         </div>
       </section>
@@ -2804,21 +3132,10 @@ function renderHome() {
           <button class="btn btn--ghost btn--full" data-nav="#/backup">abrir backup</button>
         </div>
       </section>
+
+      ${renderFreeValueCard()}
     </div>
   `;
-
-  const startBtn = $("#btnStart");
-  if (startBtn) {
-    startBtn.addEventListener("click", () => {
-      if (hasResumeTraining()) {
-        nav("#/105x");
-        toast("continuando treino");
-      } else {
-        startAuto();
-        toast("treino iniciado");
-      }
-    });
-  }
 
   const sel = $("#topicFilterSel");
   if (sel) {
@@ -2846,6 +3163,7 @@ function renderHome() {
     });
   }
 }
+
 /* ---------- tutorial ---------- */
 function renderTutorial() {
   const step = tutorialCurrentStep();
@@ -3258,8 +3576,10 @@ function renderSenseiHistory() {
 
   if (!hist.length) {
     return `
-      <div class="sheet stack">
-        <div class="small">Ainda não há materiais criados pelo Sensei IA.</div>
+      <div class="emptyState">
+        <div class="emptyIcon">🤖</div>
+        <h3 class="emptyTitle">Nenhum material criado ainda</h3>
+        <p class="emptyText">Peça frases para uma situação real e salve o pack no app.</p>
       </div>
     `;
   }
@@ -3275,7 +3595,6 @@ function renderSenseiHistory() {
     </div>
   `).join("");
 }
-
 function renderSensei() {
   if (!isPremiumUnlocked()) {
     APP.innerHTML = `
@@ -3435,8 +3754,11 @@ function render105x() {
     APP.innerHTML = `
       <div class="stack">
         <section class="card stack">
-          <div class="badge">sem frases neste filtro</div>
-          <div class="small">Escolha outro tema, abra o Pack Essencial ou salve frases como favoritas.</div>
+          <div class="emptyState">
+            <div class="emptyIcon">📭</div>
+            <h3 class="emptyTitle">Nenhuma frase neste filtro</h3>
+            <p class="emptyText">Escolha outro tema, abra o Pack Essencial ou salve frases como favoritas.</p>
+          </div>
 
           <div class="grid2">
             <button class="btn btn--ok btn--full" data-action="topicFilter" data-id="ALL">treinar tudo</button>
@@ -3598,8 +3920,10 @@ function renderPhraseListOnly() {
         </div>
       `;
     }).join("") : `
-      <div class="sheet stack">
-        <div class="small">Você ainda não salvou favoritas. Toque em ☆ durante o treino.</div>
+      <div class="emptyState">
+        <div class="emptyIcon">⭐</div>
+        <h3 class="emptyTitle">Você ainda não salvou favoritas</h3>
+        <p class="emptyText">Toque em ☆ durante o treino para montar seu kit pessoal.</p>
       </div>
     `;
     return;
@@ -3898,8 +4222,10 @@ function renderManage() {
           </div>
           <div class="small">Segure no ≡ e arraste para ordenar.</div>
         ` : `
-          <div class="sheet stack">
-            <div class="small">Este tema ainda não tem frases.</div>
+          <div class="emptyState">
+            <div class="emptyIcon">🗂️</div>
+            <h3 class="emptyTitle">Este tema ainda não tem frases</h3>
+            <p class="emptyText">Adicione uma frase para começar a treinar este contexto.</p>
           </div>
         `}
       </div>
