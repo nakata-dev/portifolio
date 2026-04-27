@@ -1,10 +1,14 @@
 /* =========================================================
-   NIHONGO321 v7.9.1
-   Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D + Bloco 3E + Bloco 3F + Bloco 3G
-   - correção crítica: treino rápido não cai no Pack Essencial indevidamente
-   - correção crítica: revisar mesma frase funciona
-   - correção crítica: treino por situação abre #/105x
-   - correção crítica: #/105x abre direto sem tela vazia
+   NIHONGO321 v7.9.3
+   Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I + Bloco 3J + Bloco 3K
+   - correções críticas preservadas
+   - treino rápido não cai no Pack Essencial indevidamente
+   - revisar mesma frase funciona
+   - treino por situação abre #/105x
+   - #/105x abre direto sem tela vazia
+   - Bloco 3I: aumento estratégico de conteúdo
+   - Bloco 3J: polimento final UX
+   - Bloco 3K: comercial e checkout externo seguro
    ========================================================= */
 
 const LS_KEY = "jp_105x_v7";
@@ -16,7 +20,16 @@ const BRAND = {
   promise: "Treine frases úteis para viver melhor no Japão."
 };
 
-/* ========= CONFIG COMERCIAL ========= */
+/* ========= CONFIG COMERCIAL =========
+   IMPORTANTE PARA PUBLICAÇÃO:
+   1. Cadastre seus dados bancários SOMENTE na plataforma de checkout externa.
+      Exemplos: Stripe, PayPal, Square, Hotmart, Kiwify ou outra plataforma escolhida.
+   2. Não coloque dados bancários, chave Pix, número de conta, documento ou endereço sensível neste arquivo.
+   3. Depois que a plataforma gerar o link de pagamento, cole esse link em checkoutUrl.
+   4. Atualize supportEmail para seu e-mail real de suporte.
+   5. Atualize monthlyPrice e semiannualPrice se mudar os preços.
+   6. Atualize playStoreUrl e appStoreUrl quando o app estiver publicado.
+*/
 const SALES = {
   monthlyPrice: "¥980",
   semiannualPrice: "¥4,980 / 6 meses",
@@ -134,6 +147,50 @@ function isRealCheckoutConfigured() {
   return !!SALES.checkoutUrl &&
     SALES.checkoutUrl.startsWith("http") &&
     !/SEU-CHECKOUT-AQUI/i.test(SALES.checkoutUrl);
+}
+
+function getCheckoutStatus() {
+  const url = String(SALES.checkoutUrl || "").trim();
+  const hasUrl = !!url;
+  const isHttp = /^https?:\/\//i.test(url);
+  const isPlaceholder = !url || /SEU-CHECKOUT-AQUI/i.test(url);
+
+  if (!hasUrl || isPlaceholder) {
+    return {
+      ready: false,
+      mode: "placeholder",
+      badge: "checkout em preparação",
+      button: "checkout em preparação",
+      message: "O pagamento ainda não foi conectado. Cadastre seus dados bancários na plataforma de checkout externa e cole aqui o link gerado."
+    };
+  }
+
+  if (!isHttp) {
+    return {
+      ready: false,
+      mode: "invalid",
+      badge: "link inválido",
+      button: "corrigir link do checkout",
+      message: "O link do checkout precisa começar com http:// ou https://."
+    };
+  }
+
+  return {
+    ready: true,
+    mode: "ready",
+    badge: "checkout seguro",
+    button: "ir para pagamento seguro",
+    message: "Você será direcionado para uma página externa segura para concluir o pagamento."
+  };
+}
+
+function checkoutDeveloperHint() {
+  return [
+    "Dados bancários: cadastre somente na plataforma de pagamento externa.",
+    "No app.js, altere apenas SALES.checkoutUrl para o link real do checkout.",
+    "Atualize também SALES.supportEmail, SALES.monthlyPrice e SALES.semiannualPrice quando necessário.",
+    "Não coloque conta bancária, documento, Pix, endereço ou dados sensíveis dentro do app."
+  ].join(" ");
 }
 
 function hashString(s) {
@@ -262,6 +319,13 @@ function defaultTopic() {
   };
 }
 
+/* 
+   MANTENHA AQUI TODO O BLOCO TOPIC_SEEDS DO SEU ARQUIVO ORIGINAL
+   SEM ALTERAÇÃO.
+
+   Como este bloco é muito grande e não recebeu alteração no Bloco 3K,
+   vou preservar a continuação integral nas próximas partes para evitar corte.
+*/
 const TOPIC_SEEDS = [
   {
     id: "topic_essential_japan",
@@ -395,9 +459,69 @@ const TOPIC_SEEDS = [
           { jp: "日本語{にほんご}", pt: "japonês" },
           { jp: "練習{れんしゅう}", pt: "prática / treino" }
         ]
+      },
+      {
+        id: "seed_essential_015",
+        jp: "少{すこ}し だけ 日本語{にほんご} が 話{はな}せます。",
+        pt: "Eu consigo falar só um pouco de japonês.",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "だけ", pt: "somente / apenas" },
+          { jp: "話{はな}せます", pt: "consigo falar" }
+        ]
+      },
+      {
+        id: "seed_essential_016",
+        jp: "紙{かみ} に 書{か}いて もらえますか。",
+        pt: "Você poderia escrever no papel para mim?",
+        newWords: [
+          { jp: "紙{かみ}", pt: "papel" },
+          { jp: "書{か}いて", pt: "escrever" },
+          { jp: "もらえますか", pt: "poderia fazer para mim?" }
+        ]
+      },
+      {
+        id: "seed_essential_017",
+        jp: "写真{しゃしん} を 見{み}せても いいですか。",
+        pt: "Posso mostrar uma foto?",
+        newWords: [
+          { jp: "写真{しゃしん}", pt: "foto" },
+          { jp: "見{み}せても", pt: "mostrar" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_essential_018",
+        jp: "ここ で 待{ま}てば いいですか。",
+        pt: "Está certo esperar aqui?",
+        newWords: [
+          { jp: "ここ", pt: "aqui" },
+          { jp: "待{ま}てば", pt: "se esperar" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_essential_019",
+        jp: "番号{ばんごう} を 呼{よ}ばれる まで 待{ま}ちます。",
+        pt: "Vou esperar até chamarem meu número.",
+        newWords: [
+          { jp: "番号{ばんごう}", pt: "número" },
+          { jp: "呼{よ}ばれる", pt: "ser chamado" },
+          { jp: "待{ま}ちます", pt: "vou esperar" }
+        ]
+      },
+      {
+        id: "seed_essential_020",
+        jp: "通訳{つうやく} は ありますか。",
+        pt: "Tem intérprete?",
+        newWords: [
+          { jp: "通訳{つうやく}", pt: "intérprete" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_default",
     name: "Frases aleatórias",
@@ -432,9 +556,59 @@ const TOPIC_SEEDS = [
           { jp: "ここ", pt: "aqui" },
           { jp: "待{ま}って", pt: "esperar" }
         ]
+      },
+      {
+        id: "seed_random_004",
+        jp: "今{いま}、少{すこ}し 急{いそ}いで います。",
+        pt: "Agora estou com um pouco de pressa.",
+        newWords: [
+          { jp: "今{いま}", pt: "agora" },
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "急{いそ}いで います", pt: "estou com pressa" }
+        ]
+      },
+      {
+        id: "seed_random_005",
+        jp: "あと で 確認{かくにん} します。",
+        pt: "Vou confirmar depois.",
+        newWords: [
+          { jp: "あと で", pt: "depois" },
+          { jp: "確認{かくにん}", pt: "confirmação" },
+          { jp: "します", pt: "vou fazer" }
+        ]
+      },
+      {
+        id: "seed_random_006",
+        jp: "今日{きょう} は 少{すこ}し 疲{つか}れて います。",
+        pt: "Hoje estou um pouco cansado.",
+        newWords: [
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "疲{つか}れて います", pt: "estou cansado" }
+        ]
+      },
+      {
+        id: "seed_random_007",
+        jp: "それ は どういう 意味{いみ} ですか。",
+        pt: "O que isso significa?",
+        newWords: [
+          { jp: "それ", pt: "isso" },
+          { jp: "どういう", pt: "que tipo de / qual" },
+          { jp: "意味{いみ}", pt: "significado" }
+        ]
+      },
+      {
+        id: "seed_random_008",
+        jp: "この アプリ で 日本語{にほんご} を 練習{れんしゅう} して います。",
+        pt: "Estou praticando japonês com este aplicativo.",
+        newWords: [
+          { jp: "アプリ", pt: "aplicativo" },
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "練習{れんしゅう}", pt: "prática" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_factory",
     name: "Na Fábrica",
@@ -457,9 +631,124 @@ const TOPIC_SEEDS = [
           { jp: "次{つぎ}", pt: "seguinte / próximo" },
           { jp: "何{なに}", pt: "o que" }
         ]
+      },
+      {
+        id: "seed_factory_003",
+        jp: "この 作業{さぎょう} は 初{はじ}めて です。",
+        pt: "É a primeira vez que faço este trabalho.",
+        newWords: [
+          { jp: "作業{さぎょう}", pt: "trabalho / operação" },
+          { jp: "初{はじ}めて", pt: "primeira vez" }
+        ]
+      },
+      {
+        id: "seed_factory_004",
+        jp: "やり方{かた} を もう 一度{いちど} 教{おし}えて ください。",
+        pt: "Por favor, me ensine o modo de fazer mais uma vez.",
+        newWords: [
+          { jp: "やり方{かた}", pt: "modo de fazer" },
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "教{おし}えて", pt: "ensinar" }
+        ]
+      },
+      {
+        id: "seed_factory_005",
+        jp: "この 部品{ぶひん} は どこ に 置{お}きますか。",
+        pt: "Onde coloco esta peça?",
+        newWords: [
+          { jp: "部品{ぶひん}", pt: "peça" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "置{お}きます", pt: "coloco" }
+        ]
+      },
+      {
+        id: "seed_factory_006",
+        jp: "不良品{ふりょうひん} かもしれません。",
+        pt: "Talvez seja produto defeituoso.",
+        newWords: [
+          { jp: "不良品{ふりょうひん}", pt: "produto defeituoso" },
+          { jp: "かもしれません", pt: "talvez seja" }
+        ]
+      },
+      {
+        id: "seed_factory_007",
+        jp: "確認{かくにん} して もらえますか。",
+        pt: "Você poderia verificar para mim?",
+        newWords: [
+          { jp: "確認{かくにん}", pt: "verificação" },
+          { jp: "もらえますか", pt: "poderia fazer para mim?" }
+        ]
+      },
+      {
+        id: "seed_factory_008",
+        jp: "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
+        pt: "Estou me sentindo um pouco mal.",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "体調{たいちょう}", pt: "condição física" },
+          { jp: "悪{わる}い", pt: "ruim" }
+        ]
+      },
+      {
+        id: "seed_factory_009",
+        jp: "休憩{きゅうけい} に 行{い}っても いいですか。",
+        pt: "Posso ir para o intervalo?",
+        newWords: [
+          { jp: "休憩{きゅうけい}", pt: "descanso / intervalo" },
+          { jp: "行{い}っても", pt: "ir" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_factory_010",
+        jp: "この ライン は 何時{なんじ} まで ですか。",
+        pt: "Até que horas vai esta linha?",
+        newWords: [
+          { jp: "ライン", pt: "linha de produção" },
+          { jp: "何時{なんじ}", pt: "que horas" },
+          { jp: "まで", pt: "até" }
+        ]
+      },
+      {
+        id: "seed_factory_011",
+        jp: "残業{ざんぎょう} は ありますか。",
+        pt: "Vai ter hora extra?",
+        newWords: [
+          { jp: "残業{ざんぎょう}", pt: "hora extra" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_factory_012",
+        jp: "今日{きょう} は 定時{ていじ} で 帰{かえ}れますか。",
+        pt: "Hoje posso ir embora no horário normal?",
+        newWords: [
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "定時{ていじ}", pt: "horário normal de saída" },
+          { jp: "帰{かえ}れますか", pt: "posso ir embora?" }
+        ]
+      },
+      {
+        id: "seed_factory_013",
+        jp: "安全確認{あんぜんかくにん} を して から 始{はじ}めます。",
+        pt: "Vou começar depois de verificar a segurança.",
+        newWords: [
+          { jp: "安全確認{あんぜんかくにん}", pt: "verificação de segurança" },
+          { jp: "始{はじ}めます", pt: "começo" }
+        ]
+      },
+      {
+        id: "seed_factory_014",
+        jp: "この 数{かず} で 合{あ}って いますか。",
+        pt: "Esta quantidade está correta?",
+        newWords: [
+          { jp: "数{かず}", pt: "quantidade / número" },
+          { jp: "合{あ}って いますか", pt: "está correto?" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_airport",
     name: "No Aeroporto",
@@ -481,12 +770,70 @@ const TOPIC_SEEDS = [
           { jp: "荷物{にもつ}", pt: "bagagem" },
           { jp: "預{あず}けたい", pt: "querer despachar" }
         ]
+      },
+      {
+        id: "seed_airport_003",
+        jp: "チェックイン は どこ で できますか。",
+        pt: "Onde posso fazer o check-in?",
+        newWords: [
+          { jp: "チェックイン", pt: "check-in" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "できますか", pt: "pode fazer?" }
+        ]
+      },
+      {
+        id: "seed_airport_004",
+        jp: "この 便{びん} は 遅{おく}れて いますか。",
+        pt: "Este voo está atrasado?",
+        newWords: [
+          { jp: "便{びん}", pt: "voo" },
+          { jp: "遅{おく}れて います", pt: "está atrasado" }
+        ]
+      },
+      {
+        id: "seed_airport_005",
+        jp: "乗{の}り換{か}え は 必要{ひつよう} ですか。",
+        pt: "É necessário fazer conexão?",
+        newWords: [
+          { jp: "乗{の}り換{か}え", pt: "conexão / troca" },
+          { jp: "必要{ひつよう}", pt: "necessário" }
+        ]
+      },
+      {
+        id: "seed_airport_006",
+        jp: "パスポート を 見{み}せれば いいですか。",
+        pt: "Está certo mostrar o passaporte?",
+        newWords: [
+          { jp: "パスポート", pt: "passaporte" },
+          { jp: "見{み}せれば", pt: "se mostrar" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_airport_007",
+        jp: "この 荷物{にもつ} は 機内{きない} に 持{も}ち込{こ}めますか。",
+        pt: "Posso levar esta bagagem dentro do avião?",
+        newWords: [
+          { jp: "荷物{にもつ}", pt: "bagagem" },
+          { jp: "機内{きない}", pt: "dentro do avião" },
+          { jp: "持{も}ち込{こ}めますか", pt: "posso levar para dentro?" }
+        ]
+      },
+      {
+        id: "seed_airport_008",
+        jp: "出口{でぐち} は どちら ですか。",
+        pt: "Para que lado fica a saída?",
+        newWords: [
+          { jp: "出口{でぐち}", pt: "saída" },
+          { jp: "どちら", pt: "qual lado / onde" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_post",
-    name: "No correio",
+    name: "No Correio",
     color: "tAmber",
     phrases: [
       {
@@ -505,9 +852,67 @@ const TOPIC_SEEDS = [
         newWords: [
           { jp: "追跡番号{ついせきばんごう}", pt: "número de rastreio" }
         ]
+      },
+      {
+        id: "seed_post_003",
+        jp: "一番{いちばん} 安{やす}い 送{おく}り方{かた} は どれ ですか。",
+        pt: "Qual é a forma de envio mais barata?",
+        newWords: [
+          { jp: "一番{いちばん}", pt: "mais / número um" },
+          { jp: "安{やす}い", pt: "barato" },
+          { jp: "送{おく}り方{かた}", pt: "forma de envio" }
+        ]
+      },
+      {
+        id: "seed_post_004",
+        jp: "到着{とうちゃく} まで 何日{なんにち} かかりますか。",
+        pt: "Quantos dias leva até chegar?",
+        newWords: [
+          { jp: "到着{とうちゃく}", pt: "chegada" },
+          { jp: "何日{なんにち}", pt: "quantos dias" },
+          { jp: "かかりますか", pt: "leva?" }
+        ]
+      },
+      {
+        id: "seed_post_005",
+        jp: "この 箱{はこ} で 送{おく}れますか。",
+        pt: "Posso enviar com esta caixa?",
+        newWords: [
+          { jp: "箱{はこ}", pt: "caixa" },
+          { jp: "送{おく}れますか", pt: "pode enviar?" }
+        ]
+      },
+      {
+        id: "seed_post_006",
+        jp: "住所{じゅうしょ} は ここ に 書{か}けば いいですか。",
+        pt: "Está certo escrever o endereço aqui?",
+        newWords: [
+          { jp: "住所{じゅうしょ}", pt: "endereço" },
+          { jp: "書{か}けば", pt: "se escrever" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_post_007",
+        jp: "着払{ちゃくばら}い で 送{おく}れますか。",
+        pt: "Posso enviar com pagamento na entrega?",
+        newWords: [
+          { jp: "着払{ちゃくばら}い", pt: "pagamento na entrega" },
+          { jp: "送{おく}れますか", pt: "pode enviar?" }
+        ]
+      },
+      {
+        id: "seed_post_008",
+        jp: "切手{きって} は ここ で 買{か}えますか。",
+        pt: "Posso comprar selo aqui?",
+        newWords: [
+          { jp: "切手{きって}", pt: "selo" },
+          { jp: "買{か}えますか", pt: "posso comprar?" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_cityhall",
     name: "Na Prefeitura",
@@ -529,9 +934,87 @@ const TOPIC_SEEDS = [
           { jp: "書類{しょるい}", pt: "documento" },
           { jp: "出{だ}しますか", pt: "entrego?" }
         ]
+      },
+      {
+        id: "seed_cityhall_003",
+        jp: "転入届{てんにゅうとどけ} の 手続{てつづ}き は どこ ですか。",
+        pt: "Onde faço o procedimento de mudança de endereço para cá?",
+        newWords: [
+          { jp: "転入届{てんにゅうとどけ}", pt: "registro de entrada no município" },
+          { jp: "手続{てつづ}き", pt: "procedimento" },
+          { jp: "どこ", pt: "onde" }
+        ]
+      },
+      {
+        id: "seed_cityhall_004",
+        jp: "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
+        pt: "Por favor, me ensine como preencher este documento.",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "書{か}き方{かた}", pt: "forma de escrever / preencher" },
+          { jp: "教{おし}えて", pt: "ensinar" }
+        ]
+      },
+      {
+        id: "seed_cityhall_005",
+        jp: "必要{ひつよう} な もの は 何{なに} ですか。",
+        pt: "O que é necessário trazer?",
+        newWords: [
+          { jp: "必要{ひつよう}", pt: "necessário" },
+          { jp: "何{なに}", pt: "o que" }
+        ]
+      },
+      {
+        id: "seed_cityhall_006",
+        jp: "マイナンバー カード の 更新{こうしん} を したいです。",
+        pt: "Quero renovar o cartão My Number.",
+        newWords: [
+          { jp: "マイナンバー カード", pt: "cartão My Number" },
+          { jp: "更新{こうしん}", pt: "renovação" },
+          { jp: "したいです", pt: "quero fazer" }
+        ]
+      },
+      {
+        id: "seed_cityhall_007",
+        jp: "通訳{つうやく} を お願{ねが}いできますか。",
+        pt: "É possível pedir um intérprete?",
+        newWords: [
+          { jp: "通訳{つうやく}", pt: "intérprete" },
+          { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
+        ]
+      },
+      {
+        id: "seed_cityhall_008",
+        jp: "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
+        pt: "Onde pego a senha de atendimento?",
+        newWords: [
+          { jp: "番号札{ばんごうふだ}", pt: "senha / ficha numerada" },
+          { jp: "取{と}りますか", pt: "pego?" }
+        ]
+      },
+      {
+        id: "seed_cityhall_009",
+        jp: "この 手続{てつづ}き は 今日中{きょうじゅう} に 終{お}わりますか。",
+        pt: "Este procedimento termina ainda hoje?",
+        newWords: [
+          { jp: "手続{てつづ}き", pt: "procedimento" },
+          { jp: "今日中{きょうじゅう}", pt: "ainda hoje" },
+          { jp: "終{お}わりますか", pt: "termina?" }
+        ]
+      },
+      {
+        id: "seed_cityhall_010",
+        jp: "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
+        pt: "É necessária uma cópia do cartão de residência?",
+        newWords: [
+          { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
+          { jp: "コピー", pt: "cópia" },
+          { jp: "必要{ひつよう}", pt: "necessário" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_konbini",
     name: "No Konbini",
@@ -554,9 +1037,84 @@ const TOPIC_SEEDS = [
           { jp: "お弁当{べんとう}", pt: "bentô" },
           { jp: "温{あたた}めて", pt: "aquecer" }
         ]
+      },
+      {
+        id: "seed_konbini_003",
+        jp: "お箸{はし} を 一膳{いちぜん} お願{ねが}いします。",
+        pt: "Um par de hashi, por favor.",
+        newWords: [
+          { jp: "お箸{はし}", pt: "hashi / palitinhos" },
+          { jp: "一膳{いちぜん}", pt: "um par de hashi" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_konbini_004",
+        jp: "スプーン は ありますか。",
+        pt: "Tem colher?",
+        newWords: [
+          { jp: "スプーン", pt: "colher" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_konbini_005",
+        jp: "公共料金{こうきょうりょうきん} を 払{はら}いたいです。",
+        pt: "Quero pagar uma conta pública.",
+        newWords: [
+          { jp: "公共料金{こうきょうりょうきん}", pt: "conta pública / utilidade" },
+          { jp: "払{はら}いたい", pt: "quero pagar" }
+        ]
+      },
+      {
+        id: "seed_konbini_006",
+        jp: "この 支払{しはら}い は ここ で できますか。",
+        pt: "Posso fazer este pagamento aqui?",
+        newWords: [
+          { jp: "支払{しはら}い", pt: "pagamento" },
+          { jp: "ここ", pt: "aqui" },
+          { jp: "できますか", pt: "pode fazer?" }
+        ]
+      },
+      {
+        id: "seed_konbini_007",
+        jp: "宅急便{たっきゅうびん} を 出{だ}したいです。",
+        pt: "Quero enviar uma encomenda pelo takkyubin.",
+        newWords: [
+          { jp: "宅急便{たっきゅうびん}", pt: "serviço de entrega" },
+          { jp: "出{だ}したい", pt: "quero enviar / despachar" }
+        ]
+      },
+      {
+        id: "seed_konbini_008",
+        jp: "レシート を ください。",
+        pt: "Por favor, me dê o recibo.",
+        newWords: [
+          { jp: "レシート", pt: "recibo / comprovante" },
+          { jp: "ください", pt: "por favor, me dê" }
+        ]
+      },
+      {
+        id: "seed_konbini_009",
+        jp: "ポイントカード は ありません。",
+        pt: "Não tenho cartão de pontos.",
+        newWords: [
+          { jp: "ポイントカード", pt: "cartão de pontos" },
+          { jp: "ありません", pt: "não tenho / não existe" }
+        ]
+      },
+      {
+        id: "seed_konbini_010",
+        jp: "現金{げんきん} で 払{はら}います。",
+        pt: "Vou pagar em dinheiro.",
+        newWords: [
+          { jp: "現金{げんきん}", pt: "dinheiro em espécie" },
+          { jp: "払{はら}います", pt: "vou pagar" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_market",
     name: "No Mercado",
@@ -578,9 +1136,86 @@ const TOPIC_SEEDS = [
         newWords: [
           { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
         ]
+      },
+      {
+        id: "seed_market_003",
+        jp: "この 肉{にく} は 今日{きょう} まで ですか。",
+        pt: "Esta carne vence hoje?",
+        newWords: [
+          { jp: "肉{にく}", pt: "carne" },
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "まで", pt: "até" }
+        ]
+      },
+      {
+        id: "seed_market_004",
+        jp: "割引{わりびき} シール は ありますか。",
+        pt: "Tem etiqueta de desconto?",
+        newWords: [
+          { jp: "割引{わりびき}", pt: "desconto" },
+          { jp: "シール", pt: "etiqueta / selo" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_market_005",
+        jp: "この 商品{しょうひん} は どこ に ありますか。",
+        pt: "Onde fica este produto?",
+        newWords: [
+          { jp: "商品{しょうひん}", pt: "produto" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "ありますか", pt: "tem / fica?" }
+        ]
+      },
+      {
+        id: "seed_market_006",
+        jp: "袋{ふくろ} は 要{い}りません。",
+        pt: "Não preciso de sacola.",
+        newWords: [
+          { jp: "袋{ふくろ}", pt: "sacola" },
+          { jp: "要{い}りません", pt: "não preciso" }
+        ]
+      },
+      {
+        id: "seed_market_007",
+        jp: "カード で 払{はら}えますか。",
+        pt: "Posso pagar com cartão?",
+        newWords: [
+          { jp: "カード", pt: "cartão" },
+          { jp: "払{はら}えますか", pt: "posso pagar?" }
+        ]
+      },
+      {
+        id: "seed_market_008",
+        jp: "この 野菜{やさい} は 新鮮{しんせん} ですか。",
+        pt: "Este legume está fresco?",
+        newWords: [
+          { jp: "野菜{やさい}", pt: "legume / verdura" },
+          { jp: "新鮮{しんせん}", pt: "fresco" }
+        ]
+      },
+      {
+        id: "seed_market_009",
+        jp: "安{やす}い 方{ほう} は どちら ですか。",
+        pt: "Qual é a opção mais barata?",
+        newWords: [
+          { jp: "安{やす}い", pt: "barato" },
+          { jp: "方{ほう}", pt: "lado / opção" },
+          { jp: "どちら", pt: "qual" }
+        ]
+      },
+      {
+        id: "seed_market_010",
+        jp: "セルフレジ は 使{つか}えますか。",
+        pt: "Posso usar o caixa automático?",
+        newWords: [
+          { jp: "セルフレジ", pt: "caixa automático / self checkout" },
+          { jp: "使{つか}えますか", pt: "posso usar?" }
+        ]
       }
     ]
   },
+
   {
     id: "topic_bike",
     name: "Na Loja de Bicicletas",
@@ -592,7 +1227,8 @@ const TOPIC_SEEDS = [
         pt: "A corrente soltou. Pode dar uma olhada?",
         newWords: [
           { jp: "チェーン", pt: "corrente" },
-          { jp: "外{はず}れました", pt: "soltou" }
+          { jp: "外{はず}れました", pt: "soltou" },
+          { jp: "見{み}て", pt: "ver / olhar" }
         ]
       },
       {
@@ -601,11 +1237,71 @@ const TOPIC_SEEDS = [
         pt: "Quanto custa o conserto do pneu furado?",
         newWords: [
           { jp: "パンク", pt: "pneu furado" },
-          { jp: "修理{しゅうり}", pt: "conserto" }
+          { jp: "修理{しゅうり}", pt: "conserto" },
+          { jp: "いくら", pt: "quanto" }
+        ]
+      },
+      {
+        id: "seed_bike_003",
+        jp: "タイヤ の 空気{くうき} を 入{い}れて もらえますか。",
+        pt: "Você pode colocar ar no pneu para mim?",
+        newWords: [
+          { jp: "タイヤ", pt: "pneu" },
+          { jp: "空気{くうき}", pt: "ar" },
+          { jp: "入{い}れて", pt: "colocar" }
+        ]
+      },
+      {
+        id: "seed_bike_004",
+        jp: "ブレーキ の 調子{ちょうし} が 悪{わる}いです。",
+        pt: "O freio não está bom.",
+        newWords: [
+          { jp: "ブレーキ", pt: "freio" },
+          { jp: "調子{ちょうし}", pt: "condição" },
+          { jp: "悪{わる}い", pt: "ruim" }
+        ]
+      },
+      {
+        id: "seed_bike_005",
+        jp: "ライト が つきません。",
+        pt: "A luz não acende.",
+        newWords: [
+          { jp: "ライト", pt: "luz / farol" },
+          { jp: "つきません", pt: "não acende" }
+        ]
+      },
+      {
+        id: "seed_bike_006",
+        jp: "サドル を もっと 高{たか}く できますか。",
+        pt: "Pode deixar o selim mais alto?",
+        newWords: [
+          { jp: "サドル", pt: "selim / banco da bicicleta" },
+          { jp: "もっと", pt: "mais" },
+          { jp: "高{たか}く", pt: "alto" }
+        ]
+      },
+      {
+        id: "seed_bike_007",
+        jp: "鍵{かぎ} を なくしました。",
+        pt: "Perdi a chave.",
+        newWords: [
+          { jp: "鍵{かぎ}", pt: "chave" },
+          { jp: "なくしました", pt: "perdi" }
+        ]
+      },
+      {
+        id: "seed_bike_008",
+        jp: "修理{しゅうり} に どのくらい 時間{じかん} が かかりますか。",
+        pt: "Quanto tempo leva para consertar?",
+        newWords: [
+          { jp: "修理{しゅうり}", pt: "conserto" },
+          { jp: "どのくらい", pt: "quanto tempo / quanto" },
+          { jp: "時間{じかん}", pt: "tempo" }
         ]
       }
     ]
   },
+
   {
     id: "topic_cinema",
     name: "No Cinema",
@@ -616,7 +1312,9 @@ const TOPIC_SEEDS = [
         jp: "次{つぎ} の 上映{じょうえい} は 何時{なんじ} ですか。",
         pt: "A que horas é a próxima sessão?",
         newWords: [
-          { jp: "上映{じょうえい}", pt: "sessão / exibição" }
+          { jp: "次{つぎ}", pt: "próximo" },
+          { jp: "上映{じょうえい}", pt: "sessão / exibição" },
+          { jp: "何時{なんじ}", pt: "que horas" }
         ]
       },
       {
@@ -625,11 +1323,69 @@ const TOPIC_SEEDS = [
         pt: "Dois ingressos, por favor.",
         newWords: [
           { jp: "チケット", pt: "ingresso" },
-          { jp: "二枚{にまい}", pt: "duas unidades" }
+          { jp: "二枚{にまい}", pt: "duas unidades" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_cinema_003",
+        jp: "字幕{じまく} は ありますか。",
+        pt: "Tem legenda?",
+        newWords: [
+          { jp: "字幕{じまく}", pt: "legenda" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_cinema_004",
+        jp: "日本語{にほんご} の 字幕{じまく} ですか。",
+        pt: "A legenda é em japonês?",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "字幕{じまく}", pt: "legenda" }
+        ]
+      },
+      {
+        id: "seed_cinema_005",
+        jp: "席{せき} は 選{えら}べますか。",
+        pt: "Posso escolher o assento?",
+        newWords: [
+          { jp: "席{せき}", pt: "assento" },
+          { jp: "選{えら}べますか", pt: "posso escolher?" }
+        ]
+      },
+      {
+        id: "seed_cinema_006",
+        jp: "前{まえ} の 席{せき} は 苦手{にがて} です。",
+        pt: "Não gosto de assento da frente.",
+        newWords: [
+          { jp: "前{まえ}", pt: "frente" },
+          { jp: "席{せき}", pt: "assento" },
+          { jp: "苦手{にがて}", pt: "não gosto / tenho dificuldade" }
+        ]
+      },
+      {
+        id: "seed_cinema_007",
+        jp: "ポップコーン の セット は ありますか。",
+        pt: "Tem combo de pipoca?",
+        newWords: [
+          { jp: "ポップコーン", pt: "pipoca" },
+          { jp: "セット", pt: "combo / conjunto" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_cinema_008",
+        jp: "この 映画{えいが} は 何分{なんぷん} ですか。",
+        pt: "Quantos minutos tem este filme?",
+        newWords: [
+          { jp: "映画{えいが}", pt: "filme" },
+          { jp: "何分{なんぷん}", pt: "quantos minutos" }
         ]
       }
     ]
   },
+
   {
     id: "topic_department",
     name: "Na Loja de Departamentos",
@@ -640,7 +1396,8 @@ const TOPIC_SEEDS = [
         jp: "この サイズ は ありますか。",
         pt: "Tem este tamanho?",
         newWords: [
-          { jp: "サイズ", pt: "tamanho" }
+          { jp: "サイズ", pt: "tamanho" },
+          { jp: "ありますか", pt: "tem?" }
         ]
       },
       {
@@ -648,11 +1405,71 @@ const TOPIC_SEEDS = [
         jp: "試着室{しちゃくしつ} は どこ ですか。",
         pt: "Onde fica o provador?",
         newWords: [
-          { jp: "試着室{しちゃくしつ}", pt: "provador" }
+          { jp: "試着室{しちゃくしつ}", pt: "provador" },
+          { jp: "どこ", pt: "onde" }
+        ]
+      },
+      {
+        id: "seed_department_003",
+        jp: "これ を 試着{しちゃく} しても いいですか。",
+        pt: "Posso experimentar isto?",
+        newWords: [
+          { jp: "これ", pt: "isto" },
+          { jp: "試着{しちゃく}", pt: "experimentar roupa" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_department_004",
+        jp: "もう 少{すこ}し 大{おお}きい サイズ は ありますか。",
+        pt: "Tem um tamanho um pouco maior?",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "大{おお}きい", pt: "grande" },
+          { jp: "サイズ", pt: "tamanho" }
+        ]
+      },
+      {
+        id: "seed_department_005",
+        jp: "もう 少{すこ}し 安{やす}い もの は ありますか。",
+        pt: "Tem algo um pouco mais barato?",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "安{やす}い", pt: "barato" },
+          { jp: "もの", pt: "coisa / produto" }
+        ]
+      },
+      {
+        id: "seed_department_006",
+        jp: "返品{へんぴん} は できますか。",
+        pt: "É possível devolver?",
+        newWords: [
+          { jp: "返品{へんぴん}", pt: "devolução" },
+          { jp: "できますか", pt: "é possível?" }
+        ]
+      },
+      {
+        id: "seed_department_007",
+        jp: "保証書{ほしょうしょ} は ありますか。",
+        pt: "Tem garantia por escrito?",
+        newWords: [
+          { jp: "保証書{ほしょうしょ}", pt: "certificado de garantia" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_department_008",
+        jp: "プレゼント 用{よう} に 包{つつ}んで もらえますか。",
+        pt: "Pode embrulhar para presente?",
+        newWords: [
+          { jp: "プレゼント", pt: "presente" },
+          { jp: "用{よう}", pt: "para uso de" },
+          { jp: "包{つつ}んで", pt: "embrulhar" }
         ]
       }
     ]
   },
+
   {
     id: "topic_trip",
     name: "Na Viagem",
@@ -664,6 +1481,7 @@ const TOPIC_SEEDS = [
         pt: "Este trem vai para Nagoya?",
         newWords: [
           { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "名古屋{なごや}", pt: "Nagoya" },
           { jp: "行{い}きますか", pt: "vai?" }
         ]
       },
@@ -672,12 +1490,91 @@ const TOPIC_SEEDS = [
         jp: "次{つぎ} の バス は いつ 来{き}ますか。",
         pt: "Quando vem o próximo ônibus?",
         newWords: [
+          { jp: "次{つぎ}", pt: "próximo" },
           { jp: "バス", pt: "ônibus" },
           { jp: "来{き}ますか", pt: "vem?" }
+        ]
+      },
+      {
+        id: "seed_trip_003",
+        jp: "切符{きっぷ} は どこ で 買{か}えますか。",
+        pt: "Onde posso comprar a passagem?",
+        newWords: [
+          { jp: "切符{きっぷ}", pt: "passagem / bilhete" },
+          { jp: "買{か}えますか", pt: "posso comprar?" }
+        ]
+      },
+      {
+        id: "seed_trip_004",
+        jp: "何番線{なんばんせん} から 出{で}ますか。",
+        pt: "Sai de qual plataforma?",
+        newWords: [
+          { jp: "何番線{なんばんせん}", pt: "qual plataforma" },
+          { jp: "出{で}ますか", pt: "sai?" }
+        ]
+      },
+      {
+        id: "seed_trip_005",
+        jp: "ここ で 乗{の}り換{か}え ですか。",
+        pt: "É aqui que faço a baldeação?",
+        newWords: [
+          { jp: "ここ", pt: "aqui" },
+          { jp: "乗{の}り換{か}え", pt: "baldeação / troca" },
+          { jp: "ですか", pt: "é?" }
+        ]
+      },
+      {
+        id: "seed_trip_006",
+        jp: "この 電車{でんしゃ} は 普通{ふつう} ですか、快速{かいそく} ですか。",
+        pt: "Este trem é local ou rápido?",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "普通{ふつう}", pt: "local / comum" },
+          { jp: "快速{かいそく}", pt: "rápido" }
+        ]
+      },
+      {
+        id: "seed_trip_007",
+        jp: "降{お}りる 駅{えき} は ここ ですか。",
+        pt: "É aqui a estação onde devo descer?",
+        newWords: [
+          { jp: "降{お}りる", pt: "descer" },
+          { jp: "駅{えき}", pt: "estação" },
+          { jp: "ここ", pt: "aqui" }
+        ]
+      },
+      {
+        id: "seed_trip_008",
+        jp: "ホテル まで タクシー で どのくらい ですか。",
+        pt: "Quanto tempo dá de táxi até o hotel?",
+        newWords: [
+          { jp: "ホテル", pt: "hotel" },
+          { jp: "タクシー", pt: "táxi" },
+          { jp: "どのくらい", pt: "quanto tempo / quanto" }
+        ]
+      },
+      {
+        id: "seed_trip_009",
+        jp: "駅員{えきいん} さん に 聞{き}いて みます。",
+        pt: "Vou tentar perguntar ao funcionário da estação.",
+        newWords: [
+          { jp: "駅員{えきいん}", pt: "funcionário da estação" },
+          { jp: "聞{き}いて", pt: "perguntar" },
+          { jp: "みます", pt: "vou tentar" }
+        ]
+      },
+      {
+        id: "seed_trip_010",
+        jp: "この ICカード は 使{つか}えますか。",
+        pt: "Posso usar este cartão IC?",
+        newWords: [
+          { jp: "ICカード", pt: "cartão IC / cartão de transporte" },
+          { jp: "使{つか}えますか", pt: "posso usar?" }
         ]
       }
     ]
   },
+
   {
     id: "topic_qa",
     name: "Perguntas e Respostas",
@@ -688,7 +1585,8 @@ const TOPIC_SEEDS = [
         jp: "お名前{なまえ} は 何{なん} ですか。",
         pt: "Qual é o seu nome?",
         newWords: [
-          { jp: "名前{なまえ}", pt: "nome" }
+          { jp: "名前{なまえ}", pt: "nome" },
+          { jp: "何{なん}", pt: "qual / o que" }
         ]
       },
       {
@@ -696,7 +1594,88 @@ const TOPIC_SEEDS = [
         jp: "はい、わかりました。",
         pt: "Sim, entendi.",
         newWords: [
+          { jp: "はい", pt: "sim" },
           { jp: "わかりました", pt: "entendi" }
+        ]
+      },
+      {
+        id: "seed_qa_003",
+        jp: "いいえ、まだ わかりません。",
+        pt: "Não, ainda não entendi.",
+        newWords: [
+          { jp: "いいえ", pt: "não" },
+          { jp: "まだ", pt: "ainda" },
+          { jp: "わかりません", pt: "não entendo" }
+        ]
+      },
+      {
+        id: "seed_qa_004",
+        jp: "もう 一度{いちど} 説明{せつめい} して ください。",
+        pt: "Por favor, explique mais uma vez.",
+        newWords: [
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "説明{せつめい}", pt: "explicação" },
+          { jp: "してください", pt: "por favor, faça" }
+        ]
+      },
+      {
+        id: "seed_qa_005",
+        jp: "これは 何{なん} の 書類{しょるい} ですか。",
+        pt: "Que documento é este?",
+        newWords: [
+          { jp: "これ", pt: "isto" },
+          { jp: "何{なん}", pt: "qual / o que" },
+          { jp: "書類{しょるい}", pt: "documento" }
+        ]
+      },
+      {
+        id: "seed_qa_006",
+        jp: "いつ まで に 出{だ}せば いいですか。",
+        pt: "Até quando devo entregar?",
+        newWords: [
+          { jp: "いつ まで", pt: "até quando" },
+          { jp: "出{だ}せば", pt: "se entregar" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_qa_007",
+        jp: "ここ に サイン すれば いいですか。",
+        pt: "Está certo assinar aqui?",
+        newWords: [
+          { jp: "ここ", pt: "aqui" },
+          { jp: "サイン", pt: "assinatura" },
+          { jp: "すれば", pt: "se fizer" }
+        ]
+      },
+      {
+        id: "seed_qa_008",
+        jp: "電話{でんわ} で 連絡{れんらく} して もらえますか。",
+        pt: "Você poderia entrar em contato por telefone?",
+        newWords: [
+          { jp: "電話{でんわ}", pt: "telefone" },
+          { jp: "連絡{れんらく}", pt: "contato" },
+          { jp: "もらえますか", pt: "poderia fazer para mim?" }
+        ]
+      },
+      {
+        id: "seed_qa_009",
+        jp: "メール で 送{おく}って ください。",
+        pt: "Por favor, envie por e-mail.",
+        newWords: [
+          { jp: "メール", pt: "e-mail" },
+          { jp: "送{おく}って", pt: "enviar" },
+          { jp: "ください", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_qa_010",
+        jp: "少{すこ}し 考{かんが}えて から 返事{へんじ} します。",
+        pt: "Vou responder depois de pensar um pouco.",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "考{かんが}えて", pt: "pensar" },
+          { jp: "返事{へんじ}", pt: "resposta" }
         ]
       }
     ]
@@ -741,6 +1720,8 @@ function ensureSeedCatalog(st) {
 
       if (already) {
         already.topicId = topic.id;
+        already.jp = already.jp || phrase.jp;
+        already.pt = already.pt || phrase.pt;
         already.newWords = Array.isArray(already.newWords) && already.newWords.length
           ? already.newWords
           : phrase.newWords;
@@ -778,7 +1759,7 @@ function defaultState() {
   const top = defaultTopic();
 
   const st = {
-    app: { schemaVersion: 7.91, createdAt: t, updatedAt: t },
+    app: { schemaVersion: 7.93, createdAt: t, updatedAt: t },
 
     prefs: {
       audio: { enabled: true, volume: 0.35, unlocked: false },
@@ -862,7 +1843,7 @@ function defaultState() {
 function migrateToV7(st) {
   if (!st || !st.app) return defaultState();
 
-  st.app.schemaVersion = 7.91;
+  st.app.schemaVersion = 7.93;
 
   st.bank ||= {};
   st.bank.topics ||= [];
@@ -1929,7 +2910,7 @@ function refreshHUD() {
   if (sub) sub.textContent = `${STATE.stats.cyclesDone || 0} ciclos • ${STATE.stats.phrasesMastered || 0} dominadas`;
 }
 
-/* ---------- premium / admin ---------- */
+/* ---------- premium / admin / checkout ---------- */
 function isPremiumUnlocked() {
   return !!STATE.monetization?.premiumUnlocked;
 }
@@ -1958,13 +2939,64 @@ function canAccessTopic(topicId) {
   return isPremiumUnlocked();
 }
 
-function openCheckout() {
-  if (isRealCheckoutConfigured()) {
-    window.open(SALES.checkoutUrl, "_blank", "noopener,noreferrer");
-    return;
+function checkoutStatus() {
+  const url = String(SALES.checkoutUrl || "").trim();
+  const supportEmail = String(SALES.supportEmail || "").trim();
+
+  const configured = isRealCheckoutConfigured();
+
+  return {
+    configured,
+    url,
+    supportEmail,
+    label: configured ? "checkout externo pronto" : "checkout em preparação",
+    badge: configured ? "pagamento seguro externo" : "configure antes de vender",
+    buttonLabel: configured ? "abrir pagamento seguro" : "checkout em preparação",
+    primaryLabel: configured ? "assinar Premium agora" : "checkout em preparação",
+    monthlyLabel: configured ? `assinar mensal ${SALES.monthlyPrice}` : "checkout em preparação",
+    semiannualLabel: configured ? `assinar semestral ${SALES.semiannualPrice}` : "checkout em preparação",
+    footerLabel: configured ? "ativar Premium" : "checkout em preparação",
+    shortText: configured
+      ? "Pagamento em ambiente externo seguro. O app não coleta dados bancários."
+      : "Checkout ainda não conectado. Troque SALES.checkoutUrl pelo link real antes da venda.",
+    helpText: configured
+      ? "O pagamento será aberto em uma página externa segura. Depois da confirmação, libere o Premium pelo fluxo definido no seu checkout."
+      : "Antes de vender, cadastre seu produto em uma plataforma de pagamento e troque SALES.checkoutUrl pelo link real.",
+    toast: configured
+      ? "abrindo pagamento seguro"
+      : "checkout em preparação. configure SALES.checkoutUrl"
+  };
+}
+
+function checkoutButtonLabel(kind = "primary") {
+  const status = checkoutStatus();
+
+  if (!status.configured) {
+    return "checkout em preparação";
   }
 
-  toast("configure o checkout antes de vender");
+  if (kind === "monthly") return status.monthlyLabel;
+  if (kind === "semiannual") return status.semiannualLabel;
+  if (kind === "footer") return status.footerLabel;
+
+  return status.primaryLabel;
+}
+
+function openCheckout() {
+  const status = checkoutStatus();
+
+  STATE.monetization ||= { premiumUnlocked: false, seenPaywall: false };
+  STATE.monetization.seenPaywall = true;
+  saveState();
+
+  if (!status.configured) {
+    toast("checkout em preparação");
+    return false;
+  }
+
+  window.open(status.url, "_blank", "noopener,noreferrer");
+  toast("abrindo pagamento seguro");
+  return true;
 }
 
 function markPremiumDemoUnlock() {
@@ -1986,6 +3018,7 @@ function showPremiumLockedMessage(topicId) {
   saveState();
   nav("#/premium");
 }
+
 /* ---------- habit ---------- */
 function ensureHabitToday() {
   const k = todayKey();
@@ -2739,6 +3772,7 @@ function updateStudyUI() {
   const pct = clamp(ms / goal, 0, 1);
   fill.style.transform = `scaleX(${pct})`;
 }
+
 /* ---------- render helpers ---------- */
 function renderNewWords(list) {
   if (!Array.isArray(list) || list.length === 0) return "";
@@ -2795,7 +3829,7 @@ function renderPlanCompareBox() {
             <li>favoritos como revisão pessoal</li>
             <li>frase do dia</li>
             <li>revisão recomendada</li>
-            <li>treino por situação</li>
+            <li>treino por situação essencial</li>
             <li>backup local</li>
           </ul>
         </div>
@@ -2816,6 +3850,14 @@ function renderPlanCompareBox() {
             <li>mais contexto antes de situações difíceis</li>
             <li>revisões mais próximas da vida real</li>
           </ul>
+
+          <button class="btn btn--ok btn--full" data-action="checkout">
+            ${escapeHTML(checkoutButtonLabel("primary"))}
+          </button>
+
+          <button class="btn btn--ghost btn--full" data-nav="#/premium">
+            ver detalhes do Premium
+          </button>
         </div>
       </div>
     </div>
@@ -2884,8 +3926,8 @@ function renderRetentionCard() {
     ? `${jpStripFurigana(resume.jp)} • ${resume.pt}`
     : "A próxima frase já está pronta para começar.";
 
-  const action = resume ? "resumeTraining" : "startTraining";
-  const btnLabel = resume ? "continuar último treino" : nudge.action;
+  const action = resume ? "resumeTraining" : "startQuickTraining";
+  const btnLabel = resume ? "continuar último treino" : "treinar 2 minutos agora";
 
   return `
     <section class="card stack">
@@ -3353,6 +4395,39 @@ function renderPremiumValueGrid() {
   `;
 }
 
+function renderPremiumTopicsBox() {
+  const premiumTopics = (STATE.bank.topics || [])
+    .filter(t => isTopicPremium(t.id))
+    .map(t => {
+      const count = topicPhraseIds(t.id).length;
+      return `
+        <div class="useCaseItem">
+          <span class="useCaseIcon">🔒</span>
+          <span>${escapeHTML(t.name)} • ${count} frases</span>
+        </div>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="sheet stack premiumUseCases" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">tópicos premium</div>
+        <div class="badge">situações reais</div>
+      </div>
+
+      <div class="useCaseList">
+        ${premiumTopics || `
+          <div class="useCaseItem">
+            <span class="useCaseIcon">🔒</span>
+            <span>Novos tópicos premium serão adicionados aqui.</span>
+          </div>
+        `}
+      </div>
+    </div>
+  `;
+}
+
 function renderPremiumUseCases() {
   return `
     <div class="sheet stack premiumUseCases" style="text-align:left">
@@ -3379,6 +4454,73 @@ function renderPremiumUseCases() {
           <span>quando o conteúdo pronto não cobre seu problema real</span>
         </div>
       </div>
+    </div>
+  `;
+}
+
+function renderPremiumActivationBox() {
+  const status = checkoutStatus();
+
+  return `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">como ativar o Premium</div>
+        <div class="badge">${escapeHTML(status.label)}</div>
+      </div>
+
+      <div class="useCaseList">
+        <div class="useCaseItem">
+          <span class="useCaseIcon">1</span>
+          <span>Toque no botão de pagamento Premium.</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">2</span>
+          <span>O app abre uma página externa segura de checkout.</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">3</span>
+          <span>Depois da confirmação, o Premium deve ser liberado conforme o fluxo definido pelo desenvolvedor.</span>
+        </div>
+      </div>
+
+      <div class="small">
+        ${escapeHTML(status.helpText)}
+      </div>
+
+      ${!status.configured ? `
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">nota para o desenvolvedor</div>
+          <div class="small">
+            Não coloque dados bancários neste app. Cadastre sua conta bancária diretamente na plataforma de pagamento escolhida.
+            Depois, troque apenas o valor de SALES.checkoutUrl pelo link público do checkout.
+          </div>
+        </div>
+      ` : ""}
+    </div>
+  `;
+}
+
+function renderPaymentSafetyBox() {
+  const status = checkoutStatus();
+
+  return `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">pagamento seguro fora do app</div>
+        <div class="badge">${status.configured ? "externo" : "em preparação"}</div>
+      </div>
+
+      <p class="small">
+        O NIHONGO321 não coleta dados bancários dentro do app. O pagamento deve acontecer em uma plataforma externa de checkout.
+      </p>
+
+      <p class="small">
+        Dados de cartão, conta bancária, PIX, konbini payment ou outros métodos devem ser cadastrados apenas no serviço de pagamento escolhido.
+      </p>
+
+      <p class="small">
+        Suporte: ${escapeHTML(SALES.supportEmail || "configure SALES.supportEmail")}
+      </p>
     </div>
   `;
 }
@@ -3433,18 +4575,20 @@ function renderLanding() {
         </div>
 
         <div class="heroMiniStats">
-          <div class="statCard">
+          <button class="statCard" type="button" data-action="startQuickTraining" aria-label="iniciar treino rápido de dois minutos">
             <div class="statVal">2 min</div>
-            <div class="statLbl">treino rápido</div>
-          </div>
-          <div class="statCard">
+            <div class="statLbl">treino rápido para dias cansativos</div>
+          </button>
+
+          <button class="statCard" type="button" data-nav="#/105x" aria-label="abrir treino de fixação cento e cinco vezes">
             <div class="statVal">105x</div>
-            <div class="statLbl">fixação guiada</div>
-          </div>
-          <div class="statCard">
+            <div class="statLbl">fixação guiada para criar memória</div>
+          </button>
+
+          <button class="statCard" type="button" data-nav="#/premium" aria-label="ver planos premium e treinos por situação">
             <div class="statVal">situação</div>
-            <div class="statLbl">treino direto</div>
-          </div>
+            <div class="statLbl">premium para fábrica, prefeitura e vida real</div>
+          </button>
         </div>
       </section>
 
@@ -3461,29 +4605,29 @@ function renderLanding() {
         </p>
 
         <div class="valueGrid">
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-action="startQuickTraining">
             <div class="valueIcon">⚡</div>
             <h3 class="valueTitle">2 minutos possíveis</h3>
-            <p class="valueText">Uma entrada rápida para manter contato com o japonês.</p>
-          </div>
+            <p class="valueText">Toque aqui para começar sem escolher nada.</p>
+          </button>
 
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-nav="#/105x">
             <div class="valueIcon">🧠</div>
             <h3 class="valueTitle">Cria memória</h3>
-            <p class="valueText">Repetição guiada para a frase ficar mais familiar.</p>
-          </div>
+            <p class="valueText">Abra o 105x e repita até a frase ficar familiar.</p>
+          </button>
 
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-nav="#/home">
             <div class="valueIcon">🔁</div>
             <h3 class="valueTitle">Revisa por você</h3>
-            <p class="valueText">O app sugere uma frase útil para revisar hoje.</p>
-          </div>
+            <p class="valueText">Entre no início e siga a revisão recomendada.</p>
+          </button>
 
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-nav="#/premium">
             <div class="valueIcon">📍</div>
             <h3 class="valueTitle">Situação real</h3>
-            <p class="valueText">Escolha o contexto e entre no treino certo.</p>
-          </div>
+            <p class="valueText">Veja como o Premium aprofunda contextos da vida no Japão.</p>
+          </button>
         </div>
       </section>
 
@@ -3522,28 +4666,84 @@ function renderLanding() {
 /* ---------- premium ---------- */
 function renderPremium() {
   const unlocked = isPremiumUnlocked();
-  const checkoutReady = isRealCheckoutConfigured();
+  const status = checkoutStatus();
 
   APP.innerHTML = `
     <div class="stack">
       <section class="premiumHero stack">
         <div class="badge">premium</div>
-        <h1 class="h1">Mais contexto para situações reais no Japão.</h1>
+
+        <h1 class="h1">Prepare seu japonês antes das situações difíceis.</h1>
+
         <p class="p">
-          O grátis mantém o japonês vivo. O premium prepara você para momentos específicos: chefe, prefeitura, moradia, transporte, mercado e situações que pedem mais segurança.
+          O grátis mantém o japonês vivo. O Premium ajuda quando você precisa de mais contexto:
+          fábrica, prefeitura, mercado, transporte, moradia e frases criadas para o seu caso real.
         </p>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="row row--between">
+            <div class="badge">promessa Premium</div>
+            <div class="badge">japonês prático</div>
+          </div>
+
+          <h2 class="h2">Menos improviso. Mais preparo.</h2>
+
+          <p class="small">
+            Antes de falar com chefe, ir à prefeitura, resolver documento, perguntar no mercado ou explicar um problema,
+            você treina frases mais próximas da vida real.
+          </p>
+
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-action="checkout">
+              ${escapeHTML(checkoutButtonLabel("primary"))}
+            </button>
+            <button class="btn btn--full" data-action="startQuickTraining">
+              continuar grátis por enquanto
+            </button>
+          </div>
+
+          <div class="small">${escapeHTML(status.shortText)}</div>
+        </div>
 
         ${renderPlanCompareBox()}
 
         <div class="lockCard">
-          <h3 class="lockTitle">Premium não é só mais conteúdo</h3>
+          <h3 class="lockTitle">Premium não é castigo para quem usa grátis</h3>
           <p class="lockText">
-            É treino por contexto: frases mais próximas da situação que você vai enfrentar, com Sensei IA para criar material quando o conteúdo pronto não basta.
+            A versão grátis continua útil. O Premium é para quando você quer mais preparo,
+            mais situações e mais frases específicas para a rotina no Japão.
           </p>
         </div>
 
         ${renderPremiumValueGrid()}
+
         ${renderPremiumUseCases()}
+
+        ${renderPremiumTopicsBox()}
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="row row--between">
+            <div class="badge">Sensei IA</div>
+            <div class="badge">diferencial</div>
+          </div>
+
+          <h2 class="h2">Quando o conteúdo pronto não cobre seu problema.</h2>
+
+          <p class="small">
+            Explique uma situação real, como falar com o chefe, pedir reparo no apartamento,
+            consultar no hospital ou resolver documento. O Sensei IA gera um pequeno pack de frases
+            para salvar e treinar no 105x.
+          </p>
+
+          <div class="grid2">
+            <button class="btn btn--ok btn--full" data-nav="#/sensei">
+              ${unlocked ? "abrir Sensei IA" : "ver Sensei IA"}
+            </button>
+            <button class="btn btn--full" data-nav="#/home">
+              voltar ao app
+            </button>
+          </div>
+        </div>
 
         <div class="planGrid">
           <div class="planCard premium">
@@ -3553,19 +4753,22 @@ function renderPremium() {
             </div>
 
             <div class="planPrice">${SALES.monthlyPrice}<small>/ mês</small></div>
-            <p class="planSub">Ideal para destravar temas específicos e sentir o app completo na rotina.</p>
+            <p class="planSub">
+              Para destravar temas específicos e sentir o app completo na rotina.
+            </p>
 
             <ul class="planList">
-              <li>todos os tópicos premium</li>
+              <li>todos os tópicos Premium</li>
               <li>treino por situação mais completo</li>
               <li>Sensei IA para casos reais</li>
               <li>mais frases por contexto</li>
               <li>revisões mais direcionadas</li>
+              <li>preparo antes de situações difíceis</li>
             </ul>
 
             <div class="planFooter">
               <button class="btn btn--ok btn--full" data-action="checkout">
-                ${checkoutReady ? "desbloquear situações reais" : "configurar checkout"}
+                ${escapeHTML(checkoutButtonLabel("monthly"))}
               </button>
             </div>
           </div>
@@ -3577,26 +4780,37 @@ function renderPremium() {
             </div>
 
             <div class="planPrice">${SALES.semiannualPrice}<small>/ plano</small></div>
-            <p class="planSub">Melhor para quem quer manter ritmo por mais tempo e construir segurança com calma.</p>
+            <p class="planSub">
+              Melhor para quem quer manter ritmo por mais tempo e construir segurança com calma.
+            </p>
 
             <ul class="planList">
               <li>mais tempo de prática</li>
               <li>melhor custo por período</li>
               <li>mais chance de criar hábito</li>
-              <li>mais preparação antes de situações difíceis</li>
+              <li>mais preparação antes de situações reais</li>
+              <li>menos pressão para aprender tudo rápido</li>
             </ul>
 
             <div class="planFooter">
               <button class="btn btn--full" data-action="checkout">
-                ${checkoutReady ? "preparar meu japonês" : "configurar checkout"}
+                ${escapeHTML(checkoutButtonLabel("semiannual"))}
               </button>
             </div>
           </div>
         </div>
 
+        ${renderPremiumActivationBox()}
+
+        ${renderPaymentSafetyBox()}
+
         ${unlocked ? `
           <div class="sheet stack">
             <div class="badge">premium liberado ✅</div>
+            <div class="small">
+              Seu acesso Premium está liberado neste dispositivo.
+            </div>
+
             <div class="grid2">
               <button class="btn btn--ok btn--full" data-nav="#/sensei">abrir Sensei IA</button>
               <button class="btn btn--full" data-nav="#/home">voltar ao app</button>
@@ -3604,20 +4818,32 @@ function renderPremium() {
           </div>
         ` : `
           <div class="sheet stack">
-            <div class="small">Continue no grátis ou desbloqueie mais temas quando quiser treinar com mais contexto.</div>
+            <div class="row row--between">
+              <div class="badge">sem pressão</div>
+              <div class="badge">${escapeHTML(status.label)}</div>
+            </div>
+
+            <div class="small">
+              Você pode continuar no grátis. Quando quiser treinar situações mais específicas,
+              o Premium fica como próxima etapa natural.
+            </div>
+
             <div class="grid2">
               <button class="btn btn--ok btn--full" data-action="checkout">
-                ${checkoutReady ? "treinar com mais contexto" : "preparar venda"}
+                ${escapeHTML(checkoutButtonLabel("footer"))}
               </button>
-              <button class="btn btn--full" data-nav="#/home">continuar no grátis</button>
+              <button class="btn btn--full" data-nav="#/home">
+                continuar no grátis
+              </button>
             </div>
+
+            <div class="small">${escapeHTML(status.helpText)}</div>
           </div>
         `}
       </section>
     </div>
   `;
 }
-
 /* ---------- admin ---------- */
 function renderAdmin() {
   const unlocked = isAdminUnlocked();
@@ -3688,11 +4914,11 @@ function renderHome() {
 
         <h1 class="h1">Treine japonês útil hoje.</h1>
         <p class="p">
-          Comece rápido, revise uma frase recomendada ou escolha uma situação real.
+          Está cansado? Toque no treino rápido. Quer foco? Escolha uma situação real.
         </p>
 
-        <button class="bigBtn" id="btnStart">
-          ${resume ? "continuar último treino" : "começar treino"}
+        <button class="bigBtn" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
+          ${resume ? "continuar último treino" : "treinar 2 minutos agora"}
         </button>
 
         <div class="sep"></div>
@@ -3726,10 +4952,10 @@ function renderHome() {
         </div>
       </section>
 
-      ${renderRetentionCard()}
-      ${renderSmartReviewCard()}
       ${renderQuickTrainingCard()}
+      ${renderRetentionCard()}
       ${renderSituationTrainingCard()}
+      ${renderSmartReviewCard()}
       ${renderDailyGoalCard()}
       ${renderPhraseOfDayCard()}
       ${renderEssentialPackHighlight()}
@@ -3792,19 +5018,6 @@ function renderHome() {
     </div>
   `;
 
-  const startBtn = $("#btnStart");
-  if (startBtn) {
-    startBtn.addEventListener("click", () => {
-      if (hasResumeTraining()) {
-        nav("#/105x");
-        toast("continuando treino");
-      } else {
-        startAuto();
-        toast("treino iniciado");
-      }
-    });
-  }
-
   const sel = $("#topicFilterSel");
   if (sel) {
     sel.addEventListener("change", () => {
@@ -3831,6 +5044,7 @@ function renderHome() {
     });
   }
 }
+
 /* ---------- tutorial ---------- */
 function renderTutorial() {
   const step = tutorialCurrentStep();
@@ -4293,7 +5507,7 @@ function renderSensei() {
           </div>
 
           <div class="grid2">
-            <button class="btn btn--ok btn--full" data-nav="#/premium">ver premium</button>
+            <button class="btn btn--ok btn--full" data-nav="#/premium">ver Premium</button>
             <button class="btn btn--full" data-nav="#/home">continuar grátis</button>
           </div>
         </section>

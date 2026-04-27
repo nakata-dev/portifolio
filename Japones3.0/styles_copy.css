@@ -1759,6 +1759,7 @@ input[type="range"]{
   user-select:none;
   touch-action:none;
 }
+
 /* =========================================================
    FEEDBACK VISUAL
    ========================================================= */
@@ -1766,10 +1767,10 @@ input[type="range"]{
 .toast{
   position: fixed;
   left: calc(12px + var(--safeLeft));
-  right: calc(76px + var(--safeRight));
+  right: calc(12px + var(--safeRight));
   bottom: calc(14px + var(--safeBottom));
-  max-width: calc(var(--max) - 76px);
-  margin: 0 auto 0 0;
+  max-width: var(--max);
+  margin: 0 auto;
   padding: 12px 14px;
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,.12);
@@ -1881,7 +1882,6 @@ input[type="range"]{
   z-index: 80;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  backdrop-filter: blur(12px);
 }
 
 #backTop.on{
@@ -2206,7 +2206,7 @@ input[type="range"]{
     padding:
       calc(12px + var(--headerH) + var(--safeTop))
       10px
-      calc(22px + var(--safeBottom))
+      calc(18px + var(--safeBottom))
       10px;
   }
 
@@ -2300,24 +2300,6 @@ input[type="range"]{
     height:34px;
     border-radius:13px;
     font-size:17px;
-  }
-
-  .toast{
-    left: calc(10px + var(--safeLeft));
-    right: calc(74px + var(--safeRight));
-    bottom: calc(14px + var(--safeBottom));
-    max-width: none;
-    margin: 0;
-    padding: 11px 13px;
-    font-size: 13px;
-    line-height: 1.35;
-  }
-
-  #backTop{
-    right: calc(12px + var(--safeRight));
-    bottom: calc(14px + var(--safeBottom));
-    width: 46px;
-    height: 46px;
   }
 }
 
@@ -2415,16 +2397,6 @@ input[type="range"]{
 @media (max-width: 340px){
   .situationGrid{
     grid-template-columns: 1fr;
-  }
-
-  .toast{
-    right: calc(66px + var(--safeRight));
-    font-size: 12.5px;
-  }
-
-  #backTop{
-    width: 42px;
-    height: 42px;
   }
 }
 
