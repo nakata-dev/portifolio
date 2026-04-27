@@ -482,13 +482,15 @@ img{
 .navArrow:active,
 .miniBtn:active,
 .pill:active,
-.storeBtn:active{
+.storeBtn:active,
+.situationBtn:active{
   transform: translateY(1px) scale(.99);
 }
 
 .btn:hover,
 .storeBtn:hover,
-.hudBtn:hover{
+.hudBtn:hover,
+.situationBtn:hover{
   filter: brightness(1.05);
 }
 
@@ -501,7 +503,8 @@ img{
 #backTop:focus-visible,
 .topicHdr:focus-visible,
 .navArrow:focus-visible,
-.storeBtn:focus-visible{
+.storeBtn:focus-visible,
+.situationBtn:focus-visible{
   outline: 2px solid rgba(122,167,255,.65);
   outline-offset: 2px;
 }
@@ -680,7 +683,6 @@ input[type="range"]{
   line-height:1.35;
 }
 
-/* Bloco 2C: caminhos mais claros na home */
 .quickPath,
 .supportDock,
 .premiumProof,
@@ -837,6 +839,124 @@ input[type="range"]{
   color:rgba(238,243,255,.88);
   font-size:12px;
   font-weight:800;
+}
+
+/* =========================================================
+   BLOCO 3E - TREINAR POR SITUAÇÃO REAL
+   ========================================================= */
+
+.situationCard{
+  text-align:left;
+  background:
+    radial-gradient(360px 180px at 10% 0%, rgba(141,255,207,.10), transparent 60%),
+    radial-gradient(320px 220px at 100% 100%, rgba(122,167,255,.12), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.050), rgba(255,255,255,.024));
+}
+
+.situationIntro{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.situationIntro .lockTitle{
+  font-size:18px;
+}
+
+.situationGrid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:10px;
+}
+
+.situationBtn{
+  min-height:82px;
+  padding:12px 10px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.105);
+  background:
+    radial-gradient(140px 90px at 20% 10%, rgba(255,255,255,.095), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.026));
+  color:var(--text);
+  box-shadow: 0 12px 26px rgba(0,0,0,.16);
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:7px;
+  text-align:left;
+  touch-action: manipulation;
+  transition: transform .16s ease, filter .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+}
+
+.situationBtn[disabled]{
+  opacity:.68;
+  cursor:not-allowed;
+}
+
+.situationBtn.isLocked{
+  border-color: rgba(255,214,107,.18);
+  background:
+    radial-gradient(140px 90px at 20% 10%, rgba(255,214,107,.11), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.024));
+}
+
+.situationBtn.isEmpty{
+  opacity:.72;
+}
+
+.situationIcon{
+  width:38px;
+  height:38px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  font-size:18px;
+  background:
+    linear-gradient(135deg, rgba(122,167,255,.22), rgba(141,255,207,.10));
+  border:1px solid rgba(255,255,255,.105);
+  box-shadow: 0 8px 18px rgba(0,0,0,.16);
+}
+
+.situationBtn.isLocked .situationIcon{
+  background:
+    linear-gradient(135deg, rgba(255,214,107,.18), rgba(255,255,255,.06));
+}
+
+.situationText{
+  min-width:0;
+  width:100%;
+}
+
+.situationName{
+  display:block;
+  font-size:13px;
+  font-weight:850;
+  color:var(--soft);
+  line-height:1.18;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.situationMeta{
+  display:block;
+  margin-top:3px;
+  font-size:11px;
+  font-weight:700;
+  color:rgba(238,243,255,.62);
+  line-height:1.24;
+}
+
+.situationFooter{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.026);
+  padding:12px;
+}
+
+.situationFooter .small{
+  color:rgba(238,243,255,.72);
 }
 
 /* =========================================================
@@ -1111,6 +1231,7 @@ input[type="range"]{
 .sheet .small b{
   color: var(--soft);
 }
+
 /* =========================================================
    TREINO 105X
    ========================================================= */
@@ -1266,6 +1387,73 @@ input[type="range"]{
   justify-self:stretch;
 }
 
+.trainingHint{
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.09);
+  background:
+    radial-gradient(220px 120px at 12% 0%, rgba(122,167,255,.10), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.038), rgba(255,255,255,.020));
+  padding:12px;
+  text-align:left;
+}
+
+.trainingHintTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.trainingHintText{
+  margin:0;
+  font-size:13px;
+  line-height:1.42;
+  color:rgba(238,243,255,.82);
+  font-weight:700;
+}
+
+.cycleGuide{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.024);
+  padding:12px;
+}
+
+.cycleStats{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:8px;
+}
+
+.cycleStat{
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.030);
+  padding:10px 8px;
+  text-align:center;
+}
+
+.cycleStatVal{
+  display:block;
+  font-size:17px;
+  font-weight:850;
+  color:var(--soft);
+  line-height:1;
+}
+
+.cycleStatLbl{
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  color:rgba(238,243,255,.62);
+  font-weight:750;
+  line-height:1.2;
+}
+
 .phraseArea{
   position: relative;
   border-radius: 26px;
@@ -1352,6 +1540,10 @@ input[type="range"]{
   border-radius:20px;
   background:
     linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
+}
+
+#cycleSheet .grid2{
+  width:100%;
 }
 
 /* =========================================================
@@ -1948,6 +2140,12 @@ input[type="range"]{
    RESPONSIVO
    ========================================================= */
 
+@media (max-width: 900px){
+  .situationGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px){
   .heroActions,
   .heroMiniStats,
@@ -1962,6 +2160,10 @@ input[type="range"]{
 
   .studyRight{
     grid-template-columns: 1fr;
+  }
+
+  .cycleStats{
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .skillRight{
@@ -2081,6 +2283,24 @@ input[type="range"]{
     padding:12px;
     border-radius:20px;
   }
+
+  .situationGrid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap:9px;
+  }
+
+  .situationBtn{
+    min-height:78px;
+    padding:11px 10px;
+    border-radius:18px;
+  }
+
+  .situationIcon{
+    width:34px;
+    height:34px;
+    border-radius:13px;
+    font-size:17px;
+  }
 }
 
 @media (max-width: 420px){
@@ -2143,6 +2363,40 @@ input[type="range"]{
 
   .brandSub{
     font-size:11px;
+  }
+
+  .cycleStats{
+    grid-template-columns: 1fr;
+  }
+
+  .cycleStat{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    text-align:left;
+    gap:10px;
+  }
+
+  .cycleStatVal{
+    font-size:16px;
+  }
+
+  .cycleStatLbl{
+    margin-top:0;
+  }
+
+  .situationName{
+    font-size:12.5px;
+  }
+
+  .situationMeta{
+    font-size:10.5px;
+  }
+}
+
+@media (max-width: 340px){
+  .situationGrid{
+    grid-template-columns: 1fr;
   }
 }
 
