@@ -1,10 +1,15 @@
 /* =========================================================
-   NIHONGO321 v7.9.1
+   NIHONGO321 v7.9
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D + Bloco 3E + Bloco 3F + Bloco 3G
-   - correção crítica: treino rápido não cai no Pack Essencial indevidamente
-   - correção crítica: revisar mesma frase funciona
-   - correção crítica: treino por situação abre #/105x
-   - correção crítica: #/105x abre direto sem tela vazia
+   - confiança final de produto
+   - retenção leve sem culpa
+   - sistema diário de continuidade
+   - revisão inteligente de sobrevivência
+   - fluidez no treino 105x
+   - treino por situação real
+   - limpeza da tela 105x
+   - treino rápido de 2 minutos
+   - premium mais convincente e vendável
    ========================================================= */
 
 const LS_KEY = "jp_105x_v7";
@@ -778,7 +783,7 @@ function defaultState() {
   const top = defaultTopic();
 
   const st = {
-    app: { schemaVersion: 7.91, createdAt: t, updatedAt: t },
+    app: { schemaVersion: 7.9, createdAt: t, updatedAt: t },
 
     prefs: {
       audio: { enabled: true, volume: 0.35, unlocked: false },
@@ -862,7 +867,7 @@ function defaultState() {
 function migrateToV7(st) {
   if (!st || !st.app) return defaultState();
 
-  st.app.schemaVersion = 7.91;
+  st.app.schemaVersion = 7.9;
 
   st.bank ||= {};
   st.bank.topics ||= [];
@@ -1680,98 +1685,40 @@ function getQuickTrainingReason(payload = getQuickTrainingPhrase()) {
   return map[source] || map.any;
 }
 
-function buildQuickTrainingQueue(startPhraseId) {
-  const accessible = (STATE.bank.phrases || []).filter(isPhraseAccessible);
-  const ids = [];
-
-  if (startPhraseId && accessible.some(p => p.id === startPhraseId)) {
-    ids.push(startPhraseId);
-  }
-
-  const day = getPhraseOfDay();
-  if (day && !ids.includes(day.id) && isPhraseAccessible(day)) {
-    ids.push(day.id);
-  }
-
-  const favs = favoritePhrasesAccessible();
-  for (const fav of favs) {
-    if (ids.length >= 3) break;
-    if (!ids.includes(fav.id)) ids.push(fav.id);
-  }
-
-  const essential = accessible.filter(p => p.topicId === "topic_essential_japan");
-  for (const p of essential) {
-    if (ids.length >= 3) break;
-    if (!ids.includes(p.id)) ids.push(p.id);
-  }
-
-  for (const p of accessible) {
-    if (ids.length >= 3) break;
-    if (!ids.includes(p.id)) ids.push(p.id);
-  }
-
-  return ids.slice(0, 3);
-}
-
 function startQuickTraining() {
   const payload = getQuickTrainingPhrase();
   const p = payload.phrase;
 
   if (!p) {
     const fallback = startSituationTraining("essential");
-
-    if (fallback && fallback.ok) {
+    if (fallback.ok) {
+      toast("abrindo Pack Essencial");
       nav("#/105x");
-      return {
-        ok: true,
-        fallback: true,
-        message: "abrindo Pack Essencial"
-      };
+      return true;
     }
 
-    return {
-      ok: false,
-      reason: "empty",
-      message: "adicione uma frase para começar"
-    };
-  }
-
-  const quickQueue = buildQuickTrainingQueue(p.id);
-
-  if (!quickQueue.length) {
-    return {
-      ok: false,
-      reason: "empty",
-      message: "não há frases disponíveis"
-    };
+    toast("adicione uma frase para começar");
+    return false;
   }
 
   STATE.session.inProgress = true;
   STATE.session.topicFilter = "ALL";
-  STATE.session.queue = quickQueue;
-  STATE.session.index = quickQueue.indexOf(p.id);
-  if (STATE.session.index < 0) STATE.session.index = 0;
-  STATE.session.phraseId = STATE.session.queue[STATE.session.index] || STATE.session.queue[0] || null;
+  STATE.session.queue = buildQueue();
 
-  if (!STATE.session.phraseId) {
-    saveState();
-    return {
-      ok: false,
-      reason: "empty",
-      message: "não há frase para treinar"
-    };
+  if (!STATE.session.queue.includes(p.id)) {
+    STATE.session.queue.unshift(p.id);
   }
 
-  resetCountForPhrase(STATE.session.phraseId);
+  STATE.session.index = STATE.session.queue.indexOf(p.id);
+  STATE.session.phraseId = p.id;
+
+  resetCountForPhrase(p.id);
   saveState();
 
+  toast("Treino rápido iniciado");
   nav("#/105x");
 
-  return {
-    ok: true,
-    fallback: false,
-    message: "treino rápido iniciado"
-  };
+  return true;
 }
 
 /* ---------- mensagens de recompensa ---------- */
@@ -1986,6 +1933,7 @@ function showPremiumLockedMessage(topicId) {
   saveState();
   nav("#/premium");
 }
+
 /* ---------- habit ---------- */
 function ensureHabitToday() {
   const k = todayKey();
@@ -2061,7 +2009,6 @@ function completeTutorial() {
   STATE.tutorial.completedAt = now();
   saveState();
 }
-
 /* ---------- tópicos ---------- */
 function getTopic(id) {
   return (STATE.bank.topics || []).find(t => t.id === id) || null;
@@ -2238,10 +2185,7 @@ function startAuto() {
 
   saveState();
   refreshHUD();
-
-  if (route() !== "#/105x") {
-    nav("#/105x");
-  }
+  nav("#/105x");
 }
 
 function getPhrase(id) {
@@ -2612,36 +2556,6 @@ function showCycleSheet(masteredNow) {
   `;
 }
 
-function reviewSamePhrase() {
-  unlockAudio();
-
-  const id = STATE.session.phraseId;
-  if (!id) return false;
-
-  const p = getPhrase(id);
-  if (!p) return false;
-
-  STATE.session.inProgress = true;
-  STATE.session.phraseId = id;
-
-  const idx = STATE.session.queue.indexOf(id);
-  if (idx >= 0) STATE.session.index = idx;
-
-  resetCountForPhrase(id);
-  saveState();
-
-  const sheet = $("#cycleSheet");
-  if (sheet) sheet.style.display = "none";
-
-  render105xBodyOnly();
-  renderPhraseListOnly();
-
-  toast("mesma frase recarregada");
-  beep("pop");
-
-  return true;
-}
-
 /* ---------- timer ---------- */
 let timerTickId = null;
 
@@ -2739,6 +2653,7 @@ function updateStudyUI() {
   const pct = clamp(ms / goal, 0, 1);
   fill.style.transform = `scaleX(${pct})`;
 }
+
 /* ---------- render helpers ---------- */
 function renderNewWords(list) {
   if (!Array.isArray(list) || list.length === 0) return "";
@@ -2984,7 +2899,6 @@ function renderSmartReviewCard() {
     </section>
   `;
 }
-
 function renderQuickTrainingCard() {
   const quick = getQuickTrainingPhrase();
   const reason = getQuickTrainingReason(quick);
@@ -3617,7 +3531,6 @@ function renderPremium() {
     </div>
   `;
 }
-
 /* ---------- admin ---------- */
 function renderAdmin() {
   const unlocked = isAdminUnlocked();
@@ -3831,6 +3744,7 @@ function renderHome() {
     });
   }
 }
+
 /* ---------- tutorial ---------- */
 function renderTutorial() {
   const step = tutorialCurrentStep();
@@ -4409,48 +4323,26 @@ function renderSenseiOutput(pack) {
 }
 
 /* ---------- treino 105x ---------- */
-function ensureSessionFor105x() {
+function render105x() {
   ensurePhrasesHaveValidTopic();
 
-  if (!STATE.session) STATE.session = {};
-  STATE.session.topicFilter ||= "ALL";
-  STATE.session.queue ||= [];
-
   if (!STATE.session.inProgress) {
-    STATE.session.inProgress = true;
+    startAuto();
+    return;
   }
 
-  const current = STATE.session.phraseId ? getPhrase(STATE.session.phraseId) : null;
-
-  if (!current || !canAccessTopic(current.topicId)) {
+  if (!STATE.session.queue || !STATE.session.queue.length) {
     STATE.session.queue = buildQueue();
     STATE.session.index = 0;
     STATE.session.phraseId = STATE.session.queue[0] || null;
     saveState();
-    return;
   }
 
-  if (!Array.isArray(STATE.session.queue) || !STATE.session.queue.length || !STATE.session.queue.includes(current.id)) {
-    STATE.session.queue = buildQueue();
-
-    if (!STATE.session.queue.includes(current.id)) {
-      STATE.session.queue.unshift(current.id);
-    }
-
-    STATE.session.index = STATE.session.queue.indexOf(current.id);
-    STATE.session.phraseId = current.id;
+  if (!STATE.session.phraseId && STATE.session.queue.length) {
+    STATE.session.phraseId = STATE.session.queue[0];
+    STATE.session.index = 0;
     saveState();
-    return;
   }
-
-  const idx = STATE.session.queue.indexOf(current.id);
-  STATE.session.index = idx >= 0 ? idx : 0;
-  STATE.session.phraseId = current.id;
-  saveState();
-}
-
-function render105x() {
-  ensureSessionFor105x();
 
   if (!STATE.session.queue.length || !STATE.session.phraseId) {
     APP.innerHTML = `
@@ -5503,17 +5395,13 @@ document.addEventListener("click", (e) => {
     if (result && result.ok) {
       toast(result.message || "treino rápido iniciado");
       beep("ding");
-
-      if (route() === "#/105x") {
-        render();
-        startStudyTimerIfOn105x();
-      }
-
       return;
     }
 
-    toast(result?.message || "não consegui iniciar o treino rápido");
+    toast("abrindo Pack Essencial");
     beep("tuk");
+    startSituationTraining("essential");
+
     return;
   }
 
@@ -5536,44 +5424,33 @@ document.addEventListener("click", (e) => {
 
     const result = startSituationTraining(id);
 
+    if (result === true) return;
+
     if (result && result.ok) {
       toast(`Treino iniciado: ${result.label}`);
       beep("ding");
+      return;
+    }
 
-      if (route() === "#/105x") {
-        render();
-        startStudyTimerIfOn105x();
-      } else {
-        nav("#/105x");
-      }
-
+    if (result && result.reason === "premium") {
+      toast("tema premium. abrindo Pack Essencial");
+      startSituationTraining("essential");
       return;
     }
 
     if (result && result.reason === "empty_favorites") {
       toast("salve favoritas para criar esse treino");
-      beep("tuk");
+      nav("#/105x");
       return;
     }
 
     if (result && result.reason === "empty") {
       toast("sem frases neste contexto. abrindo essencial");
-
-      const fallback = startSituationTraining("essential");
-
-      if (fallback && fallback.ok) {
-        if (route() === "#/105x") {
-          render();
-          startStudyTimerIfOn105x();
-        } else {
-          nav("#/105x");
-        }
-      }
-
+      startSituationTraining("essential");
       return;
     }
 
-    toast(result?.message || "não consegui iniciar este treino");
+    toast("não consegui iniciar este treino");
     beep("tuk");
 
     return;
@@ -5786,12 +5663,23 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if (act === "reviewSame" || act === "repeatSame") {
-    const ok = reviewSamePhrase();
-    if (!ok) {
-      toast("não consegui revisar esta frase");
-      beep("tuk");
-    }
+  if (act === "repeatSame") {
+    unlockAudio();
+
+    const id = STATE.session.phraseId;
+    if (!id) return;
+
+    resetCountForPhrase(id);
+    saveState();
+
+    const sheet = $("#cycleSheet");
+    if (sheet) sheet.style.display = "none";
+
+    toast("mesma frase recarregada");
+    beep("pop");
+    render105xBodyOnly();
+    renderPhraseListOnly();
+
     return;
   }
 
