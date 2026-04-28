@@ -1545,7 +1545,6 @@ input[type="range"]{
 #cycleSheet .grid2{
   width:100%;
 }
-
 /* =========================================================
    TÓPICOS, LISTAS E GERENCIAMENTO
    ========================================================= */
@@ -1759,6 +1758,7 @@ input[type="range"]{
   user-select:none;
   touch-action:none;
 }
+
 /* =========================================================
    FEEDBACK VISUAL
    ========================================================= */
@@ -2137,6 +2137,148 @@ input[type="range"]{
 }
 
 /* =========================================================
+   CORREÇÃO 105X: TOPO MAIS DISCRETO E COMPACTO
+   objetivo: deixar a frase principal aparecer mais cedo
+   ========================================================= */
+
+#view105x{
+  gap:10px;
+}
+
+#view105x > .row:first-child{
+  min-height:36px;
+  margin-bottom:-2px;
+}
+
+#view105x > .row:first-child .studyActions{
+  gap:8px;
+}
+
+#view105x > .row:first-child .miniBtn{
+  width:36px;
+  height:36px;
+  min-width:36px;
+  font-size:14px;
+  border-radius:15px;
+  opacity:.82;
+  box-shadow:none;
+  background:rgba(255,255,255,.035);
+}
+
+#view105x > .row:first-child .miniBtn:hover{
+  opacity:1;
+}
+
+#view105x > .row:first-child .btn{
+  min-height:36px;
+  padding:0 14px !important;
+  border-radius:16px;
+  font-size:13px;
+  opacity:.86;
+  box-shadow:none;
+}
+
+#view105x > .sheet:first-of-type{
+  padding:8px 10px;
+  border-radius:18px;
+  background:rgba(255,255,255,.022);
+  box-shadow:none;
+}
+
+#view105x > .sheet:first-of-type .small{
+  display:none;
+}
+
+#view105x > .sheet:first-of-type.stack{
+  gap:0;
+}
+
+#topicFilterSel105x{
+  min-height:40px;
+  max-width:320px !important;
+  border-radius:16px;
+  font-size:14px;
+  box-shadow:none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+}
+
+.studyDock{
+  gap:6px;
+}
+
+.studyRight{
+  grid-template-columns: minmax(0, 1fr) minmax(82px, 112px);
+  gap:8px;
+}
+
+.studyTimer{
+  padding:7px 10px;
+  border-radius:16px;
+  background:rgba(255,255,255,.020);
+  box-shadow:none;
+}
+
+.studyTimerRow{
+  gap:8px;
+}
+
+.studyTime{
+  font-size:11px;
+}
+
+.studyHint{
+  font-size:9.5px;
+}
+
+.studyBar{
+  margin-top:6px;
+  height:5px;
+}
+
+.callBtn{
+  min-height:40px;
+  min-width:0;
+  padding:0 10px;
+  border-radius:16px;
+  font-size:13px;
+  box-shadow:none;
+  opacity:.88;
+}
+
+.phraseArea{
+  margin-top:2px;
+}
+
+/* =========================================================
+   CORREÇÃO: espaçamento dos botões dentro dos cards Premium
+   ========================================================= */
+
+.planCard .btn{
+  margin-top: 12px;
+}
+
+.planCard .btn + .btn{
+  margin-top: 12px;
+}
+
+.planCard .planFooter{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.planCard .planFooter .btn{
+  margin-top: 0;
+}
+
+.planCard .planList + .btn,
+.planCard .planList + .planFooter{
+  margin-top: 16px;
+}
+
+/* =========================================================
    RESPONSIVO
    ========================================================= */
 
@@ -2204,7 +2346,7 @@ input[type="range"]{
 @media (max-width: 560px){
   .app{
     padding:
-      calc(12px + var(--headerH) + var(--safeTop))
+      calc(10px + var(--headerH) + var(--safeTop))
       10px
       calc(22px + var(--safeBottom))
       10px;
@@ -2319,6 +2461,78 @@ input[type="range"]{
     width: 46px;
     height: 46px;
   }
+
+  #view105x{
+    gap:8px;
+  }
+
+  #view105x > .row:first-child{
+    min-height:34px;
+  }
+
+  #view105x > .row:first-child .miniBtn{
+    width:34px;
+    height:34px;
+    min-width:34px;
+    font-size:13px;
+  }
+
+  #view105x > .row:first-child .btn{
+    min-height:34px;
+    font-size:12.5px;
+  }
+
+  #view105x > .sheet:first-of-type{
+    padding:7px 8px;
+    border-radius:16px;
+  }
+
+  #topicFilterSel105x{
+    min-height:38px;
+    font-size:13.5px;
+    border-radius:15px;
+  }
+
+  .studyRight{
+    grid-template-columns: minmax(0, 1fr) 92px;
+    gap:7px;
+  }
+
+  .studyTimer{
+    padding:6px 8px;
+    border-radius:15px;
+  }
+
+  .studyTime{
+    font-size:10.5px;
+  }
+
+  .studyHint{
+    display:none;
+  }
+
+  .studyBar{
+    height:4px;
+  }
+
+  .callBtn{
+    min-height:38px;
+    font-size:12.5px;
+    border-radius:15px;
+  }
+
+  .planCard .btn{
+    margin-top: 14px;
+  }
+
+  .planCard .btn + .btn{
+    margin-top: 14px;
+  }
+
+  .planCard .planFooter{
+    gap: 14px;
+    margin-top: 18px;
+  }
 }
 
 @media (max-width: 420px){
@@ -2339,7 +2553,7 @@ input[type="range"]{
   }
 
   .studyTime{
-    font-size:11px;
+    font-size:10px;
   }
 
   .storeBtn{
@@ -2410,6 +2624,35 @@ input[type="range"]{
   .situationMeta{
     font-size:10.5px;
   }
+
+  .studyRight{
+    grid-template-columns: 1fr;
+  }
+
+  .callBtn{
+    width:100%;
+  }
+
+  #view105x > .row:first-child .studyActions{
+    gap:6px;
+  }
+
+  #view105x > .row:first-child .miniBtn{
+    width:32px;
+    height:32px;
+    min-width:32px;
+    border-radius:14px;
+  }
+
+  #view105x > .row:first-child .btn{
+    min-height:32px;
+    padding:0 12px !important;
+    border-radius:14px;
+  }
+
+  #topicFilterSel105x{
+    min-height:36px;
+  }
 }
 
 @media (max-width: 340px){
@@ -2433,48 +2676,5 @@ input[type="range"]{
     animation: none !important;
     transition:none !important;
     scroll-behavior:auto !important;
-  }
-}
-
-/* =========================================================
-   CORREÇÃO: espaçamento dos botões dentro dos cards Premium
-   ========================================================= */
-
-.planCard .btn{
-  margin-top: 12px;
-}
-
-.planCard .btn + .btn{
-  margin-top: 12px;
-}
-
-.planCard .planFooter{
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.planCard .planFooter .btn{
-  margin-top: 0;
-}
-
-.planCard .planList + .btn,
-.planCard .planList + .planFooter{
-  margin-top: 16px;
-}
-
-@media (max-width: 560px){
-  .planCard .btn{
-    margin-top: 14px;
-  }
-
-  .planCard .btn + .btn{
-    margin-top: 14px;
-  }
-
-  .planCard .planFooter{
-    gap: 14px;
-    margin-top: 18px;
   }
 }

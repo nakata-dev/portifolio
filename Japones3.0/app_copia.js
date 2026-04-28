@@ -1,6 +1,6 @@
 /* =========================================================
-   NIHONGO321 v7.9.3
-   Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I + Bloco 3J + Bloco 3K
+   NIHONGO321 v8.0.0
+   Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I + Bloco 3J + Bloco 3K + Bloco 4A
    - correções críticas preservadas
    - treino rápido não cai no Pack Essencial indevidamente
    - revisar mesma frase funciona
@@ -9,6 +9,7 @@
    - Bloco 3I: aumento estratégico de conteúdo
    - Bloco 3J: polimento final UX
    - Bloco 3K: comercial e checkout externo seguro
+   - Bloco 4A: telas Sobre, Política de Privacidade e Termos de Uso
    ========================================================= */
 
 const LS_KEY = "jp_105x_v7";
@@ -17,7 +18,9 @@ const LS_KEY = "jp_105x_v7";
 const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
-  promise: "Treine frases úteis para viver melhor no Japão."
+  promise: "Treine frases úteis para viver melhor no Japão.",
+  version: "8.0.0",
+  updatedAt: "2026-04-28"
 };
 
 /* ========= CONFIG COMERCIAL =========
@@ -26,7 +29,7 @@ const BRAND = {
       Exemplos: Stripe, PayPal, Square, Hotmart, Kiwify ou outra plataforma escolhida.
    2. Não coloque dados bancários, chave Pix, número de conta, documento ou endereço sensível neste arquivo.
    3. Depois que a plataforma gerar o link de pagamento, cole esse link em checkoutUrl.
-   4. Atualize supportEmail para seu e-mail real de suporte.
+   4. Atualize supportEmail para seu e-mail real de suporte, se decidir exibir contato no futuro.
    5. Atualize monthlyPrice e semiannualPrice se mudar os preços.
    6. Atualize playStoreUrl e appStoreUrl quando o app estiver publicado.
 */
@@ -741,7 +744,8 @@ const TOPIC_SEEDS = [
       }
     ]
   },
-    {
+
+  {
     id: "topic_airport",
     name: "No Aeroporto",
     color: "tBlue",
@@ -2005,6 +2009,7 @@ function todayGoalProgress() {
     done: minPct >= 1 && cyclePct >= 1
   };
 }
+
 /* ---------- retenção leve ---------- */
 function hasStudyActivity(dayObj) {
   if (!dayObj) return false;
@@ -2942,7 +2947,15 @@ function checkoutStatus() {
     url,
     supportEmail,
     label: configured ? "checkout externo pronto" : "checkout em preparação",
+    badge: configured ? "pagamento seguro externo" : "configure antes de vender",
     buttonLabel: configured ? "abrir pagamento seguro" : "checkout em preparação",
+    primaryLabel: configured ? "assinar Premium agora" : "checkout em preparação",
+    monthlyLabel: configured ? `assinar mensal ${SALES.monthlyPrice}` : "checkout em preparação",
+    semiannualLabel: configured ? `assinar semestral ${SALES.semiannualPrice}` : "checkout em preparação",
+    footerLabel: configured ? "ativar Premium" : "checkout em preparação",
+    shortText: configured
+      ? "Pagamento em ambiente externo seguro. O app não coleta dados bancários."
+      : "Checkout ainda não conectado. Troque SALES.checkoutUrl pelo link real antes da venda.",
     helpText: configured
       ? "O pagamento será aberto em uma página externa segura. Depois da confirmação, libere o Premium pelo fluxo definido no seu checkout."
       : "Antes de vender, cadastre seu produto em uma plataforma de pagamento e troque SALES.checkoutUrl pelo link real.",
@@ -2950,6 +2963,20 @@ function checkoutStatus() {
       ? "abrindo pagamento seguro"
       : "checkout em preparação. configure SALES.checkoutUrl"
   };
+}
+
+function checkoutButtonLabel(kind = "primary") {
+  const status = checkoutStatus();
+
+  if (!status.configured) {
+    return "checkout em preparação";
+  }
+
+  if (kind === "monthly") return status.monthlyLabel;
+  if (kind === "semiannual") return status.semiannualLabel;
+  if (kind === "footer") return status.footerLabel;
+
+  return status.primaryLabel;
 }
 
 function openCheckout() {
@@ -3345,6 +3372,7 @@ function prevPhrase() {
 
   return true;
 }
+
 /* ---------- progresso ---------- */
 function sum1to(n) {
   return (n * (n + 1)) / 2;
@@ -3819,6 +3847,14 @@ function renderPlanCompareBox() {
             <li>mais contexto antes de situações difíceis</li>
             <li>revisões mais próximas da vida real</li>
           </ul>
+
+          <button class="btn btn--ok btn--full" data-action="checkout">
+            ${escapeHTML(checkoutButtonLabel("primary"))}
+          </button>
+
+          <button class="btn btn--ghost btn--full" data-nav="#/premium">
+            ver detalhes do Premium
+          </button>
         </div>
       </div>
     </div>
@@ -4476,13 +4512,37 @@ function renderPaymentSafetyBox() {
       </p>
 
       <p class="small">
-        Dados de cartão, conta bancária, PIX, konbini payment ou outros métodos devem ser cadastrados apenas no serviço de pagamento escolhido.
+        Dados de cartão, conta bancária, konbini payment ou outros métodos devem ser cadastrados apenas no serviço de pagamento escolhido.
       </p>
 
       <p class="small">
-        Suporte: ${escapeHTML(SALES.supportEmail || "configure SALES.supportEmail")}
+        Seus dados bancários nunca devem ser inseridos no app, no app.js, no HTML ou no CSS.
       </p>
     </div>
+  `;
+}
+
+function renderLegalLinksBox(compact = false) {
+  const cls = compact ? "sheet stack" : "card stack";
+
+  return `
+    <section class="${cls}" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">informações do app</div>
+        <div class="badge">transparência</div>
+      </div>
+
+      <div class="grid2">
+        <button class="btn btn--ghost btn--full" data-nav="#/about">sobre o app</button>
+        <button class="btn btn--ghost btn--full" data-nav="#/privacy">privacidade</button>
+      </div>
+
+      <button class="btn btn--muted btn--full" data-nav="#/terms">termos de uso</button>
+
+      <div class="small">
+        O app usa armazenamento local no seu dispositivo. Pagamentos, quando configurados, acontecem fora do app.
+      </div>
+    </section>
   `;
 }
 
@@ -4515,6 +4575,263 @@ function renderPremiumSoftBridge() {
   `;
 }
 
+/* ---------- páginas legais / publicação ---------- */
+function renderAbout() {
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">sobre o app</div>
+          <button class="btn" data-nav="#/settings">voltar</button>
+        </div>
+
+        <h1 class="h1">NIHONGO321</h1>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Japonês prático para brasileiros no Japão</h3>
+          <p class="lockText">
+            O NIHONGO321 é um aplicativo simples de repetição guiada de frases em japonês.
+            Ele foi pensado para brasileiros e dekasseguis que vivem no Japão, trabalham muitas horas por dia
+            e precisam de frases úteis para situações reais.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">proposta</div>
+          <p class="small">
+            O app não tenta substituir um curso completo de japonês. A ideia é ajudar você a ouvir,
+            ler, repetir em voz alta e revisar frases práticas para o cotidiano.
+          </p>
+          <p class="small">
+            Poucos minutos já contam. O foco é criar familiaridade com frases que podem aparecer no trabalho,
+            mercado, prefeitura, konbini, transporte e outras situações da vida no Japão.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">como funciona</div>
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">1</span>
+              <span>Você escolhe uma frase ou situação.</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">2</span>
+              <span>O app mostra japonês e português.</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">3</span>
+              <span>Você ouve, repete em voz alta e fecha ciclos de treino.</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">4</span>
+              <span>Favoritos, frase do dia e revisão ajudam a voltar sem se perder.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">dados e pagamentos</div>
+          <p class="small">
+            O NIHONGO321 usa armazenamento local do navegador para guardar frases, progresso, favoritos,
+            preferências e histórico de treino neste dispositivo.
+          </p>
+          <p class="small">
+            Dados bancários não ficam no app. Se houver assinatura Premium, o pagamento deve acontecer em uma
+            página externa segura de checkout.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="row row--between">
+            <div class="badge">versão</div>
+            <div class="badge">${escapeHTML(BRAND.version)}</div>
+          </div>
+          <div class="small">Atualização: ${escapeHTML(BRAND.updatedAt)}</div>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/home">ir para o app</button>
+          <button class="btn btn--full" data-nav="#/privacy">ver privacidade</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderPrivacy() {
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">política de privacidade</div>
+          <button class="btn" data-nav="#/settings">voltar</button>
+        </div>
+
+        <h1 class="h1">Política de privacidade</h1>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Resumo simples</h3>
+          <p class="lockText">
+            O NIHONGO321 foi criado para funcionar de forma leve. As principais informações do seu treino
+            ficam salvas no próprio dispositivo, usando armazenamento local do navegador.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">1. Quais dados o app guarda</div>
+          <p class="small">
+            O app pode guardar localmente: frases cadastradas por você, progresso do treino, favoritos,
+            ciclos concluídos, moedas internas, preferências de som e vibração, meta diária, histórico do Sensei IA local
+            e backup importado.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">2. Onde esses dados ficam</div>
+          <p class="small">
+            Esses dados ficam no armazenamento local do seu navegador ou WebView, no próprio aparelho.
+            Eles não são enviados automaticamente para um servidor pelo código atual do app.
+          </p>
+          <p class="small">
+            Se você limpar os dados do navegador, desinstalar o app ou apagar o armazenamento do dispositivo,
+            o progresso pode ser perdido. Por isso existe a função de backup.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">3. Backup</div>
+          <p class="small">
+            A função de backup gera um arquivo JSON com seus dados do app. Guarde esse arquivo em local seguro.
+            Quem tiver acesso ao arquivo poderá ver suas frases e progresso.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">4. Pagamentos</div>
+          <p class="small">
+            Dados bancários, cartão, conta, konbini payment ou qualquer informação de pagamento não devem ser colocados
+            dentro do app. O pagamento Premium, quando configurado, deve acontecer em uma plataforma externa segura.
+          </p>
+          <p class="small">
+            O app apenas abre o link definido em SALES.checkoutUrl. A responsabilidade pelo processamento do pagamento
+            pertence à plataforma externa escolhida.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">5. Áudio e fala</div>
+          <p class="small">
+            O recurso de áudio usa funções disponíveis no navegador/dispositivo para falar frases em japonês.
+            O app atual não grava sua voz e não envia áudio para análise externa.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">6. Alterações futuras</div>
+          <p class="small">
+            Se no futuro o app usar login, servidor, reconhecimento de voz online, analytics ou pagamentos integrados,
+            esta política deve ser atualizada antes da publicação dessa nova versão.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/terms">ver termos</button>
+          <button class="btn btn--full" data-nav="#/about">sobre o app</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderTerms() {
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">termos de uso</div>
+          <button class="btn" data-nav="#/settings">voltar</button>
+        </div>
+
+        <h1 class="h1">Termos de uso</h1>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Uso simples e consciente</h3>
+          <p class="lockText">
+            Ao usar o NIHONGO321, você entende que o app é uma ferramenta de apoio ao estudo de frases práticas em japonês.
+            Ele ajuda no treino, mas não garante fluência automática nem substitui orientação profissional quando necessário.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">1. Objetivo do app</div>
+          <p class="small">
+            O objetivo do NIHONGO321 é ajudar brasileiros no Japão a treinar frases úteis por repetição guiada,
+            leitura, escuta e prática em voz alta.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">2. Responsabilidade do usuário</div>
+          <p class="small">
+            Use as frases como apoio. Em situações importantes, como hospital, documentos, contrato, imposto,
+            trabalho ou emergência, confirme as informações com uma pessoa qualificada, intérprete, órgão oficial
+            ou profissional responsável.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">3. Conteúdo cadastrado</div>
+          <p class="small">
+            Você é responsável pelas frases que cadastrar, importar ou gerar no app. Evite inserir dados sensíveis,
+            documentos, senhas, informações bancárias ou dados de outras pessoas.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">4. Armazenamento local</div>
+          <p class="small">
+            O app usa armazenamento local. Isso significa que seus dados ficam no dispositivo/navegador.
+            Se você apagar os dados do app ou trocar de aparelho sem backup, poderá perder seu progresso.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">5. Premium e checkout</div>
+          <p class="small">
+            Quando houver Premium, o pagamento deve acontecer fora do app, em uma plataforma externa segura.
+            O NIHONGO321 não deve armazenar dados bancários no código, no localStorage, no HTML, no CSS ou no app.js.
+          </p>
+          <p class="small">
+            A liberação Premium depende do fluxo definido pelo responsável do produto e pela plataforma de checkout escolhida.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">6. Limitações</div>
+          <p class="small">
+            O app pode depender de recursos do navegador, como áudio de fala, armazenamento local e WebView.
+            Alguns aparelhos podem se comportar de forma diferente.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">7. Alterações</div>
+          <p class="small">
+            Estes termos podem ser ajustados conforme o app evoluir, especialmente se forem adicionados login,
+            servidor, pagamentos integrados, análise de voz ou novos serviços externos.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/home">aceitar e usar o app</button>
+          <button class="btn btn--full" data-nav="#/privacy">ver privacidade</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 /* ---------- landing ---------- */
 function renderLanding() {
   APP.innerHTML = `
@@ -4536,18 +4853,20 @@ function renderLanding() {
         </div>
 
         <div class="heroMiniStats">
-          <div class="statCard">
+          <button class="statCard" type="button" data-action="startQuickTraining" aria-label="iniciar treino rápido de dois minutos">
             <div class="statVal">2 min</div>
-            <div class="statLbl">treino rápido</div>
-          </div>
-          <div class="statCard">
+            <div class="statLbl">treino rápido para dias cansativos</div>
+          </button>
+
+          <button class="statCard" type="button" data-nav="#/105x" aria-label="abrir treino de fixação cento e cinco vezes">
             <div class="statVal">105x</div>
-            <div class="statLbl">fixação guiada</div>
-          </div>
-          <div class="statCard">
+            <div class="statLbl">fixação guiada para criar memória</div>
+          </button>
+
+          <button class="statCard" type="button" data-nav="#/premium" aria-label="ver planos premium e treinos por situação">
             <div class="statVal">situação</div>
-            <div class="statLbl">treino direto</div>
-          </div>
+            <div class="statLbl">premium para fábrica, prefeitura e vida real</div>
+          </button>
         </div>
       </section>
 
@@ -4564,29 +4883,29 @@ function renderLanding() {
         </p>
 
         <div class="valueGrid">
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-action="startQuickTraining">
             <div class="valueIcon">⚡</div>
             <h3 class="valueTitle">2 minutos possíveis</h3>
-            <p class="valueText">Uma entrada rápida para manter contato com o japonês.</p>
-          </div>
+            <p class="valueText">Toque aqui para começar sem escolher nada.</p>
+          </button>
 
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-nav="#/105x">
             <div class="valueIcon">🧠</div>
             <h3 class="valueTitle">Cria memória</h3>
-            <p class="valueText">Repetição guiada para a frase ficar mais familiar.</p>
-          </div>
+            <p class="valueText">Abra o 105x e repita até a frase ficar familiar.</p>
+          </button>
 
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-nav="#/home">
             <div class="valueIcon">🔁</div>
             <h3 class="valueTitle">Revisa por você</h3>
-            <p class="valueText">O app sugere uma frase útil para revisar hoje.</p>
-          </div>
+            <p class="valueText">Entre no início e siga a revisão recomendada.</p>
+          </button>
 
-          <div class="valueCard">
+          <button class="valueCard" type="button" data-nav="#/premium">
             <div class="valueIcon">📍</div>
             <h3 class="valueTitle">Situação real</h3>
-            <p class="valueText">Escolha o contexto e entre no treino certo.</p>
-          </div>
+            <p class="valueText">Veja como o Premium aprofunda contextos da vida no Japão.</p>
+          </button>
         </div>
       </section>
 
@@ -4618,9 +4937,12 @@ function renderLanding() {
           </a>
         </div>
       </section>
+
+      ${renderLegalLinksBox(true)}
     </div>
   `;
 }
+
 /* ---------- premium ---------- */
 function renderPremium() {
   const unlocked = isPremiumUnlocked();
@@ -4798,6 +5120,8 @@ function renderPremium() {
             <div class="small">${escapeHTML(status.helpText)}</div>
           </div>
         `}
+
+        ${renderLegalLinksBox(true)}
       </section>
     </div>
   `;
@@ -4974,6 +5298,8 @@ function renderHome() {
           <button class="btn btn--ghost btn--full" data-nav="#/backup">abrir backup</button>
         </div>
       </section>
+
+      ${renderLegalLinksBox(true)}
     </div>
   `;
 
@@ -5433,7 +5759,6 @@ function renderSenseiHistory() {
     </div>
   `).join("");
 }
-
 function renderSensei() {
   if (!isPremiumUnlocked()) {
     APP.innerHTML = `
@@ -6289,6 +6614,8 @@ function renderSettings() {
           <div class="small" id="goalCyclesLbl">${STATE.goals.dailyCycles} ciclo(s)</div>
         </div>
 
+        ${renderLegalLinksBox(true)}
+
         <div class="sep"></div>
 
         <div class="grid2">
@@ -6568,6 +6895,332 @@ function renderSkills() {
     </div>
   `;
 }
+/* ---------- páginas legais / publicação ---------- */
+function renderLegalLinksBox(compact = false) {
+  return `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">informações do app</div>
+        <div class="badge">publicação</div>
+      </div>
+
+      ${compact ? "" : `
+        <div class="small">
+          Páginas simples para transparência, publicação inicial e confiança do usuário.
+        </div>
+      `}
+
+      <div class="grid2">
+        <button class="btn btn--ghost btn--full" data-nav="#/about">sobre o app</button>
+        <button class="btn btn--ghost btn--full" data-nav="#/privacy">privacidade</button>
+      </div>
+
+      <button class="btn btn--muted btn--full" data-nav="#/terms">termos de uso</button>
+    </div>
+  `;
+}
+
+function renderAbout() {
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">sobre o app</div>
+          <button class="btn" data-nav="#/settings">voltar</button>
+        </div>
+
+        <div class="lockCard">
+          <h1 class="h1">NIHONGO321</h1>
+          <p class="lockText">
+            Japonês prático para brasileiros que vivem no Japão e precisam de frases úteis para o trabalho,
+            mercado, prefeitura, transporte, moradia e situações reais do cotidiano.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">proposta</div>
+
+          <p class="small">
+            O NIHONGO321 não foi criado para substituir um curso completo de japonês.
+            Ele foi pensado para ajudar quem trabalha muito, chega cansado e ainda assim quer manter contato
+            com frases práticas todos os dias.
+          </p>
+
+          <p class="small">
+            A ideia é simples: ouvir, ler, repetir em voz alta e revisar frases que podem ser usadas na vida real no Japão.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">como funciona</div>
+
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">1</span>
+              <span>Você escolhe uma frase ou situação.</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">2</span>
+              <span>O app mostra o japonês, a tradução e palavras úteis.</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">3</span>
+              <span>Você ouve, repete em voz alta e fecha ciclos de treino.</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">4</span>
+              <span>O progresso fica salvo no próprio aparelho usando armazenamento local.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">pagamentos</div>
+
+          <p class="small">
+            O NIHONGO321 não guarda dados bancários dentro do app. Qualquer pagamento Premium deve acontecer fora do app,
+            em uma plataforma externa segura de checkout.
+          </p>
+
+          <p class="small">
+            Dados de cartão, conta bancária, konbini payment ou outros meios de pagamento devem ser informados apenas
+            na página externa de pagamento, nunca dentro deste aplicativo.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/home">ir para o início</button>
+          <button class="btn btn--full" data-nav="#/privacy">ver privacidade</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderPrivacy() {
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">política de privacidade</div>
+          <button class="btn" data-nav="#/settings">voltar</button>
+        </div>
+
+        <div class="lockCard">
+          <h1 class="h1">Privacidade simples e direta</h1>
+          <p class="lockText">
+            Esta política explica, de forma clara, como o NIHONGO321 lida com informações dentro do app.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">armazenamento local</div>
+
+          <p class="small">
+            O NIHONGO321 usa armazenamento local do navegador, chamado localStorage, para salvar dados no próprio aparelho.
+          </p>
+
+          <p class="small">
+            Isso pode incluir frases cadastradas, progresso de treino, favoritos, configurações, metas diárias,
+            histórico local do Sensei IA simulado e preferências de uso.
+          </p>
+
+          <p class="small">
+            Esses dados ficam no dispositivo do usuário, dentro do navegador usado para acessar o app.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">dados que o app não deve guardar</div>
+
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>dados bancários;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>número de cartão;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>senha bancária;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>documentos sensíveis de pagamento;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>informações de conta bancária.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">pagamento externo</div>
+
+          <p class="small">
+            Se o usuário decidir assinar o Premium, o pagamento deve ser feito por meio de uma plataforma externa.
+            O NIHONGO321 apenas abre o link configurado pelo desenvolvedor.
+          </p>
+
+          <p class="small">
+            O app não processa pagamento diretamente e não deve receber dados bancários.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">backup e reset</div>
+
+          <p class="small">
+            O usuário pode exportar um backup local em JSON. Esse arquivo pode conter frases, progresso e configurações.
+            Guarde esse arquivo com cuidado.
+          </p>
+
+          <p class="small">
+            Ao resetar o app ou limpar os dados do navegador, as informações salvas localmente podem ser apagadas.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">áudio e voz</div>
+
+          <p class="small">
+            O app usa recursos do navegador para reprodução de voz japonesa quando disponíveis.
+            No estado atual, o app não envia gravações de voz para servidor próprio.
+          </p>
+
+          <p class="small">
+            Caso no futuro seja adicionado reconhecimento de pronúncia, esta política deve ser atualizada antes da publicação.
+          </p>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/terms">ver termos de uso</button>
+          <button class="btn btn--full" data-nav="#/home">ir para o app</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function renderTerms() {
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack">
+        <div class="row row--between">
+          <div class="badge">termos de uso</div>
+          <button class="btn" data-nav="#/settings">voltar</button>
+        </div>
+
+        <div class="lockCard">
+          <h1 class="h1">Termos simples para uso do NIHONGO321</h1>
+          <p class="lockText">
+            Ao usar o app, o usuário entende que o NIHONGO321 é uma ferramenta de apoio ao estudo prático de japonês.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">uso do app</div>
+
+          <p class="small">
+            O NIHONGO321 oferece frases, traduções, repetição guiada, favoritos, treino rápido, revisão e organização de conteúdo.
+            O objetivo é apoiar o aprendizado funcional, especialmente para brasileiros no Japão.
+          </p>
+
+          <p class="small">
+            O app não garante fluência imediata, aprovação em testes, resultado profissional ou substituição de professor,
+            intérprete, tradutor juramentado ou orientação oficial.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">conteúdo em japonês</div>
+
+          <p class="small">
+            As frases são criadas para ajudar em situações comuns, mas podem precisar de adaptação conforme o contexto,
+            nível de formalidade e região.
+          </p>
+
+          <p class="small">
+            Em situações importantes, como hospital, prefeitura, contrato, documento, trabalho ou emergência,
+            confirme as informações com uma pessoa qualificada quando necessário.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">armazenamento local</div>
+
+          <p class="small">
+            O progresso e as frases podem ficar salvos no próprio aparelho usando localStorage.
+            Se o usuário trocar de navegador, limpar dados ou resetar o app, essas informações podem ser perdidas.
+          </p>
+
+          <p class="small">
+            Use a função de backup para guardar uma cópia quando necessário.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">premium e pagamento</div>
+
+          <p class="small">
+            Recursos Premium, quando disponíveis, podem liberar tópicos específicos, Sensei IA simulado/local
+            e materiais mais direcionados para situações reais.
+          </p>
+
+          <p class="small">
+            O pagamento deve acontecer fora do app, em plataforma externa segura. O NIHONGO321 não deve armazenar
+            dados bancários no código, no navegador ou dentro das telas do aplicativo.
+          </p>
+
+          <p class="small">
+            O acesso Premium pode depender da configuração comercial definida pelo desenvolvedor e pela plataforma de pagamento escolhida.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">responsabilidade do usuário</div>
+
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✓</span>
+              <span>usar o app como apoio de estudo;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✓</span>
+              <span>fazer backup quando quiser proteger os dados;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✓</span>
+              <span>não inserir dados bancários ou informações sensíveis em campos de frase;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✓</span>
+              <span>confirmar informações importantes fora do app quando necessário.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/home">aceitar e usar o app</button>
+          <button class="btn btn--full" data-nav="#/privacy">ver privacidade</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
 
 /* ---------- render principal ---------- */
 function render() {
@@ -6587,6 +7240,9 @@ function render() {
   if (r === "#/backup") return renderBackup();
   if (r === "#/settings") return renderSettings();
   if (r === "#/skills") return renderSkills();
+  if (r === "#/about") return renderAbout();
+  if (r === "#/privacy") return renderPrivacy();
+  if (r === "#/terms") return renderTerms();
 
   nav("#/landing");
 }
