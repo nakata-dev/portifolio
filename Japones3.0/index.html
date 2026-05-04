@@ -26,15 +26,46 @@
   />
   <meta property="og:site_name" content="NIHONGO321" />
 
-  <link rel="stylesheet" href="./styles.css?v=7.9.3" />
-  <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon" />
-  <link rel="apple-touch-icon" href="./img/favicon.png" />
+  <!-- =========================================================
+       TEMA INICIAL ANTI-PISCADA
+       Carrega claro/escuro antes do CSS aplicar visual.
+       O app.js também controla isso depois.
+       ========================================================= -->
+  <script>
+    (() => {
+      try {
+        const raw = localStorage.getItem("jp_105x_v7");
+        const parsed = raw ? JSON.parse(raw) : null;
+        const savedTheme = parsed?.prefs?.theme || localStorage.getItem("nihongo321_theme") || "dark";
+        const theme = savedTheme === "light" ? "light" : "dark";
+
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch {
+        document.documentElement.dataset.theme = "dark";
+        document.documentElement.style.colorScheme = "dark";
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="./styles.css?v=8.1.0" />
+  <link rel="shortcut icon" href="./img/logo_nihongo321.png" type="image/png" />
+  <link rel="apple-touch-icon" href="./img/logo_nihongo321.png" />
 </head>
 
 <body>
   <header class="topbar" role="banner">
     <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
+      <div class="logo" aria-hidden="true">
+        <img
+          src="./img/logo_nihongo321.png"
+          alt=""
+          width="46"
+          height="46"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
 
       <div class="brandText">
         <div class="brandTitle">NIHONGO321</div>
@@ -50,6 +81,14 @@
 
       <button class="hudBtn" id="hudSound" type="button" title="som" aria-label="som">🔊</button>
       <button class="hudBtn" id="hudVibe" type="button" title="vibração" aria-label="vibração">📳</button>
+
+      <button
+        class="hudBtn"
+        id="hudTheme"
+        type="button"
+        title="modo claro ou escuro"
+        aria-label="alternar modo claro ou escuro"
+      >🌙</button>
 
       <button
         class="hudBtn"
@@ -307,6 +346,6 @@
     </div>
   </noscript>
 
-  <script src="./app.js?v=7.9.3" defer></script>
+  <script src="./app.js?v=8.1.0" defer></script>
 </body>
 </html>
