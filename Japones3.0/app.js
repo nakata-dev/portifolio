@@ -1,13 +1,17 @@
 /* =========================================================
-   NIHONGO321 v8.1.0
+   NIHONGO321 v8.2.0
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
+   + Bloco 5.7A
    - correções críticas preservadas
    - logo oficial em img/logo_nihongo321.png
    - modo claro ☀️ e modo escuro 🌙
    - cores inspiradas na logo
    - checklist final interno em #/launch-checklist
+   - Sensei IA professor especialista
+   - Sensei IA com modo gramática, palavra-alvo e situação real
+   - Sensei IA gera 7 exemplos para gramática/palavra-alvo
    ========================================================= */
 
 const LS_KEY = "jp_105x_v7";
@@ -17,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.1.0",
+  version: "8.2.0",
   updatedAt: "2026-05-04",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -384,6 +388,7 @@ function defaultTopic() {
     updatedAt: t
   };
 }
+
 /* ---------- catálogo inicial de frases ---------- */
 const TOPIC_SEEDS = [
   {
@@ -807,8 +812,7 @@ const TOPIC_SEEDS = [
       }
     ]
   },
-
-  {
+    {
     id: "topic_airport",
     name: "No Aeroporto",
     color: "tBlue",
@@ -1818,7 +1822,7 @@ function defaultState() {
   const top = defaultTopic();
 
   const st = {
-    app: { schemaVersion: 8.1, createdAt: t, updatedAt: t },
+    app: { schemaVersion: 8.2, createdAt: t, updatedAt: t },
 
     prefs: {
       theme: getTheme(),
@@ -1903,7 +1907,7 @@ function defaultState() {
 function migrateToV7(st) {
   if (!st || !st.app) return defaultState();
 
-  st.app.schemaVersion = 8.1;
+  st.app.schemaVersion = 8.2;
 
   st.bank ||= {};
   st.bank.topics ||= [];
@@ -2201,7 +2205,6 @@ function getRetentionNudge() {
     action: "começar treino"
   };
 }
-
 /* ---------- Bloco 3C: revisão inteligente ---------- */
 function isPhraseAccessible(p) {
   if (!p) return false;
@@ -3121,7 +3124,7 @@ function habitBump(_key, field, amount = 1) {
 const TUTORIAL_STEPS = [
   {
     title: "Entenda o método",
-    text: "O Nihongo321 usa repetição guiada para treinar memória, ouvido e fala com japonês funcional."
+    text: "O NIHONGO321 usa repetição guiada para treinar memória, ouvido e fala com japonês funcional."
   },
   {
     title: "Comece pelo essencial",
@@ -3141,15 +3144,23 @@ const TUTORIAL_STEPS = [
   },
   {
     title: "Salve frases importantes",
-    text: "Use favoritos para guardar frases que podem salvar sua rotina no Japão."
+    text: "Use favoritos para guardar frases que podem ajudar na sua rotina real no Japão."
   },
   {
     title: "Escolha uma situação",
     text: "Use Treinar por situação para entrar direto no contexto que você precisa hoje."
   },
   {
-    title: "Avance com o premium",
-    text: "No premium ficam temas mais específicos e o Sensei IA para criar material sob medida."
+    title: "Use o Sensei IA Premium",
+    text: "O Sensei IA cria material sob medida: situações reais, partículas, estruturas, palavras e expressões japonesas com exemplos para treinar."
+  },
+  {
+    title: "Estude uma frase por dia",
+    text: "Você pode pedir 7 exemplos de uma estrutura, como ので ou かどうか, e estudar uma frase por dia durante a semana."
+  },
+  {
+    title: "Aprendizado autodidata",
+    text: "Com o Premium, suas dúvidas viram tópicos treináveis. Você pede, salva no app e revisa no método NIHONGO321."
   }
 ];
 
@@ -3841,7 +3852,6 @@ function updateStudyUI() {
   const pct = clamp(ms / goal, 0, 1);
   fill.style.transform = `scaleX(${pct})`;
 }
-
 /* ---------- render helpers ---------- */
 function renderNewWords(list) {
   if (!Array.isArray(list) || list.length === 0) return "";
@@ -4105,6 +4115,7 @@ function renderLegalLinksBox(compact = false) {
     </div>
   `;
 }
+
 /* ---------- componentes comerciais ---------- */
 function renderPlanCompareBox() {
   return `
@@ -4149,6 +4160,8 @@ function renderPlanCompareBox() {
             <li>tópicos específicos do Japão;</li>
             <li>trabalho, prefeitura, mercado e transporte;</li>
             <li>Sensei IA para criar frases do seu caso;</li>
+            <li>gramática prática com exemplos treináveis;</li>
+            <li>7 exemplos por tema para estudar 1 frase por dia;</li>
             <li>mais contexto antes de situações difíceis;</li>
             <li>revisões mais próximas da vida real.</li>
           </ul>
@@ -4190,21 +4203,21 @@ function renderPremiumValueGrid() {
       </div>
 
       <div class="valueCard">
-        <div class="valueIcon">🏠</div>
-        <h3 class="valueTitle">Moradia</h3>
-        <p class="valueText">Frases para reparo, vazamento, imobiliária e problemas do dia a dia.</p>
+        <div class="valueIcon">文</div>
+        <h3 class="valueTitle">Gramática prática</h3>
+        <p class="valueText">Peça exemplos com ので, かどうか, ないといけない, やってみる e outras estruturas.</p>
       </div>
 
       <div class="valueCard">
-        <div class="valueIcon">🚃</div>
-        <h3 class="valueTitle">Transporte</h3>
-        <p class="valueText">Prepare-se antes de pegar trem, ônibus ou perguntar direção.</p>
+        <div class="valueIcon">7</div>
+        <h3 class="valueTitle">7 exemplos por tema</h3>
+        <p class="valueText">Estude uma frase por dia e transforme dúvida em rotina de treino.</p>
       </div>
 
       <div class="valueCard">
         <div class="valueIcon">🤖</div>
-        <h3 class="valueTitle">Sensei IA</h3>
-        <p class="valueText">Crie frases para o seu caso real e salve tudo no app.</p>
+        <h3 class="valueTitle">Sensei IA Premium</h3>
+        <p class="valueText">Crie material sob medida, salve como tópico e revise no método 105x.</p>
       </div>
     </div>
   `;
@@ -4263,6 +4276,10 @@ function renderPremiumUseCases() {
         <div class="useCaseItem">
           <span class="useCaseIcon">🏥</span>
           <span>quando precisa explicar uma situação específica;</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">文</span>
+          <span>quando quer entender uma estrutura como ので, かどうか ou ないといけない;</span>
         </div>
         <div class="useCaseItem">
           <span class="useCaseIcon">🏠</span>
@@ -4347,8 +4364,8 @@ function renderPremiumSoftBridge() {
       <div class="lockCard">
         <h3 class="lockTitle">O grátis mantém o japonês vivo. O premium prepara para situações específicas.</h3>
         <p class="lockText">
-          Quando você precisar de frases para chefe, prefeitura, moradia, transporte ou um caso muito específico,
-          o premium começa a fazer mais sentido.
+          Quando você precisar de frases para chefe, prefeitura, moradia, transporte,
+          uma dúvida gramatical ou um caso muito específico, o premium começa a fazer mais sentido.
         </p>
       </div>
 
@@ -5110,8 +5127,8 @@ function renderLanding() {
           </button>
 
           <button class="statCard" type="button" data-nav="#/premium">
-            <div class="statVal">situação</div>
-            <div class="statLbl">premium para fábrica, prefeitura e vida real</div>
+            <div class="statVal">Sensei IA</div>
+            <div class="statLbl">premium para dúvidas, gramática e vida real</div>
           </button>
         </div>
       </section>
@@ -5148,9 +5165,9 @@ function renderLanding() {
           </button>
 
           <button class="valueCard" type="button" data-nav="#/premium">
-            <div class="valueIcon">📍</div>
-            <h3 class="valueTitle">Situação real</h3>
-            <p class="valueText">Veja como o Premium aprofunda contextos da vida no Japão.</p>
+            <div class="valueIcon">文</div>
+            <h3 class="valueTitle">Professor de bolso</h3>
+            <p class="valueText">Veja como o Sensei IA transforma dúvidas em treino.</p>
           </button>
         </div>
       </section>
@@ -5160,7 +5177,7 @@ function renderLanding() {
       <section class="ctaBand stack">
         <div class="badge">primeiro treino</div>
         <h2 class="h2">Abra o app, toque no treino rápido e mantenha o japonês vivo.</h2>
-        <p class="p">A versão grátis já ajuda hoje. O premium aprofunda com mais situações reais e Sensei IA.</p>
+        <p class="p">A versão grátis já ajuda hoje. O premium aprofunda com mais situações reais, gramática prática e Sensei IA.</p>
 
         <div class="grid2">
           <button class="btn btn--ok btn--full" data-nav="#/home">entrar no app</button>
@@ -5201,7 +5218,7 @@ function renderPremium() {
 
         <p class="p">
           O grátis mantém o japonês vivo. O Premium ajuda quando você precisa de mais contexto:
-          fábrica, prefeitura, mercado, transporte, moradia e frases criadas para o seu caso real.
+          fábrica, prefeitura, mercado, transporte, moradia, gramática prática e frases criadas para o seu caso real.
         </p>
 
         <div class="sheet stack" style="text-align:left">
@@ -5213,8 +5230,8 @@ function renderPremium() {
           <h2 class="h2">Menos improviso. Mais preparo.</h2>
 
           <p class="small">
-            Antes de falar com chefe, ir à prefeitura, resolver documento, perguntar no mercado ou explicar um problema,
-            você treina frases mais próximas da vida real.
+            Antes de falar com chefe, ir à prefeitura, resolver documento, perguntar no mercado,
+            explicar um problema ou entender uma estrutura como ので, você treina frases mais próximas da vida real.
           </p>
 
           <div class="grid2">
@@ -5235,7 +5252,7 @@ function renderPremium() {
           <h3 class="lockTitle">Premium não é castigo para quem usa grátis</h3>
           <p class="lockText">
             A versão grátis continua útil. O Premium é para quando você quer mais preparo,
-            mais situações e mais frases específicas para a rotina no Japão.
+            mais situações, mais exemplos e mais frases específicas para a rotina no Japão.
           </p>
         </div>
 
@@ -5245,16 +5262,38 @@ function renderPremium() {
 
         <div class="sheet stack" style="text-align:left">
           <div class="row row--between">
-            <div class="badge">Sensei IA</div>
-            <div class="badge">diferencial</div>
+            <div class="badge">Sensei IA Premium</div>
+            <div class="badge">professor prático</div>
           </div>
 
-          <h2 class="h2">Quando o conteúdo pronto não cobre seu problema.</h2>
+          <h2 class="h2">Transforme qualquer dúvida em treino.</h2>
 
           <p class="small">
-            Explique uma situação real, como falar com o chefe, pedir reparo no apartamento,
-            consultar no hospital ou resolver documento. O Sensei IA gera um pequeno pack de frases
-            para salvar e treinar no 105x.
+            Com o Sensei IA, você não fica preso apenas aos packs prontos. Você pode pedir frases para uma situação real,
+            uma partícula, uma estrutura gramatical, uma palavra japonesa ou uma expressão que apareceu no seu dia.
+          </p>
+
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">文</span>
+              <span>“Me ensine o uso de ので.”</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">7</span>
+              <span>“Crie 7 frases com かどうか para eu revisar durante a semana.”</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">🏭</span>
+              <span>“Preciso falar com meu chefe que não entendi a tarefa.”</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">💾</span>
+              <span>O material vira tópico treinável dentro do app.</span>
+            </div>
+          </div>
+
+          <p class="small">
+            A ideia é simples: 1 frase por dia, 7 frases por semana, mais autonomia para estudar japonês prático no Japão.
           </p>
 
           <div class="grid2">
@@ -5283,6 +5322,8 @@ function renderPremium() {
               <li>todos os tópicos Premium;</li>
               <li>treino por situação mais completo;</li>
               <li>Sensei IA para casos reais;</li>
+              <li>Sensei IA para gramática prática;</li>
+              <li>7 exemplos por tema para revisar por semana;</li>
               <li>mais frases por contexto;</li>
               <li>revisões mais direcionadas.</li>
             </ul>
@@ -5309,7 +5350,8 @@ function renderPremium() {
               <li>mais tempo de prática;</li>
               <li>melhor custo por período;</li>
               <li>mais chance de criar hábito;</li>
-              <li>preparo antes de situações reais.</li>
+              <li>preparo antes de situações reais;</li>
+              <li>mais autonomia para estudar sozinho.</li>
             </ul>
 
             <div class="planFooter">
@@ -5342,7 +5384,7 @@ function renderPremium() {
 
             <div class="small">
               Você pode continuar no grátis. Quando quiser treinar situações mais específicas,
-              o Premium fica como próxima etapa natural.
+              gramática prática e materiais criados para sua necessidade, o Premium fica como próxima etapa natural.
             </div>
 
             <div class="grid2">
@@ -5497,7 +5539,7 @@ function renderHome() {
         <div class="lockCard">
           <h3 class="lockTitle">Material para a sua necessidade</h3>
           <p class="lockText">
-            Crie frases para chefe, fábrica, hospital, aluguel, viagem, mercado ou qualquer situação da sua vida no Japão.
+            Crie frases para chefe, fábrica, hospital, aluguel, viagem, mercado, partículas, gramática ou qualquer situação da sua vida no Japão.
           </p>
         </div>
 
@@ -5603,6 +5645,7 @@ function renderTutorial() {
     </div>
   `;
 }
+
 /* ---------- Sensei IA ---------- */
 const SENSEI_SCENARIO_BANK = {
   fabrica: [
@@ -5631,6 +5674,39 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "機械{きかい}", pt: "máquina" },
         { jp: "止{と}まりました", pt: "parou" }
       ]
+    },
+    {
+      jp: "確認{かくにん} して もらえますか。",
+      pt: "Você poderia verificar para mim?",
+      newWords: [
+        { jp: "確認{かくにん}", pt: "verificação" },
+        { jp: "もらえますか", pt: "poderia fazer para mim?" }
+      ]
+    },
+    {
+      jp: "やり方{かた} が まだ よく わかりません。",
+      pt: "Ainda não entendi bem o modo de fazer.",
+      newWords: [
+        { jp: "やり方{かた}", pt: "modo de fazer" },
+        { jp: "まだ", pt: "ainda" },
+        { jp: "わかりません", pt: "não entendo" }
+      ]
+    },
+    {
+      jp: "この 部品{ぶひん} は どこ に 置{お}きますか。",
+      pt: "Onde eu coloco esta peça?",
+      newWords: [
+        { jp: "部品{ぶひん}", pt: "peça" },
+        { jp: "置{お}きます", pt: "coloco" }
+      ]
+    },
+    {
+      jp: "少{すこ}し 待{ま}って もらえますか。",
+      pt: "Você poderia esperar um pouco?",
+      newWords: [
+        { jp: "少{すこ}し", pt: "um pouco" },
+        { jp: "待{ま}って", pt: "esperar" }
+      ]
     }
   ],
   chefe: [
@@ -5657,8 +5733,42 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "少{すこ}し", pt: "um pouco" },
         { jp: "ゆっくり", pt: "devagar" }
       ]
+    },
+    {
+      jp: "今日{きょう} は 残業{ざんぎょう} が ありますか。",
+      pt: "Hoje vai ter hora extra?",
+      newWords: [
+        { jp: "今日{きょう}", pt: "hoje" },
+        { jp: "残業{ざんぎょう}", pt: "hora extra" }
+      ]
+    },
+    {
+      jp: "この 作業{さぎょう} は 初{はじ}めて です。",
+      pt: "É a primeira vez que faço este trabalho.",
+      newWords: [
+        { jp: "作業{さぎょう}", pt: "trabalho / tarefa" },
+        { jp: "初{はじ}めて", pt: "primeira vez" }
+      ]
+    },
+    {
+      jp: "もう 一度{いちど} 説明{せつめい} して いただけますか。",
+      pt: "O senhor poderia explicar mais uma vez?",
+      newWords: [
+        { jp: "説明{せつめい}", pt: "explicação" },
+        { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
+      ]
+    },
+    {
+      jp: "終{お}わったら 報告{ほうこく} します。",
+      pt: "Quando terminar, eu aviso.",
+      newWords: [
+        { jp: "終{お}わったら", pt: "quando terminar" },
+        { jp: "報告{ほうこく}", pt: "relato / aviso" }
+      ]
     }
-  ],
+  ]
+};
+const SENSEI_EXTRA_BANK = {
   hospital: [
     {
       jp: "昨日{きのう} から 熱{ねつ} が あります。",
@@ -5682,6 +5792,37 @@ const SENSEI_SCENARIO_BANK = {
       newWords: [
         { jp: "薬{くすり}", pt: "remédio" },
         { jp: "飲{の}めば いい", pt: "devo tomar" }
+      ]
+    },
+    {
+      jp: "通訳{つうやく} は ありますか。",
+      pt: "Tem intérprete?",
+      newWords: [
+        { jp: "通訳{つうやく}", pt: "intérprete" }
+      ]
+    },
+    {
+      jp: "保険証{ほけんしょう} を 持{も}って います。",
+      pt: "Estou com o cartão do seguro de saúde.",
+      newWords: [
+        { jp: "保険証{ほけんしょう}", pt: "cartão do seguro de saúde" },
+        { jp: "持{も}って います", pt: "estou com / tenho comigo" }
+      ]
+    },
+    {
+      jp: "頭{あたま} が 痛{いた}くて、少{すこ}し 気持{きも}ち 悪{わる}いです。",
+      pt: "Estou com dor de cabeça e um pouco enjoado.",
+      newWords: [
+        { jp: "頭{あたま}", pt: "cabeça" },
+        { jp: "気持{きも}ち 悪{わる}い", pt: "enjoado / passando mal" }
+      ]
+    },
+    {
+      jp: "仕事{しごと} に 行{い}っても 大丈夫{だいじょうぶ} ですか。",
+      pt: "Tudo bem eu ir trabalhar?",
+      newWords: [
+        { jp: "仕事{しごと}", pt: "trabalho" },
+        { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
       ]
     }
   ],
@@ -5709,15 +5850,47 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "手続{てつづ}き", pt: "procedimento" },
         { jp: "今日中{きょうじゅう}", pt: "ainda hoje" }
       ]
+    },
+    {
+      jp: "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
+      pt: "Onde pego a senha de atendimento?",
+      newWords: [
+        { jp: "番号札{ばんごうふだ}", pt: "senha de atendimento" },
+        { jp: "取{と}りますか", pt: "pego?" }
+      ]
+    },
+    {
+      jp: "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
+      pt: "É necessária uma cópia do cartão de residência?",
+      newWords: [
+        { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
+        { jp: "必要{ひつよう}", pt: "necessário" }
+      ]
+    },
+    {
+      jp: "通訳{つうやく} を お願{ねが}いできますか。",
+      pt: "É possível pedir um intérprete?",
+      newWords: [
+        { jp: "通訳{つうやく}", pt: "intérprete" },
+        { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
+      ]
+    },
+    {
+      jp: "この 窓口{まどぐち} で 合{あ}って いますか。",
+      pt: "Este balcão está correto?",
+      newWords: [
+        { jp: "窓口{まどぐち}", pt: "balcão / guichê" },
+        { jp: "合{あ}って いますか", pt: "está correto?" }
+      ]
     }
   ],
   mercado: [
     {
-      jp: "この 商品{しょうひん} は いくら ですか。",
-      pt: "Quanto custa este produto?",
+      jp: "この 商品{しょうひん} は どこ に ありますか。",
+      pt: "Onde fica este produto?",
       newWords: [
         { jp: "商品{しょうひん}", pt: "produto" },
-        { jp: "いくら", pt: "quanto" }
+        { jp: "どこ", pt: "onde" }
       ]
     },
     {
@@ -5734,6 +5907,37 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "袋{ふくろ}", pt: "sacola" },
         { jp: "要{い}りません", pt: "não preciso" }
       ]
+    },
+    {
+      jp: "カード で 払{はら}えますか。",
+      pt: "Posso pagar com cartão?",
+      newWords: [
+        { jp: "カード", pt: "cartão" },
+        { jp: "払{はら}えますか", pt: "posso pagar?" }
+      ]
+    },
+    {
+      jp: "安{やす}い 方{ほう} は どちら ですか。",
+      pt: "Qual é a opção mais barata?",
+      newWords: [
+        { jp: "安{やす}い", pt: "barato" },
+        { jp: "方{ほう}", pt: "opção / lado" }
+      ]
+    },
+    {
+      jp: "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
+      pt: "Este produto está esgotado?",
+      newWords: [
+        { jp: "売{う}り切{き}れ", pt: "esgotado" }
+      ]
+    },
+    {
+      jp: "セルフレジ は 使{つか}えますか。",
+      pt: "Posso usar o caixa automático?",
+      newWords: [
+        { jp: "セルフレジ", pt: "caixa automático" },
+        { jp: "使{つか}えますか", pt: "posso usar?" }
+      ]
     }
   ],
   konbini: [
@@ -5749,15 +5953,45 @@ const SENSEI_SCENARIO_BANK = {
       jp: "レジ袋{ぶくろ} は 要{い}りません。",
       pt: "Não preciso de sacola.",
       newWords: [
-        { jp: "レジ袋{ぶくろ}", pt: "sacola" }
+        { jp: "レジ袋{ぶくろ}", pt: "sacola de caixa" },
+        { jp: "要{い}りません", pt: "não preciso" }
+      ]
+    },
+    {
+      jp: "お箸{はし} を 一膳{いちぜん} お願{ねが}いします。",
+      pt: "Um par de hashi, por favor.",
+      newWords: [
+        { jp: "お箸{はし}", pt: "hashi" },
+        { jp: "一膳{いちぜん}", pt: "um par de hashi" }
       ]
     },
     {
       jp: "この 支払{しはら}い は ここで できますか。",
       pt: "Posso fazer este pagamento aqui?",
       newWords: [
-        { jp: "支払{しはら}い", pt: "pagamento" },
-        { jp: "できますか", pt: "é possível?" }
+        { jp: "支払{しはら}い", pt: "pagamento" }
+      ]
+    },
+    {
+      jp: "レシート を ください。",
+      pt: "Por favor, me dê o recibo.",
+      newWords: [
+        { jp: "レシート", pt: "recibo" }
+      ]
+    },
+    {
+      jp: "スプーン は ありますか。",
+      pt: "Tem colher?",
+      newWords: [
+        { jp: "スプーン", pt: "colher" }
+      ]
+    },
+    {
+      jp: "現金{げんきん} で 払{はら}います。",
+      pt: "Vou pagar em dinheiro.",
+      newWords: [
+        { jp: "現金{げんきん}", pt: "dinheiro em espécie" },
+        { jp: "払{はら}います", pt: "vou pagar" }
       ]
     }
   ],
@@ -5781,6 +6015,38 @@ const SENSEI_SCENARIO_BANK = {
       pt: "Quando alguém pode vir aqui?",
       newWords: [
         { jp: "来{き}て もらえますか", pt: "pode vir?" }
+      ]
+    },
+    {
+      jp: "エアコン が 動{うご}きません。",
+      pt: "O ar-condicionado não funciona.",
+      newWords: [
+        { jp: "エアコン", pt: "ar-condicionado" },
+        { jp: "動{うご}きません", pt: "não funciona" }
+      ]
+    },
+    {
+      jp: "鍵{かぎ} を なくしました。",
+      pt: "Perdi a chave.",
+      newWords: [
+        { jp: "鍵{かぎ}", pt: "chave" },
+        { jp: "なくしました", pt: "perdi" }
+      ]
+    },
+    {
+      jp: "管理会社{かんりがいしゃ} に 連絡{れんらく} したいです。",
+      pt: "Quero entrar em contato com a administradora.",
+      newWords: [
+        { jp: "管理会社{かんりがいしゃ}", pt: "administradora" },
+        { jp: "連絡{れんらく}", pt: "contato" }
+      ]
+    },
+    {
+      jp: "写真{しゃしん} を 送{おく}れば いいですか。",
+      pt: "Está certo eu enviar uma foto?",
+      newWords: [
+        { jp: "写真{しゃしん}", pt: "foto" },
+        { jp: "送{おく}れば", pt: "se enviar" }
       ]
     }
   ],
@@ -5807,12 +6073,416 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "次{つぎ}", pt: "próximo" },
         { jp: "何時{なんじ}", pt: "que horas" }
       ]
+    },
+    {
+      jp: "ここ で 乗{の}り換{か}え ですか。",
+      pt: "É aqui que faço a baldeação?",
+      newWords: [
+        { jp: "乗{の}り換{か}え", pt: "baldeação / troca" }
+      ]
+    },
+    {
+      jp: "この バス は 駅{えき} に 行{い}きますか。",
+      pt: "Este ônibus vai para a estação?",
+      newWords: [
+        { jp: "バス", pt: "ônibus" },
+        { jp: "駅{えき}", pt: "estação" }
+      ]
+    },
+    {
+      jp: "切符{きっぷ} は どこ で 買{か}えますか。",
+      pt: "Onde posso comprar a passagem?",
+      newWords: [
+        { jp: "切符{きっぷ}", pt: "passagem" },
+        { jp: "買{か}えますか", pt: "posso comprar?" }
+      ]
+    },
+    {
+      jp: "降{お}りる 駅{えき} は ここ ですか。",
+      pt: "É aqui a estação onde devo descer?",
+      newWords: [
+        { jp: "降{お}りる", pt: "descer" },
+        { jp: "駅{えき}", pt: "estação" }
+      ]
     }
   ]
 };
 
+Object.assign(SENSEI_SCENARIO_BANK, SENSEI_EXTRA_BANK);
+
+const SENSEI_GRAMMAR_BANK = {
+  "ので": {
+    term: "ので",
+    title: "Uso de ので",
+    type: "gramática",
+    explanation: "ので liga uma causa a uma consequência. É natural, educado e muito usado para explicar motivo sem parecer seco. Em português, funciona como “porque”, “por causa de” ou “como”.",
+    goal: "Treine 1 frase por dia. Em 7 dias, você começa a sentir o uso de ので na prática.",
+    phrases: [
+      {
+        jp: "今日{きょう} は 体調{たいちょう} が 悪{わる}い ので、早{はや}く 帰{かえ}っても いいですか。",
+        pt: "Como hoje estou me sentindo mal, posso ir embora mais cedo?",
+        newWords: [
+          { jp: "体調{たいちょう}", pt: "condição física" },
+          { jp: "悪{わる}い", pt: "ruim" },
+          { jp: "早{はや}く", pt: "cedo" },
+          { jp: "帰{かえ}っても いいですか", pt: "posso ir embora?" }
+        ]
+      },
+      {
+        jp: "電車{でんしゃ} が 遅{おく}れて いる ので、少{すこ}し 遅{おく}れます。",
+        pt: "Como o trem está atrasado, vou me atrasar um pouco.",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "遅{おく}れて いる", pt: "está atrasado" },
+          { jp: "少{すこ}し", pt: "um pouco" }
+        ]
+      },
+      {
+        jp: "日本語{にほんご} が まだ 苦手{にがて} なので、ゆっくり 話{はな}して ください。",
+        pt: "Como ainda tenho dificuldade com japonês, por favor fale devagar.",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "苦手{にがて}", pt: "dificuldade / não ser bom em algo" },
+          { jp: "話{はな}して", pt: "falar" }
+        ]
+      },
+      {
+        jp: "明日{あした} は 仕事{しごと} なので、今日{きょう} は 早{はや}く 寝{ね}ます。",
+        pt: "Como amanhã tenho trabalho, hoje vou dormir cedo.",
+        newWords: [
+          { jp: "明日{あした}", pt: "amanhã" },
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "寝{ね}ます", pt: "vou dormir" }
+        ]
+      },
+      {
+        jp: "雨{あめ} が 降{ふ}って いる ので、自転車{じてんしゃ} では 行{い}きません。",
+        pt: "Como está chovendo, não vou de bicicleta.",
+        newWords: [
+          { jp: "雨{あめ}", pt: "chuva" },
+          { jp: "降{ふ}って いる", pt: "está caindo / está chovendo" },
+          { jp: "自転車{じてんしゃ}", pt: "bicicleta" }
+        ]
+      },
+      {
+        jp: "この 書類{しょるい} が わからない ので、教{おし}えて いただけますか。",
+        pt: "Como eu não entendo este documento, o senhor poderia me explicar?",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "教{おし}えて", pt: "ensinar / explicar" },
+          { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
+        ]
+      },
+      {
+        jp: "時間{じかん} が ない ので、あと で 連絡{れんらく} します。",
+        pt: "Como não tenho tempo, entro em contato depois.",
+        newWords: [
+          { jp: "時間{じかん}", pt: "tempo" },
+          { jp: "あと で", pt: "depois" },
+          { jp: "連絡{れんらく}", pt: "contato" }
+        ]
+      }
+    ]
+  },
+  "かどうか": {
+    term: "かどうか",
+    title: "Uso de かどうか",
+    type: "gramática",
+    explanation: "かどうか é usado para dizer “se...” ou “se é ou não”. Ajuda quando você quer confirmar uma informação sem fazer uma pergunta direta demais.",
+    goal: "Treine 1 frase por dia. Em 7 dias, você consegue perguntar e confirmar melhor no cotidiano.",
+    phrases: [
+      {
+        jp: "この 電車{でんしゃ} が 福井{ふくい} に 行{い}く かどうか 知{し}りたいです。",
+        pt: "Quero saber se este trem vai para Fukui.",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "知{し}りたい", pt: "quero saber" }
+        ]
+      },
+      {
+        jp: "今日{きょう} 残業{ざんぎょう} が ある かどうか 確認{かくにん} したいです。",
+        pt: "Quero confirmar se hoje vai ter hora extra.",
+        newWords: [
+          { jp: "残業{ざんぎょう}", pt: "hora extra" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      },
+      {
+        jp: "この 商品{しょうひん} が まだ ある かどうか 聞{き}いて みます。",
+        pt: "Vou tentar perguntar se este produto ainda tem.",
+        newWords: [
+          { jp: "商品{しょうひん}", pt: "produto" },
+          { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
+        ]
+      },
+      {
+        jp: "予約{よやく} が 必要{ひつよう} かどうか 教{おし}えて ください。",
+        pt: "Por favor, me diga se é necessário reservar.",
+        newWords: [
+          { jp: "予約{よやく}", pt: "reserva" },
+          { jp: "必要{ひつよう}", pt: "necessário" }
+        ]
+      },
+      {
+        jp: "この 書類{しょるい} で 大丈夫{だいじょうぶ} かどうか 見{み}て もらえますか。",
+        pt: "Você poderia ver se este documento está tudo bem?",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem" }
+        ]
+      },
+      {
+        jp: "明日{あした} 休{やす}める かどうか まだ わかりません。",
+        pt: "Ainda não sei se posso folgar amanhã.",
+        newWords: [
+          { jp: "明日{あした}", pt: "amanhã" },
+          { jp: "休{やす}める", pt: "posso folgar / descansar" }
+        ]
+      },
+      {
+        jp: "この カード が 使{つか}える かどうか 確認{かくにん} して ください。",
+        pt: "Por favor, confirme se este cartão pode ser usado.",
+        newWords: [
+          { jp: "使{つか}える", pt: "pode usar" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      }
+    ]
+  },
+  "ないといけない": {
+    term: "ないといけない",
+    title: "Uso de ないといけない",
+    type: "gramática",
+    explanation: "ないといけない expressa obrigação: “tenho que...”, “preciso...”. É muito comum em conversas do dia a dia.",
+    goal: "Treine 1 frase por dia para falar sobre obrigações sem travar.",
+    phrases: [
+      {
+        jp: "明日{あした} は 早{はや}く 起{お}きないといけません。",
+        pt: "Amanhã eu tenho que acordar cedo.",
+        newWords: [
+          { jp: "明日{あした}", pt: "amanhã" },
+          { jp: "早{はや}く", pt: "cedo" },
+          { jp: "起{お}きないといけません", pt: "tenho que acordar" }
+        ]
+      },
+      {
+        jp: "今日{きょう} 中{じゅう} に この 書類{しょるい} を 出{だ}さないといけません。",
+        pt: "Tenho que entregar este documento ainda hoje.",
+        newWords: [
+          { jp: "今日{きょう} 中{じゅう}", pt: "ainda hoje" },
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "出{だ}さないといけません", pt: "tenho que entregar" }
+        ]
+      },
+      {
+        jp: "仕事{しごと} の 前{まえ} に 薬{くすり} を 飲{の}まないといけません。",
+        pt: "Tenho que tomar o remédio antes do trabalho.",
+        newWords: [
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "薬{くすり}", pt: "remédio" },
+          { jp: "飲{の}まないといけません", pt: "tenho que tomar" }
+        ]
+      },
+      {
+        jp: "安全確認{あんぜんかくにん} を しないといけません。",
+        pt: "Tenho que fazer a verificação de segurança.",
+        newWords: [
+          { jp: "安全確認{あんぜんかくにん}", pt: "verificação de segurança" }
+        ]
+      },
+      {
+        jp: "この 住所{じゅうしょ} を 書{か}かないといけませんか。",
+        pt: "Tenho que escrever este endereço?",
+        newWords: [
+          { jp: "住所{じゅうしょ}", pt: "endereço" },
+          { jp: "書{か}かないといけませんか", pt: "tenho que escrever?" }
+        ]
+      },
+      {
+        jp: "もう 一度{いちど} 確認{かくにん} しないといけません。",
+        pt: "Tenho que confirmar mais uma vez.",
+        newWords: [
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      },
+      {
+        jp: "雨{あめ} なので、傘{かさ} を 持{も}って 行{い}かないといけません。",
+        pt: "Como está chovendo, tenho que levar guarda-chuva.",
+        newWords: [
+          { jp: "雨{あめ}", pt: "chuva" },
+          { jp: "傘{かさ}", pt: "guarda-chuva" },
+          { jp: "持{も}って 行{い}く", pt: "levar" }
+        ]
+      }
+    ]
+  },
+  "やってみる": {
+    term: "やってみる",
+    title: "Uso de やってみる",
+    type: "expressão",
+    explanation: "やってみる significa “tentar fazer”. É ótimo para mostrar disposição mesmo quando você ainda não domina algo.",
+    goal: "Treine 1 frase por dia para ganhar coragem de tentar falar e agir em japonês.",
+    phrases: [
+      {
+        jp: "自分{じぶん} で やってみます。",
+        pt: "Vou tentar fazer sozinho.",
+        newWords: [
+          { jp: "自分{じぶん}", pt: "eu mesmo / sozinho" }
+        ]
+      },
+      {
+        jp: "もう 一度{いちど} やってみても いいですか。",
+        pt: "Posso tentar fazer mais uma vez?",
+        newWords: [
+          { jp: "一度{いちど}", pt: "uma vez" }
+        ]
+      },
+      {
+        jp: "この 方法{ほうほう} で やってみます。",
+        pt: "Vou tentar fazer deste jeito.",
+        newWords: [
+          { jp: "方法{ほうほう}", pt: "método / forma" }
+        ]
+      },
+      {
+        jp: "少{すこ}し 難{むずか}しいですが、やってみます。",
+        pt: "É um pouco difícil, mas vou tentar.",
+        newWords: [
+          { jp: "難{むずか}しい", pt: "difícil" }
+        ]
+      },
+      {
+        jp: "まず、聞{き}いて みます。",
+        pt: "Primeiro, vou tentar perguntar.",
+        newWords: [
+          { jp: "まず", pt: "primeiro" },
+          { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
+        ]
+      },
+      {
+        jp: "駅員{えきいん} さん に 聞{き}いて みます。",
+        pt: "Vou tentar perguntar ao funcionário da estação.",
+        newWords: [
+          { jp: "駅員{えきいん}", pt: "funcionário da estação" }
+        ]
+      },
+      {
+        jp: "日本語{にほんご} で 説明{せつめい} して みます。",
+        pt: "Vou tentar explicar em japonês.",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "説明{せつめい}", pt: "explicação" }
+        ]
+      }
+    ]
+  },
+  "気づかせる": {
+    term: "気づかせる",
+    title: "Uso de 気づかせる",
+    type: "palavra-alvo",
+    explanation: "気づかせる significa “fazer perceber”, “fazer alguém notar”. É mais avançado, mas útil para falar de aprendizado, erro, aviso e reflexão.",
+    goal: "Treine 1 frase por dia para entender uma expressão mais profunda e natural.",
+    phrases: [
+      {
+        jp: "この 経験{けいけん} は 大切{たいせつ} な こと に 気{き}づかせて くれました。",
+        pt: "Esta experiência me fez perceber algo importante.",
+        newWords: [
+          { jp: "経験{けいけん}", pt: "experiência" },
+          { jp: "大切{たいせつ}", pt: "importante" }
+        ]
+      },
+      {
+        jp: "先生{せんせい} の 言葉{ことば} が 私{わたし} に 気{き}づかせて くれました。",
+        pt: "As palavras do professor me fizeram perceber.",
+        newWords: [
+          { jp: "先生{せんせい}", pt: "professor" },
+          { jp: "言葉{ことば}", pt: "palavras" }
+        ]
+      },
+      {
+        jp: "失敗{しっぱい} が 自分{じぶん} の 弱点{じゃくてん} に 気{き}づかせて くれました。",
+        pt: "O erro me fez perceber meu ponto fraco.",
+        newWords: [
+          { jp: "失敗{しっぱい}", pt: "falha / erro" },
+          { jp: "弱点{じゃくてん}", pt: "ponto fraco" }
+        ]
+      },
+      {
+        jp: "この アプリ は 毎日{まいにち} の 練習{れんしゅう} の 大切{たいせつ} さ に 気{き}づかせて くれます。",
+        pt: "Este app me faz perceber a importância da prática diária.",
+        newWords: [
+          { jp: "毎日{まいにち}", pt: "todos os dias" },
+          { jp: "練習{れんしゅう}", pt: "prática" }
+        ]
+      },
+      {
+        jp: "友達{ともだち} の 一言{ひとこと} が 私{わたし} に 気{き}づかせて くれました。",
+        pt: "Uma palavra de um amigo me fez perceber.",
+        newWords: [
+          { jp: "友達{ともだち}", pt: "amigo" },
+          { jp: "一言{ひとこと}", pt: "uma palavra / comentário breve" }
+        ]
+      },
+      {
+        jp: "仕事{しごと} の ミス が 確認{かくにん} の 大切{たいせつ} さ に 気{き}づかせました。",
+        pt: "O erro no trabalho me fez perceber a importância da confirmação.",
+        newWords: [
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      },
+      {
+        jp: "日本{にほん} での 生活{せいかつ} は 言葉{ことば} の 大切{たいせつ} さ に 気{き}づかせて くれました。",
+        pt: "A vida no Japão me fez perceber a importância das palavras.",
+        newWords: [
+          { jp: "日本{にほん}", pt: "Japão" },
+          { jp: "生活{せいかつ}", pt: "vida / cotidiano" },
+          { jp: "言葉{ことば}", pt: "palavras / idioma" }
+        ]
+      }
+    ]
+  }
+};
+
+function normalizeSenseiText(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[「」『』"“”'’]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function detectSenseiTerm(text) {
+  const raw = String(text || "");
+  const normalized = normalizeSenseiText(raw);
+
+  const knownTerms = Object.keys(SENSEI_GRAMMAR_BANK);
+  for (const term of knownTerms) {
+    if (raw.includes(term) || normalized.includes(term.toLowerCase())) return term;
+  }
+
+  const jpMatch = raw.match(/[\u3040-\u30FF\u4E00-\u9FFF]{2,12}/);
+  if (jpMatch && /(uso|usar|frases com|frases que use|explique|ensine|estrutura|partícula|particula|palavra|expressão|expressao|gramática|gramatica)/i.test(raw)) {
+    return jpMatch[0];
+  }
+
+  return "";
+}
+
+function detectSenseiRequestType(text) {
+  const raw = String(text || "");
+  const t = normalizeSenseiText(raw);
+  const hasJP = /[\u3040-\u30FF\u4E00-\u9FFF]/.test(raw);
+  const grammarWords = /(uso|usar|frases com|frases que use|explique|ensine|estrutura|partícula|particula|palavra|expressão|expressao|gramática|gramatica|termo japon[eê]s|como usar)/i;
+
+  if (hasJP && grammarWords.test(raw)) return "grammar";
+  if (grammarWords.test(raw)) return "grammar";
+  return "scenario";
+}
+
 function detectSenseiScenario(text) {
-  const t = String(text || "").toLowerCase();
+  const t = normalizeSenseiText(text);
 
   if (/(fábrica|fabrica|linha|máquina|maquina|chefe|supervisor|rh|turno|produção|producao)/.test(t)) {
     if (/(chefe|supervisor)/.test(t)) return "chefe";
@@ -5829,7 +6499,7 @@ function detectSenseiScenario(text) {
   return "fabrica";
 }
 
-function buildSenseiTopicName(scenario, customTheme) {
+function buildSenseiTopicName(scenario, customTheme, requestType = "scenario", term = "") {
   const map = {
     fabrica: "Sensei IA • Fábrica",
     chefe: "Sensei IA • Chefe",
@@ -5842,15 +6512,20 @@ function buildSenseiTopicName(scenario, customTheme) {
   };
 
   const clean = normalizeName(customTheme);
+
+  if (requestType === "grammar" && term) return `Sensei IA • ${term}`;
   if (clean) return `Sensei IA • ${clean}`;
 
   return map[scenario] || "Sensei IA • Personalizado";
 }
 
-function buildSenseiCoachLine(goal, level, tone) {
+function buildSenseiCoachLine(goal, level, tone, pack = null) {
   const parts = [];
 
-  if (goal) parts.push(`Foco: ${goal}.`);
+  if (pack?.explanation) parts.push(pack.explanation);
+  if (pack?.goal) parts.push(pack.goal);
+
+  if (goal) parts.push(`Pedido: ${goal}.`);
   if (level) parts.push(`Nível: ${level}.`);
   if (tone) parts.push(`Tom: ${tone}.`);
 
@@ -5859,8 +6534,8 @@ function buildSenseiCoachLine(goal, level, tone) {
   return parts.join(" ");
 }
 
-function cloneSenseiPhrase(base, scenario, customTheme) {
-  const topicName = buildSenseiTopicName(scenario, customTheme);
+function cloneSenseiPhrase(base, scenario, customTheme, requestType = "scenario", term = "") {
+  const topicName = buildSenseiTopicName(scenario, customTheme, requestType, term);
 
   return {
     id: uid("sensei"),
@@ -5873,19 +6548,119 @@ function cloneSenseiPhrase(base, scenario, customTheme) {
   };
 }
 
+function buildFallbackGrammarPack(term, request, level, tone) {
+  const safeTerm = String(term || "").trim() || "expressão";
+  const title = `Uso de ${safeTerm}`;
+
+  return {
+    term: safeTerm,
+    title,
+    type: "palavra-alvo",
+    explanation: `${safeTerm} foi detectado como termo de estudo. Como ainda não há um banco específico para ele, o Sensei IA preparou frases-modelo úteis para treino prático.`,
+    goal: "Treine 1 frase por dia e ajuste o material depois com suas próprias frases.",
+    phrases: [
+      {
+        jp: "この 表現{ひょうげん} の 使{つか}い方{かた} を 教{おし}えて ください。",
+        pt: "Por favor, me ensine como usar esta expressão.",
+        newWords: [
+          { jp: "表現{ひょうげん}", pt: "expressão" },
+          { jp: "使{つか}い方{かた}", pt: "modo de usar" }
+        ]
+      },
+      {
+        jp: "この 言葉{ことば} は どういう 意味{いみ} ですか。",
+        pt: "O que esta palavra significa?",
+        newWords: [
+          { jp: "言葉{ことば}", pt: "palavra" },
+          { jp: "意味{いみ}", pt: "significado" }
+        ]
+      },
+      {
+        jp: "例文{れいぶん} を 作{つく}って もらえますか。",
+        pt: "Você poderia criar uma frase de exemplo?",
+        newWords: [
+          { jp: "例文{れいぶん}", pt: "frase de exemplo" },
+          { jp: "作{つく}って", pt: "criar / fazer" }
+        ]
+      },
+      {
+        jp: "日常会話{にちじょうかいわ} で よく 使{つか}いますか。",
+        pt: "Isso é muito usado na conversa do dia a dia?",
+        newWords: [
+          { jp: "日常会話{にちじょうかいわ}", pt: "conversa do dia a dia" },
+          { jp: "使{つか}いますか", pt: "usa?" }
+        ]
+      },
+      {
+        jp: "もっと 自然{しぜん} な 言{い}い方{かた} は ありますか。",
+        pt: "Existe uma forma mais natural de dizer?",
+        newWords: [
+          { jp: "自然{しぜん}", pt: "natural" },
+          { jp: "言{い}い方{かた}", pt: "forma de dizer" }
+        ]
+      },
+      {
+        jp: "仕事{しごと} で 使{つか}える 例{れい} を 教{おし}えて ください。",
+        pt: "Por favor, me ensine um exemplo que eu possa usar no trabalho.",
+        newWords: [
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "例{れい}", pt: "exemplo" }
+        ]
+      },
+      {
+        jp: "この 表現{ひょうげん} を 使{つか}って 練習{れんしゅう} します。",
+        pt: "Vou praticar usando esta expressão.",
+        newWords: [
+          { jp: "表現{ひょうげん}", pt: "expressão" },
+          { jp: "練習{れんしゅう}", pt: "prática" }
+        ]
+      }
+    ]
+  };
+}
+
 function generateSenseiMaterial(payload) {
   const request = String(payload?.request || "").trim();
   const level = String(payload?.level || "").trim();
   const tone = String(payload?.tone || "").trim();
   const customTheme = String(payload?.theme || "").trim();
 
+  const requestType = detectSenseiRequestType(`${request} ${customTheme}`);
+  const term = detectSenseiTerm(`${request} ${customTheme}`);
+
+  if (requestType === "grammar") {
+    const grammarPack = SENSEI_GRAMMAR_BANK[term] || buildFallbackGrammarPack(term, request, level, tone);
+    const selected = grammarPack.phrases.slice(0, 7).map((base) =>
+      cloneSenseiPhrase(base, "grammar", customTheme, "grammar", grammarPack.term)
+    );
+
+    const coachLine = buildSenseiCoachLine(request, level, tone, grammarPack);
+
+    return {
+      scenario: "grammar",
+      requestType: "grammar",
+      term: grammarPack.term,
+      title: grammarPack.title,
+      explanation: grammarPack.explanation,
+      goal: grammarPack.goal,
+      topicName: buildSenseiTopicName("grammar", customTheme, "grammar", grammarPack.term),
+      coachLine,
+      phrases: selected
+    };
+  }
+
   const scenario = detectSenseiScenario(`${request} ${customTheme}`);
   const bank = SENSEI_SCENARIO_BANK[scenario] || SENSEI_SCENARIO_BANK.fabrica;
-  const selected = bank.slice(0, 3).map((base) => cloneSenseiPhrase(base, scenario, customTheme));
+  const selected = bank.slice(0, 7).map((base) => cloneSenseiPhrase(base, scenario, customTheme));
   const coachLine = buildSenseiCoachLine(request, level, tone);
 
   return {
     scenario,
+    requestType: "scenario",
+    term: "",
+    title: buildSenseiTopicName(scenario, customTheme),
+    explanation: "Material criado a partir de uma situação real. Treine as frases que mais combinam com seu dia.",
+    goal: "Escolha 1 frase hoje. Se tiver tempo, salve o pack e revise no 105x.",
     topicName: buildSenseiTopicName(scenario, customTheme),
     coachLine,
     phrases: selected
@@ -5935,6 +6710,10 @@ function saveSenseiPackToApp(pack) {
     at: now(),
     topicName: pack.topicName,
     coachLine: pack.coachLine,
+    explanation: pack.explanation || "",
+    goal: pack.goal || "",
+    requestType: pack.requestType || "scenario",
+    term: pack.term || "",
     phrases: pack.phrases
   });
 
@@ -5968,6 +6747,8 @@ function renderSenseiHistory() {
         <div class="badge">${escapeHTML(item.topicName)}</div>
         <div class="small">${fmtDateShort(item.at)}</div>
       </div>
+      ${item.explanation ? `<div class="small">${escapeHTML(item.explanation)}</div>` : ""}
+      ${item.goal ? `<div class="small"><b>meta:</b> ${escapeHTML(item.goal)}</div>` : ""}
       <div class="small">${escapeHTML(item.coachLine)}</div>
       <div class="small"><b>${item.phrases.length}</b> frases prontas para salvar e revisar no app</div>
     </div>
@@ -5987,7 +6768,8 @@ function renderSensei() {
           <div class="lockCard">
             <h3 class="lockTitle">Quando o conteúdo pronto não basta</h3>
             <p class="lockText">
-              O Sensei IA cria frases para a sua situação real, como chefe, hospital, prefeitura, moradia, mercado ou transporte.
+              O Sensei IA cria frases para situações reais e também ajuda com gramática prática,
+              partículas, palavras e expressões japonesas.
             </p>
           </div>
 
@@ -5996,6 +6778,18 @@ function renderSensei() {
               <div class="valueIcon">🧩</div>
               <h3 class="valueTitle">Seu caso real</h3>
               <p class="valueText">Explique a situação e receba frases úteis para treinar.</p>
+            </div>
+
+            <div class="valueCard">
+              <div class="valueIcon">文</div>
+              <h3 class="valueTitle">Gramática prática</h3>
+              <p class="valueText">Peça exemplos com ので, かどうか, ないといけない e outras estruturas.</p>
+            </div>
+
+            <div class="valueCard">
+              <div class="valueIcon">7</div>
+              <h3 class="valueTitle">7 exemplos</h3>
+              <p class="valueText">Estude uma frase por dia durante a semana.</p>
             </div>
 
             <div class="valueCard">
@@ -6024,10 +6818,19 @@ function renderSensei() {
         </div>
 
         <div class="lockCard">
-          <h3 class="lockTitle">Peça frases para uma situação real</h3>
+          <h3 class="lockTitle">Seu professor prático de japonês</h3>
           <p class="lockText">
-            Explique o que você precisa falar no Japão. O app cria um pequeno pack para você treinar e revisar.
+            Peça frases para uma situação real ou peça explicação de uma estrutura, partícula,
+            palavra ou expressão japonesa. O Sensei cria material treinável para o 105x.
           </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">exemplos de pedido</div>
+          <div class="small">“Preciso de frases que expliquem bem o uso de ので.”</div>
+          <div class="small">“Me ensine かどうか com frases comuns.”</div>
+          <div class="small">“Preciso falar com meu chefe que não entendi a tarefa.”</div>
+          <div class="small">“Crie frases para hospital em tom educado.”</div>
         </div>
 
         <div class="sheet stack" style="text-align:left">
@@ -6035,8 +6838,8 @@ function renderSensei() {
           <textarea
             id="senseiRequest"
             class="btn"
-            style="height:140px;width:100%;text-align:left;padding:12px;border-radius:18px;"
-            placeholder="ex: preciso de frases para falar com meu chefe quando eu não entender a tarefa"
+            style="height:150px;width:100%;text-align:left;padding:12px;border-radius:18px;"
+            placeholder="ex: preciso de frases que expliquem bem o uso de ので. Quero frases comuns no dia a dia, tom educado e nível intermediário."
           ></textarea>
 
           <div class="grid2">
@@ -6060,17 +6863,17 @@ function renderSensei() {
           </div>
 
           <div>
-            <div class="small">nome do tópico</div>
+            <div class="small">nome do tópico, opcional</div>
             <input
               id="senseiTheme"
               class="btn"
               style="height:56px;width:100%;text-align:left"
-              placeholder="ex: chefe da fábrica, consulta médica, mercado"
+              placeholder="ex: uso de ので, chefe da fábrica, consulta médica"
             />
           </div>
 
           <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="generateSensei">gerar frases</button>
+            <button class="btn btn--ok btn--full" data-action="generateSensei">gerar material</button>
             <button class="btn btn--full" data-nav="#/manage">gerenciar frases</button>
           </div>
         </div>
@@ -6093,12 +6896,17 @@ function renderSenseiOutput(pack) {
   const box = $("#senseiOutput");
   if (!box) return;
 
+  const count = Array.isArray(pack.phrases) ? pack.phrases.length : 0;
+
   box.innerHTML = `
     <div class="sheet stack" style="text-align:left">
       <div class="row row--between">
         <div class="badge">${escapeHTML(pack.topicName)}</div>
-        <div class="badge">3 frases</div>
+        <div class="badge">${count} frases</div>
       </div>
+
+      ${pack.explanation ? `<div class="small"><b>explicação:</b> ${escapeHTML(pack.explanation)}</div>` : ""}
+      ${pack.goal ? `<div class="small"><b>meta leve:</b> ${escapeHTML(pack.goal)}</div>` : ""}
       <div class="small">${escapeHTML(pack.coachLine)}</div>
     </div>
 
@@ -7446,7 +8254,12 @@ document.addEventListener("click", (e) => {
 
     const pack = generateSenseiMaterial({ request, level, tone, theme });
     renderSenseiOutput(pack);
-    toast("frases geradas");
+
+    const msg = pack.requestType === "grammar"
+      ? `${pack.phrases.length} exemplos gerados`
+      : "material gerado";
+
+    toast(msg);
     beep("ding");
 
     return;
@@ -8140,4 +8953,4996 @@ window.addEventListener("hashchange", () => {
 
   render();
   startStudyTimerIfOn105x();
+})();
+
+/* =========================================================
+   NIHONGO321 v8.2.0
+   PATCH BLOCO 5.8 — SENSEI IA EXPERT ENGINE 2.0
+   - melhora respostas independentes do Sensei IA local
+   - amplia detecção de pedidos
+   - cria fallback mais inteligente
+   - sempre tenta gerar material completo com 7 frases
+   - mantém HTML/CSS/JS puro
+   - não altera TOPIC_SEEDS
+   - não altera checkout
+   - não altera estrutura do localStorage
+   ========================================================= */
+
+(function patchSenseiExpertEngine58() {
+  "use strict";
+
+  const PATCH_ID = "nihongo321_patch_sensei_expert_engine_58";
+
+  if (window[PATCH_ID]) {
+    return;
+  }
+
+  window[PATCH_ID] = true;
+
+  /* ---------- helpers seguros ---------- */
+  function sxNow() {
+    try {
+      if (typeof now === "function") return now();
+    } catch {}
+
+    return Date.now();
+  }
+
+  function sxUid(prefix = "sx") {
+    try {
+      if (typeof uid === "function") return uid(prefix);
+    } catch {}
+
+    return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+  }
+
+  function sxEscape(value) {
+    try {
+      if (typeof escapeHTML === "function") return escapeHTML(value);
+    } catch {}
+
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function sxNormalize(text) {
+    return String(text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[「」『』"“”'’`´]/g, " ")
+      .replace(/[、。,.!?！？;；:：()\[\]{}]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function sxRaw(text) {
+    return String(text || "").trim();
+  }
+
+  function sxStripFurigana(value) {
+    try {
+      if (typeof jpStripFurigana === "function") return jpStripFurigana(value);
+    } catch {}
+
+    return String(value || "").replace(/([^{}\s]+)\{([^{}]+)\}/g, "$1");
+  }
+
+  function sxPick(list, index = 0) {
+    if (!Array.isArray(list) || !list.length) return null;
+    return list[Math.abs(index) % list.length];
+  }
+
+  function sxHasJapanese(text) {
+    return /[\u3040-\u30FF\u4E00-\u9FFF]/.test(String(text || ""));
+  }
+
+  function sxExtractJapaneseTerms(text) {
+    const raw = String(text || "");
+    const matches = raw.match(/[\u3040-\u30FF\u4E00-\u9FFFー々〆〤]{1,18}/g) || [];
+
+    return Array.from(new Set(
+      matches
+        .map(x => x.trim())
+        .filter(x => x.length >= 1)
+        .filter(x => !/^[。、！？ー]+$/.test(x))
+    ));
+  }
+
+  function sxLevelLabel(level) {
+    const n = sxNormalize(level);
+
+    if (/intermediario|medio|n4|n3/.test(n)) return "intermediário";
+    if (/avancado|n2|n1/.test(n)) return "avançado";
+    if (/basico|iniciante|n5/.test(n)) return "iniciante";
+
+    return level || "iniciante";
+  }
+
+  function sxToneLabel(tone) {
+    const n = sxNormalize(tone);
+
+    if (/educado|formal|polido|respeitoso/.test(n)) return "educado";
+    if (/simples|facil|facil/.test(n)) return "muito simples";
+    if (/trabalho|chefe|empresa|fabrica/.test(n)) return "trabalho";
+    if (/natural|casual/.test(n)) return "natural";
+
+    return tone || "educado";
+  }
+
+  function sxWords(list) {
+    return Array.isArray(list) ? list : [];
+  }
+
+  function sxPhrase(jp, pt, newWords = []) {
+    return {
+      id: sxUid("sensei"),
+      jp,
+      pt,
+      newWords: sxWords(newWords),
+      createdAt: sxNow(),
+      updatedAt: sxNow()
+    };
+  }
+
+  function sxEnsureSeven(phrases, fallbackFactory) {
+    const clean = Array.isArray(phrases) ? phrases.filter(p => p && p.jp && p.pt) : [];
+    let guard = 0;
+
+    while (clean.length < 7 && guard < 20) {
+      const generated = fallbackFactory(clean.length, guard);
+      if (generated && generated.jp && generated.pt) clean.push(generated);
+      guard++;
+    }
+
+    return clean.slice(0, 7);
+  }
+
+  function sxFormatTopicName(label) {
+    const safe = String(label || "").trim();
+    if (!safe) return "Sensei IA • Material prático";
+    if (/^sensei ia/i.test(safe)) return safe;
+    return `Sensei IA • ${safe}`;
+  }
+
+  function sxGetOriginalGenerator() {
+    try {
+      if (typeof generateSenseiMaterial === "function") return generateSenseiMaterial;
+    } catch {}
+
+    return null;
+  }
+
+  function sxGetOriginalRenderOutput() {
+    try {
+      if (typeof renderSenseiOutput === "function") return renderSenseiOutput;
+    } catch {}
+
+    return null;
+  }
+
+  const sxOriginalGenerateSenseiMaterial = sxGetOriginalGenerator();
+  const sxOriginalRenderSenseiOutput = sxGetOriginalRenderOutput();
+
+  /* ---------- dicionário de intenções ---------- */
+  const SENSEI_58_INTENT_PATTERNS = {
+    grammar: [
+      "gramatica",
+      "gramática",
+      "particula",
+      "partícula",
+      "estrutura",
+      "uso de",
+      "como usar",
+      "me ensine",
+      "ensine",
+      "explique",
+      "explica",
+      "frases com",
+      "frase com",
+      "exemplos com",
+      "exemplo com",
+      "termo",
+      "expressao",
+      "expressão",
+      "palavra",
+      "significa",
+      "significado",
+      "diferença",
+      "diferenca",
+      "quando usar"
+    ],
+
+    scenario: [
+      "preciso falar",
+      "quero falar",
+      "como digo",
+      "como eu digo",
+      "situacao",
+      "situação",
+      "caso",
+      "problema",
+      "chefe",
+      "lider",
+      "líder",
+      "fabrica",
+      "fábrica",
+      "hospital",
+      "prefeitura",
+      "mercado",
+      "konbini",
+      "correio",
+      "bicicleta",
+      "aluguel",
+      "apartamento",
+      "moradia",
+      "trem",
+      "onibus",
+      "ônibus",
+      "estacao",
+      "estação",
+      "trabalho",
+      "documento",
+      "loja",
+      "banco",
+      "dentista",
+      "escola",
+      "telefone",
+      "internet"
+    ],
+
+    requestForMany: [
+      "7 frases",
+      "sete frases",
+      "12 frases",
+      "doze frases",
+      "13 frases",
+      "treze frases",
+      "variações",
+      "variacoes",
+      "exemplos",
+      "lista"
+    ]
+  };
+
+  function sxIncludesAny(normalizedText, patterns) {
+    return patterns.some(p => normalizedText.includes(sxNormalize(p)));
+  }
+
+  function sxDetectIntent(request, theme = "") {
+    const raw = `${request || ""} ${theme || ""}`;
+    const n = sxNormalize(raw);
+    const hasJP = sxHasJapanese(raw);
+
+    const grammarScore =
+      (sxIncludesAny(n, SENSEI_58_INTENT_PATTERNS.grammar) ? 3 : 0) +
+      (hasJP ? 2 : 0);
+
+    const scenarioScore =
+      (sxIncludesAny(n, SENSEI_58_INTENT_PATTERNS.scenario) ? 3 : 0) +
+      (/preciso|quero|poderia|conseguir|perguntar|pedir|avisar/.test(n) ? 1 : 0);
+
+    if (grammarScore >= scenarioScore && grammarScore >= 2) return "grammar";
+    if (scenarioScore >= 2) return "scenario";
+
+    if (hasJP) return "grammar";
+
+    return "scenario";
+  }
+    /* ---------- banco ampliado de gramática / estruturas ---------- */
+  const SENSEI_58_GRAMMAR_BANK = {
+    "ので": {
+      label: "Uso de ので",
+      kind: "gramática",
+      explanation:
+        "ので liga uma causa a uma consequência. Soa natural, educado e é muito usado quando você quer explicar o motivo de algo sem parecer seco.",
+      usage:
+        "Use quando quiser dizer “porque”, “por causa de” ou “como”. É ótimo para trabalho, prefeitura, hospital e atrasos.",
+      phrases: [
+        sxPhrase(
+          "今日{きょう} は 体調{たいちょう} が 悪{わる}い ので、早{はや}く 帰{かえ}っても いいですか。",
+          "Como hoje estou me sentindo mal, posso ir embora mais cedo?",
+          [
+            { jp: "体調{たいちょう}", pt: "condição física" },
+            { jp: "悪{わる}い", pt: "ruim" },
+            { jp: "早{はや}く", pt: "cedo" }
+          ]
+        ),
+        sxPhrase(
+          "電車{でんしゃ} が 遅{おく}れて いる ので、少{すこ}し 遅{おく}れます。",
+          "Como o trem está atrasado, vou me atrasar um pouco.",
+          [
+            { jp: "電車{でんしゃ}", pt: "trem" },
+            { jp: "遅{おく}れて いる", pt: "está atrasado" },
+            { jp: "少{すこ}し", pt: "um pouco" }
+          ]
+        ),
+        sxPhrase(
+          "日本語{にほんご} が まだ 苦手{にがて} なので、ゆっくり 話{はな}して ください。",
+          "Como ainda tenho dificuldade com japonês, por favor fale devagar.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "苦手{にがて}", pt: "dificuldade / não ser bom em algo" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        ),
+        sxPhrase(
+          "明日{あした} は 仕事{しごと} なので、今日{きょう} は 早{はや}く 寝{ね}ます。",
+          "Como amanhã tenho trabalho, hoje vou dormir cedo.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "寝{ね}ます", pt: "vou dormir" }
+          ]
+        ),
+        sxPhrase(
+          "雨{あめ} が 降{ふ}って いる ので、自転車{じてんしゃ} では 行{い}きません。",
+          "Como está chovendo, não vou de bicicleta.",
+          [
+            { jp: "雨{あめ}", pt: "chuva" },
+            { jp: "降{ふ}って いる", pt: "está chovendo" },
+            { jp: "自転車{じてんしゃ}", pt: "bicicleta" }
+          ]
+        ),
+        sxPhrase(
+          "この 書類{しょるい} が わからない ので、教{おし}えて いただけますか。",
+          "Como eu não entendo este documento, o senhor poderia me explicar?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" },
+            { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
+          ]
+        ),
+        sxPhrase(
+          "時間{じかん} が ない ので、あと で 連絡{れんらく} します。",
+          "Como não tenho tempo, entro em contato depois.",
+          [
+            { jp: "時間{じかん}", pt: "tempo" },
+            { jp: "あと で", pt: "depois" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        )
+      ]
+    },
+
+    "から": {
+      label: "Uso de から",
+      kind: "gramática",
+      explanation:
+        "から também indica motivo, mas costuma soar mais direto que ので. É muito comum em conversa do dia a dia.",
+      usage:
+        "Use para dizer “porque”. Em situações muito formais, ので pode soar mais suave.",
+      phrases: [
+        sxPhrase(
+          "今日{きょう} は 忙{いそが}しい から、あと で 連絡{れんらく} します。",
+          "Como hoje estou ocupado, entro em contato depois.",
+          [
+            { jp: "忙{いそが}しい", pt: "ocupado" },
+            { jp: "あと で", pt: "depois" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        sxPhrase(
+          "危{あぶ}ない から、気{き}をつけて ください。",
+          "Como é perigoso, por favor tome cuidado.",
+          [
+            { jp: "危{あぶ}ない", pt: "perigoso" },
+            { jp: "気{き}をつけて", pt: "tome cuidado" }
+          ]
+        ),
+        sxPhrase(
+          "わからない から、もう 一度{いちど} 教{おし}えて ください。",
+          "Como eu não entendi, por favor me explique mais uma vez.",
+          [
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" }
+          ]
+        ),
+        sxPhrase(
+          "雨{あめ} だから、歩{ある}いて 行{い}きます。",
+          "Como está chovendo, vou a pé.",
+          [
+            { jp: "雨{あめ}", pt: "chuva" },
+            { jp: "歩{ある}いて", pt: "andando / a pé" }
+          ]
+        ),
+        sxPhrase(
+          "明日{あした} は 早{はや}い から、今日{きょう} は 早{はや}く 寝{ね}ます。",
+          "Como amanhã é cedo, hoje vou dormir cedo.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "早{はや}い", pt: "cedo" },
+            { jp: "寝{ね}ます", pt: "vou dormir" }
+          ]
+        ),
+        sxPhrase(
+          "安{やす}い から、これ を 買{か}います。",
+          "Como é barato, vou comprar isto.",
+          [
+            { jp: "安{やす}い", pt: "barato" },
+            { jp: "買{か}います", pt: "vou comprar" }
+          ]
+        ),
+        sxPhrase(
+          "時間{じかん} が ある から、少{すこ}し 練習{れんしゅう} します。",
+          "Como tenho tempo, vou praticar um pouco.",
+          [
+            { jp: "時間{じかん}", pt: "tempo" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    },
+
+    "てもいい": {
+      label: "Uso de てもいい",
+      kind: "gramática",
+      explanation:
+        "てもいい é usado para pedir ou dar permissão. Em português, fica como “posso...?” ou “tudo bem se...?”.",
+      usage:
+        "Muito útil em trabalho, lojas, prefeitura e situações em que você quer agir com educação.",
+      phrases: [
+        sxPhrase(
+          "ここ に 座{すわ}っても いいですか。",
+          "Posso sentar aqui?",
+          [
+            { jp: "ここ", pt: "aqui" },
+            { jp: "座{すわ}って", pt: "sentar" }
+          ]
+        ),
+        sxPhrase(
+          "写真{しゃしん} を 撮{と}っても いいですか。",
+          "Posso tirar foto?",
+          [
+            { jp: "写真{しゃしん}", pt: "foto" },
+            { jp: "撮{と}って", pt: "tirar foto" }
+          ]
+        ),
+        sxPhrase(
+          "この 書類{しょるい} を ここ に 置{お}いても いいですか。",
+          "Posso deixar este documento aqui?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "置{お}いて", pt: "colocar / deixar" }
+          ]
+        ),
+        sxPhrase(
+          "少{すこ}し 休{やす}んでも いいですか。",
+          "Posso descansar um pouco?",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "休{やす}んで", pt: "descansar" }
+          ]
+        ),
+        sxPhrase(
+          "あと で 電話{でんわ} しても いいですか。",
+          "Posso ligar depois?",
+          [
+            { jp: "あと で", pt: "depois" },
+            { jp: "電話{でんわ}", pt: "telefone / ligação" }
+          ]
+        ),
+        sxPhrase(
+          "この ペン を 使{つか}っても いいですか。",
+          "Posso usar esta caneta?",
+          [
+            { jp: "ペン", pt: "caneta" },
+            { jp: "使{つか}って", pt: "usar" }
+          ]
+        ),
+        sxPhrase(
+          "今日{きょう} は 早{はや}く 帰{かえ}っても いいですか。",
+          "Posso ir embora cedo hoje?",
+          [
+            { jp: "今日{きょう}", pt: "hoje" },
+            { jp: "早{はや}く", pt: "cedo" },
+            { jp: "帰{かえ}って", pt: "ir embora / voltar" }
+          ]
+        )
+      ]
+    },
+
+    "てもらえますか": {
+      label: "Uso de てもらえますか",
+      kind: "gramática",
+      explanation:
+        "てもらえますか é uma forma educada de pedir para alguém fazer algo por você. Em português: “você poderia... para mim?”.",
+      usage:
+        "Use quando precisar pedir ajuda sem parecer mandão. Funciona muito bem no Japão real.",
+      phrases: [
+        sxPhrase(
+          "もう 一度{いちど} 説明{せつめい} して もらえますか。",
+          "Você poderia explicar mais uma vez para mim?",
+          [
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "説明{せつめい}", pt: "explicação" }
+          ]
+        ),
+        sxPhrase(
+          "この 書類{しょるい} を 見{み}て もらえますか。",
+          "Você poderia olhar este documento para mim?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "見{み}て", pt: "ver / olhar" }
+          ]
+        ),
+        sxPhrase(
+          "ここ に 書{か}いて もらえますか。",
+          "Você poderia escrever aqui para mim?",
+          [
+            { jp: "ここ", pt: "aqui" },
+            { jp: "書{か}いて", pt: "escrever" }
+          ]
+        ),
+        sxPhrase(
+          "少{すこ}し 手伝{てつだ}って もらえますか。",
+          "Você poderia me ajudar um pouco?",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "手伝{てつだ}って", pt: "ajudar" }
+          ]
+        ),
+        sxPhrase(
+          "写真{しゃしん} を 送{おく}って もらえますか。",
+          "Você poderia me enviar a foto?",
+          [
+            { jp: "写真{しゃしん}", pt: "foto" },
+            { jp: "送{おく}って", pt: "enviar" }
+          ]
+        ),
+        sxPhrase(
+          "確認{かくにん} して もらえますか。",
+          "Você poderia verificar para mim?",
+          [
+            { jp: "確認{かくにん}", pt: "verificação" }
+          ]
+        ),
+        sxPhrase(
+          "ゆっくり 話{はな}して もらえますか。",
+          "Você poderia falar devagar para mim?",
+          [
+            { jp: "ゆっくり", pt: "devagar" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        )
+      ]
+    },
+
+    "たい": {
+      label: "Uso de たい",
+      kind: "gramática",
+      explanation:
+        "たい expressa desejo: “quero fazer...”. É básico e muito útil para pedidos em lojas, prefeitura, hospital e rotina.",
+      usage:
+        "Coloque たい depois da base do verbo para dizer que você quer fazer aquela ação.",
+      phrases: [
+        sxPhrase(
+          "この 荷物{にもつ} を 送{おく}りたいです。",
+          "Quero enviar esta encomenda.",
+          [
+            { jp: "荷物{にもつ}", pt: "encomenda / bagagem" },
+            { jp: "送{おく}りたい", pt: "quero enviar" }
+          ]
+        ),
+        sxPhrase(
+          "住民票{じゅうみんひょう} を 取{と}りたいです。",
+          "Quero tirar o comprovante de residência.",
+          [
+            { jp: "住民票{じゅうみんひょう}", pt: "comprovante de residência" },
+            { jp: "取{と}りたい", pt: "quero tirar / obter" }
+          ]
+        ),
+        sxPhrase(
+          "予約{よやく} を したいです。",
+          "Quero fazer uma reserva.",
+          [
+            { jp: "予約{よやく}", pt: "reserva" }
+          ]
+        ),
+        sxPhrase(
+          "この 商品{しょうひん} を 買{か}いたいです。",
+          "Quero comprar este produto.",
+          [
+            { jp: "商品{しょうひん}", pt: "produto" },
+            { jp: "買{か}いたい", pt: "quero comprar" }
+          ]
+        ),
+        sxPhrase(
+          "日本語{にほんご} を もっと 話{はな}したいです。",
+          "Quero falar mais japonês.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "話{はな}したい", pt: "quero falar" }
+          ]
+        ),
+        sxPhrase(
+          "仕事{しごと} の こと を 確認{かくにん} したいです。",
+          "Quero confirmar sobre o trabalho.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        ),
+        sxPhrase(
+          "この アプリ で 毎日{まいにち} 練習{れんしゅう} したいです。",
+          "Quero praticar todos os dias com este app.",
+          [
+            { jp: "毎日{まいにち}", pt: "todos os dias" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    },
+
+    "かどうか": {
+      label: "Uso de かどうか",
+      kind: "gramática",
+      explanation:
+        "かどうか significa “se... ou não”. Use quando você quer confirmar uma informação.",
+      usage:
+        "Excelente para perguntar se algo está correto, se pode usar, se precisa reservar, se tem hora extra ou se o documento serve.",
+      phrases: [
+        sxPhrase(
+          "この カード が 使{つか}える かどうか 確認{かくにん} して ください。",
+          "Por favor, confirme se este cartão pode ser usado.",
+          [
+            { jp: "使{つか}える", pt: "pode usar" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        ),
+        sxPhrase(
+          "今日{きょう} 残業{ざんぎょう} が ある かどうか 知{し}りたいです。",
+          "Quero saber se hoje vai ter hora extra.",
+          [
+            { jp: "残業{ざんぎょう}", pt: "hora extra" },
+            { jp: "知{し}りたい", pt: "quero saber" }
+          ]
+        ),
+        sxPhrase(
+          "この 書類{しょるい} で 大丈夫{だいじょうぶ} かどうか 見{み}て もらえますか。",
+          "Você poderia ver se este documento está certo?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / correto" }
+          ]
+        ),
+        sxPhrase(
+          "予約{よやく} が 必要{ひつよう} かどうか 教{おし}えて ください。",
+          "Por favor, me diga se é necessário reservar.",
+          [
+            { jp: "予約{よやく}", pt: "reserva" },
+            { jp: "必要{ひつよう}", pt: "necessário" }
+          ]
+        ),
+        sxPhrase(
+          "この 電車{でんしゃ} が 福井{ふくい} に 行{い}く かどうか 知{し}りたいです。",
+          "Quero saber se este trem vai para Fukui.",
+          [
+            { jp: "電車{でんしゃ}", pt: "trem" },
+            { jp: "行{い}く", pt: "ir" }
+          ]
+        ),
+        sxPhrase(
+          "明日{あした} 休{やす}める かどうか まだ わかりません。",
+          "Ainda não sei se posso folgar amanhã.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "休{やす}める", pt: "poder folgar" }
+          ]
+        ),
+        sxPhrase(
+          "この 商品{しょうひん} が まだ ある かどうか 聞{き}いて みます。",
+          "Vou tentar perguntar se este produto ainda tem.",
+          [
+            { jp: "商品{しょうひん}", pt: "produto" },
+            { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
+          ]
+        )
+      ]
+    }
+  };
+    /* ---------- banco ampliado de situações reais ---------- */
+  const SENSEI_58_SCENARIO_BANK = {
+    "hospital": {
+      label: "Hospital",
+      explanation:
+        "Material para explicar sintomas, pedir ajuda e confirmar informações em consulta médica.",
+      usage:
+        "Use frases curtas, educadas e diretas. Em casos graves, procure intérprete ou ajuda de emergência.",
+      phrases: [
+        sxPhrase(
+          "昨日{きのう} から 熱{ねつ} が あります。",
+          "Estou com febre desde ontem.",
+          [
+            { jp: "昨日{きのう}", pt: "ontem" },
+            { jp: "熱{ねつ}", pt: "febre" }
+          ]
+        ),
+        sxPhrase(
+          "のど が 痛{いた}いです。",
+          "Estou com dor de garganta.",
+          [
+            { jp: "のど", pt: "garganta" },
+            { jp: "痛{いた}い", pt: "dói / dolorido" }
+          ]
+        ),
+        sxPhrase(
+          "頭{あたま} が 痛{いた}くて、少{すこ}し 気持{きも}ち 悪{わる}いです。",
+          "Estou com dor de cabeça e um pouco enjoado.",
+          [
+            { jp: "頭{あたま}", pt: "cabeça" },
+            { jp: "気持{きも}ち 悪{わる}い", pt: "enjoado / passando mal" }
+          ]
+        ),
+        sxPhrase(
+          "薬{くすり} は いつ 飲{の}めば いいですか。",
+          "Quando devo tomar o remédio?",
+          [
+            { jp: "薬{くすり}", pt: "remédio" },
+            { jp: "飲{の}めば いい", pt: "devo tomar" }
+          ]
+        ),
+        sxPhrase(
+          "仕事{しごと} に 行{い}っても 大丈夫{だいじょうぶ} ですか。",
+          "Tudo bem eu ir trabalhar?",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
+          ]
+        ),
+        sxPhrase(
+          "通訳{つうやく} は ありますか。",
+          "Tem intérprete?",
+          [
+            { jp: "通訳{つうやく}", pt: "intérprete" }
+          ]
+        ),
+        sxPhrase(
+          "保険証{ほけんしょう} を 持{も}って います。",
+          "Estou com o cartão do seguro de saúde.",
+          [
+            { jp: "保険証{ほけんしょう}", pt: "cartão do seguro de saúde" },
+            { jp: "持{も}って います", pt: "tenho comigo / estou com" }
+          ]
+        )
+      ]
+    },
+
+    "prefeitura": {
+      label: "Prefeitura",
+      explanation:
+        "Material para documentos, balcão de atendimento, formulários e dúvidas na prefeitura.",
+      usage:
+        "Use quando precisar perguntar com calma, confirmar documentos e pedir explicação.",
+      phrases: [
+        sxPhrase(
+          "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
+          "Por favor, me ensine como preencher este documento.",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "書{か}き方{かた}", pt: "forma de escrever / preencher" }
+          ]
+        ),
+        sxPhrase(
+          "必要{ひつよう} な もの は 何{なに} ですか。",
+          "O que é necessário trazer?",
+          [
+            { jp: "必要{ひつよう}", pt: "necessário" },
+            { jp: "何{なに}", pt: "o que" }
+          ]
+        ),
+        sxPhrase(
+          "この 手続{てつづ}き は 今日中{きょうじゅう} に 終{お}わりますか。",
+          "Este procedimento termina ainda hoje?",
+          [
+            { jp: "手続{てつづ}き", pt: "procedimento" },
+            { jp: "今日中{きょうじゅう}", pt: "ainda hoje" }
+          ]
+        ),
+        sxPhrase(
+          "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
+          "Onde pego a senha de atendimento?",
+          [
+            { jp: "番号札{ばんごうふだ}", pt: "senha de atendimento" },
+            { jp: "取{と}りますか", pt: "pego?" }
+          ]
+        ),
+        sxPhrase(
+          "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
+          "É necessária uma cópia do cartão de residência?",
+          [
+            { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
+            { jp: "必要{ひつよう}", pt: "necessário" }
+          ]
+        ),
+        sxPhrase(
+          "通訳{つうやく} を お願{ねが}いできますか。",
+          "É possível pedir um intérprete?",
+          [
+            { jp: "通訳{つうやく}", pt: "intérprete" },
+            { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
+          ]
+        ),
+        sxPhrase(
+          "この 窓口{まどぐち} で 合{あ}って いますか。",
+          "Este balcão está correto?",
+          [
+            { jp: "窓口{まどぐち}", pt: "balcão / guichê" },
+            { jp: "合{あ}って いますか", pt: "está correto?" }
+          ]
+        )
+      ]
+    },
+
+    "fabrica": {
+      label: "Fábrica",
+      explanation:
+        "Material para rotina de fábrica, instruções, máquinas, peças, líder e confirmação de tarefa.",
+      usage:
+        "Use frases diretas e educadas para evitar erro de trabalho e mostrar disposição.",
+      phrases: [
+        sxPhrase(
+          "この 作業{さぎょう} を もう 一度{いちど} 教{おし}えて ください。",
+          "Por favor, me ensine este trabalho mais uma vez.",
+          [
+            { jp: "作業{さぎょう}", pt: "trabalho / tarefa" },
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" }
+          ]
+        ),
+        sxPhrase(
+          "次{つぎ} は 何{なに} を すれば いいですか。",
+          "O que eu devo fazer em seguida?",
+          [
+            { jp: "次{つぎ}", pt: "próximo / em seguida" },
+            { jp: "何{なに}", pt: "o que" }
+          ]
+        ),
+        sxPhrase(
+          "この 機械{きかい} が 止{と}まりました。",
+          "Esta máquina parou.",
+          [
+            { jp: "機械{きかい}", pt: "máquina" },
+            { jp: "止{と}まりました", pt: "parou" }
+          ]
+        ),
+        sxPhrase(
+          "確認{かくにん} して もらえますか。",
+          "Você poderia verificar para mim?",
+          [
+            { jp: "確認{かくにん}", pt: "verificação" },
+            { jp: "もらえますか", pt: "poderia fazer para mim?" }
+          ]
+        ),
+        sxPhrase(
+          "やり方{かた} が まだ よく わかりません。",
+          "Ainda não entendi bem o modo de fazer.",
+          [
+            { jp: "やり方{かた}", pt: "modo de fazer" },
+            { jp: "まだ", pt: "ainda" }
+          ]
+        ),
+        sxPhrase(
+          "この 部品{ぶひん} は どこ に 置{お}きますか。",
+          "Onde eu coloco esta peça?",
+          [
+            { jp: "部品{ぶひん}", pt: "peça" },
+            { jp: "置{お}きます", pt: "coloco" }
+          ]
+        ),
+        sxPhrase(
+          "今日{きょう} は 残業{ざんぎょう} が ありますか。",
+          "Hoje vai ter hora extra?",
+          [
+            { jp: "今日{きょう}", pt: "hoje" },
+            { jp: "残業{ざんぎょう}", pt: "hora extra" }
+          ]
+        )
+      ]
+    },
+
+    "chefe": {
+      label: "Chefe / líder",
+      explanation:
+        "Material para falar com chefe, líder ou supervisor de forma educada e clara.",
+      usage:
+        "Use para pedir explicação, avisar problema, confirmar tarefa ou falar de condição física.",
+      phrases: [
+        sxPhrase(
+          "この 内容{ないよう} で 合{あ}って いますか。",
+          "Está correto assim?",
+          [
+            { jp: "内容{ないよう}", pt: "conteúdo / instrução" },
+            { jp: "合{あ}って いますか", pt: "está correto?" }
+          ]
+        ),
+        sxPhrase(
+          "もう 少{すこ}し ゆっくり お願{ねが}いします。",
+          "Mais devagar, por favor.",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "ゆっくり", pt: "devagar" }
+          ]
+        ),
+        sxPhrase(
+          "この 作業{さぎょう} は 初{はじ}めて です。",
+          "É a primeira vez que faço este trabalho.",
+          [
+            { jp: "作業{さぎょう}", pt: "trabalho / tarefa" },
+            { jp: "初{はじ}めて", pt: "primeira vez" }
+          ]
+        ),
+        sxPhrase(
+          "もう 一度{いちど} 説明{せつめい} して いただけますか。",
+          "O senhor poderia explicar mais uma vez?",
+          [
+            { jp: "説明{せつめい}", pt: "explicação" },
+            { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
+          ]
+        ),
+        sxPhrase(
+          "終{お}わったら 報告{ほうこく} します。",
+          "Quando terminar, eu aviso.",
+          [
+            { jp: "終{お}わったら", pt: "quando terminar" },
+            { jp: "報告{ほうこく}", pt: "relato / aviso" }
+          ]
+        ),
+        sxPhrase(
+          "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
+          "Estou me sentindo um pouco mal.",
+          [
+            { jp: "体調{たいちょう}", pt: "condição física" },
+            { jp: "悪{わる}い", pt: "ruim" }
+          ]
+        ),
+        sxPhrase(
+          "間違{まちが}い が ない か 確認{かくにん} します。",
+          "Vou confirmar se não há erro.",
+          [
+            { jp: "間違{まちが}い", pt: "erro" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        )
+      ]
+    },
+
+    "mercado": {
+      label: "Mercado",
+      explanation:
+        "Material para compras, validade, desconto, pagamento e busca de produtos.",
+      usage:
+        "Use frases curtas para perguntar sem travar na frente do atendente.",
+      phrases: [
+        sxPhrase(
+          "この 商品{しょうひん} は どこ に ありますか。",
+          "Onde fica este produto?",
+          [
+            { jp: "商品{しょうひん}", pt: "produto" },
+            { jp: "どこ", pt: "onde" }
+          ]
+        ),
+        sxPhrase(
+          "賞味期限{しょうみきげん} は いつ ですか。",
+          "Qual é a data de validade?",
+          [
+            { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
+          ]
+        ),
+        sxPhrase(
+          "袋{ふくろ} は 要{い}りません。",
+          "Não preciso de sacola.",
+          [
+            { jp: "袋{ふくろ}", pt: "sacola" },
+            { jp: "要{い}りません", pt: "não preciso" }
+          ]
+        ),
+        sxPhrase(
+          "カード で 払{はら}えますか。",
+          "Posso pagar com cartão?",
+          [
+            { jp: "カード", pt: "cartão" },
+            { jp: "払{はら}えますか", pt: "posso pagar?" }
+          ]
+        ),
+        sxPhrase(
+          "安{やす}い 方{ほう} は どちら ですか。",
+          "Qual é a opção mais barata?",
+          [
+            { jp: "安{やす}い", pt: "barato" },
+            { jp: "方{ほう}", pt: "opção / lado" }
+          ]
+        ),
+        sxPhrase(
+          "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
+          "Este produto está esgotado?",
+          [
+            { jp: "売{う}り切{き}れ", pt: "esgotado" }
+          ]
+        ),
+        sxPhrase(
+          "セルフレジ は 使{つか}えますか。",
+          "Posso usar o caixa automático?",
+          [
+            { jp: "セルフレジ", pt: "caixa automático" },
+            { jp: "使{つか}えますか", pt: "posso usar?" }
+          ]
+        )
+      ]
+    },
+
+    "moradia": {
+      label: "Moradia / aluguel",
+      explanation:
+        "Material para apartamento, Leopalace, reparo, vazamento, chave, ar-condicionado e contato com administradora.",
+      usage:
+        "Use quando precisar explicar problema na casa de forma clara e educada.",
+      phrases: [
+        sxPhrase(
+          "水漏{みずも}れ して います。",
+          "Está vazando água.",
+          [
+            { jp: "水漏{みずも}れ", pt: "vazamento de água" }
+          ]
+        ),
+        sxPhrase(
+          "修理{しゅうり} を お願{ねが}いしたいです。",
+          "Quero solicitar um reparo.",
+          [
+            { jp: "修理{しゅうり}", pt: "reparo / conserto" }
+          ]
+        ),
+        sxPhrase(
+          "いつ 来{き}て もらえますか。",
+          "Quando alguém pode vir aqui?",
+          [
+            { jp: "来{き}て もらえますか", pt: "pode vir?" }
+          ]
+        ),
+        sxPhrase(
+          "エアコン が 動{うご}きません。",
+          "O ar-condicionado não funciona.",
+          [
+            { jp: "エアコン", pt: "ar-condicionado" },
+            { jp: "動{うご}きません", pt: "não funciona" }
+          ]
+        ),
+        sxPhrase(
+          "鍵{かぎ} を なくしました。",
+          "Perdi a chave.",
+          [
+            { jp: "鍵{かぎ}", pt: "chave" },
+            { jp: "なくしました", pt: "perdi" }
+          ]
+        ),
+        sxPhrase(
+          "管理会社{かんりがいしゃ} に 連絡{れんらく} したいです。",
+          "Quero entrar em contato com a administradora.",
+          [
+            { jp: "管理会社{かんりがいしゃ}", pt: "administradora" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        sxPhrase(
+          "写真{しゃしん} を 送{おく}れば いいですか。",
+          "Está certo eu enviar uma foto?",
+          [
+            { jp: "写真{しゃしん}", pt: "foto" },
+            { jp: "送{おく}れば", pt: "se enviar" }
+          ]
+        )
+      ]
+    }
+  };
+
+  function sxDetectScenario(request, theme = "") {
+    const n = sxNormalize(`${request || ""} ${theme || ""}`);
+
+    if (/chefe|lider|supervisor|encarregado|shunin|リーダー/.test(n)) return "chefe";
+    if (/fabrica|linha|maquina|peca|producao|turno|murata|作業|機械|部品/.test(n)) return "fabrica";
+    if (/hospital|medico|consulta|febre|dor|remedio|garganta|薬|熱|病院/.test(n)) return "hospital";
+    if (/prefeitura|documento|my number|mynumber|residencia|endereco|zairyu|市役所|書類/.test(n)) return "prefeitura";
+    if (/mercado|supermercado|validade|produto|preco|desconto|商品|賞味期限/.test(n)) return "mercado";
+    if (/aluguel|apartamento|moradia|leopalace|vazamento|chave|reparo|エアコン|鍵/.test(n)) return "moradia";
+
+    return "fabrica";
+  }
+
+    /* ---------- detecção de termo gramatical / palavra-alvo ---------- */
+  function sxNormalizeTerm(term) {
+    return String(term || "")
+      .trim()
+      .replace(/[「」『』"“”'’`´]/g, "")
+      .replace(/\s+/g, "");
+  }
+
+  function sxKnownGrammarKeys() {
+    const keys = new Set(Object.keys(SENSEI_58_GRAMMAR_BANK));
+
+    try {
+      if (typeof SENSEI_GRAMMAR_BANK === "object" && SENSEI_GRAMMAR_BANK) {
+        Object.keys(SENSEI_GRAMMAR_BANK).forEach(k => keys.add(k));
+      }
+    } catch {}
+
+    return Array.from(keys).sort((a, b) => b.length - a.length);
+  }
+
+  function sxDetectTargetTerm(request, theme = "") {
+    const raw = `${request || ""} ${theme || ""}`;
+    const compact = sxNormalizeTerm(raw);
+
+    for (const key of sxKnownGrammarKeys()) {
+      if (compact.includes(sxNormalizeTerm(key))) return key;
+    }
+
+    const jpTerms = sxExtractJapaneseTerms(raw)
+      .map(sxNormalizeTerm)
+      .filter(Boolean)
+      .sort((a, b) => b.length - a.length);
+
+    const badTerms = new Set([
+      "日本語",
+      "今日",
+      "明日",
+      "仕事",
+      "文章",
+      "文法",
+      "単語",
+      "例文",
+      "使い方",
+      "意味"
+    ]);
+
+    const useful = jpTerms.find(t => !badTerms.has(t));
+    if (useful) return useful;
+
+    const n = sxNormalize(raw);
+    const quoted = raw.match(/[「『"“']([^」』"”']{1,30})[」』"”']/);
+    if (quoted && quoted[1]) return sxNormalizeTerm(quoted[1]);
+
+    const afterUso = n.match(/uso de ([a-z0-9ぁ-んァ-ン一-龯ー]+)/i);
+    if (afterUso && afterUso[1]) return sxNormalizeTerm(afterUso[1]);
+
+    const afterCom = n.match(/frases com ([a-z0-9ぁ-んァ-ン一-龯ー]+)/i);
+    if (afterCom && afterCom[1]) return sxNormalizeTerm(afterCom[1]);
+
+    return "";
+  }
+
+  function sxGetKnownGrammarPack(term) {
+    const key = sxKnownGrammarKeys().find(k => sxNormalizeTerm(k) === sxNormalizeTerm(term));
+    if (!key) return null;
+
+    if (SENSEI_58_GRAMMAR_BANK[key]) return SENSEI_58_GRAMMAR_BANK[key];
+
+    try {
+      if (SENSEI_GRAMMAR_BANK[key]) {
+        const old = SENSEI_GRAMMAR_BANK[key];
+
+        return {
+          label: old.title || `Uso de ${key}`,
+          kind: old.type || "gramática",
+          explanation: old.explanation || `Material para entender o uso de ${key}.`,
+          usage: old.goal || "Treine uma frase por dia para fixar o uso na prática.",
+          phrases: Array.isArray(old.phrases)
+            ? old.phrases.map(p => sxPhrase(p.jp, p.pt, p.newWords || []))
+            : []
+        };
+      }
+    } catch {}
+
+    return null;
+  }
+
+  function sxGenericGrammarFallback(term, request, level, tone) {
+    const safeTerm = sxNormalizeTerm(term) || "esta expressão";
+
+    return {
+      label: `Uso de ${safeTerm}`,
+      kind: "palavra-alvo",
+      explanation:
+        `O Sensei IA detectou “${safeTerm}” como termo principal do pedido. Ainda não há um banco específico para ele, então foi criado um material-base para você estudar, perguntar melhor e transformar em treino.`,
+      usage:
+        "Use estas frases para pedir explicação, confirmar significado, perguntar naturalidade e criar exemplos. Depois você pode salvar o material e adaptar no gerenciador.",
+      phrases: [
+        sxPhrase(
+          `この 表現{ひょうげん}「${safeTerm}」の 使{つか}い方{かた} を 教{おし}えて ください。`,
+          `Por favor, me ensine como usar a expressão “${safeTerm}”.`,
+          [
+            { jp: "表現{ひょうげん}", pt: "expressão" },
+            { jp: "使{つか}い方{かた}", pt: "modo de usar" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" }
+          ]
+        ),
+        sxPhrase(
+          `「${safeTerm}」は どういう 意味{いみ} ですか。`,
+          `O que significa “${safeTerm}”?`,
+          [
+            { jp: "意味{いみ}", pt: "significado" }
+          ]
+        ),
+        sxPhrase(
+          `「${safeTerm}」を 使{つか}った 例文{れいぶん} を 作{つく}って もらえますか。`,
+          `Você poderia criar uma frase de exemplo usando “${safeTerm}”?`,
+          [
+            { jp: "使{つか}った", pt: "usando" },
+            { jp: "例文{れいぶん}", pt: "frase de exemplo" },
+            { jp: "作{つく}って", pt: "criar / fazer" }
+          ]
+        ),
+        sxPhrase(
+          `「${safeTerm}」は 日常会話{にちじょうかいわ} で よく 使{つか}いますか。`,
+          `“${safeTerm}” é muito usado na conversa do dia a dia?`,
+          [
+            { jp: "日常会話{にちじょうかいわ}", pt: "conversa do dia a dia" },
+            { jp: "使{つか}いますか", pt: "usa?" }
+          ]
+        ),
+        sxPhrase(
+          `「${safeTerm}」の もっと 自然{しぜん} な 使{つか}い方{かた} は ありますか。`,
+          `Existe uma forma mais natural de usar “${safeTerm}”?`,
+          [
+            { jp: "自然{しぜん}", pt: "natural" },
+            { jp: "使{つか}い方{かた}", pt: "modo de usar" }
+          ]
+        ),
+        sxPhrase(
+          `仕事{しごと} で「${safeTerm}」を 使{つか}う 例{れい} を 教{おし}えて ください。`,
+          `Por favor, me ensine um exemplo usando “${safeTerm}” no trabalho.`,
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "例{れい}", pt: "exemplo" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" }
+          ]
+        ),
+        sxPhrase(
+          `「${safeTerm}」を 使{つか}って、日本語{にほんご} を 練習{れんしゅう} します。`,
+          `Vou praticar japonês usando “${safeTerm}”.`,
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    };
+  }
+
+  function sxGenericScenarioFallback(request, theme, level, tone) {
+    const cleanTheme = String(theme || "").trim();
+    const cleanRequest = String(request || "").trim();
+
+    const label = cleanTheme || "Situação personalizada";
+
+    return {
+      label,
+      explanation:
+        "O Sensei IA não encontrou um banco específico perfeito para este pedido. Então criou um material-base para você começar sem ficar parado.",
+      usage:
+        "Use estas frases como kit inicial: pedir ajuda, pedir explicação, confirmar informação, pedir para escrever e avisar que ainda não entendeu.",
+      phrases: [
+        sxPhrase(
+          "すみません。少{すこ}し 手伝{てつだ}って もらえますか。",
+          "Com licença. Você poderia me ajudar um pouco?",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "手伝{てつだ}って", pt: "ajudar" },
+            { jp: "もらえますか", pt: "poderia fazer para mim?" }
+          ]
+        ),
+        sxPhrase(
+          "日本語{にほんご} が まだ 苦手{にがて} なので、ゆっくり 話{はな}して ください。",
+          "Como ainda tenho dificuldade com japonês, por favor fale devagar.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "苦手{にがて}", pt: "dificuldade / não sou bom em algo" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        ),
+        sxPhrase(
+          "もう 一度{いちど} 説明{せつめい} して もらえますか。",
+          "Você poderia explicar mais uma vez para mim?",
+          [
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "説明{せつめい}", pt: "explicação" }
+          ]
+        ),
+        sxPhrase(
+          "紙{かみ} に 書{か}いて もらえますか。",
+          "Você poderia escrever no papel para mim?",
+          [
+            { jp: "紙{かみ}", pt: "papel" },
+            { jp: "書{か}いて", pt: "escrever" }
+          ]
+        ),
+        sxPhrase(
+          "この 内容{ないよう} で 合{あ}って いますか。",
+          "Está correto assim?",
+          [
+            { jp: "内容{ないよう}", pt: "conteúdo" },
+            { jp: "合{あ}って いますか", pt: "está correto?" }
+          ]
+        ),
+        sxPhrase(
+          "あと で 確認{かくにん} して、連絡{れんらく} します。",
+          "Vou confirmar depois e entro em contato.",
+          [
+            { jp: "あと で", pt: "depois" },
+            { jp: "確認{かくにん}", pt: "confirmação" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        sxPhrase(
+          "今{いま} は まだ よく わかりません。",
+          "Agora eu ainda não entendi bem.",
+          [
+            { jp: "今{いま}", pt: "agora" },
+            { jp: "まだ", pt: "ainda" },
+            { jp: "わかりません", pt: "não entendo" }
+          ]
+        )
+      ],
+      sourceNote: cleanRequest
+        ? `Pedido original: ${cleanRequest}`
+        : "Pedido original não informado."
+    };
+  }
+
+  /* ---------- construção de pack expert ---------- */
+  function sxBuildCoachLine(meta) {
+    const parts = [];
+
+    parts.push(`Tipo detectado: ${meta.intent === "grammar" ? "gramática / palavra-alvo" : "situação real"}.`);
+
+    if (meta.term) parts.push(`Termo principal: ${meta.term}.`);
+    if (meta.scenarioLabel) parts.push(`Contexto: ${meta.scenarioLabel}.`);
+
+    if (meta.explanation) parts.push(meta.explanation);
+    if (meta.usage) parts.push(`Uso prático: ${meta.usage}`);
+
+    parts.push(`Nível: ${sxLevelLabel(meta.level)}.`);
+    parts.push(`Tom: ${sxToneLabel(meta.tone)}.`);
+    parts.push("Sugestão de treino: salve o material e treine 1 frase por dia durante 7 dias no método 105x.");
+
+    return parts.join(" ");
+  }
+
+  function sxBuildGrammarPack(payload) {
+    const request = sxRaw(payload?.request);
+    const theme = sxRaw(payload?.theme);
+    const level = sxLevelLabel(payload?.level);
+    const tone = sxToneLabel(payload?.tone);
+
+    const term = sxDetectTargetTerm(request, theme);
+    const knownPack = sxGetKnownGrammarPack(term);
+    const pack = knownPack || sxGenericGrammarFallback(term, request, level, tone);
+
+    const phrases = sxEnsureSeven(pack.phrases, (i) => {
+      const fallback = sxGenericGrammarFallback(term || "表現", request, level, tone);
+      return fallback.phrases[i % fallback.phrases.length];
+    }).map(p => ({
+      ...p,
+      id: sxUid("sensei")
+    }));
+
+    const topicName = sxFormatTopicName(pack.label || term || "Gramática");
+
+    const meta = {
+      intent: "grammar",
+      term: term || pack.label || "",
+      level,
+      tone,
+      explanation: pack.explanation,
+      usage: pack.usage
+    };
+
+    return {
+      scenario: "grammar",
+      requestType: "grammar",
+      term: term || "",
+      title: pack.label || topicName,
+      explanation: pack.explanation,
+      usage: pack.usage,
+      goal: "Treine 1 frase por dia. Em 7 dias, você terá contato suficiente para reconhecer esse uso com mais facilidade.",
+      topicName,
+      coachLine: sxBuildCoachLine(meta),
+      phrases,
+      expertEngine: "5.8",
+      confidence: knownPack ? "alta" : "fallback"
+    };
+  }
+
+  function sxBuildScenarioPack(payload) {
+    const request = sxRaw(payload?.request);
+    const theme = sxRaw(payload?.theme);
+    const level = sxLevelLabel(payload?.level);
+    const tone = sxToneLabel(payload?.tone);
+
+    const scenarioKey = sxDetectScenario(request, theme);
+    const knownPack = SENSEI_58_SCENARIO_BANK[scenarioKey];
+
+    const pack = knownPack || sxGenericScenarioFallback(request, theme, level, tone);
+
+    const phrases = sxEnsureSeven(pack.phrases, (i) => {
+      const fallback = sxGenericScenarioFallback(request, theme, level, tone);
+      return fallback.phrases[i % fallback.phrases.length];
+    }).map(p => ({
+      ...p,
+      id: sxUid("sensei")
+    }));
+
+    const topicName = sxFormatTopicName(theme || pack.label || "Situação real");
+
+    const meta = {
+      intent: "scenario",
+      scenarioLabel: pack.label || scenarioKey,
+      level,
+      tone,
+      explanation: pack.explanation,
+      usage: pack.usage
+    };
+
+    return {
+      scenario: scenarioKey || "custom",
+      requestType: "scenario",
+      term: "",
+      title: pack.label || topicName,
+      explanation: pack.explanation,
+      usage: pack.usage,
+      goal: "Escolha 1 frase para hoje. Se fizer sentido, salve o material e revise no 105x.",
+      topicName,
+      coachLine: sxBuildCoachLine(meta),
+      phrases,
+      expertEngine: "5.8",
+      confidence: knownPack ? "alta" : "fallback",
+      sourceNote: pack.sourceNote || ""
+    };
+  }
+    /* ---------- gerador principal Expert Engine 2.0 ---------- */
+  function sxBuildExpertPack(payload = {}) {
+    const request = sxRaw(payload.request || payload.prompt || payload.text || "");
+    const theme = sxRaw(payload.theme || payload.topic || payload.topicName || "");
+    const level = sxLevelLabel(payload.level || "iniciante");
+    const tone = sxToneLabel(payload.tone || "educado");
+
+    const intent = sxDetectIntent(request, theme);
+
+    if (intent === "grammar") {
+      return sxBuildGrammarPack({
+        request,
+        theme,
+        level,
+        tone
+      });
+    }
+
+    return sxBuildScenarioPack({
+      request,
+      theme,
+      level,
+      tone
+    });
+  }
+
+  window.generateSenseiMaterial = function patchedGenerateSenseiMaterial58(payload = {}) {
+    try {
+      const request = sxRaw(payload.request || payload.prompt || payload.text || "");
+      const theme = sxRaw(payload.theme || payload.topic || payload.topicName || "");
+
+      const intent = sxDetectIntent(request, theme);
+      const term = sxDetectTargetTerm(request, theme);
+      const scenario = sxDetectScenario(request, theme);
+
+      const shouldUseExpert =
+        intent === "grammar" ||
+        !!term ||
+        sxHasJapanese(`${request} ${theme}`) ||
+        !sxOriginalGenerateSenseiMaterial ||
+        /frases|exemplos|explique|ensine|como usar|uso de|particula|partícula|gramatica|gramática|situação|situacao|preciso|quero/i.test(`${request} ${theme}`);
+
+      if (shouldUseExpert) {
+        return sxBuildExpertPack(payload);
+      }
+
+      try {
+        const oldResult = sxOriginalGenerateSenseiMaterial(payload);
+
+        if (
+          oldResult &&
+          Array.isArray(oldResult.phrases) &&
+          oldResult.phrases.length >= 7
+        ) {
+          return {
+            ...oldResult,
+            expertEngine: oldResult.expertEngine || "legacy",
+            confidence: oldResult.confidence || "legacy"
+          };
+        }
+      } catch {}
+
+      return sxBuildScenarioPack({
+        request,
+        theme,
+        level: payload.level || "iniciante",
+        tone: payload.tone || "educado",
+        scenario
+      });
+    } catch (err) {
+      console.warn("[NIHONGO321] Sensei Expert Engine 5.8 fallback:", err);
+
+      return sxGenericScenarioFallback(
+        payload.request || payload.prompt || "",
+        payload.theme || payload.topic || "",
+        payload.level || "iniciante",
+        payload.tone || "educado"
+      );
+    }
+  };
+
+  /* ---------- reforço do resultado visual ---------- */
+  window.renderSenseiOutput = function patchedRenderSenseiOutput58(pack) {
+    const safePack = pack && Array.isArray(pack.phrases)
+      ? pack
+      : sxBuildExpertPack({
+          request: "criar frases úteis para estudar japonês no Japão",
+          theme: "Material prático",
+          level: "iniciante",
+          tone: "educado"
+        });
+
+    const enhancedPack = {
+      ...safePack,
+      topicName: safePack.topicName || sxFormatTopicName(safePack.title || "Sensei IA"),
+      explanation: safePack.explanation || "Material criado para treino prático de japonês.",
+      goal: safePack.goal || "Treine 1 frase por dia durante 7 dias.",
+      coachLine: safePack.coachLine || "Material criado pelo Sensei IA para revisão no método 105x.",
+      phrases: sxEnsureSeven(safePack.phrases, (i) => {
+        const fallback = sxGenericScenarioFallback("", "Material prático", "iniciante", "educado");
+        return fallback.phrases[i % fallback.phrases.length];
+      })
+    };
+
+    if (sxOriginalRenderSenseiOutput && sxOriginalRenderSenseiOutput !== window.renderSenseiOutput) {
+      try {
+        sxOriginalRenderSenseiOutput(enhancedPack);
+      } catch {
+        sxRenderOutputFallback58(enhancedPack);
+      }
+    } else {
+      sxRenderOutputFallback58(enhancedPack);
+    }
+
+    sxAddExpertBadgeToOutput(enhancedPack);
+  };
+
+  function sxRenderOutputFallback58(pack) {
+    const box = document.querySelector("#senseiOutput");
+    if (!box) return;
+
+    const phrases = Array.isArray(pack.phrases) ? pack.phrases : [];
+
+    const topicOptions = [
+      `<option value="AUTO_CREATE">criar novo tópico: ${sxEscape(pack.topicName || "Sensei IA")}</option>`,
+      ...sxGetTopicsForSelect58()
+    ].join("");
+
+    box.innerHTML = `
+      <div class="sheet stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">${sxEscape(pack.topicName || "Sensei IA")}</div>
+          <div class="badge">${phrases.length} frases</div>
+        </div>
+
+        <div class="small"><b>explicação:</b> ${sxEscape(pack.explanation || "")}</div>
+        <div class="small"><b>uso prático:</b> ${sxEscape(pack.usage || "")}</div>
+        <div class="small"><b>meta leve:</b> ${sxEscape(pack.goal || "")}</div>
+        <div class="small">${sxEscape(pack.coachLine || "")}</div>
+      </div>
+
+      ${phrases.map((p, i) => `
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">frase ${i + 1}</div>
+          <div class="small"><b>JP:</b> ${sxEscape(sxStripFurigana(p.jp))}</div>
+          <div class="small"><b>PT:</b> ${sxEscape(p.pt)}</div>
+
+          ${(Array.isArray(p.newWords) && p.newWords.length) ? `
+            <div class="small" style="font-weight:800;margin-top:4px">explicação</div>
+            ${p.newWords.map(w => `
+              <div class="small">${sxEscape(sxFormatWord58(w))}</div>
+            `).join("")}
+          ` : ""}
+        </div>
+      `).join("")}
+
+      <div class="sheet stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">salvar material</div>
+          <div class="badge">Sensei IA 5.8</div>
+        </div>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Escolha onde guardar este conteúdo</h3>
+          <p class="lockText">
+            Você pode criar um tópico novo automaticamente ou salvar estas frases dentro de um tópico existente.
+          </p>
+        </div>
+
+        <div>
+          <div class="small">salvar em</div>
+          <select id="senseiSaveTopicSel" class="btn selectBtn" style="width:100%">
+            ${topicOptions}
+          </select>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-action="saveSenseiPack">salvar neste tópico</button>
+          <button class="btn btn--full" data-nav="#/105x">ir ao treino</button>
+        </div>
+      </div>
+    `;
+
+    box.dataset.pack = JSON.stringify(pack);
+  }
+
+  function sxGetTopicsForSelect58() {
+    let topics = [];
+
+    try {
+      topics = Array.isArray(STATE.bank?.topics) ? STATE.bank.topics : [];
+    } catch {
+      topics = [];
+    }
+
+    return topics.map(t => {
+      let count = 0;
+
+      try {
+        if (typeof topicPhraseIds === "function") {
+          count = topicPhraseIds(t.id).length;
+        } else {
+          count = (STATE.bank?.phrases || []).filter(p => p.topicId === t.id).length;
+        }
+      } catch {}
+
+      let locked = "";
+
+      try {
+        locked = typeof isTopicPremium === "function" && isTopicPremium(t.id) ? " 🔒" : "";
+      } catch {}
+
+      return `
+        <option value="${sxEscape(t.id)}">
+          ${sxEscape(t.name)}${locked} • ${count} frases
+        </option>
+      `;
+    });
+  }
+
+  function sxFormatWord58(word) {
+    try {
+      if (typeof formatWordExplanation === "function") {
+        return formatWordExplanation(word);
+      }
+    } catch {}
+
+    return `${word?.jp || ""} = ${word?.pt || ""}`;
+  }
+
+  function sxAddExpertBadgeToOutput(pack) {
+    const box = document.querySelector("#senseiOutput");
+    if (!box) return;
+
+    if (box.querySelector("#senseiExpert58Badge")) return;
+
+    const badge = document.createElement("div");
+    badge.id = "senseiExpert58Badge";
+    badge.className = "sheet stack";
+    badge.style.textAlign = "left";
+    badge.innerHTML = `
+      <div class="row row--between">
+        <div class="badge">Sensei IA 5.8</div>
+        <div class="badge">${sxEscape(pack.confidence || "local")}</div>
+      </div>
+
+      <div class="small">
+        Motor local melhorado: detecta gramática, palavra-alvo ou situação real e tenta entregar sempre um material treinável com 7 frases.
+      </div>
+    `;
+
+    box.prepend(badge);
+  }
+
+  /* ---------- intercepta clique de gerar, quando o app antigo falhar ---------- */
+  function sxReadSenseiFormPayload58() {
+    const request =
+      document.querySelector("#senseiRequest")?.value ||
+      document.querySelector("#aiPrompt")?.value ||
+      document.querySelector("#senseiPrompt")?.value ||
+      document.querySelector("textarea")?.value ||
+      "";
+
+    const theme =
+      document.querySelector("#senseiTheme")?.value ||
+      document.querySelector("#aiTopic")?.value ||
+      document.querySelector("#senseiTopic")?.value ||
+      "";
+
+    const level =
+      document.querySelector("#senseiLevel")?.value ||
+      document.querySelector("#aiLevel")?.value ||
+      "iniciante";
+
+    const tone =
+      document.querySelector("#senseiTone")?.value ||
+      document.querySelector("#aiTone")?.value ||
+      "educado";
+
+    return {
+      request,
+      theme,
+      level,
+      tone
+    };
+  }
+
+  function sxRepairSenseiOutputAfterGenerate58() {
+    const box = document.querySelector("#senseiOutput");
+    if (!box) return;
+
+    const hasUsefulOutput =
+      box.dataset?.pack &&
+      (() => {
+        try {
+          const parsed = JSON.parse(box.dataset.pack);
+          return Array.isArray(parsed.phrases) && parsed.phrases.length >= 7;
+        } catch {
+          return false;
+        }
+      })();
+
+    if (hasUsefulOutput) return;
+
+    const payload = sxReadSenseiFormPayload58();
+    const pack = window.generateSenseiMaterial(payload);
+    window.renderSenseiOutput(pack);
+  }
+
+  let sxGenerateTimer58 = null;
+
+  document.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-action='generateSensei'], #generateSensei, #btnGenerateSensei");
+    if (!btn) return;
+
+    clearTimeout(sxGenerateTimer58);
+    sxGenerateTimer58 = setTimeout(() => {
+      sxRepairSenseiOutputAfterGenerate58();
+    }, 80);
+  }, true);
+
+  /* ---------- comando de teste no console ---------- */
+  window.nihongo321Sensei58Test = function nihongo321Sensei58Test(prompt = "Preciso de frases com ので para usar no trabalho.") {
+    const pack = window.generateSenseiMaterial({
+      request: prompt,
+      theme: "",
+      level: "intermediário",
+      tone: "educado"
+    });
+
+    console.log("[NIHONGO321] Sensei IA 5.8 teste:", pack);
+    return pack;
+  };
+
+  window.nihongo321Sensei58Check = function nihongo321Sensei58Check() {
+    const checks = {
+      patch: true,
+      generator: typeof window.generateSenseiMaterial === "function",
+      renderer: typeof window.renderSenseiOutput === "function",
+      grammarTerms: Object.keys(SENSEI_58_GRAMMAR_BANK).length,
+      scenarios: Object.keys(SENSEI_58_SCENARIO_BANK).length
+    };
+
+    console.log("[NIHONGO321] Sensei IA Expert Engine 5.8 ativo:", checks);
+    return checks;
+  };
+
+  console.log("[NIHONGO321] Sensei IA Expert Engine 5.8 carregado.");
+
+})();
+
+/* =========================================================
+   NIHONGO321 v8.3.0
+   PATCH BLOCO 6A ZERO COST — SENSEI IA LOCAL MASTER
+   - Sensei IA local mais completo, sem API e sem backend
+   - Custo zero
+   - Amplia gramática, situações e respostas pedagógicas
+   - Mantém Sensei IA 5.8 como base/fallback
+   - Não altera checkout
+   - Não altera estrutura do localStorage
+   - Não quebra treino 105x
+   ========================================================= */
+
+(function patchSenseiLocalMaster6A() {
+  "use strict";
+
+  const PATCH_ID = "nihongo321_patch_sensei_local_master_6a";
+
+  if (window[PATCH_ID]) {
+    return;
+  }
+
+  window[PATCH_ID] = true;
+
+  /* =========================================================
+     1. HELPERS SEGUROS
+     ========================================================= */
+
+  function lmNow() {
+    try {
+      if (typeof now === "function") return now();
+    } catch {}
+
+    return Date.now();
+  }
+
+  function lmUid(prefix = "lm") {
+    try {
+      if (typeof uid === "function") return uid(prefix);
+    } catch {}
+
+    return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+  }
+
+  function lmEscape(value) {
+    try {
+      if (typeof escapeHTML === "function") return escapeHTML(value);
+    } catch {}
+
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function lmNormalize(text) {
+    return String(text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[「」『』"“”'’`´]/g, " ")
+      .replace(/[、。,.!?！？;；:：()\[\]{}]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function lmCompact(text) {
+    return String(text || "")
+      .replace(/[「」『』"“”'’`´\s、。,.!?！？;；:：()\[\]{}]/g, "")
+      .trim();
+  }
+
+  function lmHasJP(text) {
+    return /[\u3040-\u30FF\u4E00-\u9FFF]/.test(String(text || ""));
+  }
+
+  function lmStripFuri(value) {
+    try {
+      if (typeof jpStripFurigana === "function") return jpStripFurigana(value);
+    } catch {}
+
+    return String(value || "").replace(/([^{}\s]+)\{([^{}]+)\}/g, "$1");
+  }
+
+  function lmPhrase(jp, pt, newWords = []) {
+    return {
+      id: lmUid("sensei"),
+      jp,
+      pt,
+      newWords: Array.isArray(newWords) ? newWords : [],
+      createdAt: lmNow(),
+      updatedAt: lmNow()
+    };
+  }
+
+  function lmEnsureSeven(phrases, fallbackFactory) {
+    const out = Array.isArray(phrases)
+      ? phrases.filter(p => p && p.jp && p.pt)
+      : [];
+
+    let guard = 0;
+
+    while (out.length < 7 && guard < 30) {
+      const p = fallbackFactory(out.length, guard);
+
+      if (p && p.jp && p.pt) {
+        const duplicated = out.some(x =>
+          lmStripFuri(x.jp) === lmStripFuri(p.jp) &&
+          String(x.pt || "").trim().toLowerCase() === String(p.pt || "").trim().toLowerCase()
+        );
+
+        if (!duplicated) out.push(p);
+      }
+
+      guard++;
+    }
+
+    return out.slice(0, 12);
+  }
+
+  function lmLevelLabel(level) {
+    const n = lmNormalize(level);
+
+    if (/avancado|avançado|n2|n1/.test(n)) return "avançado";
+    if (/intermediario|intermediário|medio|médio|n4|n3/.test(n)) return "intermediário";
+    if (/basico|básico|iniciante|facil|fácil|n5/.test(n)) return "iniciante";
+
+    return "iniciante";
+  }
+
+  function lmToneLabel(tone) {
+    const n = lmNormalize(tone);
+
+    if (/formal|respeitoso|educado|polido|keigo/.test(n)) return "educado";
+    if (/trabalho|chefe|lider|líder|empresa|fabrica|fábrica/.test(n)) return "trabalho";
+    if (/casual|natural|amigo/.test(n)) return "natural";
+    if (/emergencia|emergência|urgente|hospital/.test(n)) return "emergência";
+
+    return "educado";
+  }
+
+  function lmTopicName(label) {
+    const clean = String(label || "").trim();
+    if (!clean) return "Sensei IA • Material prático";
+    if (/^sensei ia/i.test(clean)) return clean;
+    return `Sensei IA • ${clean}`;
+  }
+
+  function lmToast(msg) {
+    try {
+      if (typeof toast === "function") {
+        toast(msg);
+        return;
+      }
+    } catch {}
+
+    console.log("[NIHONGO321]", msg);
+  }
+
+  function lmBeep(type = "ding") {
+    try {
+      if (typeof beep === "function") beep(type);
+    } catch {}
+  }
+
+  function lmSafeJSONParse(str) {
+    try {
+      return JSON.parse(str);
+    } catch {
+      return null;
+    }
+  }
+
+  function lmGetTopics() {
+    try {
+      return Array.isArray(STATE.bank?.topics) ? STATE.bank.topics : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function lmTopicPhraseCount(topicId) {
+    try {
+      if (typeof topicPhraseIds === "function") return topicPhraseIds(topicId).length;
+      return (STATE.bank?.phrases || []).filter(p => p.topicId === topicId).length;
+    } catch {
+      return 0;
+    }
+  }
+
+  function lmFormatWord(word) {
+    try {
+      if (typeof formatWordExplanation === "function") {
+        return formatWordExplanation(word);
+      }
+    } catch {}
+
+    const jp = word?.jp || "";
+    const pt = word?.pt || "";
+    return `${jp} = ${pt}`;
+  }
+
+  const lmOriginalGenerateSenseiMaterial =
+    typeof window.generateSenseiMaterial === "function"
+      ? window.generateSenseiMaterial
+      : null;
+
+  const lmOriginalRenderSenseiOutput =
+    typeof window.renderSenseiOutput === "function"
+      ? window.renderSenseiOutput
+      : null;
+
+  /* =========================================================
+     2. EXTRAÇÃO DE TERMOS E INTENÇÃO
+     ========================================================= */
+
+  const LM_STOP_JP_TERMS = new Set([
+    "日本語",
+    "文法",
+    "単語",
+    "例文",
+    "意味",
+    "使い方",
+    "文章",
+    "今日",
+    "明日",
+    "仕事",
+    "日本",
+    "私",
+    "僕",
+    "俺"
+  ]);
+
+  function lmExtractJPTerms(text) {
+    const raw = String(text || "");
+    const matches = raw.match(/[\u3040-\u30FF\u4E00-\u9FFFー々〆〤]{1,24}/g) || [];
+
+    return Array.from(new Set(
+      matches
+        .map(x => x.trim())
+        .filter(Boolean)
+        .filter(x => !LM_STOP_JP_TERMS.has(x))
+        .filter(x => !/^[。、！？ー]+$/.test(x))
+    )).sort((a, b) => b.length - a.length);
+  }
+
+  function lmExtractQuotedTerm(text) {
+    const raw = String(text || "");
+
+    const m =
+      raw.match(/[「『"“']([^」』"”']{1,40})[」』"”']/) ||
+      raw.match(/termo\s+(.{1,40})/i) ||
+      raw.match(/palavra\s+(.{1,40})/i) ||
+      raw.match(/express[aã]o\s+(.{1,40})/i);
+
+    if (!m || !m[1]) return "";
+
+    return String(m[1])
+      .replace(/[?.!,;:。！？、]/g, "")
+      .trim();
+  }
+
+  function lmDetectRequestCount(text) {
+    const n = lmNormalize(text);
+
+    if (/12 frases|doze frases/.test(n)) return 12;
+    if (/13 frases|treze frases/.test(n)) return 13;
+    if (/10 frases|dez frases/.test(n)) return 10;
+    if (/8 frases|oito frases/.test(n)) return 8;
+    if (/7 frases|sete frases/.test(n)) return 7;
+
+    return 7;
+  }
+
+  function lmDetectIntent(payload) {
+    const raw = `${payload?.request || ""} ${payload?.theme || ""} ${payload?.topic || ""}`;
+    const n = lmNormalize(raw);
+
+    const grammarWords = [
+      "gramatica",
+      "gramática",
+      "particula",
+      "partícula",
+      "estrutura",
+      "uso de",
+      "como usar",
+      "me ensine",
+      "ensine",
+      "explique",
+      "explica",
+      "diferenca",
+      "diferença",
+      "quando usar",
+      "frases com",
+      "exemplos com",
+      "significa",
+      "significado",
+      "palavra",
+      "expressao",
+      "expressão",
+      "termo"
+    ];
+
+    const scenarioWords = [
+      "como digo",
+      "como eu digo",
+      "preciso falar",
+      "quero falar",
+      "preciso explicar",
+      "preciso pedir",
+      "situacao",
+      "situação",
+      "no trabalho",
+      "na fabrica",
+      "na fábrica",
+      "no hospital",
+      "na prefeitura",
+      "no mercado",
+      "no konbini",
+      "no correio",
+      "com chefe",
+      "com meu chefe",
+      "bicicleta",
+      "aluguel",
+      "apartamento",
+      "documento",
+      "consulta",
+      "remedio",
+      "remédio"
+    ];
+
+    const hasGrammar = grammarWords.some(w => n.includes(lmNormalize(w)));
+    const hasScenario = scenarioWords.some(w => n.includes(lmNormalize(w)));
+    const hasJP = lmHasJP(raw);
+
+    if (hasGrammar || hasJP) return "grammar";
+    if (hasScenario) return "scenario";
+
+    return "scenario";
+  }
+
+  function lmDetectTargetTerm(payload) {
+    const raw = `${payload?.request || ""} ${payload?.theme || ""} ${payload?.topic || ""}`;
+    const compact = lmCompact(raw);
+
+    const knownKeys = Object.keys(LM_GRAMMAR_BANK || {}).sort((a, b) => b.length - a.length);
+
+    for (const key of knownKeys) {
+      if (compact.includes(lmCompact(key))) return key;
+    }
+
+    const quoted = lmExtractQuotedTerm(raw);
+    if (quoted && lmHasJP(quoted)) return quoted;
+
+    const jpTerms = lmExtractJPTerms(raw);
+    if (jpTerms.length) return jpTerms[0];
+
+    const n = lmNormalize(raw);
+
+    const patterns = [
+      /uso de ([a-z0-9ぁ-んァ-ン一-龯ー]+)/i,
+      /frases com ([a-z0-9ぁ-んァ-ン一-龯ー]+)/i,
+      /exemplos com ([a-z0-9ぁ-んァ-ン一-龯ー]+)/i,
+      /como usar ([a-z0-9ぁ-んァ-ン一-龯ー]+)/i,
+      /me ensine ([a-z0-9ぁ-んァ-ン一-龯ー]+)/i
+    ];
+
+    for (const pattern of patterns) {
+      const m = n.match(pattern);
+      if (m && m[1]) return m[1].trim();
+    }
+
+    return "";
+  }
+
+  /* =========================================================
+     3. BANCO-MESTRE DE GRAMÁTICA
+     ========================================================= */
+
+  const LM_GRAMMAR_BANK = {
+    "ので": {
+      label: "Uso de ので",
+      kind: "gramática",
+      explanation:
+        "ので liga uma causa a uma consequência. Soa natural e educado, ótimo para explicar motivos sem parecer brusco.",
+      usage:
+        "Use quando quiser dizer “porque”, “por causa de” ou “como”. Muito bom no trabalho, hospital, prefeitura e atrasos.",
+      commonMistake:
+        "Evite usar ので de forma seca demais em pedidos muito diretos. Para pedir algo, combine com formas educadas como てもいいですか ou いただけますか.",
+      phrases: [
+        lmPhrase(
+          "今日{きょう} は 体調{たいちょう} が 悪{わる}い ので、早{はや}く 帰{かえ}っても いいですか。",
+          "Como hoje estou me sentindo mal, posso ir embora mais cedo?",
+          [
+            { jp: "体調{たいちょう}", pt: "condição física" },
+            { jp: "悪{わる}い", pt: "ruim" },
+            { jp: "早{はや}く", pt: "cedo" }
+          ]
+        ),
+        lmPhrase(
+          "電車{でんしゃ} が 遅{おく}れて いる ので、少{すこ}し 遅{おく}れます。",
+          "Como o trem está atrasado, vou me atrasar um pouco.",
+          [
+            { jp: "電車{でんしゃ}", pt: "trem" },
+            { jp: "遅{おく}れて いる", pt: "está atrasado" },
+            { jp: "少{すこ}し", pt: "um pouco" }
+          ]
+        ),
+        lmPhrase(
+          "日本語{にほんご} が まだ 苦手{にがて} なので、ゆっくり 話{はな}して ください。",
+          "Como ainda tenho dificuldade com japonês, por favor fale devagar.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "苦手{にがて}", pt: "dificuldade / não ser bom em algo" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした} は 仕事{しごと} なので、今日{きょう} は 早{はや}く 寝{ね}ます。",
+          "Como amanhã tenho trabalho, hoje vou dormir cedo.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "寝{ね}ます", pt: "vou dormir" }
+          ]
+        ),
+        lmPhrase(
+          "雨{あめ} が 降{ふ}って いる ので、自転車{じてんしゃ} では 行{い}きません。",
+          "Como está chovendo, não vou de bicicleta.",
+          [
+            { jp: "雨{あめ}", pt: "chuva" },
+            { jp: "降{ふ}って いる", pt: "está chovendo" },
+            { jp: "自転車{じてんしゃ}", pt: "bicicleta" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} が わからない ので、教{おし}えて いただけますか。",
+          "Como eu não entendo este documento, o senhor poderia me explicar?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" },
+            { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
+          ]
+        ),
+        lmPhrase(
+          "時間{じかん} が ない ので、あと で 連絡{れんらく} します。",
+          "Como não tenho tempo, entro em contato depois.",
+          [
+            { jp: "時間{じかん}", pt: "tempo" },
+            { jp: "あと で", pt: "depois" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        )
+      ]
+    },
+
+    "から": {
+      label: "Uso de から",
+      kind: "gramática",
+      explanation:
+        "から também indica motivo. É mais direto e comum na fala do dia a dia.",
+      usage:
+        "Use para dizer “porque”. Em situações formais, ので pode soar mais suave.",
+      commonMistake:
+        "から pode soar um pouco direto demais dependendo do tom. Para trabalho e atendimento, ので costuma ser mais polido.",
+      phrases: [
+        lmPhrase(
+          "危{あぶ}ない から、気{き}をつけて ください。",
+          "Como é perigoso, por favor tome cuidado.",
+          [
+            { jp: "危{あぶ}ない", pt: "perigoso" },
+            { jp: "気{き}をつけて", pt: "tome cuidado" }
+          ]
+        ),
+        lmPhrase(
+          "忙{いそが}しい から、あと で 連絡{れんらく} します。",
+          "Como estou ocupado, entro em contato depois.",
+          [
+            { jp: "忙{いそが}しい", pt: "ocupado" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        lmPhrase(
+          "わからない から、もう 一度{いちど} 教{おし}えて ください。",
+          "Como eu não entendi, por favor me ensine mais uma vez.",
+          [
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" }
+          ]
+        ),
+        lmPhrase(
+          "安{やす}い から、これ を 買{か}います。",
+          "Como é barato, vou comprar isto.",
+          [
+            { jp: "安{やす}い", pt: "barato" },
+            { jp: "買{か}います", pt: "vou comprar" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした} は 早{はや}い から、今日{きょう} は 早{はや}く 寝{ね}ます。",
+          "Como amanhã é cedo, hoje vou dormir cedo.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "寝{ね}ます", pt: "vou dormir" }
+          ]
+        ),
+        lmPhrase(
+          "雨{あめ} だから、歩{ある}いて 行{い}きます。",
+          "Como está chovendo, vou a pé.",
+          [
+            { jp: "雨{あめ}", pt: "chuva" },
+            { jp: "歩{ある}いて", pt: "andando / a pé" }
+          ]
+        ),
+        lmPhrase(
+          "時間{じかん} が ある から、少{すこ}し 練習{れんしゅう} します。",
+          "Como tenho tempo, vou praticar um pouco.",
+          [
+            { jp: "時間{じかん}", pt: "tempo" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    },
+
+    "てもいい": {
+      label: "Uso de てもいい",
+      kind: "gramática",
+      explanation:
+        "てもいい é usado para pedir ou dar permissão. Em português: “posso...?” ou “tudo bem se...?”.",
+      usage:
+        "Muito útil em trabalho, loja, hospital, prefeitura e situações em que você quer agir com educação.",
+      commonMistake:
+        "Não use só o verbo sozinho quando estiver pedindo permissão. てもいいですか deixa o pedido mais claro e educado.",
+      phrases: [
+        lmPhrase(
+          "ここ に 座{すわ}っても いいですか。",
+          "Posso sentar aqui?",
+          [
+            { jp: "座{すわ}って", pt: "sentar" }
+          ]
+        ),
+        lmPhrase(
+          "写真{しゃしん} を 撮{と}っても いいですか。",
+          "Posso tirar foto?",
+          [
+            { jp: "写真{しゃしん}", pt: "foto" },
+            { jp: "撮{と}って", pt: "tirar foto" }
+          ]
+        ),
+        lmPhrase(
+          "少{すこ}し 休{やす}んでも いいですか。",
+          "Posso descansar um pouco?",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "休{やす}んで", pt: "descansar" }
+          ]
+        ),
+        lmPhrase(
+          "今日{きょう} は 早{はや}く 帰{かえ}っても いいですか。",
+          "Posso ir embora cedo hoje?",
+          [
+            { jp: "今日{きょう}", pt: "hoje" },
+            { jp: "帰{かえ}って", pt: "ir embora / voltar" }
+          ]
+        ),
+        lmPhrase(
+          "この ペン を 使{つか}っても いいですか。",
+          "Posso usar esta caneta?",
+          [
+            { jp: "使{つか}って", pt: "usar" }
+          ]
+        ),
+        lmPhrase(
+          "あと で 電話{でんわ} しても いいですか。",
+          "Posso ligar depois?",
+          [
+            { jp: "電話{でんわ}", pt: "telefone / ligação" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} を ここ に 置{お}いても いいですか。",
+          "Posso deixar este documento aqui?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "置{お}いて", pt: "colocar / deixar" }
+          ]
+        )
+      ]
+    }
+  };
+    Object.assign(LM_GRAMMAR_BANK, {
+    "てもらえますか": {
+      label: "Uso de てもらえますか",
+      kind: "gramática",
+      explanation:
+        "てもらえますか é uma forma educada de pedir para alguém fazer algo por você. Em português: “você poderia... para mim?”.",
+      usage:
+        "Use quando precisar pedir ajuda sem parecer mandão. É uma estrutura preciosa no trabalho, hospital, prefeitura e lojas.",
+      commonMistake:
+        "Evite pedir só com verbo no imperativo. Para soar educado, use てもらえますか ou ていただけますか.",
+      phrases: [
+        lmPhrase(
+          "もう 一度{いちど} 説明{せつめい} して もらえますか。",
+          "Você poderia explicar mais uma vez para mim?",
+          [
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "説明{せつめい}", pt: "explicação" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} を 見{み}て もらえますか。",
+          "Você poderia olhar este documento para mim?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "見{み}て", pt: "ver / olhar" }
+          ]
+        ),
+        lmPhrase(
+          "紙{かみ} に 書{か}いて もらえますか。",
+          "Você poderia escrever no papel para mim?",
+          [
+            { jp: "紙{かみ}", pt: "papel" },
+            { jp: "書{か}いて", pt: "escrever" }
+          ]
+        ),
+        lmPhrase(
+          "少{すこ}し 手伝{てつだ}って もらえますか。",
+          "Você poderia me ajudar um pouco?",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "手伝{てつだ}って", pt: "ajudar" }
+          ]
+        ),
+        lmPhrase(
+          "確認{かくにん} して もらえますか。",
+          "Você poderia verificar para mim?",
+          [
+            { jp: "確認{かくにん}", pt: "verificação / confirmação" }
+          ]
+        ),
+        lmPhrase(
+          "ゆっくり 話{はな}して もらえますか。",
+          "Você poderia falar devagar para mim?",
+          [
+            { jp: "ゆっくり", pt: "devagar" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        ),
+        lmPhrase(
+          "写真{しゃしん} を 送{おく}って もらえますか。",
+          "Você poderia me enviar a foto?",
+          [
+            { jp: "写真{しゃしん}", pt: "foto" },
+            { jp: "送{おく}って", pt: "enviar" }
+          ]
+        )
+      ]
+    },
+
+    "ていただけますか": {
+      label: "Uso de ていただけますか",
+      kind: "gramática",
+      explanation:
+        "ていただけますか é uma versão mais respeitosa de てもらえますか. Em português: “o senhor poderia...?”.",
+      usage:
+        "Use com chefe, atendente, médico, prefeitura ou qualquer situação em que você queira soar mais polido.",
+      commonMistake:
+        "Não precisa usar sempre. Se usar demais em conversa casual, pode soar formal demais. Para trabalho e atendimento, é ótimo.",
+      phrases: [
+        lmPhrase(
+          "もう 一度{いちど} 説明{せつめい} して いただけますか。",
+          "O senhor poderia explicar mais uma vez?",
+          [
+            { jp: "説明{せつめい}", pt: "explicação" },
+            { jp: "いただけますか", pt: "poderia fazer para mim? / forma respeitosa" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} を 確認{かくにん} して いただけますか。",
+          "O senhor poderia verificar este documento?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "確認{かくにん}", pt: "verificação" }
+          ]
+        ),
+        lmPhrase(
+          "少{すこ}し 待{ま}って いただけますか。",
+          "O senhor poderia esperar um pouco?",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "待{ま}って", pt: "esperar" }
+          ]
+        ),
+        lmPhrase(
+          "ゆっくり 話{はな}して いただけますか。",
+          "O senhor poderia falar devagar?",
+          [
+            { jp: "ゆっくり", pt: "devagar" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        ),
+        lmPhrase(
+          "ここ に 書{か}いて いただけますか。",
+          "O senhor poderia escrever aqui?",
+          [
+            { jp: "ここ", pt: "aqui" },
+            { jp: "書{か}いて", pt: "escrever" }
+          ]
+        ),
+        lmPhrase(
+          "必要{ひつよう} な もの を 教{おし}えて いただけますか。",
+          "O senhor poderia me dizer o que é necessário?",
+          [
+            { jp: "必要{ひつよう}", pt: "necessário" },
+            { jp: "教{おし}えて", pt: "ensinar / informar" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした} の 予定{よてい} を 確認{かくにん} して いただけますか。",
+          "O senhor poderia confirmar a programação de amanhã?",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "予定{よてい}", pt: "programação / plano" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        )
+      ]
+    },
+
+    "ないといけない": {
+      label: "Uso de ないといけない",
+      kind: "gramática",
+      explanation:
+        "ないといけない indica obrigação: “tenho que...”, “preciso...”. É muito usado na fala cotidiana.",
+      usage:
+        "Use para falar de tarefas, horários, documentos, trabalho e responsabilidades.",
+      commonMistake:
+        "Na conversa casual pode virar ないと. Em situações formais, mantenha ないといけません ou ないといけないです.",
+      phrases: [
+        lmPhrase(
+          "今日{きょう} は 早{はや}く 寝{ね}ないといけないです。",
+          "Hoje eu tenho que dormir cedo.",
+          [
+            { jp: "今日{きょう}", pt: "hoje" },
+            { jp: "寝{ね}ないといけない", pt: "tenho que dormir" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした}、市役所{しやくしょ} に 行{い}かないといけないです。",
+          "Amanhã tenho que ir à prefeitura.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "市役所{しやくしょ}", pt: "prefeitura" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} を 出{だ}さないといけないです。",
+          "Tenho que entregar este documento.",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "出{だ}さないといけない", pt: "tenho que entregar" }
+          ]
+        ),
+        lmPhrase(
+          "仕事{しごと} の 前{まえ} に 薬{くすり} を 飲{の}まないといけないです。",
+          "Tenho que tomar o remédio antes do trabalho.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "薬{くすり}", pt: "remédio" },
+            { jp: "飲{の}まないといけない", pt: "tenho que tomar" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした} まで に 連絡{れんらく} しないといけないです。",
+          "Tenho que entrar em contato até amanhã.",
+          [
+            { jp: "明日{あした} まで", pt: "até amanhã" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        lmPhrase(
+          "安全{あんぜん} の ため に ヘルメット を かぶらないといけないです。",
+          "Por segurança, tenho que usar capacete.",
+          [
+            { jp: "安全{あんぜん}", pt: "segurança" },
+            { jp: "ため に", pt: "para / por causa de" },
+            { jp: "ヘルメット", pt: "capacete" }
+          ]
+        ),
+        lmPhrase(
+          "日本語{にほんご} を 少{すこ}しずつ 練習{れんしゅう} しないといけないです。",
+          "Tenho que praticar japonês aos poucos.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "少{すこ}しずつ", pt: "aos poucos" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    },
+
+    "なければならない": {
+      label: "Uso de なければならない",
+      kind: "gramática",
+      explanation:
+        "なければならない também significa obrigação: “deve”, “tem que”. É mais formal que ないといけない.",
+      usage:
+        "Use em documentos, regras, explicações formais e situações mais sérias.",
+      commonMistake:
+        "Na fala comum, pode soar formal. Para conversa diária, ないといけない é mais natural.",
+      phrases: [
+        lmPhrase(
+          "この 書類{しょるい} を 提出{ていしゅつ} しなければなりません。",
+          "Devo entregar este documento.",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "提出{ていしゅつ}", pt: "entrega / submissão" }
+          ]
+        ),
+        lmPhrase(
+          "住所{じゅうしょ} が 変{か}わったら、届{とど}け出{で} なければなりません。",
+          "Se o endereço mudar, devo fazer a notificação.",
+          [
+            { jp: "住所{じゅうしょ}", pt: "endereço" },
+            { jp: "変{か}わったら", pt: "se mudar" },
+            { jp: "届{とど}け出{で}", pt: "notificação / declaração" }
+          ]
+        ),
+        lmPhrase(
+          "安全{あんぜん} ルール を 守{まも}らなければなりません。",
+          "Devemos obedecer às regras de segurança.",
+          [
+            { jp: "安全{あんぜん}", pt: "segurança" },
+            { jp: "守{まも}る", pt: "obedecer / proteger" }
+          ]
+        ),
+        lmPhrase(
+          "予約{よやく} を キャンセル しなければなりません。",
+          "Tenho que cancelar a reserva.",
+          [
+            { jp: "予約{よやく}", pt: "reserva" },
+            { jp: "キャンセル", pt: "cancelamento" }
+          ]
+        ),
+        lmPhrase(
+          "期限{きげん} まで に 支払{しはら}わなければなりません。",
+          "Tenho que pagar até o prazo.",
+          [
+            { jp: "期限{きげん}", pt: "prazo" },
+            { jp: "支払{しはら}う", pt: "pagar" }
+          ]
+        ),
+        lmPhrase(
+          "保険証{ほけんしょう} を 持{も}って 行{い}かなければなりません。",
+          "Tenho que levar o cartão do seguro de saúde.",
+          [
+            { jp: "保険証{ほけんしょう}", pt: "cartão do seguro de saúde" },
+            { jp: "持{も}って 行{い}く", pt: "levar" }
+          ]
+        ),
+        lmPhrase(
+          "会社{かいしゃ} に 報告{ほうこく} しなければなりません。",
+          "Tenho que informar a empresa.",
+          [
+            { jp: "会社{かいしゃ}", pt: "empresa" },
+            { jp: "報告{ほうこく}", pt: "relato / comunicação" }
+          ]
+        )
+      ]
+    },
+
+    "たほうがいい": {
+      label: "Uso de たほうがいい",
+      kind: "gramática",
+      explanation:
+        "たほうがいい significa “é melhor fazer...”. Serve para conselho, sugestão e orientação.",
+      usage:
+        "Use quando quiser aconselhar ou receber conselho de forma natural.",
+      commonMistake:
+        "Cuidado para não soar mandão. Em japonês, o tom e o contexto importam muito.",
+      phrases: [
+        lmPhrase(
+          "早{はや}く 寝{ね}た ほうが いいです。",
+          "É melhor dormir cedo.",
+          [
+            { jp: "早{はや}く", pt: "cedo" },
+            { jp: "寝{ね}た", pt: "dormiu / dormir" }
+          ]
+        ),
+        lmPhrase(
+          "病院{びょういん} に 行{い}った ほうが いいです。",
+          "É melhor ir ao hospital.",
+          [
+            { jp: "病院{びょういん}", pt: "hospital" },
+            { jp: "行{い}った", pt: "foi / ir" }
+          ]
+        ),
+        lmPhrase(
+          "もう 一度{いちど} 確認{かくにん} した ほうが いいです。",
+          "É melhor verificar mais uma vez.",
+          [
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "確認{かくにん}", pt: "verificação" }
+          ]
+        ),
+        lmPhrase(
+          "雨{あめ} なので、傘{かさ} を 持{も}って 行{い}った ほうが いいです。",
+          "Como está chovendo, é melhor levar guarda-chuva.",
+          [
+            { jp: "雨{あめ}", pt: "chuva" },
+            { jp: "傘{かさ}", pt: "guarda-chuva" }
+          ]
+        ),
+        lmPhrase(
+          "わからない 時{とき} は、すぐ 聞{き}いた ほうが いいです。",
+          "Quando não entender, é melhor perguntar logo.",
+          [
+            { jp: "時{とき}", pt: "quando / momento" },
+            { jp: "聞{き}いた", pt: "perguntou / perguntar" }
+          ]
+        ),
+        lmPhrase(
+          "この 薬{くすり} は 食後{しょくご} に 飲{の}んだ ほうが いいです。",
+          "É melhor tomar este remédio depois da refeição.",
+          [
+            { jp: "薬{くすり}", pt: "remédio" },
+            { jp: "食後{しょくご}", pt: "depois da refeição" }
+          ]
+        ),
+        lmPhrase(
+          "大事{だいじ} な こと は メモ した ほうが いいです。",
+          "É melhor anotar coisas importantes.",
+          [
+            { jp: "大事{だいじ}", pt: "importante" },
+            { jp: "メモ", pt: "anotação" }
+          ]
+        )
+      ]
+    },
+
+    "ことができる": {
+      label: "Uso de ことができる",
+      kind: "gramática",
+      explanation:
+        "ことができる indica capacidade ou possibilidade: “conseguir fazer”, “poder fazer”.",
+      usage:
+        "Use para falar do que você consegue fazer ou do que é possível fazer em determinado lugar.",
+      commonMistake:
+        "Na fala diária, muitas vezes a forma potencial do verbo é mais natural, mas ことができる é claro e educado.",
+      phrases: [
+        lmPhrase(
+          "日本語{にほんご} を 少{すこ}し 話{はな}す こと が できます。",
+          "Consigo falar um pouco de japonês.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "話{はな}す", pt: "falar" }
+          ]
+        ),
+        lmPhrase(
+          "ここ で 支払{しはら}う こと が できますか。",
+          "É possível pagar aqui?",
+          [
+            { jp: "支払{しはら}う", pt: "pagar" }
+          ]
+        ),
+        lmPhrase(
+          "この アプリ で 毎日{まいにち} 練習{れんしゅう} する こと が できます。",
+          "Com este app, é possível praticar todos os dias.",
+          [
+            { jp: "毎日{まいにち}", pt: "todos os dias" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        ),
+        lmPhrase(
+          "今日{きょう}、予約{よやく} する こと が できますか。",
+          "É possível fazer reserva hoje?",
+          [
+            { jp: "今日{きょう}", pt: "hoje" },
+            { jp: "予約{よやく}", pt: "reserva" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} を コピー する こと が できますか。",
+          "É possível tirar cópia deste documento?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "コピー", pt: "cópia" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした}、休{やす}む こと が できますか。",
+          "É possível folgar amanhã?",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "休{やす}む", pt: "folgar / descansar" }
+          ]
+        ),
+        lmPhrase(
+          "カード で 払{はら}う こと が できます。",
+          "É possível pagar com cartão.",
+          [
+            { jp: "カード", pt: "cartão" },
+            { jp: "払{はら}う", pt: "pagar" }
+          ]
+        )
+      ]
+    }
+  });
+
+    Object.assign(LM_GRAMMAR_BANK, {
+    "かどうか": {
+      label: "Uso de かどうか",
+      kind: "gramática",
+      explanation:
+        "かどうか significa “se... ou não”. Use quando quiser confirmar uma informação.",
+      usage:
+        "Excelente para confirmar se algo está correto, se pode usar, se precisa reservar, se tem hora extra ou se o documento serve.",
+      commonMistake:
+        "Não confunda com か sozinho. かどうか deixa claro que você está perguntando “se sim ou se não”.",
+      phrases: [
+        lmPhrase(
+          "この カード が 使{つか}える かどうか 確認{かくにん} して ください。",
+          "Por favor, confirme se este cartão pode ser usado.",
+          [
+            { jp: "使{つか}える", pt: "pode usar" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        ),
+        lmPhrase(
+          "今日{きょう} 残業{ざんぎょう} が ある かどうか 知{し}りたいです。",
+          "Quero saber se hoje vai ter hora extra.",
+          [
+            { jp: "残業{ざんぎょう}", pt: "hora extra" },
+            { jp: "知{し}りたい", pt: "quero saber" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} で 大丈夫{だいじょうぶ} かどうか 見{み}て もらえますか。",
+          "Você poderia ver se este documento está certo?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / correto" }
+          ]
+        ),
+        lmPhrase(
+          "予約{よやく} が 必要{ひつよう} かどうか 教{おし}えて ください。",
+          "Por favor, me diga se é necessário reservar.",
+          [
+            { jp: "予約{よやく}", pt: "reserva" },
+            { jp: "必要{ひつよう}", pt: "necessário" }
+          ]
+        ),
+        lmPhrase(
+          "この 電車{でんしゃ} が 福井{ふくい} に 行{い}く かどうか 知{し}りたいです。",
+          "Quero saber se este trem vai para Fukui.",
+          [
+            { jp: "電車{でんしゃ}", pt: "trem" },
+            { jp: "福井{ふくい}", pt: "Fukui" },
+            { jp: "行{い}く", pt: "ir" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした} 休{やす}める かどうか まだ わかりません。",
+          "Ainda não sei se posso folgar amanhã.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "休{やす}める", pt: "poder folgar" }
+          ]
+        ),
+        lmPhrase(
+          "この 商品{しょうひん} が まだ ある かどうか 聞{き}いて みます。",
+          "Vou tentar perguntar se este produto ainda tem.",
+          [
+            { jp: "商品{しょうひん}", pt: "produto" },
+            { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
+          ]
+        )
+      ]
+    },
+
+    "と思います": {
+      label: "Uso de と思います",
+      kind: "gramática",
+      explanation:
+        "と思います significa “acho que...” ou “penso que...”. Ajuda a dar opinião de forma educada e menos dura.",
+      usage:
+        "Use para expressar opinião, impressão, previsão ou resposta sem parecer definitivo demais.",
+      commonMistake:
+        "Não use para fatos totalmente óbvios quando você quer afirmar com certeza. É mais para opinião ou percepção.",
+      phrases: [
+        lmPhrase(
+          "これ で 大丈夫{だいじょうぶ} だ と 思{おも}います。",
+          "Acho que assim está tudo bem.",
+          [
+            { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / correto" },
+            { jp: "思{おも}います", pt: "acho / penso" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした} は 雨{あめ} が 降{ふ}る と 思{おも}います。",
+          "Acho que amanhã vai chover.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "雨{あめ}", pt: "chuva" },
+            { jp: "降{ふ}る", pt: "chover" }
+          ]
+        ),
+        lmPhrase(
+          "この 作業{さぎょう} は 少{すこ}し 難{むずか}しい と 思{おも}います。",
+          "Acho que este trabalho é um pouco difícil.",
+          [
+            { jp: "作業{さぎょう}", pt: "tarefa / trabalho" },
+            { jp: "難{むずか}しい", pt: "difícil" }
+          ]
+        ),
+        lmPhrase(
+          "この 方法{ほうほう} の ほう が いい と 思{おも}います。",
+          "Acho que este método é melhor.",
+          [
+            { jp: "方法{ほうほう}", pt: "método" },
+            { jp: "ほう が いい", pt: "é melhor" }
+          ]
+        ),
+        lmPhrase(
+          "時間{じかん} が 足{た}りない と 思{おも}います。",
+          "Acho que o tempo não é suficiente.",
+          [
+            { jp: "時間{じかん}", pt: "tempo" },
+            { jp: "足{た}りない", pt: "não é suficiente" }
+          ]
+        ),
+        lmPhrase(
+          "この 説明{せつめい} は わかりやすい と 思{おも}います。",
+          "Acho que esta explicação é fácil de entender.",
+          [
+            { jp: "説明{せつめい}", pt: "explicação" },
+            { jp: "わかりやすい", pt: "fácil de entender" }
+          ]
+        ),
+        lmPhrase(
+          "日本語{にほんご} は 少{すこ}しずつ 上手{じょうず} に なる と 思{おも}います。",
+          "Acho que meu japonês vai melhorar aos poucos.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "少{すこ}しずつ", pt: "aos poucos" },
+            { jp: "上手{じょうず}", pt: "habilidoso / bom" }
+          ]
+        )
+      ]
+    },
+
+    "かもしれません": {
+      label: "Uso de かもしれません",
+      kind: "gramática",
+      explanation:
+        "かもしれません significa “talvez”, “pode ser que...”. É usado quando você não tem certeza total.",
+      usage:
+        "Use para falar de possibilidade, atraso, problema, sintomas ou previsão com cuidado.",
+      commonMistake:
+        "Não use quando você tem certeza. Para certeza, use formas mais diretas como です ou と思います dependendo do caso.",
+      phrases: [
+        lmPhrase(
+          "少{すこ}し 遅{おく}れる かもしれません。",
+          "Talvez eu me atrase um pouco.",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "遅{おく}れる", pt: "atrasar" }
+          ]
+        ),
+        lmPhrase(
+          "明日{あした} は 雨{あめ} かもしれません。",
+          "Talvez amanhã chova.",
+          [
+            { jp: "明日{あした}", pt: "amanhã" },
+            { jp: "雨{あめ}", pt: "chuva" }
+          ]
+        ),
+        lmPhrase(
+          "この 部品{ぶひん} は 違{ちが}う かもしれません。",
+          "Talvez esta peça esteja errada.",
+          [
+            { jp: "部品{ぶひん}", pt: "peça" },
+            { jp: "違{ちが}う", pt: "diferente / errado" }
+          ]
+        ),
+        lmPhrase(
+          "熱{ねつ} が ある かもしれません。",
+          "Talvez eu esteja com febre.",
+          [
+            { jp: "熱{ねつ}", pt: "febre" }
+          ]
+        ),
+        lmPhrase(
+          "今日{きょう} は 残業{ざんぎょう} に なる かもしれません。",
+          "Talvez hoje vire hora extra.",
+          [
+            { jp: "今日{きょう}", pt: "hoje" },
+            { jp: "残業{ざんぎょう}", pt: "hora extra" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} が 必要{ひつよう} かもしれません。",
+          "Talvez este documento seja necessário.",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "必要{ひつよう}", pt: "necessário" }
+          ]
+        ),
+        lmPhrase(
+          "電話{でんわ} した ほう が いい かもしれません。",
+          "Talvez seja melhor ligar.",
+          [
+            { jp: "電話{でんわ}", pt: "telefone / ligação" },
+            { jp: "ほう が いい", pt: "é melhor" }
+          ]
+        )
+      ]
+    },
+
+    "ようにしています": {
+      label: "Uso de ようにしています",
+      kind: "gramática",
+      explanation:
+        "ようにしています indica um hábito ou esforço consciente: “procuro fazer...”, “tenho tentado fazer...”.",
+      usage:
+        "Use para falar de rotina, disciplina, cuidado com saúde, estudo e trabalho.",
+      commonMistake:
+        "Não é apenas “faço”. Mostra que você tenta manter aquilo como hábito.",
+      phrases: [
+        lmPhrase(
+          "毎日{まいにち} 日本語{にほんご} を 聞{き}く ようにしています。",
+          "Procuro ouvir japonês todos os dias.",
+          [
+            { jp: "毎日{まいにち}", pt: "todos os dias" },
+            { jp: "聞{き}く", pt: "ouvir" }
+          ]
+        ),
+        lmPhrase(
+          "仕事{しごと} の 前{まえ} に 水{みず} を 飲{の}む ようにしています。",
+          "Procuro beber água antes do trabalho.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "水{みず}", pt: "água" },
+            { jp: "飲{の}む", pt: "beber" }
+          ]
+        ),
+        lmPhrase(
+          "わからない 時{とき} は、すぐ 聞{き}く ようにしています。",
+          "Quando não entendo, procuro perguntar logo.",
+          [
+            { jp: "時{とき}", pt: "quando / momento" },
+            { jp: "聞{き}く", pt: "perguntar / ouvir" }
+          ]
+        ),
+        lmPhrase(
+          "大事{だいじ} な こと は メモ する ようにしています。",
+          "Procuro anotar coisas importantes.",
+          [
+            { jp: "大事{だいじ}", pt: "importante" },
+            { jp: "メモ", pt: "anotação" }
+          ]
+        ),
+        lmPhrase(
+          "夜{よる} は 早{はや}く 寝{ね}る ようにしています。",
+          "À noite, procuro dormir cedo.",
+          [
+            { jp: "夜{よる}", pt: "noite" },
+            { jp: "寝{ね}る", pt: "dormir" }
+          ]
+        ),
+        lmPhrase(
+          "安全{あんぜん} の ため に、必{かなら}ず 確認{かくにん} する ようにしています。",
+          "Por segurança, procuro sempre confirmar.",
+          [
+            { jp: "安全{あんぜん}", pt: "segurança" },
+            { jp: "必{かなら}ず", pt: "sem falta / sempre" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        ),
+        lmPhrase(
+          "少{すこ}しずつ 話{はな}す 練習{れんしゅう} を する ようにしています。",
+          "Procuro praticar fala aos poucos.",
+          [
+            { jp: "少{すこ}しずつ", pt: "aos poucos" },
+            { jp: "話{はな}す", pt: "falar" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    },
+
+    "ために": {
+      label: "Uso de ために",
+      kind: "gramática",
+      explanation:
+        "ために significa “para”, “com o objetivo de” ou “por causa de”, dependendo do contexto.",
+      usage:
+        "Use para falar de objetivo, motivo, segurança, saúde, trabalho e preparação.",
+      commonMistake:
+        "Quando for objetivo, a ideia é “para fazer algo”. Quando for causa, o contexto precisa deixar isso claro.",
+      phrases: [
+        lmPhrase(
+          "日本語{にほんご} を 話{はな}せる ように なる ために、毎日{まいにち} 練習{れんしゅう} します。",
+          "Para conseguir falar japonês, pratico todos os dias.",
+          [
+            { jp: "話{はな}せる", pt: "conseguir falar" },
+            { jp: "毎日{まいにち}", pt: "todos os dias" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        ),
+        lmPhrase(
+          "安全{あんぜん} の ために、ヘルメット を かぶって ください。",
+          "Por segurança, por favor use capacete.",
+          [
+            { jp: "安全{あんぜん}", pt: "segurança" },
+            { jp: "ヘルメット", pt: "capacete" }
+          ]
+        ),
+        lmPhrase(
+          "仕事{しごと} の ために、早{はや}く 寝{ね}ます。",
+          "Por causa do trabalho, vou dormir cedo.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "寝{ね}ます", pt: "vou dormir" }
+          ]
+        ),
+        lmPhrase(
+          "確認{かくにん} の ために、もう 一度{いちど} 聞{き}きます。",
+          "Para confirmar, vou perguntar mais uma vez.",
+          [
+            { jp: "確認{かくにん}", pt: "confirmação" },
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "聞{き}きます", pt: "vou perguntar / ouvir" }
+          ]
+        ),
+        lmPhrase(
+          "健康{けんこう} の ために、少{すこ}し 歩{ある}いて います。",
+          "Pela saúde, estou caminhando um pouco.",
+          [
+            { jp: "健康{けんこう}", pt: "saúde" },
+            { jp: "歩{ある}いて", pt: "andando" }
+          ]
+        ),
+        lmPhrase(
+          "勉強{べんきょう} の ために、この アプリ を 使{つか}って います。",
+          "Para estudar, estou usando este app.",
+          [
+            { jp: "勉強{べんきょう}", pt: "estudo" },
+            { jp: "使{つか}って", pt: "usando" }
+          ]
+        ),
+        lmPhrase(
+          "遅刻{ちこく} しない ために、早{はや}く 出{で}ます。",
+          "Para não me atrasar, vou sair cedo.",
+          [
+            { jp: "遅刻{ちこく}", pt: "atraso" },
+            { jp: "出{で}ます", pt: "vou sair" }
+          ]
+        )
+      ]
+    }
+  });
+    Object.assign(LM_GRAMMAR_BANK, {
+    "ながら": {
+      label: "Uso de ながら",
+      kind: "gramática",
+      explanation:
+        "ながら indica duas ações acontecendo ao mesmo tempo. Em português: “enquanto faço...”.",
+      usage:
+        "Use para falar de rotina, estudo, trabalho leve e ações simultâneas.",
+      commonMistake:
+        "O sujeito das duas ações geralmente é o mesmo. Evite usar quando duas pessoas diferentes fazem ações diferentes.",
+      phrases: [
+        lmPhrase(
+          "音声{おんせい} を 聞{き}きながら、発音{はつおん} を 練習{れんしゅう} します。",
+          "Enquanto escuto o áudio, pratico a pronúncia.",
+          [
+            { jp: "音声{おんせい}", pt: "áudio" },
+            { jp: "聞{き}きながら", pt: "enquanto escuto" },
+            { jp: "発音{はつおん}", pt: "pronúncia" }
+          ]
+        ),
+        lmPhrase(
+          "歩{ある}きながら、日本語{にほんご} を 聞{き}いて います。",
+          "Estou ouvindo japonês enquanto caminho.",
+          [
+            { jp: "歩{ある}きながら", pt: "enquanto caminho" },
+            { jp: "日本語{にほんご}", pt: "japonês" }
+          ]
+        ),
+        lmPhrase(
+          "メモ を 見{み}ながら、話{はな}しても いいですか。",
+          "Posso falar olhando as anotações?",
+          [
+            { jp: "メモ", pt: "anotação" },
+            { jp: "見{み}ながら", pt: "enquanto vejo" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        ),
+        lmPhrase(
+          "説明{せつめい} を 聞{き}きながら、確認{かくにん} します。",
+          "Vou confirmar enquanto escuto a explicação.",
+          [
+            { jp: "説明{せつめい}", pt: "explicação" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        ),
+        lmPhrase(
+          "仕事{しごと} を しながら、日本語{にほんご} を 少{すこ}しずつ 覚{おぼ}えています。",
+          "Enquanto trabalho, estou aprendendo japonês aos poucos.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "少{すこ}しずつ", pt: "aos poucos" },
+            { jp: "覚{おぼ}えています", pt: "estou memorizando / aprendendo" }
+          ]
+        ),
+        lmPhrase(
+          "地図{ちず} を 見{み}ながら、駅{えき} まで 行{い}きます。",
+          "Vou até a estação olhando o mapa.",
+          [
+            { jp: "地図{ちず}", pt: "mapa" },
+            { jp: "駅{えき}", pt: "estação" }
+          ]
+        ),
+        lmPhrase(
+          "動画{どうが} を 見{み}ながら、使{つか}い方{かた} を 覚{おぼ}えます。",
+          "Vou aprender o modo de usar enquanto vejo o vídeo.",
+          [
+            { jp: "動画{どうが}", pt: "vídeo" },
+            { jp: "使{つか}い方{かた}", pt: "modo de usar" },
+            { jp: "覚{おぼ}えます", pt: "vou memorizar / aprender" }
+          ]
+        )
+      ]
+    },
+
+    "前に": {
+      label: "Uso de 前に",
+      kind: "gramática",
+      explanation:
+        "前に significa “antes de”. Use para falar de ordem das ações.",
+      usage:
+        "Muito útil para rotina: antes do trabalho, antes de sair, antes de tomar remédio, antes de entregar documento.",
+      commonMistake:
+        "Antes de verbo, normalmente use a forma dicionário: 行く前に, 食べる前に, 出す前に.",
+      phrases: [
+        lmPhrase(
+          "仕事{しごと} に 行{い}く 前{まえ} に、ご飯{はん} を 食{た}べます。",
+          "Antes de ir ao trabalho, eu como.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "前{まえ} に", pt: "antes de" },
+            { jp: "食{た}べます", pt: "como" }
+          ]
+        ),
+        lmPhrase(
+          "薬{くすり} を 飲{の}む 前{まえ} に、水{みず} を 用意{ようい} します。",
+          "Antes de tomar o remédio, preparo água.",
+          [
+            { jp: "薬{くすり}", pt: "remédio" },
+            { jp: "水{みず}", pt: "água" },
+            { jp: "用意{ようい}", pt: "preparação" }
+          ]
+        ),
+        lmPhrase(
+          "出{で}かける 前{まえ} に、天気{てんき} を 確認{かくにん} します。",
+          "Antes de sair, confirmo o tempo.",
+          [
+            { jp: "出{で}かける", pt: "sair" },
+            { jp: "天気{てんき}", pt: "tempo / clima" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        ),
+        lmPhrase(
+          "書類{しょるい} を 出{だ}す 前{まえ} に、もう 一度{いちど} 見{み}ます。",
+          "Antes de entregar o documento, vou olhar mais uma vez.",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "出{だ}す", pt: "entregar" },
+            { jp: "一度{いちど}", pt: "uma vez" }
+          ]
+        ),
+        lmPhrase(
+          "寝{ね}る 前{まえ} に、少{すこ}し 日本語{にほんご} を 聞{き}きます。",
+          "Antes de dormir, escuto um pouco de japonês.",
+          [
+            { jp: "寝{ね}る", pt: "dormir" },
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "聞{き}きます", pt: "escuto" }
+          ]
+        ),
+        lmPhrase(
+          "買{か}う 前{まえ} に、値段{ねだん} を 確認{かくにん} します。",
+          "Antes de comprar, confirmo o preço.",
+          [
+            { jp: "買{か}う", pt: "comprar" },
+            { jp: "値段{ねだん}", pt: "preço" }
+          ]
+        ),
+        lmPhrase(
+          "予約{よやく} する 前{まえ} に、時間{じかん} を 確認{かくにん} したいです。",
+          "Antes de reservar, quero confirmar o horário.",
+          [
+            { jp: "予約{よやく}", pt: "reserva" },
+            { jp: "時間{じかん}", pt: "horário / tempo" }
+          ]
+        )
+      ]
+    },
+
+    "後で": {
+      label: "Uso de 後で",
+      kind: "gramática",
+      explanation:
+        "後で significa “depois”. Use para dizer que fará algo mais tarde.",
+      usage:
+        "Muito comum para avisar que vai confirmar, ligar, enviar, estudar ou resolver depois.",
+      commonMistake:
+        "後で é mais geral. Depois de uma ação específica, também aparece como 〜た後で.",
+      phrases: [
+        lmPhrase(
+          "あと で 連絡{れんらく} します。",
+          "Entro em contato depois.",
+          [
+            { jp: "あと で", pt: "depois" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        lmPhrase(
+          "仕事{しごと} の 後{あと} で、買{か}い物{もの} に 行{い}きます。",
+          "Depois do trabalho, vou fazer compras.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "買{か}い物{もの}", pt: "compras" }
+          ]
+        ),
+        lmPhrase(
+          "確認{かくにん} した 後{あと} で、返事{へんじ} します。",
+          "Depois de confirmar, respondo.",
+          [
+            { jp: "確認{かくにん}", pt: "confirmação" },
+            { jp: "返事{へんじ}", pt: "resposta" }
+          ]
+        ),
+        lmPhrase(
+          "ご飯{はん} を 食{た}べた 後{あと} で、薬{くすり} を 飲{の}みます。",
+          "Depois de comer, tomo o remédio.",
+          [
+            { jp: "ご飯{はん}", pt: "refeição / arroz" },
+            { jp: "薬{くすり}", pt: "remédio" }
+          ]
+        ),
+        lmPhrase(
+          "家{いえ} に 帰{かえ}った 後{あと} で、日本語{にほんご} を 練習{れんしゅう} します。",
+          "Depois de voltar para casa, pratico japonês.",
+          [
+            { jp: "家{いえ}", pt: "casa" },
+            { jp: "帰{かえ}った", pt: "voltou" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        ),
+        lmPhrase(
+          "説明{せつめい} を 聞{き}いた 後{あと} で、やって みます。",
+          "Depois de ouvir a explicação, vou tentar fazer.",
+          [
+            { jp: "説明{せつめい}", pt: "explicação" },
+            { jp: "聞{き}いた", pt: "ouviu" },
+            { jp: "やって みます", pt: "vou tentar fazer" }
+          ]
+        ),
+        lmPhrase(
+          "電話{でんわ} の 後{あと} で、メッセージ を 送{おく}ります。",
+          "Depois da ligação, envio mensagem.",
+          [
+            { jp: "電話{でんわ}", pt: "telefone / ligação" },
+            { jp: "送{おく}ります", pt: "envio" }
+          ]
+        )
+      ]
+    },
+
+    "時": {
+      label: "Uso de 時",
+      kind: "gramática",
+      explanation:
+        "時 significa “quando” ou “no momento em que”. É uma das estruturas mais úteis do japonês.",
+      usage:
+        "Use para falar de situações: quando não entende, quando vai ao hospital, quando chega atrasado, quando trabalha.",
+      commonMistake:
+        "Preste atenção ao tempo verbal antes de 時: 行く時 e 行った時 podem mudar o sentido.",
+      phrases: [
+        lmPhrase(
+          "わからない 時{とき} は、聞{き}いて ください。",
+          "Quando não entender, por favor pergunte.",
+          [
+            { jp: "時{とき}", pt: "quando / momento" },
+            { jp: "聞{き}いて", pt: "pergunte / escute" }
+          ]
+        ),
+        lmPhrase(
+          "困{こま}った 時{とき} は、連絡{れんらく} して ください。",
+          "Quando tiver problema, por favor entre em contato.",
+          [
+            { jp: "困{こま}った", pt: "em dificuldade / com problema" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        lmPhrase(
+          "病院{びょういん} に 行{い}く 時{とき} は、保険証{ほけんしょう} を 持{も}って 行{い}きます。",
+          "Quando vou ao hospital, levo o cartão do seguro de saúde.",
+          [
+            { jp: "病院{びょういん}", pt: "hospital" },
+            { jp: "保険証{ほけんしょう}", pt: "cartão do seguro de saúde" }
+          ]
+        ),
+        lmPhrase(
+          "仕事{しごと} の 時{とき} は、安全{あんぜん} に 気{き}をつけます。",
+          "Durante o trabalho, tomo cuidado com a segurança.",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "安全{あんぜん}", pt: "segurança" },
+            { jp: "気{き}をつけます", pt: "tomo cuidado" }
+          ]
+        ),
+        lmPhrase(
+          "遅{おく}れる 時{とき} は、先{さき}に 連絡{れんらく} します。",
+          "Quando vou me atrasar, aviso antes.",
+          [
+            { jp: "遅{おく}れる", pt: "atrasar" },
+            { jp: "先{さき}に", pt: "antes / antecipadamente" }
+          ]
+        ),
+        lmPhrase(
+          "買{か}い物{もの} の 時{とき} は、値段{ねだん} を よく 見{み}ます。",
+          "Na hora das compras, olho bem o preço.",
+          [
+            { jp: "買{か}い物{もの}", pt: "compras" },
+            { jp: "値段{ねだん}", pt: "preço" }
+          ]
+        ),
+        lmPhrase(
+          "疲{つか}れた 時{とき} は、無理{むり} しない ようにしています。",
+          "Quando estou cansado, procuro não forçar.",
+          [
+            { jp: "疲{つか}れた", pt: "cansado" },
+            { jp: "無理{むり} しない", pt: "não forçar" }
+          ]
+        )
+      ]
+    },
+
+    "もし": {
+      label: "Uso de もし",
+      kind: "gramática",
+      explanation:
+        "もし indica hipótese: “se...”. É usado quando você imagina uma possibilidade.",
+      usage:
+        "Use para planos, problemas, emergência, atraso ou confirmação de possibilidades.",
+      commonMistake:
+        "もし costuma combinar com formas condicionais como たら, なら, ても.",
+      phrases: [
+        lmPhrase(
+          "もし 遅{おく}れたら、連絡{れんらく} します。",
+          "Se eu me atrasar, entro em contato.",
+          [
+            { jp: "もし", pt: "se" },
+            { jp: "遅{おく}れたら", pt: "se atrasar" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        lmPhrase(
+          "もし わからなかったら、もう 一度{いちど} 聞{き}きます。",
+          "Se eu não entender, vou perguntar mais uma vez.",
+          [
+            { jp: "わからなかったら", pt: "se não entender" },
+            { jp: "一度{いちど}", pt: "uma vez" }
+          ]
+        ),
+        lmPhrase(
+          "もし 熱{ねつ} が 出{で}たら、病院{びょういん} に 行{い}きます。",
+          "Se der febre, vou ao hospital.",
+          [
+            { jp: "熱{ねつ}", pt: "febre" },
+            { jp: "病院{びょういん}", pt: "hospital" }
+          ]
+        ),
+        lmPhrase(
+          "もし 必要{ひつよう} なら、写真{しゃしん} を 送{おく}ります。",
+          "Se for necessário, envio uma foto.",
+          [
+            { jp: "必要{ひつよう}", pt: "necessário" },
+            { jp: "写真{しゃしん}", pt: "foto" },
+            { jp: "送{おく}ります", pt: "envio" }
+          ]
+        ),
+        lmPhrase(
+          "もし 時間{じかん} が あれば、練習{れんしゅう} します。",
+          "Se eu tiver tempo, vou praticar.",
+          [
+            { jp: "時間{じかん}", pt: "tempo" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        ),
+        lmPhrase(
+          "もし 雨{あめ} なら、自転車{じてんしゃ} では 行{い}きません。",
+          "Se chover, não vou de bicicleta.",
+          [
+            { jp: "雨{あめ}", pt: "chuva" },
+            { jp: "自転車{じてんしゃ}", pt: "bicicleta" }
+          ]
+        ),
+        lmPhrase(
+          "もし 間違{まちが}い が あったら、教{おし}えて ください。",
+          "Se houver erro, por favor me avise.",
+          [
+            { jp: "間違{まちが}い", pt: "erro" },
+            { jp: "教{おし}えて", pt: "ensinar / avisar" }
+          ]
+        )
+      ]
+    },
+
+    "けど": {
+      label: "Uso de けど",
+      kind: "gramática",
+      explanation:
+        "けど significa “mas”, “porém” ou serve para suavizar uma frase antes de pedir algo.",
+      usage:
+        "Muito usado em conversa natural. Ajuda a explicar contexto antes de fazer uma pergunta ou pedido.",
+      commonMistake:
+        "けど é natural, mas pode ser casual. Em contexto mais formal, が pode soar mais polido.",
+      phrases: [
+        lmPhrase(
+          "すみません、ちょっと わからない んですけど。",
+          "Com licença, eu não entendi muito bem.",
+          [
+            { jp: "ちょっと", pt: "um pouco" },
+            { jp: "わからない", pt: "não entendo" },
+            { jp: "んですけど", pt: "é que... / suaviza a frase" }
+          ]
+        ),
+        lmPhrase(
+          "聞{き}きたい こと が ある んですけど。",
+          "Eu queria perguntar uma coisa.",
+          [
+            { jp: "聞{き}きたい", pt: "quero perguntar" },
+            { jp: "こと", pt: "coisa / assunto" }
+          ]
+        ),
+        lmPhrase(
+          "この 書類{しょるい} なんですけど、ここ で 大丈夫{だいじょうぶ} ですか。",
+          "Sobre este documento, aqui está certo?",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / correto" }
+          ]
+        ),
+        lmPhrase(
+          "予約{よやく} したい んですけど、今日{きょう} は 空{あ}いて いますか。",
+          "Eu queria fazer uma reserva, hoje tem horário livre?",
+          [
+            { jp: "予約{よやく}", pt: "reserva" },
+            { jp: "空{あ}いて いますか", pt: "está livre?" }
+          ]
+        ),
+        lmPhrase(
+          "少{すこ}し 体調{たいちょう} が 悪{わる}い んですけど、休{やす}んでも いいですか。",
+          "Estou me sentindo um pouco mal, posso descansar?",
+          [
+            { jp: "体調{たいちょう}", pt: "condição física" },
+            { jp: "休{やす}んでも いい", pt: "pode descansar" }
+          ]
+        ),
+        lmPhrase(
+          "駅{えき} に 行{い}きたい んですけど、道{みち} を 教{おし}えて ください。",
+          "Quero ir à estação, por favor me ensine o caminho.",
+          [
+            { jp: "駅{えき}", pt: "estação" },
+            { jp: "道{みち}", pt: "caminho" },
+            { jp: "教{おし}えて", pt: "ensinar / informar" }
+          ]
+        ),
+        lmPhrase(
+          "日本語{にほんご} は 難{むずか}しい けど、少{すこ}しずつ 練習{れんしゅう} します。",
+          "Japonês é difícil, mas vou praticar aos poucos.",
+          [
+            { jp: "難{むずか}しい", pt: "difícil" },
+            { jp: "少{すこ}しずつ", pt: "aos poucos" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    },
+
+    "やってみる": {
+      label: "Uso de やってみる",
+      kind: "gramática",
+      explanation:
+        "やってみる significa “tentar fazer”. Mostra que você vai experimentar ou tentar executar algo.",
+      usage:
+        "Perfeito para trabalho, estudo, instruções e situações em que você ainda não tem certeza.",
+      commonMistake:
+        "Não confunda com apenas やる. やってみる tem a nuance de tentar para ver se consegue.",
+      phrases: [
+        lmPhrase(
+          "一度{いちど} やって みます。",
+          "Vou tentar fazer uma vez.",
+          [
+            { jp: "一度{いちど}", pt: "uma vez" },
+            { jp: "やって みます", pt: "vou tentar fazer" }
+          ]
+        ),
+        lmPhrase(
+          "説明{せつめい} を 聞{き}いて から、やって みます。",
+          "Depois de ouvir a explicação, vou tentar fazer.",
+          [
+            { jp: "説明{せつめい}", pt: "explicação" },
+            { jp: "聞{き}いて", pt: "ouvir" }
+          ]
+        ),
+        lmPhrase(
+          "この 方法{ほうほう} で やって みても いいですか。",
+          "Posso tentar fazer deste jeito?",
+          [
+            { jp: "方法{ほうほう}", pt: "método / jeito" },
+            { jp: "ても いいですか", pt: "posso?" }
+          ]
+        ),
+        lmPhrase(
+          "わからない けど、少{すこ}し やって みます。",
+          "Não entendi, mas vou tentar um pouco.",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "けど", pt: "mas / suaviza contexto" }
+          ]
+        ),
+        lmPhrase(
+          "もう 一回{いっかい} やって みます。",
+          "Vou tentar mais uma vez.",
+          [
+            { jp: "一回{いっかい}", pt: "uma vez" }
+          ]
+        ),
+        lmPhrase(
+          "日本語{にほんご} で 言{い}って みます。",
+          "Vou tentar falar em japonês.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "言{い}って みます", pt: "vou tentar dizer" }
+          ]
+        ),
+        lmPhrase(
+          "この アプリ で 毎日{まいにち} 練習{れんしゅう} して みます。",
+          "Vou tentar praticar todos os dias com este app.",
+          [
+            { jp: "毎日{まいにち}", pt: "todos os dias" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    }
+  });
+
+  /* =========================================================
+     4. BANCO-MESTRE DE SITUAÇÕES REAIS
+     ========================================================= */
+
+  const LM_SCENARIO_BANK = {
+    "fabrica": {
+      label: "Fábrica",
+      tags: ["fabrica", "fábrica", "trabalho", "maquina", "máquina", "peca", "peça", "linha", "produção", "producao", "murata", "作業", "機械", "部品"],
+      explanation:
+        "Frases para rotina de fábrica: instruções, máquina, peça, tarefa, confirmação e hora extra.",
+      usage:
+        "Use frases curtas e educadas para evitar erro de trabalho e confirmar antes de fazer.",
+      phrases: [
+        lmPhrase(
+          "この 作業{さぎょう} を もう 一度{いちど} 教{おし}えて ください。",
+          "Por favor, me ensine este trabalho mais uma vez.",
+          [
+            { jp: "作業{さぎょう}", pt: "tarefa / trabalho" },
+            { jp: "一度{いちど}", pt: "uma vez" }
+          ]
+        ),
+        lmPhrase(
+          "次{つぎ} は 何{なに} を すれば いいですか。",
+          "O que eu devo fazer em seguida?",
+          [
+            { jp: "次{つぎ}", pt: "próximo / em seguida" },
+            { jp: "何{なに}", pt: "o que" }
+          ]
+        ),
+        lmPhrase(
+          "この 機械{きかい} が 止{と}まりました。",
+          "Esta máquina parou.",
+          [
+            { jp: "機械{きかい}", pt: "máquina" },
+            { jp: "止{と}まりました", pt: "parou" }
+          ]
+        ),
+        lmPhrase(
+          "確認{かくにん} して もらえますか。",
+          "Você poderia verificar para mim?",
+          [
+            { jp: "確認{かくにん}", pt: "verificação" }
+          ]
+        ),
+        lmPhrase(
+          "やり方{かた} が まだ よく わかりません。",
+          "Ainda não entendi bem o modo de fazer.",
+          [
+            { jp: "やり方{かた}", pt: "modo de fazer" },
+            { jp: "まだ", pt: "ainda" }
+          ]
+        ),
+        lmPhrase(
+          "この 部品{ぶひん} は どこ に 置{お}きますか。",
+          "Onde eu coloco esta peça?",
+          [
+            { jp: "部品{ぶひん}", pt: "peça" },
+            { jp: "置{お}きます", pt: "coloco" }
+          ]
+        ),
+        lmPhrase(
+          "今日{きょう} は 残業{ざんぎょう} が ありますか。",
+          "Hoje vai ter hora extra?",
+          [
+            { jp: "今日{きょう}", pt: "hoje" },
+            { jp: "残業{ざんぎょう}", pt: "hora extra" }
+          ]
+        )
+      ]
+    },
+
+    "chefe": {
+      label: "Chefe / líder",
+      tags: ["chefe", "lider", "líder", "supervisor", "encarregado", "empresa", "上司", "リーダー"],
+      explanation:
+        "Frases para falar com chefe, líder ou supervisor com educação e segurança.",
+      usage:
+        "Use para confirmar tarefa, pedir explicação, avisar problema ou falar de condição física.",
+      phrases: [
+        lmPhrase(
+          "この 内容{ないよう} で 合{あ}って いますか。",
+          "Está correto assim?",
+          [
+            { jp: "内容{ないよう}", pt: "conteúdo / instrução" },
+            { jp: "合{あ}って いますか", pt: "está correto?" }
+          ]
+        ),
+        lmPhrase(
+          "もう 少{すこ}し ゆっくり お願{ねが}いします。",
+          "Mais devagar, por favor.",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "ゆっくり", pt: "devagar" }
+          ]
+        ),
+        lmPhrase(
+          "この 作業{さぎょう} は 初{はじ}めて です。",
+          "É a primeira vez que faço este trabalho.",
+          [
+            { jp: "作業{さぎょう}", pt: "tarefa / trabalho" },
+            { jp: "初{はじ}めて", pt: "primeira vez" }
+          ]
+        ),
+        lmPhrase(
+          "もう 一度{いちど} 説明{せつめい} して いただけますか。",
+          "O senhor poderia explicar mais uma vez?",
+          [
+            { jp: "説明{せつめい}", pt: "explicação" },
+            { jp: "いただけますか", pt: "poderia fazer para mim? / respeitoso" }
+          ]
+        ),
+        lmPhrase(
+          "終{お}わったら 報告{ほうこく} します。",
+          "Quando terminar, eu aviso.",
+          [
+            { jp: "終{お}わったら", pt: "quando terminar" },
+            { jp: "報告{ほうこく}", pt: "relato / aviso" }
+          ]
+        ),
+        lmPhrase(
+          "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
+          "Estou me sentindo um pouco mal.",
+          [
+            { jp: "体調{たいちょう}", pt: "condição física" },
+            { jp: "悪{わる}い", pt: "ruim" }
+          ]
+        ),
+        lmPhrase(
+          "間違{まちが}い が ない か 確認{かくにん} します。",
+          "Vou confirmar se não há erro.",
+          [
+            { jp: "間違{まちが}い", pt: "erro" },
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        )
+      ]
+    },
+
+    "hospital": {
+      label: "Hospital",
+      tags: ["hospital", "medico", "médico", "consulta", "dor", "febre", "remedio", "remédio", "garganta", "cabeça", "病院", "薬", "熱"],
+      explanation:
+        "Frases para explicar sintomas, pedir ajuda e confirmar remédios ou orientação médica.",
+      usage:
+        "Use frases simples. Em caso grave, procure ajuda imediata, intérprete ou emergência.",
+      phrases: [
+        lmPhrase(
+          "昨日{きのう} から 熱{ねつ} が あります。",
+          "Estou com febre desde ontem.",
+          [
+            { jp: "昨日{きのう}", pt: "ontem" },
+            { jp: "熱{ねつ}", pt: "febre" }
+          ]
+        ),
+        lmPhrase(
+          "のど が 痛{いた}いです。",
+          "Estou com dor de garganta.",
+          [
+            { jp: "のど", pt: "garganta" },
+            { jp: "痛{いた}い", pt: "dói / dolorido" }
+          ]
+        ),
+        lmPhrase(
+          "頭{あたま} が 痛{いた}くて、少{すこ}し 気持{きも}ち 悪{わる}いです。",
+          "Estou com dor de cabeça e um pouco enjoado.",
+          [
+            { jp: "頭{あたま}", pt: "cabeça" },
+            { jp: "気持{きも}ち 悪{わる}い", pt: "enjoado / passando mal" }
+          ]
+        ),
+        lmPhrase(
+          "薬{くすり} は いつ 飲{の}めば いいですか。",
+          "Quando devo tomar o remédio?",
+          [
+            { jp: "薬{くすり}", pt: "remédio" },
+            { jp: "飲{の}めば いい", pt: "devo tomar" }
+          ]
+        ),
+        lmPhrase(
+          "仕事{しごと} に 行{い}っても 大丈夫{だいじょうぶ} ですか。",
+          "Tudo bem eu ir trabalhar?",
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
+          ]
+        ),
+        lmPhrase(
+          "通訳{つうやく} は ありますか。",
+          "Tem intérprete?",
+          [
+            { jp: "通訳{つうやく}", pt: "intérprete" }
+          ]
+        ),
+        lmPhrase(
+          "保険証{ほけんしょう} を 持{も}って います。",
+          "Estou com o cartão do seguro de saúde.",
+          [
+            { jp: "保険証{ほけんしょう}", pt: "cartão do seguro de saúde" },
+            { jp: "持{も}って います", pt: "tenho comigo / estou com" }
+          ]
+        )
+      ]
+    }
+  };
+
+    Object.assign(LM_SCENARIO_BANK, {
+    "prefeitura": {
+      label: "Prefeitura",
+      tags: ["prefeitura", "documento", "residencia", "residência", "zairyu", "my number", "mynumber", "endereco", "endereço", "市役所", "書類", "在留"],
+      explanation:
+        "Frases para prefeitura, documentos, formulários, senha de atendimento e confirmação de balcão.",
+      usage:
+        "Use quando precisar perguntar com calma, confirmar documentos e pedir explicação.",
+      phrases: [
+        lmPhrase(
+          "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
+          "Por favor, me ensine como preencher este documento.",
+          [
+            { jp: "書類{しょるい}", pt: "documento" },
+            { jp: "書{か}き方{かた}", pt: "forma de escrever / preencher" }
+          ]
+        ),
+        lmPhrase(
+          "必要{ひつよう} な もの は 何{なに} ですか。",
+          "O que é necessário trazer?",
+          [
+            { jp: "必要{ひつよう}", pt: "necessário" },
+            { jp: "何{なに}", pt: "o que" }
+          ]
+        ),
+        lmPhrase(
+          "この 手続{てつづ}き は 今日中{きょうじゅう} に 終{お}わりますか。",
+          "Este procedimento termina ainda hoje?",
+          [
+            { jp: "手続{てつづ}き", pt: "procedimento" },
+            { jp: "今日中{きょうじゅう}", pt: "ainda hoje" }
+          ]
+        ),
+        lmPhrase(
+          "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
+          "Onde pego a senha de atendimento?",
+          [
+            { jp: "番号札{ばんごうふだ}", pt: "senha de atendimento" },
+            { jp: "取{と}りますか", pt: "pego?" }
+          ]
+        ),
+        lmPhrase(
+          "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
+          "É necessária uma cópia do cartão de residência?",
+          [
+            { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
+            { jp: "必要{ひつよう}", pt: "necessário" }
+          ]
+        ),
+        lmPhrase(
+          "通訳{つうやく} を お願{ねが}いできますか。",
+          "É possível pedir um intérprete?",
+          [
+            { jp: "通訳{つうやく}", pt: "intérprete" },
+            { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
+          ]
+        ),
+        lmPhrase(
+          "この 窓口{まどぐち} で 合{あ}って いますか。",
+          "Este balcão está correto?",
+          [
+            { jp: "窓口{まどぐち}", pt: "balcão / guichê" },
+            { jp: "合{あ}って いますか", pt: "está correto?" }
+          ]
+        )
+      ]
+    },
+
+    "mercado": {
+      label: "Mercado",
+      tags: ["mercado", "supermercado", "preco", "preço", "produto", "validade", "sacola", "cartao", "cartão", "商品", "賞味期限", "袋"],
+      explanation:
+        "Frases para compras, validade, desconto, pagamento, sacola e localização de produto.",
+      usage:
+        "Use frases curtas para perguntar sem travar na frente do atendente ou no caixa.",
+      phrases: [
+        lmPhrase(
+          "この 商品{しょうひん} は どこ に ありますか。",
+          "Onde fica este produto?",
+          [
+            { jp: "商品{しょうひん}", pt: "produto" },
+            { jp: "どこ", pt: "onde" }
+          ]
+        ),
+        lmPhrase(
+          "賞味期限{しょうみきげん} は いつ ですか。",
+          "Qual é a data de validade?",
+          [
+            { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
+          ]
+        ),
+        lmPhrase(
+          "袋{ふくろ} は 要{い}りません。",
+          "Não preciso de sacola.",
+          [
+            { jp: "袋{ふくろ}", pt: "sacola" },
+            { jp: "要{い}りません", pt: "não preciso" }
+          ]
+        ),
+        lmPhrase(
+          "カード で 払{はら}えますか。",
+          "Posso pagar com cartão?",
+          [
+            { jp: "カード", pt: "cartão" },
+            { jp: "払{はら}えますか", pt: "posso pagar?" }
+          ]
+        ),
+        lmPhrase(
+          "安{やす}い 方{ほう} は どちら ですか。",
+          "Qual é a opção mais barata?",
+          [
+            { jp: "安{やす}い", pt: "barato" },
+            { jp: "方{ほう}", pt: "opção / lado" }
+          ]
+        ),
+        lmPhrase(
+          "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
+          "Este produto está esgotado?",
+          [
+            { jp: "売{う}り切{き}れ", pt: "esgotado" }
+          ]
+        ),
+        lmPhrase(
+          "セルフレジ は 使{つか}えますか。",
+          "Posso usar o caixa automático?",
+          [
+            { jp: "セルフレジ", pt: "caixa automático" },
+            { jp: "使{つか}えますか", pt: "posso usar?" }
+          ]
+        )
+      ]
+    },
+
+    "konbini": {
+      label: "Konbini",
+      tags: ["konbini", "conveniencia", "conveniência", "loja de conveniencia", "loja de conveniência", "コンビニ", "レジ", "弁当"],
+      explanation:
+        "Frases úteis para loja de conveniência: caixa, pagamento, marmita, micro-ondas, sacola e serviços.",
+      usage:
+        "Use frases rápidas e educadas. No konbini, clareza vale ouro em horário de pressa.",
+      phrases: [
+        lmPhrase(
+          "これ を 温{あたた}めて ください。",
+          "Por favor, esquente isto.",
+          [
+            { jp: "温{あたた}めて", pt: "esquentar" }
+          ]
+        ),
+        lmPhrase(
+          "袋{ふくろ} は 要{い}りません。",
+          "Não preciso de sacola.",
+          [
+            { jp: "袋{ふくろ}", pt: "sacola" },
+            { jp: "要{い}りません", pt: "não preciso" }
+          ]
+        ),
+        lmPhrase(
+          "レシート を ください。",
+          "Por favor, me dê o recibo.",
+          [
+            { jp: "レシート", pt: "recibo" }
+          ]
+        ),
+        lmPhrase(
+          "カード で 払{はら}います。",
+          "Vou pagar com cartão.",
+          [
+            { jp: "カード", pt: "cartão" },
+            { jp: "払{はら}います", pt: "vou pagar" }
+          ]
+        ),
+        lmPhrase(
+          "公共料金{こうきょうりょうきん} を 払{はら}いたいです。",
+          "Quero pagar conta de serviço público.",
+          [
+            { jp: "公共料金{こうきょうりょうきん}", pt: "conta de serviço público" },
+            { jp: "払{はら}いたい", pt: "quero pagar" }
+          ]
+        ),
+        lmPhrase(
+          "宅急便{たっきゅうびん} を 出{だ}したいです。",
+          "Quero enviar uma encomenda.",
+          [
+            { jp: "宅急便{たっきゅうびん}", pt: "serviço de entrega / encomenda" },
+            { jp: "出{だ}したい", pt: "quero enviar / despachar" }
+          ]
+        ),
+        lmPhrase(
+          "箸{はし} を つけて ください。",
+          "Por favor, coloque hashis.",
+          [
+            { jp: "箸{はし}", pt: "hashi / palitinhos" }
+          ]
+        )
+      ]
+    },
+
+    "correio": {
+      label: "Correio",
+      tags: ["correio", "yu-pack", "yupack", "encomenda", "pacote", "carta", "endereco", "endereço", "郵便局", "荷物", "住所"],
+      explanation:
+        "Frases para enviar encomenda, preencher endereço, confirmar valor, prazo e tipo de entrega.",
+      usage:
+        "Use para pedir ajuda com formulário, endereço e envio sem depender de improviso.",
+      phrases: [
+        lmPhrase(
+          "この 荷物{にもつ} を 送{おく}りたいです。",
+          "Quero enviar esta encomenda.",
+          [
+            { jp: "荷物{にもつ}", pt: "encomenda / bagagem" },
+            { jp: "送{おく}りたい", pt: "quero enviar" }
+          ]
+        ),
+        lmPhrase(
+          "住所{じゅうしょ} の 書{か}き方{かた} を 教{おし}えて ください。",
+          "Por favor, me ensine como escrever o endereço.",
+          [
+            { jp: "住所{じゅうしょ}", pt: "endereço" },
+            { jp: "書{か}き方{かた}", pt: "forma de escrever" }
+          ]
+        ),
+        lmPhrase(
+          "送料{そうりょう} は いくら ですか。",
+          "Quanto custa o frete?",
+          [
+            { jp: "送料{そうりょう}", pt: "frete" }
+          ]
+        ),
+        lmPhrase(
+          "いつ 届{とど}きますか。",
+          "Quando chega?",
+          [
+            { jp: "届{とど}きますか", pt: "chega? / será entregue?" }
+          ]
+        ),
+        lmPhrase(
+          "追跡番号{ついせきばんごう} は ありますか。",
+          "Tem código de rastreamento?",
+          [
+            { jp: "追跡番号{ついせきばんごう}", pt: "código de rastreamento" }
+          ]
+        ),
+        lmPhrase(
+          "この 箱{はこ} で 送{おく}れますか。",
+          "Dá para enviar com esta caixa?",
+          [
+            { jp: "箱{はこ}", pt: "caixa" },
+            { jp: "送{おく}れますか", pt: "pode enviar?" }
+          ]
+        ),
+        lmPhrase(
+          "着払{ちゃくばら}い で 送{おく}れますか。",
+          "É possível enviar com pagamento na entrega?",
+          [
+            { jp: "着払{ちゃくばら}い", pt: "pagamento pelo destinatário / na entrega" },
+            { jp: "送{おく}れますか", pt: "pode enviar?" }
+          ]
+        )
+      ]
+    },
+
+    "bicicleta": {
+      label: "Bicicleta",
+      tags: ["bicicleta", "bike", "pneu", "corrente", "freio", "banco", "selim", "conserto", "自転車", "パンク", "チェーン"],
+      explanation:
+        "Frases para loja de bicicletas, pneu furado, corrente, freio, banco e conserto.",
+      usage:
+        "Use para explicar o problema rapidamente e pedir orçamento antes do conserto.",
+      phrases: [
+        lmPhrase(
+          "自転車{じてんしゃ} の タイヤ が パンク しました。",
+          "O pneu da bicicleta furou.",
+          [
+            { jp: "自転車{じてんしゃ}", pt: "bicicleta" },
+            { jp: "タイヤ", pt: "pneu" },
+            { jp: "パンク", pt: "pneu furado" }
+          ]
+        ),
+        lmPhrase(
+          "チェーン が 外{はず}れました。",
+          "A corrente saiu.",
+          [
+            { jp: "チェーン", pt: "corrente" },
+            { jp: "外{はず}れました", pt: "saiu / soltou" }
+          ]
+        ),
+        lmPhrase(
+          "修理{しゅうり} は いくら ですか。",
+          "Quanto custa o conserto?",
+          [
+            { jp: "修理{しゅうり}", pt: "conserto / reparo" }
+          ]
+        ),
+        lmPhrase(
+          "ブレーキ の 調子{ちょうし} が 悪{わる}いです。",
+          "O freio não está bom.",
+          [
+            { jp: "ブレーキ", pt: "freio" },
+            { jp: "調子{ちょうし}", pt: "condição / funcionamento" },
+            { jp: "悪{わる}い", pt: "ruim" }
+          ]
+        ),
+        lmPhrase(
+          "サドル を 交換{こうかん} したいです。",
+          "Quero trocar o banco da bicicleta.",
+          [
+            { jp: "サドル", pt: "selim / banco da bicicleta" },
+            { jp: "交換{こうかん}", pt: "troca" }
+          ]
+        ),
+        lmPhrase(
+          "今日中{きょうじゅう} に 直{なお}りますか。",
+          "Fica pronto ainda hoje?",
+          [
+            { jp: "今日中{きょうじゅう}", pt: "ainda hoje" },
+            { jp: "直{なお}りますか", pt: "fica consertado?" }
+          ]
+        ),
+        lmPhrase(
+          "見積{みつ}もり を お願{ねが}いします。",
+          "Por favor, faça um orçamento.",
+          [
+            { jp: "見積{みつ}もり", pt: "orçamento" },
+            { jp: "お願{ねが}いします", pt: "por favor" }
+          ]
+        )
+      ]
+    },
+
+    "moradia": {
+      label: "Moradia / aluguel",
+      tags: ["moradia", "aluguel", "apartamento", "leopalace", "vazamento", "chave", "ar condicionado", "aircon", "エアコン", "鍵", "水漏れ"],
+      explanation:
+        "Frases para apartamento, reparo, vazamento, chave, ar-condicionado e administradora.",
+      usage:
+        "Use para explicar problema na casa de forma clara e educada.",
+      phrases: [
+        lmPhrase(
+          "水漏{みずも}れ して います。",
+          "Está vazando água.",
+          [
+            { jp: "水漏{みずも}れ", pt: "vazamento de água" }
+          ]
+        ),
+        lmPhrase(
+          "修理{しゅうり} を お願{ねが}いしたいです。",
+          "Quero solicitar um reparo.",
+          [
+            { jp: "修理{しゅうり}", pt: "reparo / conserto" }
+          ]
+        ),
+        lmPhrase(
+          "いつ 来{き}て もらえますか。",
+          "Quando alguém pode vir aqui?",
+          [
+            { jp: "来{き}て もらえますか", pt: "pode vir?" }
+          ]
+        ),
+        lmPhrase(
+          "エアコン が 動{うご}きません。",
+          "O ar-condicionado não funciona.",
+          [
+            { jp: "エアコン", pt: "ar-condicionado" },
+            { jp: "動{うご}きません", pt: "não funciona" }
+          ]
+        ),
+        lmPhrase(
+          "鍵{かぎ} を なくしました。",
+          "Perdi a chave.",
+          [
+            { jp: "鍵{かぎ}", pt: "chave" },
+            { jp: "なくしました", pt: "perdi" }
+          ]
+        ),
+        lmPhrase(
+          "管理会社{かんりがいしゃ} に 連絡{れんらく} したいです。",
+          "Quero entrar em contato com a administradora.",
+          [
+            { jp: "管理会社{かんりがいしゃ}", pt: "administradora" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        lmPhrase(
+          "写真{しゃしん} を 送{おく}れば いいですか。",
+          "Está certo eu enviar uma foto?",
+          [
+            { jp: "写真{しゃしん}", pt: "foto" },
+            { jp: "送{おく}れば", pt: "se enviar" }
+          ]
+        )
+      ]
+    },
+
+    "transporte": {
+      label: "Transporte",
+      tags: ["trem", "onibus", "ônibus", "estacao", "estação", "atraso", "passagem", "電車", "駅", "バス", "遅れ"],
+      explanation:
+        "Frases para trem, ônibus, estação, atraso, destino, horário e passagem.",
+      usage:
+        "Use para confirmar rota, horário e destino sem depender de gestos ou adivinhação.",
+      phrases: [
+        lmPhrase(
+          "次{つぎ} の 電車{でんしゃ} は 何時{なんじ} ですか。",
+          "Que horas é o próximo trem?",
+          [
+            { jp: "次{つぎ}", pt: "próximo" },
+            { jp: "電車{でんしゃ}", pt: "trem" },
+            { jp: "何時{なんじ}", pt: "que horas" }
+          ]
+        ),
+        lmPhrase(
+          "この 電車{でんしゃ} は 福井{ふくい} に 行{い}きますか。",
+          "Este trem vai para Fukui?",
+          [
+            { jp: "電車{でんしゃ}", pt: "trem" },
+            { jp: "福井{ふくい}", pt: "Fukui" },
+            { jp: "行{い}きますか", pt: "vai?" }
+          ]
+        ),
+        lmPhrase(
+          "駅{えき} は どこ ですか。",
+          "Onde fica a estação?",
+          [
+            { jp: "駅{えき}", pt: "estação" }
+          ]
+        ),
+        lmPhrase(
+          "電車{でんしゃ} が 遅{おく}れて います。",
+          "O trem está atrasado.",
+          [
+            { jp: "電車{でんしゃ}", pt: "trem" },
+            { jp: "遅{おく}れて います", pt: "está atrasado" }
+          ]
+        ),
+        lmPhrase(
+          "どこ で 乗{の}り換{か}えますか。",
+          "Onde faço baldeação?",
+          [
+            { jp: "乗{の}り換{か}え", pt: "troca de trem/ônibus / baldeação" }
+          ]
+        ),
+        lmPhrase(
+          "切符{きっぷ} は どこ で 買{か}えますか。",
+          "Onde posso comprar a passagem?",
+          [
+            { jp: "切符{きっぷ}", pt: "passagem / bilhete" },
+            { jp: "買{か}えますか", pt: "posso comprar?" }
+          ]
+        ),
+        lmPhrase(
+          "この バス は 駅{えき} まで 行{い}きますか。",
+          "Este ônibus vai até a estação?",
+          [
+            { jp: "バス", pt: "ônibus" },
+            { jp: "駅{えき}", pt: "estação" }
+          ]
+        )
+      ]
+    },
+
+    "telefone": {
+      label: "Telefone / internet",
+      tags: ["telefone", "internet", "chip", "sim", "plano", "gb", "celular", "スマホ", "携帯", "インターネット"],
+      explanation:
+        "Frases para chip, plano de internet, dados, pagamento, contrato e suporte.",
+      usage:
+        "Use em loja de celular ou atendimento para confirmar plano, preço e detalhes antes de contratar.",
+      phrases: [
+        lmPhrase(
+          "プリペイド SIM は ありますか。",
+          "Tem chip pré-pago?",
+          [
+            { jp: "プリペイド", pt: "pré-pago" },
+            { jp: "SIM", pt: "chip / SIM" }
+          ]
+        ),
+        lmPhrase(
+          "月{つき} に いくら ですか。",
+          "Quanto custa por mês?",
+          [
+            { jp: "月{つき}", pt: "mês" }
+          ]
+        ),
+        lmPhrase(
+          "30GB の プラン は ありますか。",
+          "Tem plano de 30GB?",
+          [
+            { jp: "プラン", pt: "plano" }
+          ]
+        ),
+        lmPhrase(
+          "契約{けいやく} に 必要{ひつよう} な もの は 何{なに} ですか。",
+          "O que é necessário para o contrato?",
+          [
+            { jp: "契約{けいやく}", pt: "contrato" },
+            { jp: "必要{ひつよう}", pt: "necessário" }
+          ]
+        ),
+        lmPhrase(
+          "解約{かいやく} する 時{とき}、料金{りょうきん} は かかりますか。",
+          "Na hora de cancelar, tem taxa?",
+          [
+            { jp: "解約{かいやく}", pt: "cancelamento de contrato" },
+            { jp: "料金{りょうきん}", pt: "taxa / valor" }
+          ]
+        ),
+        lmPhrase(
+          "インターネット が つながりません。",
+          "A internet não conecta.",
+          [
+            { jp: "インターネット", pt: "internet" },
+            { jp: "つながりません", pt: "não conecta" }
+          ]
+        ),
+        lmPhrase(
+          "この プラン は いつ から 使{つか}えますか。",
+          "A partir de quando posso usar este plano?",
+          [
+            { jp: "プラン", pt: "plano" },
+            { jp: "使{つか}えますか", pt: "posso usar?" }
+          ]
+        )
+      ]
+    }
+  });
+
+  /* =========================================================
+     5. DETECÇÃO DE SITUAÇÃO
+     ========================================================= */
+
+  function lmDetectScenarioKey(payload) {
+    const raw = `${payload?.request || ""} ${payload?.theme || ""} ${payload?.topic || ""}`;
+    const n = lmNormalize(raw);
+
+    let bestKey = "";
+    let bestScore = 0;
+
+    Object.entries(LM_SCENARIO_BANK).forEach(([key, item]) => {
+      let score = 0;
+
+      (item.tags || []).forEach(tag => {
+        const tagN = lmNormalize(tag);
+        if (tagN && n.includes(tagN)) score += tagN.length >= 5 ? 3 : 2;
+      });
+
+      if (n.includes(lmNormalize(item.label))) score += 3;
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestKey = key;
+      }
+    });
+
+    if (bestKey) return bestKey;
+
+    if (/chefe|lider|líder|supervisor|encarregado/.test(n)) return "chefe";
+    if (/fabrica|fábrica|maquina|máquina|peca|peça|trabalho/.test(n)) return "fabrica";
+    if (/hospital|dor|febre|remedio|remédio|consulta/.test(n)) return "hospital";
+    if (/prefeitura|documento|zairyu|my number|mynumber/.test(n)) return "prefeitura";
+    if (/mercado|produto|preco|preço|validade/.test(n)) return "mercado";
+    if (/konbini|conveniencia|conveniência/.test(n)) return "konbini";
+    if (/correio|encomenda|yu pack|yupack/.test(n)) return "correio";
+    if (/bicicleta|bike|pneu|corrente|freio/.test(n)) return "bicicleta";
+    if (/moradia|aluguel|apartamento|leopalace|vazamento/.test(n)) return "moradia";
+    if (/trem|onibus|ônibus|estacao|estação|transporte/.test(n)) return "transporte";
+    if (/telefone|internet|chip|plano|celular/.test(n)) return "telefone";
+
+    return "fabrica";
+  }
+
+  function lmUniversalFallbackPhrases() {
+    return [
+      lmPhrase(
+        "すみません。少{すこ}し 手伝{てつだ}って もらえますか。",
+        "Com licença. Você poderia me ajudar um pouco?",
+        [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "手伝{てつだ}って", pt: "ajudar" }
+        ]
+      ),
+      lmPhrase(
+        "日本語{にほんご} が まだ 苦手{にがて} なので、ゆっくり 話{はな}して ください。",
+        "Como ainda tenho dificuldade com japonês, por favor fale devagar.",
+        [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "苦手{にがて}", pt: "dificuldade / não ser bom em algo" },
+          { jp: "話{はな}して", pt: "falar" }
+        ]
+      ),
+      lmPhrase(
+        "もう 一度{いちど} 説明{せつめい} して もらえますか。",
+        "Você poderia explicar mais uma vez para mim?",
+        [
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "説明{せつめい}", pt: "explicação" }
+        ]
+      ),
+      lmPhrase(
+        "紙{かみ} に 書{か}いて もらえますか。",
+        "Você poderia escrever no papel para mim?",
+        [
+          { jp: "紙{かみ}", pt: "papel" },
+          { jp: "書{か}いて", pt: "escrever" }
+        ]
+      ),
+      lmPhrase(
+        "この 内容{ないよう} で 合{あ}って いますか。",
+        "Está correto assim?",
+        [
+          { jp: "内容{ないよう}", pt: "conteúdo" },
+          { jp: "合{あ}って いますか", pt: "está correto?" }
+        ]
+      ),
+      lmPhrase(
+        "あと で 確認{かくにん} して、連絡{れんらく} します。",
+        "Vou confirmar depois e entro em contato.",
+        [
+          { jp: "確認{かくにん}", pt: "confirmação" },
+          { jp: "連絡{れんらく}", pt: "contato" }
+        ]
+      ),
+      lmPhrase(
+        "今{いま} は まだ よく わかりません。",
+        "Agora eu ainda não entendi bem.",
+        [
+          { jp: "今{いま}", pt: "agora" },
+          { jp: "まだ", pt: "ainda" },
+          { jp: "わかりません", pt: "não entendo" }
+        ]
+      )
+    ];
+  }
+    /* =========================================================
+     6. CONSTRUÇÃO DE PACKS DO SENSEI LOCAL MASTER
+     ========================================================= */
+
+  function lmBuildCoachLine(pack, meta = {}) {
+    const parts = [];
+
+    parts.push(`Tipo detectado: ${meta.intent === "grammar" ? "gramática / estrutura" : "situação real"}.`);
+
+    if (meta.term) parts.push(`Termo principal: ${meta.term}.`);
+    if (meta.scenarioLabel) parts.push(`Contexto: ${meta.scenarioLabel}.`);
+
+    if (pack.explanation) parts.push(pack.explanation);
+    if (pack.usage) parts.push(`Uso prático: ${pack.usage}`);
+    if (pack.commonMistake) parts.push(`Cuidado comum: ${pack.commonMistake}`);
+
+    parts.push(`Nível: ${lmLevelLabel(meta.level)}.`);
+    parts.push(`Tom: ${lmToneLabel(meta.tone)}.`);
+    parts.push("Treino recomendado: escolha 1 frase por dia e repita no método 105x.");
+
+    return parts.join(" ");
+  }
+
+  function lmBuildUnknownGrammarPack(term, payload = {}) {
+    const safeTerm = String(term || "esta expressão").trim();
+
+    return {
+      label: `Uso de ${safeTerm}`,
+      kind: "palavra-alvo",
+      explanation:
+        `O Sensei Local Master detectou “${safeTerm}” como foco do pedido. Ainda não existe um banco completo para esse termo, então ele criou um material seguro para estudo, pergunta e treino.`,
+      usage:
+        "Use estas frases para pedir explicação, confirmar significado, pedir exemplos naturais e transformar o termo em material treinável.",
+      commonMistake:
+        "Quando o termo ainda não está no banco, confirme com um nativo, professor ou fonte confiável antes de usar em situação séria.",
+      phrases: [
+        lmPhrase(
+          `この 表現{ひょうげん}「${safeTerm}」の 使{つか}い方{かた} を 教{おし}えて ください。`,
+          `Por favor, me ensine como usar a expressão “${safeTerm}”.`,
+          [
+            { jp: "表現{ひょうげん}", pt: "expressão" },
+            { jp: "使{つか}い方{かた}", pt: "modo de usar" },
+            { jp: "教{おし}えて", pt: "ensinar / explicar" }
+          ]
+        ),
+        lmPhrase(
+          `「${safeTerm}」は どういう 意味{いみ} ですか。`,
+          `O que significa “${safeTerm}”?`,
+          [
+            { jp: "意味{いみ}", pt: "significado" }
+          ]
+        ),
+        lmPhrase(
+          `「${safeTerm}」を 使{つか}った 例文{れいぶん} を 作{つく}って もらえますか。`,
+          `Você poderia criar uma frase de exemplo usando “${safeTerm}”?`,
+          [
+            { jp: "例文{れいぶん}", pt: "frase de exemplo" },
+            { jp: "作{つく}って", pt: "criar / fazer" }
+          ]
+        ),
+        lmPhrase(
+          `「${safeTerm}」は 日常会話{にちじょうかいわ} で よく 使{つか}いますか。`,
+          `“${safeTerm}” é muito usado na conversa do dia a dia?`,
+          [
+            { jp: "日常会話{にちじょうかいわ}", pt: "conversa do dia a dia" },
+            { jp: "使{つか}いますか", pt: "usa?" }
+          ]
+        ),
+        lmPhrase(
+          `仕事{しごと} で「${safeTerm}」を 使{つか}う 例{れい} を 教{おし}えて ください。`,
+          `Por favor, me ensine um exemplo usando “${safeTerm}” no trabalho.`,
+          [
+            { jp: "仕事{しごと}", pt: "trabalho" },
+            { jp: "例{れい}", pt: "exemplo" }
+          ]
+        ),
+        lmPhrase(
+          `「${safeTerm}」の もっと 自然{しぜん} な 言{い}い方{かた} は ありますか。`,
+          `Existe uma forma mais natural de dizer “${safeTerm}”?`,
+          [
+            { jp: "自然{しぜん}", pt: "natural" },
+            { jp: "言{い}い方{かた}", pt: "modo de dizer" }
+          ]
+        ),
+        lmPhrase(
+          `「${safeTerm}」を 使{つか}って、日本語{にほんご} を 練習{れんしゅう} します。`,
+          `Vou praticar japonês usando “${safeTerm}”.`,
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" },
+            { jp: "練習{れんしゅう}", pt: "prática" }
+          ]
+        )
+      ]
+    };
+  }
+
+  function lmBuildGrammarPack(payload = {}) {
+    const term = lmDetectTargetTerm(payload);
+    const wantedCount = lmDetectRequestCount(`${payload.request || ""} ${payload.theme || ""}`);
+    const base = LM_GRAMMAR_BANK[term] || lmBuildUnknownGrammarPack(term || "日本語", payload);
+
+    const phrases = lmEnsureSeven(base.phrases, (i) => {
+      const fallback = lmBuildUnknownGrammarPack(term || "日本語", payload);
+      return fallback.phrases[i % fallback.phrases.length];
+    }).slice(0, Math.max(7, Math.min(wantedCount, 12)));
+
+    const title = base.label || `Uso de ${term}`;
+    const topicName = lmTopicName(title);
+
+    const meta = {
+      intent: "grammar",
+      term,
+      level: payload.level || "iniciante",
+      tone: payload.tone || "educado"
+    };
+
+    return {
+      scenario: "grammar",
+      requestType: "grammar",
+      engine: "local-master-6a",
+      expertEngine: "6A Zero Cost",
+      confidence: LM_GRAMMAR_BANK[term] ? "alta" : "fallback",
+      term,
+      title,
+      topicName,
+      explanation: base.explanation,
+      usage: base.usage,
+      commonMistake: base.commonMistake,
+      goal: "Treine 1 frase por dia. Em 7 dias, você terá um primeiro domínio prático desta estrutura.",
+      coachLine: lmBuildCoachLine(base, meta),
+      phrases,
+      createdAt: lmNow()
+    };
+  }
+
+  function lmBuildScenarioPack(payload = {}) {
+    const key = lmDetectScenarioKey(payload);
+    const base = LM_SCENARIO_BANK[key] || LM_SCENARIO_BANK.fabrica;
+    const wantedCount = lmDetectRequestCount(`${payload.request || ""} ${payload.theme || ""}`);
+
+    const phrases = lmEnsureSeven(base.phrases, (i) => {
+      const fallback = lmUniversalFallbackPhrases();
+      return fallback[i % fallback.length];
+    }).slice(0, Math.max(7, Math.min(wantedCount, 12)));
+
+    const title = base.label || "Situação real";
+    const topicName = lmTopicName(title);
+
+    const meta = {
+      intent: "scenario",
+      scenarioLabel: title,
+      level: payload.level || "iniciante",
+      tone: payload.tone || "educado"
+    };
+
+    return {
+      scenario: key,
+      requestType: "scenario",
+      engine: "local-master-6a",
+      expertEngine: "6A Zero Cost",
+      confidence: "alta",
+      term: "",
+      title,
+      topicName,
+      explanation: base.explanation,
+      usage: base.usage,
+      commonMistake: base.commonMistake || "",
+      goal: "Escolha 1 frase útil para hoje, salve o material e revise no treino 105x.",
+      coachLine: lmBuildCoachLine(base, meta),
+      phrases,
+      createdAt: lmNow()
+    };
+  }
+
+  function lmNormalizePayload(args) {
+    const first = args[0];
+
+    if (first && typeof first === "object") {
+      return {
+        request: first.request || first.prompt || first.text || first.input || "",
+        theme: first.theme || first.topic || first.topicName || "",
+        level: first.level || "iniciante",
+        tone: first.tone || "educado"
+      };
+    }
+
+    return {
+      request: String(args[0] || ""),
+      theme: String(args[1] || ""),
+      level: String(args[2] || "iniciante"),
+      tone: String(args[3] || "educado")
+    };
+  }
+
+  function lmBuildLocalMasterPack(payload = {}) {
+    const intent = lmDetectIntent(payload);
+
+    if (intent === "grammar") {
+      return lmBuildGrammarPack(payload);
+    }
+
+    return lmBuildScenarioPack(payload);
+  }
+
+  /* =========================================================
+     7. RENDERIZAÇÃO DO RESULTADO
+     ========================================================= */
+
+  function lmTopicOptions(pack) {
+    const topics = lmGetTopics();
+
+    return [
+      `<option value="AUTO_CREATE">criar novo tópico: ${lmEscape(pack.topicName || "Sensei IA")}</option>`,
+      ...topics.map(t => {
+        let lock = "";
+
+        try {
+          lock = typeof isTopicPremium === "function" && isTopicPremium(t.id) ? " 🔒" : "";
+        } catch {}
+
+        return `
+          <option value="${lmEscape(t.id)}">
+            ${lmEscape(t.name)}${lock} • ${lmTopicPhraseCount(t.id)} frases
+          </option>
+        `;
+      })
+    ].join("");
+  }
+
+  function lmRenderOutputFallback(pack) {
+    const box = document.querySelector("#senseiOutput");
+    if (!box) return;
+
+    const phrases = Array.isArray(pack.phrases) ? pack.phrases : [];
+
+    box.innerHTML = `
+      <div class="sheet stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">Sensei Local Master</div>
+          <div class="badge">${lmEscape(pack.confidence || "local")}</div>
+        </div>
+
+        <h3 style="margin:0">${lmEscape(pack.title || pack.topicName || "Material do Sensei IA")}</h3>
+
+        <div class="small"><b>Explicação:</b> ${lmEscape(pack.explanation || "")}</div>
+        <div class="small"><b>Como usar no Japão:</b> ${lmEscape(pack.usage || "")}</div>
+        ${pack.commonMistake ? `<div class="small"><b>Cuidado comum:</b> ${lmEscape(pack.commonMistake)}</div>` : ""}
+        <div class="small"><b>Meta:</b> ${lmEscape(pack.goal || "")}</div>
+        <div class="small">${lmEscape(pack.coachLine || "")}</div>
+      </div>
+
+      ${phrases.map((p, i) => `
+        <div class="sheet stack" style="text-align:left">
+          <div class="row row--between">
+            <div class="badge">frase ${i + 1}</div>
+            <button class="btn btn--ghost" type="button" data-say="${lmEscape(lmStripFuri(p.jp))}">ouvir</button>
+          </div>
+
+          <div class="small"><b>JP:</b> ${lmEscape(lmStripFuri(p.jp))}</div>
+          <div class="small"><b>PT:</b> ${lmEscape(p.pt)}</div>
+
+          ${(Array.isArray(p.newWords) && p.newWords.length) ? `
+            <div class="small" style="font-weight:900;margin-top:6px">palavras importantes</div>
+            ${p.newWords.map(w => `
+              <div class="small">${lmEscape(lmFormatWord(w))}</div>
+            `).join("")}
+          ` : ""}
+        </div>
+      `).join("")}
+
+      <div class="sheet stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">salvar material</div>
+          <div class="badge">custo zero</div>
+        </div>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">Transformar em treino 105x</h3>
+          <p class="lockText">
+            Salve este material em um tópico novo ou dentro de um tópico existente.
+          </p>
+        </div>
+
+        <div>
+          <div class="small">salvar em</div>
+          <select id="senseiSaveTopicSel" class="btn selectBtn" style="width:100%">
+            ${lmTopicOptions(pack)}
+          </select>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-action="saveSenseiPack">salvar neste tópico</button>
+          <button class="btn btn--full" data-nav="#/105x">ir ao treino</button>
+        </div>
+      </div>
+    `;
+
+    box.dataset.pack = JSON.stringify(pack);
+  }
+
+  function lmRenderSenseiOutput(pack) {
+    const safePack = pack && Array.isArray(pack.phrases)
+      ? pack
+      : lmBuildScenarioPack({
+          request: "criar frases úteis",
+          theme: "Material prático",
+          level: "iniciante",
+          tone: "educado"
+        });
+
+    const enhanced = {
+      ...safePack,
+      topicName: safePack.topicName || lmTopicName(safePack.title || "Sensei IA"),
+      phrases: lmEnsureSeven(safePack.phrases, (i) => lmUniversalFallbackPhrases()[i % 7])
+    };
+
+    try {
+      if (
+        lmOriginalRenderSenseiOutput &&
+        lmOriginalRenderSenseiOutput !== window.renderSenseiOutput
+      ) {
+        lmOriginalRenderSenseiOutput(enhanced);
+
+        const box = document.querySelector("#senseiOutput");
+        if (box) {
+          box.dataset.pack = JSON.stringify(enhanced);
+
+          if (!box.querySelector("#senseiLocalMasterBadge")) {
+            const badge = document.createElement("div");
+            badge.id = "senseiLocalMasterBadge";
+            badge.className = "sheet stack";
+            badge.style.textAlign = "left";
+            badge.innerHTML = `
+              <div class="row row--between">
+                <div class="badge">Sensei Local Master 6A</div>
+                <div class="badge">offline • custo zero</div>
+              </div>
+              <div class="small">
+                Material criado por banco local, regras pedagógicas e fallback seguro. Não usa API paga.
+              </div>
+            `;
+            box.prepend(badge);
+          }
+        }
+
+        return;
+      }
+    } catch {}
+
+    lmRenderOutputFallback(enhanced);
+  }
+
+  /* =========================================================
+     8. OVERRIDES SEGUROS
+     ========================================================= */
+
+  window.generateSenseiMaterial = function generateSenseiMaterialLocalMaster6A() {
+    const payload = lmNormalizePayload(arguments);
+
+    try {
+      return lmBuildLocalMasterPack(payload);
+    } catch (err) {
+      console.warn("[NIHONGO321] Sensei Local Master 6A fallback:", err);
+
+      if (lmOriginalGenerateSenseiMaterial) {
+        try {
+          const oldResult = lmOriginalGenerateSenseiMaterial(payload);
+          if (oldResult && Array.isArray(oldResult.phrases)) return oldResult;
+        } catch {}
+      }
+
+      return lmBuildScenarioPack({
+        request: payload.request || "criar frases úteis para o dia a dia",
+        theme: payload.theme || "Material prático",
+        level: payload.level || "iniciante",
+        tone: payload.tone || "educado"
+      });
+    }
+  };
+
+  window.renderSenseiOutput = function renderSenseiOutputLocalMaster6A(pack) {
+    lmRenderSenseiOutput(pack);
+  };
+
+  try {
+    generateSenseiMaterial = window.generateSenseiMaterial;
+  } catch {}
+
+  try {
+    renderSenseiOutput = window.renderSenseiOutput;
+  } catch {}
+
+  /* =========================================================
+     9. REPARO APÓS CLIQUE DE GERAR
+     ========================================================= */
+
+  function lmReadSenseiFormPayload() {
+    const request =
+      document.querySelector("#senseiRequest")?.value ||
+      document.querySelector("#aiPrompt")?.value ||
+      document.querySelector("#senseiPrompt")?.value ||
+      document.querySelector("textarea")?.value ||
+      "";
+
+    const theme =
+      document.querySelector("#senseiTheme")?.value ||
+      document.querySelector("#aiTopic")?.value ||
+      document.querySelector("#senseiTopic")?.value ||
+      "";
+
+    const level =
+      document.querySelector("#senseiLevel")?.value ||
+      document.querySelector("#aiLevel")?.value ||
+      "iniciante";
+
+    const tone =
+      document.querySelector("#senseiTone")?.value ||
+      document.querySelector("#aiTone")?.value ||
+      "educado";
+
+    return {
+      request,
+      theme,
+      level,
+      tone
+    };
+  }
+
+  function lmRepairAfterGenerate() {
+    const box = document.querySelector("#senseiOutput");
+    if (!box) return;
+
+    const current = lmSafeJSONParse(box.dataset?.pack || "");
+
+    if (
+      current &&
+      current.engine === "local-master-6a" &&
+      Array.isArray(current.phrases) &&
+      current.phrases.length >= 7
+    ) {
+      return;
+    }
+
+    const payload = lmReadSenseiFormPayload();
+    const pack = window.generateSenseiMaterial(payload);
+    window.renderSenseiOutput(pack);
+  }
+
+  let lmRepairTimer = null;
+
+  document.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-action='generateSensei'], #generateSensei, #btnGenerateSensei");
+    if (!btn) return;
+
+    clearTimeout(lmRepairTimer);
+    lmRepairTimer = setTimeout(lmRepairAfterGenerate, 90);
+  }, true);
+
+  /* =========================================================
+     10. TESTES E DIAGNÓSTICO
+     ========================================================= */
+
+  window.nihongo321LocalMaster6ATest = function nihongo321LocalMaster6ATest(prompt = "Me ensine o uso de ので com frases úteis para o trabalho.") {
+    const pack = window.generateSenseiMaterial({
+      request: prompt,
+      theme: "",
+      level: "intermediário",
+      tone: "educado"
+    });
+
+    console.log("[NIHONGO321] Sensei Local Master 6A teste:", pack);
+    return pack;
+  };
+
+  window.nihongo321LocalMaster6ACheck = function nihongo321LocalMaster6ACheck() {
+    const result = {
+      patch: true,
+      engine: "local-master-6a",
+      cost: "zero",
+      offline: true,
+      grammarItems: Object.keys(LM_GRAMMAR_BANK).length,
+      scenarioItems: Object.keys(LM_SCENARIO_BANK).length,
+      generator: typeof window.generateSenseiMaterial === "function",
+      renderer: typeof window.renderSenseiOutput === "function"
+    };
+
+    console.log("[NIHONGO321] Sensei Local Master 6A ativo:", result);
+    return result;
+  };
+
+  console.log("[NIHONGO321] Sensei IA Local Master 6A carregado — custo zero, offline, sem API.");
+
 })();

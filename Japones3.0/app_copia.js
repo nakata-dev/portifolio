@@ -1,15 +1,17 @@
 /* =========================================================
-   NIHONGO321 v8.0.0
-   Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I + Bloco 3J + Bloco 3K + Bloco 4A
+   NIHONGO321 v8.2.0
+   Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
+   + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
+   + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
+   + Bloco 5.7A
    - correções críticas preservadas
-   - treino rápido não cai no Pack Essencial indevidamente
-   - revisar mesma frase funciona
-   - treino por situação abre #/105x
-   - #/105x abre direto sem tela vazia
-   - Bloco 3I: aumento estratégico de conteúdo
-   - Bloco 3J: polimento final UX
-   - Bloco 3K: comercial e checkout externo seguro
-   - Bloco 4A: telas Sobre, Política de Privacidade e Termos de Uso
+   - logo oficial em img/logo_nihongo321.png
+   - modo claro ☀️ e modo escuro 🌙
+   - cores inspiradas na logo
+   - checklist final interno em #/launch-checklist
+   - Sensei IA professor especialista
+   - Sensei IA com modo gramática, palavra-alvo e situação real
+   - Sensei IA gera 7 exemplos para gramática/palavra-alvo
    ========================================================= */
 
 const LS_KEY = "jp_105x_v7";
@@ -19,17 +21,17 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.0.0",
-  updatedAt: "2026-04-28"
+  version: "8.2.0",
+  updatedAt: "2026-05-04",
+  logoPath: "./img/logo_nihongo321.png"
 };
 
 /* ========= CONFIG COMERCIAL =========
    IMPORTANTE PARA PUBLICAÇÃO:
    1. Cadastre seus dados bancários SOMENTE na plataforma de checkout externa.
-      Exemplos: Stripe, PayPal, Square, Hotmart, Kiwify ou outra plataforma escolhida.
    2. Não coloque dados bancários, chave Pix, número de conta, documento ou endereço sensível neste arquivo.
    3. Depois que a plataforma gerar o link de pagamento, cole esse link em checkoutUrl.
-   4. Atualize supportEmail para seu e-mail real de suporte, se decidir exibir contato no futuro.
+   4. Atualize supportEmail para seu e-mail real de suporte.
    5. Atualize monthlyPrice e semiannualPrice se mudar os preços.
    6. Atualize playStoreUrl e appStoreUrl quando o app estiver publicado.
 */
@@ -69,6 +71,8 @@ const DAILY_GOAL_DEFAULTS = {
   minutes: 5,
   cycles: 1
 };
+
+const THEME_STORAGE_KEY = "nihongo321_theme";
 
 /* ---------- helpers ---------- */
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -146,56 +150,6 @@ function normalizeName(s) {
   return String(s || "").trim().replace(/\s+/g, " ").slice(0, 50);
 }
 
-function isRealCheckoutConfigured() {
-  return !!SALES.checkoutUrl &&
-    SALES.checkoutUrl.startsWith("http") &&
-    !/SEU-CHECKOUT-AQUI/i.test(SALES.checkoutUrl);
-}
-
-function getCheckoutStatus() {
-  const url = String(SALES.checkoutUrl || "").trim();
-  const hasUrl = !!url;
-  const isHttp = /^https?:\/\//i.test(url);
-  const isPlaceholder = !url || /SEU-CHECKOUT-AQUI/i.test(url);
-
-  if (!hasUrl || isPlaceholder) {
-    return {
-      ready: false,
-      mode: "placeholder",
-      badge: "checkout em preparação",
-      button: "checkout em preparação",
-      message: "O pagamento ainda não foi conectado. Cadastre seus dados bancários na plataforma de checkout externa e cole aqui o link gerado."
-    };
-  }
-
-  if (!isHttp) {
-    return {
-      ready: false,
-      mode: "invalid",
-      badge: "link inválido",
-      button: "corrigir link do checkout",
-      message: "O link do checkout precisa começar com http:// ou https://."
-    };
-  }
-
-  return {
-    ready: true,
-    mode: "ready",
-    badge: "checkout seguro",
-    button: "ir para pagamento seguro",
-    message: "Você será direcionado para uma página externa segura para concluir o pagamento."
-  };
-}
-
-function checkoutDeveloperHint() {
-  return [
-    "Dados bancários: cadastre somente na plataforma de pagamento externa.",
-    "No app.js, altere apenas SALES.checkoutUrl para o link real do checkout.",
-    "Atualize também SALES.supportEmail, SALES.monthlyPrice e SALES.semiannualPrice quando necessário.",
-    "Não coloque conta bancária, documento, Pix, endereço ou dados sensíveis dentro do app."
-  ].join(" ");
-}
-
 function hashString(s) {
   let h = 0;
   const text = String(s || "");
@@ -216,6 +170,65 @@ function truncateText(text, max = 80) {
   const clean = String(text || "").trim();
   if (clean.length <= max) return clean;
   return `${clean.slice(0, max - 1).trim()}…`;
+}
+
+/* ---------- tema claro / escuro ---------- */
+function getTheme() {
+  const stored = localStorage.getItem(THEME_STORAGE_KEY);
+
+  if (stored === "light" || stored === "dark") {
+    return stored;
+  }
+
+  return "dark";
+}
+
+function themeLabel(theme = getTheme()) {
+  return theme === "light" ? "modo claro" : "modo escuro";
+}
+
+function themeIcon(theme = getTheme()) {
+  return theme === "light" ? "☀️" : "🌙";
+}
+
+function applyTheme(theme = getTheme()) {
+  const safeTheme = theme === "light" ? "light" : "dark";
+
+  document.documentElement.dataset.theme = safeTheme;
+  document.documentElement.style.colorScheme = safeTheme === "light" ? "light" : "dark";
+
+  const metaTheme = document.querySelector("meta[name='theme-color']");
+  if (metaTheme) {
+    metaTheme.setAttribute("content", safeTheme === "light" ? "#fff4d7" : "#060912");
+  }
+
+  const themeBtn = $("#hudTheme");
+  if (themeBtn) {
+    themeBtn.textContent = themeIcon(safeTheme);
+    themeBtn.setAttribute(
+      "aria-label",
+      safeTheme === "light" ? "ativar modo escuro" : "ativar modo claro"
+    );
+    themeBtn.setAttribute("title", safeTheme === "light" ? "modo claro" : "modo escuro");
+  }
+}
+
+function setTheme(theme) {
+  const safeTheme = theme === "light" ? "light" : "dark";
+  localStorage.setItem(THEME_STORAGE_KEY, safeTheme);
+
+  STATE.prefs ||= {};
+  STATE.prefs.theme = safeTheme;
+
+  saveState();
+  applyTheme(safeTheme);
+
+  return safeTheme;
+}
+
+function toggleTheme() {
+  const current = getTheme();
+  return setTheme(current === "light" ? "dark" : "light");
 }
 
 /* ---------- rota ---------- */
@@ -286,10 +299,13 @@ function explainWordType(raw) {
   const clean = String(raw || "").trim();
   if (!clean) return "Vocabulário";
   if (jpHasFurigana(clean)) return "Kanji";
+
   const plain = jpStripFurigana(clean);
+
   if (KANJI_RE.test(plain)) return "Kanji";
   if (HIRAGANA_RE.test(plain)) return "Hiragana";
   if (KATAKANA_RE.test(plain)) return "Katakana";
+
   return "Vocabulário";
 }
 
@@ -299,6 +315,57 @@ function formatWordExplanation(word) {
   const label = explainWordType(raw);
   const value = jpHasFurigana(raw) ? jpToInlineFurigana(raw) : jpStripFurigana(raw);
   return `${label}: ${value} = ${pt}`;
+}
+
+/* ---------- checkout ---------- */
+function isRealCheckoutConfigured() {
+  return !!SALES.checkoutUrl &&
+    SALES.checkoutUrl.startsWith("http") &&
+    !/SEU-CHECKOUT-AQUI/i.test(SALES.checkoutUrl);
+}
+
+function getCheckoutStatus() {
+  const url = String(SALES.checkoutUrl || "").trim();
+  const hasUrl = !!url;
+  const isHttp = /^https?:\/\//i.test(url);
+  const isPlaceholder = !url || /SEU-CHECKOUT-AQUI/i.test(url);
+
+  if (!hasUrl || isPlaceholder) {
+    return {
+      ready: false,
+      mode: "placeholder",
+      badge: "checkout em preparação",
+      button: "checkout em preparação",
+      message: "O pagamento ainda não foi conectado. Cadastre seus dados bancários na plataforma de checkout externa e cole aqui o link gerado."
+    };
+  }
+
+  if (!isHttp) {
+    return {
+      ready: false,
+      mode: "invalid",
+      badge: "link inválido",
+      button: "corrigir link do checkout",
+      message: "O link do checkout precisa começar com http:// ou https://."
+    };
+  }
+
+  return {
+    ready: true,
+    mode: "ready",
+    badge: "checkout seguro",
+    button: "ir para pagamento seguro",
+    message: "Você será direcionado para uma página externa segura para concluir o pagamento."
+  };
+}
+
+function checkoutDeveloperHint() {
+  return [
+    "Dados bancários: cadastre somente na plataforma de pagamento externa.",
+    "No app.js, altere apenas SALES.checkoutUrl para o link real do checkout.",
+    "Atualize também SALES.supportEmail, SALES.monthlyPrice e SALES.semiannualPrice quando necessário.",
+    "Não coloque conta bancária, documento, Pix, endereço ou dados sensíveis dentro do app."
+  ].join(" ");
 }
 
 /* ---------- tópicos / seed ---------- */
@@ -322,6 +389,7 @@ function defaultTopic() {
   };
 }
 
+/* ---------- catálogo inicial de frases ---------- */
 const TOPIC_SEEDS = [
   {
     id: "topic_essential_japan",
@@ -744,8 +812,7 @@ const TOPIC_SEEDS = [
       }
     ]
   },
-
-  {
+    {
     id: "topic_airport",
     name: "No Aeroporto",
     color: "tBlue",
@@ -1678,6 +1745,7 @@ const TOPIC_SEEDS = [
   }
 ];
 
+/* ---------- seed / state ---------- */
 function ensureSeedCatalog(st) {
   const t = now();
 
@@ -1749,15 +1817,15 @@ function ensureSeedCatalog(st) {
   return st;
 }
 
-/* ---------- state ---------- */
 function defaultState() {
   const t = now();
   const top = defaultTopic();
 
   const st = {
-    app: { schemaVersion: 7.93, createdAt: t, updatedAt: t },
+    app: { schemaVersion: 8.2, createdAt: t, updatedAt: t },
 
     prefs: {
+      theme: getTheme(),
       audio: { enabled: true, volume: 0.35, unlocked: false },
       haptics: { enabled: true }
     },
@@ -1839,7 +1907,7 @@ function defaultState() {
 function migrateToV7(st) {
   if (!st || !st.app) return defaultState();
 
-  st.app.schemaVersion = 7.93;
+  st.app.schemaVersion = 8.2;
 
   st.bank ||= {};
   st.bank.topics ||= [];
@@ -1873,6 +1941,11 @@ function migrateToV7(st) {
   st.aiStudio ||= { history: [] };
   st.admin ||= { unlocked: false, lastLoginAt: null };
   st.tutorial ||= { done: false, currentStep: 0, completedAt: null };
+
+  st.prefs ||= {};
+  st.prefs.theme = st.prefs.theme === "light" ? "light" : getTheme();
+  st.prefs.audio ||= { enabled: true, volume: 0.35, unlocked: false };
+  st.prefs.haptics ||= { enabled: true };
 
   st.goals ||= {
     dailyMinutes: DAILY_GOAL_DEFAULTS.minutes,
@@ -2132,7 +2205,6 @@ function getRetentionNudge() {
     action: "começar treino"
   };
 }
-
 /* ---------- Bloco 3C: revisão inteligente ---------- */
 function isPhraseAccessible(p) {
   if (!p) return false;
@@ -2405,6 +2477,7 @@ function getSituationTrainingOptions() {
 
 function getSituationTarget(situationId) {
   const opt = SITUATION_TRAINING.find(x => x.id === situationId);
+
   if (!opt) {
     return {
       filter: "topic_essential_japan",
@@ -2905,6 +2978,8 @@ function refreshHUD() {
 
   const sub = $("#subStatus");
   if (sub) sub.textContent = `${STATE.stats.cyclesDone || 0} ciclos • ${STATE.stats.phrasesMastered || 0} dominadas`;
+
+  applyTheme(getTheme());
 }
 
 /* ---------- premium / admin / checkout ---------- */
@@ -3049,7 +3124,7 @@ function habitBump(_key, field, amount = 1) {
 const TUTORIAL_STEPS = [
   {
     title: "Entenda o método",
-    text: "O Nihongo321 usa repetição guiada para treinar memória, ouvido e fala com japonês funcional."
+    text: "O NIHONGO321 usa repetição guiada para treinar memória, ouvido e fala com japonês funcional."
   },
   {
     title: "Comece pelo essencial",
@@ -3069,15 +3144,23 @@ const TUTORIAL_STEPS = [
   },
   {
     title: "Salve frases importantes",
-    text: "Use favoritos para guardar frases que podem salvar sua rotina no Japão."
+    text: "Use favoritos para guardar frases que podem ajudar na sua rotina real no Japão."
   },
   {
     title: "Escolha uma situação",
     text: "Use Treinar por situação para entrar direto no contexto que você precisa hoje."
   },
   {
-    title: "Avance com o premium",
-    text: "No premium ficam temas mais específicos e o Sensei IA para criar material sob medida."
+    title: "Use o Sensei IA Premium",
+    text: "O Sensei IA cria material sob medida: situações reais, partículas, estruturas, palavras e expressões japonesas com exemplos para treinar."
+  },
+  {
+    title: "Estude uma frase por dia",
+    text: "Você pode pedir 7 exemplos de uma estrutura, como ので ou かどうか, e estudar uma frase por dia durante a semana."
+  },
+  {
+    title: "Aprendizado autodidata",
+    text: "Com o Premium, suas dúvidas viram tópicos treináveis. Você pede, salva no app e revisa no método NIHONGO321."
   }
 ];
 
@@ -3769,7 +3852,6 @@ function updateStudyUI() {
   const pct = clamp(ms / goal, 0, 1);
   fill.style.transform = `scaleX(${pct})`;
 }
-
 /* ---------- render helpers ---------- */
 function renderNewWords(list) {
   if (!Array.isArray(list) || list.length === 0) return "";
@@ -3801,67 +3883,6 @@ function renderTopicHeader(topic, count, collapsed) {
   `;
 }
 
-function renderPlanCompareBox() {
-  return `
-    <div class="sheet stack" style="text-align:left">
-      <div class="row row--between">
-        <div class="badge">grátis x premium</div>
-        <div class="badge">honesto e direto</div>
-      </div>
-
-      <div class="planGrid">
-        <div class="planCard">
-          <div class="planTop">
-            <h3 class="planName">Grátis</h3>
-            <span class="planTag">começar</span>
-          </div>
-
-          <div class="planPrice">¥0 <small>/ início</small></div>
-          <p class="planSub">Para manter contato com o japonês mesmo nos dias cansativos.</p>
-
-          <ul class="planList">
-            <li>treino 105x</li>
-            <li>Pack Essencial Japão</li>
-            <li>treino rápido de 2 minutos</li>
-            <li>favoritos como revisão pessoal</li>
-            <li>frase do dia</li>
-            <li>revisão recomendada</li>
-            <li>treino por situação essencial</li>
-            <li>backup local</li>
-          </ul>
-        </div>
-
-        <div class="planCard premium">
-          <div class="planTop">
-            <h3 class="planName">Premium</h3>
-            <span class="planTag">contexto real</span>
-          </div>
-
-          <div class="planPrice">${SALES.monthlyPrice} <small>/ mês</small></div>
-          <p class="planSub">Para preparar seu japonês antes de situações específicas.</p>
-
-          <ul class="planList">
-            <li>tópicos específicos do Japão</li>
-            <li>trabalho, prefeitura, mercado e transporte</li>
-            <li>Sensei IA para criar frases do seu caso</li>
-            <li>mais contexto antes de situações difíceis</li>
-            <li>revisões mais próximas da vida real</li>
-          </ul>
-
-          <button class="btn btn--ok btn--full" data-action="checkout">
-            ${escapeHTML(checkoutButtonLabel("primary"))}
-          </button>
-
-          <button class="btn btn--ghost btn--full" data-nav="#/premium">
-            ver detalhes do Premium
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-/* ---------- componentes de valor ---------- */
 function renderFavoriteButton(id, compact = false) {
   const active = isFavorite(id);
   const label = active ? "remover favorito" : "salvar favorito";
@@ -3914,6 +3935,453 @@ function renderPhraseMiniCard(p, opts = {}) {
   `;
 }
 
+function renderAppLogoBlock(extraClass = "") {
+  return `
+    <div class="appLogoBlock ${escapeHTML(extraClass)}" aria-label="logo NIHONGO321">
+      <img src="${escapeHTML(BRAND.logoPath)}" alt="NIHONGO321" loading="lazy" />
+    </div>
+  `;
+}
+
+/* ---------- Bloco 4B: checklist interno de publicação ---------- */
+const LAUNCH_CHECKLIST = [
+  {
+    id: "checkout",
+    label: "Configurar checkout real em SALES.checkoutUrl",
+    status: () => isRealCheckoutConfigured()
+  },
+  {
+    id: "email",
+    label: "Atualizar SALES.supportEmail",
+    status: () => !/exemplo\.com/i.test(String(SALES.supportEmail || ""))
+  },
+  {
+    id: "stores",
+    label: "Atualizar links reais da Google Play e App Store",
+    status: () =>
+      !/^https:\/\/play\.google\.com\/store\/?$/i.test(String(SALES.playStoreUrl || "")) &&
+      !/^https:\/\/apps\.apple\.com\/?$/i.test(String(SALES.appStoreUrl || ""))
+  },
+  {
+    id: "prices",
+    label: "Revisar preços finais do Premium",
+    status: () => !!SALES.monthlyPrice && !!SALES.semiannualPrice
+  },
+  {
+    id: "premium-copy",
+    label: "Revisar textos da página Premium",
+    status: () => false
+  },
+  {
+    id: "routes",
+    label: "Testar todas as rotas principais",
+    status: () => false
+  },
+  {
+    id: "quick",
+    label: "Testar fluxo do treino rápido",
+    status: () => false
+  },
+  {
+    id: "situation",
+    label: "Testar fluxo do treino por situação",
+    status: () => false
+  },
+  {
+    id: "favorites",
+    label: "Testar favoritos",
+    status: () => false
+  },
+  {
+    id: "daily",
+    label: "Testar frase do dia",
+    status: () => false
+  },
+  {
+    id: "backup",
+    label: "Testar backup/exportação/importação",
+    status: () => false
+  },
+  {
+    id: "audio",
+    label: "Testar áudio e vibração em Android + Chrome",
+    status: () => false
+  },
+  {
+    id: "small-phone",
+    label: "Testar layout em celular pequeno",
+    status: () => false
+  },
+  {
+    id: "icon",
+    label: "Criar ícone final do app",
+    status: () => true
+  },
+  {
+    id: "screenshots",
+    label: "Criar screenshots para loja",
+    status: () => false
+  },
+  {
+    id: "store-desc",
+    label: "Criar descrição curta e completa para Google Play",
+    status: () => false
+  },
+  {
+    id: "public-privacy",
+    label: "Criar política de privacidade pública hospedada em URL",
+    status: () => false
+  },
+  {
+    id: "publish-format",
+    label: "Decidir formato de publicação: PWA, WebView Android, Google Play ou App Store futuramente",
+    status: () => false
+  },
+  {
+    id: "real-users",
+    label: "Fazer teste com usuários reais",
+    status: () => false
+  },
+  {
+    id: "bugs",
+    label: "Corrigir bugs encontrados nos testes",
+    status: () => false
+  }
+];
+
+function launchChecklistSummary() {
+  const rows = LAUNCH_CHECKLIST.map(item => ({
+    ...item,
+    done: !!item.status()
+  }));
+
+  const done = rows.filter(x => x.done).length;
+  const total = rows.length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  return {
+    rows,
+    done,
+    total,
+    pct
+  };
+}
+
+function renderLaunchChecklistBox(compact = false) {
+  const sum = launchChecklistSummary();
+
+  return `
+    <section class="${compact ? "sheet stack" : "card stack"}" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">rumo aos 100%</div>
+        <div class="badge">${sum.pct}%</div>
+      </div>
+
+      <div class="pWrap" aria-label="progresso de publicação">
+        <div class="pBar"><div class="pFill" style="transform:scaleX(${sum.total ? sum.done / sum.total : 0})"></div></div>
+        <div class="pTxt">${sum.done}/${sum.total}</div>
+      </div>
+
+      ${compact ? `
+        <div class="small">
+          Checklist interno para publicação e testes finais. Não aparece como fluxo principal do estudante.
+        </div>
+        <button class="btn btn--ghost btn--full" data-nav="#/launch-checklist">abrir checklist final</button>
+      ` : ""}
+    </section>
+  `;
+}
+
+function renderLegalLinksBox(compact = false) {
+  return `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">informações do app</div>
+        <div class="badge">publicação</div>
+      </div>
+
+      ${compact ? "" : `
+        <div class="small">
+          Páginas simples para transparência, publicação inicial e confiança do usuário.
+        </div>
+      `}
+
+      <div class="grid2">
+        <button class="btn btn--ghost btn--full" data-nav="#/about">sobre o app</button>
+        <button class="btn btn--ghost btn--full" data-nav="#/privacy">privacidade</button>
+      </div>
+
+      <button class="btn btn--muted btn--full" data-nav="#/terms">termos de uso</button>
+    </div>
+  `;
+}
+
+/* ---------- componentes comerciais ---------- */
+function renderPlanCompareBox() {
+  return `
+    <section class="card stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">grátis x premium</div>
+        <div class="badge">sem enrolação</div>
+      </div>
+
+      <div class="planGrid">
+        <div class="planCard">
+          <div class="planTop">
+            <h3 class="planName">Grátis</h3>
+            <span class="planTag">começar</span>
+          </div>
+
+          <div class="planPrice">¥0 <small>/ início</small></div>
+          <p class="planSub">Para manter contato com o japonês mesmo nos dias cansativos.</p>
+
+          <ul class="planList">
+            <li>treino 105x;</li>
+            <li>Pack Essencial Japão;</li>
+            <li>treino rápido de 2 minutos;</li>
+            <li>favoritos como revisão pessoal;</li>
+            <li>frase do dia;</li>
+            <li>revisão recomendada;</li>
+            <li>treino por situação essencial;</li>
+            <li>backup local.</li>
+          </ul>
+        </div>
+
+        <div class="planCard premium">
+          <div class="planTop">
+            <h3 class="planName">Premium</h3>
+            <span class="planTag">contexto real</span>
+          </div>
+
+          <div class="planPrice">${escapeHTML(SALES.monthlyPrice)} <small>/ mês</small></div>
+          <p class="planSub">Para preparar seu japonês antes de situações específicas.</p>
+
+          <ul class="planList">
+            <li>tópicos específicos do Japão;</li>
+            <li>trabalho, prefeitura, mercado e transporte;</li>
+            <li>Sensei IA para criar frases do seu caso;</li>
+            <li>gramática prática com exemplos treináveis;</li>
+            <li>7 exemplos por tema para estudar 1 frase por dia;</li>
+            <li>mais contexto antes de situações difíceis;</li>
+            <li>revisões mais próximas da vida real.</li>
+          </ul>
+
+          <div class="planFooter">
+            <button class="btn btn--ok btn--full" data-action="checkout">
+              ${escapeHTML(checkoutButtonLabel("primary"))}
+            </button>
+
+            <button class="btn btn--ghost btn--full" data-nav="#/premium">
+              ver detalhes do Premium
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderPremiumValueGrid() {
+  return `
+    <div class="valueGrid premiumValueGrid">
+      <div class="valueCard">
+        <div class="valueIcon">🏭</div>
+        <h3 class="valueTitle">Trabalho e chefe</h3>
+        <p class="valueText">Frases para pedir explicação, confirmar tarefas e responder com respeito.</p>
+      </div>
+
+      <div class="valueCard">
+        <div class="valueIcon">🏢</div>
+        <h3 class="valueTitle">Prefeitura e documentos</h3>
+        <p class="valueText">Contexto para situações que exigem calma e clareza.</p>
+      </div>
+
+      <div class="valueCard">
+        <div class="valueIcon">🏪</div>
+        <h3 class="valueTitle">Mercado e konbini</h3>
+        <p class="valueText">Treinos para compras, pagamento, atendimento e pedidos rápidos.</p>
+      </div>
+
+      <div class="valueCard">
+        <div class="valueIcon">文</div>
+        <h3 class="valueTitle">Gramática prática</h3>
+        <p class="valueText">Peça exemplos com ので, かどうか, ないといけない, やってみる e outras estruturas.</p>
+      </div>
+
+      <div class="valueCard">
+        <div class="valueIcon">7</div>
+        <h3 class="valueTitle">7 exemplos por tema</h3>
+        <p class="valueText">Estude uma frase por dia e transforme dúvida em rotina de treino.</p>
+      </div>
+
+      <div class="valueCard">
+        <div class="valueIcon">🤖</div>
+        <h3 class="valueTitle">Sensei IA Premium</h3>
+        <p class="valueText">Crie material sob medida, salve como tópico e revise no método 105x.</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderPremiumTopicsBox() {
+  const premiumTopics = (STATE.bank.topics || [])
+    .filter(t => isTopicPremium(t.id))
+    .map(t => {
+      const count = topicPhraseIds(t.id).length;
+      return `
+        <div class="useCaseItem">
+          <span class="useCaseIcon">🔒</span>
+          <span>${escapeHTML(t.name)} • ${count} frases</span>
+        </div>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="sheet stack premiumUseCases" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">tópicos premium</div>
+        <div class="badge">situações reais</div>
+      </div>
+
+      <div class="useCaseList">
+        ${premiumTopics || `
+          <div class="useCaseItem">
+            <span class="useCaseIcon">🔒</span>
+            <span>Novos tópicos premium serão adicionados aqui.</span>
+          </div>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+function renderPremiumUseCases() {
+  return `
+    <div class="sheet stack premiumUseCases" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">quando o premium ajuda</div>
+        <div class="badge">contexto</div>
+      </div>
+
+      <div class="useCaseList">
+        <div class="useCaseItem">
+          <span class="useCaseIcon">🧑‍🏭</span>
+          <span>antes de falar com chefe ou líder na fábrica;</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">🏢</span>
+          <span>antes de ir à prefeitura ou resolver documentos;</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">🏥</span>
+          <span>quando precisa explicar uma situação específica;</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">文</span>
+          <span>quando quer entender uma estrutura como ので, かどうか ou ないといけない;</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">🏠</span>
+          <span>quando o conteúdo pronto não cobre seu problema real.</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPremiumActivationBox() {
+  const status = checkoutStatus();
+
+  return `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">como ativar o Premium</div>
+        <div class="badge">${escapeHTML(status.label)}</div>
+      </div>
+
+      <div class="useCaseList">
+        <div class="useCaseItem">
+          <span class="useCaseIcon">1</span>
+          <span>Toque no botão de pagamento Premium;</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">2</span>
+          <span>O app abre uma página externa segura de checkout;</span>
+        </div>
+        <div class="useCaseItem">
+          <span class="useCaseIcon">3</span>
+          <span>Depois da confirmação, o Premium deve ser liberado conforme o fluxo definido pelo desenvolvedor.</span>
+        </div>
+      </div>
+
+      <div class="small">${escapeHTML(status.helpText)}</div>
+
+      ${!status.configured ? `
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">nota para o desenvolvedor</div>
+          <div class="small">
+            Não coloque dados bancários neste app. Cadastre sua conta bancária diretamente na plataforma de pagamento escolhida.
+            Depois, troque apenas o valor de SALES.checkoutUrl pelo link público do checkout.
+          </div>
+        </div>
+      ` : ""}
+    </div>
+  `;
+}
+
+function renderPaymentSafetyBox() {
+  const status = checkoutStatus();
+
+  return `
+    <div class="sheet stack" style="text-align:left">
+      <div class="row row--between">
+        <div class="badge">pagamento seguro fora do app</div>
+        <div class="badge">${status.configured ? "externo" : "em preparação"}</div>
+      </div>
+
+      <p class="small">
+        O NIHONGO321 não coleta dados bancários dentro do app. O pagamento deve acontecer em uma plataforma externa de checkout.
+      </p>
+
+      <p class="small">
+        Dados de cartão, conta bancária, konbini payment ou outros métodos devem ser cadastrados apenas no serviço de pagamento escolhido.
+      </p>
+    </div>
+  `;
+}
+
+function renderPremiumSoftBridge() {
+  if (isPremiumUnlocked()) return "";
+
+  return `
+    <section class="card stack premiumBridgeCard">
+      <div class="row row--between">
+        <div class="badge">premium</div>
+        <div class="badge">sem pressão</div>
+      </div>
+
+      <div class="lockCard">
+        <h3 class="lockTitle">O grátis mantém o japonês vivo. O premium prepara para situações específicas.</h3>
+        <p class="lockText">
+          Quando você precisar de frases para chefe, prefeitura, moradia, transporte,
+          uma dúvida gramatical ou um caso muito específico, o premium começa a fazer mais sentido.
+        </p>
+      </div>
+
+      <div class="grid2">
+        <button class="btn btn--ok btn--full" data-nav="#/premium">
+          ver como o premium ajuda
+        </button>
+        <button class="btn btn--full" data-action="startQuickTraining">
+          continuar no grátis
+        </button>
+      </div>
+    </section>
+  `;
+}
+
+/* ---------- cards da home ---------- */
 function renderRetentionCard() {
   const streak = getStreakInfo();
   const nudge = getRetentionNudge();
@@ -3981,17 +4449,6 @@ function renderSmartReviewCard() {
     `;
   }
 
-  const premiumNudge = shouldShowPremiumReviewNudge()
-    ? `
-      <div class="sheet stack premiumBridge" style="text-align:left">
-        <div class="small">
-          Quer treinar situações mais específicas? O premium amplia para fábrica, prefeitura, moradia, mercado e transporte.
-        </div>
-        <button class="btn btn--ghost btn--full" data-nav="#/premium">ver como o premium ajuda</button>
-      </div>
-    `
-    : "";
-
   return `
     <section class="card stack">
       <div class="row row--between">
@@ -4018,8 +4475,6 @@ function renderSmartReviewCard() {
           ${escapeHTML(reason.secondary)}
         </button>
       </div>
-
-      ${premiumNudge}
     </section>
   `;
 }
@@ -4039,18 +4494,12 @@ function renderQuickTrainingCard() {
 
         <div class="lockCard">
           <h3 class="lockTitle">Pouco tempo? Comece pelo essencial.</h3>
-          <p class="lockText">
-            Treine uma frase hoje para o app sugerir melhor amanhã.
-          </p>
+          <p class="lockText">Treine uma frase hoje para o app sugerir melhor amanhã.</p>
         </div>
 
         <div class="grid2">
-          <button class="btn btn--ok btn--full" data-action="startQuickTraining">
-            iniciar treino rápido
-          </button>
-          <button class="btn btn--full" data-action="topicFilter" data-id="topic_essential_japan">
-            Pack Essencial
-          </button>
+          <button class="btn btn--ok btn--full" data-action="startQuickTraining">iniciar treino rápido</button>
+          <button class="btn btn--full" data-action="topicFilter" data-id="topic_essential_japan">Pack Essencial</button>
         </div>
       </section>
     `;
@@ -4077,12 +4526,8 @@ function renderQuickTrainingCard() {
       </div>
 
       <div class="grid2">
-        <button class="btn btn--ok btn--full" data-action="startQuickTraining">
-          ${escapeHTML(reason.cta)}
-        </button>
-        <button class="btn btn--full" data-action="reviewPhrase" data-id="${escapeHTML(p.id)}">
-          abrir frase
-        </button>
+        <button class="btn btn--ok btn--full" data-action="startQuickTraining">${escapeHTML(reason.cta)}</button>
+        <button class="btn btn--full" data-action="reviewPhrase" data-id="${escapeHTML(p.id)}">abrir frase</button>
       </div>
     </section>
   `;
@@ -4128,9 +4573,7 @@ function renderSituationTrainingCard() {
 
       <div class="situationIntro">
         <h3 class="lockTitle">Escolha o contexto de hoje</h3>
-        <p class="lockText">
-          Vai enfrentar uma situação hoje? Treine frases úteis antes de sair.
-        </p>
+        <p class="lockText">Vai enfrentar uma situação hoje? Treine frases úteis antes de sair.</p>
       </div>
 
       <div class="situationGrid">
@@ -4160,7 +4603,7 @@ function renderPhraseOfDayCard() {
       <div class="lockCard">
         <h3 class="lockTitle">Um ponto de partida para hoje</h3>
         <p class="lockText">
-          Use esta frase quando estiver cansado ou sem saber por onde começar. Ela transforma o “só vou abrir o app” em um treino real.
+          Use esta frase quando estiver cansado ou sem saber por onde começar.
         </p>
       </div>
 
@@ -4235,7 +4678,7 @@ function renderFavoritesCard() {
       <div class="lockCard">
         <h3 class="lockTitle">Seu kit pessoal de revisão</h3>
         <p class="lockText">
-          Favoritos são frases que você não quer esquecer. Salve o que pode te ajudar no trabalho, mercado, prefeitura ou conversas reais.
+          Favoritos são frases que você não quer esquecer.
         </p>
       </div>
 
@@ -4249,7 +4692,7 @@ function renderFavoritesCard() {
           : `
             <div class="sheet stack" style="text-align:left">
               <div class="small">
-                Salve frases importantes para montar sua revisão pessoal. Toque em ☆ durante o treino quando encontrar uma frase útil.
+                Salve frases importantes para montar sua revisão pessoal. Toque em ☆ durante o treino.
               </div>
               <button class="btn btn--ok btn--full" data-action="topicFilter" data-id="topic_essential_japan">
                 começar pelo Pack Essencial
@@ -4279,7 +4722,7 @@ function renderFreeValueCard() {
       <div class="lockCard">
         <h3 class="lockTitle">O básico já precisa ajudar de verdade</h3>
         <p class="lockText">
-          Comece com ${essentialCount} frases essenciais, treino rápido de 2 minutos, frase do dia, favoritos, revisão recomendada e meta leve.
+          Comece com ${essentialCount} frases essenciais, treino rápido, frase do dia, favoritos, revisão recomendada e meta leve.
         </p>
       </div>
 
@@ -4334,7 +4777,7 @@ function renderEssentialPackHighlight() {
       <div class="lockCard">
         <h3 class="lockTitle">Primeiras frases para destravar a rotina</h3>
         <p class="lockText">
-          Um conjunto inicial para pedir ajuda, entender instruções, falar com calma e ganhar confiança no cotidiano.
+          Um conjunto inicial para pedir ajuda, entender instruções, falar com calma e ganhar confiança.
         </p>
       </div>
 
@@ -4350,232 +4793,7 @@ function renderEssentialPackHighlight() {
   `;
 }
 
-function renderPremiumValueGrid() {
-  return `
-    <div class="valueGrid premiumValueGrid">
-      <div class="valueCard">
-        <div class="valueIcon">🏭</div>
-        <h3 class="valueTitle">Trabalho e chefe</h3>
-        <p class="valueText">Frases para pedir explicação, confirmar tarefas e responder com respeito.</p>
-      </div>
-
-      <div class="valueCard">
-        <div class="valueIcon">🏢</div>
-        <h3 class="valueTitle">Prefeitura e documentos</h3>
-        <p class="valueText">Contexto para situações que exigem calma, clareza e vocabulário prático.</p>
-      </div>
-
-      <div class="valueCard">
-        <div class="valueIcon">🏪</div>
-        <h3 class="valueTitle">Mercado e konbini</h3>
-        <p class="valueText">Treinos para compras, pagamento, atendimento e pedidos rápidos.</p>
-      </div>
-
-      <div class="valueCard">
-        <div class="valueIcon">🏠</div>
-        <h3 class="valueTitle">Moradia</h3>
-        <p class="valueText">Frases para reparo, vazamento, contato com imobiliária e problemas do dia a dia.</p>
-      </div>
-
-      <div class="valueCard">
-        <div class="valueIcon">🚃</div>
-        <h3 class="valueTitle">Transporte</h3>
-        <p class="valueText">Prepare-se antes de pegar trem, ônibus, perguntar horário ou direção.</p>
-      </div>
-
-      <div class="valueCard">
-        <div class="valueIcon">🤖</div>
-        <h3 class="valueTitle">Sensei IA</h3>
-        <p class="valueText">Crie frases para o seu caso real e salve tudo no app para treinar depois.</p>
-      </div>
-    </div>
-  `;
-}
-
-function renderPremiumTopicsBox() {
-  const premiumTopics = (STATE.bank.topics || [])
-    .filter(t => isTopicPremium(t.id))
-    .map(t => {
-      const count = topicPhraseIds(t.id).length;
-      return `
-        <div class="useCaseItem">
-          <span class="useCaseIcon">🔒</span>
-          <span>${escapeHTML(t.name)} • ${count} frases</span>
-        </div>
-      `;
-    })
-    .join("");
-
-  return `
-    <div class="sheet stack premiumUseCases" style="text-align:left">
-      <div class="row row--between">
-        <div class="badge">tópicos premium</div>
-        <div class="badge">situações reais</div>
-      </div>
-
-      <div class="useCaseList">
-        ${premiumTopics || `
-          <div class="useCaseItem">
-            <span class="useCaseIcon">🔒</span>
-            <span>Novos tópicos premium serão adicionados aqui.</span>
-          </div>
-        `}
-      </div>
-    </div>
-  `;
-}
-
-function renderPremiumUseCases() {
-  return `
-    <div class="sheet stack premiumUseCases" style="text-align:left">
-      <div class="row row--between">
-        <div class="badge">quando o premium ajuda</div>
-        <div class="badge">contexto</div>
-      </div>
-
-      <div class="useCaseList">
-        <div class="useCaseItem">
-          <span class="useCaseIcon">🧑‍🏭</span>
-          <span>antes de falar com chefe ou líder na fábrica</span>
-        </div>
-        <div class="useCaseItem">
-          <span class="useCaseIcon">🏢</span>
-          <span>antes de ir à prefeitura ou resolver documentos</span>
-        </div>
-        <div class="useCaseItem">
-          <span class="useCaseIcon">🏥</span>
-          <span>quando precisa explicar uma situação específica</span>
-        </div>
-        <div class="useCaseItem">
-          <span class="useCaseIcon">🏠</span>
-          <span>quando o conteúdo pronto não cobre seu problema real</span>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function renderPremiumActivationBox() {
-  const status = checkoutStatus();
-
-  return `
-    <div class="sheet stack" style="text-align:left">
-      <div class="row row--between">
-        <div class="badge">como ativar o Premium</div>
-        <div class="badge">${escapeHTML(status.label)}</div>
-      </div>
-
-      <div class="useCaseList">
-        <div class="useCaseItem">
-          <span class="useCaseIcon">1</span>
-          <span>Toque no botão de pagamento Premium.</span>
-        </div>
-        <div class="useCaseItem">
-          <span class="useCaseIcon">2</span>
-          <span>O app abre uma página externa segura de checkout.</span>
-        </div>
-        <div class="useCaseItem">
-          <span class="useCaseIcon">3</span>
-          <span>Depois da confirmação, o Premium deve ser liberado conforme o fluxo definido pelo desenvolvedor.</span>
-        </div>
-      </div>
-
-      <div class="small">
-        ${escapeHTML(status.helpText)}
-      </div>
-
-      ${!status.configured ? `
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">nota para o desenvolvedor</div>
-          <div class="small">
-            Não coloque dados bancários neste app. Cadastre sua conta bancária diretamente na plataforma de pagamento escolhida.
-            Depois, troque apenas o valor de SALES.checkoutUrl pelo link público do checkout.
-          </div>
-        </div>
-      ` : ""}
-    </div>
-  `;
-}
-
-function renderPaymentSafetyBox() {
-  const status = checkoutStatus();
-
-  return `
-    <div class="sheet stack" style="text-align:left">
-      <div class="row row--between">
-        <div class="badge">pagamento seguro fora do app</div>
-        <div class="badge">${status.configured ? "externo" : "em preparação"}</div>
-      </div>
-
-      <p class="small">
-        O NIHONGO321 não coleta dados bancários dentro do app. O pagamento deve acontecer em uma plataforma externa de checkout.
-      </p>
-
-      <p class="small">
-        Dados de cartão, conta bancária, konbini payment ou outros métodos devem ser cadastrados apenas no serviço de pagamento escolhido.
-      </p>
-
-      <p class="small">
-        Seus dados bancários nunca devem ser inseridos no app, no app.js, no HTML ou no CSS.
-      </p>
-    </div>
-  `;
-}
-
-function renderLegalLinksBox(compact = false) {
-  const cls = compact ? "sheet stack" : "card stack";
-
-  return `
-    <section class="${cls}" style="text-align:left">
-      <div class="row row--between">
-        <div class="badge">informações do app</div>
-        <div class="badge">transparência</div>
-      </div>
-
-      <div class="grid2">
-        <button class="btn btn--ghost btn--full" data-nav="#/about">sobre o app</button>
-        <button class="btn btn--ghost btn--full" data-nav="#/privacy">privacidade</button>
-      </div>
-
-      <button class="btn btn--muted btn--full" data-nav="#/terms">termos de uso</button>
-
-      <div class="small">
-        O app usa armazenamento local no seu dispositivo. Pagamentos, quando configurados, acontecem fora do app.
-      </div>
-    </section>
-  `;
-}
-
-function renderPremiumSoftBridge() {
-  if (isPremiumUnlocked()) return "";
-
-  return `
-    <section class="card stack premiumBridgeCard">
-      <div class="row row--between">
-        <div class="badge">premium</div>
-        <div class="badge">sem pressão</div>
-      </div>
-
-      <div class="lockCard">
-        <h3 class="lockTitle">O grátis mantém o japonês vivo. O premium prepara para situações específicas.</h3>
-        <p class="lockText">
-          Quando você precisar de frases para chefe, prefeitura, moradia, transporte ou um caso muito específico, o premium começa a fazer mais sentido.
-        </p>
-      </div>
-
-      <div class="grid2">
-        <button class="btn btn--ok btn--full" data-nav="#/premium">
-          ver como o premium ajuda
-        </button>
-        <button class="btn btn--full" data-action="startQuickTraining">
-          continuar no grátis
-        </button>
-      </div>
-    </section>
-  `;
-}
-
-/* ---------- páginas legais / publicação ---------- */
+/* ---------- páginas legais ---------- */
 function renderAbout() {
   APP.innerHTML = `
     <div class="stack">
@@ -4584,6 +4802,8 @@ function renderAbout() {
           <div class="badge">sobre o app</div>
           <button class="btn" data-nav="#/settings">voltar</button>
         </div>
+
+        ${renderAppLogoBlock("aboutLogo")}
 
         <h1 class="h1">NIHONGO321</h1>
 
@@ -4602,32 +4822,6 @@ function renderAbout() {
             O app não tenta substituir um curso completo de japonês. A ideia é ajudar você a ouvir,
             ler, repetir em voz alta e revisar frases práticas para o cotidiano.
           </p>
-          <p class="small">
-            Poucos minutos já contam. O foco é criar familiaridade com frases que podem aparecer no trabalho,
-            mercado, prefeitura, konbini, transporte e outras situações da vida no Japão.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">como funciona</div>
-          <div class="useCaseList">
-            <div class="useCaseItem">
-              <span class="useCaseIcon">1</span>
-              <span>Você escolhe uma frase ou situação.</span>
-            </div>
-            <div class="useCaseItem">
-              <span class="useCaseIcon">2</span>
-              <span>O app mostra japonês e português.</span>
-            </div>
-            <div class="useCaseItem">
-              <span class="useCaseIcon">3</span>
-              <span>Você ouve, repete em voz alta e fecha ciclos de treino.</span>
-            </div>
-            <div class="useCaseItem">
-              <span class="useCaseIcon">4</span>
-              <span>Favoritos, frase do dia e revisão ajudam a voltar sem se perder.</span>
-            </div>
-          </div>
         </div>
 
         <div class="sheet stack" style="text-align:left">
@@ -4682,7 +4876,7 @@ function renderPrivacy() {
           <div class="badge">1. Quais dados o app guarda</div>
           <p class="small">
             O app pode guardar localmente: frases cadastradas por você, progresso do treino, favoritos,
-            ciclos concluídos, moedas internas, preferências de som e vibração, meta diária, histórico do Sensei IA local
+            ciclos concluídos, moedas internas, preferências de tema, som e vibração, meta diária, histórico do Sensei IA local
             e backup importado.
           </p>
         </div>
@@ -4693,17 +4887,12 @@ function renderPrivacy() {
             Esses dados ficam no armazenamento local do seu navegador ou WebView, no próprio aparelho.
             Eles não são enviados automaticamente para um servidor pelo código atual do app.
           </p>
-          <p class="small">
-            Se você limpar os dados do navegador, desinstalar o app ou apagar o armazenamento do dispositivo,
-            o progresso pode ser perdido. Por isso existe a função de backup.
-          </p>
         </div>
 
         <div class="sheet stack" style="text-align:left">
           <div class="badge">3. Backup</div>
           <p class="small">
             A função de backup gera um arquivo JSON com seus dados do app. Guarde esse arquivo em local seguro.
-            Quem tiver acesso ao arquivo poderá ver suas frases e progresso.
           </p>
         </div>
 
@@ -4712,26 +4901,6 @@ function renderPrivacy() {
           <p class="small">
             Dados bancários, cartão, conta, konbini payment ou qualquer informação de pagamento não devem ser colocados
             dentro do app. O pagamento Premium, quando configurado, deve acontecer em uma plataforma externa segura.
-          </p>
-          <p class="small">
-            O app apenas abre o link definido em SALES.checkoutUrl. A responsabilidade pelo processamento do pagamento
-            pertence à plataforma externa escolhida.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">5. Áudio e fala</div>
-          <p class="small">
-            O recurso de áudio usa funções disponíveis no navegador/dispositivo para falar frases em japonês.
-            O app atual não grava sua voz e não envia áudio para análise externa.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">6. Alterações futuras</div>
-          <p class="small">
-            Se no futuro o app usar login, servidor, reconhecimento de voz online, analytics ou pagamentos integrados,
-            esta política deve ser atualizada antes da publicação dessa nova versão.
           </p>
         </div>
 
@@ -4759,7 +4928,7 @@ function renderTerms() {
           <h3 class="lockTitle">Uso simples e consciente</h3>
           <p class="lockText">
             Ao usar o NIHONGO321, você entende que o app é uma ferramenta de apoio ao estudo de frases práticas em japonês.
-            Ele ajuda no treino, mas não garante fluência automática nem substitui orientação profissional quando necessário.
+            Ele ajuda no treino, mas não garante fluência automática.
           </p>
         </div>
 
@@ -4789,37 +4958,10 @@ function renderTerms() {
         </div>
 
         <div class="sheet stack" style="text-align:left">
-          <div class="badge">4. Armazenamento local</div>
-          <p class="small">
-            O app usa armazenamento local. Isso significa que seus dados ficam no dispositivo/navegador.
-            Se você apagar os dados do app ou trocar de aparelho sem backup, poderá perder seu progresso.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">5. Premium e checkout</div>
+          <div class="badge">4. Premium e checkout</div>
           <p class="small">
             Quando houver Premium, o pagamento deve acontecer fora do app, em uma plataforma externa segura.
             O NIHONGO321 não deve armazenar dados bancários no código, no localStorage, no HTML, no CSS ou no app.js.
-          </p>
-          <p class="small">
-            A liberação Premium depende do fluxo definido pelo responsável do produto e pela plataforma de checkout escolhida.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">6. Limitações</div>
-          <p class="small">
-            O app pode depender de recursos do navegador, como áudio de fala, armazenamento local e WebView.
-            Alguns aparelhos podem se comportar de forma diferente.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">7. Alterações</div>
-          <p class="small">
-            Estes termos podem ser ajustados conforme o app evoluir, especialmente se forem adicionados login,
-            servidor, pagamentos integrados, análise de voz ou novos serviços externos.
           </p>
         </div>
 
@@ -4832,12 +4974,133 @@ function renderTerms() {
   `;
 }
 
+/* ---------- checklist final ---------- */
+function renderLaunchChecklist() {
+  const sum = launchChecklistSummary();
+
+  APP.innerHTML = `
+    <div class="stack">
+      <section class="card stack" style="text-align:left">
+        <div class="row row--between">
+          <div class="badge">checklist final</div>
+          <button class="btn" data-nav="#/settings">voltar</button>
+        </div>
+
+        ${renderAppLogoBlock("checkLogo")}
+
+        <h1 class="h1">Rumo aos 100% do NIHONGO321</h1>
+
+        <div class="lockCard">
+          <h3 class="lockTitle">${sum.done}/${sum.total} itens • ${sum.pct}%</h3>
+          <p class="lockText">
+            Esta é uma área interna de publicação. Ela serve para acompanhar o que ainda falta antes dos testes reais,
+            loja, PWA, WebView ou venda Premium.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="row row--between">
+            <div class="badge">progresso interno</div>
+            <div class="badge">${sum.pct}%</div>
+          </div>
+
+          <div class="pWrap" aria-label="progresso do checklist">
+            <div class="pBar">
+              <div class="pFill" style="transform:scaleX(${sum.total ? sum.done / sum.total : 0})"></div>
+            </div>
+            <div class="pTxt">${sum.done}/${sum.total}</div>
+          </div>
+
+          <p class="small">
+            Alguns itens dependem de teste manual, publicação, criação de arte, hospedagem pública ou configuração externa.
+          </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">configurações comerciais atuais</div>
+
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">${isRealCheckoutConfigured() ? "✓" : "!"}</span>
+              <span>Checkout: ${isRealCheckoutConfigured() ? "link real configurado" : "ainda está em preparação"}</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✉</span>
+              <span>E-mail de suporte: ${escapeHTML(SALES.supportEmail || "não configurado")}</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">¥</span>
+              <span>Preço mensal atual: ${escapeHTML(SALES.monthlyPrice)}</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">¥</span>
+              <span>Preço semestral atual: ${escapeHTML(SALES.semiannualPrice)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="row row--between">
+            <div class="badge">tarefas finais</div>
+            <div class="badge">publicação</div>
+          </div>
+
+          <div class="useCaseList">
+            ${sum.rows.map((item, index) => `
+              <div class="useCaseItem">
+                <span class="useCaseIcon">${item.done ? "✓" : index + 1}</span>
+                <span>${escapeHTML(item.label)}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">não colocar no código</div>
+
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>dados bancários;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>número de cartão;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✕</span>
+              <span>senha, documento, Pix, conta bancária ou endereço sensível;</span>
+            </div>
+
+            <div class="useCaseItem">
+              <span class="useCaseIcon">✓</span>
+              <span>usar apenas o link público gerado pela plataforma externa em SALES.checkoutUrl.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <button class="btn btn--ok btn--full" data-nav="#/premium">revisar Premium</button>
+          <button class="btn btn--full" data-nav="#/home">voltar ao app</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 /* ---------- landing ---------- */
 function renderLanding() {
   APP.innerHTML = `
     <div class="stack">
       <section class="card heroCard stack">
         <div class="badge">${escapeHTML(BRAND.tagline)}</div>
+
+        ${renderAppLogoBlock("landingLogo")}
 
         <h1 class="heroTitle">
           Japonês útil para quem vive a rotina real do Japão.
@@ -4853,19 +5116,19 @@ function renderLanding() {
         </div>
 
         <div class="heroMiniStats">
-          <button class="statCard" type="button" data-action="startQuickTraining" aria-label="iniciar treino rápido de dois minutos">
+          <button class="statCard" type="button" data-action="startQuickTraining">
             <div class="statVal">2 min</div>
             <div class="statLbl">treino rápido para dias cansativos</div>
           </button>
 
-          <button class="statCard" type="button" data-nav="#/105x" aria-label="abrir treino de fixação cento e cinco vezes">
+          <button class="statCard" type="button" data-nav="#/105x">
             <div class="statVal">105x</div>
             <div class="statLbl">fixação guiada para criar memória</div>
           </button>
 
-          <button class="statCard" type="button" data-nav="#/premium" aria-label="ver planos premium e treinos por situação">
-            <div class="statVal">situação</div>
-            <div class="statLbl">premium para fábrica, prefeitura e vida real</div>
+          <button class="statCard" type="button" data-nav="#/premium">
+            <div class="statVal">Sensei IA</div>
+            <div class="statLbl">premium para dúvidas, gramática e vida real</div>
           </button>
         </div>
       </section>
@@ -4902,9 +5165,9 @@ function renderLanding() {
           </button>
 
           <button class="valueCard" type="button" data-nav="#/premium">
-            <div class="valueIcon">📍</div>
-            <h3 class="valueTitle">Situação real</h3>
-            <p class="valueText">Veja como o Premium aprofunda contextos da vida no Japão.</p>
+            <div class="valueIcon">文</div>
+            <h3 class="valueTitle">Professor de bolso</h3>
+            <p class="valueText">Veja como o Sensei IA transforma dúvidas em treino.</p>
           </button>
         </div>
       </section>
@@ -4914,7 +5177,7 @@ function renderLanding() {
       <section class="ctaBand stack">
         <div class="badge">primeiro treino</div>
         <h2 class="h2">Abra o app, toque no treino rápido e mantenha o japonês vivo.</h2>
-        <p class="p">A versão grátis já ajuda hoje. O premium aprofunda com mais situações reais e Sensei IA.</p>
+        <p class="p">A versão grátis já ajuda hoje. O premium aprofunda com mais situações reais, gramática prática e Sensei IA.</p>
 
         <div class="grid2">
           <button class="btn btn--ok btn--full" data-nav="#/home">entrar no app</button>
@@ -4922,17 +5185,13 @@ function renderLanding() {
         </div>
 
         <div class="storeGrid">
-          <a class="storeBtn" href="${escapeHTML(SALES.playStoreUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Google Play">
+          <a class="storeBtn" href="${escapeHTML(SALES.playStoreUrl)}" target="_blank" rel="noopener noreferrer">
             <span class="ic">▶</span>
             <span>Google Play</span>
           </a>
 
-          <a class="storeBtn" href="${escapeHTML(SALES.appStoreUrl)}" target="_blank" rel="noopener noreferrer" aria-label="App Store">
-            <span class="ic" aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;">
-              <svg width="20" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M16.37 12.47c.03 3.22 2.82 4.29 2.85 4.3-.02.08-.45 1.54-1.49 3.05-.9 1.3-1.84 2.59-3.31 2.62-1.45.03-1.92-.86-3.58-.86-1.67 0-2.19.84-3.55.89-1.42.05-2.5-1.42-3.41-2.71C1.99 17.89.5 14.45.53 11.19c.02-2.1 1.09-4.06 2.84-5.12 1.45-.9 3.38-.97 4.92-.09 1.35.76 2.25.86 3.78.09 1.5-.74 3.36-.63 4.72.08-1.2.72-2.01 2.05-2.02 3.53-.01 1.24.57 2.17 1.6 2.79zM13.92 2.48c.76-.92 1.28-2.19 1.14-3.48-1.1.04-2.43.73-3.22 1.65-.71.82-1.33 2.12-1.16 3.36 1.22.09 2.48-.62 3.24-1.53z"/>
-              </svg>
-            </span>
+          <a class="storeBtn" href="${escapeHTML(SALES.appStoreUrl)}" target="_blank" rel="noopener noreferrer">
+            <span class="ic"></span>
             <span>App Store</span>
           </a>
         </div>
@@ -4953,11 +5212,13 @@ function renderPremium() {
       <section class="premiumHero stack">
         <div class="badge">premium</div>
 
+        ${renderAppLogoBlock("premiumLogo")}
+
         <h1 class="h1">Prepare seu japonês antes das situações difíceis.</h1>
 
         <p class="p">
           O grátis mantém o japonês vivo. O Premium ajuda quando você precisa de mais contexto:
-          fábrica, prefeitura, mercado, transporte, moradia e frases criadas para o seu caso real.
+          fábrica, prefeitura, mercado, transporte, moradia, gramática prática e frases criadas para o seu caso real.
         </p>
 
         <div class="sheet stack" style="text-align:left">
@@ -4969,8 +5230,8 @@ function renderPremium() {
           <h2 class="h2">Menos improviso. Mais preparo.</h2>
 
           <p class="small">
-            Antes de falar com chefe, ir à prefeitura, resolver documento, perguntar no mercado ou explicar um problema,
-            você treina frases mais próximas da vida real.
+            Antes de falar com chefe, ir à prefeitura, resolver documento, perguntar no mercado,
+            explicar um problema ou entender uma estrutura como ので, você treina frases mais próximas da vida real.
           </p>
 
           <div class="grid2">
@@ -4991,28 +5252,48 @@ function renderPremium() {
           <h3 class="lockTitle">Premium não é castigo para quem usa grátis</h3>
           <p class="lockText">
             A versão grátis continua útil. O Premium é para quando você quer mais preparo,
-            mais situações e mais frases específicas para a rotina no Japão.
+            mais situações, mais exemplos e mais frases específicas para a rotina no Japão.
           </p>
         </div>
 
         ${renderPremiumValueGrid()}
-
         ${renderPremiumUseCases()}
-
         ${renderPremiumTopicsBox()}
 
         <div class="sheet stack" style="text-align:left">
           <div class="row row--between">
-            <div class="badge">Sensei IA</div>
-            <div class="badge">diferencial</div>
+            <div class="badge">Sensei IA Premium</div>
+            <div class="badge">professor prático</div>
           </div>
 
-          <h2 class="h2">Quando o conteúdo pronto não cobre seu problema.</h2>
+          <h2 class="h2">Transforme qualquer dúvida em treino.</h2>
 
           <p class="small">
-            Explique uma situação real, como falar com o chefe, pedir reparo no apartamento,
-            consultar no hospital ou resolver documento. O Sensei IA gera um pequeno pack de frases
-            para salvar e treinar no 105x.
+            Com o Sensei IA, você não fica preso apenas aos packs prontos. Você pode pedir frases para uma situação real,
+            uma partícula, uma estrutura gramatical, uma palavra japonesa ou uma expressão que apareceu no seu dia.
+          </p>
+
+          <div class="useCaseList">
+            <div class="useCaseItem">
+              <span class="useCaseIcon">文</span>
+              <span>“Me ensine o uso de ので.”</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">7</span>
+              <span>“Crie 7 frases com かどうか para eu revisar durante a semana.”</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">🏭</span>
+              <span>“Preciso falar com meu chefe que não entendi a tarefa.”</span>
+            </div>
+            <div class="useCaseItem">
+              <span class="useCaseIcon">💾</span>
+              <span>O material vira tópico treinável dentro do app.</span>
+            </div>
+          </div>
+
+          <p class="small">
+            A ideia é simples: 1 frase por dia, 7 frases por semana, mais autonomia para estudar japonês prático no Japão.
           </p>
 
           <div class="grid2">
@@ -5032,18 +5313,19 @@ function renderPremium() {
               <span class="planTag">flexível</span>
             </div>
 
-            <div class="planPrice">${SALES.monthlyPrice}<small>/ mês</small></div>
+            <div class="planPrice">${escapeHTML(SALES.monthlyPrice)}<small>/ mês</small></div>
             <p class="planSub">
               Para destravar temas específicos e sentir o app completo na rotina.
             </p>
 
             <ul class="planList">
-              <li>todos os tópicos Premium</li>
-              <li>treino por situação mais completo</li>
-              <li>Sensei IA para casos reais</li>
-              <li>mais frases por contexto</li>
-              <li>revisões mais direcionadas</li>
-              <li>preparo antes de situações difíceis</li>
+              <li>todos os tópicos Premium;</li>
+              <li>treino por situação mais completo;</li>
+              <li>Sensei IA para casos reais;</li>
+              <li>Sensei IA para gramática prática;</li>
+              <li>7 exemplos por tema para revisar por semana;</li>
+              <li>mais frases por contexto;</li>
+              <li>revisões mais direcionadas.</li>
             </ul>
 
             <div class="planFooter">
@@ -5059,17 +5341,17 @@ function renderPremium() {
               <span class="planTag">constância</span>
             </div>
 
-            <div class="planPrice">${SALES.semiannualPrice}<small>/ plano</small></div>
+            <div class="planPrice">${escapeHTML(SALES.semiannualPrice)}<small>/ plano</small></div>
             <p class="planSub">
-              Melhor para quem quer manter ritmo por mais tempo e construir segurança com calma.
+              Melhor para quem quer manter ritmo por mais tempo.
             </p>
 
             <ul class="planList">
-              <li>mais tempo de prática</li>
-              <li>melhor custo por período</li>
-              <li>mais chance de criar hábito</li>
-              <li>mais preparação antes de situações reais</li>
-              <li>menos pressão para aprender tudo rápido</li>
+              <li>mais tempo de prática;</li>
+              <li>melhor custo por período;</li>
+              <li>mais chance de criar hábito;</li>
+              <li>preparo antes de situações reais;</li>
+              <li>mais autonomia para estudar sozinho.</li>
             </ul>
 
             <div class="planFooter">
@@ -5081,15 +5363,12 @@ function renderPremium() {
         </div>
 
         ${renderPremiumActivationBox()}
-
         ${renderPaymentSafetyBox()}
 
         ${unlocked ? `
           <div class="sheet stack">
             <div class="badge">premium liberado ✅</div>
-            <div class="small">
-              Seu acesso Premium está liberado neste dispositivo.
-            </div>
+            <div class="small">Seu acesso Premium está liberado neste dispositivo.</div>
 
             <div class="grid2">
               <button class="btn btn--ok btn--full" data-nav="#/sensei">abrir Sensei IA</button>
@@ -5105,7 +5384,7 @@ function renderPremium() {
 
             <div class="small">
               Você pode continuar no grátis. Quando quiser treinar situações mais específicas,
-              o Premium fica como próxima etapa natural.
+              gramática prática e materiais criados para sua necessidade, o Premium fica como próxima etapa natural.
             </div>
 
             <div class="grid2">
@@ -5116,8 +5395,6 @@ function renderPremium() {
                 continuar no grátis
               </button>
             </div>
-
-            <div class="small">${escapeHTML(status.helpText)}</div>
           </div>
         `}
 
@@ -5142,9 +5419,7 @@ function renderAdmin() {
 
         <div class="lockCard">
           <h3 class="lockTitle">Área interna de testes</h3>
-          <p class="lockText">
-            Use esta tela apenas para validar o acesso premium antes da publicação.
-          </p>
+          <p class="lockText">Use esta tela apenas para validar o acesso premium antes da publicação.</p>
         </div>
 
         ${unlocked ? `
@@ -5159,7 +5434,7 @@ function renderAdmin() {
 
             <div class="grid2">
               <button class="btn btn--ghost btn--full" data-nav="#/premium">ver premium</button>
-              <button class="btn btn--full" data-nav="#/sensei">abrir Sensei IA</button>
+              <button class="btn btn--full" data-nav="#/launch-checklist">checklist final</button>
             </div>
 
             <div class="small">status premium: ${premium ? "liberado" : "bloqueado"}</div>
@@ -5264,7 +5539,7 @@ function renderHome() {
         <div class="lockCard">
           <h3 class="lockTitle">Material para a sua necessidade</h3>
           <p class="lockText">
-            Crie frases para chefe, fábrica, hospital, aluguel, viagem, mercado ou qualquer situação da sua vida no Japão.
+            Crie frases para chefe, fábrica, hospital, aluguel, viagem, mercado, partículas, gramática ou qualquer situação da sua vida no Japão.
           </p>
         </div>
 
@@ -5299,6 +5574,7 @@ function renderHome() {
         </div>
       </section>
 
+      ${renderLaunchChecklistBox(true)}
       ${renderLegalLinksBox(true)}
     </div>
   `;
@@ -5353,7 +5629,7 @@ function renderTutorial() {
           <h2 class="h2">${escapeHTML(item.title)}</h2>
           <p class="p">${escapeHTML(item.text)}</p>
 
-          <div class="pWrap" aria-label="progresso tutorial">
+          <div class="pWrap">
             <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
             <div class="pTxt">${Math.round(pct * 100)}%</div>
           </div>
@@ -5364,18 +5640,6 @@ function renderTutorial() {
               ${step >= TUTORIAL_STEPS.length - 1 ? "concluir" : "próximo"}
             </button>
           </div>
-        </div>
-
-        <div class="lockCard">
-          <h3 class="lockTitle">Atalho prático</h3>
-          <p class="lockText">
-            Quando estiver cansado, use o treino rápido. Quando tiver uma situação real, escolha o contexto e treine direto.
-          </p>
-        </div>
-
-        <div class="grid2">
-          <button class="btn btn--ghost btn--full" data-nav="#/premium">comparar planos</button>
-          <button class="btn btn--full" data-nav="#/home">ir para o início</button>
         </div>
       </section>
     </div>
@@ -5410,9 +5674,41 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "機械{きかい}", pt: "máquina" },
         { jp: "止{と}まりました", pt: "parou" }
       ]
+    },
+    {
+      jp: "確認{かくにん} して もらえますか。",
+      pt: "Você poderia verificar para mim?",
+      newWords: [
+        { jp: "確認{かくにん}", pt: "verificação" },
+        { jp: "もらえますか", pt: "poderia fazer para mim?" }
+      ]
+    },
+    {
+      jp: "やり方{かた} が まだ よく わかりません。",
+      pt: "Ainda não entendi bem o modo de fazer.",
+      newWords: [
+        { jp: "やり方{かた}", pt: "modo de fazer" },
+        { jp: "まだ", pt: "ainda" },
+        { jp: "わかりません", pt: "não entendo" }
+      ]
+    },
+    {
+      jp: "この 部品{ぶひん} は どこ に 置{お}きますか。",
+      pt: "Onde eu coloco esta peça?",
+      newWords: [
+        { jp: "部品{ぶひん}", pt: "peça" },
+        { jp: "置{お}きます", pt: "coloco" }
+      ]
+    },
+    {
+      jp: "少{すこ}し 待{ま}って もらえますか。",
+      pt: "Você poderia esperar um pouco?",
+      newWords: [
+        { jp: "少{すこ}し", pt: "um pouco" },
+        { jp: "待{ま}って", pt: "esperar" }
+      ]
     }
   ],
-
   chefe: [
     {
       jp: "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
@@ -5437,9 +5733,42 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "少{すこ}し", pt: "um pouco" },
         { jp: "ゆっくり", pt: "devagar" }
       ]
+    },
+    {
+      jp: "今日{きょう} は 残業{ざんぎょう} が ありますか。",
+      pt: "Hoje vai ter hora extra?",
+      newWords: [
+        { jp: "今日{きょう}", pt: "hoje" },
+        { jp: "残業{ざんぎょう}", pt: "hora extra" }
+      ]
+    },
+    {
+      jp: "この 作業{さぎょう} は 初{はじ}めて です。",
+      pt: "É a primeira vez que faço este trabalho.",
+      newWords: [
+        { jp: "作業{さぎょう}", pt: "trabalho / tarefa" },
+        { jp: "初{はじ}めて", pt: "primeira vez" }
+      ]
+    },
+    {
+      jp: "もう 一度{いちど} 説明{せつめい} して いただけますか。",
+      pt: "O senhor poderia explicar mais uma vez?",
+      newWords: [
+        { jp: "説明{せつめい}", pt: "explicação" },
+        { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
+      ]
+    },
+    {
+      jp: "終{お}わったら 報告{ほうこく} します。",
+      pt: "Quando terminar, eu aviso.",
+      newWords: [
+        { jp: "終{お}わったら", pt: "quando terminar" },
+        { jp: "報告{ほうこく}", pt: "relato / aviso" }
+      ]
     }
-  ],
-
+  ]
+};
+const SENSEI_EXTRA_BANK = {
   hospital: [
     {
       jp: "昨日{きのう} から 熱{ねつ} が あります。",
@@ -5464,9 +5793,39 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "薬{くすり}", pt: "remédio" },
         { jp: "飲{の}めば いい", pt: "devo tomar" }
       ]
+    },
+    {
+      jp: "通訳{つうやく} は ありますか。",
+      pt: "Tem intérprete?",
+      newWords: [
+        { jp: "通訳{つうやく}", pt: "intérprete" }
+      ]
+    },
+    {
+      jp: "保険証{ほけんしょう} を 持{も}って います。",
+      pt: "Estou com o cartão do seguro de saúde.",
+      newWords: [
+        { jp: "保険証{ほけんしょう}", pt: "cartão do seguro de saúde" },
+        { jp: "持{も}って います", pt: "estou com / tenho comigo" }
+      ]
+    },
+    {
+      jp: "頭{あたま} が 痛{いた}くて、少{すこ}し 気持{きも}ち 悪{わる}いです。",
+      pt: "Estou com dor de cabeça e um pouco enjoado.",
+      newWords: [
+        { jp: "頭{あたま}", pt: "cabeça" },
+        { jp: "気持{きも}ち 悪{わる}い", pt: "enjoado / passando mal" }
+      ]
+    },
+    {
+      jp: "仕事{しごと} に 行{い}っても 大丈夫{だいじょうぶ} ですか。",
+      pt: "Tudo bem eu ir trabalhar?",
+      newWords: [
+        { jp: "仕事{しごと}", pt: "trabalho" },
+        { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
+      ]
     }
   ],
-
   prefeitura: [
     {
       jp: "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
@@ -5491,23 +5850,54 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "手続{てつづ}き", pt: "procedimento" },
         { jp: "今日中{きょうじゅう}", pt: "ainda hoje" }
       ]
-    }
-  ],
-
-  mercado: [
+    },
     {
-      jp: "この 商品{しょうひん} は いくら ですか。",
-      pt: "Quanto custa este produto?",
+      jp: "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
+      pt: "Onde pego a senha de atendimento?",
       newWords: [
-        { jp: "商品{しょうひん}", pt: "produto" },
-        { jp: "いくら", pt: "quanto" }
+        { jp: "番号札{ばんごうふだ}", pt: "senha de atendimento" },
+        { jp: "取{と}りますか", pt: "pego?" }
       ]
     },
     {
-      jp: "賞味期限{しょうみげん} は いつ ですか。",
+      jp: "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
+      pt: "É necessária uma cópia do cartão de residência?",
+      newWords: [
+        { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
+        { jp: "必要{ひつよう}", pt: "necessário" }
+      ]
+    },
+    {
+      jp: "通訳{つうやく} を お願{ねが}いできますか。",
+      pt: "É possível pedir um intérprete?",
+      newWords: [
+        { jp: "通訳{つうやく}", pt: "intérprete" },
+        { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
+      ]
+    },
+    {
+      jp: "この 窓口{まどぐち} で 合{あ}って いますか。",
+      pt: "Este balcão está correto?",
+      newWords: [
+        { jp: "窓口{まどぐち}", pt: "balcão / guichê" },
+        { jp: "合{あ}って いますか", pt: "está correto?" }
+      ]
+    }
+  ],
+  mercado: [
+    {
+      jp: "この 商品{しょうひん} は どこ に ありますか。",
+      pt: "Onde fica este produto?",
+      newWords: [
+        { jp: "商品{しょうひん}", pt: "produto" },
+        { jp: "どこ", pt: "onde" }
+      ]
+    },
+    {
+      jp: "賞味期限{しょうみきげん} は いつ ですか。",
       pt: "Qual é a data de validade?",
       newWords: [
-        { jp: "賞味期限{しょうみげん}", pt: "data de validade" }
+        { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
       ]
     },
     {
@@ -5517,9 +5907,39 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "袋{ふくろ}", pt: "sacola" },
         { jp: "要{い}りません", pt: "não preciso" }
       ]
+    },
+    {
+      jp: "カード で 払{はら}えますか。",
+      pt: "Posso pagar com cartão?",
+      newWords: [
+        { jp: "カード", pt: "cartão" },
+        { jp: "払{はら}えますか", pt: "posso pagar?" }
+      ]
+    },
+    {
+      jp: "安{やす}い 方{ほう} は どちら ですか。",
+      pt: "Qual é a opção mais barata?",
+      newWords: [
+        { jp: "安{やす}い", pt: "barato" },
+        { jp: "方{ほう}", pt: "opção / lado" }
+      ]
+    },
+    {
+      jp: "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
+      pt: "Este produto está esgotado?",
+      newWords: [
+        { jp: "売{う}り切{き}れ", pt: "esgotado" }
+      ]
+    },
+    {
+      jp: "セルフレジ は 使{つか}えますか。",
+      pt: "Posso usar o caixa automático?",
+      newWords: [
+        { jp: "セルフレジ", pt: "caixa automático" },
+        { jp: "使{つか}えますか", pt: "posso usar?" }
+      ]
     }
   ],
-
   konbini: [
     {
       jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
@@ -5533,19 +5953,48 @@ const SENSEI_SCENARIO_BANK = {
       jp: "レジ袋{ぶくろ} は 要{い}りません。",
       pt: "Não preciso de sacola.",
       newWords: [
-        { jp: "レジ袋{ぶくろ}", pt: "sacola" }
+        { jp: "レジ袋{ぶくろ}", pt: "sacola de caixa" },
+        { jp: "要{い}りません", pt: "não preciso" }
+      ]
+    },
+    {
+      jp: "お箸{はし} を 一膳{いちぜん} お願{ねが}いします。",
+      pt: "Um par de hashi, por favor.",
+      newWords: [
+        { jp: "お箸{はし}", pt: "hashi" },
+        { jp: "一膳{いちぜん}", pt: "um par de hashi" }
       ]
     },
     {
       jp: "この 支払{しはら}い は ここで できますか。",
       pt: "Posso fazer este pagamento aqui?",
       newWords: [
-        { jp: "支払{しはら}い", pt: "pagamento" },
-        { jp: "できますか", pt: "é possível?" }
+        { jp: "支払{しはら}い", pt: "pagamento" }
+      ]
+    },
+    {
+      jp: "レシート を ください。",
+      pt: "Por favor, me dê o recibo.",
+      newWords: [
+        { jp: "レシート", pt: "recibo" }
+      ]
+    },
+    {
+      jp: "スプーン は ありますか。",
+      pt: "Tem colher?",
+      newWords: [
+        { jp: "スプーン", pt: "colher" }
+      ]
+    },
+    {
+      jp: "現金{げんきん} で 払{はら}います。",
+      pt: "Vou pagar em dinheiro.",
+      newWords: [
+        { jp: "現金{げんきん}", pt: "dinheiro em espécie" },
+        { jp: "払{はら}います", pt: "vou pagar" }
       ]
     }
   ],
-
   aluguel: [
     {
       jp: "水漏{みずも}れ して います。",
@@ -5567,9 +6016,40 @@ const SENSEI_SCENARIO_BANK = {
       newWords: [
         { jp: "来{き}て もらえますか", pt: "pode vir?" }
       ]
+    },
+    {
+      jp: "エアコン が 動{うご}きません。",
+      pt: "O ar-condicionado não funciona.",
+      newWords: [
+        { jp: "エアコン", pt: "ar-condicionado" },
+        { jp: "動{うご}きません", pt: "não funciona" }
+      ]
+    },
+    {
+      jp: "鍵{かぎ} を なくしました。",
+      pt: "Perdi a chave.",
+      newWords: [
+        { jp: "鍵{かぎ}", pt: "chave" },
+        { jp: "なくしました", pt: "perdi" }
+      ]
+    },
+    {
+      jp: "管理会社{かんりがいしゃ} に 連絡{れんらく} したいです。",
+      pt: "Quero entrar em contato com a administradora.",
+      newWords: [
+        { jp: "管理会社{かんりがいしゃ}", pt: "administradora" },
+        { jp: "連絡{れんらく}", pt: "contato" }
+      ]
+    },
+    {
+      jp: "写真{しゃしん} を 送{おく}れば いいですか。",
+      pt: "Está certo eu enviar uma foto?",
+      newWords: [
+        { jp: "写真{しゃしん}", pt: "foto" },
+        { jp: "送{おく}れば", pt: "se enviar" }
+      ]
     }
   ],
-
   transporte: [
     {
       jp: "この 電車{でんしゃ} は 福井{ふくい} に 行{い}きますか。",
@@ -5593,12 +6073,416 @@ const SENSEI_SCENARIO_BANK = {
         { jp: "次{つぎ}", pt: "próximo" },
         { jp: "何時{なんじ}", pt: "que horas" }
       ]
+    },
+    {
+      jp: "ここ で 乗{の}り換{か}え ですか。",
+      pt: "É aqui que faço a baldeação?",
+      newWords: [
+        { jp: "乗{の}り換{か}え", pt: "baldeação / troca" }
+      ]
+    },
+    {
+      jp: "この バス は 駅{えき} に 行{い}きますか。",
+      pt: "Este ônibus vai para a estação?",
+      newWords: [
+        { jp: "バス", pt: "ônibus" },
+        { jp: "駅{えき}", pt: "estação" }
+      ]
+    },
+    {
+      jp: "切符{きっぷ} は どこ で 買{か}えますか。",
+      pt: "Onde posso comprar a passagem?",
+      newWords: [
+        { jp: "切符{きっぷ}", pt: "passagem" },
+        { jp: "買{か}えますか", pt: "posso comprar?" }
+      ]
+    },
+    {
+      jp: "降{お}りる 駅{えき} は ここ ですか。",
+      pt: "É aqui a estação onde devo descer?",
+      newWords: [
+        { jp: "降{お}りる", pt: "descer" },
+        { jp: "駅{えき}", pt: "estação" }
+      ]
     }
   ]
 };
 
+Object.assign(SENSEI_SCENARIO_BANK, SENSEI_EXTRA_BANK);
+
+const SENSEI_GRAMMAR_BANK = {
+  "ので": {
+    term: "ので",
+    title: "Uso de ので",
+    type: "gramática",
+    explanation: "ので liga uma causa a uma consequência. É natural, educado e muito usado para explicar motivo sem parecer seco. Em português, funciona como “porque”, “por causa de” ou “como”.",
+    goal: "Treine 1 frase por dia. Em 7 dias, você começa a sentir o uso de ので na prática.",
+    phrases: [
+      {
+        jp: "今日{きょう} は 体調{たいちょう} が 悪{わる}い ので、早{はや}く 帰{かえ}っても いいですか。",
+        pt: "Como hoje estou me sentindo mal, posso ir embora mais cedo?",
+        newWords: [
+          { jp: "体調{たいちょう}", pt: "condição física" },
+          { jp: "悪{わる}い", pt: "ruim" },
+          { jp: "早{はや}く", pt: "cedo" },
+          { jp: "帰{かえ}っても いいですか", pt: "posso ir embora?" }
+        ]
+      },
+      {
+        jp: "電車{でんしゃ} が 遅{おく}れて いる ので、少{すこ}し 遅{おく}れます。",
+        pt: "Como o trem está atrasado, vou me atrasar um pouco.",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "遅{おく}れて いる", pt: "está atrasado" },
+          { jp: "少{すこ}し", pt: "um pouco" }
+        ]
+      },
+      {
+        jp: "日本語{にほんご} が まだ 苦手{にがて} なので、ゆっくり 話{はな}して ください。",
+        pt: "Como ainda tenho dificuldade com japonês, por favor fale devagar.",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "苦手{にがて}", pt: "dificuldade / não ser bom em algo" },
+          { jp: "話{はな}して", pt: "falar" }
+        ]
+      },
+      {
+        jp: "明日{あした} は 仕事{しごと} なので、今日{きょう} は 早{はや}く 寝{ね}ます。",
+        pt: "Como amanhã tenho trabalho, hoje vou dormir cedo.",
+        newWords: [
+          { jp: "明日{あした}", pt: "amanhã" },
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "寝{ね}ます", pt: "vou dormir" }
+        ]
+      },
+      {
+        jp: "雨{あめ} が 降{ふ}って いる ので、自転車{じてんしゃ} では 行{い}きません。",
+        pt: "Como está chovendo, não vou de bicicleta.",
+        newWords: [
+          { jp: "雨{あめ}", pt: "chuva" },
+          { jp: "降{ふ}って いる", pt: "está caindo / está chovendo" },
+          { jp: "自転車{じてんしゃ}", pt: "bicicleta" }
+        ]
+      },
+      {
+        jp: "この 書類{しょるい} が わからない ので、教{おし}えて いただけますか。",
+        pt: "Como eu não entendo este documento, o senhor poderia me explicar?",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "教{おし}えて", pt: "ensinar / explicar" },
+          { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
+        ]
+      },
+      {
+        jp: "時間{じかん} が ない ので、あと で 連絡{れんらく} します。",
+        pt: "Como não tenho tempo, entro em contato depois.",
+        newWords: [
+          { jp: "時間{じかん}", pt: "tempo" },
+          { jp: "あと で", pt: "depois" },
+          { jp: "連絡{れんらく}", pt: "contato" }
+        ]
+      }
+    ]
+  },
+  "かどうか": {
+    term: "かどうか",
+    title: "Uso de かどうか",
+    type: "gramática",
+    explanation: "かどうか é usado para dizer “se...” ou “se é ou não”. Ajuda quando você quer confirmar uma informação sem fazer uma pergunta direta demais.",
+    goal: "Treine 1 frase por dia. Em 7 dias, você consegue perguntar e confirmar melhor no cotidiano.",
+    phrases: [
+      {
+        jp: "この 電車{でんしゃ} が 福井{ふくい} に 行{い}く かどうか 知{し}りたいです。",
+        pt: "Quero saber se este trem vai para Fukui.",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "知{し}りたい", pt: "quero saber" }
+        ]
+      },
+      {
+        jp: "今日{きょう} 残業{ざんぎょう} が ある かどうか 確認{かくにん} したいです。",
+        pt: "Quero confirmar se hoje vai ter hora extra.",
+        newWords: [
+          { jp: "残業{ざんぎょう}", pt: "hora extra" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      },
+      {
+        jp: "この 商品{しょうひん} が まだ ある かどうか 聞{き}いて みます。",
+        pt: "Vou tentar perguntar se este produto ainda tem.",
+        newWords: [
+          { jp: "商品{しょうひん}", pt: "produto" },
+          { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
+        ]
+      },
+      {
+        jp: "予約{よやく} が 必要{ひつよう} かどうか 教{おし}えて ください。",
+        pt: "Por favor, me diga se é necessário reservar.",
+        newWords: [
+          { jp: "予約{よやく}", pt: "reserva" },
+          { jp: "必要{ひつよう}", pt: "necessário" }
+        ]
+      },
+      {
+        jp: "この 書類{しょるい} で 大丈夫{だいじょうぶ} かどうか 見{み}て もらえますか。",
+        pt: "Você poderia ver se este documento está tudo bem?",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem" }
+        ]
+      },
+      {
+        jp: "明日{あした} 休{やす}める かどうか まだ わかりません。",
+        pt: "Ainda não sei se posso folgar amanhã.",
+        newWords: [
+          { jp: "明日{あした}", pt: "amanhã" },
+          { jp: "休{やす}める", pt: "posso folgar / descansar" }
+        ]
+      },
+      {
+        jp: "この カード が 使{つか}える かどうか 確認{かくにん} して ください。",
+        pt: "Por favor, confirme se este cartão pode ser usado.",
+        newWords: [
+          { jp: "使{つか}える", pt: "pode usar" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      }
+    ]
+  },
+  "ないといけない": {
+    term: "ないといけない",
+    title: "Uso de ないといけない",
+    type: "gramática",
+    explanation: "ないといけない expressa obrigação: “tenho que...”, “preciso...”. É muito comum em conversas do dia a dia.",
+    goal: "Treine 1 frase por dia para falar sobre obrigações sem travar.",
+    phrases: [
+      {
+        jp: "明日{あした} は 早{はや}く 起{お}きないといけません。",
+        pt: "Amanhã eu tenho que acordar cedo.",
+        newWords: [
+          { jp: "明日{あした}", pt: "amanhã" },
+          { jp: "早{はや}く", pt: "cedo" },
+          { jp: "起{お}きないといけません", pt: "tenho que acordar" }
+        ]
+      },
+      {
+        jp: "今日{きょう} 中{じゅう} に この 書類{しょるい} を 出{だ}さないといけません。",
+        pt: "Tenho que entregar este documento ainda hoje.",
+        newWords: [
+          { jp: "今日{きょう} 中{じゅう}", pt: "ainda hoje" },
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "出{だ}さないといけません", pt: "tenho que entregar" }
+        ]
+      },
+      {
+        jp: "仕事{しごと} の 前{まえ} に 薬{くすり} を 飲{の}まないといけません。",
+        pt: "Tenho que tomar o remédio antes do trabalho.",
+        newWords: [
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "薬{くすり}", pt: "remédio" },
+          { jp: "飲{の}まないといけません", pt: "tenho que tomar" }
+        ]
+      },
+      {
+        jp: "安全確認{あんぜんかくにん} を しないといけません。",
+        pt: "Tenho que fazer a verificação de segurança.",
+        newWords: [
+          { jp: "安全確認{あんぜんかくにん}", pt: "verificação de segurança" }
+        ]
+      },
+      {
+        jp: "この 住所{じゅうしょ} を 書{か}かないといけませんか。",
+        pt: "Tenho que escrever este endereço?",
+        newWords: [
+          { jp: "住所{じゅうしょ}", pt: "endereço" },
+          { jp: "書{か}かないといけませんか", pt: "tenho que escrever?" }
+        ]
+      },
+      {
+        jp: "もう 一度{いちど} 確認{かくにん} しないといけません。",
+        pt: "Tenho que confirmar mais uma vez.",
+        newWords: [
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      },
+      {
+        jp: "雨{あめ} なので、傘{かさ} を 持{も}って 行{い}かないといけません。",
+        pt: "Como está chovendo, tenho que levar guarda-chuva.",
+        newWords: [
+          { jp: "雨{あめ}", pt: "chuva" },
+          { jp: "傘{かさ}", pt: "guarda-chuva" },
+          { jp: "持{も}って 行{い}く", pt: "levar" }
+        ]
+      }
+    ]
+  },
+  "やってみる": {
+    term: "やってみる",
+    title: "Uso de やってみる",
+    type: "expressão",
+    explanation: "やってみる significa “tentar fazer”. É ótimo para mostrar disposição mesmo quando você ainda não domina algo.",
+    goal: "Treine 1 frase por dia para ganhar coragem de tentar falar e agir em japonês.",
+    phrases: [
+      {
+        jp: "自分{じぶん} で やってみます。",
+        pt: "Vou tentar fazer sozinho.",
+        newWords: [
+          { jp: "自分{じぶん}", pt: "eu mesmo / sozinho" }
+        ]
+      },
+      {
+        jp: "もう 一度{いちど} やってみても いいですか。",
+        pt: "Posso tentar fazer mais uma vez?",
+        newWords: [
+          { jp: "一度{いちど}", pt: "uma vez" }
+        ]
+      },
+      {
+        jp: "この 方法{ほうほう} で やってみます。",
+        pt: "Vou tentar fazer deste jeito.",
+        newWords: [
+          { jp: "方法{ほうほう}", pt: "método / forma" }
+        ]
+      },
+      {
+        jp: "少{すこ}し 難{むずか}しいですが、やってみます。",
+        pt: "É um pouco difícil, mas vou tentar.",
+        newWords: [
+          { jp: "難{むずか}しい", pt: "difícil" }
+        ]
+      },
+      {
+        jp: "まず、聞{き}いて みます。",
+        pt: "Primeiro, vou tentar perguntar.",
+        newWords: [
+          { jp: "まず", pt: "primeiro" },
+          { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
+        ]
+      },
+      {
+        jp: "駅員{えきいん} さん に 聞{き}いて みます。",
+        pt: "Vou tentar perguntar ao funcionário da estação.",
+        newWords: [
+          { jp: "駅員{えきいん}", pt: "funcionário da estação" }
+        ]
+      },
+      {
+        jp: "日本語{にほんご} で 説明{せつめい} して みます。",
+        pt: "Vou tentar explicar em japonês.",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "説明{せつめい}", pt: "explicação" }
+        ]
+      }
+    ]
+  },
+  "気づかせる": {
+    term: "気づかせる",
+    title: "Uso de 気づかせる",
+    type: "palavra-alvo",
+    explanation: "気づかせる significa “fazer perceber”, “fazer alguém notar”. É mais avançado, mas útil para falar de aprendizado, erro, aviso e reflexão.",
+    goal: "Treine 1 frase por dia para entender uma expressão mais profunda e natural.",
+    phrases: [
+      {
+        jp: "この 経験{けいけん} は 大切{たいせつ} な こと に 気{き}づかせて くれました。",
+        pt: "Esta experiência me fez perceber algo importante.",
+        newWords: [
+          { jp: "経験{けいけん}", pt: "experiência" },
+          { jp: "大切{たいせつ}", pt: "importante" }
+        ]
+      },
+      {
+        jp: "先生{せんせい} の 言葉{ことば} が 私{わたし} に 気{き}づかせて くれました。",
+        pt: "As palavras do professor me fizeram perceber.",
+        newWords: [
+          { jp: "先生{せんせい}", pt: "professor" },
+          { jp: "言葉{ことば}", pt: "palavras" }
+        ]
+      },
+      {
+        jp: "失敗{しっぱい} が 自分{じぶん} の 弱点{じゃくてん} に 気{き}づかせて くれました。",
+        pt: "O erro me fez perceber meu ponto fraco.",
+        newWords: [
+          { jp: "失敗{しっぱい}", pt: "falha / erro" },
+          { jp: "弱点{じゃくてん}", pt: "ponto fraco" }
+        ]
+      },
+      {
+        jp: "この アプリ は 毎日{まいにち} の 練習{れんしゅう} の 大切{たいせつ} さ に 気{き}づかせて くれます。",
+        pt: "Este app me faz perceber a importância da prática diária.",
+        newWords: [
+          { jp: "毎日{まいにち}", pt: "todos os dias" },
+          { jp: "練習{れんしゅう}", pt: "prática" }
+        ]
+      },
+      {
+        jp: "友達{ともだち} の 一言{ひとこと} が 私{わたし} に 気{き}づかせて くれました。",
+        pt: "Uma palavra de um amigo me fez perceber.",
+        newWords: [
+          { jp: "友達{ともだち}", pt: "amigo" },
+          { jp: "一言{ひとこと}", pt: "uma palavra / comentário breve" }
+        ]
+      },
+      {
+        jp: "仕事{しごと} の ミス が 確認{かくにん} の 大切{たいせつ} さ に 気{き}づかせました。",
+        pt: "O erro no trabalho me fez perceber a importância da confirmação.",
+        newWords: [
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "確認{かくにん}", pt: "confirmação" }
+        ]
+      },
+      {
+        jp: "日本{にほん} での 生活{せいかつ} は 言葉{ことば} の 大切{たいせつ} さ に 気{き}づかせて くれました。",
+        pt: "A vida no Japão me fez perceber a importância das palavras.",
+        newWords: [
+          { jp: "日本{にほん}", pt: "Japão" },
+          { jp: "生活{せいかつ}", pt: "vida / cotidiano" },
+          { jp: "言葉{ことば}", pt: "palavras / idioma" }
+        ]
+      }
+    ]
+  }
+};
+
+function normalizeSenseiText(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[「」『』"“”'’]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function detectSenseiTerm(text) {
+  const raw = String(text || "");
+  const normalized = normalizeSenseiText(raw);
+
+  const knownTerms = Object.keys(SENSEI_GRAMMAR_BANK);
+  for (const term of knownTerms) {
+    if (raw.includes(term) || normalized.includes(term.toLowerCase())) return term;
+  }
+
+  const jpMatch = raw.match(/[\u3040-\u30FF\u4E00-\u9FFF]{2,12}/);
+  if (jpMatch && /(uso|usar|frases com|frases que use|explique|ensine|estrutura|partícula|particula|palavra|expressão|expressao|gramática|gramatica)/i.test(raw)) {
+    return jpMatch[0];
+  }
+
+  return "";
+}
+
+function detectSenseiRequestType(text) {
+  const raw = String(text || "");
+  const t = normalizeSenseiText(raw);
+  const hasJP = /[\u3040-\u30FF\u4E00-\u9FFF]/.test(raw);
+  const grammarWords = /(uso|usar|frases com|frases que use|explique|ensine|estrutura|partícula|particula|palavra|expressão|expressao|gramática|gramatica|termo japon[eê]s|como usar)/i;
+
+  if (hasJP && grammarWords.test(raw)) return "grammar";
+  if (grammarWords.test(raw)) return "grammar";
+  return "scenario";
+}
+
 function detectSenseiScenario(text) {
-  const t = String(text || "").toLowerCase();
+  const t = normalizeSenseiText(text);
 
   if (/(fábrica|fabrica|linha|máquina|maquina|chefe|supervisor|rh|turno|produção|producao)/.test(t)) {
     if (/(chefe|supervisor)/.test(t)) return "chefe";
@@ -5615,7 +6499,7 @@ function detectSenseiScenario(text) {
   return "fabrica";
 }
 
-function buildSenseiTopicName(scenario, customTheme) {
+function buildSenseiTopicName(scenario, customTheme, requestType = "scenario", term = "") {
   const map = {
     fabrica: "Sensei IA • Fábrica",
     chefe: "Sensei IA • Chefe",
@@ -5628,15 +6512,20 @@ function buildSenseiTopicName(scenario, customTheme) {
   };
 
   const clean = normalizeName(customTheme);
+
+  if (requestType === "grammar" && term) return `Sensei IA • ${term}`;
   if (clean) return `Sensei IA • ${clean}`;
 
   return map[scenario] || "Sensei IA • Personalizado";
 }
 
-function buildSenseiCoachLine(goal, level, tone) {
+function buildSenseiCoachLine(goal, level, tone, pack = null) {
   const parts = [];
 
-  if (goal) parts.push(`Foco: ${goal}.`);
+  if (pack?.explanation) parts.push(pack.explanation);
+  if (pack?.goal) parts.push(pack.goal);
+
+  if (goal) parts.push(`Pedido: ${goal}.`);
   if (level) parts.push(`Nível: ${level}.`);
   if (tone) parts.push(`Tom: ${tone}.`);
 
@@ -5645,8 +6534,8 @@ function buildSenseiCoachLine(goal, level, tone) {
   return parts.join(" ");
 }
 
-function cloneSenseiPhrase(base, scenario, customTheme) {
-  const topicName = buildSenseiTopicName(scenario, customTheme);
+function cloneSenseiPhrase(base, scenario, customTheme, requestType = "scenario", term = "") {
+  const topicName = buildSenseiTopicName(scenario, customTheme, requestType, term);
 
   return {
     id: uid("sensei"),
@@ -5659,19 +6548,119 @@ function cloneSenseiPhrase(base, scenario, customTheme) {
   };
 }
 
+function buildFallbackGrammarPack(term, request, level, tone) {
+  const safeTerm = String(term || "").trim() || "expressão";
+  const title = `Uso de ${safeTerm}`;
+
+  return {
+    term: safeTerm,
+    title,
+    type: "palavra-alvo",
+    explanation: `${safeTerm} foi detectado como termo de estudo. Como ainda não há um banco específico para ele, o Sensei IA preparou frases-modelo úteis para treino prático.`,
+    goal: "Treine 1 frase por dia e ajuste o material depois com suas próprias frases.",
+    phrases: [
+      {
+        jp: "この 表現{ひょうげん} の 使{つか}い方{かた} を 教{おし}えて ください。",
+        pt: "Por favor, me ensine como usar esta expressão.",
+        newWords: [
+          { jp: "表現{ひょうげん}", pt: "expressão" },
+          { jp: "使{つか}い方{かた}", pt: "modo de usar" }
+        ]
+      },
+      {
+        jp: "この 言葉{ことば} は どういう 意味{いみ} ですか。",
+        pt: "O que esta palavra significa?",
+        newWords: [
+          { jp: "言葉{ことば}", pt: "palavra" },
+          { jp: "意味{いみ}", pt: "significado" }
+        ]
+      },
+      {
+        jp: "例文{れいぶん} を 作{つく}って もらえますか。",
+        pt: "Você poderia criar uma frase de exemplo?",
+        newWords: [
+          { jp: "例文{れいぶん}", pt: "frase de exemplo" },
+          { jp: "作{つく}って", pt: "criar / fazer" }
+        ]
+      },
+      {
+        jp: "日常会話{にちじょうかいわ} で よく 使{つか}いますか。",
+        pt: "Isso é muito usado na conversa do dia a dia?",
+        newWords: [
+          { jp: "日常会話{にちじょうかいわ}", pt: "conversa do dia a dia" },
+          { jp: "使{つか}いますか", pt: "usa?" }
+        ]
+      },
+      {
+        jp: "もっと 自然{しぜん} な 言{い}い方{かた} は ありますか。",
+        pt: "Existe uma forma mais natural de dizer?",
+        newWords: [
+          { jp: "自然{しぜん}", pt: "natural" },
+          { jp: "言{い}い方{かた}", pt: "forma de dizer" }
+        ]
+      },
+      {
+        jp: "仕事{しごと} で 使{つか}える 例{れい} を 教{おし}えて ください。",
+        pt: "Por favor, me ensine um exemplo que eu possa usar no trabalho.",
+        newWords: [
+          { jp: "仕事{しごと}", pt: "trabalho" },
+          { jp: "例{れい}", pt: "exemplo" }
+        ]
+      },
+      {
+        jp: "この 表現{ひょうげん} を 使{つか}って 練習{れんしゅう} します。",
+        pt: "Vou praticar usando esta expressão.",
+        newWords: [
+          { jp: "表現{ひょうげん}", pt: "expressão" },
+          { jp: "練習{れんしゅう}", pt: "prática" }
+        ]
+      }
+    ]
+  };
+}
+
 function generateSenseiMaterial(payload) {
   const request = String(payload?.request || "").trim();
   const level = String(payload?.level || "").trim();
   const tone = String(payload?.tone || "").trim();
   const customTheme = String(payload?.theme || "").trim();
 
+  const requestType = detectSenseiRequestType(`${request} ${customTheme}`);
+  const term = detectSenseiTerm(`${request} ${customTheme}`);
+
+  if (requestType === "grammar") {
+    const grammarPack = SENSEI_GRAMMAR_BANK[term] || buildFallbackGrammarPack(term, request, level, tone);
+    const selected = grammarPack.phrases.slice(0, 7).map((base) =>
+      cloneSenseiPhrase(base, "grammar", customTheme, "grammar", grammarPack.term)
+    );
+
+    const coachLine = buildSenseiCoachLine(request, level, tone, grammarPack);
+
+    return {
+      scenario: "grammar",
+      requestType: "grammar",
+      term: grammarPack.term,
+      title: grammarPack.title,
+      explanation: grammarPack.explanation,
+      goal: grammarPack.goal,
+      topicName: buildSenseiTopicName("grammar", customTheme, "grammar", grammarPack.term),
+      coachLine,
+      phrases: selected
+    };
+  }
+
   const scenario = detectSenseiScenario(`${request} ${customTheme}`);
   const bank = SENSEI_SCENARIO_BANK[scenario] || SENSEI_SCENARIO_BANK.fabrica;
-  const selected = bank.slice(0, 3).map((base) => cloneSenseiPhrase(base, scenario, customTheme));
+  const selected = bank.slice(0, 7).map((base) => cloneSenseiPhrase(base, scenario, customTheme));
   const coachLine = buildSenseiCoachLine(request, level, tone);
 
   return {
     scenario,
+    requestType: "scenario",
+    term: "",
+    title: buildSenseiTopicName(scenario, customTheme),
+    explanation: "Material criado a partir de uma situação real. Treine as frases que mais combinam com seu dia.",
+    goal: "Escolha 1 frase hoje. Se tiver tempo, salve o pack e revise no 105x.",
     topicName: buildSenseiTopicName(scenario, customTheme),
     coachLine,
     phrases: selected
@@ -5721,6 +6710,10 @@ function saveSenseiPackToApp(pack) {
     at: now(),
     topicName: pack.topicName,
     coachLine: pack.coachLine,
+    explanation: pack.explanation || "",
+    goal: pack.goal || "",
+    requestType: pack.requestType || "scenario",
+    term: pack.term || "",
     phrases: pack.phrases
   });
 
@@ -5754,11 +6747,14 @@ function renderSenseiHistory() {
         <div class="badge">${escapeHTML(item.topicName)}</div>
         <div class="small">${fmtDateShort(item.at)}</div>
       </div>
+      ${item.explanation ? `<div class="small">${escapeHTML(item.explanation)}</div>` : ""}
+      ${item.goal ? `<div class="small"><b>meta:</b> ${escapeHTML(item.goal)}</div>` : ""}
       <div class="small">${escapeHTML(item.coachLine)}</div>
       <div class="small"><b>${item.phrases.length}</b> frases prontas para salvar e revisar no app</div>
     </div>
   `).join("");
 }
+
 function renderSensei() {
   if (!isPremiumUnlocked()) {
     APP.innerHTML = `
@@ -5772,7 +6768,8 @@ function renderSensei() {
           <div class="lockCard">
             <h3 class="lockTitle">Quando o conteúdo pronto não basta</h3>
             <p class="lockText">
-              O Sensei IA cria frases para a sua situação real, como chefe, hospital, prefeitura, moradia, mercado ou transporte. Depois você salva no app e treina no 105x.
+              O Sensei IA cria frases para situações reais e também ajuda com gramática prática,
+              partículas, palavras e expressões japonesas.
             </p>
           </div>
 
@@ -5781,6 +6778,18 @@ function renderSensei() {
               <div class="valueIcon">🧩</div>
               <h3 class="valueTitle">Seu caso real</h3>
               <p class="valueText">Explique a situação e receba frases úteis para treinar.</p>
+            </div>
+
+            <div class="valueCard">
+              <div class="valueIcon">文</div>
+              <h3 class="valueTitle">Gramática prática</h3>
+              <p class="valueText">Peça exemplos com ので, かどうか, ないといけない e outras estruturas.</p>
+            </div>
+
+            <div class="valueCard">
+              <div class="valueIcon">7</div>
+              <h3 class="valueTitle">7 exemplos</h3>
+              <p class="valueText">Estude uma frase por dia durante a semana.</p>
             </div>
 
             <div class="valueCard">
@@ -5809,10 +6818,19 @@ function renderSensei() {
         </div>
 
         <div class="lockCard">
-          <h3 class="lockTitle">Peça frases para uma situação real</h3>
+          <h3 class="lockTitle">Seu professor prático de japonês</h3>
           <p class="lockText">
-            Explique o que você precisa falar no Japão. O app cria um pequeno pack para você treinar e revisar.
+            Peça frases para uma situação real ou peça explicação de uma estrutura, partícula,
+            palavra ou expressão japonesa. O Sensei cria material treinável para o 105x.
           </p>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="badge">exemplos de pedido</div>
+          <div class="small">“Preciso de frases que expliquem bem o uso de ので.”</div>
+          <div class="small">“Me ensine かどうか com frases comuns.”</div>
+          <div class="small">“Preciso falar com meu chefe que não entendi a tarefa.”</div>
+          <div class="small">“Crie frases para hospital em tom educado.”</div>
         </div>
 
         <div class="sheet stack" style="text-align:left">
@@ -5820,8 +6838,8 @@ function renderSensei() {
           <textarea
             id="senseiRequest"
             class="btn"
-            style="height:140px;width:100%;text-align:left;padding:12px;border-radius:18px;"
-            placeholder="ex: preciso de frases para falar com meu chefe quando eu não entender a tarefa"
+            style="height:150px;width:100%;text-align:left;padding:12px;border-radius:18px;"
+            placeholder="ex: preciso de frases que expliquem bem o uso de ので. Quero frases comuns no dia a dia, tom educado e nível intermediário."
           ></textarea>
 
           <div class="grid2">
@@ -5845,17 +6863,17 @@ function renderSensei() {
           </div>
 
           <div>
-            <div class="small">nome do tópico</div>
+            <div class="small">nome do tópico, opcional</div>
             <input
               id="senseiTheme"
               class="btn"
               style="height:56px;width:100%;text-align:left"
-              placeholder="ex: chefe da fábrica, consulta médica, mercado"
+              placeholder="ex: uso de ので, chefe da fábrica, consulta médica"
             />
           </div>
 
           <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="generateSensei">gerar frases</button>
+            <button class="btn btn--ok btn--full" data-action="generateSensei">gerar material</button>
             <button class="btn btn--full" data-nav="#/manage">gerenciar frases</button>
           </div>
         </div>
@@ -5878,12 +6896,17 @@ function renderSenseiOutput(pack) {
   const box = $("#senseiOutput");
   if (!box) return;
 
+  const count = Array.isArray(pack.phrases) ? pack.phrases.length : 0;
+
   box.innerHTML = `
     <div class="sheet stack" style="text-align:left">
       <div class="row row--between">
         <div class="badge">${escapeHTML(pack.topicName)}</div>
-        <div class="badge">3 frases</div>
+        <div class="badge">${count} frases</div>
       </div>
+
+      ${pack.explanation ? `<div class="small"><b>explicação:</b> ${escapeHTML(pack.explanation)}</div>` : ""}
+      ${pack.goal ? `<div class="small"><b>meta leve:</b> ${escapeHTML(pack.goal)}</div>` : ""}
       <div class="small">${escapeHTML(pack.coachLine)}</div>
     </div>
 
@@ -6217,7 +7240,7 @@ function render105xBodyOnly() {
   }
 }
 
-/* ---------- edit ---------- */
+/* ---------- edit / manage / backup / settings ---------- */
 function parseNewWords(input) {
   const raw = String(input || "").trim();
   if (!raw) return [];
@@ -6320,7 +7343,6 @@ function renderEdit(editingId = null) {
   `;
 }
 
-/* ---------- manage ---------- */
 function renderManage() {
   ensurePhrasesHaveValidTopic();
 
@@ -6376,9 +7398,6 @@ function renderManage() {
     const canDeleteTopic = t.id !== def.id;
     const hasPhrases = list.length > 0;
 
-    const wrap = document.createElement("div");
-    wrap.className = "topicGroup";
-
     const toolsHtml = `
       <div class="topicTools">
         <button class="btn btn--ok" data-action="addPhraseToTopic" data-id="${escapeHTML(t.id)}">adicionar frase</button>
@@ -6424,6 +7443,8 @@ function renderManage() {
       </div>
     `;
 
+    const wrap = document.createElement("div");
+    wrap.className = "topicGroup";
     wrap.innerHTML = `${renderTopicHeader(t, list.length, isCollapsed)}${bodyHtml}`;
     frag.appendChild(wrap);
   }
@@ -6434,7 +7455,6 @@ function renderManage() {
   initReorderable();
 }
 
-/* ---------- drag ---------- */
 let DRAG = null;
 
 function initReorderable() {
@@ -6473,7 +7493,6 @@ function applyTopicOrder(topicId, orderedIds) {
   saveState();
 }
 
-/* ---------- delete phrase ---------- */
 function deletePhraseById(id) {
   const idx = STATE.bank.phrases.findIndex(p => p.id === id);
   if (idx < 0) return false;
@@ -6503,7 +7522,6 @@ function deletePhraseById(id) {
   return true;
 }
 
-/* ---------- backup ---------- */
 function validateAndLoadBackup(parsed, msgEl) {
   if (!parsed || parsed.schema !== "jp_105x_backup_v1" || !parsed.state) {
     if (msgEl) msgEl.textContent = "json inválido.";
@@ -6531,6 +7549,7 @@ function validateAndLoadBackup(parsed, msgEl) {
 
   STATE = migrateToV7(st);
   saveState();
+  applyTheme(getTheme());
   refreshHUD();
 
   if (msgEl) msgEl.textContent = "importado com sucesso";
@@ -6578,8 +7597,10 @@ function renderBackup() {
   `;
 }
 
-/* ---------- settings ---------- */
 function renderSettings() {
+  const currentTheme = getTheme();
+  const lightActive = currentTheme === "light";
+
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack">
@@ -6591,6 +7612,24 @@ function renderSettings() {
         <div class="grid2">
           <button class="btn btn--full" data-action="toggleSound">${STATE.prefs.audio.enabled ? "som ligado" : "som desligado"}</button>
           <button class="btn btn--full" data-action="toggleVibe">${STATE.prefs.haptics.enabled ? "vibração ligada" : "vibração desligada"}</button>
+        </div>
+
+        <div class="sheet stack" style="text-align:left">
+          <div class="row row--between">
+            <div class="badge">modo dekassegui</div>
+            <div class="badge">${lightActive ? "☀️ claro" : "🌙 escuro"}</div>
+          </div>
+
+          <div class="lockCard">
+            <h3 class="lockTitle">${lightActive ? "Dia claro, estudo leve" : "Noite suave para olhos cansados"}</h3>
+            <p class="lockText">
+              Use claro para energia durante o dia e escuro para estudar depois do trabalho ou no turno da noite.
+            </p>
+          </div>
+
+          <button class="btn btn--ok btn--full" data-action="toggleTheme">
+            ${lightActive ? "🌙 ativar modo escuro" : "☀️ ativar modo claro"}
+          </button>
         </div>
 
         <div class="sheet stack">
@@ -6614,6 +7653,7 @@ function renderSettings() {
           <div class="small" id="goalCyclesLbl">${STATE.goals.dailyCycles} ciclo(s)</div>
         </div>
 
+        ${renderLaunchChecklistBox(true)}
         ${renderLegalLinksBox(true)}
 
         <div class="sep"></div>
@@ -6622,6 +7662,10 @@ function renderSettings() {
           <button class="btn btn--ghost btn--full" data-nav="#/tutorial">tutorial</button>
           <button class="btn btn--ghost btn--full" data-nav="#/premium">premium</button>
         </div>
+
+        <button class="btn btn--muted btn--full" data-nav="#/admin">
+          área admin
+        </button>
 
         <div class="sep"></div>
         <button class="btn btn--bad btn--full" data-action="reset">resetar tudo</button>
@@ -6643,10 +7687,6 @@ const RANKS = [
   { days: 270, name: "Fluência", vibe: "o hábito virou resultado", icon: "🌸" }
 ];
 
-function isStudyDay(dayObj) {
-  return hasStudyActivity(dayObj);
-}
-
 function habitSummary() {
   const days = STATE.habit?.days || {};
   const keys = Object.keys(days).sort();
@@ -6663,7 +7703,7 @@ function habitSummary() {
     cycles += d.cycles || 0;
     listens += d.listens || 0;
     calls += d.calls || 0;
-    if (isStudyDay(d)) activeDays++;
+    if (hasStudyActivity(d)) activeDays++;
   }
 
   const nowTS = now();
@@ -6686,9 +7726,6 @@ function habitSummary() {
   const last7Ms = last7.reduce((a, x) => a + (x.ms || 0), 0);
   const last30Ms = last30.reduce((a, x) => a + (x.ms || 0), 0);
 
-  const last7MinPerDay = last7Ms / 60000 / 7;
-  const last30MinPerDay = last30Ms / 60000 / 30;
-
   return {
     keys,
     totalMs,
@@ -6697,8 +7734,8 @@ function habitSummary() {
     cycles,
     listens,
     calls,
-    last7MinPerDay,
-    last30MinPerDay
+    last7MinPerDay: last7Ms / 60000 / 7,
+    last30MinPerDay: last30Ms / 60000 / 30
   };
 }
 
@@ -6895,336 +7932,11 @@ function renderSkills() {
     </div>
   `;
 }
-/* ---------- páginas legais / publicação ---------- */
-function renderLegalLinksBox(compact = false) {
-  return `
-    <div class="sheet stack" style="text-align:left">
-      <div class="row row--between">
-        <div class="badge">informações do app</div>
-        <div class="badge">publicação</div>
-      </div>
-
-      ${compact ? "" : `
-        <div class="small">
-          Páginas simples para transparência, publicação inicial e confiança do usuário.
-        </div>
-      `}
-
-      <div class="grid2">
-        <button class="btn btn--ghost btn--full" data-nav="#/about">sobre o app</button>
-        <button class="btn btn--ghost btn--full" data-nav="#/privacy">privacidade</button>
-      </div>
-
-      <button class="btn btn--muted btn--full" data-nav="#/terms">termos de uso</button>
-    </div>
-  `;
-}
-
-function renderAbout() {
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">sobre o app</div>
-          <button class="btn" data-nav="#/settings">voltar</button>
-        </div>
-
-        <div class="lockCard">
-          <h1 class="h1">NIHONGO321</h1>
-          <p class="lockText">
-            Japonês prático para brasileiros que vivem no Japão e precisam de frases úteis para o trabalho,
-            mercado, prefeitura, transporte, moradia e situações reais do cotidiano.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">proposta</div>
-
-          <p class="small">
-            O NIHONGO321 não foi criado para substituir um curso completo de japonês.
-            Ele foi pensado para ajudar quem trabalha muito, chega cansado e ainda assim quer manter contato
-            com frases práticas todos os dias.
-          </p>
-
-          <p class="small">
-            A ideia é simples: ouvir, ler, repetir em voz alta e revisar frases que podem ser usadas na vida real no Japão.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">como funciona</div>
-
-          <div class="useCaseList">
-            <div class="useCaseItem">
-              <span class="useCaseIcon">1</span>
-              <span>Você escolhe uma frase ou situação.</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">2</span>
-              <span>O app mostra o japonês, a tradução e palavras úteis.</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">3</span>
-              <span>Você ouve, repete em voz alta e fecha ciclos de treino.</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">4</span>
-              <span>O progresso fica salvo no próprio aparelho usando armazenamento local.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">pagamentos</div>
-
-          <p class="small">
-            O NIHONGO321 não guarda dados bancários dentro do app. Qualquer pagamento Premium deve acontecer fora do app,
-            em uma plataforma externa segura de checkout.
-          </p>
-
-          <p class="small">
-            Dados de cartão, conta bancária, konbini payment ou outros meios de pagamento devem ser informados apenas
-            na página externa de pagamento, nunca dentro deste aplicativo.
-          </p>
-        </div>
-
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/home">ir para o início</button>
-          <button class="btn btn--full" data-nav="#/privacy">ver privacidade</button>
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-function renderPrivacy() {
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">política de privacidade</div>
-          <button class="btn" data-nav="#/settings">voltar</button>
-        </div>
-
-        <div class="lockCard">
-          <h1 class="h1">Privacidade simples e direta</h1>
-          <p class="lockText">
-            Esta política explica, de forma clara, como o NIHONGO321 lida com informações dentro do app.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">armazenamento local</div>
-
-          <p class="small">
-            O NIHONGO321 usa armazenamento local do navegador, chamado localStorage, para salvar dados no próprio aparelho.
-          </p>
-
-          <p class="small">
-            Isso pode incluir frases cadastradas, progresso de treino, favoritos, configurações, metas diárias,
-            histórico local do Sensei IA simulado e preferências de uso.
-          </p>
-
-          <p class="small">
-            Esses dados ficam no dispositivo do usuário, dentro do navegador usado para acessar o app.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">dados que o app não deve guardar</div>
-
-          <div class="useCaseList">
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>dados bancários;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>número de cartão;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>senha bancária;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>documentos sensíveis de pagamento;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>informações de conta bancária.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">pagamento externo</div>
-
-          <p class="small">
-            Se o usuário decidir assinar o Premium, o pagamento deve ser feito por meio de uma plataforma externa.
-            O NIHONGO321 apenas abre o link configurado pelo desenvolvedor.
-          </p>
-
-          <p class="small">
-            O app não processa pagamento diretamente e não deve receber dados bancários.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">backup e reset</div>
-
-          <p class="small">
-            O usuário pode exportar um backup local em JSON. Esse arquivo pode conter frases, progresso e configurações.
-            Guarde esse arquivo com cuidado.
-          </p>
-
-          <p class="small">
-            Ao resetar o app ou limpar os dados do navegador, as informações salvas localmente podem ser apagadas.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">áudio e voz</div>
-
-          <p class="small">
-            O app usa recursos do navegador para reprodução de voz japonesa quando disponíveis.
-            No estado atual, o app não envia gravações de voz para servidor próprio.
-          </p>
-
-          <p class="small">
-            Caso no futuro seja adicionado reconhecimento de pronúncia, esta política deve ser atualizada antes da publicação.
-          </p>
-        </div>
-
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/terms">ver termos de uso</button>
-          <button class="btn btn--full" data-nav="#/home">ir para o app</button>
-        </div>
-      </section>
-    </div>
-  `;
-}
-
-function renderTerms() {
-  APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">termos de uso</div>
-          <button class="btn" data-nav="#/settings">voltar</button>
-        </div>
-
-        <div class="lockCard">
-          <h1 class="h1">Termos simples para uso do NIHONGO321</h1>
-          <p class="lockText">
-            Ao usar o app, o usuário entende que o NIHONGO321 é uma ferramenta de apoio ao estudo prático de japonês.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">uso do app</div>
-
-          <p class="small">
-            O NIHONGO321 oferece frases, traduções, repetição guiada, favoritos, treino rápido, revisão e organização de conteúdo.
-            O objetivo é apoiar o aprendizado funcional, especialmente para brasileiros no Japão.
-          </p>
-
-          <p class="small">
-            O app não garante fluência imediata, aprovação em testes, resultado profissional ou substituição de professor,
-            intérprete, tradutor juramentado ou orientação oficial.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">conteúdo em japonês</div>
-
-          <p class="small">
-            As frases são criadas para ajudar em situações comuns, mas podem precisar de adaptação conforme o contexto,
-            nível de formalidade e região.
-          </p>
-
-          <p class="small">
-            Em situações importantes, como hospital, prefeitura, contrato, documento, trabalho ou emergência,
-            confirme as informações com uma pessoa qualificada quando necessário.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">armazenamento local</div>
-
-          <p class="small">
-            O progresso e as frases podem ficar salvos no próprio aparelho usando localStorage.
-            Se o usuário trocar de navegador, limpar dados ou resetar o app, essas informações podem ser perdidas.
-          </p>
-
-          <p class="small">
-            Use a função de backup para guardar uma cópia quando necessário.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">premium e pagamento</div>
-
-          <p class="small">
-            Recursos Premium, quando disponíveis, podem liberar tópicos específicos, Sensei IA simulado/local
-            e materiais mais direcionados para situações reais.
-          </p>
-
-          <p class="small">
-            O pagamento deve acontecer fora do app, em plataforma externa segura. O NIHONGO321 não deve armazenar
-            dados bancários no código, no navegador ou dentro das telas do aplicativo.
-          </p>
-
-          <p class="small">
-            O acesso Premium pode depender da configuração comercial definida pelo desenvolvedor e pela plataforma de pagamento escolhida.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">responsabilidade do usuário</div>
-
-          <div class="useCaseList">
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✓</span>
-              <span>usar o app como apoio de estudo;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✓</span>
-              <span>fazer backup quando quiser proteger os dados;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✓</span>
-              <span>não inserir dados bancários ou informações sensíveis em campos de frase;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✓</span>
-              <span>confirmar informações importantes fora do app quando necessário.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/home">aceitar e usar o app</button>
-          <button class="btn btn--full" data-nav="#/privacy">ver privacidade</button>
-        </div>
-      </section>
-    </div>
-  `;
-}
 
 /* ---------- render principal ---------- */
 function render() {
   refreshHUD();
+  applyTheme(getTheme());
 
   const r = route();
 
@@ -7243,6 +7955,7 @@ function render() {
   if (r === "#/about") return renderAbout();
   if (r === "#/privacy") return renderPrivacy();
   if (r === "#/terms") return renderTerms();
+  if (r === "#/launch-checklist") return renderLaunchChecklist();
 
   nav("#/landing");
 }
@@ -7303,6 +8016,17 @@ document.addEventListener("click", (e) => {
   }
 
   const act = btn.dataset.action;
+
+  if (act === "toggleTheme" || btn.id === "hudTheme") {
+    unlockAudio();
+
+    const next = toggleTheme();
+    toast(next === "light" ? "modo claro ativado ☀️" : "modo escuro ativado 🌙");
+    beep("ding");
+    render();
+
+    return;
+  }
 
   if (act === "toggleFavorite") {
     unlockAudio();
@@ -7385,30 +8109,13 @@ document.addEventListener("click", (e) => {
       return;
     }
 
-    if (result && result.reason === "empty") {
-      toast("sem frases neste contexto. abrindo essencial");
-
-      const fallback = startSituationTraining("essential");
-
-      if (fallback && fallback.ok) {
-        if (route() === "#/105x") {
-          render();
-          startStudyTimerIfOn105x();
-        } else {
-          nav("#/105x");
-        }
-      }
-
-      return;
-    }
-
     toast(result?.message || "não consegui iniciar este treino");
     beep("tuk");
 
     return;
   }
 
-  if (act === "reviewPhrase") {
+  if (act === "reviewPhrase" || act === "trainPhrase") {
     unlockAudio();
 
     const id = btn.dataset.id;
@@ -7422,38 +8129,6 @@ document.addEventListener("click", (e) => {
     }
 
     STATE.session.inProgress = true;
-
-    const previousFilter = STATE.session.topicFilter || "ALL";
-    STATE.session.topicFilter = canAccessTopic(p.topicId) ? previousFilter : "ALL";
-    STATE.session.queue = buildQueue();
-
-    if (!STATE.session.queue.includes(id)) {
-      STATE.session.queue.unshift(id);
-    }
-
-    STATE.session.index = STATE.session.queue.indexOf(id);
-    STATE.session.phraseId = id;
-
-    resetCountForPhrase(id);
-    saveState();
-
-    toast("revisão carregada");
-    beep("ding");
-    nav("#/105x");
-
-    return;
-  }
-
-  if (act === "trainPhrase") {
-    unlockAudio();
-
-    const id = btn.dataset.id;
-    if (!id) return;
-
-    if (!STATE.session.inProgress) {
-      STATE.session.inProgress = true;
-    }
-
     STATE.session.topicFilter = "ALL";
     STATE.session.queue = buildQueue();
 
@@ -7467,7 +8142,7 @@ document.addEventListener("click", (e) => {
     resetCountForPhrase(id);
     saveState();
 
-    toast("frase carregada");
+    toast(act === "reviewPhrase" ? "revisão carregada" : "frase carregada");
     beep("ding");
     nav("#/105x");
 
@@ -7579,7 +8254,12 @@ document.addEventListener("click", (e) => {
 
     const pack = generateSenseiMaterial({ request, level, tone, theme });
     renderSenseiOutput(pack);
-    toast("frases geradas");
+
+    const msg = pack.requestType === "grammar"
+      ? `${pack.phrases.length} exemplos gerados`
+      : "material gerado";
+
+    toast(msg);
     beep("ding");
 
     return;
@@ -8062,25 +8742,27 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if (act === "toggleSound") {
+  if (act === "toggleSound" || btn.id === "hudSound") {
     unlockAudio();
 
     STATE.prefs.audio.enabled = !STATE.prefs.audio.enabled;
     saveState();
 
-    toast(STATE.prefs.audio.enabled ? "som ligado" : "som desligado");
     refreshHUD();
+    toast(STATE.prefs.audio.enabled ? "som ligado" : "som desligado");
     render();
 
     return;
   }
 
-  if (act === "toggleVibe") {
+  if (act === "toggleVibe" || btn.id === "hudVibe") {
+    unlockAudio();
+
     STATE.prefs.haptics.enabled = !STATE.prefs.haptics.enabled;
     saveState();
 
-    toast(STATE.prefs.haptics.enabled ? "vibração ligada" : "vibração desligada");
     refreshHUD();
+    toast(STATE.prefs.haptics.enabled ? "vibração ligada" : "vibração desligada");
     render();
 
     return;
@@ -8099,34 +8781,11 @@ document.addEventListener("click", (e) => {
 
     STATE = defaultState();
     saveState();
+    applyTheme(getTheme());
 
     toast("app resetado");
     beep("ding");
     nav("#/landing");
-
-    return;
-  }
-
-  if (btn.id === "hudSound") {
-    unlockAudio();
-
-    STATE.prefs.audio.enabled = !STATE.prefs.audio.enabled;
-    saveState();
-
-    refreshHUD();
-    toast(STATE.prefs.audio.enabled ? "som ligado" : "som desligado");
-
-    return;
-  }
-
-  if (btn.id === "hudVibe") {
-    unlockAudio();
-
-    STATE.prefs.haptics.enabled = !STATE.prefs.haptics.enabled;
-    saveState();
-
-    refreshHUD();
-    toast(STATE.prefs.haptics.enabled ? "vibração ligada" : "vibração desligada");
 
     return;
   }
@@ -8279,6 +8938,8 @@ window.addEventListener("hashchange", () => {
 (function init() {
   ensureDefaultTopic();
   ensurePhrasesHaveValidTopic();
+
+  applyTheme(getTheme());
   refreshHUD();
 
   if (!location.hash) nav("#/landing");

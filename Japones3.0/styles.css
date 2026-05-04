@@ -4057,3 +4057,144 @@ html:not([data-theme="light"]) select.btn{
     font-size:12.5px;
   }
 }
+/* =========================================================
+   NIHONGO321 — OURO EQUILIBRADO AO CLICAR EM "OUVIR"
+   - mais contraste no modo claro
+   - menos borrão no modo escuro
+   - efeito premium sem apagar a leitura
+   ========================================================= */
+
+/* Base: ouro sólido e legível */
+#kanaLine.kana .kseg.on,
+.phraseArea #kanaLine .kseg.on,
+.kana span.kseg.on,
+.kseg.on{
+  color:#d98212 !important;
+
+  background-image:
+    linear-gradient(
+      180deg,
+      #ffe58a 0%,
+      #ffc247 34%,
+      #e88b19 68%,
+      #c85d10 100%
+    ) !important;
+
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+
+  opacity:1 !important;
+  filter:none !important;
+
+  text-shadow:
+    0 1px 0 rgba(80,38,0,.42),
+    0 0 4px rgba(255,184,54,.34) !important;
+}
+
+/* Modo claro: mais laranja-dourado, com sombra escura leve para leitura */
+html[data-theme="light"] #kanaLine.kana .kseg.on,
+html[data-theme="light"] .phraseArea #kanaLine .kseg.on,
+html[data-theme="light"] .kana span.kseg.on,
+html[data-theme="light"] .kseg.on{
+  color:#d96f13 !important;
+
+  background-image:
+    linear-gradient(
+      180deg,
+      #ffcf58 0%,
+      #ffad32 35%,
+      #eb741d 70%,
+      #c94f13 100%
+    ) !important;
+
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+
+  text-shadow:
+    0 1px 0 rgba(80,32,0,.48),
+    0 2px 3px rgba(90,42,0,.24),
+    0 0 5px rgba(255,166,38,.22) !important;
+
+  filter:contrast(1.08) saturate(1.08) !important;
+  opacity:1 !important;
+}
+
+/* Modo escuro: dourado vivo, porém sem névoa borrada */
+html[data-theme="dark"] #kanaLine.kana .kseg.on,
+html[data-theme="dark"] .phraseArea #kanaLine .kseg.on,
+html[data-theme="dark"] .kana span.kseg.on,
+html[data-theme="dark"] .kseg.on{
+  color:#ffd15a !important;
+
+  background-image:
+    linear-gradient(
+      180deg,
+      #fff0a6 0%,
+      #ffd25c 30%,
+      #f4a62b 66%,
+      #e2741d 100%
+    ) !important;
+
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.72),
+    0 0 3px rgba(255,220,115,.58),
+    0 0 7px rgba(255,171,49,.34) !important;
+
+  filter:contrast(1.12) saturate(1.12) brightness(1.04) !important;
+  opacity:1 !important;
+}
+
+/* Animação mais discreta: dá sensação de recompensa sem borrar */
+@keyframes nihongoGoldPulse{
+  0%{
+    transform:translateY(0);
+    filter:contrast(1.02) saturate(1.02) brightness(1);
+  }
+
+  45%{
+    transform:translateY(-1px);
+    filter:contrast(1.12) saturate(1.14) brightness(1.08);
+  }
+
+  100%{
+    transform:translateY(0);
+    filter:contrast(1.08) saturate(1.08) brightness(1.02);
+  }
+}
+
+#kanaLine.kana .kseg.on,
+.phraseArea #kanaLine .kseg.on,
+.kana span.kseg.on,
+.kseg.on{
+  animation:nihongoGoldPulse .28s ease-out both !important;
+}
+
+/* Mantém as letras apagadas legíveis antes de serem ativadas */
+html[data-theme="light"] #kanaLine.kana .kseg:not(.on){
+  color:#f46f21;
+  -webkit-text-fill-color:currentColor;
+  text-shadow:none;
+}
+
+html[data-theme="dark"] #kanaLine.kana .kseg:not(.on){
+  color:#f6f0df;
+  -webkit-text-fill-color:currentColor;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.55);
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce){
+  #kanaLine.kana .kseg.on,
+  .phraseArea #kanaLine .kseg.on,
+  .kana span.kseg.on,
+  .kseg.on{
+    animation:none !important;
+  }
+}
