@@ -13946,3 +13946,1750 @@ window.addEventListener("hashchange", () => {
   console.log("[NIHONGO321] Sensei IA Local Master 6A carregado — custo zero, offline, sem API.");
 
 })();
+
+/* =========================================================
+   NIHONGO321 v8.3.1
+   PATCH BLOCO 6B — VARIAÇÃO REAL POR NÍVEL E TOM
+   - Faz level e tone mudarem o material de verdade
+   - Mantém Sensei Local Master 6A como base
+   - Não altera localStorage
+   - Não altera checkout
+   - Não quebra treino 105x
+   ========================================================= */
+
+(function patchSenseiLevelTone6B() {
+  "use strict";
+
+  const PATCH_ID = "nihongo321_patch_sensei_level_tone_6b";
+
+  if (window[PATCH_ID]) return;
+  window[PATCH_ID] = true;
+
+  const previousGenerator =
+    typeof window.generateSenseiMaterial === "function"
+      ? window.generateSenseiMaterial
+      : null;
+
+  const previousRenderer =
+    typeof window.renderSenseiOutput === "function"
+      ? window.renderSenseiOutput
+      : null;
+
+  function b6Now() {
+    return Date.now();
+  }
+
+  function b6Uid(prefix = "b6") {
+    return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+  }
+
+  function b6Normalize(text) {
+    return String(text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[「」『』"“”'’`´]/g, " ")
+      .replace(/[、。,.!?！？;；:：()\[\]{}]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function b6StripFuri(value) {
+    try {
+      if (typeof jpStripFurigana === "function") return jpStripFurigana(value);
+    } catch {}
+
+    return String(value || "").replace(/([^{}\s]+)\{([^{}]+)\}/g, "$1");
+  }
+
+  function b6Phrase(jp, pt, newWords = []) {
+    return {
+      id: b6Uid("sensei"),
+      jp,
+      pt,
+      newWords: Array.isArray(newWords) ? newWords : [],
+      createdAt: b6Now(),
+      updatedAt: b6Now()
+    };
+  }
+
+  function b6Level(value) {
+    const n = b6Normalize(value);
+
+    if (/avancado|avançado|n2|n1/.test(n)) return "avancado";
+    if (/intermediario|intermediário|medio|médio|n4|n3/.test(n)) return "intermediario";
+    if (/basico|básico|iniciante|facil|fácil|n5/.test(n)) return "iniciante";
+
+    return "iniciante";
+  }
+
+  function b6Tone(value) {
+    const n = b6Normalize(value);
+
+    if (/emergencia|emergência|urgente|hospital|socorro/.test(n)) return "emergencia";
+    if (/trabalho|fabrica|fábrica|chefe|lider|líder|empresa/.test(n)) return "trabalho";
+    if (/natural|casual|amigo|dia a dia/.test(n)) return "natural";
+    if (/formal|educado|polido|respeitoso|keigo/.test(n)) return "educado";
+
+    return "educado";
+  }
+
+  function b6ReadPayload(argsLike) {
+    const args = Array.from(argsLike || []);
+    const first = args[0];
+
+    if (first && typeof first === "object") {
+      return {
+        request: first.request || first.prompt || first.text || first.input || "",
+        theme: first.theme || first.topic || first.topicName || "",
+        level: first.level || "iniciante",
+        tone: first.tone || "educado"
+      };
+    }
+
+    return {
+      request: String(args[0] || ""),
+      theme: String(args[1] || ""),
+      level: String(args[2] || "iniciante"),
+      tone: String(args[3] || "educado")
+    };
+  }
+
+  function b6WantedCount(payload, fallbackCount = 7) {
+    const n = b6Normalize(`${payload.request || ""} ${payload.theme || ""}`);
+
+    if (/13 frases|treze frases/.test(n)) return 13;
+    if (/12 frases|doze frases/.test(n)) return 12;
+    if (/10 frases|dez frases/.test(n)) return 10;
+    if (/8 frases|oito frases/.test(n)) return 8;
+    if (/7 frases|sete frases/.test(n)) return 7;
+
+    return Math.max(7, fallbackCount || 7);
+  }
+
+  function b6DetectTerm(payload, pack) {
+    const raw = `${payload.request || ""} ${payload.theme || ""} ${pack?.term || ""} ${pack?.title || ""}`;
+    const compact = raw.replace(/\s+/g, "");
+
+    const known = [
+      "ので",
+      "から",
+      "てもいい",
+      "てもらえますか",
+      "ていただけますか",
+      "ないといけない",
+      "なければならない",
+      "たほうがいい",
+      "ことができる",
+      "かどうか",
+      "と思います",
+      "かもしれません",
+      "ようにしています",
+      "ために",
+      "ながら",
+      "前に",
+      "後で",
+      "時",
+      "もし",
+      "けど",
+      "やってみる"
+    ];
+
+    return known.find(k => compact.includes(k)) || pack?.term || "";
+  }
+
+  function b6DetectScenario(payload, pack) {
+    const n = b6Normalize(`${payload.request || ""} ${payload.theme || ""} ${pack?.scenario || ""} ${pack?.title || ""}`);
+
+    if (/chefe|lider|supervisor|encarregado/.test(n)) return "chefe";
+    if (/hospital|medico|consulta|febre|dor|remedio|garganta/.test(n)) return "hospital";
+    if (/prefeitura|documento|zairyu|my number|mynumber/.test(n)) return "prefeitura";
+    if (/mercado|supermercado|produto|preco|validade/.test(n)) return "mercado";
+    if (/konbini|conveniencia/.test(n)) return "konbini";
+    if (/correio|encomenda|yu pack|yupack/.test(n)) return "correio";
+    if (/bicicleta|bike|pneu|corrente|freio/.test(n)) return "bicicleta";
+    if (/moradia|aluguel|apartamento|leopalace|vazamento/.test(n)) return "moradia";
+    if (/trem|onibus|estacao|transporte/.test(n)) return "transporte";
+    if (/telefone|internet|chip|plano|celular/.test(n)) return "telefone";
+    if (/fabrica|trabalho|maquina|peca|linha|producao/.test(n)) return "fabrica";
+
+    return pack?.scenario || "fabrica";
+  }
+
+  function b6EnsureCount(phrases, count) {
+    const out = Array.isArray(phrases) ? phrases.filter(p => p && p.jp && p.pt) : [];
+    const fallback = [
+      b6Phrase(
+        "すみません。もう 一度{いちど} お願{ねが}いします。",
+        "Com licença. Mais uma vez, por favor.",
+        [
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      ),
+      b6Phrase(
+        "ゆっくり 話{はな}して ください。",
+        "Por favor, fale devagar.",
+        [
+          { jp: "ゆっくり", pt: "devagar" },
+          { jp: "話{はな}して", pt: "falar" }
+        ]
+      ),
+      b6Phrase(
+        "確認{かくにん} して もらえますか。",
+        "Você poderia verificar para mim?",
+        [
+          { jp: "確認{かくにん}", pt: "verificação / confirmação" }
+        ]
+      ),
+      b6Phrase(
+        "紙{かみ} に 書{か}いて もらえますか。",
+        "Você poderia escrever no papel para mim?",
+        [
+          { jp: "紙{かみ}", pt: "papel" },
+          { jp: "書{か}いて", pt: "escrever" }
+        ]
+      ),
+      b6Phrase(
+        "あと で 連絡{れんらく} します。",
+        "Entro em contato depois.",
+        [
+          { jp: "連絡{れんらく}", pt: "contato" }
+        ]
+      ),
+      b6Phrase(
+        "今{いま} は まだ よく わかりません。",
+        "Agora eu ainda não entendi bem.",
+        [
+          { jp: "今{いま}", pt: "agora" },
+          { jp: "まだ", pt: "ainda" }
+        ]
+      ),
+      b6Phrase(
+        "この 内容{ないよう} で 合{あ}って いますか。",
+        "Está correto assim?",
+        [
+          { jp: "内容{ないよう}", pt: "conteúdo" },
+          { jp: "合{あ}って いますか", pt: "está correto?" }
+        ]
+      )
+    ];
+
+    let i = 0;
+
+    while (out.length < count) {
+      out.push({
+        ...fallback[i % fallback.length],
+        id: b6Uid("sensei")
+      });
+      i++;
+    }
+
+    return out.slice(0, count);
+  }
+    /* =========================================================
+     2. BANCOS DE VARIAÇÃO REAL POR NÍVEL E TOM
+     ========================================================= */
+
+  function b6TermSet(term, level, tone) {
+    const t = String(term || "").trim();
+
+    if (t === "ので") {
+      if (level === "iniciante") {
+        return [
+          b6Phrase(
+            "雨{あめ} なので、行{い}きません。",
+            "Como está chovendo, não vou.",
+            [
+              { jp: "雨{あめ}", pt: "chuva" },
+              { jp: "行{い}きません", pt: "não vou" }
+            ]
+          ),
+          b6Phrase(
+            "仕事{しごと} なので、早{はや}く 寝{ね}ます。",
+            "Como tenho trabalho, vou dormir cedo.",
+            [
+              { jp: "仕事{しごと}", pt: "trabalho" },
+              { jp: "寝{ね}ます", pt: "vou dormir" }
+            ]
+          ),
+          b6Phrase(
+            "時間{じかん} が ない ので、あと で します。",
+            "Como não tenho tempo, faço depois.",
+            [
+              { jp: "時間{じかん}", pt: "tempo" },
+              { jp: "あと で", pt: "depois" }
+            ]
+          ),
+          b6Phrase(
+            "日本語{にほんご} が 苦手{にがて} なので、ゆっくり お願{ねが}いします。",
+            "Como tenho dificuldade com japonês, devagar, por favor.",
+            [
+              { jp: "日本語{にほんご}", pt: "japonês" },
+              { jp: "苦手{にがて}", pt: "dificuldade" }
+            ]
+          ),
+          b6Phrase(
+            "疲{つか}れた ので、少{すこ}し 休{やす}みます。",
+            "Como fiquei cansado, vou descansar um pouco.",
+            [
+              { jp: "疲{つか}れた", pt: "cansado" },
+              { jp: "休{やす}みます", pt: "vou descansar" }
+            ]
+          ),
+          b6Phrase(
+            "寒{さむ}い ので、上着{うわぎ} を 着{き}ます。",
+            "Como está frio, vou vestir uma blusa.",
+            [
+              { jp: "寒{さむ}い", pt: "frio" },
+              { jp: "上着{うわぎ}", pt: "blusa / casaco" }
+            ]
+          ),
+          b6Phrase(
+            "わからない ので、教{おし}えて ください。",
+            "Como não entendo, por favor me ensine.",
+            [
+              { jp: "教{おし}えて", pt: "ensinar / explicar" }
+            ]
+          )
+        ];
+      }
+
+      if (level === "avancado") {
+        return [
+          b6Phrase(
+            "体調{たいちょう} が あまり 良{よ}くない ので、今日{きょう} は 無理{むり} を しない ようにします。",
+            "Como minha condição física não está muito boa, hoje vou procurar não forçar.",
+            [
+              { jp: "体調{たいちょう}", pt: "condição física" },
+              { jp: "無理{むり} を しない", pt: "não forçar" },
+              { jp: "ようにします", pt: "vou procurar fazer" }
+            ]
+          ),
+          b6Phrase(
+            "電車{でんしゃ} が 遅{おく}れて いる ので、到着{とうちゃく} が 少{すこ}し 遅{おそ}く なる かもしれません。",
+            "Como o trem está atrasado, talvez minha chegada fique um pouco mais tarde.",
+            [
+              { jp: "到着{とうちゃく}", pt: "chegada" },
+              { jp: "遅{おそ}く なる", pt: "ficar tarde" },
+              { jp: "かもしれません", pt: "talvez" }
+            ]
+          ),
+          b6Phrase(
+            "説明{せつめい} の 内容{ないよう} が まだ 完全{かんぜん} に 理解{りかい} できて いない ので、もう 一度{いちど} 確認{かくにん} させて ください。",
+            "Como ainda não consegui entender completamente o conteúdo da explicação, por favor deixe-me confirmar mais uma vez.",
+            [
+              { jp: "完全{かんぜん}", pt: "completamente" },
+              { jp: "理解{りかい}", pt: "entendimento" },
+              { jp: "確認{かくにん} させて ください", pt: "por favor, deixe-me confirmar" }
+            ]
+          ),
+          b6Phrase(
+            "書類{しょるい} に 不備{ふび} が ある かもしれない ので、提出{ていしゅつ} する 前{まえ} に 確認{かくにん} したいです。",
+            "Como pode haver alguma falha no documento, quero confirmar antes de entregar.",
+            [
+              { jp: "不備{ふび}", pt: "falha / pendência" },
+              { jp: "提出{ていしゅつ}", pt: "entrega" },
+              { jp: "前{まえ} に", pt: "antes de" }
+            ]
+          ),
+          b6Phrase(
+            "安全{あんぜん} に 関{かか}わる こと なので、少{すこ}しでも 不安{ふあん} が あれば 先{さき}に 確認{かくにん} します。",
+            "Como é algo relacionado à segurança, se eu tiver qualquer insegurança, confirmo antes.",
+            [
+              { jp: "関{かか}わる", pt: "estar relacionado" },
+              { jp: "不安{ふあん}", pt: "insegurança / preocupação" },
+              { jp: "先{さき}に", pt: "antes / antecipadamente" }
+            ]
+          ),
+          b6Phrase(
+            "日本語{にほんご} だけ では 細{こま}かい ニュアンス が わかりにくい ので、簡単{かんたん} な 言葉{ことば} で 説明{せつめい} して いただけますか。",
+            "Como é difícil entender nuances detalhadas só em japonês, o senhor poderia explicar com palavras simples?",
+            [
+              { jp: "細{こま}かい", pt: "detalhado" },
+              { jp: "ニュアンス", pt: "nuance" },
+              { jp: "言葉{ことば}", pt: "palavras" }
+            ]
+          ),
+          b6Phrase(
+            "予定{よてい} が 変{か}わる 可能性{かのうせい} が ある ので、決{き}まり 次第{しだい} すぐ に 連絡{れんらく} します。",
+            "Como existe a possibilidade de a programação mudar, assim que for definido eu entro em contato.",
+            [
+              { jp: "可能性{かのうせい}", pt: "possibilidade" },
+              { jp: "決{き}まり 次第{しだい}", pt: "assim que for decidido" },
+              { jp: "連絡{れんらく}", pt: "contato" }
+            ]
+          )
+        ];
+      }
+    }
+
+    if (t === "かどうか") {
+      if (level === "iniciante") {
+        return [
+          b6Phrase(
+            "これ が 使{つか}える かどうか 知{し}りたいです。",
+            "Quero saber se isto pode ser usado.",
+            [
+              { jp: "使{つか}える", pt: "pode usar" },
+              { jp: "知{し}りたい", pt: "quero saber" }
+            ]
+          ),
+          b6Phrase(
+            "今日{きょう}、残業{ざんぎょう} が ある かどうか わかりますか。",
+            "Você sabe se hoje tem hora extra?",
+            [
+              { jp: "残業{ざんぎょう}", pt: "hora extra" }
+            ]
+          ),
+          b6Phrase(
+            "この 電車{でんしゃ} が 行{い}く かどうか 知{し}りたいです。",
+            "Quero saber se este trem vai.",
+            [
+              { jp: "電車{でんしゃ}", pt: "trem" },
+              { jp: "行{い}く", pt: "ir" }
+            ]
+          ),
+          b6Phrase(
+            "これ で 大丈夫{だいじょうぶ} かどうか 見{み}て ください。",
+            "Por favor, veja se assim está certo.",
+            [
+              { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / correto" },
+              { jp: "見{み}て", pt: "ver / olhar" }
+            ]
+          ),
+          b6Phrase(
+            "予約{よやく} が 必要{ひつよう} かどうか 聞{き}きたいです。",
+            "Quero perguntar se precisa de reserva.",
+            [
+              { jp: "予約{よやく}", pt: "reserva" },
+              { jp: "必要{ひつよう}", pt: "necessário" }
+            ]
+          ),
+          b6Phrase(
+            "明日{あした} 休{やす}める かどうか まだ わかりません。",
+            "Ainda não sei se posso folgar amanhã.",
+            [
+              { jp: "休{やす}める", pt: "poder folgar" }
+            ]
+          ),
+          b6Phrase(
+            "この 商品{しょうひん} が ある かどうか 聞{き}きます。",
+            "Vou perguntar se tem este produto.",
+            [
+              { jp: "商品{しょうひん}", pt: "produto" },
+              { jp: "聞{き}きます", pt: "vou perguntar" }
+            ]
+          )
+        ];
+      }
+
+      if (level === "avancado") {
+        return [
+          b6Phrase(
+            "この 書類{しょるい} で 手続{てつづ}き が できる かどうか、先{さき}に 確認{かくにん} して いただけますか。",
+            "O senhor poderia confirmar antes se é possível fazer o procedimento com este documento?",
+            [
+              { jp: "手続{てつづ}き", pt: "procedimento" },
+              { jp: "先{さき}に", pt: "antes / antecipadamente" },
+              { jp: "確認{かくにん}", pt: "confirmação" }
+            ]
+          ),
+          b6Phrase(
+            "今日中{きょうじゅう} に 対応{たいおう} できる かどうか、わかり 次第{しだい} 教{おし}えて ください。",
+            "Assim que souber se dá para atender ainda hoje, por favor me avise.",
+            [
+              { jp: "今日中{きょうじゅう}", pt: "ainda hoje" },
+              { jp: "対応{たいおう}", pt: "atendimento / resposta" },
+              { jp: "次第{しだい}", pt: "assim que" }
+            ]
+          ),
+          b6Phrase(
+            "この 方法{ほうほう} で 問題{もんだい} が ない かどうか、念{ねん}のため 確認{かくにん} したいです。",
+            "Por precaução, quero confirmar se não há problema com este método.",
+            [
+              { jp: "方法{ほうほう}", pt: "método" },
+              { jp: "念{ねん}のため", pt: "por precaução" },
+              { jp: "問題{もんだい}", pt: "problema" }
+            ]
+          ),
+          b6Phrase(
+            "この 部品{ぶひん} が 正{ただ}しい かどうか 自信{じしん} が ない ので、確認{かくにん} を お願{ねが}いします。",
+            "Como não tenho certeza se esta peça está correta, peço a verificação.",
+            [
+              { jp: "部品{ぶひん}", pt: "peça" },
+              { jp: "正{ただ}しい", pt: "correto" },
+              { jp: "自信{じしん}", pt: "confiança / certeza" }
+            ]
+          ),
+          b6Phrase(
+            "予定{よてい} が 変更{へんこう} に なる かどうか、まだ 連絡{れんらく} が 来{き}て いません。",
+            "Ainda não recebi contato sobre se a programação será alterada.",
+            [
+              { jp: "予定{よてい}", pt: "programação" },
+              { jp: "変更{へんこう}", pt: "alteração" },
+              { jp: "連絡{れんらく}", pt: "contato" }
+            ]
+          ),
+          b6Phrase(
+            "この 表現{ひょうげん} が 自然{しぜん} かどうか、日本人{にほんじん} の 友達{ともだち} に 聞{き}いて みます。",
+            "Vou tentar perguntar a um amigo japonês se esta expressão é natural.",
+            [
+              { jp: "表現{ひょうげん}", pt: "expressão" },
+              { jp: "自然{しぜん}", pt: "natural" },
+              { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
+            ]
+          ),
+          b6Phrase(
+            "この 契約{けいやく} に 追加料金{ついかりょうきん} が かかる かどうか、必{かなら}ず 確認{かくにん} した ほう が いいです。",
+            "É melhor confirmar sem falta se haverá taxa extra neste contrato.",
+            [
+              { jp: "契約{けいやく}", pt: "contrato" },
+              { jp: "追加料金{ついかりょうきん}", pt: "taxa extra" },
+              { jp: "必{かなら}ず", pt: "sem falta" }
+            ]
+          )
+        ];
+      }
+    }
+
+    return null;
+  }
+
+  function b6ScenarioSet(scenario, level, tone) {
+    if (scenario === "chefe" || tone === "trabalho") {
+      if (level === "iniciante") {
+        return [
+          b6Phrase(
+            "すみません。よく わかりません。",
+            "Com licença. Eu não entendi bem.",
+            [
+              { jp: "すみません", pt: "com licença / desculpe" },
+              { jp: "わかりません", pt: "não entendo" }
+            ]
+          ),
+          b6Phrase(
+            "もう 一度{いちど} お願{ねが}いします。",
+            "Mais uma vez, por favor.",
+            [
+              { jp: "一度{いちど}", pt: "uma vez" },
+              { jp: "お願{ねが}いします", pt: "por favor" }
+            ]
+          ),
+          b6Phrase(
+            "ゆっくり お願{ねが}いします。",
+            "Devagar, por favor.",
+            [
+              { jp: "ゆっくり", pt: "devagar" }
+            ]
+          ),
+          b6Phrase(
+            "これ で いいですか。",
+            "Assim está bom?",
+            [
+              { jp: "これ", pt: "isto" }
+            ]
+          ),
+          b6Phrase(
+            "次{つぎ} は 何{なに} ですか。",
+            "O que vem depois?",
+            [
+              { jp: "次{つぎ}", pt: "próximo" },
+              { jp: "何{なに}", pt: "o que" }
+            ]
+          ),
+          b6Phrase(
+            "確認{かくにん} お願{ねが}いします。",
+            "Confirmação, por favor.",
+            [
+              { jp: "確認{かくにん}", pt: "confirmação" }
+            ]
+          ),
+          b6Phrase(
+            "少{すこ}し 待{ま}って ください。",
+            "Por favor, espere um pouco.",
+            [
+              { jp: "少{すこ}し", pt: "um pouco" },
+              { jp: "待{ま}って", pt: "esperar" }
+            ]
+          )
+        ];
+      }
+
+      if (level === "intermediario") {
+        return [
+          b6Phrase(
+            "すみません。この 作業{さぎょう} の やり方{かた} が まだ よく わかりません。",
+            "Com licença. Ainda não entendi bem o modo de fazer esta tarefa.",
+            [
+              { jp: "作業{さぎょう}", pt: "tarefa / trabalho" },
+              { jp: "やり方{かた}", pt: "modo de fazer" }
+            ]
+          ),
+          b6Phrase(
+            "もう 一度{いちど} 説明{せつめい} して もらえますか。",
+            "Você poderia explicar mais uma vez para mim?",
+            [
+              { jp: "説明{せつめい}", pt: "explicação" },
+              { jp: "もらえますか", pt: "poderia fazer para mim?" }
+            ]
+          ),
+          b6Phrase(
+            "この 内容{ないよう} で 合{あ}って いる かどうか 確認{かくにん} して ください。",
+            "Por favor, confirme se este conteúdo está correto.",
+            [
+              { jp: "内容{ないよう}", pt: "conteúdo" },
+              { jp: "合{あ}って いる", pt: "está correto" }
+            ]
+          ),
+          b6Phrase(
+            "次{つぎ} に 何{なに} を すれば いいですか。",
+            "O que eu devo fazer em seguida?",
+            [
+              { jp: "次{つぎ}", pt: "em seguida" },
+              { jp: "すれば いい", pt: "devo fazer" }
+            ]
+          ),
+          b6Phrase(
+            "間違{まちが}い が ない ように、先{さき}に 確認{かくにん} したいです。",
+            "Para não haver erro, quero confirmar antes.",
+            [
+              { jp: "間違{まちが}い", pt: "erro" },
+              { jp: "先{さき}に", pt: "antes" }
+            ]
+          ),
+          b6Phrase(
+            "終{お}わったら、すぐ 報告{ほうこく} します。",
+            "Quando terminar, aviso imediatamente.",
+            [
+              { jp: "終{お}わったら", pt: "quando terminar" },
+              { jp: "報告{ほうこく}", pt: "relatório / aviso" }
+            ]
+          ),
+          b6Phrase(
+            "少{すこ}し 体調{たいちょう} が 悪{わる}い ので、無理{むり} しない ようにします。",
+            "Como estou me sentindo um pouco mal, vou procurar não forçar.",
+            [
+              { jp: "体調{たいちょう}", pt: "condição física" },
+              { jp: "無理{むり} しない", pt: "não forçar" }
+            ]
+          )
+        ];
+      }
+
+      return [
+        b6Phrase(
+          "申し訳{もう}し訳{わけ} ありません。この 作業{さぎょう} の 手順{てじゅん} を もう 一度{いちど} 確認{かくにん} させて いただけますか。",
+          "Desculpe. O senhor poderia me permitir confirmar mais uma vez o procedimento desta tarefa?",
+          [
+            { jp: "申{もう}し訳{わけ} ありません", pt: "sinto muito / desculpe formalmente" },
+            { jp: "手順{てじゅん}", pt: "procedimento / passo a passo" },
+            { jp: "確認{かくにん} させて いただけますか", pt: "poderia me permitir confirmar?" }
+          ]
+        ),
+        b6Phrase(
+          "認識{にんしき} に 間違{まちが}い が ない か、念{ねん}のため 確認{かくにん} させて ください。",
+          "Por precaução, deixe-me confirmar se não há erro no meu entendimento.",
+          [
+            { jp: "認識{にんしき}", pt: "entendimento / percepção" },
+            { jp: "念{ねん}のため", pt: "por precaução" },
+            { jp: "間違{まちが}い", pt: "erro" }
+          ]
+        ),
+        b6Phrase(
+          "この 方法{ほうほう} で 進{すす}めても 問題{もんだい} ない か、ご確認{かくにん} を お願{ねが}いします。",
+          "Peço sua confirmação se não há problema em prosseguir com este método.",
+          [
+            { jp: "方法{ほうほう}", pt: "método" },
+            { jp: "進{すす}めても", pt: "mesmo prosseguindo" },
+            { jp: "問題{もんだい}", pt: "problema" }
+          ]
+        ),
+        b6Phrase(
+          "安全{あんぜん} に 関{かか}わる 内容{ないよう} なので、先{さき}に 確認{かくにん} して から 作業{さぎょう} します。",
+          "Como é um conteúdo relacionado à segurança, vou trabalhar depois de confirmar antes.",
+          [
+            { jp: "安全{あんぜん}", pt: "segurança" },
+            { jp: "関{かか}わる", pt: "estar relacionado" },
+            { jp: "作業{さぎょう}", pt: "tarefa / trabalho" }
+          ]
+        ),
+        b6Phrase(
+          "予定{よてい} より 時間{じかん} が かかる 可能性{かのうせい} が あります。",
+          "Existe a possibilidade de levar mais tempo do que o previsto.",
+          [
+            { jp: "予定{よてい}", pt: "previsão / programação" },
+            { jp: "可能性{かのうせい}", pt: "possibilidade" }
+          ]
+        ),
+        b6Phrase(
+          "完了{かんりょう} したら、すぐ に 報告{ほうこく} いたします。",
+          "Quando concluir, informarei imediatamente.",
+          [
+            { jp: "完了{かんりょう}", pt: "conclusão" },
+            { jp: "報告{ほうこく} いたします", pt: "informarei / forma humilde" }
+          ]
+        ),
+        b6Phrase(
+          "不明点{ふめいてん} が あれば、そのまま 進{すす}めず に 確認{かくにん} します。",
+          "Se houver pontos duvidosos, não vou prosseguir sem confirmar.",
+          [
+            { jp: "不明点{ふめいてん}", pt: "ponto não claro / dúvida" },
+            { jp: "進{すす}めず に", pt: "sem prosseguir" }
+          ]
+        )
+      ];
+    }
+
+    if (tone === "emergencia") {
+      return [
+        b6Phrase(
+          "助{たす}けて ください。",
+          "Por favor, me ajude.",
+          [
+            { jp: "助{たす}けて", pt: "ajude" }
+          ]
+        ),
+        b6Phrase(
+          "気分{きぶん} が 悪{わる}いです。",
+          "Estou passando mal.",
+          [
+            { jp: "気分{きぶん}", pt: "estado / sensação" },
+            { jp: "悪{わる}い", pt: "ruim" }
+          ]
+        ),
+        b6Phrase(
+          "救急車{きゅうきゅうしゃ} を 呼{よ}んで ください。",
+          "Por favor, chame uma ambulância.",
+          [
+            { jp: "救急車{きゅうきゅうしゃ}", pt: "ambulância" },
+            { jp: "呼{よ}んで", pt: "chamar" }
+          ]
+        ),
+        b6Phrase(
+          "日本語{にほんご} が あまり わかりません。",
+          "Não entendo muito japonês.",
+          [
+            { jp: "日本語{にほんご}", pt: "japonês" }
+          ]
+        ),
+        b6Phrase(
+          "ここ が 痛{いた}いです。",
+          "Dói aqui.",
+          [
+            { jp: "痛{いた}い", pt: "dói / dolorido" }
+          ]
+        ),
+        b6Phrase(
+          "会社{かいしゃ} に 連絡{れんらく} して ください。",
+          "Por favor, entre em contato com a empresa.",
+          [
+            { jp: "会社{かいしゃ}", pt: "empresa" },
+            { jp: "連絡{れんらく}", pt: "contato" }
+          ]
+        ),
+        b6Phrase(
+          "通訳{つうやく} を お願{ねが}いします。",
+          "Por favor, preciso de intérprete.",
+          [
+            { jp: "通訳{つうやく}", pt: "intérprete" }
+          ]
+        )
+      ];
+    }
+
+    if (tone === "natural") {
+      return [
+        b6Phrase(
+          "ちょっと 聞{き}いても いいですか。",
+          "Posso perguntar uma coisa?",
+          [
+            { jp: "ちょっと", pt: "um pouco / só um instante" },
+            { jp: "聞{き}いても いい", pt: "posso perguntar?" }
+          ]
+        ),
+        b6Phrase(
+          "これ、どうすれば いいですか。",
+          "O que eu faço com isto?",
+          [
+            { jp: "どうすれば いい", pt: "o que devo fazer?" }
+          ]
+        ),
+        b6Phrase(
+          "すみません、もう 一回{いっかい} お願{ねが}いします。",
+          "Desculpa, mais uma vez, por favor.",
+          [
+            { jp: "一回{いっかい}", pt: "uma vez" }
+          ]
+        ),
+        b6Phrase(
+          "ちょっと わからない です。",
+          "Eu não entendi muito bem.",
+          [
+            { jp: "わからない", pt: "não entendo" }
+          ]
+        ),
+        b6Phrase(
+          "あと で 確認{かくにん} します。",
+          "Vou confirmar depois.",
+          [
+            { jp: "確認{かくにん}", pt: "confirmação" }
+          ]
+        ),
+        b6Phrase(
+          "これ で 合{あ}って ますか。",
+          "Está certo assim?",
+          [
+            { jp: "合{あ}って ますか", pt: "está certo?" }
+          ]
+        ),
+        b6Phrase(
+          "もう 少{すこ}し ゆっくり 話{はな}して ください。",
+          "Por favor, fale um pouco mais devagar.",
+          [
+            { jp: "少{すこ}し", pt: "um pouco" },
+            { jp: "話{はな}して", pt: "falar" }
+          ]
+        )
+      ];
+    }
+
+    return null;
+  }
+
+  function b6ApplyTonePolish(phrases, tone) {
+    if (!Array.isArray(phrases)) return [];
+
+    if (tone === "educado") {
+      return phrases.map(p => ({
+        ...p,
+        jp: p.jp
+          .replace(/ください。$/g, "いただけますか。")
+          .replace(/お願いします。$/g, "お願{ねが}いできますか。"),
+        pt: p.pt
+          .replace(/^Por favor, /, "O senhor poderia ")
+          .replace(/^Com licença\. /, "Com licença. ")
+      }));
+    }
+
+    if (tone === "natural") {
+      return phrases.map(p => ({
+        ...p,
+        jp: p.jp
+          .replace(/いただけますか。/g, "もらえますか。")
+          .replace(/お願{ねが}いできますか。/g, "お願{ねが}いします。")
+          .replace(/申{もう}し訳{わけ} ありません。/g, "すみません。"),
+        pt: p.pt
+          .replace(/O senhor poderia /g, "Você poderia ")
+          .replace(/Peço sua confirmação/g, "Pode confirmar")
+      }));
+    }
+
+    if (tone === "emergencia") {
+      return phrases.map(p => ({
+        ...p,
+        jp: p.jp
+          .replace(/いただけますか。/g, "ください。")
+          .replace(/もらえますか。/g, "ください。"),
+        pt: p.pt
+          .replace(/O senhor poderia /g, "Por favor, ")
+          .replace(/Você poderia /g, "Por favor, ")
+      }));
+    }
+
+    return phrases;
+  }
+    /* =========================================================
+     3. APLICAÇÃO REAL DAS VARIAÇÕES
+     ========================================================= */
+
+  function b6MakeMetaNote(level, tone) {
+    const levelMap = {
+      iniciante: "Frases mais curtas, diretas e fáceis de repetir.",
+      intermediario: "Frases mais completas, com conectores e contexto real.",
+      avancado: "Frases mais naturais, polidas e próximas de situações reais."
+    };
+
+    const toneMap = {
+      educado: "Tom educado para atendimento, chefe, prefeitura, hospital e situações formais.",
+      natural: "Tom natural para conversas do dia a dia, sem ficar duro demais.",
+      trabalho: "Tom voltado para fábrica, chefe, líder, tarefa, segurança e confirmação.",
+      emergencia: "Tom direto para pedir ajuda rápido e evitar confusão."
+    };
+
+    return `${levelMap[level] || levelMap.iniciante} ${toneMap[tone] || toneMap.educado}`;
+  }
+
+  function b6BuildVariantPack(basePack, payload) {
+    const level = b6Level(payload.level);
+    const tone = b6Tone(payload.tone);
+    const term = b6DetectTerm(payload, basePack);
+    const scenario = b6DetectScenario(payload, basePack);
+    const wantedCount = b6WantedCount(payload, basePack?.phrases?.length || 7);
+
+    let variantPhrases = null;
+
+    if (term) {
+      variantPhrases = b6TermSet(term, level, tone);
+    }
+
+    if (!variantPhrases) {
+      variantPhrases = b6ScenarioSet(scenario, level, tone);
+    }
+
+    if (!variantPhrases) {
+      variantPhrases = Array.isArray(basePack?.phrases) ? basePack.phrases : [];
+    }
+
+    variantPhrases = b6ApplyTonePolish(variantPhrases, tone);
+    variantPhrases = b6EnsureCount(variantPhrases, wantedCount);
+
+    const levelLabel = {
+      iniciante: "iniciante",
+      intermediario: "intermediário",
+      avancado: "avançado"
+    }[level];
+
+    const toneLabel = {
+      educado: "educado",
+      natural: "natural",
+      trabalho: "trabalho",
+      emergencia: "emergência"
+    }[tone];
+
+    const baseTitle = basePack?.title || basePack?.topicName || "Material prático";
+    const title = `${baseTitle} • ${levelLabel} • ${toneLabel}`;
+
+    return {
+      ...(basePack || {}),
+      title,
+      topicName: basePack?.topicName || `Sensei IA • ${baseTitle}`,
+      engine: "local-master-6b",
+      expertEngine: "6B Level/Tone",
+      levelMode: level,
+      toneMode: tone,
+      term,
+      scenario,
+      confidence: basePack?.confidence || "alta",
+      explanation: basePack?.explanation || "Material criado pelo Sensei IA Local Master.",
+      usage: `${basePack?.usage || "Use este material para treino prático."} ${b6MakeMetaNote(level, tone)}`,
+      goal:
+        level === "iniciante"
+          ? "Treine frases curtas primeiro. Repita cada frase até sair sem esforço."
+          : level === "intermediario"
+            ? "Treine contexto e conectores. Tente trocar uma palavra da frase depois de repetir."
+            : "Treine naturalidade. Repita em voz alta imaginando a situação real no Japão.",
+      coachLine: [
+        basePack?.coachLine || "",
+        `Variação aplicada: nível ${levelLabel}, tom ${toneLabel}.`,
+        b6MakeMetaNote(level, tone)
+      ].filter(Boolean).join(" "),
+      phrases: variantPhrases.map((p, index) => ({
+        ...p,
+        id: p.id || b6Uid("sensei"),
+        order: index + 1,
+        levelMode: level,
+        toneMode: tone,
+        updatedAt: b6Now()
+      })),
+      updatedAt: b6Now()
+    };
+  }
+
+  function b6ShouldEnhance(payload, pack) {
+    if (!pack || !Array.isArray(pack.phrases)) return true;
+
+    const level = b6Level(payload.level);
+    const tone = b6Tone(payload.tone);
+
+    if (pack.engine !== "local-master-6b") return true;
+    if (pack.levelMode !== level) return true;
+    if (pack.toneMode !== tone) return true;
+
+    return false;
+  }
+
+  window.generateSenseiMaterial = function generateSenseiMaterialLevelTone6B() {
+    const payload = b6ReadPayload(arguments);
+
+    let basePack = null;
+
+    try {
+      if (previousGenerator) {
+        basePack = previousGenerator(payload);
+      }
+    } catch (err) {
+      console.warn("[NIHONGO321] 6B previousGenerator falhou:", err);
+    }
+
+    if (!basePack || !Array.isArray(basePack.phrases)) {
+      basePack = {
+        title: "Material prático",
+        topicName: "Sensei IA • Material prático",
+        scenario: "fabrica",
+        requestType: "scenario",
+        explanation: "Material prático para situações reais no Japão.",
+        usage: "Use para treinar escuta, leitura e fala no 105x.",
+        goal: "Treine uma frase por vez.",
+        coachLine: "",
+        phrases: []
+      };
+    }
+
+    if (!b6ShouldEnhance(payload, basePack)) {
+      return basePack;
+    }
+
+    return b6BuildVariantPack(basePack, payload);
+  };
+
+  try {
+    generateSenseiMaterial = window.generateSenseiMaterial;
+  } catch {}
+
+  /* =========================================================
+     4. REFORÇO VISUAL NO RESULTADO
+     ========================================================= */
+
+  window.renderSenseiOutput = function renderSenseiOutputLevelTone6B(pack) {
+    const safePack = pack && Array.isArray(pack.phrases)
+      ? pack
+      : window.generateSenseiMaterial({
+          request: "criar frases úteis",
+          theme: "material prático",
+          level: "iniciante",
+          tone: "educado"
+        });
+
+    if (previousRenderer) {
+      try {
+        previousRenderer(safePack);
+      } catch (err) {
+        console.warn("[NIHONGO321] 6B previousRenderer falhou:", err);
+      }
+    }
+
+    const box = document.querySelector("#senseiOutput");
+    if (!box) return;
+
+    try {
+      box.dataset.pack = JSON.stringify(safePack);
+    } catch {}
+
+    const level = safePack.levelMode || "iniciante";
+    const tone = safePack.toneMode || "educado";
+
+    const levelLabel = {
+      iniciante: "iniciante",
+      intermediario: "intermediário",
+      avancado: "avançado"
+    }[level] || level;
+
+    const toneLabel = {
+      educado: "educado",
+      natural: "natural",
+      trabalho: "trabalho",
+      emergencia: "emergência"
+    }[tone] || tone;
+
+    if (!box.querySelector("#senseiLevelToneBadge6B")) {
+      const badge = document.createElement("div");
+      badge.id = "senseiLevelToneBadge6B";
+      badge.className = "sheet stack";
+      badge.style.textAlign = "left";
+      badge.innerHTML = `
+        <div class="row row--between">
+          <div class="badge">Variação real ativa</div>
+          <div class="badge">${levelLabel} • ${toneLabel}</div>
+        </div>
+        <div class="small">
+          Este material foi ajustado de verdade pelo nível e pelo tom escolhidos.
+        </div>
+      `;
+      box.prepend(badge);
+    } else {
+      const badge = box.querySelector("#senseiLevelToneBadge6B");
+      badge.innerHTML = `
+        <div class="row row--between">
+          <div class="badge">Variação real ativa</div>
+          <div class="badge">${levelLabel} • ${toneLabel}</div>
+        </div>
+        <div class="small">
+          Este material foi ajustado de verdade pelo nível e pelo tom escolhidos.
+        </div>
+      `;
+    }
+  };
+
+  try {
+    renderSenseiOutput = window.renderSenseiOutput;
+  } catch {}
+
+  /* =========================================================
+     5. REPARO PÓS-GERAÇÃO
+     ========================================================= */
+
+  function b6ReadFormPayload() {
+    const request =
+      document.querySelector("#senseiRequest")?.value ||
+      document.querySelector("#aiPrompt")?.value ||
+      document.querySelector("#senseiPrompt")?.value ||
+      document.querySelector("textarea")?.value ||
+      "";
+
+    const theme =
+      document.querySelector("#senseiTheme")?.value ||
+      document.querySelector("#aiTopic")?.value ||
+      document.querySelector("#senseiTopic")?.value ||
+      "";
+
+    const level =
+      document.querySelector("#senseiLevel")?.value ||
+      document.querySelector("#aiLevel")?.value ||
+      document.querySelector("select[name='level']")?.value ||
+      "iniciante";
+
+    const tone =
+      document.querySelector("#senseiTone")?.value ||
+      document.querySelector("#aiTone")?.value ||
+      document.querySelector("select[name='tone']")?.value ||
+      "educado";
+
+    return { request, theme, level, tone };
+  }
+
+  function b6RepairAfterGenerate() {
+    const box = document.querySelector("#senseiOutput");
+    if (!box) return;
+
+    const payload = b6ReadFormPayload();
+
+    let current = null;
+
+    try {
+      current = JSON.parse(box.dataset?.pack || "null");
+    } catch {}
+
+    const expectedLevel = b6Level(payload.level);
+    const expectedTone = b6Tone(payload.tone);
+
+    if (
+      current &&
+      current.engine === "local-master-6b" &&
+      current.levelMode === expectedLevel &&
+      current.toneMode === expectedTone &&
+      Array.isArray(current.phrases) &&
+      current.phrases.length >= 7
+    ) {
+      return;
+    }
+
+    const pack = window.generateSenseiMaterial(payload);
+    window.renderSenseiOutput(pack);
+  }
+
+  let b6Timer = null;
+
+  document.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-action='generateSensei'], #generateSensei, #btnGenerateSensei");
+    if (!btn) return;
+
+    clearTimeout(b6Timer);
+    b6Timer = setTimeout(b6RepairAfterGenerate, 120);
+  }, true);
+
+  /* =========================================================
+     6. TESTES
+     ========================================================= */
+
+  window.nihongo321Sensei6BCheck = function nihongo321Sensei6BCheck() {
+    const samples = {
+      inicianteEducado: window.generateSenseiMaterial({
+        request: "Me ensine o uso de ので",
+        level: "iniciante",
+        tone: "educado"
+      }),
+      intermediarioTrabalho: window.generateSenseiMaterial({
+        request: "Preciso falar com meu chefe que não entendi a tarefa",
+        level: "intermediário",
+        tone: "trabalho"
+      }),
+      avancadoEducado: window.generateSenseiMaterial({
+        request: "Me ensine o uso de かどうか",
+        level: "avançado",
+        tone: "educado"
+      }),
+      emergencia: window.generateSenseiMaterial({
+        request: "Estou passando mal no trabalho",
+        level: "iniciante",
+        tone: "emergência"
+      })
+    };
+
+    console.log("[NIHONGO321] Sensei 6B variação real ativa:", samples);
+    return samples;
+  };
+
+  window.nihongo321Sensei6BTest = function nihongo321Sensei6BTest(request = "Me ensine o uso de ので") {
+    const a = window.generateSenseiMaterial({
+      request,
+      level: "iniciante",
+      tone: "educado"
+    });
+
+    const b = window.generateSenseiMaterial({
+      request,
+      level: "intermediário",
+      tone: "trabalho"
+    });
+
+    const c = window.generateSenseiMaterial({
+      request,
+      level: "avançado",
+      tone: "educado"
+    });
+
+    console.table([
+      {
+        modo: "iniciante / educado",
+        primeira: b6StripFuri(a.phrases?.[0]?.jp || "")
+      },
+      {
+        modo: "intermediário / trabalho",
+        primeira: b6StripFuri(b.phrases?.[0]?.jp || "")
+      },
+      {
+        modo: "avançado / educado",
+        primeira: b6StripFuri(c.phrases?.[0]?.jp || "")
+      }
+    ]);
+
+    return { iniciante: a, intermediario: b, avancado: c };
+  };
+
+  console.log("[NIHONGO321] Sensei IA 6B carregado — nível e tom agora alteram as frases de verdade.");
+
+})();
+
+/* =========================================================
+   NIHONGO321 - Bloco 6C
+   Ponte segura: app.js ⇄ sensei-bank.js
+   - Lê window.NIHONGO321_SENSEI_BANK
+   - Importa tópicos e frases para STATE.bank
+   - Mantém conteúdo antigo
+   - Não altera treino 105x
+   - Não altera checkout
+   - Não apaga localStorage
+   ========================================================= */
+
+(function nihongo321SenseiBankBridge6C() {
+  "use strict";
+
+  const BRIDGE_VERSION = "6C.1.0";
+  const SOURCE = "sensei-bank";
+  const TOPIC_PREFIX = "sb_topic_";
+  const PHRASE_PREFIX = "sb_phrase_";
+
+  function sbLog(msg, data) {
+    try {
+      console.log(`[NIHONGO321 ${BRIDGE_VERSION}] ${msg}`, data || "");
+    } catch {}
+  }
+
+  function sbToast(msg) {
+    try {
+      if (typeof toast === "function") {
+        toast(msg);
+        return;
+      }
+    } catch {}
+
+    sbLog(msg);
+  }
+
+  function sbGetBank() {
+    try {
+      return window.NIHONGO321_SENSEI_BANK || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function sbHasAppState() {
+    try {
+      return !!(
+        typeof STATE === "object" &&
+        STATE &&
+        STATE.bank &&
+        Array.isArray(STATE.bank.topics) &&
+        Array.isArray(STATE.bank.phrases)
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  function sbSafeId(value, fallback = "item") {
+    const raw = String(value || fallback)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9_/-]+/g, "_")
+      .replace(/\/+/g, "_")
+      .replace(/_+/g, "_")
+      .replace(/^_+|_+$/g, "");
+
+    return raw || fallback;
+  }
+
+  function sbNow() {
+    try {
+      if (typeof now === "function") return now();
+    } catch {}
+
+    return Date.now();
+  }
+
+  function sbPickColor(index) {
+    try {
+      if (typeof pickTopicColor === "function") return pickTopicColor(index);
+    } catch {}
+
+    const colors = ["tRose", "tViolet", "tBlue", "tCyan", "tGreen", "tAmber", "tPink", "tMint"];
+    return colors[index % colors.length];
+  }
+
+  function sbSave() {
+    try {
+      if (typeof saveState === "function") {
+        saveState();
+        return true;
+      }
+    } catch (err) {
+      sbLog("saveState falhou", err);
+    }
+
+    return false;
+  }
+
+  function sbRender() {
+    try {
+      if (typeof render === "function") {
+        render();
+        return true;
+      }
+    } catch (err) {
+      sbLog("render falhou", err);
+    }
+
+    try {
+      if (typeof renderApp === "function") {
+        renderApp();
+        return true;
+      }
+    } catch (err) {
+      sbLog("renderApp falhou", err);
+    }
+
+    return false;
+  }
+
+  function sbToArray(value) {
+    if (Array.isArray(value)) return value;
+
+    if (value && typeof value === "object") {
+      return Object.entries(value).map(([key, item]) => {
+        if (item && typeof item === "object") {
+          return { key, ...item };
+        }
+
+        return { key, value: item };
+      });
+    }
+
+    return [];
+  }
+
+  function sbNormalizeTopic(raw, index) {
+    const key = raw.key || raw.id || raw.slug || raw.topic || raw.name || `topico_${index + 1}`;
+    const id = `${TOPIC_PREFIX}${sbSafeId(key, `topico_${index + 1}`)}`;
+
+    const name =
+      raw.name ||
+      raw.title ||
+      raw.label ||
+      raw.pt ||
+      raw.value ||
+      key ||
+      `Tópico ${index + 1}`;
+
+    return {
+      id,
+      name: String(name).trim(),
+      color: raw.color || sbPickColor(index),
+      createdAt: sbNow(),
+      updatedAt: sbNow(),
+      source: SOURCE,
+      sourceKey: String(key),
+      level: raw.level || "",
+      description: raw.description || raw.desc || "",
+      isPremium: !!raw.isPremium
+    };
+  }
+
+  function sbNormalizePhrase(raw, topicId, topicKey, index) {
+    const baseId = raw.id || `${topicKey}_${index + 1}`;
+    const id = `${PHRASE_PREFIX}${sbSafeId(baseId, `frase_${index + 1}`)}`;
+
+    const jp = String(raw.jp || raw.japanese || raw.text || "").trim();
+    const pt = String(raw.pt || raw.portuguese || raw.translation || "").trim();
+
+    if (!jp || !pt) return null;
+
+    const newWords = Array.isArray(raw.newWords)
+      ? raw.newWords
+      : Array.isArray(raw.words)
+        ? raw.words
+        : Array.isArray(raw.vocab)
+          ? raw.vocab
+          : [];
+
+    return {
+      id,
+      topicId,
+      jp,
+      pt,
+      romaji: raw.romaji || "",
+      kana: raw.kana || "",
+      note: raw.note || raw.obs || "",
+      tags: Array.isArray(raw.tags) ? raw.tags : [],
+      situation: raw.situation || "",
+      audioKey: raw.audioKey || "",
+      source: SOURCE,
+      sourceId: String(raw.id || baseId),
+      level: raw.level || "",
+      isPremium: !!raw.isPremium,
+      newWords: newWords
+        .filter(Boolean)
+        .map((w) => ({
+          jp: String(w.jp || w.word || "").trim(),
+          pt: String(w.pt || w.meaning || "").trim()
+        }))
+        .filter((w) => w.jp && w.pt)
+    };
+  }
+
+  function sbCollectTopicsAndPhrases(bank) {
+    const result = {
+      topics: [],
+      phrases: []
+    };
+
+    const topicEntries = sbToArray(bank?.topics);
+
+    topicEntries.forEach((rawTopic, topicIndex) => {
+      const topic = sbNormalizeTopic(rawTopic, topicIndex);
+      result.topics.push(topic);
+
+      const topicPhrases =
+        rawTopic.phrases ||
+        rawTopic.items ||
+        rawTopic.sentences ||
+        rawTopic.examples ||
+        [];
+
+      sbToArray(topicPhrases).forEach((rawPhrase, phraseIndex) => {
+        const phrase = sbNormalizePhrase(
+          rawPhrase,
+          topic.id,
+          topic.sourceKey,
+          phraseIndex
+        );
+
+        if (phrase) {
+          phrase.topic = rawTopic.key || rawTopic.id || rawTopic.slug || "";
+          result.phrases.push(phrase);
+        }
+      });
+    });
+
+    const loosePhraseGroups = [
+      ["dailyPhrases", bank?.dailyPhrases, "Frase do dia"],
+      ["quickLessons", bank?.quickLessons, "Lições rápidas"],
+      ["premiumPacks", bank?.premiumPacks, "Packs Premium"]
+    ];
+
+    loosePhraseGroups.forEach(([groupKey, groupValue, groupName]) => {
+      const list = sbToArray(groupValue);
+      if (!list.length) return;
+
+      const topic = sbNormalizeTopic(
+        {
+          id: groupKey,
+          name: groupName,
+          isPremium: groupKey === "premiumPacks"
+        },
+        result.topics.length
+      );
+
+      result.topics.push(topic);
+
+      list.forEach((rawPhrase, phraseIndex) => {
+        const phrase = sbNormalizePhrase(
+          rawPhrase,
+          topic.id,
+          groupKey,
+          phraseIndex
+        );
+
+        if (phrase) result.phrases.push(phrase);
+      });
+    });
+
+    return result;
+  }
+
+  function sbAddPremiumTopic(topicId) {
+    try {
+      if (
+        typeof PREMIUM_TOPIC_IDS !== "undefined" &&
+        PREMIUM_TOPIC_IDS &&
+        typeof PREMIUM_TOPIC_IDS.add === "function"
+      ) {
+        PREMIUM_TOPIC_IDS.add(topicId);
+      }
+    } catch {}
+  }
+
+  function sbUpsertTopics(topics) {
+    let added = 0;
+    let updated = 0;
+
+    const existingById = new Map(
+      STATE.bank.topics.map((topic) => [topic.id, topic])
+    );
+
+    topics.forEach((topic) => {
+      const old = existingById.get(topic.id);
+
+      if (!old) {
+        STATE.bank.topics.push(topic);
+        added++;
+      } else if (old.source === SOURCE) {
+        old.name = topic.name;
+        old.color = old.color || topic.color;
+        old.updatedAt = sbNow();
+        old.description = topic.description;
+        old.level = topic.level;
+        old.isPremium = topic.isPremium;
+        updated++;
+      }
+
+      if (topic.isPremium) {
+        sbAddPremiumTopic(topic.id);
+      }
+    });
+
+    return { added, updated };
+  }
+
+  function sbUpsertPhrases(phrases) {
+    let added = 0;
+    let updated = 0;
+
+    const existingById = new Map(
+      STATE.bank.phrases.map((phrase) => [phrase.id, phrase])
+    );
+
+    phrases.forEach((phrase) => {
+      const old = existingById.get(phrase.id);
+
+      if (!old) {
+        STATE.bank.phrases.push(phrase);
+        added++;
+        return;
+      }
+
+      if (old.source === SOURCE) {
+        old.topicId = phrase.topicId;
+        old.jp = phrase.jp;
+        old.pt = phrase.pt;
+        old.romaji = phrase.romaji;
+        old.kana = phrase.kana;
+        old.note = phrase.note;
+        old.tags = phrase.tags;
+        old.situation = phrase.situation;
+        old.audioKey = phrase.audioKey;
+        old.level = phrase.level;
+        old.isPremium = phrase.isPremium;
+        old.newWords = phrase.newWords;
+        updated++;
+      }
+    });
+
+    return { added, updated };
+  }
+
+  function sbValidateImportedPhrases() {
+    try {
+      if (typeof ensurePhrasesHaveValidTopic === "function") {
+        ensurePhrasesHaveValidTopic();
+      }
+    } catch (err) {
+      sbLog("ensurePhrasesHaveValidTopic falhou", err);
+    }
+  }
+
+  function sbSync(options = {}) {
+    const bank = sbGetBank();
+
+    if (!bank) {
+      return {
+        ok: false,
+        reason: "window.NIHONGO321_SENSEI_BANK não encontrado.",
+        version: BRIDGE_VERSION
+      };
+    }
+
+    if (!sbHasAppState()) {
+      return {
+        ok: false,
+        reason: "STATE.bank.topics ou STATE.bank.phrases não encontrado.",
+        version: BRIDGE_VERSION
+      };
+    }
+
+    const collected = sbCollectTopicsAndPhrases(bank);
+
+    const topicResult = sbUpsertTopics(collected.topics);
+    const phraseResult = sbUpsertPhrases(collected.phrases);
+
+    STATE.app ||= {};
+    STATE.app.senseiBankBridge ||= {};
+    STATE.app.senseiBankBridge.version = BRIDGE_VERSION;
+    STATE.app.senseiBankBridge.lastSyncAt = sbNow();
+    STATE.app.senseiBankBridge.topics = collected.topics.length;
+    STATE.app.senseiBankBridge.phrases = collected.phrases.length;
+
+    sbValidateImportedPhrases();
+
+    const changed =
+      topicResult.added ||
+      topicResult.updated ||
+      phraseResult.added ||
+      phraseResult.updated;
+
+    if (changed) {
+      sbSave();
+    }
+
+    if (options.render !== false) {
+      sbRender();
+    }
+
+    return {
+      ok: true,
+      version: BRIDGE_VERSION,
+      bankMeta: bank.meta || null,
+      topicsFound: collected.topics.length,
+      phrasesFound: collected.phrases.length,
+      topicsAdded: topicResult.added,
+      topicsUpdated: topicResult.updated,
+      phrasesAdded: phraseResult.added,
+      phrasesUpdated: phraseResult.updated,
+      changed: !!changed
+    };
+  }
+
+  function sbPreview() {
+    const bank = sbGetBank();
+
+    if (!bank) {
+      return {
+        ok: false,
+        reason: "sensei-bank.js ainda não carregou ou está com nome global errado."
+      };
+    }
+
+    const collected = sbCollectTopicsAndPhrases(bank);
+
+    return {
+      ok: true,
+      version: BRIDGE_VERSION,
+      meta: bank.meta || null,
+      levels: bank.levels || null,
+      topics: collected.topics.slice(0, 10),
+      phrases: collected.phrases.slice(0, 10),
+      totalTopics: collected.topics.length,
+      totalPhrases: collected.phrases.length
+    };
+  }
+
+  function sbCheck() {
+    const bank = sbGetBank();
+
+    return {
+      ok: !!bank && sbHasAppState(),
+      version: BRIDGE_VERSION,
+      hasSenseiBank: !!bank,
+      hasStateBank: sbHasAppState(),
+      bankKeys: bank ? Object.keys(bank) : [],
+      currentTopics: sbHasAppState() ? STATE.bank.topics.length : 0,
+      currentPhrases: sbHasAppState() ? STATE.bank.phrases.length : 0,
+      importedTopics: sbHasAppState()
+        ? STATE.bank.topics.filter((t) => t.source === SOURCE).length
+        : 0,
+      importedPhrases: sbHasAppState()
+        ? STATE.bank.phrases.filter((p) => p.source === SOURCE).length
+        : 0
+    };
+  }
+
+  function sbResetImported() {
+    if (!sbHasAppState()) {
+      return {
+        ok: false,
+        reason: "STATE.bank não encontrado."
+      };
+    }
+
+    const beforeTopics = STATE.bank.topics.length;
+    const beforePhrases = STATE.bank.phrases.length;
+
+    STATE.bank.phrases = STATE.bank.phrases.filter((p) => p.source !== SOURCE);
+    STATE.bank.topics = STATE.bank.topics.filter((t) => t.source !== SOURCE);
+
+    sbSave();
+    sbRender();
+
+    return {
+      ok: true,
+      removedTopics: beforeTopics - STATE.bank.topics.length,
+      removedPhrases: beforePhrases - STATE.bank.phrases.length
+    };
+  }
+
+  window.NIHONGO321_SENSEI_BRIDGE = {
+    version: BRIDGE_VERSION,
+    check: sbCheck,
+    preview: sbPreview,
+    sync: sbSync,
+    resetImported: sbResetImported
+  };
+
+  window.nihongo321SenseiBridgeCheck = sbCheck;
+  window.nihongo321SenseiBridgePreview = sbPreview;
+  window.nihongo321SenseiBridgeSync = sbSync;
+  window.nihongo321SenseiBridgeResetImported = sbResetImported;
+
+  setTimeout(() => {
+    const result = sbSync({ render: true });
+
+    if (result.ok) {
+      sbLog("Ponte Sensei Bank sincronizada", result);
+    } else {
+      sbLog("Ponte Sensei Bank aguardando banco externo", result);
+    }
+  }, 80);
+})();
