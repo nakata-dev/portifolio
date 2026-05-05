@@ -3960,3 +3960,616 @@
     }
   );
 })();
+
+/* =========================================================
+   NIHONGO321 — BLOCO 7A
+   Adaptador de compatibilidade do Sensei Bank
+
+   Objetivo:
+   - Preservar o banco atual completo
+   - Criar campos compatíveis para o app.js
+   - Não apagar conteúdo
+   - Não diminuir o sensei-bank.js
+   - Preparar app.js para consumir conteúdo externo com segurança
+   ========================================================= */
+
+(function initNihongo321SenseiBankCompat7A() {
+  "use strict";
+
+  const bank = window.NIHONGO321_SENSEI_BANK;
+
+  if (!bank || typeof bank !== "object") {
+    console.warn("[NIHONGO321 7A] Sensei Bank não encontrado.");
+    return;
+  }
+
+  const COMPAT_VERSION = "7A.1.0";
+
+  function toArray(value) {
+    if (Array.isArray(value)) return value;
+
+    if (value && typeof value === "object") {
+      return Object.entries(value).map(([key, item]) => {
+        if (item && typeof item === "object") {
+          return {
+            key,
+            ...item
+          };
+        }
+
+        return {
+          key,
+          value: item
+        };
+      });
+    }
+
+    return [];
+  }
+
+  function safeText(value) {
+    return String(value || "").trim();
+  }
+
+  function safeId(value, fallback = "item") {
+    return safeText(value || fallback)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9_\-]+/g, "_")
+      .replace(/_+/g, "_")
+      .replace(/^_+|_+$/g, "") || fallback;
+  }
+
+  function levelLabel(level) {
+    const key = safeId(level || "iniciante");
+
+    if (bank.levels && bank.levels[key]) {
+      return bank.levels[key].label || bank.levels[key].name || key;
+    }
+
+    if (key === "iniciante") return "Básico";
+    if (key === "basico") return "Básico";
+    if (key === "intermediario") return "Intermediário";
+    if (key === "avancado") return "Avançado";
+
+    return key;
+  }
+
+  function normalizeLevel(level) {
+    const raw = safeId(level || bank.meta?.defaultLevel || "iniciante");
+
+    if (raw === "basico" || raw === "basico_sobrevivencia" || raw === "sobrevivencia") {
+      return "iniciante";
+    }
+
+    if (raw === "intermediário") {
+      return "intermediario";
+    }
+
+    if (raw === "avançado") {
+      return "avancado";
+    }
+
+    return raw || "iniciante";
+  }
+
+  function normalizePhrase(raw, extra = {}) {
+    if (!raw || typeof raw !== "object") return null;
+
+    const jp = safeText(raw.jp || raw.japanese || raw.text);
+    const pt = safeText(raw.pt || raw.portuguese || raw.translation || raw.meaning);
+
+    if (!jp || !pt) return null;
+
+    const level = normalizeLevel(raw.level || extra.level || "iniciante");
+    const topic = safeId(raw.topic || extra.topic || extra.sourceKey || "sensei");
+
+    const id = safeId(
+      raw.id ||
+      extra.id ||
+      `${topic}_${level}_${extra.index || 1}`,
+      `phrase_${Date.now()}_${Math.random().toString(16).slice(2)}`
+    );
+
+    return {
+      id,
+      source: "sensei-bank",
+      sourceType: extra.sourceType || raw.sourceType || "phrase",
+      sourceKey: extra.sourceKey || raw.sourceKey || "",
+      level,
+      levelLabel: levelLabel(level),
+      topic,
+      topicId: extra.topicId || raw.topicId || `sb_${topic}`,
+      jp,
+      pt,
+      romaji: safeText(raw.romaji),
+      kana: safeText(raw.kana || raw.reading),
+      note: safeText(raw.note || raw.explanation || extra.note),
+      tags: Array.isArray(raw.tags) ? raw.tags : Array.isArray(extra.tags) ? extra.tags : [],
+      situation: safeText(raw.situation || extra.situation),
+      isPremium: Boolean(raw.isPremium || extra.isPremium),
+      audioKey: safeText(raw.audioKey || id),
+      newWords: Array.isArray(raw.newWords) ? raw.newWords : [],
+      original: raw
+    };
+  }
+
+  function makeTopic(raw, index = 0, extra = {}) {
+    const sourceKey = safeId(raw?.id || raw?.key || raw?.target || extra.key || `topic_${index + 1}`);
+
+    return {
+      id: `sb_${sourceKey}`,
+      source: "sensei-bank",
+      sourceKey,
+      name:
+        safeText(raw?.name) ||
+        safeText(raw?.label) ||
+        safeText(raw?.title) ||
+        safeText(extra.name) ||
+        sourceKey,
+      title:
+        safeText(raw?.title) ||
+        safeText(raw?.name) ||
+        safeText(raw?.label) ||
+        safeText(extra.name) ||
+        sourceKey,
+      description:
+        safeText(raw?.description) ||
+        safeText(raw?.shortDescription) ||
+        safeText(raw?.subtitle) ||
+        safeText(extra.description),
+      icon: safeText(raw?.icon || extra.icon),
+      color: safeText(raw?.color || extra.color || "tBlue"),
+      level: normalizeLevel(raw?.level || extra.level || "iniciante"),
+      isPremium: Boolean(raw?.isPremium || raw?.unlock === "premium" || extra.isPremium)
+    };
+  }
+
+  function buildCompatLevels() {
+    return toArray(bank.levels).map((level, index) => ({
+      id: normalizeLevel(level.id || level.key || `level_${index + 1}`),
+      key: level.key || level.id || `level_${index + 1}`,
+      label: level.label || level.name || `Nível ${index + 1}`,
+      name: level.name || level.label || `Nível ${index + 1}`,
+      fullName: level.fullName || level.label || level.name || `Nível ${index + 1}`,
+      order: Number(level.order || index + 1),
+      icon: level.icon || "",
+      color: level.color || "tBlue",
+      description: level.description || level.shortDescription || "",
+      goal: level.goal || "",
+      studyAdvice: level.studyAdvice || ""
+    }));
+  }
+
+  function buildCompatTones() {
+    return toArray(bank.tones).map((tone, index) => ({
+      id: safeId(tone.id || tone.key || `tone_${index + 1}`),
+      key: tone.key || tone.id || `tone_${index + 1}`,
+      label: tone.label || tone.name || `Tom ${index + 1}`,
+      icon: tone.icon || "",
+      description: tone.description || "",
+      style: tone.style || ""
+    }));
+  }
+
+  function buildTopicsFromStudyPaths() {
+    const topics = [];
+
+    toArray(bank.studyPaths).forEach((group) => {
+      const level = normalizeLevel(group.key || group.id || "iniciante");
+      const items = Array.isArray(group.value) ? group.value : [];
+
+      items.forEach((item, index) => {
+        topics.push(
+          makeTopic(item, topics.length, {
+            key: item.target || item.id || `${level}_${index + 1}`,
+            level,
+            name: item.title,
+            description: item.subtitle,
+            isPremium: item.unlock === "premium",
+            icon: level === "iniciante" ? "🧱" : level === "intermediario" ? "🛠️" : "🏯"
+          })
+        );
+      });
+    });
+
+    return topics;
+  }
+
+  function buildTopicsFromPracticalMap() {
+    return toArray(bank.practicalMap).map((item, index) =>
+      makeTopic(item, index, {
+        key: item.key || item.id || `map_${index + 1}`,
+        name: item.label,
+        description: item.description,
+        icon: item.icon
+      })
+    );
+  }
+
+  function buildGrammarTopics() {
+    return toArray(bank.grammar).map((grammar, index) =>
+      makeTopic(grammar, index, {
+        key: grammar.key || grammar.id || `grammar_${index + 1}`,
+        name: grammar.label || grammar.key,
+        description: grammar.explanation,
+        level: grammar.levelGroup || "intermediario",
+        icon: "🧠",
+        color: "tViolet",
+        isPremium: grammar.levelGroup !== "iniciante"
+      })
+    );
+  }
+
+  function buildScenarioTopics() {
+    return toArray(bank.scenarios).map((scenario, index) =>
+      makeTopic(scenario, index, {
+        key: scenario.key || scenario.id || `scenario_${index + 1}`,
+        name: scenario.label || scenario.title || scenario.key,
+        description: scenario.description || scenario.goal || scenario.subtitle,
+        level: scenario.level || scenario.levelGroup || "iniciante",
+        icon: scenario.icon || "🎯",
+        color: scenario.color || "tGreen",
+        isPremium: scenario.unlock === "premium" || scenario.isPremium
+      })
+    );
+  }
+
+  function uniqueTopics(topics) {
+    const seen = new Set();
+
+    return topics.filter((topic) => {
+      if (!topic || !topic.id) return false;
+      if (seen.has(topic.id)) return false;
+      seen.add(topic.id);
+      return true;
+    });
+  }
+
+  function buildCompatTopics() {
+    const topics = [
+      ...buildTopicsFromStudyPaths(),
+      ...buildTopicsFromPracticalMap(),
+      ...buildGrammarTopics(),
+      ...buildScenarioTopics()
+    ];
+
+    return uniqueTopics(topics);
+  }
+
+  function buildGrammarPhrases() {
+    const phrases = [];
+
+    toArray(bank.grammar).forEach((grammar) => {
+      const grammarKey = safeId(grammar.key || grammar.id || grammar.label || "grammar");
+      const grammarId = grammar.id || grammarKey;
+      const levels = grammar.levels || {};
+
+      toArray(levels).forEach((levelGroup) => {
+        const level = normalizeLevel(levelGroup.key || levelGroup.id || "iniciante");
+        const items = Array.isArray(levelGroup.value) ? levelGroup.value : [];
+
+        items.forEach((item, index) => {
+          const phrase = normalizePhrase(item, {
+            id: `${grammarId}_${level}_${index + 1}`,
+            index: index + 1,
+            level,
+            topic: grammarKey,
+            topicId: `sb_${grammarKey}`,
+            sourceType: "grammar",
+            sourceKey: grammarKey,
+            note: grammar.explanation || grammar.usage || "",
+            tags: Array.isArray(grammar.tags) ? grammar.tags : ["gramática"],
+            situation: grammar.usage || "",
+            isPremium: level !== "iniciante"
+          });
+
+          if (phrase) phrases.push(phrase);
+        });
+      });
+    });
+
+    return phrases;
+  }
+
+  function extractScenarioPhraseArrays(scenario) {
+    const candidates = [];
+
+    if (Array.isArray(scenario.phrases)) {
+      candidates.push({
+        level: scenario.level || scenario.levelGroup || "iniciante",
+        list: scenario.phrases
+      });
+    }
+
+    if (scenario.levels && typeof scenario.levels === "object") {
+      toArray(scenario.levels).forEach((group) => {
+        if (Array.isArray(group.value)) {
+          candidates.push({
+            level: group.key || group.id || "iniciante",
+            list: group.value
+          });
+        }
+      });
+    }
+
+    if (scenario.examples && Array.isArray(scenario.examples)) {
+      candidates.push({
+        level: scenario.level || scenario.levelGroup || "iniciante",
+        list: scenario.examples
+      });
+    }
+
+    return candidates;
+  }
+
+  function buildScenarioPhrases() {
+    const phrases = [];
+
+    toArray(bank.scenarios).forEach((scenario) => {
+      const scenarioKey = safeId(scenario.key || scenario.id || scenario.label || scenario.title || "scenario");
+      const scenarioId = scenario.id || scenarioKey;
+      const groups = extractScenarioPhraseArrays(scenario);
+
+      groups.forEach((group) => {
+        const level = normalizeLevel(group.level || "iniciante");
+
+        group.list.forEach((item, index) => {
+          const phrase = normalizePhrase(item, {
+            id: `${scenarioId}_${level}_${index + 1}`,
+            index: index + 1,
+            level,
+            topic: scenarioKey,
+            topicId: `sb_${scenarioKey}`,
+            sourceType: "scenario",
+            sourceKey: scenarioKey,
+            note: scenario.goal || scenario.description || "",
+            tags: Array.isArray(scenario.tags) ? scenario.tags : ["situação"],
+            situation: scenario.label || scenario.title || scenarioKey,
+            isPremium: scenario.unlock === "premium" || scenario.isPremium || level !== "iniciante"
+          });
+
+          if (phrase) phrases.push(phrase);
+        });
+      });
+    });
+
+    return phrases;
+  }
+
+  function buildModernTermPhrases() {
+    const terms = toArray(bank.modernTerms || bank.terms || {});
+    const phrases = [];
+
+    terms.forEach((term, index) => {
+      if (Array.isArray(term.examples)) {
+        term.examples.forEach((example, exampleIndex) => {
+          const phrase = normalizePhrase(example, {
+            id: `modern_term_${safeId(term.id || term.key || index + 1)}_${exampleIndex + 1}`,
+            index: exampleIndex + 1,
+            level: term.level || "intermediario",
+            topic: "termos_atuais",
+            topicId: "sb_termos_atuais",
+            sourceType: "modernTerm",
+            sourceKey: term.id || term.key || "",
+            note: term.pt || term.usage || "",
+            tags: ["termos atuais", term.category || ""].filter(Boolean),
+            situation: term.category || "termos atuais",
+            isPremium: Boolean(term.isPremium)
+          });
+
+          if (phrase) phrases.push(phrase);
+        });
+      }
+    });
+
+    return phrases;
+  }
+
+  function buildLoosePhrases() {
+    const fields = [
+      {
+        key: "dailyPhrases",
+        topic: "frase_do_dia",
+        topicId: "sb_frase_do_dia",
+        sourceType: "dailyPhrase",
+        isPremium: false
+      },
+      {
+        key: "quickLessons",
+        topic: "treino_rapido",
+        topicId: "sb_treino_rapido",
+        sourceType: "quickLesson",
+        isPremium: false
+      },
+      {
+        key: "premiumPacks",
+        topic: "premium",
+        topicId: "sb_premium",
+        sourceType: "premiumPack",
+        isPremium: true
+      }
+    ];
+
+    const phrases = [];
+
+    fields.forEach((field) => {
+      toArray(bank[field.key]).forEach((item, index) => {
+        const phrase = normalizePhrase(item, {
+          id: `${field.key}_${index + 1}`,
+          index: index + 1,
+          level: item.level || "iniciante",
+          topic: item.topic || field.topic,
+          topicId: field.topicId,
+          sourceType: field.sourceType,
+          sourceKey: field.key,
+          note: item.note || item.description || item.title || "",
+          tags: Array.isArray(item.tags) ? item.tags : [field.sourceType],
+          situation: item.situation || item.title || "",
+          isPremium: field.isPremium || item.unlock === "premium" || item.isPremium
+        });
+
+        if (phrase) phrases.push(phrase);
+      });
+    });
+
+    return phrases;
+  }
+
+  function uniquePhrases(phrases) {
+    const seen = new Set();
+
+    return phrases.filter((phrase) => {
+      if (!phrase || !phrase.jp || !phrase.pt) return false;
+
+      const key = `${phrase.id}|${phrase.jp}|${phrase.pt}`;
+
+      if (seen.has(key)) return false;
+
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function buildCompatPhrases() {
+    return uniquePhrases([
+      ...buildGrammarPhrases(),
+      ...buildScenarioPhrases(),
+      ...buildModernTermPhrases(),
+      ...buildLoosePhrases()
+    ]);
+  }
+
+  function buildCompatGrammar() {
+    return toArray(bank.grammar).map((grammar, index) => {
+      const key = safeId(grammar.key || grammar.id || `grammar_${index + 1}`);
+
+      return {
+        id: grammar.id || key,
+        key,
+        label: grammar.label || key,
+        title: grammar.label || key,
+        kind: grammar.kind || "gramática",
+        levelGroup: grammar.levelGroup || "intermediario",
+        tags: Array.isArray(grammar.tags) ? grammar.tags : [],
+        explanation: grammar.explanation || "",
+        usage: grammar.usage || "",
+        commonMistake: grammar.commonMistake || "",
+        goal: grammar.goal || "",
+        levels: grammar.levels || {},
+        original: grammar
+      };
+    });
+  }
+
+  function buildCompatScenarios() {
+    return toArray(bank.scenarios).map((scenario, index) => {
+      const key = safeId(scenario.key || scenario.id || `scenario_${index + 1}`);
+
+      return {
+        id: scenario.id || key,
+        key,
+        label: scenario.label || scenario.title || key,
+        title: scenario.title || scenario.label || key,
+        level: scenario.level || scenario.levelGroup || "iniciante",
+        tags: Array.isArray(scenario.tags) ? scenario.tags : [],
+        description: scenario.description || scenario.goal || "",
+        goal: scenario.goal || "",
+        phrases: extractScenarioPhraseArrays(scenario).flatMap((group) => group.list),
+        original: scenario
+      };
+    });
+  }
+
+  function buildCompatSearchIndex() {
+    const phrases = bank.compatPhrases || [];
+
+    return phrases.map((phrase) => ({
+      id: phrase.id,
+      type: phrase.sourceType || "phrase",
+      level: phrase.level,
+      topic: phrase.topic,
+      jp: phrase.jp,
+      pt: phrase.pt,
+      tags: phrase.tags || [],
+      text: [
+        phrase.jp,
+        phrase.pt,
+        phrase.kana,
+        phrase.romaji,
+        phrase.note,
+        phrase.topic,
+        phrase.level,
+        ...(phrase.tags || [])
+      ].filter(Boolean).join(" ").toLowerCase()
+    }));
+  }
+
+  function rebuildCompat() {
+    bank.compatVersion = COMPAT_VERSION;
+
+    bank.compatLevels = buildCompatLevels();
+    bank.compatTones = buildCompatTones();
+    bank.compatTopics = buildCompatTopics();
+    bank.compatGrammar = buildCompatGrammar();
+    bank.compatScenarios = buildCompatScenarios();
+    bank.compatPhrases = buildCompatPhrases();
+    bank.compatSearchIndex = buildCompatSearchIndex();
+
+    bank.topics = Array.isArray(bank.topics) && bank.topics.length
+      ? bank.topics
+      : bank.compatTopics;
+
+    bank.phrases = Array.isArray(bank.phrases) && bank.phrases.length
+      ? bank.phrases
+      : bank.compatPhrases;
+
+    bank.grammarList = bank.compatGrammar;
+    bank.scenarioList = bank.compatScenarios;
+
+    bank.termBank = bank.modernTerms || bank.terms || [];
+    bank.modernTermBank = bank.modernTerms || bank.terms || [];
+
+    bank.isReady = true;
+    bank.compatReady = true;
+    bank.compatLoadedAt = new Date().toISOString();
+
+    return bank.compatSummary();
+  }
+
+  const oldCheck = typeof bank.check === "function" ? bank.check.bind(bank) : null;
+
+  bank.compatSummary = function () {
+    return {
+      ok: true,
+      app: bank.meta?.appName || bank.meta?.app || "NIHONGO321",
+      version: bank.version || bank.meta?.version || "sem versão",
+      compatVersion: bank.compatVersion || COMPAT_VERSION,
+      levels: bank.compatLevels?.length || 0,
+      tones: bank.compatTones?.length || 0,
+      topics: bank.compatTopics?.length || 0,
+      phrases: bank.compatPhrases?.length || 0,
+      grammar: bank.compatGrammar?.length || 0,
+      scenarios: bank.compatScenarios?.length || 0,
+      modernTerms: toArray(bank.modernTerms || bank.terms || {}).length,
+      searchIndex: bank.compatSearchIndex?.length || 0,
+      ready: Boolean(bank.compatReady)
+    };
+  };
+
+  bank.check = function () {
+    const base = oldCheck ? oldCheck() : {};
+
+    return {
+      ...base,
+      ...bank.compatSummary()
+    };
+  };
+
+  bank.rebuildCompat = rebuildCompat;
+
+  const summary = rebuildCompat();
+
+  console.log("[NIHONGO321 7A] Adaptador Sensei Bank carregado:", summary);
+})();
