@@ -36,7 +36,7 @@
       try {
         window.NIHONGO321_BOOT = {
           appName: "NIHONGO321",
-          htmlVersion: "8.5.6",
+          htmlVersion: "8.4.1",
           storageKey: "jp_105x_v7",
           themeStorageKey: "nihongo321_theme",
           usesExternalSenseiBank: true,
@@ -54,7 +54,7 @@
       } catch {
         window.NIHONGO321_BOOT = {
           appName: "NIHONGO321",
-          htmlVersion: "8.5.6",
+          htmlVersion: "8.4.1",
           storageKey: "jp_105x_v7",
           themeStorageKey: "nihongo321_theme",
           usesExternalSenseiBank: true,
@@ -69,7 +69,7 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="./styles.css?v=8.5.6" />
+  <link rel="stylesheet" href="./styles.css?v=8.5.10" />
   <link rel="shortcut icon" href="./img/logo_nihongo321.png" type="image/png" />
   <link rel="apple-touch-icon" href="./img/logo_nihongo321.png" />
 </head>
@@ -122,15 +122,28 @@
   </header>
 
   <main class="app" id="app" role="main">
-    <section class="card heroCard stack" aria-labelledby="heroTitle">
-      <div class="badge">Japonês prático no Japão</div>
+    <section class="card heroCard stack heroCard--landing" aria-labelledby="heroTitle">
+      <div class="badge heroBadgeCenter">Japonês prático no Japão</div>
+
+      <div class="heroBannerSlot heroBannerSlot--ready" role="img" aria-label="Trabalhador dekassegui indo de bicicleta para a fábrica no amanhecer do Japão.">
+        <img
+          class="heroBannerImg"
+          src="./img/banner-hero-nihongo321.png"
+          alt="Trabalhador dekassegui indo de bicicleta para a fábrica no amanhecer do Japão."
+          width="1200"
+          height="520"
+          loading="eager"
+          decoding="async"
+        />
+        <div class="heroBannerShade" aria-hidden="true"></div>
+      </div>
 
       <h1 class="heroTitle" id="heroTitle">
-        Treine uma frase útil hoje. Volte amanhã com mais confiança.
+        Japonês útil para quem vive a rotina real do Japão.
       </h1>
 
       <p class="heroLead">
-        O NIHONGO321 foi pensado para brasileiros no Japão que trabalham muito, chegam cansados e precisam de japonês prático para situações reais.
+        Estude no seu ritmo, treine frases práticas e volte amanhã com mais confiança para viver melhor no Japão.
       </p>
 
       <div class="heroActions">
@@ -373,7 +386,7 @@
        2. app.js: lógica principal do aplicativo
        Não inverter esta ordem.
        ========================================================= -->
-  <script src="./sensei-bank.js?v=1.1.4" defer></script>
-  <script src="./app.js?v=8.5.6" defer></script>
+  <script src="./sensei-bank.js?v=1.1.0" defer></script>
+  <script src="./app.js?v=8.5.10" defer></script>
 </body>
 </html>

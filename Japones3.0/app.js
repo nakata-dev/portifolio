@@ -199,7 +199,7 @@ function applyTheme(theme = getTheme()) {
 
   const metaTheme = document.querySelector("meta[name='theme-color']");
   if (metaTheme) {
-    metaTheme.setAttribute("content", safeTheme === "light" ? "#fff0c3" : "#030815");
+    metaTheme.setAttribute("content", safeTheme === "light" ? "#fff4d7" : "#060912");
   }
 
   const themeBtn = $("#hudTheme");
@@ -2453,21 +2453,6 @@ function segmentText(text) {
 function setKanaLine(el, rawText) {
   const plain = jpStripFurigana(rawText);
   const segs = segmentText(plain);
-  const compactLen = plain.replace(/\s+/g, "").length;
-
-  el.classList.remove("kana--short", "kana--medium", "kana--long", "kana--xlong");
-
-  if (compactLen <= 12) {
-    el.classList.add("kana--short");
-  } else if (compactLen <= 18) {
-    el.classList.add("kana--medium");
-  } else if (compactLen <= 26) {
-    el.classList.add("kana--long");
-  } else {
-    el.classList.add("kana--xlong");
-  }
-
-  el.dataset.charCount = String(compactLen);
   el.innerHTML = segs.map((s, i) => `<span class="kseg" data-idx="${i}">${escapeHTML(s)}</span>`).join("");
 }
 
@@ -2848,15 +2833,10 @@ function renderNewWords(list) {
     .join("");
 
   return `
-    <details class="phraseExplanation">
-      <summary>
-        <span>explicação da frase</span>
-        <span class="explainHint">abrir</span>
-      </summary>
-      <div class="phraseExplanationBody">
-        ${rows}
-      </div>
-    </details>
+    <div class="sheet">
+      <div class="small" style="font-weight:800;margin-bottom:6px">explicação</div>
+      ${rows}
+    </div>
   `;
 }
 
@@ -4089,21 +4069,32 @@ function renderLaunchChecklist() {
 function renderLanding() {
   APP.innerHTML = `
     <div class="stack">
-      <section class="card heroCard stack">
-        <div class="badge">${escapeHTML(BRAND.tagline)}</div>
+      <section class="card heroCard stack heroCard--landing">
+        <div class="badge heroBadgeCenter">${escapeHTML(BRAND.tagline)}</div>
 
-        ${renderAppLogoBlock("landingLogo")}
+        <div class="heroBannerSlot heroBannerSlot--ready" role="img" aria-label="Trabalhador dekassegui indo de bicicleta para a fábrica no amanhecer do Japão.">
+          <img
+            class="heroBannerImg"
+            src="./img/banner-hero-nihongo321.png"
+            alt="Trabalhador dekassegui indo de bicicleta para a fábrica no amanhecer do Japão."
+            width="1200"
+            height="520"
+            loading="eager"
+            decoding="async"
+          />
+          <div class="heroBannerShade" aria-hidden="true"></div>
+        </div>
 
         <h1 class="heroTitle">
           Japonês útil para quem vive a rotina real do Japão.
         </h1>
 
         <p class="heroLead">
-          Treine frases curtas, ouça em japonês, repita em voz alta e revise o que importa sem precisar pensar demais.
+          Estude no seu ritmo, treine frases práticas e volte amanhã com mais confiança para viver melhor no Japão.
         </p>
 
         <div class="heroActions">
-          <button class="bigBtn" data-nav="#/home">começar grátis</button>
+          <button class="bigBtn" data-nav="#/home">começar treino</button>
           <button class="btn btn--ghost btn--full" data-nav="#/premium">comparar planos</button>
         </div>
 
