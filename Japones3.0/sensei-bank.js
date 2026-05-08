@@ -3990,6 +3990,13 @@
 
     if (value && typeof value === "object") {
       return Object.entries(value).map(([key, item]) => {
+        if (Array.isArray(item)) {
+          return {
+            key,
+            value: item
+          };
+        }
+
         if (item && typeof item === "object") {
           return {
             key,
@@ -4572,4 +4579,1588 @@
   const summary = rebuildCompat();
 
   console.log("[NIHONGO321 7A] Adaptador Sensei Bank carregado:", summary);
+})();
+
+/* =========================================================
+   NIHONGO321 — TOPICS COMPLETOS v8.4.2
+   O conteúdo histórico e os cenários do Sensei passam a ser
+   entregues como tópicos com frases aninhadas para o app.js.
+   ========================================================= */
+(function nihongo321BuildCompleteExternalTopics() {
+  "use strict";
+
+  const bank = window.NIHONGO321_SENSEI_BANK;
+  if (!bank || typeof bank !== "object") return;
+
+  const LEGACY_APP_TOPICS = [
+  {
+    id: "topic_essential_japan",
+    name: "Pack Essencial Japão",
+    color: "tBlue",
+    phrases: [
+      {
+        id: "seed_essential_001",
+        jp: "すみません。もう 一度{いちど} お願{ねが}いします。",
+        pt: "Com licença. Mais uma vez, por favor.",
+        newWords: [
+          { jp: "すみません", pt: "com licença / desculpe" },
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_essential_002",
+        jp: "日本語{にほんご} が まだ よく わかりません。",
+        pt: "Eu ainda não entendo bem japonês.",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "língua japonesa" },
+          { jp: "まだ", pt: "ainda" },
+          { jp: "わかりません", pt: "não entendo" }
+        ]
+      },
+      {
+        id: "seed_essential_003",
+        jp: "ゆっくり 話{はな}して ください。",
+        pt: "Por favor, fale devagar.",
+        newWords: [
+          { jp: "ゆっくり", pt: "devagar" },
+          { jp: "話{はな}して", pt: "falar" }
+        ]
+      },
+      {
+        id: "seed_essential_004",
+        jp: "これ は いくら ですか。",
+        pt: "Quanto custa isto?",
+        newWords: [
+          { jp: "これ", pt: "isto" },
+          { jp: "いくら", pt: "quanto" }
+        ]
+      },
+      {
+        id: "seed_essential_005",
+        jp: "トイレ は どこ ですか。",
+        pt: "Onde fica o banheiro?",
+        newWords: [
+          { jp: "トイレ", pt: "banheiro" },
+          { jp: "どこ", pt: "onde" }
+        ]
+      },
+      {
+        id: "seed_essential_006",
+        jp: "大丈夫{だいじょうぶ} です。",
+        pt: "Está tudo bem.",
+        newWords: [
+          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
+        ]
+      },
+      {
+        id: "seed_essential_007",
+        jp: "手伝{てつだ}って もらえますか。",
+        pt: "Pode me ajudar?",
+        newWords: [
+          { jp: "手伝{てつだ}って", pt: "ajudar" },
+          { jp: "もらえますか", pt: "pode fazer para mim?" }
+        ]
+      },
+      {
+        id: "seed_essential_008",
+        jp: "ありがとう ございます。",
+        pt: "Muito obrigado.",
+        newWords: [
+          { jp: "ありがとう ございます", pt: "muito obrigado" }
+        ]
+      },
+      {
+        id: "seed_essential_009",
+        jp: "今{いま} は ちょっと わかりません。",
+        pt: "Agora eu não entendo muito bem.",
+        newWords: [
+          { jp: "今{いま}", pt: "agora" },
+          { jp: "ちょっと", pt: "um pouco" },
+          { jp: "わかりません", pt: "não entendo" }
+        ]
+      },
+      {
+        id: "seed_essential_010",
+        jp: "ここ に 座{すわ}って いいですか。",
+        pt: "Posso sentar aqui?",
+        newWords: [
+          { jp: "ここ", pt: "aqui" },
+          { jp: "座{すわ}って", pt: "sentar" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_essential_011",
+        jp: "これ を お願{ねが}いします。",
+        pt: "Quero este, por favor.",
+        newWords: [
+          { jp: "これ", pt: "este" },
+          { jp: "お願{ねが}いします", pt: "por favor / eu gostaria" }
+        ]
+      },
+      {
+        id: "seed_essential_012",
+        jp: "あと で 来{き}ます。",
+        pt: "Eu volto depois.",
+        newWords: [
+          { jp: "あと で", pt: "depois" },
+          { jp: "来{き}ます", pt: "venho / volto" }
+        ]
+      },
+      {
+        id: "seed_essential_013",
+        jp: "少{すこ}し 待{ま}って ください。",
+        pt: "Espere um pouco, por favor.",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "待{ま}って", pt: "esperar" }
+        ]
+      },
+      {
+        id: "seed_essential_014",
+        jp: "日本語{にほんご} の 練習{れんしゅう} を して います。",
+        pt: "Estou praticando japonês.",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "練習{れんしゅう}", pt: "prática / treino" }
+        ]
+      },
+      {
+        id: "seed_essential_015",
+        jp: "少{すこ}し だけ 日本語{にほんご} が 話{はな}せます。",
+        pt: "Eu consigo falar só um pouco de japonês.",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "だけ", pt: "somente / apenas" },
+          { jp: "話{はな}せます", pt: "consigo falar" }
+        ]
+      },
+      {
+        id: "seed_essential_016",
+        jp: "紙{かみ} に 書{か}いて もらえますか。",
+        pt: "Você poderia escrever no papel para mim?",
+        newWords: [
+          { jp: "紙{かみ}", pt: "papel" },
+          { jp: "書{か}いて", pt: "escrever" },
+          { jp: "もらえますか", pt: "poderia fazer para mim?" }
+        ]
+      },
+      {
+        id: "seed_essential_017",
+        jp: "写真{しゃしん} を 見{み}せても いいですか。",
+        pt: "Posso mostrar uma foto?",
+        newWords: [
+          { jp: "写真{しゃしん}", pt: "foto" },
+          { jp: "見{み}せても", pt: "mostrar" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_essential_018",
+        jp: "ここ で 待{ま}てば いいですか。",
+        pt: "Está certo esperar aqui?",
+        newWords: [
+          { jp: "ここ", pt: "aqui" },
+          { jp: "待{ま}てば", pt: "se esperar" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_essential_019",
+        jp: "番号{ばんごう} を 呼{よ}ばれる まで 待{ま}ちます。",
+        pt: "Vou esperar até chamarem meu número.",
+        newWords: [
+          { jp: "番号{ばんごう}", pt: "número" },
+          { jp: "呼{よ}ばれる", pt: "ser chamado" },
+          { jp: "待{ま}ちます", pt: "vou esperar" }
+        ]
+      },
+      {
+        id: "seed_essential_020",
+        jp: "通訳{つうやく} は ありますか。",
+        pt: "Tem intérprete?",
+        newWords: [
+          { jp: "通訳{つうやく}", pt: "intérprete" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_default",
+    name: "Frases aleatórias",
+    color: "tViolet",
+    phrases: [
+      {
+        id: "seed_random_001",
+        jp: "大丈夫{だいじょうぶ} です。ゆっくり お願{ねが}いします。",
+        pt: "Está tudo bem. Devagar, por favor.",
+        newWords: [
+          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" },
+          { jp: "ゆっくり", pt: "devagar" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_random_002",
+        jp: "もう 一度{いちど} 言{い}って ください。",
+        pt: "Por favor, diga mais uma vez.",
+        newWords: [
+          { jp: "もう", pt: "novamente" },
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "言{い}って", pt: "dizer" }
+        ]
+      },
+      {
+        id: "seed_random_003",
+        jp: "今日{きょう} は ここで 待{ま}って います。",
+        pt: "Hoje vou esperar aqui.",
+        newWords: [
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "ここ", pt: "aqui" },
+          { jp: "待{ま}って", pt: "esperar" }
+        ]
+      },
+      {
+        id: "seed_random_004",
+        jp: "今{いま}、少{すこ}し 急{いそ}いで います。",
+        pt: "Agora estou com um pouco de pressa.",
+        newWords: [
+          { jp: "今{いま}", pt: "agora" },
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "急{いそ}いで います", pt: "estou com pressa" }
+        ]
+      },
+      {
+        id: "seed_random_005",
+        jp: "あと で 確認{かくにん} します。",
+        pt: "Vou confirmar depois.",
+        newWords: [
+          { jp: "あと で", pt: "depois" },
+          { jp: "確認{かくにん}", pt: "confirmação" },
+          { jp: "します", pt: "vou fazer" }
+        ]
+      },
+      {
+        id: "seed_random_006",
+        jp: "今日{きょう} は 少{すこ}し 疲{つか}れて います。",
+        pt: "Hoje estou um pouco cansado.",
+        newWords: [
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "疲{つか}れて います", pt: "estou cansado" }
+        ]
+      },
+      {
+        id: "seed_random_007",
+        jp: "それ は どういう 意味{いみ} ですか。",
+        pt: "O que isso significa?",
+        newWords: [
+          { jp: "それ", pt: "isso" },
+          { jp: "どういう", pt: "que tipo de / qual" },
+          { jp: "意味{いみ}", pt: "significado" }
+        ]
+      },
+      {
+        id: "seed_random_008",
+        jp: "この アプリ で 日本語{にほんご} を 練習{れんしゅう} して います。",
+        pt: "Estou praticando japonês com este aplicativo.",
+        newWords: [
+          { jp: "アプリ", pt: "aplicativo" },
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "練習{れんしゅう}", pt: "prática" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_factory",
+    name: "Na Fábrica",
+    color: "tRose",
+    phrases: [
+      {
+        id: "seed_factory_001",
+        jp: "この 機械{きかい} は もう 動{うご}いて いますか。",
+        pt: "Esta máquina já está funcionando?",
+        newWords: [
+          { jp: "機械{きかい}", pt: "máquina" },
+          { jp: "動{うご}いて", pt: "funcionando" }
+        ]
+      },
+      {
+        id: "seed_factory_002",
+        jp: "次{つぎ} は 何{なに} を すれば いいですか。",
+        pt: "O que devo fazer em seguida?",
+        newWords: [
+          { jp: "次{つぎ}", pt: "seguinte / próximo" },
+          { jp: "何{なに}", pt: "o que" }
+        ]
+      },
+      {
+        id: "seed_factory_003",
+        jp: "この 作業{さぎょう} は 初{はじ}めて です。",
+        pt: "É a primeira vez que faço este trabalho.",
+        newWords: [
+          { jp: "作業{さぎょう}", pt: "trabalho / operação" },
+          { jp: "初{はじ}めて", pt: "primeira vez" }
+        ]
+      },
+      {
+        id: "seed_factory_004",
+        jp: "やり方{かた} を もう 一度{いちど} 教{おし}えて ください。",
+        pt: "Por favor, me ensine o modo de fazer mais uma vez.",
+        newWords: [
+          { jp: "やり方{かた}", pt: "modo de fazer" },
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "教{おし}えて", pt: "ensinar" }
+        ]
+      },
+      {
+        id: "seed_factory_005",
+        jp: "この 部品{ぶひん} は どこ に 置{お}きますか。",
+        pt: "Onde coloco esta peça?",
+        newWords: [
+          { jp: "部品{ぶひん}", pt: "peça" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "置{お}きます", pt: "coloco" }
+        ]
+      },
+      {
+        id: "seed_factory_006",
+        jp: "不良品{ふりょうひん} かもしれません。",
+        pt: "Talvez seja produto defeituoso.",
+        newWords: [
+          { jp: "不良品{ふりょうひん}", pt: "produto defeituoso" },
+          { jp: "かもしれません", pt: "talvez seja" }
+        ]
+      },
+      {
+        id: "seed_factory_007",
+        jp: "確認{かくにん} して もらえますか。",
+        pt: "Você poderia verificar para mim?",
+        newWords: [
+          { jp: "確認{かくにん}", pt: "verificação" },
+          { jp: "もらえますか", pt: "poderia fazer para mim?" }
+        ]
+      },
+      {
+        id: "seed_factory_008",
+        jp: "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
+        pt: "Estou me sentindo um pouco mal.",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "体調{たいちょう}", pt: "condição física" },
+          { jp: "悪{わる}い", pt: "ruim" }
+        ]
+      },
+      {
+        id: "seed_factory_009",
+        jp: "休憩{きゅうけい} に 行{い}っても いいですか。",
+        pt: "Posso ir para o intervalo?",
+        newWords: [
+          { jp: "休憩{きゅうけい}", pt: "descanso / intervalo" },
+          { jp: "行{い}っても", pt: "ir" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_factory_010",
+        jp: "この ライン は 何時{なんじ} まで ですか。",
+        pt: "Até que horas vai esta linha?",
+        newWords: [
+          { jp: "ライン", pt: "linha de produção" },
+          { jp: "何時{なんじ}", pt: "que horas" },
+          { jp: "まで", pt: "até" }
+        ]
+      },
+      {
+        id: "seed_factory_011",
+        jp: "残業{ざんぎょう} は ありますか。",
+        pt: "Vai ter hora extra?",
+        newWords: [
+          { jp: "残業{ざんぎょう}", pt: "hora extra" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_factory_012",
+        jp: "今日{きょう} は 定時{ていじ} で 帰{かえ}れますか。",
+        pt: "Hoje posso ir embora no horário normal?",
+        newWords: [
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "定時{ていじ}", pt: "horário normal de saída" },
+          { jp: "帰{かえ}れますか", pt: "posso ir embora?" }
+        ]
+      },
+      {
+        id: "seed_factory_013",
+        jp: "安全確認{あんぜんかくにん} を して から 始{はじ}めます。",
+        pt: "Vou começar depois de verificar a segurança.",
+        newWords: [
+          { jp: "安全確認{あんぜんかくにん}", pt: "verificação de segurança" },
+          { jp: "始{はじ}めます", pt: "começo" }
+        ]
+      },
+      {
+        id: "seed_factory_014",
+        jp: "この 数{かず} で 合{あ}って いますか。",
+        pt: "Esta quantidade está correta?",
+        newWords: [
+          { jp: "数{かず}", pt: "quantidade / número" },
+          { jp: "合{あ}って いますか", pt: "está correto?" }
+        ]
+      }
+    ]
+  },
+    {
+    id: "topic_airport",
+    name: "No Aeroporto",
+    color: "tBlue",
+    phrases: [
+      {
+        id: "seed_airport_001",
+        jp: "搭乗口{とうじょうぐち} は どこ ですか。",
+        pt: "Onde é o portão de embarque?",
+        newWords: [
+          { jp: "搭乗口{とうじょうぐち}", pt: "portão de embarque" }
+        ]
+      },
+      {
+        id: "seed_airport_002",
+        jp: "荷物{にもつ} を 預{あず}けたいです。",
+        pt: "Quero despachar a bagagem.",
+        newWords: [
+          { jp: "荷物{にもつ}", pt: "bagagem" },
+          { jp: "預{あず}けたい", pt: "querer despachar" }
+        ]
+      },
+      {
+        id: "seed_airport_003",
+        jp: "チェックイン は どこ で できますか。",
+        pt: "Onde posso fazer o check-in?",
+        newWords: [
+          { jp: "チェックイン", pt: "check-in" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "できますか", pt: "pode fazer?" }
+        ]
+      },
+      {
+        id: "seed_airport_004",
+        jp: "この 便{びん} は 遅{おく}れて いますか。",
+        pt: "Este voo está atrasado?",
+        newWords: [
+          { jp: "便{びん}", pt: "voo" },
+          { jp: "遅{おく}れて います", pt: "está atrasado" }
+        ]
+      },
+      {
+        id: "seed_airport_005",
+        jp: "乗{の}り換{か}え は 必要{ひつよう} ですか。",
+        pt: "É necessário fazer conexão?",
+        newWords: [
+          { jp: "乗{の}り換{か}え", pt: "conexão / troca" },
+          { jp: "必要{ひつよう}", pt: "necessário" }
+        ]
+      },
+      {
+        id: "seed_airport_006",
+        jp: "パスポート を 見{み}せれば いいですか。",
+        pt: "Está certo mostrar o passaporte?",
+        newWords: [
+          { jp: "パスポート", pt: "passaporte" },
+          { jp: "見{み}せれば", pt: "se mostrar" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_airport_007",
+        jp: "この 荷物{にもつ} は 機内{きない} に 持{も}ち込{こ}めますか。",
+        pt: "Posso levar esta bagagem dentro do avião?",
+        newWords: [
+          { jp: "荷物{にもつ}", pt: "bagagem" },
+          { jp: "機内{きない}", pt: "dentro do avião" },
+          { jp: "持{も}ち込{こ}めますか", pt: "posso levar para dentro?" }
+        ]
+      },
+      {
+        id: "seed_airport_008",
+        jp: "出口{でぐち} は どちら ですか。",
+        pt: "Para que lado fica a saída?",
+        newWords: [
+          { jp: "出口{でぐち}", pt: "saída" },
+          { jp: "どちら", pt: "qual lado / onde" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_post",
+    name: "No Correio",
+    color: "tAmber",
+    phrases: [
+      {
+        id: "seed_post_001",
+        jp: "この 荷物{にもつ} を ブラジル へ 送{おく}りたいです。",
+        pt: "Quero enviar esta encomenda para o Brasil.",
+        newWords: [
+          { jp: "荷物{にもつ}", pt: "encomenda" },
+          { jp: "送{おく}りたい", pt: "querer enviar" }
+        ]
+      },
+      {
+        id: "seed_post_002",
+        jp: "追跡番号{ついせきばんごう} は ありますか。",
+        pt: "Tem número de rastreio?",
+        newWords: [
+          { jp: "追跡番号{ついせきばんごう}", pt: "número de rastreio" }
+        ]
+      },
+      {
+        id: "seed_post_003",
+        jp: "一番{いちばん} 安{やす}い 送{おく}り方{かた} は どれ ですか。",
+        pt: "Qual é a forma de envio mais barata?",
+        newWords: [
+          { jp: "一番{いちばん}", pt: "mais / número um" },
+          { jp: "安{やす}い", pt: "barato" },
+          { jp: "送{おく}り方{かた}", pt: "forma de envio" }
+        ]
+      },
+      {
+        id: "seed_post_004",
+        jp: "到着{とうちゃく} まで 何日{なんにち} かかりますか。",
+        pt: "Quantos dias leva até chegar?",
+        newWords: [
+          { jp: "到着{とうちゃく}", pt: "chegada" },
+          { jp: "何日{なんにち}", pt: "quantos dias" },
+          { jp: "かかりますか", pt: "leva?" }
+        ]
+      },
+      {
+        id: "seed_post_005",
+        jp: "この 箱{はこ} で 送{おく}れますか。",
+        pt: "Posso enviar com esta caixa?",
+        newWords: [
+          { jp: "箱{はこ}", pt: "caixa" },
+          { jp: "送{おく}れますか", pt: "pode enviar?" }
+        ]
+      },
+      {
+        id: "seed_post_006",
+        jp: "住所{じゅうしょ} は ここ に 書{か}けば いいですか。",
+        pt: "Está certo escrever o endereço aqui?",
+        newWords: [
+          { jp: "住所{じゅうしょ}", pt: "endereço" },
+          { jp: "書{か}けば", pt: "se escrever" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_post_007",
+        jp: "着払{ちゃくばら}い で 送{おく}れますか。",
+        pt: "Posso enviar com pagamento na entrega?",
+        newWords: [
+          { jp: "着払{ちゃくばら}い", pt: "pagamento na entrega" },
+          { jp: "送{おく}れますか", pt: "pode enviar?" }
+        ]
+      },
+      {
+        id: "seed_post_008",
+        jp: "切手{きって} は ここ で 買{か}えますか。",
+        pt: "Posso comprar selo aqui?",
+        newWords: [
+          { jp: "切手{きって}", pt: "selo" },
+          { jp: "買{か}えますか", pt: "posso comprar?" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_cityhall",
+    name: "Na Prefeitura",
+    color: "tCyan",
+    phrases: [
+      {
+        id: "seed_cityhall_001",
+        jp: "住民票{じゅうみんひょう} を 取{と}りたいです。",
+        pt: "Quero tirar o comprovante de residência.",
+        newWords: [
+          { jp: "住民票{じゅうみんひょう}", pt: "comprovante de residência" }
+        ]
+      },
+      {
+        id: "seed_cityhall_002",
+        jp: "この 書類{しょるい} は どこへ 出{だ}しますか。",
+        pt: "Onde entrego este documento?",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "出{だ}しますか", pt: "entrego?" }
+        ]
+      },
+      {
+        id: "seed_cityhall_003",
+        jp: "転入届{てんにゅうとどけ} の 手続{てつづ}き は どこ ですか。",
+        pt: "Onde faço o procedimento de mudança de endereço para cá?",
+        newWords: [
+          { jp: "転入届{てんにゅうとどけ}", pt: "registro de entrada no município" },
+          { jp: "手続{てつづ}き", pt: "procedimento" },
+          { jp: "どこ", pt: "onde" }
+        ]
+      },
+      {
+        id: "seed_cityhall_004",
+        jp: "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
+        pt: "Por favor, me ensine como preencher este documento.",
+        newWords: [
+          { jp: "書類{しょるい}", pt: "documento" },
+          { jp: "書{か}き方{かた}", pt: "forma de escrever / preencher" },
+          { jp: "教{おし}えて", pt: "ensinar" }
+        ]
+      },
+      {
+        id: "seed_cityhall_005",
+        jp: "必要{ひつよう} な もの は 何{なに} ですか。",
+        pt: "O que é necessário trazer?",
+        newWords: [
+          { jp: "必要{ひつよう}", pt: "necessário" },
+          { jp: "何{なに}", pt: "o que" }
+        ]
+      },
+      {
+        id: "seed_cityhall_006",
+        jp: "マイナンバー カード の 更新{こうしん} を したいです。",
+        pt: "Quero renovar o cartão My Number.",
+        newWords: [
+          { jp: "マイナンバー カード", pt: "cartão My Number" },
+          { jp: "更新{こうしん}", pt: "renovação" },
+          { jp: "したいです", pt: "quero fazer" }
+        ]
+      },
+      {
+        id: "seed_cityhall_007",
+        jp: "通訳{つうやく} を お願{ねが}いできますか。",
+        pt: "É possível pedir um intérprete?",
+        newWords: [
+          { jp: "通訳{つうやく}", pt: "intérprete" },
+          { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
+        ]
+      },
+      {
+        id: "seed_cityhall_008",
+        jp: "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
+        pt: "Onde pego a senha de atendimento?",
+        newWords: [
+          { jp: "番号札{ばんごうふだ}", pt: "senha / ficha numerada" },
+          { jp: "取{と}りますか", pt: "pego?" }
+        ]
+      },
+      {
+        id: "seed_cityhall_009",
+        jp: "この 手続{てつづ}き は 今日中{きょうじゅう} に 終{お}わりますか。",
+        pt: "Este procedimento termina ainda hoje?",
+        newWords: [
+          { jp: "手続{てつづ}き", pt: "procedimento" },
+          { jp: "今日中{きょうじゅう}", pt: "ainda hoje" },
+          { jp: "終{お}わりますか", pt: "termina?" }
+        ]
+      },
+      {
+        id: "seed_cityhall_010",
+        jp: "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
+        pt: "É necessária uma cópia do cartão de residência?",
+        newWords: [
+          { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
+          { jp: "コピー", pt: "cópia" },
+          { jp: "必要{ひつよう}", pt: "necessário" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_konbini",
+    name: "No Konbini",
+    color: "tMint",
+    phrases: [
+      {
+        id: "seed_konbini_001",
+        jp: "レジ袋{ぶくろ} は 要{い}りません。",
+        pt: "Não preciso de sacola.",
+        newWords: [
+          { jp: "レジ袋{ぶくろ}", pt: "sacola" },
+          { jp: "要{い}りません", pt: "não preciso" }
+        ]
+      },
+      {
+        id: "seed_konbini_002",
+        jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
+        pt: "Por favor, aqueça este bentô.",
+        newWords: [
+          { jp: "お弁当{べんとう}", pt: "bentô" },
+          { jp: "温{あたた}めて", pt: "aquecer" }
+        ]
+      },
+      {
+        id: "seed_konbini_003",
+        jp: "お箸{はし} を 一膳{いちぜん} お願{ねが}いします。",
+        pt: "Um par de hashi, por favor.",
+        newWords: [
+          { jp: "お箸{はし}", pt: "hashi / palitinhos" },
+          { jp: "一膳{いちぜん}", pt: "um par de hashi" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_konbini_004",
+        jp: "スプーン は ありますか。",
+        pt: "Tem colher?",
+        newWords: [
+          { jp: "スプーン", pt: "colher" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_konbini_005",
+        jp: "公共料金{こうきょうりょうきん} を 払{はら}いたいです。",
+        pt: "Quero pagar uma conta pública.",
+        newWords: [
+          { jp: "公共料金{こうきょうりょうきん}", pt: "conta pública / utilidade" },
+          { jp: "払{はら}いたい", pt: "quero pagar" }
+        ]
+      },
+      {
+        id: "seed_konbini_006",
+        jp: "この 支払{しはら}い は ここ で できますか。",
+        pt: "Posso fazer este pagamento aqui?",
+        newWords: [
+          { jp: "支払{しはら}い", pt: "pagamento" },
+          { jp: "ここ", pt: "aqui" },
+          { jp: "できますか", pt: "pode fazer?" }
+        ]
+      },
+      {
+        id: "seed_konbini_007",
+        jp: "宅急便{たっきゅうびん} を 出{だ}したいです。",
+        pt: "Quero enviar uma encomenda pelo takkyubin.",
+        newWords: [
+          { jp: "宅急便{たっきゅうびん}", pt: "serviço de entrega" },
+          { jp: "出{だ}したい", pt: "quero enviar / despachar" }
+        ]
+      },
+      {
+        id: "seed_konbini_008",
+        jp: "レシート を ください。",
+        pt: "Por favor, me dê o recibo.",
+        newWords: [
+          { jp: "レシート", pt: "recibo / comprovante" },
+          { jp: "ください", pt: "por favor, me dê" }
+        ]
+      },
+      {
+        id: "seed_konbini_009",
+        jp: "ポイントカード は ありません。",
+        pt: "Não tenho cartão de pontos.",
+        newWords: [
+          { jp: "ポイントカード", pt: "cartão de pontos" },
+          { jp: "ありません", pt: "não tenho / não existe" }
+        ]
+      },
+      {
+        id: "seed_konbini_010",
+        jp: "現金{げんきん} で 払{はら}います。",
+        pt: "Vou pagar em dinheiro.",
+        newWords: [
+          { jp: "現金{げんきん}", pt: "dinheiro em espécie" },
+          { jp: "払{はら}います", pt: "vou pagar" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_market",
+    name: "No Mercado",
+    color: "tGreen",
+    phrases: [
+      {
+        id: "seed_market_001",
+        jp: "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
+        pt: "Este produto está esgotado?",
+        newWords: [
+          { jp: "商品{しょうひん}", pt: "produto" },
+          { jp: "売{う}り切{き}れ", pt: "esgotado" }
+        ]
+      },
+      {
+        id: "seed_market_002",
+        jp: "賞味期限{しょうみきげん} は いつ ですか。",
+        pt: "Qual é a data de validade?",
+        newWords: [
+          { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
+        ]
+      },
+      {
+        id: "seed_market_003",
+        jp: "この 肉{にく} は 今日{きょう} まで ですか。",
+        pt: "Esta carne vence hoje?",
+        newWords: [
+          { jp: "肉{にく}", pt: "carne" },
+          { jp: "今日{きょう}", pt: "hoje" },
+          { jp: "まで", pt: "até" }
+        ]
+      },
+      {
+        id: "seed_market_004",
+        jp: "割引{わりびき} シール は ありますか。",
+        pt: "Tem etiqueta de desconto?",
+        newWords: [
+          { jp: "割引{わりびき}", pt: "desconto" },
+          { jp: "シール", pt: "etiqueta / selo" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_market_005",
+        jp: "この 商品{しょうひん} は どこ に ありますか。",
+        pt: "Onde fica este produto?",
+        newWords: [
+          { jp: "商品{しょうひん}", pt: "produto" },
+          { jp: "どこ", pt: "onde" },
+          { jp: "ありますか", pt: "tem / fica?" }
+        ]
+      },
+      {
+        id: "seed_market_006",
+        jp: "袋{ふくろ} は 要{い}りません。",
+        pt: "Não preciso de sacola.",
+        newWords: [
+          { jp: "袋{ふくろ}", pt: "sacola" },
+          { jp: "要{い}りません", pt: "não preciso" }
+        ]
+      },
+      {
+        id: "seed_market_007",
+        jp: "カード で 払{はら}えますか。",
+        pt: "Posso pagar com cartão?",
+        newWords: [
+          { jp: "カード", pt: "cartão" },
+          { jp: "払{はら}えますか", pt: "posso pagar?" }
+        ]
+      },
+      {
+        id: "seed_market_008",
+        jp: "この 野菜{やさい} は 新鮮{しんせん} ですか。",
+        pt: "Este legume está fresco?",
+        newWords: [
+          { jp: "野菜{やさい}", pt: "legume / verdura" },
+          { jp: "新鮮{しんせん}", pt: "fresco" }
+        ]
+      },
+      {
+        id: "seed_market_009",
+        jp: "安{やす}い 方{ほう} は どちら ですか。",
+        pt: "Qual é a opção mais barata?",
+        newWords: [
+          { jp: "安{やす}い", pt: "barato" },
+          { jp: "方{ほう}", pt: "lado / opção" },
+          { jp: "どちら", pt: "qual" }
+        ]
+      },
+      {
+        id: "seed_market_010",
+        jp: "セルフレジ は 使{つか}えますか。",
+        pt: "Posso usar o caixa automático?",
+        newWords: [
+          { jp: "セルフレジ", pt: "caixa automático / self checkout" },
+          { jp: "使{つか}えますか", pt: "posso usar?" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_bike",
+    name: "Na Loja de Bicicletas",
+    color: "tPink",
+    phrases: [
+      {
+        id: "seed_bike_001",
+        jp: "チェーン が 外{はず}れました。見{み}て もらえますか。",
+        pt: "A corrente soltou. Pode dar uma olhada?",
+        newWords: [
+          { jp: "チェーン", pt: "corrente" },
+          { jp: "外{はず}れました", pt: "soltou" },
+          { jp: "見{み}て", pt: "ver / olhar" }
+        ]
+      },
+      {
+        id: "seed_bike_002",
+        jp: "パンク 修理{しゅうり} は いくら ですか。",
+        pt: "Quanto custa o conserto do pneu furado?",
+        newWords: [
+          { jp: "パンク", pt: "pneu furado" },
+          { jp: "修理{しゅうり}", pt: "conserto" },
+          { jp: "いくら", pt: "quanto" }
+        ]
+      },
+      {
+        id: "seed_bike_003",
+        jp: "タイヤ の 空気{くうき} を 入{い}れて もらえますか。",
+        pt: "Você pode colocar ar no pneu para mim?",
+        newWords: [
+          { jp: "タイヤ", pt: "pneu" },
+          { jp: "空気{くうき}", pt: "ar" },
+          { jp: "入{い}れて", pt: "colocar" }
+        ]
+      },
+      {
+        id: "seed_bike_004",
+        jp: "ブレーキ の 調子{ちょうし} が 悪{わる}いです。",
+        pt: "O freio não está bom.",
+        newWords: [
+          { jp: "ブレーキ", pt: "freio" },
+          { jp: "調子{ちょうし}", pt: "condição" },
+          { jp: "悪{わる}い", pt: "ruim" }
+        ]
+      },
+      {
+        id: "seed_bike_005",
+        jp: "ライト が つきません。",
+        pt: "A luz não acende.",
+        newWords: [
+          { jp: "ライト", pt: "luz / farol" },
+          { jp: "つきません", pt: "não acende" }
+        ]
+      },
+      {
+        id: "seed_bike_006",
+        jp: "サドル を もっと 高{たか}く できますか。",
+        pt: "Pode deixar o selim mais alto?",
+        newWords: [
+          { jp: "サドル", pt: "selim / banco da bicicleta" },
+          { jp: "もっと", pt: "mais" },
+          { jp: "高{たか}く", pt: "alto" }
+        ]
+      },
+      {
+        id: "seed_bike_007",
+        jp: "鍵{かぎ} を なくしました。",
+        pt: "Perdi a chave.",
+        newWords: [
+          { jp: "鍵{かぎ}", pt: "chave" },
+          { jp: "なくしました", pt: "perdi" }
+        ]
+      },
+      {
+        id: "seed_bike_008",
+        jp: "修理{しゅうり} に どのくらい 時間{じかん} が かかりますか。",
+        pt: "Quanto tempo leva para consertar?",
+        newWords: [
+          { jp: "修理{しゅうり}", pt: "conserto" },
+          { jp: "どのくらい", pt: "quanto tempo / quanto" },
+          { jp: "時間{じかん}", pt: "tempo" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_cinema",
+    name: "No Cinema",
+    color: "tBlue",
+    phrases: [
+      {
+        id: "seed_cinema_001",
+        jp: "次{つぎ} の 上映{じょうえい} は 何時{なんじ} ですか。",
+        pt: "A que horas é a próxima sessão?",
+        newWords: [
+          { jp: "次{つぎ}", pt: "próximo" },
+          { jp: "上映{じょうえい}", pt: "sessão / exibição" },
+          { jp: "何時{なんじ}", pt: "que horas" }
+        ]
+      },
+      {
+        id: "seed_cinema_002",
+        jp: "チケット を 二枚{にまい} お願{ねが}いします。",
+        pt: "Dois ingressos, por favor.",
+        newWords: [
+          { jp: "チケット", pt: "ingresso" },
+          { jp: "二枚{にまい}", pt: "duas unidades" },
+          { jp: "お願{ねが}いします", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_cinema_003",
+        jp: "字幕{じまく} は ありますか。",
+        pt: "Tem legenda?",
+        newWords: [
+          { jp: "字幕{じまく}", pt: "legenda" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_cinema_004",
+        jp: "日本語{にほんご} の 字幕{じまく} ですか。",
+        pt: "A legenda é em japonês?",
+        newWords: [
+          { jp: "日本語{にほんご}", pt: "japonês" },
+          { jp: "字幕{じまく}", pt: "legenda" }
+        ]
+      },
+      {
+        id: "seed_cinema_005",
+        jp: "席{せき} は 選{えら}べますか。",
+        pt: "Posso escolher o assento?",
+        newWords: [
+          { jp: "席{せき}", pt: "assento" },
+          { jp: "選{えら}べますか", pt: "posso escolher?" }
+        ]
+      },
+      {
+        id: "seed_cinema_006",
+        jp: "前{まえ} の 席{せき} は 苦手{にがて} です。",
+        pt: "Não gosto de assento da frente.",
+        newWords: [
+          { jp: "前{まえ}", pt: "frente" },
+          { jp: "席{せき}", pt: "assento" },
+          { jp: "苦手{にがて}", pt: "não gosto / tenho dificuldade" }
+        ]
+      },
+      {
+        id: "seed_cinema_007",
+        jp: "ポップコーン の セット は ありますか。",
+        pt: "Tem combo de pipoca?",
+        newWords: [
+          { jp: "ポップコーン", pt: "pipoca" },
+          { jp: "セット", pt: "combo / conjunto" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_cinema_008",
+        jp: "この 映画{えいが} は 何分{なんぷん} ですか。",
+        pt: "Quantos minutos tem este filme?",
+        newWords: [
+          { jp: "映画{えいが}", pt: "filme" },
+          { jp: "何分{なんぷん}", pt: "quantos minutos" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_department",
+    name: "Na Loja de Departamentos",
+    color: "tAmber",
+    phrases: [
+      {
+        id: "seed_department_001",
+        jp: "この サイズ は ありますか。",
+        pt: "Tem este tamanho?",
+        newWords: [
+          { jp: "サイズ", pt: "tamanho" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_department_002",
+        jp: "試着室{しちゃくしつ} は どこ ですか。",
+        pt: "Onde fica o provador?",
+        newWords: [
+          { jp: "試着室{しちゃくしつ}", pt: "provador" },
+          { jp: "どこ", pt: "onde" }
+        ]
+      },
+      {
+        id: "seed_department_003",
+        jp: "これ を 試着{しちゃく} しても いいですか。",
+        pt: "Posso experimentar isto?",
+        newWords: [
+          { jp: "これ", pt: "isto" },
+          { jp: "試着{しちゃく}", pt: "experimentar roupa" },
+          { jp: "いいですか", pt: "posso?" }
+        ]
+      },
+      {
+        id: "seed_department_004",
+        jp: "もう 少{すこ}し 大{おお}きい サイズ は ありますか。",
+        pt: "Tem um tamanho um pouco maior?",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "大{おお}きい", pt: "grande" },
+          { jp: "サイズ", pt: "tamanho" }
+        ]
+      },
+      {
+        id: "seed_department_005",
+        jp: "もう 少{すこ}し 安{やす}い もの は ありますか。",
+        pt: "Tem algo um pouco mais barato?",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "安{やす}い", pt: "barato" },
+          { jp: "もの", pt: "coisa / produto" }
+        ]
+      },
+      {
+        id: "seed_department_006",
+        jp: "返品{へんぴん} は できますか。",
+        pt: "É possível devolver?",
+        newWords: [
+          { jp: "返品{へんぴん}", pt: "devolução" },
+          { jp: "できますか", pt: "é possível?" }
+        ]
+      },
+      {
+        id: "seed_department_007",
+        jp: "保証書{ほしょうしょ} は ありますか。",
+        pt: "Tem garantia por escrito?",
+        newWords: [
+          { jp: "保証書{ほしょうしょ}", pt: "certificado de garantia" },
+          { jp: "ありますか", pt: "tem?" }
+        ]
+      },
+      {
+        id: "seed_department_008",
+        jp: "プレゼント 用{よう} に 包{つつ}んで もらえますか。",
+        pt: "Pode embrulhar para presente?",
+        newWords: [
+          { jp: "プレゼント", pt: "presente" },
+          { jp: "用{よう}", pt: "para uso de" },
+          { jp: "包{つつ}んで", pt: "embrulhar" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_trip",
+    name: "Na Viagem",
+    color: "tGreen",
+    phrases: [
+      {
+        id: "seed_trip_001",
+        jp: "この 電車{でんしゃ} は 名古屋{なごや} へ 行{い}きますか。",
+        pt: "Este trem vai para Nagoya?",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "名古屋{なごや}", pt: "Nagoya" },
+          { jp: "行{い}きますか", pt: "vai?" }
+        ]
+      },
+      {
+        id: "seed_trip_002",
+        jp: "次{つぎ} の バス は いつ 来{き}ますか。",
+        pt: "Quando vem o próximo ônibus?",
+        newWords: [
+          { jp: "次{つぎ}", pt: "próximo" },
+          { jp: "バス", pt: "ônibus" },
+          { jp: "来{き}ますか", pt: "vem?" }
+        ]
+      },
+      {
+        id: "seed_trip_003",
+        jp: "切符{きっぷ} は どこ で 買{か}えますか。",
+        pt: "Onde posso comprar a passagem?",
+        newWords: [
+          { jp: "切符{きっぷ}", pt: "passagem / bilhete" },
+          { jp: "買{か}えますか", pt: "posso comprar?" }
+        ]
+      },
+      {
+        id: "seed_trip_004",
+        jp: "何番線{なんばんせん} から 出{で}ますか。",
+        pt: "Sai de qual plataforma?",
+        newWords: [
+          { jp: "何番線{なんばんせん}", pt: "qual plataforma" },
+          { jp: "出{で}ますか", pt: "sai?" }
+        ]
+      },
+      {
+        id: "seed_trip_005",
+        jp: "ここ で 乗{の}り換{か}え ですか。",
+        pt: "É aqui que faço a baldeação?",
+        newWords: [
+          { jp: "ここ", pt: "aqui" },
+          { jp: "乗{の}り換{か}え", pt: "baldeação / troca" },
+          { jp: "ですか", pt: "é?" }
+        ]
+      },
+      {
+        id: "seed_trip_006",
+        jp: "この 電車{でんしゃ} は 普通{ふつう} ですか、快速{かいそく} ですか。",
+        pt: "Este trem é local ou rápido?",
+        newWords: [
+          { jp: "電車{でんしゃ}", pt: "trem" },
+          { jp: "普通{ふつう}", pt: "local / comum" },
+          { jp: "快速{かいそく}", pt: "rápido" }
+        ]
+      },
+      {
+        id: "seed_trip_007",
+        jp: "降{お}りる 駅{えき} は ここ ですか。",
+        pt: "É aqui a estação onde devo descer?",
+        newWords: [
+          { jp: "降{お}りる", pt: "descer" },
+          { jp: "駅{えき}", pt: "estação" },
+          { jp: "ここ", pt: "aqui" }
+        ]
+      },
+      {
+        id: "seed_trip_008",
+        jp: "ホテル まで タクシー で どのくらい ですか。",
+        pt: "Quanto tempo dá de táxi até o hotel?",
+        newWords: [
+          { jp: "ホテル", pt: "hotel" },
+          { jp: "タクシー", pt: "táxi" },
+          { jp: "どのくらい", pt: "quanto tempo / quanto" }
+        ]
+      },
+      {
+        id: "seed_trip_009",
+        jp: "駅員{えきいん} さん に 聞{き}いて みます。",
+        pt: "Vou tentar perguntar ao funcionário da estação.",
+        newWords: [
+          { jp: "駅員{えきいん}", pt: "funcionário da estação" },
+          { jp: "聞{き}いて", pt: "perguntar" },
+          { jp: "みます", pt: "vou tentar" }
+        ]
+      },
+      {
+        id: "seed_trip_010",
+        jp: "この ICカード は 使{つか}えますか。",
+        pt: "Posso usar este cartão IC?",
+        newWords: [
+          { jp: "ICカード", pt: "cartão IC / cartão de transporte" },
+          { jp: "使{つか}えますか", pt: "posso usar?" }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "topic_qa",
+    name: "Perguntas e Respostas",
+    color: "tRose",
+    phrases: [
+      {
+        id: "seed_qa_001",
+        jp: "お名前{なまえ} は 何{なん} ですか。",
+        pt: "Qual é o seu nome?",
+        newWords: [
+          { jp: "名前{なまえ}", pt: "nome" },
+          { jp: "何{なん}", pt: "qual / o que" }
+        ]
+      },
+      {
+        id: "seed_qa_002",
+        jp: "はい、わかりました。",
+        pt: "Sim, entendi.",
+        newWords: [
+          { jp: "はい", pt: "sim" },
+          { jp: "わかりました", pt: "entendi" }
+        ]
+      },
+      {
+        id: "seed_qa_003",
+        jp: "いいえ、まだ わかりません。",
+        pt: "Não, ainda não entendi.",
+        newWords: [
+          { jp: "いいえ", pt: "não" },
+          { jp: "まだ", pt: "ainda" },
+          { jp: "わかりません", pt: "não entendo" }
+        ]
+      },
+      {
+        id: "seed_qa_004",
+        jp: "もう 一度{いちど} 説明{せつめい} して ください。",
+        pt: "Por favor, explique mais uma vez.",
+        newWords: [
+          { jp: "一度{いちど}", pt: "uma vez" },
+          { jp: "説明{せつめい}", pt: "explicação" },
+          { jp: "してください", pt: "por favor, faça" }
+        ]
+      },
+      {
+        id: "seed_qa_005",
+        jp: "これは 何{なん} の 書類{しょるい} ですか。",
+        pt: "Que documento é este?",
+        newWords: [
+          { jp: "これ", pt: "isto" },
+          { jp: "何{なん}", pt: "qual / o que" },
+          { jp: "書類{しょるい}", pt: "documento" }
+        ]
+      },
+      {
+        id: "seed_qa_006",
+        jp: "いつ まで に 出{だ}せば いいですか。",
+        pt: "Até quando devo entregar?",
+        newWords: [
+          { jp: "いつ まで", pt: "até quando" },
+          { jp: "出{だ}せば", pt: "se entregar" },
+          { jp: "いいですか", pt: "está certo?" }
+        ]
+      },
+      {
+        id: "seed_qa_007",
+        jp: "ここ に サイン すれば いいですか。",
+        pt: "Está certo assinar aqui?",
+        newWords: [
+          { jp: "ここ", pt: "aqui" },
+          { jp: "サイン", pt: "assinatura" },
+          { jp: "すれば", pt: "se fizer" }
+        ]
+      },
+      {
+        id: "seed_qa_008",
+        jp: "電話{でんわ} で 連絡{れんらく} して もらえますか。",
+        pt: "Você poderia entrar em contato por telefone?",
+        newWords: [
+          { jp: "電話{でんわ}", pt: "telefone" },
+          { jp: "連絡{れんらく}", pt: "contato" },
+          { jp: "もらえますか", pt: "poderia fazer para mim?" }
+        ]
+      },
+      {
+        id: "seed_qa_009",
+        jp: "メール で 送{おく}って ください。",
+        pt: "Por favor, envie por e-mail.",
+        newWords: [
+          { jp: "メール", pt: "e-mail" },
+          { jp: "送{おく}って", pt: "enviar" },
+          { jp: "ください", pt: "por favor" }
+        ]
+      },
+      {
+        id: "seed_qa_010",
+        jp: "少{すこ}し 考{かんが}えて から 返事{へんじ} します。",
+        pt: "Vou responder depois de pensar um pouco.",
+        newWords: [
+          { jp: "少{すこ}し", pt: "um pouco" },
+          { jp: "考{かんが}えて", pt: "pensar" },
+          { jp: "返事{へんじ}", pt: "resposta" }
+        ]
+      }
+    ]
+  }
+];
+
+  function safeText(value) {
+    return String(value ?? "").trim();
+  }
+
+  function safeId(value, fallback = "item") {
+    return safeText(value || fallback)
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9_\-]+/g, "_")
+      .replace(/_+/g, "_")
+      .replace(/^_+|_+$/g, "") || fallback;
+  }
+
+  function safeArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function entries(value) {
+    if (!value || typeof value !== "object") return [];
+    if (Array.isArray(value)) return value.map((item, index) => [String(index + 1), item]);
+    return Object.entries(value);
+  }
+
+  function cloneTopic(topic) {
+    return {
+      ...topic,
+      phrases: safeArray(topic.phrases).map((phrase) => ({ ...phrase }))
+    };
+  }
+
+  function normalizeWords(list) {
+    return safeArray(list)
+      .map((word) => ({
+        jp: safeText(word?.jp || word?.word || word?.term),
+        pt: safeText(word?.pt || word?.meaning || word?.translation)
+      }))
+      .filter((word) => word.jp && word.pt);
+  }
+
+  function flattenLevelGroups(container, fallbackLevel = "iniciante") {
+    const groups = [];
+
+    if (Array.isArray(container?.phrases)) {
+      groups.push([safeText(container.level || container.levelGroup || fallbackLevel), container.phrases]);
+    }
+
+    if (Array.isArray(container?.examples)) {
+      groups.push([safeText(container.level || container.levelGroup || fallbackLevel), container.examples]);
+    }
+
+    if (container?.levels && typeof container.levels === "object") {
+      entries(container.levels).forEach(([levelKey, list]) => {
+        if (Array.isArray(list)) groups.push([levelKey, list]);
+      });
+    }
+
+    return groups;
+  }
+
+  function normalizePhrase(item, extra) {
+    const jp = safeText(item?.jp || item?.japanese || item?.text);
+    const pt = safeText(item?.pt || item?.portuguese || item?.translation || item?.meaning);
+    if (!jp || !pt) return null;
+
+    return {
+      id: safeId(item?.id || extra.id),
+      level: extra.level || safeText(item?.level),
+      topic: extra.topicKey,
+      topicId: extra.topicId,
+      jp,
+      pt,
+      romaji: safeText(item?.romaji),
+      kana: safeText(item?.kana || item?.reading),
+      note: safeText(item?.note || item?.explanation || extra.note),
+      tags: Array.isArray(item?.tags) ? item.tags : safeArray(extra.tags),
+      situation: safeText(item?.situation || extra.situation),
+      isPremium: Boolean(item?.isPremium || extra.isPremium),
+      audioKey: safeText(item?.audioKey || item?.id || extra.id),
+      newWords: normalizeWords(item?.newWords || item?.words || item?.vocabulary || item?.vocab)
+    };
+  }
+
+  function buildScenarioTopics() {
+    return entries(bank.scenarios).map(([key, scenario], scenarioIndex) => {
+      const topicKey = safeId(key || scenario?.id || `scenario_${scenarioIndex + 1}`);
+      const topicId = `sb_${topicKey}`;
+      const phrases = [];
+
+      flattenLevelGroups(scenario, scenario?.level || scenario?.levelGroup || "iniciante").forEach(([levelKey, list]) => {
+        const level = safeId(levelKey || "iniciante");
+        safeArray(list).forEach((item, phraseIndex) => {
+          const phrase = normalizePhrase(item, {
+            id: `${scenario?.id || topicKey}_${level}_${phraseIndex + 1}`,
+            level,
+            topicKey,
+            topicId,
+            note: scenario?.goal || scenario?.description || scenario?.explanation || "",
+            tags: Array.isArray(scenario?.tags) ? scenario.tags : ["situação"],
+            situation: scenario?.label || scenario?.title || topicKey,
+            isPremium: scenario?.unlock === "premium" || scenario?.isPremium || level !== "iniciante"
+          });
+          if (phrase) phrases.push(phrase);
+        });
+      });
+
+      return {
+        id: topicId,
+        name: safeText(scenario?.label || scenario?.title || key),
+        title: safeText(scenario?.title || scenario?.label || key),
+        color: scenario?.color || "tGreen",
+        level: safeId(scenario?.level || scenario?.levelGroup || "iniciante"),
+        description: safeText(scenario?.description || scenario?.goal || scenario?.explanation),
+        isPremium: Boolean(scenario?.unlock === "premium" || scenario?.isPremium),
+        phrases
+      };
+    }).filter((topic) => topic.phrases.length > 0);
+  }
+
+  function buildGrammarTopics() {
+    return entries(bank.grammar).map(([key, grammar], grammarIndex) => {
+      const topicKey = safeId(grammar?.id || key || `grammar_${grammarIndex + 1}`);
+      const topicId = `sb_${topicKey}`;
+      const phrases = [];
+
+      flattenLevelGroups(grammar, grammar?.levelGroup || "intermediario").forEach(([levelKey, list]) => {
+        const level = safeId(levelKey || "intermediario");
+        safeArray(list).forEach((item, phraseIndex) => {
+          const phrase = normalizePhrase(item, {
+            id: `${grammar?.id || topicKey}_${level}_${phraseIndex + 1}`,
+            level,
+            topicKey,
+            topicId,
+            note: grammar?.explanation || grammar?.usage || "",
+            tags: Array.isArray(grammar?.tags) ? grammar.tags : ["gramática"],
+            situation: grammar?.usage || grammar?.label || topicKey,
+            isPremium: level !== "iniciante"
+          });
+          if (phrase) phrases.push(phrase);
+        });
+      });
+
+      return {
+        id: topicId,
+        name: safeText(grammar?.label || grammar?.title || key),
+        title: safeText(grammar?.title || grammar?.label || key),
+        color: grammar?.color || "tViolet",
+        level: safeId(grammar?.levelGroup || "intermediario"),
+        description: safeText(grammar?.explanation || grammar?.usage),
+        isPremium: grammar?.levelGroup !== "iniciante",
+        phrases
+      };
+    }).filter((topic) => topic.phrases.length > 0);
+  }
+
+  function mergeTopics(...groups) {
+    const byId = new Map();
+
+    groups.flat().forEach((topic) => {
+      if (!topic || !topic.id) return;
+      const cleanTopic = cloneTopic(topic);
+      const existing = byId.get(cleanTopic.id);
+
+      if (!existing) {
+        byId.set(cleanTopic.id, cleanTopic);
+        return;
+      }
+
+      const existingPhraseIds = new Set(safeArray(existing.phrases).map((phrase) => phrase.id));
+      safeArray(cleanTopic.phrases).forEach((phrase) => {
+        if (!phrase || !phrase.id || existingPhraseIds.has(phrase.id)) return;
+        existing.phrases.push(phrase);
+        existingPhraseIds.add(phrase.id);
+      });
+    });
+
+    return Array.from(byId.values());
+  }
+
+  const scenarioTopics = buildScenarioTopics();
+  const grammarTopics = buildGrammarTopics();
+  const previousNestedTopics = safeArray(bank.topics).filter((topic) => safeArray(topic.phrases).length > 0);
+
+  bank.legacyAppTopics = LEGACY_APP_TOPICS;
+  bank.scenarioTopics = scenarioTopics;
+  bank.grammarTopics = grammarTopics;
+  bank.topics = mergeTopics(LEGACY_APP_TOPICS, scenarioTopics, grammarTopics, previousNestedTopics);
+  bank.phrases = bank.topics.flatMap((topic) =>
+    safeArray(topic.phrases).map((phrase) => ({
+      ...phrase,
+      topicId: phrase.topicId || topic.id
+    }))
+  );
+
+  bank.compatReady = true;
+  bank.isReady = true;
+  bank.updatedAt = "2026-05-08";
+
+  const previousCheck = typeof bank.check === "function" ? bank.check.bind(bank) : null;
+  bank.check = function () {
+    const base = previousCheck ? previousCheck() : {};
+    return {
+      ...base,
+      ok: true,
+      topics: bank.topics.length,
+      phrases: bank.phrases.length,
+      legacyTopics: LEGACY_APP_TOPICS.length,
+      scenarioTopics: scenarioTopics.length,
+      grammarTopics: grammarTopics.length,
+      source: "sensei-bank-completo"
+    };
+  };
+
+  try {
+    console.log("[NIHONGO321] Sensei Bank completo carregado:", bank.check());
+  } catch {}
 })();

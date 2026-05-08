@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.2.0
+   NIHONGO321 v8.4.8
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,8 +21,8 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.2.0",
-  updatedAt: "2026-05-04",
+  version: "8.4.8",
+  updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
 
@@ -199,7 +199,7 @@ function applyTheme(theme = getTheme()) {
 
   const metaTheme = document.querySelector("meta[name='theme-color']");
   if (metaTheme) {
-    metaTheme.setAttribute("content", safeTheme === "light" ? "#fff4d7" : "#060912");
+    metaTheme.setAttribute("content", safeTheme === "light" ? "#fff0c3" : "#030815");
   }
 
   const themeBtn = $("#hudTheme");
@@ -390,6 +390,17 @@ function defaultTopic() {
 }
 
 /* ---------- catálogo inicial de frases ---------- */
+/* ---------- catálogo inicial de frases ----------
+   Fallback mínimo do app.js.
+
+   O conteúdo principal agora deve vir do sensei-bank.js
+   via window.NIHONGO321_SENSEI_BANK.
+
+   Este bloco existe apenas para o app continuar funcionando caso:
+   - sensei-bank.js não carregue;
+   - o banco externo esteja incompleto;
+   - o usuário abra o app offline com cache quebrado.
+*/
 const TOPIC_SEEDS = [
   {
     id: "topic_essential_japan",
@@ -442,150 +453,9 @@ const TOPIC_SEEDS = [
           { jp: "トイレ", pt: "banheiro" },
           { jp: "どこ", pt: "onde" }
         ]
-      },
-      {
-        id: "seed_essential_006",
-        jp: "大丈夫{だいじょうぶ} です。",
-        pt: "Está tudo bem.",
-        newWords: [
-          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
-        ]
-      },
-      {
-        id: "seed_essential_007",
-        jp: "手伝{てつだ}って もらえますか。",
-        pt: "Pode me ajudar?",
-        newWords: [
-          { jp: "手伝{てつだ}って", pt: "ajudar" },
-          { jp: "もらえますか", pt: "pode fazer para mim?" }
-        ]
-      },
-      {
-        id: "seed_essential_008",
-        jp: "ありがとう ございます。",
-        pt: "Muito obrigado.",
-        newWords: [
-          { jp: "ありがとう ございます", pt: "muito obrigado" }
-        ]
-      },
-      {
-        id: "seed_essential_009",
-        jp: "今{いま} は ちょっと わかりません。",
-        pt: "Agora eu não entendo muito bem.",
-        newWords: [
-          { jp: "今{いま}", pt: "agora" },
-          { jp: "ちょっと", pt: "um pouco" },
-          { jp: "わかりません", pt: "não entendo" }
-        ]
-      },
-      {
-        id: "seed_essential_010",
-        jp: "ここ に 座{すわ}って いいですか。",
-        pt: "Posso sentar aqui?",
-        newWords: [
-          { jp: "ここ", pt: "aqui" },
-          { jp: "座{すわ}って", pt: "sentar" },
-          { jp: "いいですか", pt: "posso?" }
-        ]
-      },
-      {
-        id: "seed_essential_011",
-        jp: "これ を お願{ねが}いします。",
-        pt: "Quero este, por favor.",
-        newWords: [
-          { jp: "これ", pt: "este" },
-          { jp: "お願{ねが}いします", pt: "por favor / eu gostaria" }
-        ]
-      },
-      {
-        id: "seed_essential_012",
-        jp: "あと で 来{き}ます。",
-        pt: "Eu volto depois.",
-        newWords: [
-          { jp: "あと で", pt: "depois" },
-          { jp: "来{き}ます", pt: "venho / volto" }
-        ]
-      },
-      {
-        id: "seed_essential_013",
-        jp: "少{すこ}し 待{ま}って ください。",
-        pt: "Espere um pouco, por favor.",
-        newWords: [
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "待{ま}って", pt: "esperar" }
-        ]
-      },
-      {
-        id: "seed_essential_014",
-        jp: "日本語{にほんご} の 練習{れんしゅう} を して います。",
-        pt: "Estou praticando japonês.",
-        newWords: [
-          { jp: "日本語{にほんご}", pt: "japonês" },
-          { jp: "練習{れんしゅう}", pt: "prática / treino" }
-        ]
-      },
-      {
-        id: "seed_essential_015",
-        jp: "少{すこ}し だけ 日本語{にほんご} が 話{はな}せます。",
-        pt: "Eu consigo falar só um pouco de japonês.",
-        newWords: [
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "だけ", pt: "somente / apenas" },
-          { jp: "話{はな}せます", pt: "consigo falar" }
-        ]
-      },
-      {
-        id: "seed_essential_016",
-        jp: "紙{かみ} に 書{か}いて もらえますか。",
-        pt: "Você poderia escrever no papel para mim?",
-        newWords: [
-          { jp: "紙{かみ}", pt: "papel" },
-          { jp: "書{か}いて", pt: "escrever" },
-          { jp: "もらえますか", pt: "poderia fazer para mim?" }
-        ]
-      },
-      {
-        id: "seed_essential_017",
-        jp: "写真{しゃしん} を 見{み}せても いいですか。",
-        pt: "Posso mostrar uma foto?",
-        newWords: [
-          { jp: "写真{しゃしん}", pt: "foto" },
-          { jp: "見{み}せても", pt: "mostrar" },
-          { jp: "いいですか", pt: "posso?" }
-        ]
-      },
-      {
-        id: "seed_essential_018",
-        jp: "ここ で 待{ま}てば いいですか。",
-        pt: "Está certo esperar aqui?",
-        newWords: [
-          { jp: "ここ", pt: "aqui" },
-          { jp: "待{ま}てば", pt: "se esperar" },
-          { jp: "いいですか", pt: "está certo?" }
-        ]
-      },
-      {
-        id: "seed_essential_019",
-        jp: "番号{ばんごう} を 呼{よ}ばれる まで 待{ま}ちます。",
-        pt: "Vou esperar até chamarem meu número.",
-        newWords: [
-          { jp: "番号{ばんごう}", pt: "número" },
-          { jp: "呼{よ}ばれる", pt: "ser chamado" },
-          { jp: "待{ま}ちます", pt: "vou esperar" }
-        ]
-      },
-      {
-        id: "seed_essential_020",
-        jp: "通訳{つうやく} は ありますか。",
-        pt: "Tem intérprete?",
-        newWords: [
-          { jp: "通訳{つうやく}", pt: "intérprete" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
       }
     ]
   },
-
   {
     id: "topic_default",
     name: "Frases aleatórias",
@@ -610,1142 +480,218 @@ const TOPIC_SEEDS = [
           { jp: "一度{いちど}", pt: "uma vez" },
           { jp: "言{い}って", pt: "dizer" }
         ]
-      },
-      {
-        id: "seed_random_003",
-        jp: "今日{きょう} は ここで 待{ま}って います。",
-        pt: "Hoje vou esperar aqui.",
-        newWords: [
-          { jp: "今日{きょう}", pt: "hoje" },
-          { jp: "ここ", pt: "aqui" },
-          { jp: "待{ま}って", pt: "esperar" }
-        ]
-      },
-      {
-        id: "seed_random_004",
-        jp: "今{いま}、少{すこ}し 急{いそ}いで います。",
-        pt: "Agora estou com um pouco de pressa.",
-        newWords: [
-          { jp: "今{いま}", pt: "agora" },
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "急{いそ}いで います", pt: "estou com pressa" }
-        ]
-      },
-      {
-        id: "seed_random_005",
-        jp: "あと で 確認{かくにん} します。",
-        pt: "Vou confirmar depois.",
-        newWords: [
-          { jp: "あと で", pt: "depois" },
-          { jp: "確認{かくにん}", pt: "confirmação" },
-          { jp: "します", pt: "vou fazer" }
-        ]
-      },
-      {
-        id: "seed_random_006",
-        jp: "今日{きょう} は 少{すこ}し 疲{つか}れて います。",
-        pt: "Hoje estou um pouco cansado.",
-        newWords: [
-          { jp: "今日{きょう}", pt: "hoje" },
-          { jp: "疲{つか}れて います", pt: "estou cansado" }
-        ]
-      },
-      {
-        id: "seed_random_007",
-        jp: "それ は どういう 意味{いみ} ですか。",
-        pt: "O que isso significa?",
-        newWords: [
-          { jp: "それ", pt: "isso" },
-          { jp: "どういう", pt: "que tipo de / qual" },
-          { jp: "意味{いみ}", pt: "significado" }
-        ]
-      },
-      {
-        id: "seed_random_008",
-        jp: "この アプリ で 日本語{にほんご} を 練習{れんしゅう} して います。",
-        pt: "Estou praticando japonês com este aplicativo.",
-        newWords: [
-          { jp: "アプリ", pt: "aplicativo" },
-          { jp: "日本語{にほんご}", pt: "japonês" },
-          { jp: "練習{れんしゅう}", pt: "prática" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_factory",
-    name: "Na Fábrica",
-    color: "tRose",
-    phrases: [
-      {
-        id: "seed_factory_001",
-        jp: "この 機械{きかい} は もう 動{うご}いて いますか。",
-        pt: "Esta máquina já está funcionando?",
-        newWords: [
-          { jp: "機械{きかい}", pt: "máquina" },
-          { jp: "動{うご}いて", pt: "funcionando" }
-        ]
-      },
-      {
-        id: "seed_factory_002",
-        jp: "次{つぎ} は 何{なに} を すれば いいですか。",
-        pt: "O que devo fazer em seguida?",
-        newWords: [
-          { jp: "次{つぎ}", pt: "seguinte / próximo" },
-          { jp: "何{なに}", pt: "o que" }
-        ]
-      },
-      {
-        id: "seed_factory_003",
-        jp: "この 作業{さぎょう} は 初{はじ}めて です。",
-        pt: "É a primeira vez que faço este trabalho.",
-        newWords: [
-          { jp: "作業{さぎょう}", pt: "trabalho / operação" },
-          { jp: "初{はじ}めて", pt: "primeira vez" }
-        ]
-      },
-      {
-        id: "seed_factory_004",
-        jp: "やり方{かた} を もう 一度{いちど} 教{おし}えて ください。",
-        pt: "Por favor, me ensine o modo de fazer mais uma vez.",
-        newWords: [
-          { jp: "やり方{かた}", pt: "modo de fazer" },
-          { jp: "一度{いちど}", pt: "uma vez" },
-          { jp: "教{おし}えて", pt: "ensinar" }
-        ]
-      },
-      {
-        id: "seed_factory_005",
-        jp: "この 部品{ぶひん} は どこ に 置{お}きますか。",
-        pt: "Onde coloco esta peça?",
-        newWords: [
-          { jp: "部品{ぶひん}", pt: "peça" },
-          { jp: "どこ", pt: "onde" },
-          { jp: "置{お}きます", pt: "coloco" }
-        ]
-      },
-      {
-        id: "seed_factory_006",
-        jp: "不良品{ふりょうひん} かもしれません。",
-        pt: "Talvez seja produto defeituoso.",
-        newWords: [
-          { jp: "不良品{ふりょうひん}", pt: "produto defeituoso" },
-          { jp: "かもしれません", pt: "talvez seja" }
-        ]
-      },
-      {
-        id: "seed_factory_007",
-        jp: "確認{かくにん} して もらえますか。",
-        pt: "Você poderia verificar para mim?",
-        newWords: [
-          { jp: "確認{かくにん}", pt: "verificação" },
-          { jp: "もらえますか", pt: "poderia fazer para mim?" }
-        ]
-      },
-      {
-        id: "seed_factory_008",
-        jp: "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
-        pt: "Estou me sentindo um pouco mal.",
-        newWords: [
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "体調{たいちょう}", pt: "condição física" },
-          { jp: "悪{わる}い", pt: "ruim" }
-        ]
-      },
-      {
-        id: "seed_factory_009",
-        jp: "休憩{きゅうけい} に 行{い}っても いいですか。",
-        pt: "Posso ir para o intervalo?",
-        newWords: [
-          { jp: "休憩{きゅうけい}", pt: "descanso / intervalo" },
-          { jp: "行{い}っても", pt: "ir" },
-          { jp: "いいですか", pt: "posso?" }
-        ]
-      },
-      {
-        id: "seed_factory_010",
-        jp: "この ライン は 何時{なんじ} まで ですか。",
-        pt: "Até que horas vai esta linha?",
-        newWords: [
-          { jp: "ライン", pt: "linha de produção" },
-          { jp: "何時{なんじ}", pt: "que horas" },
-          { jp: "まで", pt: "até" }
-        ]
-      },
-      {
-        id: "seed_factory_011",
-        jp: "残業{ざんぎょう} は ありますか。",
-        pt: "Vai ter hora extra?",
-        newWords: [
-          { jp: "残業{ざんぎょう}", pt: "hora extra" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
-      },
-      {
-        id: "seed_factory_012",
-        jp: "今日{きょう} は 定時{ていじ} で 帰{かえ}れますか。",
-        pt: "Hoje posso ir embora no horário normal?",
-        newWords: [
-          { jp: "今日{きょう}", pt: "hoje" },
-          { jp: "定時{ていじ}", pt: "horário normal de saída" },
-          { jp: "帰{かえ}れますか", pt: "posso ir embora?" }
-        ]
-      },
-      {
-        id: "seed_factory_013",
-        jp: "安全確認{あんぜんかくにん} を して から 始{はじ}めます。",
-        pt: "Vou começar depois de verificar a segurança.",
-        newWords: [
-          { jp: "安全確認{あんぜんかくにん}", pt: "verificação de segurança" },
-          { jp: "始{はじ}めます", pt: "começo" }
-        ]
-      },
-      {
-        id: "seed_factory_014",
-        jp: "この 数{かず} で 合{あ}って いますか。",
-        pt: "Esta quantidade está correta?",
-        newWords: [
-          { jp: "数{かず}", pt: "quantidade / número" },
-          { jp: "合{あ}って いますか", pt: "está correto?" }
-        ]
-      }
-    ]
-  },
-    {
-    id: "topic_airport",
-    name: "No Aeroporto",
-    color: "tBlue",
-    phrases: [
-      {
-        id: "seed_airport_001",
-        jp: "搭乗口{とうじょうぐち} は どこ ですか。",
-        pt: "Onde é o portão de embarque?",
-        newWords: [
-          { jp: "搭乗口{とうじょうぐち}", pt: "portão de embarque" }
-        ]
-      },
-      {
-        id: "seed_airport_002",
-        jp: "荷物{にもつ} を 預{あず}けたいです。",
-        pt: "Quero despachar a bagagem.",
-        newWords: [
-          { jp: "荷物{にもつ}", pt: "bagagem" },
-          { jp: "預{あず}けたい", pt: "querer despachar" }
-        ]
-      },
-      {
-        id: "seed_airport_003",
-        jp: "チェックイン は どこ で できますか。",
-        pt: "Onde posso fazer o check-in?",
-        newWords: [
-          { jp: "チェックイン", pt: "check-in" },
-          { jp: "どこ", pt: "onde" },
-          { jp: "できますか", pt: "pode fazer?" }
-        ]
-      },
-      {
-        id: "seed_airport_004",
-        jp: "この 便{びん} は 遅{おく}れて いますか。",
-        pt: "Este voo está atrasado?",
-        newWords: [
-          { jp: "便{びん}", pt: "voo" },
-          { jp: "遅{おく}れて います", pt: "está atrasado" }
-        ]
-      },
-      {
-        id: "seed_airport_005",
-        jp: "乗{の}り換{か}え は 必要{ひつよう} ですか。",
-        pt: "É necessário fazer conexão?",
-        newWords: [
-          { jp: "乗{の}り換{か}え", pt: "conexão / troca" },
-          { jp: "必要{ひつよう}", pt: "necessário" }
-        ]
-      },
-      {
-        id: "seed_airport_006",
-        jp: "パスポート を 見{み}せれば いいですか。",
-        pt: "Está certo mostrar o passaporte?",
-        newWords: [
-          { jp: "パスポート", pt: "passaporte" },
-          { jp: "見{み}せれば", pt: "se mostrar" },
-          { jp: "いいですか", pt: "está certo?" }
-        ]
-      },
-      {
-        id: "seed_airport_007",
-        jp: "この 荷物{にもつ} は 機内{きない} に 持{も}ち込{こ}めますか。",
-        pt: "Posso levar esta bagagem dentro do avião?",
-        newWords: [
-          { jp: "荷物{にもつ}", pt: "bagagem" },
-          { jp: "機内{きない}", pt: "dentro do avião" },
-          { jp: "持{も}ち込{こ}めますか", pt: "posso levar para dentro?" }
-        ]
-      },
-      {
-        id: "seed_airport_008",
-        jp: "出口{でぐち} は どちら ですか。",
-        pt: "Para que lado fica a saída?",
-        newWords: [
-          { jp: "出口{でぐち}", pt: "saída" },
-          { jp: "どちら", pt: "qual lado / onde" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_post",
-    name: "No Correio",
-    color: "tAmber",
-    phrases: [
-      {
-        id: "seed_post_001",
-        jp: "この 荷物{にもつ} を ブラジル へ 送{おく}りたいです。",
-        pt: "Quero enviar esta encomenda para o Brasil.",
-        newWords: [
-          { jp: "荷物{にもつ}", pt: "encomenda" },
-          { jp: "送{おく}りたい", pt: "querer enviar" }
-        ]
-      },
-      {
-        id: "seed_post_002",
-        jp: "追跡番号{ついせきばんごう} は ありますか。",
-        pt: "Tem número de rastreio?",
-        newWords: [
-          { jp: "追跡番号{ついせきばんごう}", pt: "número de rastreio" }
-        ]
-      },
-      {
-        id: "seed_post_003",
-        jp: "一番{いちばん} 安{やす}い 送{おく}り方{かた} は どれ ですか。",
-        pt: "Qual é a forma de envio mais barata?",
-        newWords: [
-          { jp: "一番{いちばん}", pt: "mais / número um" },
-          { jp: "安{やす}い", pt: "barato" },
-          { jp: "送{おく}り方{かた}", pt: "forma de envio" }
-        ]
-      },
-      {
-        id: "seed_post_004",
-        jp: "到着{とうちゃく} まで 何日{なんにち} かかりますか。",
-        pt: "Quantos dias leva até chegar?",
-        newWords: [
-          { jp: "到着{とうちゃく}", pt: "chegada" },
-          { jp: "何日{なんにち}", pt: "quantos dias" },
-          { jp: "かかりますか", pt: "leva?" }
-        ]
-      },
-      {
-        id: "seed_post_005",
-        jp: "この 箱{はこ} で 送{おく}れますか。",
-        pt: "Posso enviar com esta caixa?",
-        newWords: [
-          { jp: "箱{はこ}", pt: "caixa" },
-          { jp: "送{おく}れますか", pt: "pode enviar?" }
-        ]
-      },
-      {
-        id: "seed_post_006",
-        jp: "住所{じゅうしょ} は ここ に 書{か}けば いいですか。",
-        pt: "Está certo escrever o endereço aqui?",
-        newWords: [
-          { jp: "住所{じゅうしょ}", pt: "endereço" },
-          { jp: "書{か}けば", pt: "se escrever" },
-          { jp: "いいですか", pt: "está certo?" }
-        ]
-      },
-      {
-        id: "seed_post_007",
-        jp: "着払{ちゃくばら}い で 送{おく}れますか。",
-        pt: "Posso enviar com pagamento na entrega?",
-        newWords: [
-          { jp: "着払{ちゃくばら}い", pt: "pagamento na entrega" },
-          { jp: "送{おく}れますか", pt: "pode enviar?" }
-        ]
-      },
-      {
-        id: "seed_post_008",
-        jp: "切手{きって} は ここ で 買{か}えますか。",
-        pt: "Posso comprar selo aqui?",
-        newWords: [
-          { jp: "切手{きって}", pt: "selo" },
-          { jp: "買{か}えますか", pt: "posso comprar?" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_cityhall",
-    name: "Na Prefeitura",
-    color: "tCyan",
-    phrases: [
-      {
-        id: "seed_cityhall_001",
-        jp: "住民票{じゅうみんひょう} を 取{と}りたいです。",
-        pt: "Quero tirar o comprovante de residência.",
-        newWords: [
-          { jp: "住民票{じゅうみんひょう}", pt: "comprovante de residência" }
-        ]
-      },
-      {
-        id: "seed_cityhall_002",
-        jp: "この 書類{しょるい} は どこへ 出{だ}しますか。",
-        pt: "Onde entrego este documento?",
-        newWords: [
-          { jp: "書類{しょるい}", pt: "documento" },
-          { jp: "出{だ}しますか", pt: "entrego?" }
-        ]
-      },
-      {
-        id: "seed_cityhall_003",
-        jp: "転入届{てんにゅうとどけ} の 手続{てつづ}き は どこ ですか。",
-        pt: "Onde faço o procedimento de mudança de endereço para cá?",
-        newWords: [
-          { jp: "転入届{てんにゅうとどけ}", pt: "registro de entrada no município" },
-          { jp: "手続{てつづ}き", pt: "procedimento" },
-          { jp: "どこ", pt: "onde" }
-        ]
-      },
-      {
-        id: "seed_cityhall_004",
-        jp: "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
-        pt: "Por favor, me ensine como preencher este documento.",
-        newWords: [
-          { jp: "書類{しょるい}", pt: "documento" },
-          { jp: "書{か}き方{かた}", pt: "forma de escrever / preencher" },
-          { jp: "教{おし}えて", pt: "ensinar" }
-        ]
-      },
-      {
-        id: "seed_cityhall_005",
-        jp: "必要{ひつよう} な もの は 何{なに} ですか。",
-        pt: "O que é necessário trazer?",
-        newWords: [
-          { jp: "必要{ひつよう}", pt: "necessário" },
-          { jp: "何{なに}", pt: "o que" }
-        ]
-      },
-      {
-        id: "seed_cityhall_006",
-        jp: "マイナンバー カード の 更新{こうしん} を したいです。",
-        pt: "Quero renovar o cartão My Number.",
-        newWords: [
-          { jp: "マイナンバー カード", pt: "cartão My Number" },
-          { jp: "更新{こうしん}", pt: "renovação" },
-          { jp: "したいです", pt: "quero fazer" }
-        ]
-      },
-      {
-        id: "seed_cityhall_007",
-        jp: "通訳{つうやく} を お願{ねが}いできますか。",
-        pt: "É possível pedir um intérprete?",
-        newWords: [
-          { jp: "通訳{つうやく}", pt: "intérprete" },
-          { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
-        ]
-      },
-      {
-        id: "seed_cityhall_008",
-        jp: "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
-        pt: "Onde pego a senha de atendimento?",
-        newWords: [
-          { jp: "番号札{ばんごうふだ}", pt: "senha / ficha numerada" },
-          { jp: "取{と}りますか", pt: "pego?" }
-        ]
-      },
-      {
-        id: "seed_cityhall_009",
-        jp: "この 手続{てつづ}き は 今日中{きょうじゅう} に 終{お}わりますか。",
-        pt: "Este procedimento termina ainda hoje?",
-        newWords: [
-          { jp: "手続{てつづ}き", pt: "procedimento" },
-          { jp: "今日中{きょうじゅう}", pt: "ainda hoje" },
-          { jp: "終{お}わりますか", pt: "termina?" }
-        ]
-      },
-      {
-        id: "seed_cityhall_010",
-        jp: "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
-        pt: "É necessária uma cópia do cartão de residência?",
-        newWords: [
-          { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
-          { jp: "コピー", pt: "cópia" },
-          { jp: "必要{ひつよう}", pt: "necessário" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_konbini",
-    name: "No Konbini",
-    color: "tMint",
-    phrases: [
-      {
-        id: "seed_konbini_001",
-        jp: "レジ袋{ぶくろ} は 要{い}りません。",
-        pt: "Não preciso de sacola.",
-        newWords: [
-          { jp: "レジ袋{ぶくろ}", pt: "sacola" },
-          { jp: "要{い}りません", pt: "não preciso" }
-        ]
-      },
-      {
-        id: "seed_konbini_002",
-        jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
-        pt: "Por favor, aqueça este bentô.",
-        newWords: [
-          { jp: "お弁当{べんとう}", pt: "bentô" },
-          { jp: "温{あたた}めて", pt: "aquecer" }
-        ]
-      },
-      {
-        id: "seed_konbini_003",
-        jp: "お箸{はし} を 一膳{いちぜん} お願{ねが}いします。",
-        pt: "Um par de hashi, por favor.",
-        newWords: [
-          { jp: "お箸{はし}", pt: "hashi / palitinhos" },
-          { jp: "一膳{いちぜん}", pt: "um par de hashi" },
-          { jp: "お願{ねが}いします", pt: "por favor" }
-        ]
-      },
-      {
-        id: "seed_konbini_004",
-        jp: "スプーン は ありますか。",
-        pt: "Tem colher?",
-        newWords: [
-          { jp: "スプーン", pt: "colher" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
-      },
-      {
-        id: "seed_konbini_005",
-        jp: "公共料金{こうきょうりょうきん} を 払{はら}いたいです。",
-        pt: "Quero pagar uma conta pública.",
-        newWords: [
-          { jp: "公共料金{こうきょうりょうきん}", pt: "conta pública / utilidade" },
-          { jp: "払{はら}いたい", pt: "quero pagar" }
-        ]
-      },
-      {
-        id: "seed_konbini_006",
-        jp: "この 支払{しはら}い は ここ で できますか。",
-        pt: "Posso fazer este pagamento aqui?",
-        newWords: [
-          { jp: "支払{しはら}い", pt: "pagamento" },
-          { jp: "ここ", pt: "aqui" },
-          { jp: "できますか", pt: "pode fazer?" }
-        ]
-      },
-      {
-        id: "seed_konbini_007",
-        jp: "宅急便{たっきゅうびん} を 出{だ}したいです。",
-        pt: "Quero enviar uma encomenda pelo takkyubin.",
-        newWords: [
-          { jp: "宅急便{たっきゅうびん}", pt: "serviço de entrega" },
-          { jp: "出{だ}したい", pt: "quero enviar / despachar" }
-        ]
-      },
-      {
-        id: "seed_konbini_008",
-        jp: "レシート を ください。",
-        pt: "Por favor, me dê o recibo.",
-        newWords: [
-          { jp: "レシート", pt: "recibo / comprovante" },
-          { jp: "ください", pt: "por favor, me dê" }
-        ]
-      },
-      {
-        id: "seed_konbini_009",
-        jp: "ポイントカード は ありません。",
-        pt: "Não tenho cartão de pontos.",
-        newWords: [
-          { jp: "ポイントカード", pt: "cartão de pontos" },
-          { jp: "ありません", pt: "não tenho / não existe" }
-        ]
-      },
-      {
-        id: "seed_konbini_010",
-        jp: "現金{げんきん} で 払{はら}います。",
-        pt: "Vou pagar em dinheiro.",
-        newWords: [
-          { jp: "現金{げんきん}", pt: "dinheiro em espécie" },
-          { jp: "払{はら}います", pt: "vou pagar" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_market",
-    name: "No Mercado",
-    color: "tGreen",
-    phrases: [
-      {
-        id: "seed_market_001",
-        jp: "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
-        pt: "Este produto está esgotado?",
-        newWords: [
-          { jp: "商品{しょうひん}", pt: "produto" },
-          { jp: "売{う}り切{き}れ", pt: "esgotado" }
-        ]
-      },
-      {
-        id: "seed_market_002",
-        jp: "賞味期限{しょうみきげん} は いつ ですか。",
-        pt: "Qual é a data de validade?",
-        newWords: [
-          { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
-        ]
-      },
-      {
-        id: "seed_market_003",
-        jp: "この 肉{にく} は 今日{きょう} まで ですか。",
-        pt: "Esta carne vence hoje?",
-        newWords: [
-          { jp: "肉{にく}", pt: "carne" },
-          { jp: "今日{きょう}", pt: "hoje" },
-          { jp: "まで", pt: "até" }
-        ]
-      },
-      {
-        id: "seed_market_004",
-        jp: "割引{わりびき} シール は ありますか。",
-        pt: "Tem etiqueta de desconto?",
-        newWords: [
-          { jp: "割引{わりびき}", pt: "desconto" },
-          { jp: "シール", pt: "etiqueta / selo" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
-      },
-      {
-        id: "seed_market_005",
-        jp: "この 商品{しょうひん} は どこ に ありますか。",
-        pt: "Onde fica este produto?",
-        newWords: [
-          { jp: "商品{しょうひん}", pt: "produto" },
-          { jp: "どこ", pt: "onde" },
-          { jp: "ありますか", pt: "tem / fica?" }
-        ]
-      },
-      {
-        id: "seed_market_006",
-        jp: "袋{ふくろ} は 要{い}りません。",
-        pt: "Não preciso de sacola.",
-        newWords: [
-          { jp: "袋{ふくろ}", pt: "sacola" },
-          { jp: "要{い}りません", pt: "não preciso" }
-        ]
-      },
-      {
-        id: "seed_market_007",
-        jp: "カード で 払{はら}えますか。",
-        pt: "Posso pagar com cartão?",
-        newWords: [
-          { jp: "カード", pt: "cartão" },
-          { jp: "払{はら}えますか", pt: "posso pagar?" }
-        ]
-      },
-      {
-        id: "seed_market_008",
-        jp: "この 野菜{やさい} は 新鮮{しんせん} ですか。",
-        pt: "Este legume está fresco?",
-        newWords: [
-          { jp: "野菜{やさい}", pt: "legume / verdura" },
-          { jp: "新鮮{しんせん}", pt: "fresco" }
-        ]
-      },
-      {
-        id: "seed_market_009",
-        jp: "安{やす}い 方{ほう} は どちら ですか。",
-        pt: "Qual é a opção mais barata?",
-        newWords: [
-          { jp: "安{やす}い", pt: "barato" },
-          { jp: "方{ほう}", pt: "lado / opção" },
-          { jp: "どちら", pt: "qual" }
-        ]
-      },
-      {
-        id: "seed_market_010",
-        jp: "セルフレジ は 使{つか}えますか。",
-        pt: "Posso usar o caixa automático?",
-        newWords: [
-          { jp: "セルフレジ", pt: "caixa automático / self checkout" },
-          { jp: "使{つか}えますか", pt: "posso usar?" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_bike",
-    name: "Na Loja de Bicicletas",
-    color: "tPink",
-    phrases: [
-      {
-        id: "seed_bike_001",
-        jp: "チェーン が 外{はず}れました。見{み}て もらえますか。",
-        pt: "A corrente soltou. Pode dar uma olhada?",
-        newWords: [
-          { jp: "チェーン", pt: "corrente" },
-          { jp: "外{はず}れました", pt: "soltou" },
-          { jp: "見{み}て", pt: "ver / olhar" }
-        ]
-      },
-      {
-        id: "seed_bike_002",
-        jp: "パンク 修理{しゅうり} は いくら ですか。",
-        pt: "Quanto custa o conserto do pneu furado?",
-        newWords: [
-          { jp: "パンク", pt: "pneu furado" },
-          { jp: "修理{しゅうり}", pt: "conserto" },
-          { jp: "いくら", pt: "quanto" }
-        ]
-      },
-      {
-        id: "seed_bike_003",
-        jp: "タイヤ の 空気{くうき} を 入{い}れて もらえますか。",
-        pt: "Você pode colocar ar no pneu para mim?",
-        newWords: [
-          { jp: "タイヤ", pt: "pneu" },
-          { jp: "空気{くうき}", pt: "ar" },
-          { jp: "入{い}れて", pt: "colocar" }
-        ]
-      },
-      {
-        id: "seed_bike_004",
-        jp: "ブレーキ の 調子{ちょうし} が 悪{わる}いです。",
-        pt: "O freio não está bom.",
-        newWords: [
-          { jp: "ブレーキ", pt: "freio" },
-          { jp: "調子{ちょうし}", pt: "condição" },
-          { jp: "悪{わる}い", pt: "ruim" }
-        ]
-      },
-      {
-        id: "seed_bike_005",
-        jp: "ライト が つきません。",
-        pt: "A luz não acende.",
-        newWords: [
-          { jp: "ライト", pt: "luz / farol" },
-          { jp: "つきません", pt: "não acende" }
-        ]
-      },
-      {
-        id: "seed_bike_006",
-        jp: "サドル を もっと 高{たか}く できますか。",
-        pt: "Pode deixar o selim mais alto?",
-        newWords: [
-          { jp: "サドル", pt: "selim / banco da bicicleta" },
-          { jp: "もっと", pt: "mais" },
-          { jp: "高{たか}く", pt: "alto" }
-        ]
-      },
-      {
-        id: "seed_bike_007",
-        jp: "鍵{かぎ} を なくしました。",
-        pt: "Perdi a chave.",
-        newWords: [
-          { jp: "鍵{かぎ}", pt: "chave" },
-          { jp: "なくしました", pt: "perdi" }
-        ]
-      },
-      {
-        id: "seed_bike_008",
-        jp: "修理{しゅうり} に どのくらい 時間{じかん} が かかりますか。",
-        pt: "Quanto tempo leva para consertar?",
-        newWords: [
-          { jp: "修理{しゅうり}", pt: "conserto" },
-          { jp: "どのくらい", pt: "quanto tempo / quanto" },
-          { jp: "時間{じかん}", pt: "tempo" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_cinema",
-    name: "No Cinema",
-    color: "tBlue",
-    phrases: [
-      {
-        id: "seed_cinema_001",
-        jp: "次{つぎ} の 上映{じょうえい} は 何時{なんじ} ですか。",
-        pt: "A que horas é a próxima sessão?",
-        newWords: [
-          { jp: "次{つぎ}", pt: "próximo" },
-          { jp: "上映{じょうえい}", pt: "sessão / exibição" },
-          { jp: "何時{なんじ}", pt: "que horas" }
-        ]
-      },
-      {
-        id: "seed_cinema_002",
-        jp: "チケット を 二枚{にまい} お願{ねが}いします。",
-        pt: "Dois ingressos, por favor.",
-        newWords: [
-          { jp: "チケット", pt: "ingresso" },
-          { jp: "二枚{にまい}", pt: "duas unidades" },
-          { jp: "お願{ねが}いします", pt: "por favor" }
-        ]
-      },
-      {
-        id: "seed_cinema_003",
-        jp: "字幕{じまく} は ありますか。",
-        pt: "Tem legenda?",
-        newWords: [
-          { jp: "字幕{じまく}", pt: "legenda" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
-      },
-      {
-        id: "seed_cinema_004",
-        jp: "日本語{にほんご} の 字幕{じまく} ですか。",
-        pt: "A legenda é em japonês?",
-        newWords: [
-          { jp: "日本語{にほんご}", pt: "japonês" },
-          { jp: "字幕{じまく}", pt: "legenda" }
-        ]
-      },
-      {
-        id: "seed_cinema_005",
-        jp: "席{せき} は 選{えら}べますか。",
-        pt: "Posso escolher o assento?",
-        newWords: [
-          { jp: "席{せき}", pt: "assento" },
-          { jp: "選{えら}べますか", pt: "posso escolher?" }
-        ]
-      },
-      {
-        id: "seed_cinema_006",
-        jp: "前{まえ} の 席{せき} は 苦手{にがて} です。",
-        pt: "Não gosto de assento da frente.",
-        newWords: [
-          { jp: "前{まえ}", pt: "frente" },
-          { jp: "席{せき}", pt: "assento" },
-          { jp: "苦手{にがて}", pt: "não gosto / tenho dificuldade" }
-        ]
-      },
-      {
-        id: "seed_cinema_007",
-        jp: "ポップコーン の セット は ありますか。",
-        pt: "Tem combo de pipoca?",
-        newWords: [
-          { jp: "ポップコーン", pt: "pipoca" },
-          { jp: "セット", pt: "combo / conjunto" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
-      },
-      {
-        id: "seed_cinema_008",
-        jp: "この 映画{えいが} は 何分{なんぷん} ですか。",
-        pt: "Quantos minutos tem este filme?",
-        newWords: [
-          { jp: "映画{えいが}", pt: "filme" },
-          { jp: "何分{なんぷん}", pt: "quantos minutos" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_department",
-    name: "Na Loja de Departamentos",
-    color: "tAmber",
-    phrases: [
-      {
-        id: "seed_department_001",
-        jp: "この サイズ は ありますか。",
-        pt: "Tem este tamanho?",
-        newWords: [
-          { jp: "サイズ", pt: "tamanho" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
-      },
-      {
-        id: "seed_department_002",
-        jp: "試着室{しちゃくしつ} は どこ ですか。",
-        pt: "Onde fica o provador?",
-        newWords: [
-          { jp: "試着室{しちゃくしつ}", pt: "provador" },
-          { jp: "どこ", pt: "onde" }
-        ]
-      },
-      {
-        id: "seed_department_003",
-        jp: "これ を 試着{しちゃく} しても いいですか。",
-        pt: "Posso experimentar isto?",
-        newWords: [
-          { jp: "これ", pt: "isto" },
-          { jp: "試着{しちゃく}", pt: "experimentar roupa" },
-          { jp: "いいですか", pt: "posso?" }
-        ]
-      },
-      {
-        id: "seed_department_004",
-        jp: "もう 少{すこ}し 大{おお}きい サイズ は ありますか。",
-        pt: "Tem um tamanho um pouco maior?",
-        newWords: [
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "大{おお}きい", pt: "grande" },
-          { jp: "サイズ", pt: "tamanho" }
-        ]
-      },
-      {
-        id: "seed_department_005",
-        jp: "もう 少{すこ}し 安{やす}い もの は ありますか。",
-        pt: "Tem algo um pouco mais barato?",
-        newWords: [
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "安{やす}い", pt: "barato" },
-          { jp: "もの", pt: "coisa / produto" }
-        ]
-      },
-      {
-        id: "seed_department_006",
-        jp: "返品{へんぴん} は できますか。",
-        pt: "É possível devolver?",
-        newWords: [
-          { jp: "返品{へんぴん}", pt: "devolução" },
-          { jp: "できますか", pt: "é possível?" }
-        ]
-      },
-      {
-        id: "seed_department_007",
-        jp: "保証書{ほしょうしょ} は ありますか。",
-        pt: "Tem garantia por escrito?",
-        newWords: [
-          { jp: "保証書{ほしょうしょ}", pt: "certificado de garantia" },
-          { jp: "ありますか", pt: "tem?" }
-        ]
-      },
-      {
-        id: "seed_department_008",
-        jp: "プレゼント 用{よう} に 包{つつ}んで もらえますか。",
-        pt: "Pode embrulhar para presente?",
-        newWords: [
-          { jp: "プレゼント", pt: "presente" },
-          { jp: "用{よう}", pt: "para uso de" },
-          { jp: "包{つつ}んで", pt: "embrulhar" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_trip",
-    name: "Na Viagem",
-    color: "tGreen",
-    phrases: [
-      {
-        id: "seed_trip_001",
-        jp: "この 電車{でんしゃ} は 名古屋{なごや} へ 行{い}きますか。",
-        pt: "Este trem vai para Nagoya?",
-        newWords: [
-          { jp: "電車{でんしゃ}", pt: "trem" },
-          { jp: "名古屋{なごや}", pt: "Nagoya" },
-          { jp: "行{い}きますか", pt: "vai?" }
-        ]
-      },
-      {
-        id: "seed_trip_002",
-        jp: "次{つぎ} の バス は いつ 来{き}ますか。",
-        pt: "Quando vem o próximo ônibus?",
-        newWords: [
-          { jp: "次{つぎ}", pt: "próximo" },
-          { jp: "バス", pt: "ônibus" },
-          { jp: "来{き}ますか", pt: "vem?" }
-        ]
-      },
-      {
-        id: "seed_trip_003",
-        jp: "切符{きっぷ} は どこ で 買{か}えますか。",
-        pt: "Onde posso comprar a passagem?",
-        newWords: [
-          { jp: "切符{きっぷ}", pt: "passagem / bilhete" },
-          { jp: "買{か}えますか", pt: "posso comprar?" }
-        ]
-      },
-      {
-        id: "seed_trip_004",
-        jp: "何番線{なんばんせん} から 出{で}ますか。",
-        pt: "Sai de qual plataforma?",
-        newWords: [
-          { jp: "何番線{なんばんせん}", pt: "qual plataforma" },
-          { jp: "出{で}ますか", pt: "sai?" }
-        ]
-      },
-      {
-        id: "seed_trip_005",
-        jp: "ここ で 乗{の}り換{か}え ですか。",
-        pt: "É aqui que faço a baldeação?",
-        newWords: [
-          { jp: "ここ", pt: "aqui" },
-          { jp: "乗{の}り換{か}え", pt: "baldeação / troca" },
-          { jp: "ですか", pt: "é?" }
-        ]
-      },
-      {
-        id: "seed_trip_006",
-        jp: "この 電車{でんしゃ} は 普通{ふつう} ですか、快速{かいそく} ですか。",
-        pt: "Este trem é local ou rápido?",
-        newWords: [
-          { jp: "電車{でんしゃ}", pt: "trem" },
-          { jp: "普通{ふつう}", pt: "local / comum" },
-          { jp: "快速{かいそく}", pt: "rápido" }
-        ]
-      },
-      {
-        id: "seed_trip_007",
-        jp: "降{お}りる 駅{えき} は ここ ですか。",
-        pt: "É aqui a estação onde devo descer?",
-        newWords: [
-          { jp: "降{お}りる", pt: "descer" },
-          { jp: "駅{えき}", pt: "estação" },
-          { jp: "ここ", pt: "aqui" }
-        ]
-      },
-      {
-        id: "seed_trip_008",
-        jp: "ホテル まで タクシー で どのくらい ですか。",
-        pt: "Quanto tempo dá de táxi até o hotel?",
-        newWords: [
-          { jp: "ホテル", pt: "hotel" },
-          { jp: "タクシー", pt: "táxi" },
-          { jp: "どのくらい", pt: "quanto tempo / quanto" }
-        ]
-      },
-      {
-        id: "seed_trip_009",
-        jp: "駅員{えきいん} さん に 聞{き}いて みます。",
-        pt: "Vou tentar perguntar ao funcionário da estação.",
-        newWords: [
-          { jp: "駅員{えきいん}", pt: "funcionário da estação" },
-          { jp: "聞{き}いて", pt: "perguntar" },
-          { jp: "みます", pt: "vou tentar" }
-        ]
-      },
-      {
-        id: "seed_trip_010",
-        jp: "この ICカード は 使{つか}えますか。",
-        pt: "Posso usar este cartão IC?",
-        newWords: [
-          { jp: "ICカード", pt: "cartão IC / cartão de transporte" },
-          { jp: "使{つか}えますか", pt: "posso usar?" }
-        ]
-      }
-    ]
-  },
-
-  {
-    id: "topic_qa",
-    name: "Perguntas e Respostas",
-    color: "tRose",
-    phrases: [
-      {
-        id: "seed_qa_001",
-        jp: "お名前{なまえ} は 何{なん} ですか。",
-        pt: "Qual é o seu nome?",
-        newWords: [
-          { jp: "名前{なまえ}", pt: "nome" },
-          { jp: "何{なん}", pt: "qual / o que" }
-        ]
-      },
-      {
-        id: "seed_qa_002",
-        jp: "はい、わかりました。",
-        pt: "Sim, entendi.",
-        newWords: [
-          { jp: "はい", pt: "sim" },
-          { jp: "わかりました", pt: "entendi" }
-        ]
-      },
-      {
-        id: "seed_qa_003",
-        jp: "いいえ、まだ わかりません。",
-        pt: "Não, ainda não entendi.",
-        newWords: [
-          { jp: "いいえ", pt: "não" },
-          { jp: "まだ", pt: "ainda" },
-          { jp: "わかりません", pt: "não entendo" }
-        ]
-      },
-      {
-        id: "seed_qa_004",
-        jp: "もう 一度{いちど} 説明{せつめい} して ください。",
-        pt: "Por favor, explique mais uma vez.",
-        newWords: [
-          { jp: "一度{いちど}", pt: "uma vez" },
-          { jp: "説明{せつめい}", pt: "explicação" },
-          { jp: "してください", pt: "por favor, faça" }
-        ]
-      },
-      {
-        id: "seed_qa_005",
-        jp: "これは 何{なん} の 書類{しょるい} ですか。",
-        pt: "Que documento é este?",
-        newWords: [
-          { jp: "これ", pt: "isto" },
-          { jp: "何{なん}", pt: "qual / o que" },
-          { jp: "書類{しょるい}", pt: "documento" }
-        ]
-      },
-      {
-        id: "seed_qa_006",
-        jp: "いつ まで に 出{だ}せば いいですか。",
-        pt: "Até quando devo entregar?",
-        newWords: [
-          { jp: "いつ まで", pt: "até quando" },
-          { jp: "出{だ}せば", pt: "se entregar" },
-          { jp: "いいですか", pt: "está certo?" }
-        ]
-      },
-      {
-        id: "seed_qa_007",
-        jp: "ここ に サイン すれば いいですか。",
-        pt: "Está certo assinar aqui?",
-        newWords: [
-          { jp: "ここ", pt: "aqui" },
-          { jp: "サイン", pt: "assinatura" },
-          { jp: "すれば", pt: "se fizer" }
-        ]
-      },
-      {
-        id: "seed_qa_008",
-        jp: "電話{でんわ} で 連絡{れんらく} して もらえますか。",
-        pt: "Você poderia entrar em contato por telefone?",
-        newWords: [
-          { jp: "電話{でんわ}", pt: "telefone" },
-          { jp: "連絡{れんらく}", pt: "contato" },
-          { jp: "もらえますか", pt: "poderia fazer para mim?" }
-        ]
-      },
-      {
-        id: "seed_qa_009",
-        jp: "メール で 送{おく}って ください。",
-        pt: "Por favor, envie por e-mail.",
-        newWords: [
-          { jp: "メール", pt: "e-mail" },
-          { jp: "送{おく}って", pt: "enviar" },
-          { jp: "ください", pt: "por favor" }
-        ]
-      },
-      {
-        id: "seed_qa_010",
-        jp: "少{すこ}し 考{かんが}えて から 返事{へんじ} します。",
-        pt: "Vou responder depois de pensar um pouco.",
-        newWords: [
-          { jp: "少{すこ}し", pt: "um pouco" },
-          { jp: "考{かんが}えて", pt: "pensar" },
-          { jp: "返事{へんじ}", pt: "resposta" }
-        ]
       }
     ]
   }
 ];
+/* ---------- ponte segura com sensei-bank.js ---------- */
+function getExternalSenseiBank() {
+  try {
+    const bank = window.NIHONGO321_SENSEI_BANK;
 
+    if (!bank || typeof bank !== "object") {
+      return null;
+    }
+
+    return bank;
+  } catch {
+    return null;
+  }
+}
+
+function normalizeExternalNewWords(list) {
+  if (!Array.isArray(list)) return [];
+
+  return list
+    .map(item => {
+      if (!item || typeof item !== "object") return null;
+
+      const jp = String(item.jp || item.word || item.term || "").trim();
+      const pt = String(item.pt || item.meaning || item.translation || "").trim();
+
+      if (!jp || !pt) return null;
+
+      return { jp, pt };
+    })
+    .filter(Boolean);
+}
+
+function normalizeExternalPhrase(raw, topicId, index = 0) {
+  if (!raw || typeof raw !== "object") return null;
+
+  const jp = String(raw.jp || raw.japanese || raw.text || "").trim();
+  const pt = String(raw.pt || raw.portuguese || raw.translation || "").trim();
+
+  if (!jp || !pt) return null;
+
+  const baseId = String(raw.id || "").trim();
+  const safeId = baseId || `sensei_external_${topicId}_${index + 1}`;
+
+  return {
+    id: safeId,
+    jp,
+    pt,
+    romaji: String(raw.romaji || "").trim(),
+    kana: String(raw.kana || "").trim(),
+    note: String(raw.note || raw.explanation || "").trim(),
+    tags: Array.isArray(raw.tags) ? raw.tags : [],
+    situation: String(raw.situation || "").trim(),
+    isPremium: !!raw.isPremium,
+    level: String(raw.level || raw.levelGroup || "").trim(),
+    audioKey: String(raw.audioKey || "").trim(),
+    newWords: normalizeExternalNewWords(raw.newWords || raw.words || raw.vocabulary)
+  };
+}
+
+function normalizeExternalTopic(raw, index = 0) {
+  if (!raw || typeof raw !== "object") return null;
+
+  const id = String(raw.id || raw.key || `sensei_topic_${index + 1}`).trim();
+  const name = String(raw.name || raw.title || raw.label || `Tópico ${index + 1}`).trim();
+
+  if (!id || !name) return null;
+
+  const phrasesRaw = Array.isArray(raw.phrases)
+    ? raw.phrases
+    : Array.isArray(raw.items)
+      ? raw.items
+      : [];
+
+  const phrases = phrasesRaw
+    .map((phrase, phraseIndex) => normalizeExternalPhrase(phrase, id, phraseIndex))
+    .filter(Boolean);
+
+  return {
+    id,
+    name,
+    color: raw.color || pickTopicColor(index),
+    level: String(raw.level || raw.levelGroup || "").trim(),
+    description: String(raw.description || raw.desc || raw.shortDescription || "").trim(),
+    isPremium: !!raw.isPremium || raw.unlock === "premium",
+    phrases
+  };
+}
+
+function readExternalBankTopics() {
+  const bank = getExternalSenseiBank();
+  if (!bank) return [];
+
+  const source = bank.topics;
+
+  if (Array.isArray(source)) {
+    return source
+      .map((topic, index) => normalizeExternalTopic(topic, index))
+      .filter(Boolean);
+  }
+
+  if (source && typeof source === "object") {
+    return Object.entries(source)
+      .map(([key, topic], index) => normalizeExternalTopic({ id: key, ...topic }, index))
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function mergeTopicSeedsWithExternalBank() {
+  const legacySeeds = Array.isArray(TOPIC_SEEDS) ? TOPIC_SEEDS : [];
+  const externalSeeds = readExternalBankTopics();
+
+  if (!externalSeeds.length) {
+    return legacySeeds;
+  }
+
+  const byId = new Map();
+
+  for (const topic of legacySeeds) {
+    if (!topic?.id) continue;
+
+    byId.set(topic.id, {
+      ...topic,
+      phrases: Array.isArray(topic.phrases) ? [...topic.phrases] : []
+    });
+  }
+
+  for (const topic of externalSeeds) {
+    if (!topic?.id) continue;
+
+    const existing = byId.get(topic.id);
+
+    if (!existing) {
+      byId.set(topic.id, {
+        ...topic,
+        phrases: Array.isArray(topic.phrases) ? [...topic.phrases] : []
+      });
+      continue;
+    }
+
+    existing.name = existing.name || topic.name;
+    existing.color = existing.color || topic.color;
+
+    const phraseIds = new Set((existing.phrases || []).map(p => p.id));
+
+    for (const phrase of topic.phrases || []) {
+      if (!phrase?.id) continue;
+      if (phraseIds.has(phrase.id)) continue;
+
+      existing.phrases.push(phrase);
+      phraseIds.add(phrase.id);
+    }
+  }
+
+  return Array.from(byId.values());
+}
 /* ---------- seed / state ---------- */
+
+function cleanupOldSenseiBridgeImports(st) {
+  if (!st || !st.bank) return st;
+
+  st.bank.topics ||= [];
+  st.bank.phrases ||= [];
+  st.progress ||= {};
+  st.favorites ||= { phraseIds: [] };
+  st.favorites.phraseIds ||= [];
+  st.session ||= {};
+
+  const oldTopicIds = new Set(
+    st.bank.topics
+      .filter((topic) => topic?.source === "sensei-bank" || String(topic?.id || "").startsWith("sb_topic_"))
+      .map((topic) => topic.id)
+  );
+
+  const oldPhraseIds = new Set(
+    st.bank.phrases
+      .filter((phrase) =>
+        phrase?.source === "sensei-bank" ||
+        String(phrase?.id || "").startsWith("sb_phrase_") ||
+        oldTopicIds.has(phrase?.topicId)
+      )
+      .map((phrase) => phrase.id)
+  );
+
+  if (!oldTopicIds.size && !oldPhraseIds.size) return st;
+
+  st.bank.topics = st.bank.topics.filter((topic) => !oldTopicIds.has(topic.id));
+  st.bank.phrases = st.bank.phrases.filter((phrase) => !oldPhraseIds.has(phrase.id));
+
+  for (const id of oldPhraseIds) {
+    delete st.progress[id];
+  }
+
+  st.favorites.phraseIds = st.favorites.phraseIds.filter((id) => !oldPhraseIds.has(id));
+
+  if (Array.isArray(st.session.queue)) {
+    st.session.queue = st.session.queue.filter((id) => !oldPhraseIds.has(id));
+  }
+
+  if (oldPhraseIds.has(st.session.phraseId)) {
+    st.session.phraseId = st.session.queue?.[0] || null;
+    st.session.index = 0;
+  }
+
+  return st;
+}
+
 function ensureSeedCatalog(st) {
   const t = now();
 
@@ -1754,11 +700,20 @@ function ensureSeedCatalog(st) {
   st.bank.phrases ||= [];
   st.progress ||= {};
 
+  cleanupOldSenseiBridgeImports(st);
+
   const existingTopics = st.bank.topics;
   const topicNameMap = new Map(existingTopics.map(topic => [String(topic.name || "").toLowerCase(), topic]));
 
-  for (let i = 0; i < TOPIC_SEEDS.length; i++) {
-    const seedTopic = TOPIC_SEEDS[i];
+  const mergedTopicSeeds = mergeTopicSeedsWithExternalBank();
+
+  for (let i = 0; i < mergedTopicSeeds.length; i++) {
+    const seedTopic = mergedTopicSeeds[i];
+
+    if (seedTopic?.isPremium && typeof PREMIUM_TOPIC_IDS?.add === "function") {
+      PREMIUM_TOPIC_IDS.add(seedTopic.id);
+    }
+
     let topic = existingTopics.find(x => x.id === seedTopic.id) || topicNameMap.get(seedTopic.name.toLowerCase());
 
     if (!topic) {
@@ -1767,13 +722,19 @@ function ensureSeedCatalog(st) {
         name: seedTopic.name,
         color: seedTopic.color || pickTopicColor(i),
         createdAt: t,
-        updatedAt: t
+        updatedAt: t,
+        level: seedTopic.level || "",
+        description: seedTopic.description || "",
+        isPremium: !!seedTopic.isPremium
       };
       existingTopics.push(topic);
       topicNameMap.set(topic.name.toLowerCase(), topic);
     } else {
       topic.name = topic.name || seedTopic.name;
       topic.color = topic.color || seedTopic.color || pickTopicColor(i);
+      topic.level = topic.level || seedTopic.level || "";
+      topic.description = topic.description || seedTopic.description || "";
+      topic.isPremium = !!topic.isPremium || !!seedTopic.isPremium;
       topic.updatedAt ||= t;
       topic.createdAt ||= t;
       if (!topic.id) topic.id = seedTopic.id;
@@ -2870,7 +1831,7 @@ function unlockAudio() {
     o.connect(g).connect(audioCtx.destination);
     o.start();
     o.stop(audioCtx.currentTime + 0.01);
-  } catch {}
+  } catch { }
 
   saveState();
 }
@@ -3377,6 +2338,15 @@ function setPhraseById(id) {
 
   resetCountForPhrase(id);
   saveState();
+
+  if (route() === "#/105x") {
+    const sheet = $("#cycleSheet");
+    if (sheet) sheet.style.display = "none";
+
+    render105xBodyOnly();
+    renderPhraseListOnly();
+    startStudyTimerIfOn105x();
+  }
 }
 
 function loadPhraseForReview(id) {
@@ -3483,6 +2453,21 @@ function segmentText(text) {
 function setKanaLine(el, rawText) {
   const plain = jpStripFurigana(rawText);
   const segs = segmentText(plain);
+  const compactLen = plain.replace(/\s+/g, "").length;
+
+  el.classList.remove("kana--short", "kana--medium", "kana--long", "kana--xlong");
+
+  if (compactLen <= 12) {
+    el.classList.add("kana--short");
+  } else if (compactLen <= 18) {
+    el.classList.add("kana--medium");
+  } else if (compactLen <= 26) {
+    el.classList.add("kana--long");
+  } else {
+    el.classList.add("kana--xlong");
+  }
+
+  el.dataset.charCount = String(compactLen);
   el.innerHTML = segs.map((s, i) => `<span class="kseg" data-idx="${i}">${escapeHTML(s)}</span>`).join("");
 }
 
@@ -3539,7 +2524,7 @@ function ttsSpeak(text, rate = 1.0, onStart, onEnd) {
 
   try {
     speechSynthesis.cancel();
-  } catch {}
+  } catch { }
 
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "ja-JP";
@@ -3562,7 +2547,7 @@ function speakWithKaraoke(jpRaw, rate, kanaEl) {
     plain,
     rate,
     () => karaokePlay(kanaEl, plain, rate),
-    () => {}
+    () => { }
   );
 
   if (!ok) toast("áudio indisponível. treine lendo em voz alta.");
@@ -3585,7 +2570,7 @@ function callAndResponse(jpRaw, rate, kanaEl, onDone) {
     plain,
     rate,
     () => karaokePlay(kanaEl, plain, rate),
-    () => {}
+    () => { }
   );
 
   const t = estimateDurationMs(plain, rate);
@@ -3715,8 +2700,8 @@ function showCycleSheet(masteredNow) {
     <div class="small">${escapeHTML(msg)}</div>
     <div class="small">
       ${masteredNow
-        ? "Use esta frase como revisão rápida quando precisar."
-        : "Você pode seguir para a próxima frase ou repetir a mesma para reforçar."}
+      ? "Use esta frase como revisão rápida quando precisar."
+      : "Você pode seguir para a próxima frase ou repetir a mesma para reforçar."}
     </div>
     <div class="grid2">
       <button class="btn btn--ok btn--full" data-action="next">próxima frase</button>
@@ -3839,10 +2824,12 @@ function updateStudyUI() {
   const el = $("#studyTime");
   const fill = $("#studyFill");
 
-  if (!el || !fill) return;
+  if (!el) return;
 
   const ms = getStudyMs();
   el.textContent = fmtHMSDays(ms);
+
+  if (!fill) return;
 
   const goal = Math.max(
     5 * 60 * 1000,
@@ -3861,10 +2848,15 @@ function renderNewWords(list) {
     .join("");
 
   return `
-    <div class="sheet">
-      <div class="small" style="font-weight:800;margin-bottom:6px">explicação</div>
-      ${rows}
-    </div>
+    <details class="phraseExplanation">
+      <summary>
+        <span>explicação da frase</span>
+        <span class="explainHint">abrir</span>
+      </summary>
+      <div class="phraseExplanationBody">
+        ${rows}
+      </div>
+    </details>
   `;
 }
 
@@ -3910,6 +2902,7 @@ function renderPhraseMiniCard(p, opts = {}) {
   const title = opts.title || topicName(p.topicId);
   const actionLabel = opts.actionLabel || "treinar esta frase";
   const action = opts.action || "trainPhrase";
+  const filterAttr = opts.filter ? `data-filter="${escapeHTML(opts.filter)}"` : "";
 
   return `
     <div class="sheet stack" style="text-align:left">
@@ -3927,9 +2920,9 @@ function renderPhraseMiniCard(p, opts = {}) {
       </div>
 
       ${showGo ? `
-        <button class="btn btn--ok btn--full" data-action="${escapeHTML(action)}" data-id="${escapeHTML(p.id)}">
-          ${escapeHTML(actionLabel)}
-        </button>
+        <button class="btn btn--ok btn--full" data-action="${escapeHTML(action)}" data-id="${escapeHTML(p.id)}" ${filterAttr}>
+  ${escapeHTML(actionLabel)}
+</button>
       ` : ""}
     </div>
   `;
@@ -4462,10 +3455,10 @@ function renderSmartReviewCard() {
       </div>
 
       ${renderPhraseMiniCard(p, {
-        title: topicName(p.topicId),
-        actionLabel: reason.cta,
-        action: "reviewPhrase"
-      })}
+    title: topicName(p.topicId),
+    actionLabel: reason.cta,
+    action: "reviewPhrase"
+  })}
 
       <div class="grid2">
         <button class="btn btn--ghost btn--full" data-action="reviewPhrase" data-id="${escapeHTML(p.id)}">
@@ -4608,9 +3601,9 @@ function renderPhraseOfDayCard() {
       </div>
 
       ${renderPhraseMiniCard(p, {
-        title: topicName(p.topicId),
-        actionLabel: "treinar frase do dia"
-      })}
+    title: topicName(p.topicId),
+    actionLabel: "treinar frase do dia"
+  })}
     </section>
   `;
 }
@@ -4682,14 +3675,13 @@ function renderFavoritesCard() {
         </p>
       </div>
 
-      ${
-        list.length
-          ? list.slice(0, 3).map(p => renderPhraseMiniCard(p, {
-              title: "favorita",
-              actionLabel: "revisar favorita",
-              action: "reviewPhrase"
-            })).join("")
-          : `
+      ${list.length
+      ? list.slice(0, 3).map(p => renderPhraseMiniCard(p, {
+        title: "favorita",
+        actionLabel: "revisar favorita",
+        action: "reviewPhrase"
+      })).join("")
+      : `
             <div class="sheet stack" style="text-align:left">
               <div class="small">
                 Salve frases importantes para montar sua revisão pessoal. Toque em ☆ durante o treino.
@@ -4699,7 +3691,7 @@ function renderFavoritesCard() {
               </button>
             </div>
           `
-      }
+    }
 
       <button class="btn btn--full" data-action="topicFilter" data-id="FAV">
         abrir favoritas
@@ -5492,9 +4484,9 @@ function renderHome() {
               <option value="ALL">tudo</option>
               <option value="FAV" ${topicFilter === "FAV" ? "selected" : ""}>favoritas ${favCount ? `(${favCount})` : ""}</option>
               ${(STATE.bank.topics || []).map(t => {
-                const locked = isTopicPremium(t.id) && !isPremiumUnlocked();
-                return `<option value="${t.id}" ${t.id === topicFilter ? "selected" : ""}>${escapeHTML(t.name)}${locked ? " 🔒" : ""}</option>`;
-              }).join("")}
+    const locked = isTopicPremium(t.id) && !isPremiumUnlocked();
+    return `<option value="${t.id}" ${t.id === topicFilter ? "selected" : ""}>${escapeHTML(t.name)}${locked ? " 🔒" : ""}</option>`;
+  }).join("")}
             </select>
             <button class="btn btn--ghost" data-nav="#/manage">gerenciar</button>
           </div>
@@ -5646,804 +4638,7 @@ function renderTutorial() {
   `;
 }
 
-/* ---------- Sensei IA ---------- */
-const SENSEI_SCENARIO_BANK = {
-  fabrica: [
-    {
-      jp: "この 作業{さぎょう} を もう 一度{いちど} 教{おし}えて ください。",
-      pt: "Por favor, me ensine este trabalho mais uma vez.",
-      newWords: [
-        { jp: "作業{さぎょう}", pt: "trabalho / tarefa" },
-        { jp: "一度{いちど}", pt: "uma vez" },
-        { jp: "教{おし}えて", pt: "ensinar / explicar" }
-      ]
-    },
-    {
-      jp: "次{つぎ} は 何{なに} を すれば いいですか。",
-      pt: "O que eu devo fazer em seguida?",
-      newWords: [
-        { jp: "次{つぎ}", pt: "próximo / em seguida" },
-        { jp: "何{なに}", pt: "o que" },
-        { jp: "すれば いい", pt: "devo fazer" }
-      ]
-    },
-    {
-      jp: "この 機械{きかい} が 止{と}まりました。",
-      pt: "Esta máquina parou.",
-      newWords: [
-        { jp: "機械{きかい}", pt: "máquina" },
-        { jp: "止{と}まりました", pt: "parou" }
-      ]
-    },
-    {
-      jp: "確認{かくにん} して もらえますか。",
-      pt: "Você poderia verificar para mim?",
-      newWords: [
-        { jp: "確認{かくにん}", pt: "verificação" },
-        { jp: "もらえますか", pt: "poderia fazer para mim?" }
-      ]
-    },
-    {
-      jp: "やり方{かた} が まだ よく わかりません。",
-      pt: "Ainda não entendi bem o modo de fazer.",
-      newWords: [
-        { jp: "やり方{かた}", pt: "modo de fazer" },
-        { jp: "まだ", pt: "ainda" },
-        { jp: "わかりません", pt: "não entendo" }
-      ]
-    },
-    {
-      jp: "この 部品{ぶひん} は どこ に 置{お}きますか。",
-      pt: "Onde eu coloco esta peça?",
-      newWords: [
-        { jp: "部品{ぶひん}", pt: "peça" },
-        { jp: "置{お}きます", pt: "coloco" }
-      ]
-    },
-    {
-      jp: "少{すこ}し 待{ま}って もらえますか。",
-      pt: "Você poderia esperar um pouco?",
-      newWords: [
-        { jp: "少{すこ}し", pt: "um pouco" },
-        { jp: "待{ま}って", pt: "esperar" }
-      ]
-    }
-  ],
-  chefe: [
-    {
-      jp: "少{すこ}し 体調{たいちょう} が 悪{わる}いです。",
-      pt: "Estou me sentindo um pouco mal.",
-      newWords: [
-        { jp: "体調{たいちょう}", pt: "condição física" },
-        { jp: "悪{わる}い", pt: "ruim" }
-      ]
-    },
-    {
-      jp: "この 内容{ないよう} で 合{あ}って いますか。",
-      pt: "Está correto assim?",
-      newWords: [
-        { jp: "内容{ないよう}", pt: "conteúdo / instrução" },
-        { jp: "合{あ}って いますか", pt: "está correto?" }
-      ]
-    },
-    {
-      jp: "もう 少{すこ}し ゆっくり お願{ねが}いします。",
-      pt: "Mais devagar, por favor.",
-      newWords: [
-        { jp: "少{すこ}し", pt: "um pouco" },
-        { jp: "ゆっくり", pt: "devagar" }
-      ]
-    },
-    {
-      jp: "今日{きょう} は 残業{ざんぎょう} が ありますか。",
-      pt: "Hoje vai ter hora extra?",
-      newWords: [
-        { jp: "今日{きょう}", pt: "hoje" },
-        { jp: "残業{ざんぎょう}", pt: "hora extra" }
-      ]
-    },
-    {
-      jp: "この 作業{さぎょう} は 初{はじ}めて です。",
-      pt: "É a primeira vez que faço este trabalho.",
-      newWords: [
-        { jp: "作業{さぎょう}", pt: "trabalho / tarefa" },
-        { jp: "初{はじ}めて", pt: "primeira vez" }
-      ]
-    },
-    {
-      jp: "もう 一度{いちど} 説明{せつめい} して いただけますか。",
-      pt: "O senhor poderia explicar mais uma vez?",
-      newWords: [
-        { jp: "説明{せつめい}", pt: "explicação" },
-        { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
-      ]
-    },
-    {
-      jp: "終{お}わったら 報告{ほうこく} します。",
-      pt: "Quando terminar, eu aviso.",
-      newWords: [
-        { jp: "終{お}わったら", pt: "quando terminar" },
-        { jp: "報告{ほうこく}", pt: "relato / aviso" }
-      ]
-    }
-  ]
-};
-const SENSEI_EXTRA_BANK = {
-  hospital: [
-    {
-      jp: "昨日{きのう} から 熱{ねつ} が あります。",
-      pt: "Estou com febre desde ontem.",
-      newWords: [
-        { jp: "昨日{きのう}", pt: "ontem" },
-        { jp: "熱{ねつ}", pt: "febre" }
-      ]
-    },
-    {
-      jp: "のど が 痛{いた}いです。",
-      pt: "Estou com dor de garganta.",
-      newWords: [
-        { jp: "のど", pt: "garganta" },
-        { jp: "痛{いた}い", pt: "doer" }
-      ]
-    },
-    {
-      jp: "薬{くすり} は いつ 飲{の}めば いいですか。",
-      pt: "Quando devo tomar o remédio?",
-      newWords: [
-        { jp: "薬{くすり}", pt: "remédio" },
-        { jp: "飲{の}めば いい", pt: "devo tomar" }
-      ]
-    },
-    {
-      jp: "通訳{つうやく} は ありますか。",
-      pt: "Tem intérprete?",
-      newWords: [
-        { jp: "通訳{つうやく}", pt: "intérprete" }
-      ]
-    },
-    {
-      jp: "保険証{ほけんしょう} を 持{も}って います。",
-      pt: "Estou com o cartão do seguro de saúde.",
-      newWords: [
-        { jp: "保険証{ほけんしょう}", pt: "cartão do seguro de saúde" },
-        { jp: "持{も}って います", pt: "estou com / tenho comigo" }
-      ]
-    },
-    {
-      jp: "頭{あたま} が 痛{いた}くて、少{すこ}し 気持{きも}ち 悪{わる}いです。",
-      pt: "Estou com dor de cabeça e um pouco enjoado.",
-      newWords: [
-        { jp: "頭{あたま}", pt: "cabeça" },
-        { jp: "気持{きも}ち 悪{わる}い", pt: "enjoado / passando mal" }
-      ]
-    },
-    {
-      jp: "仕事{しごと} に 行{い}っても 大丈夫{だいじょうぶ} ですか。",
-      pt: "Tudo bem eu ir trabalhar?",
-      newWords: [
-        { jp: "仕事{しごと}", pt: "trabalho" },
-        { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem / sem problema" }
-      ]
-    }
-  ],
-  prefeitura: [
-    {
-      jp: "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
-      pt: "Por favor, me ensine como preencher este documento.",
-      newWords: [
-        { jp: "書類{しょるい}", pt: "documento" },
-        { jp: "書{か}き方{かた}", pt: "forma de preencher" }
-      ]
-    },
-    {
-      jp: "必要{ひつよう} な もの は 何{なに} ですか。",
-      pt: "O que é necessário trazer?",
-      newWords: [
-        { jp: "必要{ひつよう}", pt: "necessário" },
-        { jp: "何{なに}", pt: "o que" }
-      ]
-    },
-    {
-      jp: "この 手続{てつづ}き は 今日中{きょうじゅう} に 終{お}わりますか。",
-      pt: "Este procedimento termina ainda hoje?",
-      newWords: [
-        { jp: "手続{てつづ}き", pt: "procedimento" },
-        { jp: "今日中{きょうじゅう}", pt: "ainda hoje" }
-      ]
-    },
-    {
-      jp: "番号札{ばんごうふだ} は どこ で 取{と}りますか。",
-      pt: "Onde pego a senha de atendimento?",
-      newWords: [
-        { jp: "番号札{ばんごうふだ}", pt: "senha de atendimento" },
-        { jp: "取{と}りますか", pt: "pego?" }
-      ]
-    },
-    {
-      jp: "在留{ざいりゅう} カード の コピー は 必要{ひつよう} ですか。",
-      pt: "É necessária uma cópia do cartão de residência?",
-      newWords: [
-        { jp: "在留{ざいりゅう} カード", pt: "cartão de residência" },
-        { jp: "必要{ひつよう}", pt: "necessário" }
-      ]
-    },
-    {
-      jp: "通訳{つうやく} を お願{ねが}いできますか。",
-      pt: "É possível pedir um intérprete?",
-      newWords: [
-        { jp: "通訳{つうやく}", pt: "intérprete" },
-        { jp: "お願{ねが}いできますか", pt: "é possível pedir?" }
-      ]
-    },
-    {
-      jp: "この 窓口{まどぐち} で 合{あ}って いますか。",
-      pt: "Este balcão está correto?",
-      newWords: [
-        { jp: "窓口{まどぐち}", pt: "balcão / guichê" },
-        { jp: "合{あ}って いますか", pt: "está correto?" }
-      ]
-    }
-  ],
-  mercado: [
-    {
-      jp: "この 商品{しょうひん} は どこ に ありますか。",
-      pt: "Onde fica este produto?",
-      newWords: [
-        { jp: "商品{しょうひん}", pt: "produto" },
-        { jp: "どこ", pt: "onde" }
-      ]
-    },
-    {
-      jp: "賞味期限{しょうみきげん} は いつ ですか。",
-      pt: "Qual é a data de validade?",
-      newWords: [
-        { jp: "賞味期限{しょうみきげん}", pt: "data de validade" }
-      ]
-    },
-    {
-      jp: "袋{ふくろ} は 要{い}りません。",
-      pt: "Não preciso de sacola.",
-      newWords: [
-        { jp: "袋{ふくろ}", pt: "sacola" },
-        { jp: "要{い}りません", pt: "não preciso" }
-      ]
-    },
-    {
-      jp: "カード で 払{はら}えますか。",
-      pt: "Posso pagar com cartão?",
-      newWords: [
-        { jp: "カード", pt: "cartão" },
-        { jp: "払{はら}えますか", pt: "posso pagar?" }
-      ]
-    },
-    {
-      jp: "安{やす}い 方{ほう} は どちら ですか。",
-      pt: "Qual é a opção mais barata?",
-      newWords: [
-        { jp: "安{やす}い", pt: "barato" },
-        { jp: "方{ほう}", pt: "opção / lado" }
-      ]
-    },
-    {
-      jp: "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
-      pt: "Este produto está esgotado?",
-      newWords: [
-        { jp: "売{う}り切{き}れ", pt: "esgotado" }
-      ]
-    },
-    {
-      jp: "セルフレジ は 使{つか}えますか。",
-      pt: "Posso usar o caixa automático?",
-      newWords: [
-        { jp: "セルフレジ", pt: "caixa automático" },
-        { jp: "使{つか}えますか", pt: "posso usar?" }
-      ]
-    }
-  ],
-  konbini: [
-    {
-      jp: "この お弁当{べんとう} を 温{あたた}めて ください。",
-      pt: "Por favor, aqueça este bentô.",
-      newWords: [
-        { jp: "お弁当{べんとう}", pt: "bentô" },
-        { jp: "温{あたた}めて", pt: "aquecer" }
-      ]
-    },
-    {
-      jp: "レジ袋{ぶくろ} は 要{い}りません。",
-      pt: "Não preciso de sacola.",
-      newWords: [
-        { jp: "レジ袋{ぶくろ}", pt: "sacola de caixa" },
-        { jp: "要{い}りません", pt: "não preciso" }
-      ]
-    },
-    {
-      jp: "お箸{はし} を 一膳{いちぜん} お願{ねが}いします。",
-      pt: "Um par de hashi, por favor.",
-      newWords: [
-        { jp: "お箸{はし}", pt: "hashi" },
-        { jp: "一膳{いちぜん}", pt: "um par de hashi" }
-      ]
-    },
-    {
-      jp: "この 支払{しはら}い は ここで できますか。",
-      pt: "Posso fazer este pagamento aqui?",
-      newWords: [
-        { jp: "支払{しはら}い", pt: "pagamento" }
-      ]
-    },
-    {
-      jp: "レシート を ください。",
-      pt: "Por favor, me dê o recibo.",
-      newWords: [
-        { jp: "レシート", pt: "recibo" }
-      ]
-    },
-    {
-      jp: "スプーン は ありますか。",
-      pt: "Tem colher?",
-      newWords: [
-        { jp: "スプーン", pt: "colher" }
-      ]
-    },
-    {
-      jp: "現金{げんきん} で 払{はら}います。",
-      pt: "Vou pagar em dinheiro.",
-      newWords: [
-        { jp: "現金{げんきん}", pt: "dinheiro em espécie" },
-        { jp: "払{はら}います", pt: "vou pagar" }
-      ]
-    }
-  ],
-  aluguel: [
-    {
-      jp: "水漏{みずも}れ して います。",
-      pt: "Está vazando água.",
-      newWords: [
-        { jp: "水漏{みずも}れ", pt: "vazamento de água" }
-      ]
-    },
-    {
-      jp: "修理{しゅうり} を お願{ねが}いしたいです。",
-      pt: "Quero solicitar um reparo.",
-      newWords: [
-        { jp: "修理{しゅうり}", pt: "reparo / conserto" }
-      ]
-    },
-    {
-      jp: "いつ 来{き}て もらえますか。",
-      pt: "Quando alguém pode vir aqui?",
-      newWords: [
-        { jp: "来{き}て もらえますか", pt: "pode vir?" }
-      ]
-    },
-    {
-      jp: "エアコン が 動{うご}きません。",
-      pt: "O ar-condicionado não funciona.",
-      newWords: [
-        { jp: "エアコン", pt: "ar-condicionado" },
-        { jp: "動{うご}きません", pt: "não funciona" }
-      ]
-    },
-    {
-      jp: "鍵{かぎ} を なくしました。",
-      pt: "Perdi a chave.",
-      newWords: [
-        { jp: "鍵{かぎ}", pt: "chave" },
-        { jp: "なくしました", pt: "perdi" }
-      ]
-    },
-    {
-      jp: "管理会社{かんりがいしゃ} に 連絡{れんらく} したいです。",
-      pt: "Quero entrar em contato com a administradora.",
-      newWords: [
-        { jp: "管理会社{かんりがいしゃ}", pt: "administradora" },
-        { jp: "連絡{れんらく}", pt: "contato" }
-      ]
-    },
-    {
-      jp: "写真{しゃしん} を 送{おく}れば いいですか。",
-      pt: "Está certo eu enviar uma foto?",
-      newWords: [
-        { jp: "写真{しゃしん}", pt: "foto" },
-        { jp: "送{おく}れば", pt: "se enviar" }
-      ]
-    }
-  ],
-  transporte: [
-    {
-      jp: "この 電車{でんしゃ} は 福井{ふくい} に 行{い}きますか。",
-      pt: "Este trem vai para Fukui?",
-      newWords: [
-        { jp: "電車{でんしゃ}", pt: "trem" },
-        { jp: "行{い}きますか", pt: "vai?" }
-      ]
-    },
-    {
-      jp: "何番線{なんばんせん} ですか。",
-      pt: "É na plataforma número qual?",
-      newWords: [
-        { jp: "何番線{なんばんせん}", pt: "qual plataforma" }
-      ]
-    },
-    {
-      jp: "次{つぎ} の 電車{でんしゃ} は 何時{なんじ} ですか。",
-      pt: "A que horas é o próximo trem?",
-      newWords: [
-        { jp: "次{つぎ}", pt: "próximo" },
-        { jp: "何時{なんじ}", pt: "que horas" }
-      ]
-    },
-    {
-      jp: "ここ で 乗{の}り換{か}え ですか。",
-      pt: "É aqui que faço a baldeação?",
-      newWords: [
-        { jp: "乗{の}り換{か}え", pt: "baldeação / troca" }
-      ]
-    },
-    {
-      jp: "この バス は 駅{えき} に 行{い}きますか。",
-      pt: "Este ônibus vai para a estação?",
-      newWords: [
-        { jp: "バス", pt: "ônibus" },
-        { jp: "駅{えき}", pt: "estação" }
-      ]
-    },
-    {
-      jp: "切符{きっぷ} は どこ で 買{か}えますか。",
-      pt: "Onde posso comprar a passagem?",
-      newWords: [
-        { jp: "切符{きっぷ}", pt: "passagem" },
-        { jp: "買{か}えますか", pt: "posso comprar?" }
-      ]
-    },
-    {
-      jp: "降{お}りる 駅{えき} は ここ ですか。",
-      pt: "É aqui a estação onde devo descer?",
-      newWords: [
-        { jp: "降{お}りる", pt: "descer" },
-        { jp: "駅{えき}", pt: "estação" }
-      ]
-    }
-  ]
-};
 
-Object.assign(SENSEI_SCENARIO_BANK, SENSEI_EXTRA_BANK);
-
-const SENSEI_GRAMMAR_BANK = {
-  "ので": {
-    term: "ので",
-    title: "Uso de ので",
-    type: "gramática",
-    explanation: "ので liga uma causa a uma consequência. É natural, educado e muito usado para explicar motivo sem parecer seco. Em português, funciona como “porque”, “por causa de” ou “como”.",
-    goal: "Treine 1 frase por dia. Em 7 dias, você começa a sentir o uso de ので na prática.",
-    phrases: [
-      {
-        jp: "今日{きょう} は 体調{たいちょう} が 悪{わる}い ので、早{はや}く 帰{かえ}っても いいですか。",
-        pt: "Como hoje estou me sentindo mal, posso ir embora mais cedo?",
-        newWords: [
-          { jp: "体調{たいちょう}", pt: "condição física" },
-          { jp: "悪{わる}い", pt: "ruim" },
-          { jp: "早{はや}く", pt: "cedo" },
-          { jp: "帰{かえ}っても いいですか", pt: "posso ir embora?" }
-        ]
-      },
-      {
-        jp: "電車{でんしゃ} が 遅{おく}れて いる ので、少{すこ}し 遅{おく}れます。",
-        pt: "Como o trem está atrasado, vou me atrasar um pouco.",
-        newWords: [
-          { jp: "電車{でんしゃ}", pt: "trem" },
-          { jp: "遅{おく}れて いる", pt: "está atrasado" },
-          { jp: "少{すこ}し", pt: "um pouco" }
-        ]
-      },
-      {
-        jp: "日本語{にほんご} が まだ 苦手{にがて} なので、ゆっくり 話{はな}して ください。",
-        pt: "Como ainda tenho dificuldade com japonês, por favor fale devagar.",
-        newWords: [
-          { jp: "日本語{にほんご}", pt: "japonês" },
-          { jp: "苦手{にがて}", pt: "dificuldade / não ser bom em algo" },
-          { jp: "話{はな}して", pt: "falar" }
-        ]
-      },
-      {
-        jp: "明日{あした} は 仕事{しごと} なので、今日{きょう} は 早{はや}く 寝{ね}ます。",
-        pt: "Como amanhã tenho trabalho, hoje vou dormir cedo.",
-        newWords: [
-          { jp: "明日{あした}", pt: "amanhã" },
-          { jp: "仕事{しごと}", pt: "trabalho" },
-          { jp: "寝{ね}ます", pt: "vou dormir" }
-        ]
-      },
-      {
-        jp: "雨{あめ} が 降{ふ}って いる ので、自転車{じてんしゃ} では 行{い}きません。",
-        pt: "Como está chovendo, não vou de bicicleta.",
-        newWords: [
-          { jp: "雨{あめ}", pt: "chuva" },
-          { jp: "降{ふ}って いる", pt: "está caindo / está chovendo" },
-          { jp: "自転車{じてんしゃ}", pt: "bicicleta" }
-        ]
-      },
-      {
-        jp: "この 書類{しょるい} が わからない ので、教{おし}えて いただけますか。",
-        pt: "Como eu não entendo este documento, o senhor poderia me explicar?",
-        newWords: [
-          { jp: "書類{しょるい}", pt: "documento" },
-          { jp: "教{おし}えて", pt: "ensinar / explicar" },
-          { jp: "いただけますか", pt: "poderia fazer para mim? / forma educada" }
-        ]
-      },
-      {
-        jp: "時間{じかん} が ない ので、あと で 連絡{れんらく} します。",
-        pt: "Como não tenho tempo, entro em contato depois.",
-        newWords: [
-          { jp: "時間{じかん}", pt: "tempo" },
-          { jp: "あと で", pt: "depois" },
-          { jp: "連絡{れんらく}", pt: "contato" }
-        ]
-      }
-    ]
-  },
-  "かどうか": {
-    term: "かどうか",
-    title: "Uso de かどうか",
-    type: "gramática",
-    explanation: "かどうか é usado para dizer “se...” ou “se é ou não”. Ajuda quando você quer confirmar uma informação sem fazer uma pergunta direta demais.",
-    goal: "Treine 1 frase por dia. Em 7 dias, você consegue perguntar e confirmar melhor no cotidiano.",
-    phrases: [
-      {
-        jp: "この 電車{でんしゃ} が 福井{ふくい} に 行{い}く かどうか 知{し}りたいです。",
-        pt: "Quero saber se este trem vai para Fukui.",
-        newWords: [
-          { jp: "電車{でんしゃ}", pt: "trem" },
-          { jp: "知{し}りたい", pt: "quero saber" }
-        ]
-      },
-      {
-        jp: "今日{きょう} 残業{ざんぎょう} が ある かどうか 確認{かくにん} したいです。",
-        pt: "Quero confirmar se hoje vai ter hora extra.",
-        newWords: [
-          { jp: "残業{ざんぎょう}", pt: "hora extra" },
-          { jp: "確認{かくにん}", pt: "confirmação" }
-        ]
-      },
-      {
-        jp: "この 商品{しょうひん} が まだ ある かどうか 聞{き}いて みます。",
-        pt: "Vou tentar perguntar se este produto ainda tem.",
-        newWords: [
-          { jp: "商品{しょうひん}", pt: "produto" },
-          { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
-        ]
-      },
-      {
-        jp: "予約{よやく} が 必要{ひつよう} かどうか 教{おし}えて ください。",
-        pt: "Por favor, me diga se é necessário reservar.",
-        newWords: [
-          { jp: "予約{よやく}", pt: "reserva" },
-          { jp: "必要{ひつよう}", pt: "necessário" }
-        ]
-      },
-      {
-        jp: "この 書類{しょるい} で 大丈夫{だいじょうぶ} かどうか 見{み}て もらえますか。",
-        pt: "Você poderia ver se este documento está tudo bem?",
-        newWords: [
-          { jp: "書類{しょるい}", pt: "documento" },
-          { jp: "大丈夫{だいじょうぶ}", pt: "tudo bem" }
-        ]
-      },
-      {
-        jp: "明日{あした} 休{やす}める かどうか まだ わかりません。",
-        pt: "Ainda não sei se posso folgar amanhã.",
-        newWords: [
-          { jp: "明日{あした}", pt: "amanhã" },
-          { jp: "休{やす}める", pt: "posso folgar / descansar" }
-        ]
-      },
-      {
-        jp: "この カード が 使{つか}える かどうか 確認{かくにん} して ください。",
-        pt: "Por favor, confirme se este cartão pode ser usado.",
-        newWords: [
-          { jp: "使{つか}える", pt: "pode usar" },
-          { jp: "確認{かくにん}", pt: "confirmação" }
-        ]
-      }
-    ]
-  },
-  "ないといけない": {
-    term: "ないといけない",
-    title: "Uso de ないといけない",
-    type: "gramática",
-    explanation: "ないといけない expressa obrigação: “tenho que...”, “preciso...”. É muito comum em conversas do dia a dia.",
-    goal: "Treine 1 frase por dia para falar sobre obrigações sem travar.",
-    phrases: [
-      {
-        jp: "明日{あした} は 早{はや}く 起{お}きないといけません。",
-        pt: "Amanhã eu tenho que acordar cedo.",
-        newWords: [
-          { jp: "明日{あした}", pt: "amanhã" },
-          { jp: "早{はや}く", pt: "cedo" },
-          { jp: "起{お}きないといけません", pt: "tenho que acordar" }
-        ]
-      },
-      {
-        jp: "今日{きょう} 中{じゅう} に この 書類{しょるい} を 出{だ}さないといけません。",
-        pt: "Tenho que entregar este documento ainda hoje.",
-        newWords: [
-          { jp: "今日{きょう} 中{じゅう}", pt: "ainda hoje" },
-          { jp: "書類{しょるい}", pt: "documento" },
-          { jp: "出{だ}さないといけません", pt: "tenho que entregar" }
-        ]
-      },
-      {
-        jp: "仕事{しごと} の 前{まえ} に 薬{くすり} を 飲{の}まないといけません。",
-        pt: "Tenho que tomar o remédio antes do trabalho.",
-        newWords: [
-          { jp: "仕事{しごと}", pt: "trabalho" },
-          { jp: "薬{くすり}", pt: "remédio" },
-          { jp: "飲{の}まないといけません", pt: "tenho que tomar" }
-        ]
-      },
-      {
-        jp: "安全確認{あんぜんかくにん} を しないといけません。",
-        pt: "Tenho que fazer a verificação de segurança.",
-        newWords: [
-          { jp: "安全確認{あんぜんかくにん}", pt: "verificação de segurança" }
-        ]
-      },
-      {
-        jp: "この 住所{じゅうしょ} を 書{か}かないといけませんか。",
-        pt: "Tenho que escrever este endereço?",
-        newWords: [
-          { jp: "住所{じゅうしょ}", pt: "endereço" },
-          { jp: "書{か}かないといけませんか", pt: "tenho que escrever?" }
-        ]
-      },
-      {
-        jp: "もう 一度{いちど} 確認{かくにん} しないといけません。",
-        pt: "Tenho que confirmar mais uma vez.",
-        newWords: [
-          { jp: "一度{いちど}", pt: "uma vez" },
-          { jp: "確認{かくにん}", pt: "confirmação" }
-        ]
-      },
-      {
-        jp: "雨{あめ} なので、傘{かさ} を 持{も}って 行{い}かないといけません。",
-        pt: "Como está chovendo, tenho que levar guarda-chuva.",
-        newWords: [
-          { jp: "雨{あめ}", pt: "chuva" },
-          { jp: "傘{かさ}", pt: "guarda-chuva" },
-          { jp: "持{も}って 行{い}く", pt: "levar" }
-        ]
-      }
-    ]
-  },
-  "やってみる": {
-    term: "やってみる",
-    title: "Uso de やってみる",
-    type: "expressão",
-    explanation: "やってみる significa “tentar fazer”. É ótimo para mostrar disposição mesmo quando você ainda não domina algo.",
-    goal: "Treine 1 frase por dia para ganhar coragem de tentar falar e agir em japonês.",
-    phrases: [
-      {
-        jp: "自分{じぶん} で やってみます。",
-        pt: "Vou tentar fazer sozinho.",
-        newWords: [
-          { jp: "自分{じぶん}", pt: "eu mesmo / sozinho" }
-        ]
-      },
-      {
-        jp: "もう 一度{いちど} やってみても いいですか。",
-        pt: "Posso tentar fazer mais uma vez?",
-        newWords: [
-          { jp: "一度{いちど}", pt: "uma vez" }
-        ]
-      },
-      {
-        jp: "この 方法{ほうほう} で やってみます。",
-        pt: "Vou tentar fazer deste jeito.",
-        newWords: [
-          { jp: "方法{ほうほう}", pt: "método / forma" }
-        ]
-      },
-      {
-        jp: "少{すこ}し 難{むずか}しいですが、やってみます。",
-        pt: "É um pouco difícil, mas vou tentar.",
-        newWords: [
-          { jp: "難{むずか}しい", pt: "difícil" }
-        ]
-      },
-      {
-        jp: "まず、聞{き}いて みます。",
-        pt: "Primeiro, vou tentar perguntar.",
-        newWords: [
-          { jp: "まず", pt: "primeiro" },
-          { jp: "聞{き}いて みます", pt: "vou tentar perguntar" }
-        ]
-      },
-      {
-        jp: "駅員{えきいん} さん に 聞{き}いて みます。",
-        pt: "Vou tentar perguntar ao funcionário da estação.",
-        newWords: [
-          { jp: "駅員{えきいん}", pt: "funcionário da estação" }
-        ]
-      },
-      {
-        jp: "日本語{にほんご} で 説明{せつめい} して みます。",
-        pt: "Vou tentar explicar em japonês.",
-        newWords: [
-          { jp: "日本語{にほんご}", pt: "japonês" },
-          { jp: "説明{せつめい}", pt: "explicação" }
-        ]
-      }
-    ]
-  },
-  "気づかせる": {
-    term: "気づかせる",
-    title: "Uso de 気づかせる",
-    type: "palavra-alvo",
-    explanation: "気づかせる significa “fazer perceber”, “fazer alguém notar”. É mais avançado, mas útil para falar de aprendizado, erro, aviso e reflexão.",
-    goal: "Treine 1 frase por dia para entender uma expressão mais profunda e natural.",
-    phrases: [
-      {
-        jp: "この 経験{けいけん} は 大切{たいせつ} な こと に 気{き}づかせて くれました。",
-        pt: "Esta experiência me fez perceber algo importante.",
-        newWords: [
-          { jp: "経験{けいけん}", pt: "experiência" },
-          { jp: "大切{たいせつ}", pt: "importante" }
-        ]
-      },
-      {
-        jp: "先生{せんせい} の 言葉{ことば} が 私{わたし} に 気{き}づかせて くれました。",
-        pt: "As palavras do professor me fizeram perceber.",
-        newWords: [
-          { jp: "先生{せんせい}", pt: "professor" },
-          { jp: "言葉{ことば}", pt: "palavras" }
-        ]
-      },
-      {
-        jp: "失敗{しっぱい} が 自分{じぶん} の 弱点{じゃくてん} に 気{き}づかせて くれました。",
-        pt: "O erro me fez perceber meu ponto fraco.",
-        newWords: [
-          { jp: "失敗{しっぱい}", pt: "falha / erro" },
-          { jp: "弱点{じゃくてん}", pt: "ponto fraco" }
-        ]
-      },
-      {
-        jp: "この アプリ は 毎日{まいにち} の 練習{れんしゅう} の 大切{たいせつ} さ に 気{き}づかせて くれます。",
-        pt: "Este app me faz perceber a importância da prática diária.",
-        newWords: [
-          { jp: "毎日{まいにち}", pt: "todos os dias" },
-          { jp: "練習{れんしゅう}", pt: "prática" }
-        ]
-      },
-      {
-        jp: "友達{ともだち} の 一言{ひとこと} が 私{わたし} に 気{き}づかせて くれました。",
-        pt: "Uma palavra de um amigo me fez perceber.",
-        newWords: [
-          { jp: "友達{ともだち}", pt: "amigo" },
-          { jp: "一言{ひとこと}", pt: "uma palavra / comentário breve" }
-        ]
-      },
-      {
-        jp: "仕事{しごと} の ミス が 確認{かくにん} の 大切{たいせつ} さ に 気{き}づかせました。",
-        pt: "O erro no trabalho me fez perceber a importância da confirmação.",
-        newWords: [
-          { jp: "仕事{しごと}", pt: "trabalho" },
-          { jp: "確認{かくにん}", pt: "confirmação" }
-        ]
-      },
-      {
-        jp: "日本{にほん} での 生活{せいかつ} は 言葉{ことば} の 大切{たいせつ} さ に 気{き}づかせて くれました。",
-        pt: "A vida no Japão me fez perceber a importância das palavras.",
-        newWords: [
-          { jp: "日本{にほん}", pt: "Japão" },
-          { jp: "生活{せいかつ}", pt: "vida / cotidiano" },
-          { jp: "言葉{ことば}", pt: "palavras / idioma" }
-        ]
-      }
-    ]
-  }
-};
 
 function normalizeSenseiText(text) {
   return String(text || "")
@@ -6457,7 +4652,7 @@ function detectSenseiTerm(text) {
   const raw = String(text || "");
   const normalized = normalizeSenseiText(raw);
 
-  const knownTerms = Object.keys(SENSEI_GRAMMAR_BANK);
+  const knownTerms = Object.keys(getActiveSenseiGrammarBank());
   for (const term of knownTerms) {
     if (raw.includes(term) || normalized.includes(term.toLowerCase())) return term;
   }
@@ -6618,7 +4813,181 @@ function buildFallbackGrammarPack(term, request, level, tone) {
     ]
   };
 }
+/* ---------- ponte segura: bancos externos do Sensei IA ---------- */
+function getExternalSenseiData() {
+  try {
+    const bank = window.NIHONGO321_SENSEI_BANK;
 
+    if (!bank || typeof bank !== "object") {
+      return null;
+    }
+
+    return bank;
+  } catch {
+    return null;
+  }
+}
+
+function getExternalSenseiGrammarBank() {
+  const bank = getExternalSenseiData();
+  if (!bank) return null;
+
+  const candidates = [
+    bank.grammar,
+    bank.grammarBank,
+    bank.grammarPacks,
+    bank.quickLessons?.grammar,
+    bank.quickLessons,
+    bank.lessons
+  ];
+
+  for (const item of candidates) {
+    if (item && typeof item === "object" && !Array.isArray(item)) {
+      return item;
+    }
+  }
+
+  return null;
+}
+
+function getExternalSenseiScenarioBank() {
+  const bank = getExternalSenseiData();
+  if (!bank) return null;
+
+  const candidates = [
+    bank.scenarios,
+    bank.scenarioBank,
+    bank.situationPacks,
+    bank.situations,
+    bank.premiumPacks?.scenarios,
+    bank.premiumPacks,
+    bank.phrasePacks
+  ];
+
+  for (const item of candidates) {
+    if (item && typeof item === "object" && !Array.isArray(item)) {
+      return item;
+    }
+  }
+
+  return null;
+}
+
+function getActiveSenseiGrammarBank() {
+  return getExternalSenseiGrammarBank() || SENSEI_GRAMMAR_BANK || {};
+}
+
+function getActiveSenseiScenarioBank() {
+  return getExternalSenseiScenarioBank() || SENSEI_SCENARIO_BANK || {};
+}
+
+function normalizeSenseiPackPhrases(pack, preferredLevel = "") {
+  if (!pack || typeof pack !== "object") return [];
+
+  function normalizeList(list) {
+    if (!Array.isArray(list)) return [];
+
+    return list
+      .map(item => {
+        if (!item || typeof item !== "object") return null;
+
+        const jp = String(item.jp || item.japanese || "").trim();
+        const pt = String(item.pt || item.portuguese || item.translation || "").trim();
+
+        if (!jp || !pt) return null;
+
+        return {
+          jp,
+          pt,
+          newWords: normalizeExternalNewWords(item.newWords || item.words || item.vocabulary)
+        };
+      })
+      .filter(Boolean);
+  }
+
+  const directList = Array.isArray(pack.phrases)
+    ? pack.phrases
+    : Array.isArray(pack.items)
+      ? pack.items
+      : Array.isArray(pack.examples)
+        ? pack.examples
+        : [];
+
+  if (directList.length) {
+    return normalizeList(directList);
+  }
+
+  if (pack.levels && typeof pack.levels === "object") {
+    const levelKey = normalizeSenseiLevelKey(preferredLevel);
+
+    const preferred = normalizeList(pack.levels[levelKey]);
+    if (preferred.length) return preferred;
+
+    const fallbackOrder = ["iniciante", "intermediario", "avancado"];
+
+    for (const key of fallbackOrder) {
+      const list = normalizeList(pack.levels[key]);
+      if (list.length) return list;
+    }
+
+    for (const value of Object.values(pack.levels)) {
+      const list = normalizeList(value);
+      if (list.length) return list;
+    }
+  }
+
+  return [];
+}
+
+function normalizeSenseiLevelKey(level) {
+  const raw = String(level || "").toLowerCase().trim();
+
+  if (/avancado|avançado|n2|n1|confiança|confianca/.test(raw)) return "avancado";
+  if (/intermediario|intermediário|medio|médio|n4|n3|autonomia/.test(raw)) return "intermediario";
+
+  return "iniciante";
+}
+
+function normalizeSenseiGrammarPack(pack, term = "", preferredLevel = "") {
+  if (!pack || typeof pack !== "object") return null;
+
+  const safeTerm = String(pack.term || pack.label || term || "").trim();
+  const phrases = normalizeSenseiPackPhrases(pack, preferredLevel);
+
+  if (!phrases.length) return null;
+
+  return {
+    term: safeTerm,
+    title: String(pack.title || pack.label || `Uso de ${safeTerm}`).trim(),
+    type: String(pack.type || pack.kind || "gramática").trim(),
+    explanation: String(pack.explanation || pack.note || pack.usage || "").trim(),
+    goal: String(pack.goal || "").trim(),
+    phrases
+  };
+}
+
+function normalizeSenseiScenarioPack(pack, preferredLevel = "") {
+  if (Array.isArray(pack)) {
+    return pack
+      .map(item => {
+        if (!item || typeof item !== "object") return null;
+
+        const jp = String(item.jp || item.japanese || "").trim();
+        const pt = String(item.pt || item.portuguese || item.translation || "").trim();
+
+        if (!jp || !pt) return null;
+
+        return {
+          jp,
+          pt,
+          newWords: normalizeExternalNewWords(item.newWords || item.words || item.vocabulary)
+        };
+      })
+      .filter(Boolean);
+  }
+
+  return normalizeSenseiPackPhrases(pack, preferredLevel);
+}
 function generateSenseiMaterial(payload) {
   const request = String(payload?.request || "").trim();
   const level = String(payload?.level || "").trim();
@@ -6629,7 +4998,10 @@ function generateSenseiMaterial(payload) {
   const term = detectSenseiTerm(`${request} ${customTheme}`);
 
   if (requestType === "grammar") {
-    const grammarPack = SENSEI_GRAMMAR_BANK[term] || buildFallbackGrammarPack(term, request, level, tone);
+    const activeGrammarBank = getActiveSenseiGrammarBank();
+    const externalPack = normalizeSenseiGrammarPack(activeGrammarBank[term], term, level);
+    const grammarPack = externalPack || SENSEI_GRAMMAR_BANK[term] || buildFallbackGrammarPack(term, request, level, tone);
+
     const selected = grammarPack.phrases.slice(0, 7).map((base) =>
       cloneSenseiPhrase(base, "grammar", customTheme, "grammar", grammarPack.term)
     );
@@ -6650,7 +5022,11 @@ function generateSenseiMaterial(payload) {
   }
 
   const scenario = detectSenseiScenario(`${request} ${customTheme}`);
-  const bank = SENSEI_SCENARIO_BANK[scenario] || SENSEI_SCENARIO_BANK.fabrica;
+  const activeScenarioBank = getActiveSenseiScenarioBank();
+  const externalScenario = normalizeSenseiScenarioPack(activeScenarioBank[scenario], level);
+  const legacyScenario = SENSEI_SCENARIO_BANK[scenario] || SENSEI_SCENARIO_BANK.fabrica || [];
+  const bank = externalScenario.length ? externalScenario : legacyScenario;
+
   const selected = bank.slice(0, 7).map((base) => cloneSenseiPhrase(base, scenario, customTheme));
   const coachLine = buildSenseiCoachLine(request, level, tone);
 
@@ -6844,12 +5220,12 @@ function renderSensei() {
 
           <div class="grid2">
             <div>
-              <div class="small">nível</div>
-              <select id="senseiLevel" class="btn selectBtn" style="width:100%">
-                <option value="iniciante">iniciante</option>
-                <option value="básico">básico</option>
-                <option value="intermediário">intermediário</option>
-              </select>
+            <div class="small">nível</div>
+            <select id="senseiLevel" class="btn selectBtn" style="width:100%">
+              <option value="básico">básico — sobrevivência</option>
+              <option value="intermediário">intermediário — autonomia</option>
+              <option value="avançado">avançado — confiança</option>
+            </select>
             </div>
 
             <div>
@@ -6996,41 +5372,31 @@ function render105x() {
   APP.innerHTML = `
     <div class="stack">
       <section class="card stack" id="view105x">
-        <div class="row row--between" style="align-items:center">
+        <div class="studyTopCompact" aria-label="controles compactos do treino">
           <div class="studyActions">
             <button class="miniBtn" title="skills" aria-label="skills" data-nav="#/skills">🏅</button>
             <button class="miniBtn" title="gerenciar frases" aria-label="gerenciar frases" data-nav="#/manage">✏️</button>
           </div>
 
-          <button class="btn btn--muted" data-nav="#/home" style="min-height:40px;padding:0 16px;">sair</button>
-        </div>
+          <div class="studyMetaCompact">
+            <select class="btn selectBtn studyTopicCompact" id="topicFilterSel105x" aria-label="selecionar tema do treino">
+              <option value="ALL">tudo</option>
+              <option value="FAV" ${currentFilter === "FAV" ? "selected" : ""}>favoritas</option>
+              ${(STATE.bank.topics || []).map(t => {
+    const locked = isTopicPremium(t.id) && !isPremiumUnlocked();
+    return `<option value="${t.id}" ${t.id === currentFilter ? "selected" : ""}>${escapeHTML(t.name)}${locked ? " 🔒" : ""}</option>`;
+  }).join("")}
+            </select>
 
-        <div class="sheet stack" style="text-align:center">
-          <div class="small">tema do treino</div>
-          <select class="btn selectBtn" id="topicFilterSel105x" aria-label="selecionar tema do treino" style="max-width:360px;margin:0 auto;">
-            <option value="ALL">tudo</option>
-            <option value="FAV" ${currentFilter === "FAV" ? "selected" : ""}>favoritas</option>
-            ${(STATE.bank.topics || []).map(t => {
-              const locked = isTopicPremium(t.id) && !isPremiumUnlocked();
-              return `<option value="${t.id}" ${t.id === currentFilter ? "selected" : ""}>${escapeHTML(t.name)}${locked ? " 🔒" : ""}</option>`;
-            }).join("")}
-          </select>
-        </div>
-
-        <div class="studyDock">
-          <div class="studyRight">
-            <div class="studyTimer" aria-label="tempo de estudo">
-              <div class="studyTimerRow">
-                <div class="studyTime"><span class="ic">⏱</span> <span id="studyTime">00:00:00 (0d)</span></div>
-                <div class="studyHint">tempo dedicado</div>
-              </div>
-              <div class="studyBar"><div class="studyFill" id="studyFill"></div></div>
+            <div class="studyMiniLine">
+              <span class="studyTimeMini" aria-label="tempo estudado"><span class="ic">⏱</span> <span id="studyTime">00:00:00 (0d)</span></span>
+              <button class="callChip" data-action="toggleCall" aria-label="alternar call and response">
+                ${STATE.session.callMode ? "call on" : "call off"}
+              </button>
             </div>
-
-            <button class="btn btn--ghost callBtn" data-action="toggleCall">
-              ${STATE.session.callMode ? "call: on" : "call: off"}
-            </button>
           </div>
+
+          <button class="studyExitBtn" data-nav="#/home">sair</button>
         </div>
 
         <div class="phraseArea" aria-label="frase em treino">
@@ -7062,14 +5428,6 @@ function render105x() {
 
         <div id="cycleSheet" class="sheet stack" style="display:none"></div>
       </section>
-
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">frases do treino</div>
-          <div class="small">organizadas por tema</div>
-        </div>
-        <div class="list" id="phraseList"></div>
-      </section>
     </div>
   `;
 
@@ -7097,7 +5455,6 @@ function render105x() {
   }
 
   render105xBodyOnly();
-  renderPhraseListOnly();
   startStudyTimerIfOn105x();
   ensureBackTopButton();
   updateBackTopVisibility();
@@ -7171,12 +5528,12 @@ function renderPhraseListOnly() {
       ${renderTopicHeader(t, list.length, collapsed)}
       <div class="topicBody ${collapsed ? "isCollapsed" : ""}">
         ${list.map(x => {
-          const pr = getProg(x.id);
-          const st = pr.status === "mastered" ? "dominada" : "em treino";
-          const pct = phraseProgressPct(pr);
-          const pctTxt = Math.round(pct * 100);
+      const pr = getProg(x.id);
+      const st = pr.status === "mastered" ? "dominada" : "em treino";
+      const pct = phraseProgressPct(pr);
+      const pctTxt = Math.round(pct * 100);
 
-          return `
+      return `
             <div class="item">
               <div class="itemTop">
                 <div style="min-width:0;text-align:left">
@@ -7196,7 +5553,7 @@ function renderPhraseListOnly() {
               </div>
             </div>
           `;
-        }).join("")}
+    }).join("")}
       </div>
     `;
 
@@ -7348,7 +5705,9 @@ function renderManage() {
 
   const def = ensureDefaultTopic();
   const topics = STATE.bank.topics || [];
-  const collapsed = STATE.ui.collapsedTopics || {};
+  STATE.ui ||= {};
+  STATE.ui.collapsedTopics ||= {};
+  const collapsed = STATE.ui.collapsedTopics;
 
   const byTopic = new Map();
   for (const t of topics) byTopic.set(t.id, []);
@@ -7378,11 +5737,11 @@ function renderManage() {
         <div class="sep"></div>
 
         <div class="row row--between">
-          <div class="badge">temas e frases</div>
+          <div class="badge">temas organizados</div>
           <button class="btn btn--ghost" data-nav="#/edit">nova frase</button>
         </div>
 
-        <div class="small">Use furigana com chaves. exemplo: 名前{なまえ}</div>
+        <div class="small">Os tópicos começam fechados para manter a organização. Toque em um tema para abrir as frases.</div>
 
         <div class="list" id="manageTopics"></div>
       </section>
@@ -7394,7 +5753,7 @@ function renderManage() {
 
   for (const t of topics) {
     const list = byTopic.get(t.id) || [];
-    const isCollapsed = !!collapsed[t.id];
+    const isCollapsed = collapsed[t.id] !== false;
     const canDeleteTopic = t.id !== def.id;
     const hasPhrases = list.length > 0;
 
@@ -7412,10 +5771,10 @@ function renderManage() {
         ${hasPhrases ? `
           <div class="reorderList" data-reorder-list="1" data-topic="${escapeHTML(t.id)}">
             ${list.map(p => {
-              const pr = getProg(p.id);
-              const st = pr.status === "mastered" ? "dominada" : "em treino";
+      const pr = getProg(p.id);
+      const st = pr.status === "mastered" ? "dominada" : "em treino";
 
-              return `
+      return `
                 <div class="reorderItem" data-reorder-item="1" data-topic="${escapeHTML(t.id)}" data-id="${escapeHTML(p.id)}">
                   <div class="reorderTop">
                     <div class="reorderLeft">
@@ -7432,7 +5791,7 @@ function renderManage() {
                   </div>
                 </div>
               `;
-            }).join("")}
+    }).join("")}
           </div>
           <div class="small">Segure no ≡ e arraste para ordenar.</div>
         ` : `
@@ -7978,8 +6337,8 @@ function ensureBackTopButton() {
     if (reduce) window.scrollTo(0, 0);
     else window.scrollTo({ top: 0, behavior: "smooth" });
 
-    try { beep("pop"); } catch {}
-    try { vibrate([8]); } catch {}
+    try { beep("pop"); } catch { }
+    try { vibrate([8]); } catch { }
   }, { passive: true });
 }
 
@@ -8361,8 +6720,12 @@ document.addEventListener("click", (e) => {
     const id = btn.dataset.id;
     if (!id) return;
 
+    STATE.ui ||= {};
     STATE.ui.collapsedTopics ||= {};
-    STATE.ui.collapsedTopics[id] = !STATE.ui.collapsedTopics[id];
+
+    const currentlyCollapsed = STATE.ui.collapsedTopics[id] !== false;
+    STATE.ui.collapsedTopics[id] = currentlyCollapsed ? false : true;
+
     saveState();
     render();
 
@@ -8422,7 +6785,7 @@ document.addEventListener("click", (e) => {
 
     if (!p || !kanaEl) return;
 
-    if (STATE.session.callMode) callAndResponse(p.jp, rate, kanaEl, () => {});
+    if (STATE.session.callMode) callAndResponse(p.jp, rate, kanaEl, () => { });
     else speakWithKaraoke(p.jp, rate, kanaEl);
 
     return;
@@ -8814,7 +7177,7 @@ document.addEventListener("pointerdown", (e) => {
     pointerId: e.pointerId
   };
 
-  try { item.setPointerCapture(e.pointerId); } catch {}
+  try { item.setPointerCapture(e.pointerId); } catch { }
 
   item.classList.add("dragging");
   vibrate([8]);
@@ -8866,7 +7229,7 @@ document.addEventListener("pointercancel", (e) => {
   if (!DRAG) return;
   if (e.pointerId !== DRAG.pointerId) return;
 
-  try { DRAG.item.classList.remove("dragging"); } catch {}
+  try { DRAG.item.classList.remove("dragging"); } catch { }
 
   DRAG = null;
 }, { passive: true });
@@ -8956,7 +7319,7 @@ window.addEventListener("hashchange", () => {
 })();
 
 /* =========================================================
-   NIHONGO321 v8.2.0
+   NIHONGO321 v8.4.8
    PATCH BLOCO 5.8 — SENSEI IA EXPERT ENGINE 2.0
    - melhora respostas independentes do Sensei IA local
    - amplia detecção de pedidos
@@ -8983,7 +7346,7 @@ window.addEventListener("hashchange", () => {
   function sxNow() {
     try {
       if (typeof now === "function") return now();
-    } catch {}
+    } catch { }
 
     return Date.now();
   }
@@ -8991,7 +7354,7 @@ window.addEventListener("hashchange", () => {
   function sxUid(prefix = "sx") {
     try {
       if (typeof uid === "function") return uid(prefix);
-    } catch {}
+    } catch { }
 
     return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
   }
@@ -8999,7 +7362,7 @@ window.addEventListener("hashchange", () => {
   function sxEscape(value) {
     try {
       if (typeof escapeHTML === "function") return escapeHTML(value);
-    } catch {}
+    } catch { }
 
     return String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -9026,7 +7389,7 @@ window.addEventListener("hashchange", () => {
   function sxStripFurigana(value) {
     try {
       if (typeof jpStripFurigana === "function") return jpStripFurigana(value);
-    } catch {}
+    } catch { }
 
     return String(value || "").replace(/([^{}\s]+)\{([^{}]+)\}/g, "$1");
   }
@@ -9111,7 +7474,7 @@ window.addEventListener("hashchange", () => {
   function sxGetOriginalGenerator() {
     try {
       if (typeof generateSenseiMaterial === "function") return generateSenseiMaterial;
-    } catch {}
+    } catch { }
 
     return null;
   }
@@ -9119,7 +7482,7 @@ window.addEventListener("hashchange", () => {
   function sxGetOriginalRenderOutput() {
     try {
       if (typeof renderSenseiOutput === "function") return renderSenseiOutput;
-    } catch {}
+    } catch { }
 
     return null;
   }
@@ -9232,7 +7595,7 @@ window.addEventListener("hashchange", () => {
 
     return "scenario";
   }
-    /* ---------- banco ampliado de gramática / estruturas ---------- */
+  /* ---------- banco ampliado de gramática / estruturas ---------- */
   const SENSEI_58_GRAMMAR_BANK = {
     "ので": {
       label: "Uso de ので",
@@ -9644,7 +8007,7 @@ window.addEventListener("hashchange", () => {
       ]
     }
   };
-    /* ---------- banco ampliado de situações reais ---------- */
+  /* ---------- banco ampliado de situações reais ---------- */
   const SENSEI_58_SCENARIO_BANK = {
     "hospital": {
       label: "Hospital",
@@ -10051,7 +8414,7 @@ window.addEventListener("hashchange", () => {
     return "fabrica";
   }
 
-    /* ---------- detecção de termo gramatical / palavra-alvo ---------- */
+  /* ---------- detecção de termo gramatical / palavra-alvo ---------- */
   function sxNormalizeTerm(term) {
     return String(term || "")
       .trim()
@@ -10066,7 +8429,7 @@ window.addEventListener("hashchange", () => {
       if (typeof SENSEI_GRAMMAR_BANK === "object" && SENSEI_GRAMMAR_BANK) {
         Object.keys(SENSEI_GRAMMAR_BANK).forEach(k => keys.add(k));
       }
-    } catch {}
+    } catch { }
 
     return Array.from(keys).sort((a, b) => b.length - a.length);
   }
@@ -10133,7 +8496,7 @@ window.addEventListener("hashchange", () => {
             : []
         };
       }
-    } catch {}
+    } catch { }
 
     return null;
   }
@@ -10401,7 +8764,7 @@ window.addEventListener("hashchange", () => {
       sourceNote: pack.sourceNote || ""
     };
   }
-    /* ---------- gerador principal Expert Engine 2.0 ---------- */
+  /* ---------- gerador principal Expert Engine 2.0 ---------- */
   function sxBuildExpertPack(payload = {}) {
     const request = sxRaw(payload.request || payload.prompt || payload.text || "");
     const theme = sxRaw(payload.theme || payload.topic || payload.topicName || "");
@@ -10461,7 +8824,7 @@ window.addEventListener("hashchange", () => {
             confidence: oldResult.confidence || "legacy"
           };
         }
-      } catch {}
+      } catch { }
 
       return sxBuildScenarioPack({
         request,
@@ -10487,11 +8850,11 @@ window.addEventListener("hashchange", () => {
     const safePack = pack && Array.isArray(pack.phrases)
       ? pack
       : sxBuildExpertPack({
-          request: "criar frases úteis para estudar japonês no Japão",
-          theme: "Material prático",
-          level: "iniciante",
-          tone: "educado"
-        });
+        request: "criar frases úteis para estudar japonês no Japão",
+        theme: "Material prático",
+        level: "iniciante",
+        tone: "educado"
+      });
 
     const enhancedPack = {
       ...safePack,
@@ -10605,13 +8968,13 @@ window.addEventListener("hashchange", () => {
         } else {
           count = (STATE.bank?.phrases || []).filter(p => p.topicId === t.id).length;
         }
-      } catch {}
+      } catch { }
 
       let locked = "";
 
       try {
         locked = typeof isTopicPremium === "function" && isTopicPremium(t.id) ? " 🔒" : "";
-      } catch {}
+      } catch { }
 
       return `
         <option value="${sxEscape(t.id)}">
@@ -10626,7 +8989,7 @@ window.addEventListener("hashchange", () => {
       if (typeof formatWordExplanation === "function") {
         return formatWordExplanation(word);
       }
-    } catch {}
+    } catch { }
 
     return `${word?.jp || ""} = ${word?.pt || ""}`;
   }
@@ -10782,7 +9145,7 @@ window.addEventListener("hashchange", () => {
   function lmNow() {
     try {
       if (typeof now === "function") return now();
-    } catch {}
+    } catch { }
 
     return Date.now();
   }
@@ -10790,7 +9153,7 @@ window.addEventListener("hashchange", () => {
   function lmUid(prefix = "lm") {
     try {
       if (typeof uid === "function") return uid(prefix);
-    } catch {}
+    } catch { }
 
     return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
   }
@@ -10798,7 +9161,7 @@ window.addEventListener("hashchange", () => {
   function lmEscape(value) {
     try {
       if (typeof escapeHTML === "function") return escapeHTML(value);
-    } catch {}
+    } catch { }
 
     return String(value ?? "")
       .replaceAll("&", "&amp;")
@@ -10831,7 +9194,7 @@ window.addEventListener("hashchange", () => {
   function lmStripFuri(value) {
     try {
       if (typeof jpStripFurigana === "function") return jpStripFurigana(value);
-    } catch {}
+    } catch { }
 
     return String(value || "").replace(/([^{}\s]+)\{([^{}]+)\}/g, "$1");
   }
@@ -10906,7 +9269,7 @@ window.addEventListener("hashchange", () => {
         toast(msg);
         return;
       }
-    } catch {}
+    } catch { }
 
     console.log("[NIHONGO321]", msg);
   }
@@ -10914,7 +9277,7 @@ window.addEventListener("hashchange", () => {
   function lmBeep(type = "ding") {
     try {
       if (typeof beep === "function") beep(type);
-    } catch {}
+    } catch { }
   }
 
   function lmSafeJSONParse(str) {
@@ -10947,7 +9310,7 @@ window.addEventListener("hashchange", () => {
       if (typeof formatWordExplanation === "function") {
         return formatWordExplanation(word);
       }
-    } catch {}
+    } catch { }
 
     const jp = word?.jp || "";
     const pt = word?.pt || "";
@@ -11343,7 +9706,7 @@ window.addEventListener("hashchange", () => {
       ]
     }
   };
-    Object.assign(LM_GRAMMAR_BANK, {
+  Object.assign(LM_GRAMMAR_BANK, {
     "てもらえますか": {
       label: "Uso de てもらえますか",
       kind: "gramática",
@@ -11762,7 +10125,7 @@ window.addEventListener("hashchange", () => {
     }
   });
 
-    Object.assign(LM_GRAMMAR_BANK, {
+  Object.assign(LM_GRAMMAR_BANK, {
     "かどうか": {
       label: "Uso de かどうか",
       kind: "gramática",
@@ -12115,7 +10478,7 @@ window.addEventListener("hashchange", () => {
       ]
     }
   });
-    Object.assign(LM_GRAMMAR_BANK, {
+  Object.assign(LM_GRAMMAR_BANK, {
     "ながら": {
       label: "Uso de ながら",
       kind: "gramática",
@@ -12821,7 +11184,7 @@ window.addEventListener("hashchange", () => {
     }
   };
 
-    Object.assign(LM_SCENARIO_BANK, {
+  Object.assign(LM_SCENARIO_BANK, {
     "prefeitura": {
       label: "Prefeitura",
       tags: ["prefeitura", "documento", "residencia", "residência", "zairyu", "my number", "mynumber", "endereco", "endereço", "市役所", "書類", "在留"],
@@ -13453,9 +11816,9 @@ window.addEventListener("hashchange", () => {
       )
     ];
   }
-    /* =========================================================
-     6. CONSTRUÇÃO DE PACKS DO SENSEI LOCAL MASTER
-     ========================================================= */
+  /* =========================================================
+   6. CONSTRUÇÃO DE PACKS DO SENSEI LOCAL MASTER
+   ========================================================= */
 
   function lmBuildCoachLine(pack, meta = {}) {
     const parts = [];
@@ -13671,7 +12034,7 @@ window.addEventListener("hashchange", () => {
 
         try {
           lock = typeof isTopicPremium === "function" && isTopicPremium(t.id) ? " 🔒" : "";
-        } catch {}
+        } catch { }
 
         return `
           <option value="${lmEscape(t.id)}">
@@ -13757,11 +12120,11 @@ window.addEventListener("hashchange", () => {
     const safePack = pack && Array.isArray(pack.phrases)
       ? pack
       : lmBuildScenarioPack({
-          request: "criar frases úteis",
-          theme: "Material prático",
-          level: "iniciante",
-          tone: "educado"
-        });
+        request: "criar frases úteis",
+        theme: "Material prático",
+        level: "iniciante",
+        tone: "educado"
+      });
 
     const enhanced = {
       ...safePack,
@@ -13800,7 +12163,7 @@ window.addEventListener("hashchange", () => {
 
         return;
       }
-    } catch {}
+    } catch { }
 
     lmRenderOutputFallback(enhanced);
   }
@@ -13821,7 +12184,7 @@ window.addEventListener("hashchange", () => {
         try {
           const oldResult = lmOriginalGenerateSenseiMaterial(payload);
           if (oldResult && Array.isArray(oldResult.phrases)) return oldResult;
-        } catch {}
+        } catch { }
       }
 
       return lmBuildScenarioPack({
@@ -13839,11 +12202,11 @@ window.addEventListener("hashchange", () => {
 
   try {
     generateSenseiMaterial = window.generateSenseiMaterial;
-  } catch {}
+  } catch { }
 
   try {
     renderSenseiOutput = window.renderSenseiOutput;
-  } catch {}
+  } catch { }
 
   /* =========================================================
      9. REPARO APÓS CLIQUE DE GERAR
@@ -13997,7 +12360,7 @@ window.addEventListener("hashchange", () => {
   function b6StripFuri(value) {
     try {
       if (typeof jpStripFurigana === "function") return jpStripFurigana(value);
-    } catch {}
+    } catch { }
 
     return String(value || "").replace(/([^{}\s]+)\{([^{}]+)\}/g, "$1");
   }
@@ -14187,9 +12550,9 @@ window.addEventListener("hashchange", () => {
 
     return out.slice(0, count);
   }
-    /* =========================================================
-     2. BANCOS DE VARIAÇÃO REAL POR NÍVEL E TOM
-     ========================================================= */
+  /* =========================================================
+   2. BANCOS DE VARIAÇÃO REAL POR NÍVEL E TOM
+   ========================================================= */
 
   function b6TermSet(term, level, tone) {
     const t = String(term || "").trim();
@@ -14799,9 +13162,9 @@ window.addEventListener("hashchange", () => {
 
     return phrases;
   }
-    /* =========================================================
-     3. APLICAÇÃO REAL DAS VARIAÇÕES
-     ========================================================= */
+  /* =========================================================
+   3. APLICAÇÃO REAL DAS VARIAÇÕES
+   ========================================================= */
 
   function b6MakeMetaNote(level, tone) {
     const levelMap = {
@@ -14945,7 +13308,7 @@ window.addEventListener("hashchange", () => {
 
   try {
     generateSenseiMaterial = window.generateSenseiMaterial;
-  } catch {}
+  } catch { }
 
   /* =========================================================
      4. REFORÇO VISUAL NO RESULTADO
@@ -14955,11 +13318,11 @@ window.addEventListener("hashchange", () => {
     const safePack = pack && Array.isArray(pack.phrases)
       ? pack
       : window.generateSenseiMaterial({
-          request: "criar frases úteis",
-          theme: "material prático",
-          level: "iniciante",
-          tone: "educado"
-        });
+        request: "criar frases úteis",
+        theme: "material prático",
+        level: "iniciante",
+        tone: "educado"
+      });
 
     if (previousRenderer) {
       try {
@@ -14974,7 +13337,7 @@ window.addEventListener("hashchange", () => {
 
     try {
       box.dataset.pack = JSON.stringify(safePack);
-    } catch {}
+    } catch { }
 
     const level = safePack.levelMode || "iniciante";
     const tone = safePack.toneMode || "educado";
@@ -15023,7 +13386,7 @@ window.addEventListener("hashchange", () => {
 
   try {
     renderSenseiOutput = window.renderSenseiOutput;
-  } catch {}
+  } catch { }
 
   /* =========================================================
      5. REPARO PÓS-GERAÇÃO
@@ -15068,7 +13431,7 @@ window.addEventListener("hashchange", () => {
 
     try {
       current = JSON.parse(box.dataset?.pack || "null");
-    } catch {}
+    } catch { }
 
     const expectedLevel = b6Level(payload.level);
     const expectedTone = b6Tone(payload.tone);
@@ -15170,527 +13533,3 @@ window.addEventListener("hashchange", () => {
   console.log("[NIHONGO321] Sensei IA 6B carregado — nível e tom agora alteram as frases de verdade.");
 
 })();
-
-/* =========================================================
-   NIHONGO321 - Bloco 6C
-   Ponte segura: app.js ⇄ sensei-bank.js
-   - Lê window.NIHONGO321_SENSEI_BANK
-   - Importa tópicos e frases para STATE.bank
-   - Mantém conteúdo antigo
-   - Não altera treino 105x
-   - Não altera checkout
-   - Não apaga localStorage
-   ========================================================= */
-
-(function nihongo321SenseiBankBridge6C() {
-  "use strict";
-
-  const BRIDGE_VERSION = "6C.1.0";
-  const SOURCE = "sensei-bank";
-  const TOPIC_PREFIX = "sb_topic_";
-  const PHRASE_PREFIX = "sb_phrase_";
-
-  function sbLog(msg, data) {
-    try {
-      console.log(`[NIHONGO321 ${BRIDGE_VERSION}] ${msg}`, data || "");
-    } catch {}
-  }
-
-  function sbToast(msg) {
-    try {
-      if (typeof toast === "function") {
-        toast(msg);
-        return;
-      }
-    } catch {}
-
-    sbLog(msg);
-  }
-
-  function sbGetBank() {
-    try {
-      return window.NIHONGO321_SENSEI_BANK || null;
-    } catch {
-      return null;
-    }
-  }
-
-  function sbHasAppState() {
-    try {
-      return !!(
-        typeof STATE === "object" &&
-        STATE &&
-        STATE.bank &&
-        Array.isArray(STATE.bank.topics) &&
-        Array.isArray(STATE.bank.phrases)
-      );
-    } catch {
-      return false;
-    }
-  }
-
-  function sbSafeId(value, fallback = "item") {
-    const raw = String(value || fallback)
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9_/-]+/g, "_")
-      .replace(/\/+/g, "_")
-      .replace(/_+/g, "_")
-      .replace(/^_+|_+$/g, "");
-
-    return raw || fallback;
-  }
-
-  function sbNow() {
-    try {
-      if (typeof now === "function") return now();
-    } catch {}
-
-    return Date.now();
-  }
-
-  function sbPickColor(index) {
-    try {
-      if (typeof pickTopicColor === "function") return pickTopicColor(index);
-    } catch {}
-
-    const colors = ["tRose", "tViolet", "tBlue", "tCyan", "tGreen", "tAmber", "tPink", "tMint"];
-    return colors[index % colors.length];
-  }
-
-  function sbSave() {
-    try {
-      if (typeof saveState === "function") {
-        saveState();
-        return true;
-      }
-    } catch (err) {
-      sbLog("saveState falhou", err);
-    }
-
-    return false;
-  }
-
-  function sbRender() {
-    try {
-      if (typeof render === "function") {
-        render();
-        return true;
-      }
-    } catch (err) {
-      sbLog("render falhou", err);
-    }
-
-    try {
-      if (typeof renderApp === "function") {
-        renderApp();
-        return true;
-      }
-    } catch (err) {
-      sbLog("renderApp falhou", err);
-    }
-
-    return false;
-  }
-
-  function sbToArray(value) {
-    if (Array.isArray(value)) return value;
-
-    if (value && typeof value === "object") {
-      return Object.entries(value).map(([key, item]) => {
-        if (item && typeof item === "object") {
-          return { key, ...item };
-        }
-
-        return { key, value: item };
-      });
-    }
-
-    return [];
-  }
-
-  function sbNormalizeTopic(raw, index) {
-    const key = raw.key || raw.id || raw.slug || raw.topic || raw.name || `topico_${index + 1}`;
-    const id = `${TOPIC_PREFIX}${sbSafeId(key, `topico_${index + 1}`)}`;
-
-    const name =
-      raw.name ||
-      raw.title ||
-      raw.label ||
-      raw.pt ||
-      raw.value ||
-      key ||
-      `Tópico ${index + 1}`;
-
-    return {
-      id,
-      name: String(name).trim(),
-      color: raw.color || sbPickColor(index),
-      createdAt: sbNow(),
-      updatedAt: sbNow(),
-      source: SOURCE,
-      sourceKey: String(key),
-      level: raw.level || "",
-      description: raw.description || raw.desc || "",
-      isPremium: !!raw.isPremium
-    };
-  }
-
-  function sbNormalizePhrase(raw, topicId, topicKey, index) {
-    const baseId = raw.id || `${topicKey}_${index + 1}`;
-    const id = `${PHRASE_PREFIX}${sbSafeId(baseId, `frase_${index + 1}`)}`;
-
-    const jp = String(raw.jp || raw.japanese || raw.text || "").trim();
-    const pt = String(raw.pt || raw.portuguese || raw.translation || "").trim();
-
-    if (!jp || !pt) return null;
-
-    const newWords = Array.isArray(raw.newWords)
-      ? raw.newWords
-      : Array.isArray(raw.words)
-        ? raw.words
-        : Array.isArray(raw.vocab)
-          ? raw.vocab
-          : [];
-
-    return {
-      id,
-      topicId,
-      jp,
-      pt,
-      romaji: raw.romaji || "",
-      kana: raw.kana || "",
-      note: raw.note || raw.obs || "",
-      tags: Array.isArray(raw.tags) ? raw.tags : [],
-      situation: raw.situation || "",
-      audioKey: raw.audioKey || "",
-      source: SOURCE,
-      sourceId: String(raw.id || baseId),
-      level: raw.level || "",
-      isPremium: !!raw.isPremium,
-      newWords: newWords
-        .filter(Boolean)
-        .map((w) => ({
-          jp: String(w.jp || w.word || "").trim(),
-          pt: String(w.pt || w.meaning || "").trim()
-        }))
-        .filter((w) => w.jp && w.pt)
-    };
-  }
-
-  function sbCollectTopicsAndPhrases(bank) {
-    const result = {
-      topics: [],
-      phrases: []
-    };
-
-    const topicEntries = sbToArray(bank?.topics);
-
-    topicEntries.forEach((rawTopic, topicIndex) => {
-      const topic = sbNormalizeTopic(rawTopic, topicIndex);
-      result.topics.push(topic);
-
-      const topicPhrases =
-        rawTopic.phrases ||
-        rawTopic.items ||
-        rawTopic.sentences ||
-        rawTopic.examples ||
-        [];
-
-      sbToArray(topicPhrases).forEach((rawPhrase, phraseIndex) => {
-        const phrase = sbNormalizePhrase(
-          rawPhrase,
-          topic.id,
-          topic.sourceKey,
-          phraseIndex
-        );
-
-        if (phrase) {
-          phrase.topic = rawTopic.key || rawTopic.id || rawTopic.slug || "";
-          result.phrases.push(phrase);
-        }
-      });
-    });
-
-    const loosePhraseGroups = [
-      ["dailyPhrases", bank?.dailyPhrases, "Frase do dia"],
-      ["quickLessons", bank?.quickLessons, "Lições rápidas"],
-      ["premiumPacks", bank?.premiumPacks, "Packs Premium"]
-    ];
-
-    loosePhraseGroups.forEach(([groupKey, groupValue, groupName]) => {
-      const list = sbToArray(groupValue);
-      if (!list.length) return;
-
-      const topic = sbNormalizeTopic(
-        {
-          id: groupKey,
-          name: groupName,
-          isPremium: groupKey === "premiumPacks"
-        },
-        result.topics.length
-      );
-
-      result.topics.push(topic);
-
-      list.forEach((rawPhrase, phraseIndex) => {
-        const phrase = sbNormalizePhrase(
-          rawPhrase,
-          topic.id,
-          groupKey,
-          phraseIndex
-        );
-
-        if (phrase) result.phrases.push(phrase);
-      });
-    });
-
-    return result;
-  }
-
-  function sbAddPremiumTopic(topicId) {
-    try {
-      if (
-        typeof PREMIUM_TOPIC_IDS !== "undefined" &&
-        PREMIUM_TOPIC_IDS &&
-        typeof PREMIUM_TOPIC_IDS.add === "function"
-      ) {
-        PREMIUM_TOPIC_IDS.add(topicId);
-      }
-    } catch {}
-  }
-
-  function sbUpsertTopics(topics) {
-    let added = 0;
-    let updated = 0;
-
-    const existingById = new Map(
-      STATE.bank.topics.map((topic) => [topic.id, topic])
-    );
-
-    topics.forEach((topic) => {
-      const old = existingById.get(topic.id);
-
-      if (!old) {
-        STATE.bank.topics.push(topic);
-        added++;
-      } else if (old.source === SOURCE) {
-        old.name = topic.name;
-        old.color = old.color || topic.color;
-        old.updatedAt = sbNow();
-        old.description = topic.description;
-        old.level = topic.level;
-        old.isPremium = topic.isPremium;
-        updated++;
-      }
-
-      if (topic.isPremium) {
-        sbAddPremiumTopic(topic.id);
-      }
-    });
-
-    return { added, updated };
-  }
-
-  function sbUpsertPhrases(phrases) {
-    let added = 0;
-    let updated = 0;
-
-    const existingById = new Map(
-      STATE.bank.phrases.map((phrase) => [phrase.id, phrase])
-    );
-
-    phrases.forEach((phrase) => {
-      const old = existingById.get(phrase.id);
-
-      if (!old) {
-        STATE.bank.phrases.push(phrase);
-        added++;
-        return;
-      }
-
-      if (old.source === SOURCE) {
-        old.topicId = phrase.topicId;
-        old.jp = phrase.jp;
-        old.pt = phrase.pt;
-        old.romaji = phrase.romaji;
-        old.kana = phrase.kana;
-        old.note = phrase.note;
-        old.tags = phrase.tags;
-        old.situation = phrase.situation;
-        old.audioKey = phrase.audioKey;
-        old.level = phrase.level;
-        old.isPremium = phrase.isPremium;
-        old.newWords = phrase.newWords;
-        updated++;
-      }
-    });
-
-    return { added, updated };
-  }
-
-  function sbValidateImportedPhrases() {
-    try {
-      if (typeof ensurePhrasesHaveValidTopic === "function") {
-        ensurePhrasesHaveValidTopic();
-      }
-    } catch (err) {
-      sbLog("ensurePhrasesHaveValidTopic falhou", err);
-    }
-  }
-
-  function sbSync(options = {}) {
-    const bank = sbGetBank();
-
-    if (!bank) {
-      return {
-        ok: false,
-        reason: "window.NIHONGO321_SENSEI_BANK não encontrado.",
-        version: BRIDGE_VERSION
-      };
-    }
-
-    if (!sbHasAppState()) {
-      return {
-        ok: false,
-        reason: "STATE.bank.topics ou STATE.bank.phrases não encontrado.",
-        version: BRIDGE_VERSION
-      };
-    }
-
-    const collected = sbCollectTopicsAndPhrases(bank);
-
-    const topicResult = sbUpsertTopics(collected.topics);
-    const phraseResult = sbUpsertPhrases(collected.phrases);
-
-    STATE.app ||= {};
-    STATE.app.senseiBankBridge ||= {};
-    STATE.app.senseiBankBridge.version = BRIDGE_VERSION;
-    STATE.app.senseiBankBridge.lastSyncAt = sbNow();
-    STATE.app.senseiBankBridge.topics = collected.topics.length;
-    STATE.app.senseiBankBridge.phrases = collected.phrases.length;
-
-    sbValidateImportedPhrases();
-
-    const changed =
-      topicResult.added ||
-      topicResult.updated ||
-      phraseResult.added ||
-      phraseResult.updated;
-
-    if (changed) {
-      sbSave();
-    }
-
-    if (options.render !== false) {
-      sbRender();
-    }
-
-    return {
-      ok: true,
-      version: BRIDGE_VERSION,
-      bankMeta: bank.meta || null,
-      topicsFound: collected.topics.length,
-      phrasesFound: collected.phrases.length,
-      topicsAdded: topicResult.added,
-      topicsUpdated: topicResult.updated,
-      phrasesAdded: phraseResult.added,
-      phrasesUpdated: phraseResult.updated,
-      changed: !!changed
-    };
-  }
-
-  function sbPreview() {
-    const bank = sbGetBank();
-
-    if (!bank) {
-      return {
-        ok: false,
-        reason: "sensei-bank.js ainda não carregou ou está com nome global errado."
-      };
-    }
-
-    const collected = sbCollectTopicsAndPhrases(bank);
-
-    return {
-      ok: true,
-      version: BRIDGE_VERSION,
-      meta: bank.meta || null,
-      levels: bank.levels || null,
-      topics: collected.topics.slice(0, 10),
-      phrases: collected.phrases.slice(0, 10),
-      totalTopics: collected.topics.length,
-      totalPhrases: collected.phrases.length
-    };
-  }
-
-  function sbCheck() {
-    const bank = sbGetBank();
-
-    return {
-      ok: !!bank && sbHasAppState(),
-      version: BRIDGE_VERSION,
-      hasSenseiBank: !!bank,
-      hasStateBank: sbHasAppState(),
-      bankKeys: bank ? Object.keys(bank) : [],
-      currentTopics: sbHasAppState() ? STATE.bank.topics.length : 0,
-      currentPhrases: sbHasAppState() ? STATE.bank.phrases.length : 0,
-      importedTopics: sbHasAppState()
-        ? STATE.bank.topics.filter((t) => t.source === SOURCE).length
-        : 0,
-      importedPhrases: sbHasAppState()
-        ? STATE.bank.phrases.filter((p) => p.source === SOURCE).length
-        : 0
-    };
-  }
-
-  function sbResetImported() {
-    if (!sbHasAppState()) {
-      return {
-        ok: false,
-        reason: "STATE.bank não encontrado."
-      };
-    }
-
-    const beforeTopics = STATE.bank.topics.length;
-    const beforePhrases = STATE.bank.phrases.length;
-
-    STATE.bank.phrases = STATE.bank.phrases.filter((p) => p.source !== SOURCE);
-    STATE.bank.topics = STATE.bank.topics.filter((t) => t.source !== SOURCE);
-
-    sbSave();
-    sbRender();
-
-    return {
-      ok: true,
-      removedTopics: beforeTopics - STATE.bank.topics.length,
-      removedPhrases: beforePhrases - STATE.bank.phrases.length
-    };
-  }
-
-  window.NIHONGO321_SENSEI_BRIDGE = {
-    version: BRIDGE_VERSION,
-    check: sbCheck,
-    preview: sbPreview,
-    sync: sbSync,
-    resetImported: sbResetImported
-  };
-
-  window.nihongo321SenseiBridgeCheck = sbCheck;
-  window.nihongo321SenseiBridgePreview = sbPreview;
-  window.nihongo321SenseiBridgeSync = sbSync;
-  window.nihongo321SenseiBridgeResetImported = sbResetImported;
-
-  setTimeout(() => {
-    const result = sbSync({ render: true });
-
-    if (result.ok) {
-      sbLog("Ponte Sensei Bank sincronizada", result);
-    } else {
-      sbLog("Ponte Sensei Bank aguardando banco externo", result);
-    }
-  }, 80);
-})();
-

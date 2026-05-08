@@ -27,13 +27,23 @@
   <meta property="og:site_name" content="NIHONGO321" />
 
   <!-- =========================================================
-       TEMA INICIAL ANTI-PISCADA
-       Carrega claro/escuro antes do CSS aplicar visual.
-       O app.js também controla isso depois.
+       NIHONGO321 — BOOT SEGURO
+       Mantém tema inicial e registra contrato de carregamento.
+       Não altera treino 105x, localStorage, checkout ou lógica do app.
        ========================================================= -->
   <script>
     (() => {
       try {
+        window.NIHONGO321_BOOT = {
+          appName: "NIHONGO321",
+          htmlVersion: "8.5.6",
+          storageKey: "jp_105x_v7",
+          themeStorageKey: "nihongo321_theme",
+          usesExternalSenseiBank: true,
+          requiredGlobals: ["NIHONGO321_SENSEI_BANK"],
+          loadedAt: new Date().toISOString()
+        };
+
         const raw = localStorage.getItem("jp_105x_v7");
         const parsed = raw ? JSON.parse(raw) : null;
         const savedTheme = parsed?.prefs?.theme || localStorage.getItem("nihongo321_theme") || "dark";
@@ -42,13 +52,24 @@
         document.documentElement.dataset.theme = theme;
         document.documentElement.style.colorScheme = theme;
       } catch {
+        window.NIHONGO321_BOOT = {
+          appName: "NIHONGO321",
+          htmlVersion: "8.5.6",
+          storageKey: "jp_105x_v7",
+          themeStorageKey: "nihongo321_theme",
+          usesExternalSenseiBank: true,
+          requiredGlobals: ["NIHONGO321_SENSEI_BANK"],
+          loadedAt: new Date().toISOString(),
+          bootFallback: true
+        };
+
         document.documentElement.dataset.theme = "dark";
         document.documentElement.style.colorScheme = "dark";
       }
     })();
   </script>
 
-  <link rel="stylesheet" href="./styles.css?v=8.1.0" />
+  <link rel="stylesheet" href="./styles.css?v=8.5.6" />
   <link rel="shortcut icon" href="./img/logo_nihongo321.png" type="image/png" />
   <link rel="apple-touch-icon" href="./img/logo_nihongo321.png" />
 </head>
@@ -95,7 +116,7 @@
         type="button"
         title="ajustes"
         aria-label="ajustes"
-        onclick="location.hash='#/settings'"
+        data-nav="#/settings"
       >⚙️</button>
     </div>
   </header>
@@ -346,7 +367,13 @@
     </div>
   </noscript>
 
-  <script src="./sensei-bank.js?v=1.0.0" defer></script>
-  <script src="./app.js?v=8.3.2" defer></script>
+  <!-- =========================================================
+       ORDEM CRÍTICA
+       1. sensei-bank.js: conteúdo externo do Sensei
+       2. app.js: lógica principal do aplicativo
+       Não inverter esta ordem.
+       ========================================================= -->
+  <script src="./sensei-bank.js?v=1.1.4" defer></script>
+  <script src="./app.js?v=8.5.6" defer></script>
 </body>
 </html>
