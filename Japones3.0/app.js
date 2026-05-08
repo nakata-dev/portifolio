@@ -1972,6 +1972,30 @@ function canAccessTopic(topicId) {
   return isPremiumUnlocked();
 }
 
+function isSpecialTopicFilter(topicId) {
+  return topicId === "ALL" || topicId === "FAV";
+}
+
+function safeTopicFilter(topicId, fallback = "topic_essential_japan") {
+  const id = String(topicId || "ALL").trim() || "ALL";
+
+  if (isSpecialTopicFilter(id)) return id;
+  if (canAccessTopic(id)) return id;
+
+  return fallback;
+}
+
+function topicOptionLockAttrs(topicId) {
+  return isTopicPremium(topicId) && !isPremiumUnlocked()
+    ? 'disabled aria-disabled="true" data-premium-locked="true"'
+    : "";
+}
+
+function topicOptionLabel(topic) {
+  const locked = isTopicPremium(topic?.id) && !isPremiumUnlocked();
+  return `${locked ? "🔒 Premium • " : ""}${escapeHTML(topic?.name || "Tópico")}`;
+}
+
 function checkoutStatus() {
   const url = String(SALES.checkoutUrl || "").trim();
   const supportEmail = String(SALES.supportEmail || "").trim();
@@ -4440,7 +4464,13 @@ function renderAdmin() {
 function renderHome() {
   ensurePhrasesHaveValidTopic();
 
-  const topicFilter = STATE.session.topicFilter || "ALL";
+  const topicFilter = safeTopicFilter(STATE.session.topicFilter || "ALL");
+
+  if (STATE.session.topicFilter !== topicFilter) {
+    STATE.session.topicFilter = topicFilter;
+    saveState();
+  }
+
   const filterLabel = topicFilter === "ALL" ? "tudo" : topicName(topicFilter);
   const favCount = favoritePhrasesAccessible().length;
   const resume = hasResumeTraining();
@@ -4475,8 +4505,8 @@ function renderHome() {
               <option value="ALL">tudo</option>
               <option value="FAV" ${topicFilter === "FAV" ? "selected" : ""}>favoritas ${favCount ? `(${favCount})` : ""}</option>
               ${(STATE.bank.topics || []).map(t => {
-    const locked = isTopicPremium(t.id) && !isPremiumUnlocked();
-    return `<option value="${t.id}" ${t.id === topicFilter ? "selected" : ""}>${escapeHTML(t.name)}${locked ? " 🔒" : ""}</option>`;
+    const lockedAttrs = topicOptionLockAttrs(t.id);
+    return `<option value="${t.id}" ${lockedAttrs} ${t.id === topicFilter ? "selected" : ""}>${topicOptionLabel(t)}</option>`;
   }).join("")}
             </select>
             <button class="btn btn--ghost" data-nav="#/manage">gerenciar</button>
@@ -5357,7 +5387,16 @@ function render105x() {
     return;
   }
 
-  const currentFilter = STATE.session.topicFilter || "ALL";
+  const currentFilter = safeTopicFilter(STATE.session.topicFilter || "ALL");
+
+  if (STATE.session.topicFilter !== currentFilter) {
+    STATE.session.topicFilter = currentFilter;
+    STATE.session.queue = buildQueue();
+    STATE.session.index = 0;
+    STATE.session.phraseId = STATE.session.queue[0] || null;
+    saveState();
+  }
+
   const currentPhrase = getPhrase(STATE.session.phraseId);
 
   APP.innerHTML = `
@@ -5374,8 +5413,8 @@ function render105x() {
               <option value="ALL">tudo</option>
               <option value="FAV" ${currentFilter === "FAV" ? "selected" : ""}>favoritas</option>
               ${(STATE.bank.topics || []).map(t => {
-    const locked = isTopicPremium(t.id) && !isPremiumUnlocked();
-    return `<option value="${t.id}" ${t.id === currentFilter ? "selected" : ""}>${escapeHTML(t.name)}${locked ? " 🔒" : ""}</option>`;
+    const lockedAttrs = topicOptionLockAttrs(t.id);
+    return `<option value="${t.id}" ${lockedAttrs} ${t.id === currentFilter ? "selected" : ""}>${topicOptionLabel(t)}</option>`;
   }).join("")}
             </select>
 
@@ -5611,7 +5650,10 @@ function renderTopicSelect(selectedId) {
 
   return `
     <select class="btn selectBtn" id="topicSel" aria-label="selecionar tópico">
-      ${topics.map(t => `<option value="${t.id}" ${t.id === sel ? "selected" : ""}>${escapeHTML(t.name)}</option>`).join("")}
+      ${topics.map(t => {
+        const lockedAttrs = topicOptionLockAttrs(t.id);
+        return `<option value="${t.id}" ${lockedAttrs} ${t.id === sel && !lockedAttrs ? "selected" : ""}>${topicOptionLabel(t)}</option>`;
+      }).join("")}
     </select>
   `;
 }
