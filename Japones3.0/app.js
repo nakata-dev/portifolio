@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.30
+   NIHONGO321 v8.5.32
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.30",
+  version: "8.5.32",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -5500,6 +5500,40 @@ function ensureSessionFor105x() {
   saveState();
 }
 
+
+function phraseTextStats(phrase) {
+  const jp = jpStripFurigana(phrase?.jp || "").replace(/\s+/g, "");
+  const pt = String(phrase?.pt || "").trim();
+
+  return {
+    jpLen: jp.length,
+    ptLen: pt.length,
+    total: jp.length + Math.round(pt.length * 0.48)
+  };
+}
+
+function phraseDisplayMode(phrase) {
+  const s = phraseTextStats(phrase);
+
+  if (s.jpLen >= 78 || s.ptLen >= 170 || s.total >= 138) return "phraseModeXL";
+  if (s.jpLen >= 42 || s.ptLen >= 92 || s.total >= 86) return "phraseModeLong";
+  if (s.jpLen >= 26 || s.ptLen >= 58 || s.total >= 54) return "phraseModeMedium";
+
+  return "phraseModeShort";
+}
+
+function applyPhraseDisplayMode(phrase) {
+  const mode = phraseDisplayMode(phrase);
+  const area = $(".phraseArea");
+  const panel = $("#phraseTextPanel");
+
+  for (const el of [area, panel]) {
+    if (!el) continue;
+    el.classList.remove("phraseModeShort", "phraseModeMedium", "phraseModeLong", "phraseModeXL");
+    el.classList.add(mode);
+  }
+}
+
 function render105x() {
   ensureSessionFor105x();
 
@@ -5562,19 +5596,23 @@ function render105x() {
           <button class="studyExitBtn" data-nav="#/home">sair</button>
         </div>
 
-        <div class="phraseArea" aria-label="frase em treino">
+        <div class="phraseArea ${phraseDisplayMode(currentPhrase)}" aria-label="frase em treino">
           <div class="row row--between" id="phraseTopRow" style="gap:10px;align-items:center;">
             <div class="badge" id="phraseTopicBadge">${escapeHTML(topicName(currentPhrase?.topicId || ""))}</div>
             <span id="favoriteSlot">${renderFavoriteButton(STATE.session.phraseId)}</span>
           </div>
 
-          <div class="counterMini" id="counterBox" aria-label="contador">
-            <div class="counterVal" id="countVal">-</div>
-            <div class="counterSub" id="cycleSub">ciclo</div>
+          <div class="phraseCounterDock">
+            <div class="counterMini" id="counterBox" aria-label="contador">
+              <div class="counterVal" id="countVal">-</div>
+              <div class="counterSub" id="cycleSub">ciclo</div>
+            </div>
           </div>
 
-          <div class="kana" id="kanaLine"></div>
-          <div class="pt" id="ptLine"></div>
+          <div class="phraseTextPanel ${phraseDisplayMode(currentPhrase)}" id="phraseTextPanel">
+            <div class="kana" id="kanaLine"></div>
+            <div class="pt" id="ptLine"></div>
+          </div>
         </div>
 
         <div class="row" style="display:grid;grid-template-columns:56px minmax(0,1fr) 56px;gap:10px;align-items:center;">
@@ -5731,6 +5769,8 @@ function render105xBodyOnly() {
   const pid = STATE.session.phraseId;
   const p = getPhrase(pid);
   if (!p) return;
+
+  applyPhraseDisplayMode(p);
 
   const pr = getProg(pid);
   const cs = clamp(pr.cycleStart || 14, 1, 14);
@@ -6321,14 +6361,28 @@ function renderBackup() {
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <div class="sheet stack">
-          <div class="badge">exportar</div>
+        <div class="sheet stack backupShareCard">
+          <div class="badge">compartilhar frases</div>
           <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="exportCopy">copiar json</button>
-            <button class="btn btn--ok btn--full" data-action="exportFile">baixar arquivo</button>
+            <button class="btn btn--ok btn--full" data-action="shareTextPack">WhatsApp / LINE</button>
+            <button class="btn btn--ok btn--full" data-action="exportCopy">copiar texto</button>
+            <button class="btn btn--full" data-action="exportTxtFile">baixar .txt</button>
+            <button class="btn btn--muted btn--full" data-action="exportFile">baixar .json</button>
           </div>
-          <div class="small">Use o backup para guardar ou compartilhar frases. Ao importar, o app mescla o conteúdo e não apaga as frases que já existem no aparelho.</div>
+          <div class="small">Use WhatsApp/LINE ou copie o texto do pacote. Ao importar no celular de outra pessoa, as frases entram como acréscimo e nada é apagado.</div>
         </div>
+
+        <details class="sheet backupTutorial">
+          <summary>Como usar o Backup / Compartilhar frases</summary>
+          <div class="backupTutorialBody">
+            <div class="backupStep"><b>1.</b> Toque em <strong>WhatsApp / LINE</strong> para abrir o compartilhamento do celular.</div>
+            <div class="backupStep"><b>2.</b> Envie o texto inteiro para seu amigo ou para você mesmo.</div>
+            <div class="backupStep"><b>3.</b> No outro aparelho, copie o texto recebido.</div>
+            <div class="backupStep"><b>4.</b> Cole na área <strong>importar</strong> e toque em <strong>importar</strong>.</div>
+            <div class="backupStep"><b>5.</b> O app adiciona as frases novas sem apagar as antigas.</div>
+            <div class="small">Dica: o arquivo .txt é melhor para WhatsApp/LINE. O .json fica como opção avançada.</div>
+          </div>
+        </details>
 
         <div class="sheet stack">
           <div class="badge">importar sem apagar</div>
@@ -7429,30 +7483,50 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  if (act === "exportCopy" || act === "exportFile") {
+  if (act === "shareTextPack" || act === "exportCopy" || act === "exportTxtFile" || act === "exportFile") {
     const msg = $("#backupMsg");
-    const payload = {
-      schema: "jp_105x_backup_v1",
-      exportKind: "full_state_merge_safe",
-      appName: BRAND.name,
-      appVersion: BRAND.version,
-      exportedAt: new Date().toISOString(),
-      state: STATE
-    };
-    const txt = JSON.stringify(payload, null, 2);
+    const pack = createTextSharePack();
+    const textPack = pack.text;
+    const jsonPayload = createContentPackPayload();
+    const jsonText = JSON.stringify(jsonPayload, null, 2);
+
+    if (act === "shareTextPack") {
+      shareTextPackNative(textPack).then(shared => {
+        if (shared) {
+          if (msg) msg.textContent = `pacote pronto para WhatsApp/LINE: ${pack.stats.phrases} frase(s).`;
+          toast("compartilhamento aberto");
+          beep("ding");
+          return;
+        }
+
+        navigator.clipboard?.writeText(textPack).then(() => {
+          if (msg) msg.textContent = "seu celular não abriu o compartilhamento, então copiei o texto do pacote.";
+          toast("pacote copiado");
+          beep("ding");
+        }).catch(() => {
+          const box = $("#importBox");
+          if (box) box.value = textPack;
+          if (msg) msg.textContent = "copie manualmente o texto que coloquei na caixa de importação.";
+          toast("copie manualmente");
+          beep("tuk");
+        });
+      });
+
+      return;
+    }
 
     if (act === "exportCopy") {
-      navigator.clipboard?.writeText(txt).then(() => {
-        if (msg) msg.textContent = "backup copiado";
-        toast("backup copiado");
+      navigator.clipboard?.writeText(textPack).then(() => {
+        if (msg) msg.textContent = `texto copiado: ${pack.stats.phrases} frase(s).`;
+        toast("texto do pacote copiado");
         beep("ding");
       }).catch(() => {
-        if (msg) msg.textContent = "não deu para copiar. copie manualmente.";
+        if (msg) msg.textContent = "não deu para copiar. o pacote foi colocado na caixa de texto.";
         toast("copie manualmente");
         beep("tuk");
 
         const box = $("#importBox");
-        if (box) box.value = txt;
+        if (box) box.value = textPack;
       });
 
       return;
@@ -7462,12 +7536,19 @@ document.addEventListener("click", (e) => {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(d.getDate()).padStart(2, "0");
-    const filename = `nihongo321-backup-${y}-${m}-${dd}.json`;
 
-    downloadTextFile(filename, txt);
+    if (act === "exportTxtFile") {
+      downloadTextFile(`nihongo321-pacote-whatsapp-line-${y}-${m}-${dd}.txt`, textPack, "text/plain");
+      if (msg) msg.textContent = `arquivo .txt baixado: ${pack.stats.phrases} frase(s).`;
+      toast("pacote .txt baixado");
+      beep("ding");
+      return;
+    }
 
-    if (msg) msg.textContent = "backup baixado";
-    toast("backup baixado");
+    downloadTextFile(`nihongo321-pacote-frases-${y}-${m}-${dd}.json`, jsonText);
+
+    if (msg) msg.textContent = `pacote .json baixado: ${jsonPayload.stats.phrases} frase(s).`;
+    toast("pacote .json baixado");
     beep("ding");
 
     return;
