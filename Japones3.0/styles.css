@@ -6543,3 +6543,243 @@ html[data-theme="light"] #view105x .richDetails[open] .explainMiniGuide{
     padding:11px 12px !important;
   }
 }
+
+
+/* =========================================================
+   NIHONGO321 8.5.20 — harmonia para textos longos no 105x
+   Correção CSS-only.
+   Objetivo:
+   - evitar texto encavalado em frases longas;
+   - dar mais respiro entre contador, japonês, português e botões;
+   - permitir que a tela cresça verticalmente de forma natural;
+   - aproveitar melhor a largura horizontal no celular;
+   - manter o treino 105x modo foco premium.
+   ========================================================= */
+
+#view105x{
+  gap:14px !important;
+}
+
+#view105x .card,
+#view105x .sheet,
+#view105x .phraseArea{
+  min-width:0;
+}
+
+#view105x .phraseArea{
+  width:100%;
+  max-width:100%;
+  height:auto !important;
+  min-height:clamp(280px, 48vh, 560px);
+  overflow:visible !important;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  gap:18px;
+  padding:22px clamp(16px, 4.5vw, 30px) 26px clamp(16px, 4.5vw, 30px) !important;
+}
+
+#view105x #phraseTopRow{
+  margin-bottom:2px;
+}
+
+#view105x .counterMini{
+  margin:0 auto 2px auto !important;
+  flex:0 0 auto;
+}
+
+#view105x .kana{
+  width:100%;
+  max-width:100%;
+  margin:2px auto 0 auto !important;
+  padding:0 2px;
+  color:var(--soft);
+  font-size:clamp(24px, 5.7vw, 34px) !important;
+  line-height:1.34 !important;
+  letter-spacing:.015em;
+  font-weight:900;
+  text-align:center;
+  text-wrap:pretty;
+  white-space:normal !important;
+  word-break:normal;
+  overflow-wrap:anywhere;
+  line-break:loose;
+  hyphens:none;
+}
+
+html[data-theme="light"] #view105x .kana{
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.72),
+    0 5px 12px rgba(164,86,0,.18) !important;
+}
+
+#view105x .pt{
+  width:100%;
+  max-width:min(100%, 720px);
+  margin:0 auto !important;
+  padding:0 4px;
+  font-size:clamp(16px, 4.1vw, 22px) !important;
+  line-height:1.48 !important;
+  font-weight:800;
+  letter-spacing:.002em;
+  white-space:normal !important;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  text-wrap:pretty;
+  text-align:justify;
+  text-align-last:center;
+}
+
+#view105x .phraseArea .kseg{
+  display:inline;
+  line-height:inherit;
+}
+
+#view105x .phraseArea .kseg.on{
+  transform:none !important;
+}
+
+#view105x .primaryRow{
+  margin-top:2px;
+}
+
+#view105x .primaryAction{
+  min-height:64px;
+}
+
+#view105x .row:has([data-action="speak"]){
+  margin-top:0;
+}
+
+#view105x .row:has([data-action="speak"]) .btn{
+  min-height:58px !important;
+}
+
+#view105x #newWordsBox{
+  margin-top:18px !important;
+}
+
+#view105x #newWordsBox .explanationSheet.richDetails{
+  border-radius:28px !important;
+}
+
+#view105x .richDetails:not([open]) .explainPreview{
+  max-width:100%;
+  white-space:normal !important;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  text-align:left;
+}
+
+#view105x .richDetails[open] .explainPreview{
+  white-space:normal !important;
+  overflow:visible;
+  display:block;
+  text-align:left;
+}
+
+#view105x .richDetails[open] .explainBody{
+  padding:18px clamp(16px, 4vw, 24px) 22px !important;
+  gap:16px !important;
+}
+
+#view105x .richDetails[open] .explainMeaning,
+#view105x .richDetails[open] .explainPt,
+#view105x .richDetails[open] .particleChip span,
+#view105x .richDetails[open] .particleChip em,
+#view105x .richDetails[open] .explainMiniGuide ol{
+  text-align:justify;
+  text-align-last:left;
+  overflow-wrap:anywhere;
+  line-height:1.58 !important;
+}
+
+#view105x .richDetails[open] .explainMeaning{
+  font-size:clamp(15px, 4vw, 18px) !important;
+}
+
+#view105x .richDetails[open] .explainItem,
+#view105x .richDetails[open] .particleChip,
+#view105x .richDetails[open] .explainBlock--meaning,
+#view105x .richDetails[open] .explainMiniGuide{
+  padding:14px clamp(13px, 3.8vw, 18px) !important;
+}
+
+#view105x .richDetails[open] .explainJp{
+  line-height:1.42 !important;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  line-break:loose;
+}
+
+@media (max-width:560px){
+  #view105x{
+    gap:12px !important;
+  }
+
+  #view105x .phraseArea{
+    min-height:clamp(330px, 52vh, 640px);
+    gap:17px;
+    padding:20px 18px 24px 18px !important;
+    border-radius:30px;
+  }
+
+  #view105x .counterMini{
+    max-width:116px;
+  }
+
+  #view105x .kana{
+    font-size:clamp(25px, 6.2vw, 32px) !important;
+    line-height:1.36 !important;
+  }
+
+  #view105x .pt{
+    font-size:clamp(17px, 4.6vw, 21px) !important;
+    line-height:1.50 !important;
+  }
+
+  #view105x .primaryAction{
+    min-height:64px;
+    border-radius:22px;
+  }
+
+  #view105x .row:has([data-action="speak"]){
+    grid-template-columns:64px minmax(0,1fr) 64px !important;
+    gap:12px !important;
+  }
+
+  #view105x .row:has([data-action="speak"]) .btn{
+    min-height:60px !important;
+    border-radius:20px !important;
+  }
+
+  #view105x .richDetails[open] .explainSummary{
+    position:relative !important;
+    top:auto !important;
+  }
+}
+
+@media (max-width:380px){
+  #view105x .phraseArea{
+    min-height:clamp(350px, 56vh, 680px);
+    padding-left:15px !important;
+    padding-right:15px !important;
+  }
+
+  #view105x .kana{
+    font-size:clamp(23px, 6vw, 30px) !important;
+    line-height:1.38 !important;
+  }
+
+  #view105x .pt{
+    font-size:clamp(16px, 4.4vw, 20px) !important;
+  }
+
+  #view105x .row:has([data-action="speak"]){
+    grid-template-columns:58px minmax(0,1fr) 58px !important;
+    gap:10px !important;
+  }
+}
