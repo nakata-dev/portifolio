@@ -1,0 +1,29 @@
+NIHONGO321 8.5.21 — Textos Longos Respiram no 105x
+
+BASE:
+NIHONGO321 8.5.15 — Base Atual com Melhorias Retomadas
+
+ARQUIVOS ALTERADOS:
+- app.js
+- styles.css
+
+O QUE ESTA VERSÃO CORRIGE:
+- Corrige a sobreposição/encavalamento de frases longas no treino 105x.
+- O app agora classifica automaticamente a frase como curta, média, longa ou extra longa.
+- O CSS adapta tamanho da fonte, altura de linha, espaçamento e respiro conforme o tamanho da frase.
+- O contador, o japonês e a tradução ficam em linhas próprias, sem invadir um ao outro.
+- A tela cresce verticalmente quando necessário, sem limitar o aluno a frases de uma linha.
+- O texto em português usa melhor a largura horizontal em frases longas.
+
+IMPORTANTE:
+- A voz/TTS não foi alterada.
+- A lógica do treino 105x não foi reescrita.
+- O localStorage não foi alterado.
+- Checkout, Sensei IA, rotas e banco sensei-bank.js foram preservados.
+
+COMO USAR:
+1. Extraia este ZIP.
+2. Substitua app.js e styles.css.
+3. Mantenha index.html, sensei-bank.js e a pasta img como estão.
+4. Teste uma frase curta, uma média e a frase longa da cobrança de 4.000/6.000 ienes.
+5. Confirme que o card cresce verticalmente e nada fica sobreposto.

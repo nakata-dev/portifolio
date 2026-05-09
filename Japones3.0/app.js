@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.15
+   NIHONGO321 v8.5.23
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.15",
+  version: "8.5.23",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -2640,6 +2640,8 @@ function onRepeat() {
 
   const p = getPhrase(pid);
   if (!p) return;
+
+  applyPhraseDisplayMode(p);
 
   const pr = getProg(pid);
   const cs = clamp(pr.cycleStart || 14, 1, 14);
@@ -5500,6 +5502,40 @@ function ensureSessionFor105x() {
   saveState();
 }
 
+
+function phraseTextStats(phrase) {
+  const jp = jpStripFurigana(phrase?.jp || "").replace(/\s+/g, "");
+  const pt = String(phrase?.pt || "").trim();
+
+  return {
+    jpLen: jp.length,
+    ptLen: pt.length,
+    total: jp.length + Math.round(pt.length * 0.48)
+  };
+}
+
+function phraseDisplayMode(phrase) {
+  const s = phraseTextStats(phrase);
+
+  if (s.jpLen >= 82 || s.ptLen >= 185 || s.total >= 150) return "phraseModeXL";
+  if (s.jpLen >= 58 || s.ptLen >= 130 || s.total >= 112) return "phraseModeLong";
+  if (s.jpLen >= 34 || s.ptLen >= 78 || s.total >= 72) return "phraseModeMedium";
+
+  return "phraseModeShort";
+}
+
+function applyPhraseDisplayMode(phrase) {
+  const mode = phraseDisplayMode(phrase);
+  const area = $(".phraseArea");
+  const panel = $("#phraseTextPanel");
+
+  for (const el of [area, panel]) {
+    if (!el) continue;
+    el.classList.remove("phraseModeShort", "phraseModeMedium", "phraseModeLong", "phraseModeXL");
+    el.classList.add(mode);
+  }
+}
+
 function render105x() {
   ensureSessionFor105x();
 
@@ -5562,19 +5598,23 @@ function render105x() {
           <button class="studyExitBtn" data-nav="#/home">sair</button>
         </div>
 
-        <div class="phraseArea" aria-label="frase em treino">
+        <div class="phraseArea ${phraseDisplayMode(currentPhrase)}" aria-label="frase em treino">
           <div class="row row--between" id="phraseTopRow" style="gap:10px;align-items:center;">
             <div class="badge" id="phraseTopicBadge">${escapeHTML(topicName(currentPhrase?.topicId || ""))}</div>
             <span id="favoriteSlot">${renderFavoriteButton(STATE.session.phraseId)}</span>
           </div>
 
-          <div class="counterMini" id="counterBox" aria-label="contador">
-            <div class="counterVal" id="countVal">-</div>
-            <div class="counterSub" id="cycleSub">ciclo</div>
+          <div class="phraseCounterDock">
+            <div class="counterMini" id="counterBox" aria-label="contador">
+              <div class="counterVal" id="countVal">-</div>
+              <div class="counterSub" id="cycleSub">ciclo</div>
+            </div>
           </div>
 
-          <div class="kana" id="kanaLine"></div>
-          <div class="pt" id="ptLine"></div>
+          <div class="phraseTextPanel ${phraseDisplayMode(currentPhrase)}" id="phraseTextPanel">
+            <div class="kana" id="kanaLine"></div>
+            <div class="pt" id="ptLine"></div>
+          </div>
         </div>
 
         <div class="row" style="display:grid;grid-template-columns:56px minmax(0,1fr) 56px;gap:10px;align-items:center;">

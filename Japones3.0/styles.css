@@ -6546,122 +6546,308 @@ html[data-theme="light"] #view105x .richDetails[open] .explainMiniGuide{
 
 
 /* =========================================================
-   NIHONGO321 8.5.20 — harmonia para textos longos no 105x
-   Correção CSS-only.
-   Objetivo:
-   - evitar texto encavalado em frases longas;
-   - dar mais respiro entre contador, japonês, português e botões;
-   - permitir que a tela cresça verticalmente de forma natural;
-   - aproveitar melhor a largura horizontal no celular;
-   - manter o treino 105x modo foco premium.
+   NIHONGO321 8.5.22 — leitura profissional no treino 105x
+   Corrige de verdade frases longas:
+   - contador não invade texto;
+   - japonês e português ficam em um painel de leitura;
+   - frases longas usam layout de leitura, não pôster centralizado;
+   - altura cresce naturalmente, sem corte e sem encavalamento.
    ========================================================= */
 
 #view105x{
-  gap:14px !important;
+  width:min(100%, 760px);
 }
 
-#view105x .card,
-#view105x .sheet,
-#view105x .phraseArea{
+#view105x,
+#view105x *{
   min-width:0;
 }
 
-#view105x .phraseArea{
-  width:100%;
-  max-width:100%;
-  height:auto !important;
-  min-height:clamp(280px, 48vh, 560px);
+#view105x .card,
+#view105x .phraseArea,
+#view105x .phraseTextPanel{
   overflow:visible !important;
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  justify-content:flex-start;
-  gap:18px;
-  padding:22px clamp(16px, 4.5vw, 30px) 26px clamp(16px, 4.5vw, 30px) !important;
+}
+
+#view105x .phraseArea{
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  gap:14px !important;
+  padding:16px clamp(14px, 3.8vw, 26px) 20px !important;
+  border-radius:28px !important;
 }
 
 #view105x #phraseTopRow{
-  margin-bottom:2px;
+  position:static !important;
+  width:100% !important;
+  margin:0 !important;
+  display:flex !important;
+  align-items:flex-start !important;
+  justify-content:space-between !important;
+  gap:10px !important;
 }
 
-#view105x .counterMini{
-  margin:0 auto 2px auto !important;
-  flex:0 0 auto;
+#view105x #phraseTopicBadge{
+  max-width:min(70%, 320px) !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
 }
 
-#view105x .kana{
+#view105x #favoriteSlot .btn,
+#view105x #favoriteSlot button{
+  width:clamp(46px, 10vw, 58px) !important;
+  height:clamp(46px, 10vw, 58px) !important;
+  min-width:clamp(46px, 10vw, 58px) !important;
+  min-height:clamp(46px, 10vw, 58px) !important;
+  border-radius:18px !important;
+}
+
+#view105x .phraseCounterDock{
+  width:100%;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+#view105x .counterMini,
+#view105x #counterBox{
+  position:static !important;
+  inset:auto !important;
+  z-index:1 !important;
+  transform:none !important;
+  flex:0 0 auto !important;
+  width:auto !important;
+  min-width:96px !important;
+  max-width:126px !important;
+  height:auto !important;
+  min-height:62px !important;
+  max-height:none !important;
+  margin:0 auto !important;
+  padding:8px 12px !important;
+}
+
+#view105x .counterVal{
+  font-size:clamp(34px, 8.2vw, 46px) !important;
+  line-height:.92 !important;
+}
+
+#view105x .counterSub{
+  font-size:clamp(10px, 2.3vw, 12px) !important;
+  line-height:1.16 !important;
+  margin-top:3px !important;
+}
+
+#view105x .phraseTextPanel{
   width:100%;
   max-width:100%;
-  margin:2px auto 0 auto !important;
-  padding:0 2px;
-  color:var(--soft);
-  font-size:clamp(24px, 5.7vw, 34px) !important;
-  line-height:1.34 !important;
-  letter-spacing:.015em;
-  font-weight:900;
-  text-align:center;
-  text-wrap:pretty;
-  white-space:normal !important;
-  word-break:normal;
-  overflow-wrap:anywhere;
-  line-break:loose;
-  hyphens:none;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:12px !important;
+  border-radius:24px;
+  padding:0;
 }
 
-html[data-theme="light"] #view105x .kana{
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.72),
-    0 5px 12px rgba(164,86,0,.18) !important;
-}
-
-#view105x .pt{
-  width:100%;
-  max-width:min(100%, 720px);
+#view105x .kana,
+#view105x #kanaLine{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:0 !important;
+  max-height:none !important;
+  height:auto !important;
   margin:0 auto !important;
-  padding:0 4px;
-  font-size:clamp(16px, 4.1vw, 22px) !important;
-  line-height:1.48 !important;
-  font-weight:800;
-  letter-spacing:.002em;
+  padding:0 !important;
+  display:block !important;
+  overflow:visible !important;
   white-space:normal !important;
-  overflow-wrap:anywhere;
-  word-break:normal;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+  line-break:loose !important;
   text-wrap:pretty;
-  text-align:justify;
-  text-align-last:center;
+  letter-spacing:.01em;
 }
 
-#view105x .phraseArea .kseg{
-  display:inline;
-  line-height:inherit;
-}
-
-#view105x .phraseArea .kseg.on{
+#view105x .kana .kseg,
+#view105x #kanaLine .kseg{
+  display:inline !important;
+  max-width:none !important;
+  white-space:normal !important;
+  line-height:inherit !important;
   transform:none !important;
 }
 
+#view105x .kana .kseg.on,
+#view105x #kanaLine .kseg.on{
+  transform:none !important;
+}
+
+#view105x .pt,
+#view105x #ptLine{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:0 !important;
+  max-height:none !important;
+  height:auto !important;
+  margin:0 auto !important;
+  padding:0 !important;
+  display:block !important;
+  overflow:visible !important;
+  white-space:normal !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+  text-wrap:pretty;
+}
+
+/* Frases curtas: mantém impacto visual premium */
+#view105x .phraseArea.phraseModeShort{
+  min-height:clamp(292px, 42vh, 378px) !important;
+  justify-content:center !important;
+  gap:15px !important;
+}
+
+#view105x .phraseModeShort .phraseTextPanel{
+  align-items:center;
+  justify-content:center;
+}
+
+#view105x .phraseModeShort .kana{
+  text-align:center !important;
+  font-size:clamp(30px, 7.6vw, 44px) !important;
+  line-height:1.28 !important;
+  font-weight:930 !important;
+}
+
+#view105x .phraseModeShort .pt{
+  max-width:92% !important;
+  text-align:center !important;
+  text-align-last:center !important;
+  font-size:clamp(17px, 4.2vw, 23px) !important;
+  line-height:1.46 !important;
+  font-weight:820 !important;
+}
+
+/* Médias: ainda centralizado, mas com mais espaço */
+#view105x .phraseArea.phraseModeMedium{
+  min-height:clamp(330px, 48vh, 460px) !important;
+  gap:16px !important;
+}
+
+#view105x .phraseModeMedium .kana{
+  text-align:center !important;
+  font-size:clamp(25px, 6.0vw, 36px) !important;
+  line-height:1.38 !important;
+  font-weight:920 !important;
+}
+
+#view105x .phraseModeMedium .pt{
+  max-width:94% !important;
+  text-align:center !important;
+  text-align-last:center !important;
+  font-size:clamp(16px, 3.85vw, 21px) !important;
+  line-height:1.52 !important;
+  font-weight:800 !important;
+}
+
+/* Longas: vira painel de leitura */
+#view105x .phraseArea.phraseModeLong,
+#view105x .phraseArea.phraseModeXL{
+  min-height:auto !important;
+  gap:13px !important;
+  padding-bottom:22px !important;
+}
+
+#view105x .phraseModeLong .phraseTextPanel,
+#view105x .phraseModeXL .phraseTextPanel{
+  gap:12px !important;
+  padding:16px clamp(14px, 3.5vw, 22px) !important;
+  border:1px solid var(--strokeSoft);
+  background:
+    radial-gradient(320px 180px at 0% 0%, rgba(255,179,71,.070), transparent 62%),
+    radial-gradient(280px 180px at 100% 100%, rgba(108,166,255,.075), transparent 62%),
+    rgba(255,255,255,.032);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+html[data-theme="light"] #view105x .phraseModeLong .phraseTextPanel,
+html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel{
+  background:
+    radial-gradient(320px 180px at 0% 0%, rgba(255,179,71,.20), transparent 62%),
+    radial-gradient(280px 180px at 100% 100%, rgba(61,139,238,.12), transparent 62%),
+    rgba(255,255,255,.72);
+}
+
+#view105x .phraseModeLong .kana,
+#view105x .phraseModeXL .kana{
+  text-align:left !important;
+  text-align-last:left !important;
+  font-weight:900 !important;
+}
+
+#view105x .phraseModeLong .pt,
+#view105x .phraseModeXL .pt{
+  text-align:left !important;
+  text-align-last:left !important;
+  color:var(--muted2);
+  font-weight:760 !important;
+  border-top:1px solid var(--strokeSoft);
+  padding-top:12px !important;
+}
+
+#view105x .phraseModeLong .kana{
+  font-size:clamp(21px, 4.8vw, 30px) !important;
+  line-height:1.50 !important;
+}
+
+#view105x .phraseModeLong .pt{
+  font-size:clamp(14.5px, 3.45vw, 18px) !important;
+  line-height:1.62 !important;
+}
+
+/* Extra longas: leitura confortável acima de impacto visual */
+#view105x .phraseModeXL .kana{
+  font-size:clamp(18px, 4.05vw, 25px) !important;
+  line-height:1.58 !important;
+  letter-spacing:0 !important;
+}
+
+#view105x .phraseModeXL .pt{
+  font-size:clamp(14px, 3.25vw, 17px) !important;
+  line-height:1.66 !important;
+}
+
+#view105x .phraseModeLong .counterMini,
+#view105x .phraseModeXL .counterMini{
+  min-width:86px !important;
+  min-height:54px !important;
+  padding:7px 11px !important;
+}
+
+#view105x .phraseModeLong .counterVal,
+#view105x .phraseModeXL .counterVal{
+  font-size:clamp(30px, 7vw, 38px) !important;
+}
+
+#view105x .phraseModeLong .counterSub,
+#view105x .phraseModeXL .counterSub{
+  font-size:10px !important;
+}
+
+#view105x .row[style*="grid-template-columns:56px"],
 #view105x .primaryRow{
-  margin-top:2px;
-}
-
-#view105x .primaryAction{
-  min-height:64px;
-}
-
-#view105x .row:has([data-action="speak"]){
-  margin-top:0;
-}
-
-#view105x .row:has([data-action="speak"]) .btn{
-  min-height:58px !important;
+  margin-top:12px !important;
 }
 
 #view105x #newWordsBox{
   margin-top:18px !important;
-}
-
-#view105x #newWordsBox .explanationSheet.richDetails{
-  border-radius:28px !important;
 }
 
 #view105x .richDetails:not([open]) .explainPreview{
@@ -6678,108 +6864,255 @@ html[data-theme="light"] #view105x .kana{
   white-space:normal !important;
   overflow:visible;
   display:block;
-  text-align:left;
-}
-
-#view105x .richDetails[open] .explainBody{
-  padding:18px clamp(16px, 4vw, 24px) 22px !important;
-  gap:16px !important;
-}
-
-#view105x .richDetails[open] .explainMeaning,
-#view105x .richDetails[open] .explainPt,
-#view105x .richDetails[open] .particleChip span,
-#view105x .richDetails[open] .particleChip em,
-#view105x .richDetails[open] .explainMiniGuide ol{
-  text-align:justify;
-  text-align-last:left;
-  overflow-wrap:anywhere;
-  line-height:1.58 !important;
-}
-
-#view105x .richDetails[open] .explainMeaning{
-  font-size:clamp(15px, 4vw, 18px) !important;
-}
-
-#view105x .richDetails[open] .explainItem,
-#view105x .richDetails[open] .particleChip,
-#view105x .richDetails[open] .explainBlock--meaning,
-#view105x .richDetails[open] .explainMiniGuide{
-  padding:14px clamp(13px, 3.8vw, 18px) !important;
-}
-
-#view105x .richDetails[open] .explainJp{
-  line-height:1.42 !important;
-  overflow-wrap:anywhere;
-  word-break:normal;
-  line-break:loose;
 }
 
 @media (max-width:560px){
-  #view105x{
-    gap:12px !important;
-  }
-
   #view105x .phraseArea{
-    min-height:clamp(330px, 52vh, 640px);
-    gap:17px;
-    padding:20px 18px 24px 18px !important;
-    border-radius:30px;
+    border-radius:26px !important;
+    padding:14px 12px 18px !important;
   }
 
-  #view105x .counterMini{
-    max-width:116px;
+  #view105x #phraseTopicBadge{
+    max-width:68% !important;
+    min-height:32px !important;
+    padding-inline:11px !important;
+    font-size:11.5px !important;
   }
 
-  #view105x .kana{
-    font-size:clamp(25px, 6.2vw, 32px) !important;
-    line-height:1.36 !important;
+  #view105x #favoriteSlot .btn,
+  #view105x #favoriteSlot button{
+    width:46px !important;
+    height:46px !important;
+    min-width:46px !important;
+    min-height:46px !important;
   }
 
-  #view105x .pt{
-    font-size:clamp(17px, 4.6vw, 21px) !important;
-    line-height:1.50 !important;
+  #view105x .phraseArea.phraseModeShort{
+    min-height:clamp(286px, 42vh, 372px) !important;
   }
 
-  #view105x .primaryAction{
-    min-height:64px;
+  #view105x .phraseArea.phraseModeMedium{
+    min-height:clamp(334px, 49vh, 470px) !important;
+  }
+
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    padding:15px 14px !important;
     border-radius:22px;
   }
 
-  #view105x .row:has([data-action="speak"]){
-    grid-template-columns:64px minmax(0,1fr) 64px !important;
-    gap:12px !important;
+  #view105x .phraseModeLong .kana{
+    font-size:clamp(20px, 5.05vw, 27px) !important;
+    line-height:1.52 !important;
   }
 
-  #view105x .row:has([data-action="speak"]) .btn{
-    min-height:60px !important;
-    border-radius:20px !important;
+  #view105x .phraseModeXL .kana{
+    font-size:clamp(17px, 4.35vw, 23px) !important;
+    line-height:1.62 !important;
   }
 
-  #view105x .richDetails[open] .explainSummary{
-    position:relative !important;
-    top:auto !important;
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt{
+    font-size:clamp(13.5px, 3.55vw, 16.5px) !important;
+    line-height:1.66 !important;
   }
 }
 
 @media (max-width:380px){
-  #view105x .phraseArea{
-    min-height:clamp(350px, 56vh, 680px);
-    padding-left:15px !important;
-    padding-right:15px !important;
+  #view105x .phraseModeXL .kana{
+    font-size:clamp(16px, 4.15vw, 21px) !important;
   }
 
-  #view105x .kana{
-    font-size:clamp(23px, 6vw, 30px) !important;
-    line-height:1.38 !important;
+  #view105x .phraseModeXL .pt{
+    font-size:clamp(13px, 3.45vw, 15.5px) !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.23 — tipografia justificada no 105x
+   Refinamento visual para frases longas:
+   - menos aparência de "sopa de letrinhas";
+   - texto japonês mais leve e legível;
+   - português justificado com largura confortável;
+   - painel de leitura com medida tipográfica melhor.
+   ========================================================= */
+
+#view105x .phraseModeLong .phraseTextPanel,
+#view105x .phraseModeXL .phraseTextPanel{
+  max-width:100%;
+  margin-inline:auto;
+  gap:14px !important;
+  padding:18px clamp(16px, 4.2vw, 28px) !important;
+  border-radius:22px !important;
+  background:
+    radial-gradient(360px 180px at 0% 0%, rgba(255,179,71,.060), transparent 62%),
+    radial-gradient(300px 180px at 100% 100%, rgba(108,166,255,.070), transparent 62%),
+    rgba(255,255,255,.030) !important;
+}
+
+#view105x .phraseModeLong .kana,
+#view105x .phraseModeXL .kana{
+  max-width:34em !important;
+  margin-inline:auto !important;
+  color:var(--soft);
+  font-family:
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    "Noto Sans JP",
+    system-ui,
+    sans-serif !important;
+  font-weight:820 !important;
+  letter-spacing:.015em !important;
+  text-align:justify !important;
+  text-align-last:left !important;
+  text-justify:inter-character;
+  line-break:strict !important;
+  word-break:normal !important;
+  overflow-wrap:anywhere !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.18),
+    0 8px 18px rgba(0,0,0,.12) !important;
+}
+
+#view105x .phraseModeLong .kana{
+  font-size:clamp(20px, 4.55vw, 27px) !important;
+  line-height:1.62 !important;
+}
+
+#view105x .phraseModeXL .kana{
+  font-size:clamp(17px, 3.95vw, 23px) !important;
+  line-height:1.70 !important;
+}
+
+#view105x .phraseModeLong .pt,
+#view105x .phraseModeXL .pt{
+  max-width:38em !important;
+  margin-inline:auto !important;
+  padding-top:14px !important;
+  border-top:1px solid var(--strokeSoft);
+  color:var(--muted2);
+  font-family:
+    Inter,
+    "Noto Sans",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif !important;
+  font-weight:720 !important;
+  letter-spacing:.002em !important;
+  text-align:justify !important;
+  text-align-last:left !important;
+  text-wrap:pretty;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+  hyphens:auto;
+  text-shadow:none !important;
+}
+
+#view105x .phraseModeLong .pt{
+  font-size:clamp(14.5px, 3.35vw, 17.5px) !important;
+  line-height:1.70 !important;
+}
+
+#view105x .phraseModeXL .pt{
+  font-size:clamp(13.8px, 3.15vw, 16.5px) !important;
+  line-height:1.76 !important;
+}
+
+#view105x .phraseModeLong .phraseTextPanel::before,
+#view105x .phraseModeXL .phraseTextPanel::before{
+  content:"leitura confortável";
+  align-self:flex-start;
+  display:inline-flex;
+  min-height:26px;
+  align-items:center;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--strokeSoft);
+  background:rgba(255,255,255,.040);
+  color:var(--muted);
+  font-size:10px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+}
+
+#view105x .phraseModeLong .kana .kseg,
+#view105x .phraseModeXL .kana .kseg{
+  font-weight:inherit !important;
+  letter-spacing:inherit !important;
+}
+
+html[data-theme="light"] #view105x .phraseModeLong .phraseTextPanel,
+html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel{
+  background:
+    radial-gradient(360px 180px at 0% 0%, rgba(255,179,71,.16), transparent 62%),
+    radial-gradient(300px 180px at 100% 100%, rgba(61,139,238,.10), transparent 62%),
+    rgba(255,255,255,.78) !important;
+}
+
+html[data-theme="light"] #view105x .phraseModeLong .kana,
+html[data-theme="light"] #view105x .phraseModeXL .kana{
+  color:#17213a;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.78),
+    0 6px 14px rgba(122,76,0,.10) !important;
+}
+
+html[data-theme="light"] #view105x .phraseModeLong .pt,
+html[data-theme="light"] #view105x .phraseModeXL .pt{
+  color:#263a5d;
+}
+
+html[data-theme="light"] #view105x .phraseModeLong .phraseTextPanel::before,
+html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel::before{
+  background:rgba(255,255,255,.70);
+  color:#52637d;
+}
+
+@media (max-width:560px){
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    padding:16px 15px !important;
+    gap:13px !important;
   }
 
-  #view105x .pt{
-    font-size:clamp(16px, 4.4vw, 20px) !important;
+  #view105x .phraseModeLong .kana{
+    font-size:clamp(19px, 4.75vw, 25px) !important;
+    line-height:1.66 !important;
   }
 
-  #view105x .row:has([data-action="speak"]){
-    grid-template-columns:58px minmax(0,1fr) 58px !important;
-    gap:10px !important;
+  #view105x .phraseModeXL .kana{
+    font-size:clamp(16.2px, 4.18vw, 21.5px) !important;
+    line-height:1.74 !important;
+  }
+
+  #view105x .phraseModeLong .pt{
+    font-size:clamp(13.8px, 3.55vw, 16.2px) !important;
+    line-height:1.74 !important;
+  }
+
+  #view105x .phraseModeXL .pt{
+    font-size:clamp(13.2px, 3.42vw, 15.5px) !important;
+    line-height:1.80 !important;
+  }
+}
+
+@media (max-width:380px){
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    padding:15px 13px !important;
+  }
+
+  #view105x .phraseModeXL .kana{
+    font-size:clamp(15.6px, 4.05vw, 20px) !important;
+  }
+
+  #view105x .phraseModeXL .pt{
+    font-size:clamp(12.8px, 3.34vw, 14.8px) !important;
   }
 }
