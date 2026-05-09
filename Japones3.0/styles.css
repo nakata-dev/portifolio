@@ -7667,3 +7667,173 @@ html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel::before{
     overflow-wrap:break-word !important;
   }
 }
+
+
+/* =========================================================
+   NIHONGO321 8.5.29 — justificação inteligente mobile
+   Estratégia:
+   - mantém largura igual para JP/PT;
+   - mantém recuo de parágrafo;
+   - evita depender de justificação nativa agressiva em telas estreitas;
+   - usa balanceamento visual para reduzir espaços gigantes entre palavras;
+   - preserva justificação total quando há largura suficiente.
+   ========================================================= */
+
+#view105x .phraseModeLong .phraseTextPanel,
+#view105x .phraseModeXL .phraseTextPanel{
+  --readingW: min(100%, 39rem);
+  --readingIndentJP: 1em;
+  --readingIndentPT: 1.35em;
+  align-items:center !important;
+  padding:18px clamp(16px, 4vw, 28px) !important;
+}
+
+#view105x .phraseModeLong .kana,
+#view105x .phraseModeXL .kana,
+#view105x .phraseModeLong #kanaLine,
+#view105x .phraseModeXL #kanaLine,
+#view105x .phraseModeLong .pt,
+#view105x .phraseModeXL .pt,
+#view105x .phraseModeLong #ptLine,
+#view105x .phraseModeXL #ptLine{
+  width:var(--readingW) !important;
+  max-width:var(--readingW) !important;
+  margin-inline:auto !important;
+  display:block !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+}
+
+/* Desktop/tablet: justificação completa, onde existe largura suficiente */
+@media (min-width:561px){
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeLong #kanaLine,
+  #view105x .phraseModeXL #kanaLine{
+    text-align:justify !important;
+    text-align-last:justify !important;
+    text-justify:inter-character !important;
+    text-indent:var(--readingIndentJP) !important;
+    letter-spacing:.014em !important;
+    word-spacing:normal !important;
+    line-break:strict !important;
+  }
+
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeLong #ptLine,
+  #view105x .phraseModeXL #ptLine{
+    text-align:justify !important;
+    text-align-last:justify !important;
+    text-justify:inter-word !important;
+    text-indent:var(--readingIndentPT) !important;
+    word-spacing:.01em !important;
+    letter-spacing:.002em !important;
+    hyphens:auto !important;
+  }
+}
+
+/* Mobile: justificação controlada.
+   Visualmente fica justificado pelo bloco/largura/recuo,
+   mas evita o navegador abrir buracos gigantes entre palavras. */
+@media (max-width:560px){
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    --readingW: 100%;
+    --readingIndentJP: 1em;
+    --readingIndentPT: 1.25em;
+    padding:16px clamp(14px, 4vw, 17px) !important;
+    gap:14px !important;
+  }
+
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeLong #kanaLine,
+  #view105x .phraseModeXL #kanaLine{
+    text-align:justify !important;
+    text-align-last:left !important;
+    text-justify:inter-character !important;
+    text-indent:var(--readingIndentJP) !important;
+    letter-spacing:.01em !important;
+    word-spacing:normal !important;
+    line-break:loose !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeLong #ptLine,
+  #view105x .phraseModeXL #ptLine{
+    text-align:justify !important;
+    text-align-last:left !important;
+    text-indent:var(--readingIndentPT) !important;
+    word-spacing:normal !important;
+    letter-spacing:.001em !important;
+    hyphens:auto !important;
+    overflow-wrap:break-word !important;
+  }
+
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeLong #kanaLine{
+    font-size:clamp(19px, 4.9vw, 25.5px) !important;
+    line-height:1.68 !important;
+  }
+
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeXL #kanaLine{
+    font-size:clamp(16.2px, 4.12vw, 21.8px) !important;
+    line-height:1.78 !important;
+  }
+
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeLong #ptLine{
+    font-size:clamp(14px, 3.58vw, 16.2px) !important;
+    line-height:1.78 !important;
+  }
+
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeXL #ptLine{
+    font-size:clamp(13.2px, 3.38vw, 15.4px) !important;
+    line-height:1.84 !important;
+  }
+
+  /* Reduz os "buracos" em português quando o Chrome tenta esticar linhas curtas */
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt{
+    max-width:calc(100% - 2px) !important;
+  }
+}
+
+/* Em telas muito estreitas, a última linha fica natural para evitar rios de espaço */
+@media (max-width:390px){
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeLong #ptLine,
+  #view105x .phraseModeXL #ptLine{
+    text-align-last:left !important;
+    word-spacing:normal !important;
+  }
+
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeLong #kanaLine,
+  #view105x .phraseModeXL #kanaLine{
+    text-align-last:left !important;
+  }
+}
+
+/* Frases médias no mobile: visual de parágrafo, sem espaços exagerados */
+@media (max-width:560px){
+  #view105x .phraseModeMedium .pt,
+  #view105x .phraseModeMedium #ptLine{
+    text-align:justify !important;
+    text-align-last:left !important;
+    text-indent:1.15em !important;
+    hyphens:auto !important;
+    word-spacing:normal !important;
+    overflow-wrap:break-word !important;
+  }
+}
