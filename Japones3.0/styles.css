@@ -6546,1294 +6546,140 @@ html[data-theme="light"] #view105x .richDetails[open] .explainMiniGuide{
 
 
 /* =========================================================
-   NIHONGO321 8.5.22 — leitura profissional no treino 105x
-   Corrige de verdade frases longas:
-   - contador não invade texto;
-   - japonês e português ficam em um painel de leitura;
-   - frases longas usam layout de leitura, não pôster centralizado;
-   - altura cresce naturalmente, sem corte e sem encavalamento.
+   NIHONGO321 8.5.30 — hero mobile em duas linhas
+   Objetivo:
+   - corrigir estouro lateral do título principal no celular;
+   - manter a frase principal em 2 linhas sempre que possível;
+   - reduzir fonte proporcionalmente conforme a tela estreita;
+   - evitar textos grandes para público cansado;
+   - deixar o hero com aparência de landing profissional.
    ========================================================= */
-
-#view105x{
-  width:min(100%, 760px);
-}
-
-#view105x,
-#view105x *{
-  min-width:0;
-}
-
-#view105x .card,
-#view105x .phraseArea,
-#view105x .phraseTextPanel{
-  overflow:visible !important;
-}
-
-#view105x .phraseArea{
-  height:auto !important;
-  min-height:0 !important;
-  max-height:none !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:stretch !important;
-  justify-content:flex-start !important;
-  gap:14px !important;
-  padding:16px clamp(14px, 3.8vw, 26px) 20px !important;
-  border-radius:28px !important;
-}
-
-#view105x #phraseTopRow{
-  position:static !important;
-  width:100% !important;
-  margin:0 !important;
-  display:flex !important;
-  align-items:flex-start !important;
-  justify-content:space-between !important;
-  gap:10px !important;
-}
-
-#view105x #phraseTopicBadge{
-  max-width:min(70%, 320px) !important;
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-
-#view105x #favoriteSlot .btn,
-#view105x #favoriteSlot button{
-  width:clamp(46px, 10vw, 58px) !important;
-  height:clamp(46px, 10vw, 58px) !important;
-  min-width:clamp(46px, 10vw, 58px) !important;
-  min-height:clamp(46px, 10vw, 58px) !important;
-  border-radius:18px !important;
-}
-
-#view105x .phraseCounterDock{
-  width:100%;
-  display:flex !important;
-  justify-content:center !important;
-  align-items:center !important;
-  margin:0 !important;
-  padding:0 !important;
-}
-
-#view105x .counterMini,
-#view105x #counterBox{
-  position:static !important;
-  inset:auto !important;
-  z-index:1 !important;
-  transform:none !important;
-  flex:0 0 auto !important;
-  width:auto !important;
-  min-width:96px !important;
-  max-width:126px !important;
-  height:auto !important;
-  min-height:62px !important;
-  max-height:none !important;
-  margin:0 auto !important;
-  padding:8px 12px !important;
-}
-
-#view105x .counterVal{
-  font-size:clamp(34px, 8.2vw, 46px) !important;
-  line-height:.92 !important;
-}
-
-#view105x .counterSub{
-  font-size:clamp(10px, 2.3vw, 12px) !important;
-  line-height:1.16 !important;
-  margin-top:3px !important;
-}
-
-#view105x .phraseTextPanel{
-  width:100%;
-  max-width:100%;
-  display:flex !important;
-  flex-direction:column !important;
-  gap:12px !important;
-  border-radius:24px;
-  padding:0;
-}
-
-#view105x .kana,
-#view105x #kanaLine{
-  width:100% !important;
-  max-width:100% !important;
-  min-height:0 !important;
-  max-height:none !important;
-  height:auto !important;
-  margin:0 auto !important;
-  padding:0 !important;
-  display:block !important;
-  overflow:visible !important;
-  white-space:normal !important;
-  text-overflow:clip !important;
-  overflow-wrap:anywhere !important;
-  word-break:normal !important;
-  line-break:loose !important;
-  text-wrap:pretty;
-  letter-spacing:.01em;
-}
-
-#view105x .kana .kseg,
-#view105x #kanaLine .kseg{
-  display:inline !important;
-  max-width:none !important;
-  white-space:normal !important;
-  line-height:inherit !important;
-  transform:none !important;
-}
-
-#view105x .kana .kseg.on,
-#view105x #kanaLine .kseg.on{
-  transform:none !important;
-}
-
-#view105x .pt,
-#view105x #ptLine{
-  width:100% !important;
-  max-width:100% !important;
-  min-height:0 !important;
-  max-height:none !important;
-  height:auto !important;
-  margin:0 auto !important;
-  padding:0 !important;
-  display:block !important;
-  overflow:visible !important;
-  white-space:normal !important;
-  text-overflow:clip !important;
-  overflow-wrap:anywhere !important;
-  word-break:normal !important;
-  text-wrap:pretty;
-}
-
-/* Frases curtas: mantém impacto visual premium */
-#view105x .phraseArea.phraseModeShort{
-  min-height:clamp(292px, 42vh, 378px) !important;
-  justify-content:center !important;
-  gap:15px !important;
-}
-
-#view105x .phraseModeShort .phraseTextPanel{
-  align-items:center;
-  justify-content:center;
-}
-
-#view105x .phraseModeShort .kana{
-  text-align:center !important;
-  font-size:clamp(30px, 7.6vw, 44px) !important;
-  line-height:1.28 !important;
-  font-weight:930 !important;
-}
-
-#view105x .phraseModeShort .pt{
-  max-width:92% !important;
-  text-align:center !important;
-  text-align-last:center !important;
-  font-size:clamp(17px, 4.2vw, 23px) !important;
-  line-height:1.46 !important;
-  font-weight:820 !important;
-}
-
-/* Médias: ainda centralizado, mas com mais espaço */
-#view105x .phraseArea.phraseModeMedium{
-  min-height:clamp(330px, 48vh, 460px) !important;
-  gap:16px !important;
-}
-
-#view105x .phraseModeMedium .kana{
-  text-align:center !important;
-  font-size:clamp(25px, 6.0vw, 36px) !important;
-  line-height:1.38 !important;
-  font-weight:920 !important;
-}
-
-#view105x .phraseModeMedium .pt{
-  max-width:94% !important;
-  text-align:center !important;
-  text-align-last:center !important;
-  font-size:clamp(16px, 3.85vw, 21px) !important;
-  line-height:1.52 !important;
-  font-weight:800 !important;
-}
-
-/* Longas: vira painel de leitura */
-#view105x .phraseArea.phraseModeLong,
-#view105x .phraseArea.phraseModeXL{
-  min-height:auto !important;
-  gap:13px !important;
-  padding-bottom:22px !important;
-}
-
-#view105x .phraseModeLong .phraseTextPanel,
-#view105x .phraseModeXL .phraseTextPanel{
-  gap:12px !important;
-  padding:16px clamp(14px, 3.5vw, 22px) !important;
-  border:1px solid var(--strokeSoft);
-  background:
-    radial-gradient(320px 180px at 0% 0%, rgba(255,179,71,.070), transparent 62%),
-    radial-gradient(280px 180px at 100% 100%, rgba(108,166,255,.075), transparent 62%),
-    rgba(255,255,255,.032);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
-}
-
-html[data-theme="light"] #view105x .phraseModeLong .phraseTextPanel,
-html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel{
-  background:
-    radial-gradient(320px 180px at 0% 0%, rgba(255,179,71,.20), transparent 62%),
-    radial-gradient(280px 180px at 100% 100%, rgba(61,139,238,.12), transparent 62%),
-    rgba(255,255,255,.72);
-}
-
-#view105x .phraseModeLong .kana,
-#view105x .phraseModeXL .kana{
-  text-align:left !important;
-  text-align-last:left !important;
-  font-weight:900 !important;
-}
-
-#view105x .phraseModeLong .pt,
-#view105x .phraseModeXL .pt{
-  text-align:left !important;
-  text-align-last:left !important;
-  color:var(--muted2);
-  font-weight:760 !important;
-  border-top:1px solid var(--strokeSoft);
-  padding-top:12px !important;
-}
-
-#view105x .phraseModeLong .kana{
-  font-size:clamp(21px, 4.8vw, 30px) !important;
-  line-height:1.50 !important;
-}
-
-#view105x .phraseModeLong .pt{
-  font-size:clamp(14.5px, 3.45vw, 18px) !important;
-  line-height:1.62 !important;
-}
-
-/* Extra longas: leitura confortável acima de impacto visual */
-#view105x .phraseModeXL .kana{
-  font-size:clamp(18px, 4.05vw, 25px) !important;
-  line-height:1.58 !important;
-  letter-spacing:0 !important;
-}
-
-#view105x .phraseModeXL .pt{
-  font-size:clamp(14px, 3.25vw, 17px) !important;
-  line-height:1.66 !important;
-}
-
-#view105x .phraseModeLong .counterMini,
-#view105x .phraseModeXL .counterMini{
-  min-width:86px !important;
-  min-height:54px !important;
-  padding:7px 11px !important;
-}
-
-#view105x .phraseModeLong .counterVal,
-#view105x .phraseModeXL .counterVal{
-  font-size:clamp(30px, 7vw, 38px) !important;
-}
-
-#view105x .phraseModeLong .counterSub,
-#view105x .phraseModeXL .counterSub{
-  font-size:10px !important;
-}
-
-#view105x .row[style*="grid-template-columns:56px"],
-#view105x .primaryRow{
-  margin-top:12px !important;
-}
-
-#view105x #newWordsBox{
-  margin-top:18px !important;
-}
-
-#view105x .richDetails:not([open]) .explainPreview{
-  max-width:100%;
-  white-space:normal !important;
-  overflow:hidden;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  text-align:left;
-}
-
-#view105x .richDetails[open] .explainPreview{
-  white-space:normal !important;
-  overflow:visible;
-  display:block;
-}
-
-@media (max-width:560px){
-  #view105x .phraseArea{
-    border-radius:26px !important;
-    padding:14px 12px 18px !important;
-  }
-
-  #view105x #phraseTopicBadge{
-    max-width:68% !important;
-    min-height:32px !important;
-    padding-inline:11px !important;
-    font-size:11.5px !important;
-  }
-
-  #view105x #favoriteSlot .btn,
-  #view105x #favoriteSlot button{
-    width:46px !important;
-    height:46px !important;
-    min-width:46px !important;
-    min-height:46px !important;
-  }
-
-  #view105x .phraseArea.phraseModeShort{
-    min-height:clamp(286px, 42vh, 372px) !important;
-  }
-
-  #view105x .phraseArea.phraseModeMedium{
-    min-height:clamp(334px, 49vh, 470px) !important;
-  }
-
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    padding:15px 14px !important;
-    border-radius:22px;
-  }
-
-  #view105x .phraseModeLong .kana{
-    font-size:clamp(20px, 5.05vw, 27px) !important;
-    line-height:1.52 !important;
-  }
-
-  #view105x .phraseModeXL .kana{
-    font-size:clamp(17px, 4.35vw, 23px) !important;
-    line-height:1.62 !important;
-  }
-
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt{
-    font-size:clamp(13.5px, 3.55vw, 16.5px) !important;
-    line-height:1.66 !important;
-  }
-}
-
-@media (max-width:380px){
-  #view105x .phraseModeXL .kana{
-    font-size:clamp(16px, 4.15vw, 21px) !important;
-  }
-
-  #view105x .phraseModeXL .pt{
-    font-size:clamp(13px, 3.45vw, 15.5px) !important;
-  }
-}
-
-
-/* =========================================================
-   NIHONGO321 8.5.23 — tipografia justificada no 105x
-   Refinamento visual para frases longas:
-   - menos aparência de "sopa de letrinhas";
-   - texto japonês mais leve e legível;
-   - português justificado com largura confortável;
-   - painel de leitura com medida tipográfica melhor.
-   ========================================================= */
-
-#view105x .phraseModeLong .phraseTextPanel,
-#view105x .phraseModeXL .phraseTextPanel{
-  max-width:100%;
-  margin-inline:auto;
-  gap:14px !important;
-  padding:18px clamp(16px, 4.2vw, 28px) !important;
-  border-radius:22px !important;
-  background:
-    radial-gradient(360px 180px at 0% 0%, rgba(255,179,71,.060), transparent 62%),
-    radial-gradient(300px 180px at 100% 100%, rgba(108,166,255,.070), transparent 62%),
-    rgba(255,255,255,.030) !important;
-}
-
-#view105x .phraseModeLong .kana,
-#view105x .phraseModeXL .kana{
-  max-width:34em !important;
-  margin-inline:auto !important;
-  color:var(--soft);
-  font-family:
-    "Hiragino Kaku Gothic ProN",
-    "Yu Gothic",
-    "Noto Sans JP",
-    system-ui,
-    sans-serif !important;
-  font-weight:820 !important;
-  letter-spacing:.015em !important;
-  text-align:justify !important;
-  text-align-last:left !important;
-  text-justify:inter-character;
-  line-break:strict !important;
-  word-break:normal !important;
-  overflow-wrap:anywhere !important;
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.18),
-    0 8px 18px rgba(0,0,0,.12) !important;
-}
-
-#view105x .phraseModeLong .kana{
-  font-size:clamp(20px, 4.55vw, 27px) !important;
-  line-height:1.62 !important;
-}
-
-#view105x .phraseModeXL .kana{
-  font-size:clamp(17px, 3.95vw, 23px) !important;
-  line-height:1.70 !important;
-}
-
-#view105x .phraseModeLong .pt,
-#view105x .phraseModeXL .pt{
-  max-width:38em !important;
-  margin-inline:auto !important;
-  padding-top:14px !important;
-  border-top:1px solid var(--strokeSoft);
-  color:var(--muted2);
-  font-family:
-    Inter,
-    "Noto Sans",
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif !important;
-  font-weight:720 !important;
-  letter-spacing:.002em !important;
-  text-align:justify !important;
-  text-align-last:left !important;
-  text-wrap:pretty;
-  overflow-wrap:break-word !important;
-  word-break:normal !important;
-  hyphens:auto;
-  text-shadow:none !important;
-}
-
-#view105x .phraseModeLong .pt{
-  font-size:clamp(14.5px, 3.35vw, 17.5px) !important;
-  line-height:1.70 !important;
-}
-
-#view105x .phraseModeXL .pt{
-  font-size:clamp(13.8px, 3.15vw, 16.5px) !important;
-  line-height:1.76 !important;
-}
-
-#view105x .phraseModeLong .phraseTextPanel::before,
-#view105x .phraseModeXL .phraseTextPanel::before{
-  content:"leitura confortável";
-  align-self:flex-start;
-  display:inline-flex;
-  min-height:26px;
-  align-items:center;
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid var(--strokeSoft);
-  background:rgba(255,255,255,.040);
-  color:var(--muted);
-  font-size:10px;
-  line-height:1;
-  font-weight:950;
-  letter-spacing:.055em;
-  text-transform:uppercase;
-}
-
-#view105x .phraseModeLong .kana .kseg,
-#view105x .phraseModeXL .kana .kseg{
-  font-weight:inherit !important;
-  letter-spacing:inherit !important;
-}
-
-html[data-theme="light"] #view105x .phraseModeLong .phraseTextPanel,
-html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel{
-  background:
-    radial-gradient(360px 180px at 0% 0%, rgba(255,179,71,.16), transparent 62%),
-    radial-gradient(300px 180px at 100% 100%, rgba(61,139,238,.10), transparent 62%),
-    rgba(255,255,255,.78) !important;
-}
-
-html[data-theme="light"] #view105x .phraseModeLong .kana,
-html[data-theme="light"] #view105x .phraseModeXL .kana{
-  color:#17213a;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.78),
-    0 6px 14px rgba(122,76,0,.10) !important;
-}
-
-html[data-theme="light"] #view105x .phraseModeLong .pt,
-html[data-theme="light"] #view105x .phraseModeXL .pt{
-  color:#263a5d;
-}
-
-html[data-theme="light"] #view105x .phraseModeLong .phraseTextPanel::before,
-html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel::before{
-  background:rgba(255,255,255,.70);
-  color:#52637d;
-}
-
-@media (max-width:560px){
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    padding:16px 15px !important;
-    gap:13px !important;
-  }
-
-  #view105x .phraseModeLong .kana{
-    font-size:clamp(19px, 4.75vw, 25px) !important;
-    line-height:1.66 !important;
-  }
-
-  #view105x .phraseModeXL .kana{
-    font-size:clamp(16.2px, 4.18vw, 21.5px) !important;
-    line-height:1.74 !important;
-  }
-
-  #view105x .phraseModeLong .pt{
-    font-size:clamp(13.8px, 3.55vw, 16.2px) !important;
-    line-height:1.74 !important;
-  }
-
-  #view105x .phraseModeXL .pt{
-    font-size:clamp(13.2px, 3.42vw, 15.5px) !important;
-    line-height:1.80 !important;
-  }
-}
-
-@media (max-width:380px){
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    padding:15px 13px !important;
-  }
-
-  #view105x .phraseModeXL .kana{
-    font-size:clamp(15.6px, 4.05vw, 20px) !important;
-  }
-
-  #view105x .phraseModeXL .pt{
-    font-size:clamp(12.8px, 3.34vw, 14.8px) !important;
-  }
-}
-
-
-/* =========================================================
-   NIHONGO321 8.5.24 — leitura mobile + hero otimizado
-   - Frases médias-grandes no 105x viram modo leitura mais cedo.
-   - No celular, modo leitura fica alinhado à esquerda e mais agradável.
-   - Hero da apresentação ganha diagramação mais limpa em 2 linhas.
-   ========================================================= */
-
-/* ---------- 105x: leitura mobile realmente alinhada/organizada ---------- */
-
-@media (max-width:560px){
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    width:100% !important;
-    max-width:100% !important;
-    align-items:stretch !important;
-    text-align:left !important;
-    padding:18px 16px !important;
-  }
-
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeLong #kanaLine,
-  #view105x .phraseModeXL #kanaLine{
-    max-width:100% !important;
-    margin-inline:0 !important;
-    text-align:left !important;
-    text-align-last:left !important;
-    text-justify:auto !important;
-    display:block !important;
-    letter-spacing:.012em !important;
-    word-spacing:.02em !important;
-    overflow-wrap:anywhere !important;
-    word-break:normal !important;
-    line-break:loose !important;
-  }
-
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeLong #ptLine,
-  #view105x .phraseModeXL #ptLine{
-    max-width:100% !important;
-    margin-inline:0 !important;
-    text-align:justify !important;
-    text-align-last:left !important;
-    text-justify:auto !important;
-    display:block !important;
-    overflow-wrap:break-word !important;
-    word-break:normal !important;
-    hyphens:auto;
-  }
-
-  #view105x .phraseModeLong .kana{
-    font-size:clamp(20px, 5.15vw, 27px) !important;
-    line-height:1.62 !important;
-  }
-
-  #view105x .phraseModeXL .kana{
-    font-size:clamp(17px, 4.35vw, 23px) !important;
-    line-height:1.72 !important;
-  }
-
-  #view105x .phraseModeLong .pt{
-    font-size:clamp(14.4px, 3.72vw, 16.8px) !important;
-    line-height:1.72 !important;
-  }
-
-  #view105x .phraseModeXL .pt{
-    font-size:clamp(13.6px, 3.52vw, 15.8px) !important;
-    line-height:1.80 !important;
-  }
-}
-
-/* Frase média no celular: mantém impacto, mas sem bloco centralizado exagerado */
-@media (max-width:560px){
-  #view105x .phraseModeMedium .phraseTextPanel{
-    gap:13px !important;
-    padding:12px 4px !important;
-  }
-
-  #view105x .phraseModeMedium .kana{
-    font-size:clamp(23px, 5.55vw, 30px) !important;
-    line-height:1.46 !important;
-    text-align:center !important;
-    text-align-last:center !important;
-  }
-
-  #view105x .phraseModeMedium .pt{
-    max-width:100% !important;
-    font-size:clamp(15px, 3.85vw, 18px) !important;
-    line-height:1.62 !important;
-    text-align:justify !important;
-    text-align-last:center !important;
-  }
-}
-
-/* ---------- Landing/Hero: título e subtítulo mais diagramados ---------- */
 
 .heroCard--landing{
-  gap:18px !important;
+  overflow:hidden !important;
 }
 
 .heroCard--landing .heroTitle,
 .heroTitle{
-  max-width:11.8em;
+  box-sizing:border-box;
+  width:100% !important;
+  max-width:min(100%, 15.2em) !important;
+  padding-inline:0 !important;
   margin-inline:auto !important;
   text-align:center !important;
   text-wrap:balance;
-  line-height:1.08 !important;
-  letter-spacing:-.035em !important;
+  overflow-wrap:normal !important;
+  word-break:keep-all !important;
+  hyphens:none !important;
 }
 
 .heroCard--landing .heroLead,
 .heroLead{
-  max-width:31em;
+  box-sizing:border-box;
+  width:100% !important;
+  max-width:min(100%, 34em) !important;
   margin-inline:auto !important;
   text-align:center !important;
   text-wrap:balance;
-  line-height:1.52 !important;
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  hyphens:none !important;
 }
 
+/* Telas médias: texto acompanha o banner sem estourar */
+@media (max-width:760px){
+  .heroCard--landing .heroTitle,
+  .heroTitle{
+    max-width:min(100%, 14.6em) !important;
+    font-size:clamp(31px, 7.45vw, 44px) !important;
+    line-height:1.08 !important;
+    letter-spacing:-.047em !important;
+  }
+
+  .heroCard--landing .heroLead,
+  .heroLead{
+    max-width:min(100%, 30em) !important;
+    font-size:clamp(15.5px, 3.45vw, 18px) !important;
+    line-height:1.56 !important;
+  }
+}
+
+/* Celular comum: força proporção mais segura para 2 linhas */
 @media (max-width:560px){
   .heroCard--landing{
-    padding-inline:clamp(18px, 5vw, 24px) !important;
-    gap:17px !important;
-  }
-
-  .heroCard--landing .heroBannerSlot{
-    margin-bottom:2px !important;
+    padding-inline:clamp(16px, 4.2vw, 20px) !important;
   }
 
   .heroCard--landing .heroTitle,
   .heroTitle{
-    max-width:10.8em !important;
-    font-size:clamp(34px, 9.2vw, 43px) !important;
-    line-height:1.06 !important;
+    max-width:100% !important;
+    font-size:clamp(27px, 7.15vw, 36px) !important;
+    line-height:1.10 !important;
     letter-spacing:-.045em !important;
-    margin-top:2px !important;
-    margin-bottom:0 !important;
   }
 
   .heroCard--landing .heroLead,
   .heroLead{
-    max-width:24.5em !important;
-    font-size:clamp(16px, 4.25vw, 19px) !important;
+    max-width:100% !important;
+    font-size:clamp(14.5px, 3.65vw, 16.5px) !important;
     line-height:1.58 !important;
-    letter-spacing:.002em !important;
-    margin-top:0 !important;
-    margin-bottom:0 !important;
   }
 }
 
-@media (max-width:420px){
+/* Celulares estreitos: reduz um pouco mais para não cortar a frase */
+@media (max-width:430px){
   .heroCard--landing .heroTitle,
   .heroTitle{
-    max-width:11.4em !important;
-    font-size:clamp(31px, 8.45vw, 37px) !important;
+    font-size:clamp(25px, 6.65vw, 31px) !important;
+    line-height:1.12 !important;
+    letter-spacing:-.040em !important;
   }
 
   .heroCard--landing .heroLead,
   .heroLead{
-    max-width:25em !important;
-    font-size:clamp(15.5px, 4.05vw, 17.5px) !important;
-    line-height:1.62 !important;
-  }
-}
-
-@media (max-width:360px){
-  .heroCard--landing .heroTitle,
-  .heroTitle{
-    font-size:clamp(28px, 8.1vw, 32px) !important;
-    max-width:11.2em !important;
-  }
-
-  .heroCard--landing .heroLead,
-  .heroLead{
-    font-size:15px !important;
+    font-size:clamp(14px, 3.55vw, 15.5px) !important;
     line-height:1.60 !important;
   }
 }
 
-
-/* =========================================================
-   NIHONGO321 8.5.25 — hero responsivo proporcional
-   O texto da apresentação passa a acompanhar a largura visual
-   do banner, evitando quebras estranhas em telas maiores.
-   ========================================================= */
-
-.heroCard--landing{
-  --heroContentW: min(100%, 920px);
-  align-items:center !important;
-  text-align:center !important;
-  padding-inline:clamp(18px, 4vw, 38px) !important;
-}
-
-.heroCard--landing .heroBadgeCenter,
-.heroCard--landing .heroBannerSlot,
-.heroCard--landing .heroTitle,
-.heroCard--landing .heroLead,
-.heroCard--landing .heroActions,
-.heroCard--landing .heroMiniStats,
-.heroCard--landing .freeValueStrip{
-  width:var(--heroContentW) !important;
-  max-width:var(--heroContentW) !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-}
-
-.heroCard--landing .heroBannerSlot{
-  aspect-ratio:1200 / 520;
-}
-
-.heroCard--landing .heroTitle,
-.heroTitle{
-  max-width:min(100%, 880px) !important;
-  width:min(100%, 880px) !important;
-  margin-top:clamp(10px, 2vw, 20px) !important;
-  margin-bottom:0 !important;
-  color:var(--soft);
-  font-size:clamp(36px, 5.4vw, 64px) !important;
-  line-height:1.04 !important;
-  letter-spacing:-.055em !important;
-  text-align:center !important;
-  text-wrap:balance;
-  overflow-wrap:normal;
-  word-break:normal;
-}
-
-.heroCard--landing .heroLead,
-.heroLead{
-  max-width:min(100%, 760px) !important;
-  width:min(100%, 760px) !important;
-  margin-top:0 !important;
-  color:var(--muted2);
-  font-size:clamp(16px, 2.05vw, 21px) !important;
-  line-height:1.55 !important;
-  letter-spacing:.002em !important;
-  text-align:center !important;
-  text-wrap:balance;
-  overflow-wrap:normal;
-  word-break:normal;
-}
-
-.heroCard--landing .heroActions{
-  display:grid !important;
-  grid-template-columns:1fr 1fr;
-  gap:14px !important;
-  margin-top:4px !important;
-}
-
-.heroCard--landing .heroActions > *{
-  min-width:0;
-}
-
-.heroCard--landing .heroMiniStats{
-  grid-template-columns:repeat(3, minmax(0, 1fr));
-}
-
-@media (min-width:900px){
-  .heroCard--landing{
-    --heroContentW: min(100%, 960px);
-  }
-
+/* Celulares muito estreitos: prioridade é não cortar texto */
+@media (max-width:370px){
   .heroCard--landing .heroTitle,
   .heroTitle{
-    max-width:920px !important;
-    width:920px !important;
-    font-size:clamp(52px, 5.2vw, 68px) !important;
+    font-size:clamp(23px, 6.2vw, 28px) !important;
+    line-height:1.13 !important;
+    letter-spacing:-.035em !important;
   }
 
   .heroCard--landing .heroLead,
   .heroLead{
-    max-width:800px !important;
-    width:800px !important;
-    font-size:20px !important;
-  }
-}
-
-@media (max-width:760px){
-  .heroCard--landing{
-    --heroContentW: min(100%, 680px);
-  }
-
-  .heroCard--landing .heroTitle,
-  .heroTitle{
-    max-width:min(100%, 12.8em) !important;
-    width:min(100%, 12.8em) !important;
-    font-size:clamp(34px, 8vw, 50px) !important;
-    line-height:1.06 !important;
-    letter-spacing:-.045em !important;
-  }
-
-  .heroCard--landing .heroLead,
-  .heroLead{
-    max-width:min(100%, 32em) !important;
-    width:min(100%, 32em) !important;
-    font-size:clamp(15.8px, 3.8vw, 19px) !important;
+    font-size:13.8px !important;
     line-height:1.58 !important;
   }
+}
 
+/* Pequeno polimento do conjunto abaixo do hero em mobile */
+@media (max-width:560px){
   .heroCard--landing .heroActions{
-    grid-template-columns:1fr !important;
-    gap:12px !important;
-  }
-}
-
-@media (max-width:430px){
-  .heroCard--landing{
-    padding-inline:16px !important;
-    gap:16px !important;
+    margin-top:2px !important;
   }
 
-  .heroCard--landing .heroTitle,
-  .heroTitle{
-    max-width:11.7em !important;
-    width:11.7em !important;
-    font-size:clamp(30px, 8.4vw, 38px) !important;
-    line-height:1.08 !important;
+  .heroCard--landing .heroMiniStats{
+    gap:10px !important;
   }
 
-  .heroCard--landing .heroLead,
-  .heroLead{
-    max-width:25.5em !important;
-    width:25.5em !important;
-    font-size:clamp(15px, 4vw, 17px) !important;
-    line-height:1.62 !important;
-  }
-}
-
-/* NIHONGO321 8.5.26 — backup incremental + caracteres especiais livres. CSS preservado da 8.5.25. */
-
-
-/* =========================================================
-   NIHONGO321 8.5.27 — leitura mobile sem espaços estranhos
-   Corrige o efeito ruim do texto justificado em telas estreitas:
-   - remove espaçamento exagerado entre palavras;
-   - usa alinhamento à esquerda no mobile;
-   - aproveita melhor a largura horizontal;
-   - mantém leitura limpa e profissional.
-   ========================================================= */
-
-@media (max-width:560px){
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    width:100% !important;
-    max-width:100% !important;
-    padding:16px clamp(14px, 4.2vw, 18px) !important;
-    gap:14px !important;
+  .heroCard--landing .statCard{
+    min-height:96px;
+    padding:14px 10px !important;
   }
 
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeLong #kanaLine,
-  #view105x .phraseModeXL #kanaLine{
-    width:100% !important;
-    max-width:100% !important;
-    margin-inline:0 !important;
-    text-align:left !important;
-    text-align-last:left !important;
-    text-justify:auto !important;
-    word-spacing:normal !important;
-    letter-spacing:.01em !important;
-    overflow-wrap:break-word !important;
-    word-break:normal !important;
-    line-break:loose !important;
+  .heroCard--landing .statVal{
+    font-size:clamp(20px, 5vw, 27px) !important;
+    line-height:1.05 !important;
   }
 
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeLong #ptLine,
-  #view105x .phraseModeXL #ptLine{
-    width:100% !important;
-    max-width:100% !important;
-    margin-inline:0 !important;
-    text-align:left !important;
-    text-align-last:left !important;
-    text-justify:auto !important;
-    word-spacing:normal !important;
-    letter-spacing:.002em !important;
-    overflow-wrap:break-word !important;
-    word-break:normal !important;
-    hyphens:none !important;
-  }
-
-  #view105x .phraseModeLong .kana{
-    font-size:clamp(20px, 5.05vw, 27px) !important;
-    line-height:1.62 !important;
-  }
-
-  #view105x .phraseModeXL .kana{
-    font-size:clamp(17px, 4.28vw, 23px) !important;
-    line-height:1.72 !important;
-  }
-
-  #view105x .phraseModeLong .pt{
-    font-size:clamp(14.5px, 3.72vw, 16.8px) !important;
-    line-height:1.72 !important;
-  }
-
-  #view105x .phraseModeXL .pt{
-    font-size:clamp(13.8px, 3.52vw, 15.8px) !important;
-    line-height:1.80 !important;
-  }
-}
-
-@media (max-width:420px){
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    padding:15px 14px !important;
-    border-radius:21px !important;
-  }
-
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt{
-    line-height:1.76 !important;
-  }
-}
-
-
-/* =========================================================
-   NIHONGO321 8.5.28 — texto justificado com parágrafo
-   Pedido do usuário:
-   - Japonês e português sempre justificados no modo leitura.
-   - Mesma largura visual para os dois textos.
-   - Espaço automático de parágrafo no início de toda frase.
-   - Sem alinhamento à esquerda/direita no modo leitura.
-   ========================================================= */
-
-#view105x .phraseModeLong .phraseTextPanel,
-#view105x .phraseModeXL .phraseTextPanel{
-  --readingW: min(100%, 38rem);
-  align-items:center !important;
-  justify-content:flex-start !important;
-  padding:18px clamp(16px, 4vw, 28px) !important;
-}
-
-#view105x .phraseModeLong .kana,
-#view105x .phraseModeXL .kana,
-#view105x .phraseModeLong #kanaLine,
-#view105x .phraseModeXL #kanaLine,
-#view105x .phraseModeLong .pt,
-#view105x .phraseModeXL .pt,
-#view105x .phraseModeLong #ptLine,
-#view105x .phraseModeXL #ptLine{
-  width:var(--readingW) !important;
-  max-width:var(--readingW) !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  display:block !important;
-  text-align:justify !important;
-  text-align-last:justify !important;
-  overflow-wrap:break-word !important;
-  word-break:normal !important;
-  white-space:normal !important;
-}
-
-/* Japonês: justificação por caracteres, com entrada de parágrafo */
-#view105x .phraseModeLong .kana,
-#view105x .phraseModeXL .kana,
-#view105x .phraseModeLong #kanaLine,
-#view105x .phraseModeXL #kanaLine{
-  text-justify:inter-character !important;
-  text-indent:1em !important;
-  word-spacing:normal !important;
-  letter-spacing:.018em !important;
-  line-break:strict !important;
-  hyphens:none !important;
-}
-
-/* Português: justificação por palavras, com entrada de parágrafo */
-#view105x .phraseModeLong .pt,
-#view105x .phraseModeXL .pt,
-#view105x .phraseModeLong #ptLine,
-#view105x .phraseModeXL #ptLine{
-  text-justify:inter-word !important;
-  text-indent:1.45em !important;
-  word-spacing:.02em !important;
-  letter-spacing:.002em !important;
-  hyphens:auto !important;
-}
-
-/* Mantém o parágrafo mesmo quando há spans no japonês */
-#view105x .phraseModeLong .kana .kseg:first-child,
-#view105x .phraseModeXL .kana .kseg:first-child,
-#view105x .phraseModeLong #kanaLine .kseg:first-child,
-#view105x .phraseModeXL #kanaLine .kseg:first-child{
-  margin-left:0 !important;
-}
-
-@media (max-width:560px){
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    --readingW: 100%;
-    padding:16px 15px !important;
-  }
-
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeLong #kanaLine,
-  #view105x .phraseModeXL #kanaLine,
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeLong #ptLine,
-  #view105x .phraseModeXL #ptLine{
-    width:100% !important;
-    max-width:100% !important;
-    text-align:justify !important;
-    text-align-last:justify !important;
-  }
-
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeLong #kanaLine{
-    font-size:clamp(19px, 4.9vw, 26px) !important;
-    line-height:1.66 !important;
-    text-indent:1em !important;
-  }
-
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeXL #kanaLine{
-    font-size:clamp(16.4px, 4.18vw, 22px) !important;
-    line-height:1.76 !important;
-    text-indent:1em !important;
-  }
-
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeLong #ptLine{
-    font-size:clamp(14px, 3.62vw, 16.4px) !important;
-    line-height:1.76 !important;
-    text-indent:1.35em !important;
-  }
-
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeXL #ptLine{
-    font-size:clamp(13.4px, 3.45vw, 15.6px) !important;
-    line-height:1.84 !important;
-    text-indent:1.35em !important;
-  }
-}
-
-/* Frases médias no mobile também ganham parágrafo e justificação quando ficarem grandes visualmente */
-@media (max-width:560px){
-  #view105x .phraseModeMedium .pt,
-  #view105x .phraseModeMedium #ptLine{
-    text-align:justify !important;
-    text-align-last:justify !important;
-    text-indent:1.25em !important;
-    hyphens:auto !important;
-    overflow-wrap:break-word !important;
-  }
-}
-
-
-/* =========================================================
-   NIHONGO321 8.5.29 — justificação inteligente mobile
-   Estratégia:
-   - mantém largura igual para JP/PT;
-   - mantém recuo de parágrafo;
-   - evita depender de justificação nativa agressiva em telas estreitas;
-   - usa balanceamento visual para reduzir espaços gigantes entre palavras;
-   - preserva justificação total quando há largura suficiente.
-   ========================================================= */
-
-#view105x .phraseModeLong .phraseTextPanel,
-#view105x .phraseModeXL .phraseTextPanel{
-  --readingW: min(100%, 39rem);
-  --readingIndentJP: 1em;
-  --readingIndentPT: 1.35em;
-  align-items:center !important;
-  padding:18px clamp(16px, 4vw, 28px) !important;
-}
-
-#view105x .phraseModeLong .kana,
-#view105x .phraseModeXL .kana,
-#view105x .phraseModeLong #kanaLine,
-#view105x .phraseModeXL #kanaLine,
-#view105x .phraseModeLong .pt,
-#view105x .phraseModeXL .pt,
-#view105x .phraseModeLong #ptLine,
-#view105x .phraseModeXL #ptLine{
-  width:var(--readingW) !important;
-  max-width:var(--readingW) !important;
-  margin-inline:auto !important;
-  display:block !important;
-  white-space:normal !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-  overflow-wrap:break-word !important;
-  word-break:normal !important;
-}
-
-/* Desktop/tablet: justificação completa, onde existe largura suficiente */
-@media (min-width:561px){
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeLong #kanaLine,
-  #view105x .phraseModeXL #kanaLine{
-    text-align:justify !important;
-    text-align-last:justify !important;
-    text-justify:inter-character !important;
-    text-indent:var(--readingIndentJP) !important;
-    letter-spacing:.014em !important;
-    word-spacing:normal !important;
-    line-break:strict !important;
-  }
-
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeLong #ptLine,
-  #view105x .phraseModeXL #ptLine{
-    text-align:justify !important;
-    text-align-last:justify !important;
-    text-justify:inter-word !important;
-    text-indent:var(--readingIndentPT) !important;
-    word-spacing:.01em !important;
-    letter-spacing:.002em !important;
-    hyphens:auto !important;
-  }
-}
-
-/* Mobile: justificação controlada.
-   Visualmente fica justificado pelo bloco/largura/recuo,
-   mas evita o navegador abrir buracos gigantes entre palavras. */
-@media (max-width:560px){
-  #view105x .phraseModeLong .phraseTextPanel,
-  #view105x .phraseModeXL .phraseTextPanel{
-    --readingW: 100%;
-    --readingIndentJP: 1em;
-    --readingIndentPT: 1.25em;
-    padding:16px clamp(14px, 4vw, 17px) !important;
-    gap:14px !important;
-  }
-
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeLong #kanaLine,
-  #view105x .phraseModeXL #kanaLine{
-    text-align:justify !important;
-    text-align-last:left !important;
-    text-justify:inter-character !important;
-    text-indent:var(--readingIndentJP) !important;
-    letter-spacing:.01em !important;
-    word-spacing:normal !important;
-    line-break:loose !important;
-    overflow-wrap:anywhere !important;
-  }
-
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeLong #ptLine,
-  #view105x .phraseModeXL #ptLine{
-    text-align:justify !important;
-    text-align-last:left !important;
-    text-indent:var(--readingIndentPT) !important;
-    word-spacing:normal !important;
-    letter-spacing:.001em !important;
-    hyphens:auto !important;
-    overflow-wrap:break-word !important;
-  }
-
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeLong #kanaLine{
-    font-size:clamp(19px, 4.9vw, 25.5px) !important;
-    line-height:1.68 !important;
-  }
-
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeXL #kanaLine{
-    font-size:clamp(16.2px, 4.12vw, 21.8px) !important;
-    line-height:1.78 !important;
-  }
-
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeLong #ptLine{
-    font-size:clamp(14px, 3.58vw, 16.2px) !important;
-    line-height:1.78 !important;
-  }
-
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeXL #ptLine{
-    font-size:clamp(13.2px, 3.38vw, 15.4px) !important;
-    line-height:1.84 !important;
-  }
-
-  /* Reduz os "buracos" em português quando o Chrome tenta esticar linhas curtas */
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt{
-    max-width:calc(100% - 2px) !important;
-  }
-}
-
-/* Em telas muito estreitas, a última linha fica natural para evitar rios de espaço */
-@media (max-width:390px){
-  #view105x .phraseModeLong .pt,
-  #view105x .phraseModeXL .pt,
-  #view105x .phraseModeLong #ptLine,
-  #view105x .phraseModeXL #ptLine{
-    text-align-last:left !important;
-    word-spacing:normal !important;
-  }
-
-  #view105x .phraseModeLong .kana,
-  #view105x .phraseModeXL .kana,
-  #view105x .phraseModeLong #kanaLine,
-  #view105x .phraseModeXL #kanaLine{
-    text-align-last:left !important;
-  }
-}
-
-/* Frases médias no mobile: visual de parágrafo, sem espaços exagerados */
-@media (max-width:560px){
-  #view105x .phraseModeMedium .pt,
-  #view105x .phraseModeMedium #ptLine{
-    text-align:justify !important;
-    text-align-last:left !important;
-    text-indent:1.15em !important;
-    hyphens:auto !important;
-    word-spacing:normal !important;
-    overflow-wrap:break-word !important;
+  .heroCard--landing .statLbl{
+    font-size:clamp(12px, 3.1vw, 14px) !important;
+    line-height:1.35 !important;
   }
 }
