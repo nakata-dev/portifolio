@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.23
+   NIHONGO321 v8.5.25
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.23",
+  version: "8.5.25",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -5517,9 +5517,9 @@ function phraseTextStats(phrase) {
 function phraseDisplayMode(phrase) {
   const s = phraseTextStats(phrase);
 
-  if (s.jpLen >= 82 || s.ptLen >= 185 || s.total >= 150) return "phraseModeXL";
-  if (s.jpLen >= 58 || s.ptLen >= 130 || s.total >= 112) return "phraseModeLong";
-  if (s.jpLen >= 34 || s.ptLen >= 78 || s.total >= 72) return "phraseModeMedium";
+  if (s.jpLen >= 78 || s.ptLen >= 170 || s.total >= 138) return "phraseModeXL";
+  if (s.jpLen >= 42 || s.ptLen >= 92 || s.total >= 86) return "phraseModeLong";
+  if (s.jpLen >= 26 || s.ptLen >= 58 || s.total >= 54) return "phraseModeMedium";
 
   return "phraseModeShort";
 }

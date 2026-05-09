@@ -7116,3 +7116,332 @@ html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel::before{
     font-size:clamp(12.8px, 3.34vw, 14.8px) !important;
   }
 }
+
+
+/* =========================================================
+   NIHONGO321 8.5.24 — leitura mobile + hero otimizado
+   - Frases médias-grandes no 105x viram modo leitura mais cedo.
+   - No celular, modo leitura fica alinhado à esquerda e mais agradável.
+   - Hero da apresentação ganha diagramação mais limpa em 2 linhas.
+   ========================================================= */
+
+/* ---------- 105x: leitura mobile realmente alinhada/organizada ---------- */
+
+@media (max-width:560px){
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    width:100% !important;
+    max-width:100% !important;
+    align-items:stretch !important;
+    text-align:left !important;
+    padding:18px 16px !important;
+  }
+
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeLong #kanaLine,
+  #view105x .phraseModeXL #kanaLine{
+    max-width:100% !important;
+    margin-inline:0 !important;
+    text-align:left !important;
+    text-align-last:left !important;
+    text-justify:auto !important;
+    display:block !important;
+    letter-spacing:.012em !important;
+    word-spacing:.02em !important;
+    overflow-wrap:anywhere !important;
+    word-break:normal !important;
+    line-break:loose !important;
+  }
+
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeLong #ptLine,
+  #view105x .phraseModeXL #ptLine{
+    max-width:100% !important;
+    margin-inline:0 !important;
+    text-align:justify !important;
+    text-align-last:left !important;
+    text-justify:auto !important;
+    display:block !important;
+    overflow-wrap:break-word !important;
+    word-break:normal !important;
+    hyphens:auto;
+  }
+
+  #view105x .phraseModeLong .kana{
+    font-size:clamp(20px, 5.15vw, 27px) !important;
+    line-height:1.62 !important;
+  }
+
+  #view105x .phraseModeXL .kana{
+    font-size:clamp(17px, 4.35vw, 23px) !important;
+    line-height:1.72 !important;
+  }
+
+  #view105x .phraseModeLong .pt{
+    font-size:clamp(14.4px, 3.72vw, 16.8px) !important;
+    line-height:1.72 !important;
+  }
+
+  #view105x .phraseModeXL .pt{
+    font-size:clamp(13.6px, 3.52vw, 15.8px) !important;
+    line-height:1.80 !important;
+  }
+}
+
+/* Frase média no celular: mantém impacto, mas sem bloco centralizado exagerado */
+@media (max-width:560px){
+  #view105x .phraseModeMedium .phraseTextPanel{
+    gap:13px !important;
+    padding:12px 4px !important;
+  }
+
+  #view105x .phraseModeMedium .kana{
+    font-size:clamp(23px, 5.55vw, 30px) !important;
+    line-height:1.46 !important;
+    text-align:center !important;
+    text-align-last:center !important;
+  }
+
+  #view105x .phraseModeMedium .pt{
+    max-width:100% !important;
+    font-size:clamp(15px, 3.85vw, 18px) !important;
+    line-height:1.62 !important;
+    text-align:justify !important;
+    text-align-last:center !important;
+  }
+}
+
+/* ---------- Landing/Hero: título e subtítulo mais diagramados ---------- */
+
+.heroCard--landing{
+  gap:18px !important;
+}
+
+.heroCard--landing .heroTitle,
+.heroTitle{
+  max-width:11.8em;
+  margin-inline:auto !important;
+  text-align:center !important;
+  text-wrap:balance;
+  line-height:1.08 !important;
+  letter-spacing:-.035em !important;
+}
+
+.heroCard--landing .heroLead,
+.heroLead{
+  max-width:31em;
+  margin-inline:auto !important;
+  text-align:center !important;
+  text-wrap:balance;
+  line-height:1.52 !important;
+}
+
+@media (max-width:560px){
+  .heroCard--landing{
+    padding-inline:clamp(18px, 5vw, 24px) !important;
+    gap:17px !important;
+  }
+
+  .heroCard--landing .heroBannerSlot{
+    margin-bottom:2px !important;
+  }
+
+  .heroCard--landing .heroTitle,
+  .heroTitle{
+    max-width:10.8em !important;
+    font-size:clamp(34px, 9.2vw, 43px) !important;
+    line-height:1.06 !important;
+    letter-spacing:-.045em !important;
+    margin-top:2px !important;
+    margin-bottom:0 !important;
+  }
+
+  .heroCard--landing .heroLead,
+  .heroLead{
+    max-width:24.5em !important;
+    font-size:clamp(16px, 4.25vw, 19px) !important;
+    line-height:1.58 !important;
+    letter-spacing:.002em !important;
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+  }
+}
+
+@media (max-width:420px){
+  .heroCard--landing .heroTitle,
+  .heroTitle{
+    max-width:11.4em !important;
+    font-size:clamp(31px, 8.45vw, 37px) !important;
+  }
+
+  .heroCard--landing .heroLead,
+  .heroLead{
+    max-width:25em !important;
+    font-size:clamp(15.5px, 4.05vw, 17.5px) !important;
+    line-height:1.62 !important;
+  }
+}
+
+@media (max-width:360px){
+  .heroCard--landing .heroTitle,
+  .heroTitle{
+    font-size:clamp(28px, 8.1vw, 32px) !important;
+    max-width:11.2em !important;
+  }
+
+  .heroCard--landing .heroLead,
+  .heroLead{
+    font-size:15px !important;
+    line-height:1.60 !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.25 — hero responsivo proporcional
+   O texto da apresentação passa a acompanhar a largura visual
+   do banner, evitando quebras estranhas em telas maiores.
+   ========================================================= */
+
+.heroCard--landing{
+  --heroContentW: min(100%, 920px);
+  align-items:center !important;
+  text-align:center !important;
+  padding-inline:clamp(18px, 4vw, 38px) !important;
+}
+
+.heroCard--landing .heroBadgeCenter,
+.heroCard--landing .heroBannerSlot,
+.heroCard--landing .heroTitle,
+.heroCard--landing .heroLead,
+.heroCard--landing .heroActions,
+.heroCard--landing .heroMiniStats,
+.heroCard--landing .freeValueStrip{
+  width:var(--heroContentW) !important;
+  max-width:var(--heroContentW) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+.heroCard--landing .heroBannerSlot{
+  aspect-ratio:1200 / 520;
+}
+
+.heroCard--landing .heroTitle,
+.heroTitle{
+  max-width:min(100%, 880px) !important;
+  width:min(100%, 880px) !important;
+  margin-top:clamp(10px, 2vw, 20px) !important;
+  margin-bottom:0 !important;
+  color:var(--soft);
+  font-size:clamp(36px, 5.4vw, 64px) !important;
+  line-height:1.04 !important;
+  letter-spacing:-.055em !important;
+  text-align:center !important;
+  text-wrap:balance;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+
+.heroCard--landing .heroLead,
+.heroLead{
+  max-width:min(100%, 760px) !important;
+  width:min(100%, 760px) !important;
+  margin-top:0 !important;
+  color:var(--muted2);
+  font-size:clamp(16px, 2.05vw, 21px) !important;
+  line-height:1.55 !important;
+  letter-spacing:.002em !important;
+  text-align:center !important;
+  text-wrap:balance;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+
+.heroCard--landing .heroActions{
+  display:grid !important;
+  grid-template-columns:1fr 1fr;
+  gap:14px !important;
+  margin-top:4px !important;
+}
+
+.heroCard--landing .heroActions > *{
+  min-width:0;
+}
+
+.heroCard--landing .heroMiniStats{
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+}
+
+@media (min-width:900px){
+  .heroCard--landing{
+    --heroContentW: min(100%, 960px);
+  }
+
+  .heroCard--landing .heroTitle,
+  .heroTitle{
+    max-width:920px !important;
+    width:920px !important;
+    font-size:clamp(52px, 5.2vw, 68px) !important;
+  }
+
+  .heroCard--landing .heroLead,
+  .heroLead{
+    max-width:800px !important;
+    width:800px !important;
+    font-size:20px !important;
+  }
+}
+
+@media (max-width:760px){
+  .heroCard--landing{
+    --heroContentW: min(100%, 680px);
+  }
+
+  .heroCard--landing .heroTitle,
+  .heroTitle{
+    max-width:min(100%, 12.8em) !important;
+    width:min(100%, 12.8em) !important;
+    font-size:clamp(34px, 8vw, 50px) !important;
+    line-height:1.06 !important;
+    letter-spacing:-.045em !important;
+  }
+
+  .heroCard--landing .heroLead,
+  .heroLead{
+    max-width:min(100%, 32em) !important;
+    width:min(100%, 32em) !important;
+    font-size:clamp(15.8px, 3.8vw, 19px) !important;
+    line-height:1.58 !important;
+  }
+
+  .heroCard--landing .heroActions{
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+}
+
+@media (max-width:430px){
+  .heroCard--landing{
+    padding-inline:16px !important;
+    gap:16px !important;
+  }
+
+  .heroCard--landing .heroTitle,
+  .heroTitle{
+    max-width:11.7em !important;
+    width:11.7em !important;
+    font-size:clamp(30px, 8.4vw, 38px) !important;
+    line-height:1.08 !important;
+  }
+
+  .heroCard--landing .heroLead,
+  .heroLead{
+    max-width:25.5em !important;
+    width:25.5em !important;
+    font-size:clamp(15px, 4vw, 17px) !important;
+    line-height:1.62 !important;
+  }
+}
