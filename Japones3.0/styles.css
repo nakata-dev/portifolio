@@ -7447,3 +7447,223 @@ html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel::before{
 }
 
 /* NIHONGO321 8.5.26 — backup incremental + caracteres especiais livres. CSS preservado da 8.5.25. */
+
+
+/* =========================================================
+   NIHONGO321 8.5.27 — leitura mobile sem espaços estranhos
+   Corrige o efeito ruim do texto justificado em telas estreitas:
+   - remove espaçamento exagerado entre palavras;
+   - usa alinhamento à esquerda no mobile;
+   - aproveita melhor a largura horizontal;
+   - mantém leitura limpa e profissional.
+   ========================================================= */
+
+@media (max-width:560px){
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    width:100% !important;
+    max-width:100% !important;
+    padding:16px clamp(14px, 4.2vw, 18px) !important;
+    gap:14px !important;
+  }
+
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeLong #kanaLine,
+  #view105x .phraseModeXL #kanaLine{
+    width:100% !important;
+    max-width:100% !important;
+    margin-inline:0 !important;
+    text-align:left !important;
+    text-align-last:left !important;
+    text-justify:auto !important;
+    word-spacing:normal !important;
+    letter-spacing:.01em !important;
+    overflow-wrap:break-word !important;
+    word-break:normal !important;
+    line-break:loose !important;
+  }
+
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeLong #ptLine,
+  #view105x .phraseModeXL #ptLine{
+    width:100% !important;
+    max-width:100% !important;
+    margin-inline:0 !important;
+    text-align:left !important;
+    text-align-last:left !important;
+    text-justify:auto !important;
+    word-spacing:normal !important;
+    letter-spacing:.002em !important;
+    overflow-wrap:break-word !important;
+    word-break:normal !important;
+    hyphens:none !important;
+  }
+
+  #view105x .phraseModeLong .kana{
+    font-size:clamp(20px, 5.05vw, 27px) !important;
+    line-height:1.62 !important;
+  }
+
+  #view105x .phraseModeXL .kana{
+    font-size:clamp(17px, 4.28vw, 23px) !important;
+    line-height:1.72 !important;
+  }
+
+  #view105x .phraseModeLong .pt{
+    font-size:clamp(14.5px, 3.72vw, 16.8px) !important;
+    line-height:1.72 !important;
+  }
+
+  #view105x .phraseModeXL .pt{
+    font-size:clamp(13.8px, 3.52vw, 15.8px) !important;
+    line-height:1.80 !important;
+  }
+}
+
+@media (max-width:420px){
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    padding:15px 14px !important;
+    border-radius:21px !important;
+  }
+
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt{
+    line-height:1.76 !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.28 — texto justificado com parágrafo
+   Pedido do usuário:
+   - Japonês e português sempre justificados no modo leitura.
+   - Mesma largura visual para os dois textos.
+   - Espaço automático de parágrafo no início de toda frase.
+   - Sem alinhamento à esquerda/direita no modo leitura.
+   ========================================================= */
+
+#view105x .phraseModeLong .phraseTextPanel,
+#view105x .phraseModeXL .phraseTextPanel{
+  --readingW: min(100%, 38rem);
+  align-items:center !important;
+  justify-content:flex-start !important;
+  padding:18px clamp(16px, 4vw, 28px) !important;
+}
+
+#view105x .phraseModeLong .kana,
+#view105x .phraseModeXL .kana,
+#view105x .phraseModeLong #kanaLine,
+#view105x .phraseModeXL #kanaLine,
+#view105x .phraseModeLong .pt,
+#view105x .phraseModeXL .pt,
+#view105x .phraseModeLong #ptLine,
+#view105x .phraseModeXL #ptLine{
+  width:var(--readingW) !important;
+  max-width:var(--readingW) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  display:block !important;
+  text-align:justify !important;
+  text-align-last:justify !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+  white-space:normal !important;
+}
+
+/* Japonês: justificação por caracteres, com entrada de parágrafo */
+#view105x .phraseModeLong .kana,
+#view105x .phraseModeXL .kana,
+#view105x .phraseModeLong #kanaLine,
+#view105x .phraseModeXL #kanaLine{
+  text-justify:inter-character !important;
+  text-indent:1em !important;
+  word-spacing:normal !important;
+  letter-spacing:.018em !important;
+  line-break:strict !important;
+  hyphens:none !important;
+}
+
+/* Português: justificação por palavras, com entrada de parágrafo */
+#view105x .phraseModeLong .pt,
+#view105x .phraseModeXL .pt,
+#view105x .phraseModeLong #ptLine,
+#view105x .phraseModeXL #ptLine{
+  text-justify:inter-word !important;
+  text-indent:1.45em !important;
+  word-spacing:.02em !important;
+  letter-spacing:.002em !important;
+  hyphens:auto !important;
+}
+
+/* Mantém o parágrafo mesmo quando há spans no japonês */
+#view105x .phraseModeLong .kana .kseg:first-child,
+#view105x .phraseModeXL .kana .kseg:first-child,
+#view105x .phraseModeLong #kanaLine .kseg:first-child,
+#view105x .phraseModeXL #kanaLine .kseg:first-child{
+  margin-left:0 !important;
+}
+
+@media (max-width:560px){
+  #view105x .phraseModeLong .phraseTextPanel,
+  #view105x .phraseModeXL .phraseTextPanel{
+    --readingW: 100%;
+    padding:16px 15px !important;
+  }
+
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeLong #kanaLine,
+  #view105x .phraseModeXL #kanaLine,
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeLong #ptLine,
+  #view105x .phraseModeXL #ptLine{
+    width:100% !important;
+    max-width:100% !important;
+    text-align:justify !important;
+    text-align-last:justify !important;
+  }
+
+  #view105x .phraseModeLong .kana,
+  #view105x .phraseModeLong #kanaLine{
+    font-size:clamp(19px, 4.9vw, 26px) !important;
+    line-height:1.66 !important;
+    text-indent:1em !important;
+  }
+
+  #view105x .phraseModeXL .kana,
+  #view105x .phraseModeXL #kanaLine{
+    font-size:clamp(16.4px, 4.18vw, 22px) !important;
+    line-height:1.76 !important;
+    text-indent:1em !important;
+  }
+
+  #view105x .phraseModeLong .pt,
+  #view105x .phraseModeLong #ptLine{
+    font-size:clamp(14px, 3.62vw, 16.4px) !important;
+    line-height:1.76 !important;
+    text-indent:1.35em !important;
+  }
+
+  #view105x .phraseModeXL .pt,
+  #view105x .phraseModeXL #ptLine{
+    font-size:clamp(13.4px, 3.45vw, 15.6px) !important;
+    line-height:1.84 !important;
+    text-indent:1.35em !important;
+  }
+}
+
+/* Frases médias no mobile também ganham parágrafo e justificação quando ficarem grandes visualmente */
+@media (max-width:560px){
+  #view105x .phraseModeMedium .pt,
+  #view105x .phraseModeMedium #ptLine{
+    text-align:justify !important;
+    text-align-last:justify !important;
+    text-indent:1.25em !important;
+    hyphens:auto !important;
+    overflow-wrap:break-word !important;
+  }
+}

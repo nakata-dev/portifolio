@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.26
+   NIHONGO321 v8.5.28
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.26",
+  version: "8.5.28",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
