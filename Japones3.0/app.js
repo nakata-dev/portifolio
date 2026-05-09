@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.25
+   NIHONGO321 v8.5.26
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.25",
+  version: "8.5.26",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -259,19 +259,23 @@ function nav(hash) {
 }
 
 /* ---------- validação JP ---------- */
-const JP_ALLOWED_RE =
-  /^[A-Za-z\uFF21-\uFF3A\uFF41-\uFF5A\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF 　。、！？・ー\-~!?.,:;()（）「」『』【】［］…\n\r\t0-9\uFF10-\uFF19{}%％＋+／/＝=＆&・'’"”“#＃]*$/;
-
 function isValidJP(text) {
+  /*
+    NIHONGO321 8.5.26
+    Validação permissiva para frases próprias.
+    O usuário pode cadastrar frases reais com símbolos, valores, aspas,
+    colchetes, emoji, sinais matemáticos, caracteres full-width, etc.
+
+    A sanitização visual continua sendo feita com escapeHTML na renderização.
+    Furigana no formato Kanji{かな} segue funcionando quando estiver correto,
+    mas caracteres especiais não bloqueiam mais o salvamento da frase.
+  */
   if (typeof text !== "string") return false;
   const t = text.trim();
   if (!t) return false;
-  if (!JP_ALLOWED_RE.test(t)) return false;
 
-  const open = (t.match(/{/g) || []).length;
-  const close = (t.match(/}/g) || []).length;
-  if (open !== close) return false;
-  if (/\{\s*\}/.test(t)) return false;
+  const hasUnsafeControl = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(t);
+  if (hasUnsafeControl) return false;
 
   return true;
 }
@@ -6125,6 +6129,105 @@ function safeImportedId(prefix, text, usedIds) {
   return id;
 }
 
+
+function cloneCleanTopicForExport(topic) {
+  return {
+    id: String(topic?.id || "").trim(),
+    name: String(topic?.name || "Tema").trim(),
+    color: topic?.color || "tBlue",
+    createdAt: Number(topic?.createdAt || now()),
+    updatedAt: Number(topic?.updatedAt || now()),
+    level: String(topic?.level || "").trim(),
+    description: String(topic?.description || "").trim(),
+    isPremium: !!topic?.isPremium
+  };
+}
+
+function cloneCleanPhraseForExport(phrase) {
+  return {
+    id: String(phrase?.id || "").trim(),
+    jp: String(phrase?.jp || "").trim(),
+    pt: String(phrase?.pt || "").trim(),
+    newWords: normalizeExternalNewWords(phrase?.newWords || []),
+    topicId: String(phrase?.topicId || "topic_default").trim(),
+    createdAt: Number(phrase?.createdAt || now()),
+    updatedAt: Number(phrase?.updatedAt || now()),
+    romaji: String(phrase?.romaji || "").trim(),
+    kana: String(phrase?.kana || "").trim(),
+    note: String(phrase?.note || "").trim(),
+    tags: Array.isArray(phrase?.tags) ? phrase.tags : [],
+    situation: String(phrase?.situation || "").trim(),
+    level: String(phrase?.level || "").trim(),
+    audioKey: String(phrase?.audioKey || "").trim()
+  };
+}
+
+function createContentPackPayload() {
+  ensurePhrasesHaveValidTopic();
+
+  const phrases = (STATE.bank?.phrases || [])
+    .filter(p => p?.jp && p?.pt)
+    .map(cloneCleanPhraseForExport);
+
+  const usedTopicIds = new Set(phrases.map(p => p.topicId));
+  const topics = (STATE.bank?.topics || [])
+    .filter(t => usedTopicIds.has(t.id))
+    .map(cloneCleanTopicForExport);
+
+  const progress = {};
+  for (const phrase of phrases) {
+    if (STATE.progress?.[phrase.id]) {
+      progress[phrase.id] = defaultProgressForImportedPhrase(STATE.progress[phrase.id]);
+    }
+  }
+
+  const exportedIds = new Set(phrases.map(p => p.id));
+  const favorites = {
+    phraseIds: (STATE.favorites?.phraseIds || []).filter(id => exportedIds.has(id))
+  };
+
+  return {
+    schema: "nihongo321_content_pack_v2",
+    exportKind: "incremental_content_pack",
+    appName: BRAND.name,
+    appVersion: BRAND.version,
+    exportedAt: new Date().toISOString(),
+    mergeMode: "add_or_merge_without_erasing_local_content",
+    bank: {
+      topics,
+      phrases
+    },
+    progress,
+    favorites,
+    stats: {
+      topics: topics.length,
+      phrases: phrases.length,
+      favorites: favorites.phraseIds.length
+    }
+  };
+}
+
+function createFullBackupPayload() {
+  return {
+    schema: "jp_105x_backup_v1",
+    exportKind: "full_state_merge_safe",
+    appName: BRAND.name,
+    appVersion: BRAND.version,
+    exportedAt: new Date().toISOString(),
+    state: STATE
+  };
+}
+
+function normalizeImportBank(rawBank) {
+  const topics = Array.isArray(rawBank?.topics) ? rawBank.topics : [];
+  const phrases = Array.isArray(rawBank?.phrases) ? rawBank.phrases : [];
+
+  return {
+    topics,
+    phrases
+  };
+}
+
 function normalizeImportedTopic(topic, index = 0) {
   if (!topic || typeof topic !== "object") return null;
 
@@ -6178,8 +6281,12 @@ function extractImportState(parsed) {
     return parsed.state;
   }
 
-  if (parsed.schema === "nihongo321_content_pack_v1" && parsed.bank) {
-    return { bank: parsed.bank, progress: parsed.progress || {}, favorites: parsed.favorites || { phraseIds: [] } };
+  if ((parsed.schema === "nihongo321_content_pack_v1" || parsed.schema === "nihongo321_content_pack_v2") && parsed.bank) {
+    return {
+      bank: normalizeImportBank(parsed.bank),
+      progress: parsed.progress || {},
+      favorites: parsed.favorites || { phraseIds: [] }
+    };
   }
 
   if (parsed.bank?.phrases || parsed.phrases) {
@@ -6194,16 +6301,9 @@ function extractImportState(parsed) {
 }
 
 function mergeImportedContent(importState) {
-  const source = migrateToV7({
-    app: { schemaVersion: 8.2, createdAt: now(), updatedAt: now() },
-    bank: importState.bank || {},
-    progress: importState.progress || {},
-    favorites: importState.favorites || { phraseIds: [] },
-    session: { topicFilter: "ALL" },
-    prefs: { theme: getTheme() }
-  });
-
   STATE = migrateToV7(STATE);
+
+  const sourceBank = normalizeImportBank(importState.bank || {});
 
   const result = {
     topicsAdded: 0,
@@ -6217,8 +6317,8 @@ function mergeImportedContent(importState) {
   const usedTopicIds = new Set(STATE.bank.topics.map(t => t.id));
   const topicMap = new Map();
 
-  for (let i = 0; i < source.bank.topics.length; i++) {
-    const importedTopic = normalizeImportedTopic(source.bank.topics[i], i);
+  for (let i = 0; i < sourceBank.topics.length; i++) {
+    const importedTopic = normalizeImportedTopic(sourceBank.topics[i], i);
     if (!importedTopic) continue;
 
     const sameId = STATE.bank.topics.find(t => t.id === importedTopic.id);
@@ -6247,16 +6347,23 @@ function mergeImportedContent(importState) {
     result.topicsAdded += 1;
   }
 
-  const defaultLocalTopic = STATE.bank.topics.find(t => t.id === "topic_essential_japan") || STATE.bank.topics[0] || defaultTopic();
-  if (!STATE.bank.topics.length) STATE.bank.topics.push(defaultLocalTopic);
+  let defaultLocalTopic = STATE.bank.topics.find(t => t.id === "topic_default") ||
+    STATE.bank.topics.find(t => t.id === "topic_essential_japan") ||
+    STATE.bank.topics[0];
+
+  if (!defaultLocalTopic) {
+    defaultLocalTopic = defaultTopic();
+    STATE.bank.topics.push(defaultLocalTopic);
+  }
 
   const usedPhraseIds = new Set(STATE.bank.phrases.map(p => p.id));
   const bySignature = new Map(STATE.bank.phrases.map(p => [phraseSignature(p), p]));
   const importedPhraseIdToLocal = new Map();
 
-  for (let i = 0; i < source.bank.phrases.length; i++) {
-    const raw = source.bank.phrases[i];
-    const localTopicId = topicMap.get(String(raw?.topicId || "")) || defaultLocalTopic.id;
+  for (let i = 0; i < sourceBank.phrases.length; i++) {
+    const raw = sourceBank.phrases[i];
+    const rawTopicId = String(raw?.topicId || "").trim();
+    const localTopicId = topicMap.get(rawTopicId) || defaultLocalTopic.id;
     const imported = normalizeImportedPhrase(raw, localTopicId);
 
     if (!imported) {
@@ -6278,9 +6385,11 @@ function mergeImportedContent(importState) {
       sameContent.kana ||= imported.kana;
       sameContent.situation ||= imported.situation;
       sameContent.level ||= imported.level;
+      sameContent.audioKey ||= imported.audioKey;
       sameContent.tags = Array.from(new Set([...(sameContent.tags || []), ...(imported.tags || [])]));
       sameContent.updatedAt = now();
-      importedPhraseIdToLocal.set(raw.id, sameContent.id);
+
+      if (raw?.id) importedPhraseIdToLocal.set(raw.id, sameContent.id);
       result.phrasesMerged += 1;
       continue;
     }
@@ -6295,13 +6404,14 @@ function mergeImportedContent(importState) {
     const newPhrase = { ...imported, id: newId, createdAt: now(), updatedAt: now() };
     STATE.bank.phrases.push(newPhrase);
     bySignature.set(sig, newPhrase);
-    importedPhraseIdToLocal.set(raw.id, newId);
 
-    STATE.progress[newId] = defaultProgressForImportedPhrase(source.progress?.[raw.id] || source.progress?.[imported.id]);
+    if (raw?.id) importedPhraseIdToLocal.set(raw.id, newId);
+
+    STATE.progress[newId] = defaultProgressForImportedPhrase(importState.progress?.[raw.id] || importState.progress?.[imported.id]);
     result.phrasesAdded += 1;
   }
 
-  const favoriteIds = source.favorites?.phraseIds || [];
+  const favoriteIds = importState.favorites?.phraseIds || [];
   const favSet = favoriteSet();
 
   for (const importedFavId of favoriteIds) {
@@ -6323,7 +6433,6 @@ function mergeImportedContent(importState) {
 
   return result;
 }
-
 function validateAndLoadBackup(parsed, msgEl) {
   const importState = extractImportState(parsed);
 
@@ -6362,12 +6471,12 @@ function renderBackup() {
         </div>
 
         <div class="sheet stack">
-          <div class="badge">exportar</div>
+          <div class="badge">compartilhar frases</div>
           <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="exportCopy">copiar json</button>
-            <button class="btn btn--ok btn--full" data-action="exportFile">baixar arquivo</button>
+            <button class="btn btn--ok btn--full" data-action="exportCopy">copiar pacote</button>
+            <button class="btn btn--ok btn--full" data-action="exportFile">baixar pacote</button>
           </div>
-          <div class="small">Use o backup para guardar ou compartilhar frases. Ao importar, o app mescla o conteúdo e não apaga as frases que já existem no aparelho.</div>
+          <div class="small">Cria um arquivo incremental com seus temas e frases. Quem importar recebe esse conteúdo como acréscimo, sem apagar as frases que já existem no aparelho.</div>
         </div>
 
         <div class="sheet stack">
@@ -7326,16 +7435,16 @@ document.addEventListener("click", (e) => {
     }
 
     if (!isValidJP(jp)) {
-      if (msg) msg.textContent = "japonês inválido.";
-      toast("japonês inválido");
+      if (msg) msg.textContent = "o campo japonês precisa ter texto.";
+      toast("campo japonês vazio");
       beep("tuk");
       return;
     }
 
     for (const w of nw) {
       if (!isValidJP(w.jp)) {
-        if (msg) msg.textContent = "palavra nova inválida.";
-        toast("palavra inválida");
+        if (msg) msg.textContent = "confira a palavra nova. use o formato jp=pt.";
+        toast("confira palavra nova");
         beep("tuk");
         return;
       }
@@ -7417,16 +7526,16 @@ document.addEventListener("click", (e) => {
     }
 
     if (!isValidJP(jp)) {
-      if (msg) msg.textContent = "japonês inválido.";
-      toast("japonês inválido");
+      if (msg) msg.textContent = "o campo japonês precisa ter texto.";
+      toast("campo japonês vazio");
       beep("tuk");
       return;
     }
 
     for (const w of nw) {
       if (!isValidJP(w.jp)) {
-        if (msg) msg.textContent = "palavra nova inválida.";
-        toast("palavra inválida");
+        if (msg) msg.textContent = "confira a palavra nova. use o formato jp=pt.";
+        toast("confira palavra nova");
         beep("tuk");
         return;
       }
@@ -7471,23 +7580,16 @@ document.addEventListener("click", (e) => {
 
   if (act === "exportCopy" || act === "exportFile") {
     const msg = $("#backupMsg");
-    const payload = {
-      schema: "jp_105x_backup_v1",
-      exportKind: "full_state_merge_safe",
-      appName: BRAND.name,
-      appVersion: BRAND.version,
-      exportedAt: new Date().toISOString(),
-      state: STATE
-    };
+    const payload = createContentPackPayload();
     const txt = JSON.stringify(payload, null, 2);
 
     if (act === "exportCopy") {
       navigator.clipboard?.writeText(txt).then(() => {
-        if (msg) msg.textContent = "backup copiado";
-        toast("backup copiado");
+        if (msg) msg.textContent = `pacote copiado: ${payload.stats.phrases} frase(s).`;
+        toast("pacote copiado");
         beep("ding");
       }).catch(() => {
-        if (msg) msg.textContent = "não deu para copiar. copie manualmente.";
+        if (msg) msg.textContent = "não deu para copiar. o pacote foi colocado na caixa de texto.";
         toast("copie manualmente");
         beep("tuk");
 
@@ -7502,12 +7604,12 @@ document.addEventListener("click", (e) => {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(d.getDate()).padStart(2, "0");
-    const filename = `nihongo321-backup-${y}-${m}-${dd}.json`;
+    const filename = `nihongo321-pacote-frases-${y}-${m}-${dd}.json`;
 
     downloadTextFile(filename, txt);
 
-    if (msg) msg.textContent = "backup baixado";
-    toast("backup baixado");
+    if (msg) msg.textContent = `pacote baixado: ${payload.stats.phrases} frase(s).`;
+    toast("pacote de frases baixado");
     beep("ding");
 
     return;
