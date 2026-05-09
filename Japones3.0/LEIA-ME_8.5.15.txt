@@ -1,0 +1,48 @@
+NIHONGO321 8.5.15 — Explicação Ampla e Confortável
+
+BASE PRESERVADA:
+NIHONGO321 8.5.14 — Explicação Compacta Profissional + Backup Seguro
+NIHONGO321 8.5.13 — Detalhes Recolhíveis + Backup Seguro
+NIHONGO321 8.5.11 — Bloqueio Premium no Menu de Tópicos
+NIHONGO321 8.5.10 — Hero Real sem Reverter Treino
+
+ARQUIVOS ALTERADOS:
+- app.js
+- styles.css
+
+O QUE ESTA VERSAO CORRIGE:
+- A explicação aberta não fica mais cortada.
+- Remove travas de altura antigas que deixavam aparecer só o começo do conteúdo.
+- Mantém o card compacto quando fechado.
+- Ao clicar em "detalhes", a caixa fica ampla e confortável para ler.
+- A página pode ganhar rolagem vertical natural, sem barra interna na caixa.
+- O botão/área superior da explicação fica mais estável durante a leitura.
+
+BACKUP:
+- Mantém a correção de backup/importação segura das versões anteriores.
+- A importação mescla conteúdo em vez de apagar o conteúdo local.
+
+PRESERVADO:
+- treino 105x modo foco premium
+- setas anterior/proxima
+- audio
+- favoritos
+- Sensei IA
+- banco sensei-bank.js
+- checkout
+- localStorage
+- rotas principais
+- tema claro/escuro
+- banner hero real
+- logo circular
+- index.html
+- imagem ./img/banner-hero-nihongo321.png
+
+COMO USAR:
+1. Extraia este ZIP.
+2. Substitua app.js e styles.css no projeto.
+3. Mantenha index.html, sensei-bank.js e a pasta img como estão.
+4. Abra no celular.
+5. Entre no treino 105x.
+6. Toque em "detalhes".
+7. Confira se a explicação abre ampla, sem cortar o conteúdo, e se a página rola normalmente.

@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.4.8
+   NIHONGO321 v8.5.15
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.4.8",
+  version: "8.5.15",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -2849,7 +2849,140 @@ function updateStudyUI() {
   fill.style.transform = `scaleX(${pct})`;
 }
 /* ---------- render helpers ---------- */
+function getParticleNotesFromPhrase(phrase) {
+  const raw = String(phrase?.jp || "");
+  if (!raw.trim()) return [];
+
+  const plain = jpStripFurigana(raw)
+    .replace(/[。、！？!?]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const particleMap = [
+    { key: "は", label: "は", meaning: "marca o assunto principal da frase", hint: "Mostra sobre o que a frase está falando. Como partícula, lê-se “wa”." },
+    { key: "が", label: "が", meaning: "marca quem faz, sente ou está em foco", hint: "Costuma apontar a informação importante da frase." },
+    { key: "を", label: "を", meaning: "marca o alvo da ação", hint: "Use antes do verbo quando algo recebe a ação." },
+    { key: "に", label: "に", meaning: "indica direção, lugar, horário, alvo ou pessoa envolvida", hint: "Muito usado para destino, tempo e para quem recebe uma ação." },
+    { key: "で", label: "で", meaning: "indica local da ação, meio, ferramenta ou motivo", hint: "Ajuda a dizer onde, como ou por qual meio algo acontece." },
+    { key: "へ", label: "へ", meaning: "indica direção", hint: "Como partícula, lê-se “e”. Mostra para onde a ação vai." },
+    { key: "と", label: "と", meaning: "liga ideias como “e”, “com” ou citação", hint: "Pode juntar palavras ou indicar com quem você faz algo." },
+    { key: "も", label: "も", meaning: "significa “também” ou reforça inclusão", hint: "Mostra que algo entra junto na ideia." },
+    { key: "の", label: "の", meaning: "liga posse, relação ou explicação entre palavras", hint: "Pode funcionar como “de” em português." },
+    { key: "から", label: "から", meaning: "indica origem, início ou motivo", hint: "Pode significar “de”, “a partir de” ou “porque”, dependendo da frase." },
+    { key: "まで", label: "まで", meaning: "indica limite ou ponto final", hint: "Costuma ter sentido de “até”." },
+    { key: "ので", label: "ので", meaning: "explica o motivo de forma natural e educada", hint: "Útil para justificar algo sem soar seco." },
+    { key: "か", label: "か", meaning: "marca pergunta ou dúvida", hint: "No final da frase, transforma em pergunta." }
+  ];
+
+  return particleMap
+    .filter(item => {
+      const escaped = item.key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(`(^|[\\s　])${escaped}($|[\\s　])`).test(plain) ||
+        new RegExp(`${escaped}(です|ます|ありません|ない|ください|ません|した|する|ですか|ますか)?$`).test(plain);
+    })
+    .slice(0, 5);
+}
+
+function renderTrainingExplanation(phrase) {
+  if (!phrase || typeof phrase !== "object") return "";
+
+  const words = Array.isArray(phrase.newWords) ? phrase.newWords : [];
+  const particles = getParticleNotesFromPhrase(phrase);
+  const cleanPt = String(phrase.pt || "").trim();
+
+  const wordRows = words.length
+    ? words.map((w, index) => {
+      const raw = String(w?.jp || "").trim();
+      const base = jpHasFurigana(raw) ? jpToInlineFurigana(raw) : jpStripFurigana(raw);
+      const pt = String(w?.pt || "").trim();
+      const type = explainWordType(raw);
+
+      return `
+        <div class="explainItem">
+          <div class="explainItemTop">
+            <span class="explainIndex">${index + 1}</span>
+            <span class="explainJp">${escapeHTML(base)}</span>
+          </div>
+          <div class="explainPt">${escapeHTML(pt || "significado não informado")}</div>
+          <div class="explainHint">${escapeHTML(type)} dentro desta frase.</div>
+        </div>
+      `;
+    }).join("")
+    : `
+      <div class="explainEmpty">
+        Esta frase ainda não tem vocabulário detalhado cadastrado. Mesmo assim, treine pelo sentido geral abaixo.
+      </div>
+    `;
+
+  const particleRows = particles.length
+    ? particles.map(p => `
+      <div class="particleChip">
+        <b>${escapeHTML(p.label)}</b>
+        <span>${escapeHTML(p.meaning)}</span>
+        <em>${escapeHTML(p.hint)}</em>
+      </div>
+    `).join("")
+    : `
+      <div class="explainEmpty">
+        Nenhuma partícula principal foi detectada com segurança nesta frase.
+      </div>
+    `;
+
+  return `
+    <details class="sheet explanationSheet richDetails">
+      <summary class="explainSummary">
+        <div class="explainSummaryMain">
+          <span class="explainIcon" aria-hidden="true">解</span>
+          <div>
+            <div class="explainKicker">guia rápido</div>
+            <div class="explainTitle">Entender frase</div>
+            <div class="explainPreview">${escapeHTML(cleanPt || "Toque para ver palavras, partículas e uso.")}</div>
+          </div>
+        </div>
+        <span class="explainToggleText" aria-hidden="true">
+          <span class="summaryOpen">ocultar</span>
+          <span class="summaryClosed">detalhes</span>
+        </span>
+      </summary>
+
+      <div class="explainBody" aria-label="detalhes da frase atual">
+        <section class="explainBlock explainBlock--meaning">
+          <div class="explainBlockTitle">Sentido geral</div>
+          <p class="explainMeaning">${escapeHTML(cleanPt || "Tradução não informada.")}</p>
+        </section>
+
+        <section class="explainBlock">
+          <div class="explainBlockTitle">Palavras da frase</div>
+          <div class="explainList">
+            ${wordRows}
+          </div>
+        </section>
+
+        <section class="explainBlock">
+          <div class="explainBlockTitle">Partículas e função</div>
+          <div class="particleList">
+            ${particleRows}
+          </div>
+        </section>
+
+        <section class="explainBlock explainMiniGuide">
+          <div class="explainBlockTitle">Como estudar agora</div>
+          <ol>
+            <li>Leia a frase inteira e entenda a ideia geral.</li>
+            <li>Veja as palavras e partículas que montam o sentido.</li>
+            <li>Ouça e repita imaginando a situação real no Japão.</li>
+          </ol>
+        </section>
+      </div>
+    </details>
+  `;
+}
+
 function renderNewWords(list) {
+  if (list && typeof list === "object" && !Array.isArray(list) && ("jp" in list || "pt" in list || "newWords" in list)) {
+    return renderTrainingExplanation(list);
+  }
+
   if (!Array.isArray(list) || list.length === 0) return "";
 
   const rows = list
@@ -5620,7 +5753,7 @@ function render105xBodyOnly() {
 
   if (kanaEl) setKanaLine(kanaEl, p.jp);
   if (ptLine) ptLine.textContent = p.pt;
-  if (nw) nw.innerHTML = renderNewWords(p.newWords || []);
+  if (nw) nw.innerHTML = renderNewWords(p);
 
   if (sheet && sheet.style.display === "block" && count > 1) {
     sheet.style.display = "none";
@@ -5914,38 +6047,265 @@ function deletePhraseById(id) {
   return true;
 }
 
+function defaultProgressForImportedPhrase(importedProgress = null) {
+  if (importedProgress && typeof importedProgress === "object") {
+    return {
+      status: importedProgress.status || "training",
+      cycleStart: Number(importedProgress.cycleStart || 14),
+      count: clamp(Number(importedProgress.count || 14), 1, 14),
+      masteredAt: importedProgress.masteredAt || null,
+      history: Array.isArray(importedProgress.history) ? importedProgress.history.slice(-80) : []
+    };
+  }
+
+  return {
+    status: "training",
+    cycleStart: 14,
+    count: 14,
+    masteredAt: null,
+    history: []
+  };
+}
+
+function phraseSignature(p) {
+  return `${jpStripFurigana(p?.jp || "").trim()}::${String(p?.pt || "").trim()}`.toLowerCase();
+}
+
+function safeImportedId(prefix, text, usedIds) {
+  let base = `${prefix}_${hashString(text || now())}`;
+  let id = base;
+  let i = 2;
+
+  while (usedIds.has(id)) {
+    id = `${base}_${i}`;
+    i += 1;
+  }
+
+  usedIds.add(id);
+  return id;
+}
+
+function normalizeImportedTopic(topic, index = 0) {
+  if (!topic || typeof topic !== "object") return null;
+
+  const id = String(topic.id || topic.key || "").trim();
+  const name = normalizeName(topic.name || topic.title || topic.label || `Tópico importado ${index + 1}`);
+
+  if (!name) return null;
+
+  return {
+    id: id || `imported_topic_${hashString(name)}`,
+    name,
+    color: topic.color || pickTopicColor(index),
+    createdAt: Number(topic.createdAt || now()),
+    updatedAt: Number(topic.updatedAt || now()),
+    level: String(topic.level || topic.levelGroup || "").trim(),
+    description: String(topic.description || topic.desc || "").trim(),
+    isPremium: !!topic.isPremium
+  };
+}
+
+function normalizeImportedPhrase(phrase, fallbackTopicId) {
+  if (!phrase || typeof phrase !== "object") return null;
+
+  const jp = String(phrase.jp || phrase.japanese || phrase.text || "").trim();
+  const pt = String(phrase.pt || phrase.portuguese || phrase.translation || "").trim();
+
+  if (!jp || !pt || !isValidJP(jp)) return null;
+
+  return {
+    id: String(phrase.id || "").trim(),
+    jp,
+    pt,
+    newWords: normalizeExternalNewWords(phrase.newWords || phrase.words || phrase.vocabulary),
+    topicId: String(phrase.topicId || fallbackTopicId || "topic_default").trim(),
+    createdAt: Number(phrase.createdAt || now()),
+    updatedAt: Number(phrase.updatedAt || now()),
+    romaji: String(phrase.romaji || "").trim(),
+    kana: String(phrase.kana || "").trim(),
+    note: String(phrase.note || phrase.explanation || "").trim(),
+    tags: Array.isArray(phrase.tags) ? phrase.tags : [],
+    situation: String(phrase.situation || "").trim(),
+    level: String(phrase.level || phrase.levelGroup || "").trim(),
+    audioKey: String(phrase.audioKey || "").trim()
+  };
+}
+
+function extractImportState(parsed) {
+  if (!parsed || typeof parsed !== "object") return null;
+
+  if (parsed.schema === "jp_105x_backup_v1" && parsed.state) {
+    return parsed.state;
+  }
+
+  if (parsed.schema === "nihongo321_content_pack_v1" && parsed.bank) {
+    return { bank: parsed.bank, progress: parsed.progress || {}, favorites: parsed.favorites || { phraseIds: [] } };
+  }
+
+  if (parsed.bank?.phrases || parsed.phrases) {
+    return {
+      bank: parsed.bank || { topics: parsed.topics || [], phrases: parsed.phrases || [] },
+      progress: parsed.progress || {},
+      favorites: parsed.favorites || { phraseIds: [] }
+    };
+  }
+
+  return null;
+}
+
+function mergeImportedContent(importState) {
+  const source = migrateToV7({
+    app: { schemaVersion: 8.2, createdAt: now(), updatedAt: now() },
+    bank: importState.bank || {},
+    progress: importState.progress || {},
+    favorites: importState.favorites || { phraseIds: [] },
+    session: { topicFilter: "ALL" },
+    prefs: { theme: getTheme() }
+  });
+
+  STATE = migrateToV7(STATE);
+
+  const result = {
+    topicsAdded: 0,
+    topicsMerged: 0,
+    phrasesAdded: 0,
+    phrasesMerged: 0,
+    phrasesSkipped: 0,
+    favoritesImported: 0
+  };
+
+  const usedTopicIds = new Set(STATE.bank.topics.map(t => t.id));
+  const topicMap = new Map();
+
+  for (let i = 0; i < source.bank.topics.length; i++) {
+    const importedTopic = normalizeImportedTopic(source.bank.topics[i], i);
+    if (!importedTopic) continue;
+
+    const sameId = STATE.bank.topics.find(t => t.id === importedTopic.id);
+    const sameName = STATE.bank.topics.find(t => String(t.name || "").toLowerCase() === importedTopic.name.toLowerCase());
+    const localTopic = sameId || sameName;
+
+    if (localTopic) {
+      localTopic.description ||= importedTopic.description;
+      localTopic.level ||= importedTopic.level;
+      localTopic.color ||= importedTopic.color;
+      localTopic.updatedAt = now();
+      topicMap.set(importedTopic.id, localTopic.id);
+      result.topicsMerged += 1;
+      continue;
+    }
+
+    let newId = importedTopic.id;
+    if (usedTopicIds.has(newId)) {
+      newId = safeImportedId("shared_topic", importedTopic.name, usedTopicIds);
+    } else {
+      usedTopicIds.add(newId);
+    }
+
+    STATE.bank.topics.push({ ...importedTopic, id: newId, createdAt: now(), updatedAt: now() });
+    topicMap.set(importedTopic.id, newId);
+    result.topicsAdded += 1;
+  }
+
+  const defaultLocalTopic = STATE.bank.topics.find(t => t.id === "topic_essential_japan") || STATE.bank.topics[0] || defaultTopic();
+  if (!STATE.bank.topics.length) STATE.bank.topics.push(defaultLocalTopic);
+
+  const usedPhraseIds = new Set(STATE.bank.phrases.map(p => p.id));
+  const bySignature = new Map(STATE.bank.phrases.map(p => [phraseSignature(p), p]));
+  const importedPhraseIdToLocal = new Map();
+
+  for (let i = 0; i < source.bank.phrases.length; i++) {
+    const raw = source.bank.phrases[i];
+    const localTopicId = topicMap.get(String(raw?.topicId || "")) || defaultLocalTopic.id;
+    const imported = normalizeImportedPhrase(raw, localTopicId);
+
+    if (!imported) {
+      result.phrasesSkipped += 1;
+      continue;
+    }
+
+    imported.topicId = topicMap.get(imported.topicId) || localTopicId;
+
+    const sig = phraseSignature(imported);
+    const sameContent = bySignature.get(sig);
+
+    if (sameContent) {
+      sameContent.newWords = Array.isArray(sameContent.newWords) && sameContent.newWords.length
+        ? sameContent.newWords
+        : imported.newWords;
+      sameContent.note ||= imported.note;
+      sameContent.romaji ||= imported.romaji;
+      sameContent.kana ||= imported.kana;
+      sameContent.situation ||= imported.situation;
+      sameContent.level ||= imported.level;
+      sameContent.tags = Array.from(new Set([...(sameContent.tags || []), ...(imported.tags || [])]));
+      sameContent.updatedAt = now();
+      importedPhraseIdToLocal.set(raw.id, sameContent.id);
+      result.phrasesMerged += 1;
+      continue;
+    }
+
+    let newId = imported.id || safeImportedId("shared_phrase", sig, usedPhraseIds);
+    if (usedPhraseIds.has(newId)) {
+      newId = safeImportedId("shared_phrase", sig, usedPhraseIds);
+    } else {
+      usedPhraseIds.add(newId);
+    }
+
+    const newPhrase = { ...imported, id: newId, createdAt: now(), updatedAt: now() };
+    STATE.bank.phrases.push(newPhrase);
+    bySignature.set(sig, newPhrase);
+    importedPhraseIdToLocal.set(raw.id, newId);
+
+    STATE.progress[newId] = defaultProgressForImportedPhrase(source.progress?.[raw.id] || source.progress?.[imported.id]);
+    result.phrasesAdded += 1;
+  }
+
+  const favoriteIds = source.favorites?.phraseIds || [];
+  const favSet = favoriteSet();
+
+  for (const importedFavId of favoriteIds) {
+    const localId = importedPhraseIdToLocal.get(importedFavId);
+    if (!localId || favSet.has(localId)) continue;
+    favSet.add(localId);
+    result.favoritesImported += 1;
+  }
+
+  STATE.favorites.phraseIds = Array.from(favSet).filter(id => STATE.bank.phrases.some(p => p.id === id));
+  STATE.session.topicFilter = "ALL";
+  STATE.session.queue = [];
+  STATE.session.index = 0;
+  STATE.session.phraseId = null;
+
+  saveState();
+  applyTheme(getTheme());
+  refreshHUD();
+
+  return result;
+}
+
 function validateAndLoadBackup(parsed, msgEl) {
-  if (!parsed || parsed.schema !== "jp_105x_backup_v1" || !parsed.state) {
+  const importState = extractImportState(parsed);
+
+  if (!importState) {
     if (msgEl) msgEl.textContent = "json inválido.";
     toast("json inválido");
     beep("tuk");
     return false;
   }
 
-  const st = parsed.state;
-  if (!st.bank?.phrases || !Array.isArray(st.bank.phrases)) {
-    if (msgEl) msgEl.textContent = "backup incompleto.";
-    toast("backup incompleto");
+  if (!importState.bank?.phrases || !Array.isArray(importState.bank.phrases)) {
+    if (msgEl) msgEl.textContent = "arquivo sem frases para importar.";
+    toast("sem frases no arquivo");
     beep("tuk");
     return false;
   }
 
-  for (const p of st.bank.phrases) {
-    if (!isValidJP(p.jp || "")) {
-      if (msgEl) msgEl.textContent = "backup tem japonês inválido.";
-      toast("japonês inválido no backup");
-      beep("tuk");
-      return false;
-    }
-  }
+  const result = mergeImportedContent(importState);
+  const summary = `importação segura: ${result.phrasesAdded} nova(s), ${result.phrasesMerged} mesclada(s), ${result.phrasesSkipped} ignorada(s).`;
 
-  STATE = migrateToV7(st);
-  saveState();
-  applyTheme(getTheme());
-  refreshHUD();
-
-  if (msgEl) msgEl.textContent = "importado com sucesso";
-  toast("backup importado");
+  if (msgEl) msgEl.textContent = summary;
+  toast("conteúdo importado sem apagar o seu");
   beep("ding");
   nav("#/home");
 
@@ -5957,7 +6317,7 @@ function renderBackup() {
     <div class="stack">
       <section class="card stack">
         <div class="row row--between">
-          <div class="badge">backup</div>
+          <div class="badge">backup seguro</div>
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
@@ -5967,11 +6327,11 @@ function renderBackup() {
             <button class="btn btn--ok btn--full" data-action="exportCopy">copiar json</button>
             <button class="btn btn--ok btn--full" data-action="exportFile">baixar arquivo</button>
           </div>
-          <div class="small">Use o backup para guardar suas frases, progresso, favoritos e revisões.</div>
+          <div class="small">Use o backup para guardar ou compartilhar frases. Ao importar, o app mescla o conteúdo e não apaga as frases que já existem no aparelho.</div>
         </div>
 
         <div class="sheet stack">
-          <div class="badge">importar</div>
+          <div class="badge">importar sem apagar</div>
 
           <div class="grid2">
             <button class="btn btn--muted btn--full" data-action="importText">importar texto</button>
@@ -5980,7 +6340,7 @@ function renderBackup() {
 
           <input id="fileImport" type="file" accept=".json,application/json" style="display:none" />
 
-          <div class="small">cole o json aqui</div>
+          <div class="small">cole o json aqui. O conteúdo será mesclado com segurança.</div>
           <textarea id="importBox" class="btn" style="height:160px;width:100%;text-align:left;padding:12px;border-radius:18px;"></textarea>
           <div class="small" id="backupMsg"></div>
         </div>
@@ -7073,6 +7433,9 @@ document.addEventListener("click", (e) => {
     const msg = $("#backupMsg");
     const payload = {
       schema: "jp_105x_backup_v1",
+      exportKind: "full_state_merge_safe",
+      appName: BRAND.name,
+      appVersion: BRAND.version,
       exportedAt: new Date().toISOString(),
       state: STATE
     };
