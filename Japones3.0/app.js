@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.35
+   NIHONGO321 v8.5.36
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.35",
+  version: "8.5.36",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -6125,6 +6125,321 @@ function safeImportedId(prefix, text, usedIds) {
   return id;
 }
 
+
+function cloneCleanTopicForExport(topic) {
+  return {
+    id: String(topic?.id || "").trim(),
+    name: String(topic?.name || "Tema").trim(),
+    color: topic?.color || "tBlue",
+    createdAt: Number(topic?.createdAt || now()),
+    updatedAt: Number(topic?.updatedAt || now()),
+    level: String(topic?.level || "").trim(),
+    description: String(topic?.description || "").trim(),
+    isPremium: !!topic?.isPremium
+  };
+}
+
+function cloneCleanPhraseForExport(phrase) {
+  return {
+    id: String(phrase?.id || "").trim(),
+    jp: String(phrase?.jp || "").trim(),
+    pt: String(phrase?.pt || "").trim(),
+    newWords: normalizeExternalNewWords(phrase?.newWords || []),
+    topicId: String(phrase?.topicId || "topic_default").trim(),
+    createdAt: Number(phrase?.createdAt || now()),
+    updatedAt: Number(phrase?.updatedAt || now()),
+    romaji: String(phrase?.romaji || "").trim(),
+    kana: String(phrase?.kana || "").trim(),
+    note: String(phrase?.note || "").trim(),
+    tags: Array.isArray(phrase?.tags) ? phrase.tags : [],
+    situation: String(phrase?.situation || "").trim(),
+    level: String(phrase?.level || "").trim(),
+    audioKey: String(phrase?.audioKey || "").trim()
+  };
+}
+
+function normalizeImportBank(rawBank) {
+  return {
+    topics: Array.isArray(rawBank?.topics) ? rawBank.topics : [],
+    phrases: Array.isArray(rawBank?.phrases) ? rawBank.phrases : []
+  };
+}
+
+function createContentPackPayload() {
+  ensurePhrasesHaveValidTopic();
+
+  const phrases = (STATE.bank?.phrases || [])
+    .filter(p => p?.jp && p?.pt)
+    .map(cloneCleanPhraseForExport);
+
+  const usedTopicIds = new Set(phrases.map(p => p.topicId));
+  const topics = (STATE.bank?.topics || [])
+    .filter(t => usedTopicIds.has(t.id))
+    .map(cloneCleanTopicForExport);
+
+  const progress = {};
+  for (const phrase of phrases) {
+    if (STATE.progress?.[phrase.id]) {
+      progress[phrase.id] = defaultProgressForImportedPhrase(STATE.progress[phrase.id]);
+    }
+  }
+
+  const exportedIds = new Set(phrases.map(p => p.id));
+  const favorites = {
+    phraseIds: (STATE.favorites?.phraseIds || []).filter(id => exportedIds.has(id))
+  };
+
+  return {
+    schema: "nihongo321_content_pack_v2",
+    exportKind: "incremental_content_pack",
+    appName: BRAND.name,
+    appVersion: BRAND.version,
+    exportedAt: new Date().toISOString(),
+    mergeMode: "add_or_merge_without_erasing_local_content",
+    bank: { topics, phrases },
+    progress,
+    favorites,
+    stats: {
+      topics: topics.length,
+      phrases: phrases.length,
+      favorites: favorites.phraseIds.length
+    }
+  };
+}
+
+function encodeShareValue(value = "") {
+  return String(value ?? "")
+    .replaceAll("\\", "\\\\")
+    .replaceAll("\n", "\\n")
+    .trim();
+}
+
+function decodeShareValue(value = "") {
+  return String(value ?? "")
+    .replace(/\\n/g, "\n")
+    .replace(/\\\\/g, "\\")
+    .trim();
+}
+
+function createTextSharePack() {
+  const payload = createContentPackPayload();
+  const topics = payload.bank?.topics || [];
+  const phrases = payload.bank?.phrases || [];
+  const topicMap = new Map(topics.map(t => [t.id, t]));
+
+  const lines = [
+    "NIHONGO321_SHARE_V1",
+    `APP: ${BRAND.name}`,
+    `VERSAO: ${BRAND.version}`,
+    `DATA: ${payload.exportedAt}`,
+    `TOTAL_FRASES: ${phrases.length}`,
+    "",
+    "COMO USAR:",
+    "1. Copie todo este texto.",
+    "2. Abra o NIHONGO321.",
+    "3. Vá em Gerenciar / Backup.",
+    "4. Cole na área de importar.",
+    "5. Toque em importar texto.",
+    "Nada será apagado do app.",
+    "",
+    "INICIO_FRASES"
+  ];
+
+  for (const phrase of phrases) {
+    const topic = topicMap.get(phrase.topicId);
+    lines.push("");
+    lines.push("[FRASE]");
+    lines.push(`TEMA: ${encodeShareValue(topic?.name || "Frases compartilhadas")}`);
+    lines.push(`JP: ${encodeShareValue(phrase.jp)}`);
+    lines.push(`PT: ${encodeShareValue(phrase.pt)}`);
+
+    if (Array.isArray(phrase.newWords) && phrase.newWords.length) {
+      const words = phrase.newWords
+        .map(w => `${encodeShareValue(w.jp)}=${encodeShareValue(w.pt)}`)
+        .join(" | ");
+      lines.push(`PALAVRAS: ${words}`);
+    }
+
+    if (phrase.note) lines.push(`NOTA: ${encodeShareValue(phrase.note)}`);
+    if (phrase.level) lines.push(`NIVEL: ${encodeShareValue(phrase.level)}`);
+  }
+
+  lines.push("");
+  lines.push("FIM_FRASES");
+  lines.push("FIM_NIHONGO321_SHARE_V1");
+
+  return {
+    text: lines.join("\n"),
+    payload,
+    stats: payload.stats || { phrases: phrases.length, topics: topics.length }
+  };
+}
+
+function parseTextSharePack(text) {
+  const raw = String(text || "").trim();
+  if (!raw.includes("NIHONGO321_SHARE_V1")) return null;
+
+  const lines = raw.split(/\r?\n/);
+  const topicsByName = new Map();
+  const topics = [];
+  const phrases = [];
+  let current = null;
+
+  function ensureTopic(name) {
+    const safeName = normalizeName(name || "Frases compartilhadas") || "Frases compartilhadas";
+    const key = safeName.toLowerCase();
+
+    if (topicsByName.has(key)) return topicsByName.get(key);
+
+    const topic = {
+      id: `shared_topic_${hashString(safeName)}`,
+      name: safeName,
+      color: pickTopicColor(topics.length),
+      createdAt: now(),
+      updatedAt: now()
+    };
+
+    topics.push(topic);
+    topicsByName.set(key, topic);
+    return topic;
+  }
+
+  function commitCurrent() {
+    if (!current) return;
+
+    const topic = ensureTopic(current.topic);
+    const jp = String(current.jp || "").trim();
+    const pt = String(current.pt || "").trim();
+
+    if (!jp || !pt) {
+      current = null;
+      return;
+    }
+
+    phrases.push({
+      id: `shared_phrase_${hashString(`${jp}|${pt}|${phrases.length}`)}`,
+      jp,
+      pt,
+      topicId: topic.id,
+      newWords: current.newWords || [],
+      note: current.note || "",
+      level: current.level || "",
+      createdAt: now(),
+      updatedAt: now()
+    });
+
+    current = null;
+  }
+
+  for (const lineRaw of lines) {
+    const line = lineRaw.trim();
+    if (!line) continue;
+
+    if (line === "[FRASE]") {
+      commitCurrent();
+      current = { topic: "Frases compartilhadas", jp: "", pt: "", newWords: [] };
+      continue;
+    }
+
+    if (!current) continue;
+
+    if (line.startsWith("TEMA:")) current.topic = decodeShareValue(line.slice(5));
+    if (line.startsWith("JP:")) current.jp = decodeShareValue(line.slice(3));
+    if (line.startsWith("PT:")) current.pt = decodeShareValue(line.slice(3));
+
+    if (line.startsWith("PALAVRAS:")) {
+      const rawWords = line.slice(9).trim();
+      current.newWords = rawWords
+        .split("|")
+        .map(part => {
+          const [jp, ...ptParts] = part.split("=");
+          const pt = ptParts.join("=");
+          const cleanJp = decodeShareValue(jp || "");
+          const cleanPt = decodeShareValue(pt || "");
+          if (!cleanJp || !cleanPt) return null;
+          return { jp: cleanJp, pt: cleanPt };
+        })
+        .filter(Boolean);
+    }
+
+    if (line.startsWith("NOTA:")) current.note = decodeShareValue(line.slice(5));
+    if (line.startsWith("NIVEL:")) current.level = decodeShareValue(line.slice(6));
+  }
+
+  commitCurrent();
+
+  if (!phrases.length) return null;
+
+  return {
+    bank: { topics, phrases },
+    progress: {},
+    favorites: { phraseIds: [] }
+  };
+}
+
+function getImportPreview(importState) {
+  const sourceBank = normalizeImportBank(importState?.bank || {});
+  const localSignatures = new Set((STATE.bank?.phrases || []).map(phraseSignature));
+  const topicNames = new Set();
+  let newCount = 0;
+  let repeatedCount = 0;
+  let invalidCount = 0;
+
+  for (const topic of sourceBank.topics || []) {
+    const name = String(topic?.name || topic?.title || topic?.label || "").trim();
+    if (name) topicNames.add(name);
+  }
+
+  for (const raw of sourceBank.phrases || []) {
+    const phrase = normalizeImportedPhrase(raw, raw?.topicId || "topic_default");
+    if (!phrase) {
+      invalidCount += 1;
+      continue;
+    }
+
+    if (localSignatures.has(phraseSignature(phrase))) repeatedCount += 1;
+    else newCount += 1;
+  }
+
+  return { topics: topicNames.size, total: sourceBank.phrases?.length || 0, newCount, repeatedCount, invalidCount };
+}
+
+async function copyTextSafely(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch { }
+
+  try {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "readonly");
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    area.style.top = "0";
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    const ok = document.execCommand("copy");
+    area.remove();
+    return !!ok;
+  } catch {
+    return false;
+  }
+}
+
+async function shareTextPackNative(text) {
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "Pacote de frases NIHONGO321", text });
+      return "shared";
+    }
+  } catch { }
+
+  const copied = await copyTextSafely(text);
+  return copied ? "copied" : "manual";
+}
+
 function normalizeImportedTopic(topic, index = 0) {
   if (!topic || typeof topic !== "object") return null;
 
@@ -6324,25 +6639,48 @@ function mergeImportedContent(importState) {
   return result;
 }
 
-function validateAndLoadBackup(parsed, msgEl) {
-  const importState = extractImportState(parsed);
+function validateAndLoadBackup(input, msgEl) {
+  let importState = null;
+
+  if (typeof input === "string") {
+    const raw = input.trim();
+
+    if (!raw) {
+      if (msgEl) msgEl.textContent = "cole ou selecione um pacote antes de importar.";
+      toast("pacote vazio");
+      beep("tuk");
+      return false;
+    }
+
+    importState = parseTextSharePack(raw);
+
+    if (!importState) {
+      const parsed = safeJSONParse(raw);
+      importState = extractImportState(parsed);
+    }
+  } else {
+    importState = extractImportState(input);
+  }
 
   if (!importState) {
-    if (msgEl) msgEl.textContent = "json inválido.";
-    toast("json inválido");
+    if (msgEl) msgEl.textContent = "pacote inválido. Cole o texto completo do NIHONGO321 ou importe o arquivo correto.";
+    toast("pacote inválido");
     beep("tuk");
     return false;
   }
 
-  if (!importState.bank?.phrases || !Array.isArray(importState.bank.phrases)) {
-    if (msgEl) msgEl.textContent = "arquivo sem frases para importar.";
-    toast("sem frases no arquivo");
+  importState.bank = normalizeImportBank(importState.bank || {});
+
+  if (!importState.bank?.phrases || !Array.isArray(importState.bank.phrases) || !importState.bank.phrases.length) {
+    if (msgEl) msgEl.textContent = "pacote sem frases para importar.";
+    toast("sem frases no pacote");
     beep("tuk");
     return false;
   }
 
+  const preview = getImportPreview(importState);
   const result = mergeImportedContent(importState);
-  const summary = `importação segura: ${result.phrasesAdded} nova(s), ${result.phrasesMerged} mesclada(s), ${result.phrasesSkipped} ignorada(s).`;
+  const summary = `prévia: ${preview.newCount} nova(s), ${preview.repeatedCount} repetida(s). importado: ${result.phrasesAdded} nova(s), ${result.phrasesMerged} mesclada(s). Nada foi apagado.`;
 
   if (msgEl) msgEl.textContent = summary;
   toast("conteúdo importado sem apagar o seu");
@@ -6351,7 +6689,6 @@ function validateAndLoadBackup(parsed, msgEl) {
 
   return true;
 }
-
 function renderBackup() {
   APP.innerHTML = `
     <div class="stack">
@@ -6392,9 +6729,9 @@ function renderBackup() {
             <button class="btn btn--muted btn--full" data-action="importFile">importar arquivo</button>
           </div>
 
-          <input id="fileImport" type="file" accept=".json,application/json" style="display:none" />
+          <input id="fileImport" type="file" accept=".txt,.json,text/plain,application/json" style="display:none" />
 
-          <div class="small">cole o json aqui. O conteúdo será mesclado com segurança.</div>
+          <div class="small">cole aqui o pacote recebido por WhatsApp/LINE ou o conteúdo do arquivo. O conteúdo será mesclado com segurança.</div>
           <textarea id="importBox" class="btn" style="height:160px;width:100%;text-align:left;padding:12px;border-radius:18px;"></textarea>
           <div class="small" id="backupMsg"></div>
         </div>
@@ -7485,48 +7822,60 @@ document.addEventListener("click", (e) => {
 
   if (act === "shareTextPack" || act === "exportCopy" || act === "exportTxtFile" || act === "exportFile") {
     const msg = $("#backupMsg");
+    const box = $("#importBox");
     const pack = createTextSharePack();
     const textPack = pack.text;
     const jsonPayload = createContentPackPayload();
     const jsonText = JSON.stringify(jsonPayload, null, 2);
 
     if (act === "shareTextPack") {
-      shareTextPackNative(textPack).then(shared => {
-        if (shared) {
-          if (msg) msg.textContent = `pacote pronto para WhatsApp/LINE: ${pack.stats.phrases} frase(s).`;
+      shareTextPackNative(textPack).then(status => {
+        if (status === "shared") {
+          if (msg) msg.textContent = `compartilhamento aberto: ${pack.stats.phrases} frase(s).`;
           toast("compartilhamento aberto");
           beep("ding");
           return;
         }
 
-        navigator.clipboard?.writeText(textPack).then(() => {
-          if (msg) msg.textContent = "seu celular não abriu o compartilhamento, então copiei o texto do pacote.";
+        if (status === "copied") {
+          if (msg) msg.textContent = "o navegador não abriu WhatsApp/LINE, então copiei o pacote. Agora cole no WhatsApp ou LINE.";
           toast("pacote copiado");
           beep("ding");
-        }).catch(() => {
-          const box = $("#importBox");
-          if (box) box.value = textPack;
-          if (msg) msg.textContent = "copie manualmente o texto que coloquei na caixa de importação.";
-          toast("copie manualmente");
-          beep("tuk");
-        });
+          return;
+        }
+
+        if (box) {
+          box.value = textPack;
+          box.focus();
+          box.select();
+        }
+
+        if (msg) msg.textContent = "não deu para abrir nem copiar. O pacote ficou na caixa: selecione tudo e envie pelo WhatsApp/LINE.";
+        toast("copie manualmente");
+        beep("tuk");
       });
 
       return;
     }
 
     if (act === "exportCopy") {
-      navigator.clipboard?.writeText(textPack).then(() => {
-        if (msg) msg.textContent = `texto copiado: ${pack.stats.phrases} frase(s).`;
-        toast("texto do pacote copiado");
-        beep("ding");
-      }).catch(() => {
-        if (msg) msg.textContent = "não deu para copiar. o pacote foi colocado na caixa de texto.";
+      copyTextSafely(textPack).then(ok => {
+        if (ok) {
+          if (msg) msg.textContent = `texto copiado: ${pack.stats.phrases} frase(s).`;
+          toast("texto do pacote copiado");
+          beep("ding");
+          return;
+        }
+
+        if (box) {
+          box.value = textPack;
+          box.focus();
+          box.select();
+        }
+
+        if (msg) msg.textContent = "não deu para copiar. O pacote foi colocado na caixa para copiar manualmente.";
         toast("copie manualmente");
         beep("tuk");
-
-        const box = $("#importBox");
-        if (box) box.value = textPack;
       });
 
       return;
@@ -7560,14 +7909,13 @@ document.addEventListener("click", (e) => {
     const raw = (box?.value || "").trim();
 
     if (!raw) {
-      if (msg) msg.textContent = "cole o json primeiro.";
-      toast("sem json");
+      if (msg) msg.textContent = "cole o pacote recebido primeiro.";
+      toast("sem pacote");
       beep("tuk");
       return;
     }
 
-    const parsed = safeJSONParse(raw);
-    validateAndLoadBackup(parsed, msg);
+    validateAndLoadBackup(raw, msg);
 
     return;
   }
@@ -7753,8 +8101,7 @@ document.addEventListener("change", (e) => {
 
     reader.onload = () => {
       const text = String(reader.result || "").trim();
-      const parsed = safeJSONParse(text);
-      validateAndLoadBackup(parsed, msg);
+      validateAndLoadBackup(text, msg);
     };
 
     reader.onerror = () => {
