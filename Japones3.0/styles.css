@@ -7711,3 +7711,978 @@ html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel{
 /* NIHONGO321 8.5.37 — corrige clique real dos botões de backup/WhatsApp/LINE. */
 
 /* NIHONGO321 8.5.38 — backup com ação direta, listener em captura e onclick de fallback. */
+
+
+/* =========================================================
+   NIHONGO321 8.5.39 — Premium mais claro e vendável
+   Escopo: somente tela Premium.
+   ========================================================= */
+
+.premiumPage{text-align:left;}
+
+.premiumHeroV2{
+  padding:clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(420px 260px at 10% 0%, rgba(255,179,71,.16), transparent 64%),
+    radial-gradient(420px 260px at 100% 100%, rgba(108,166,255,.14), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.premiumHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1.15fr) minmax(280px, .85fr);
+  gap:clamp(18px, 4vw, 30px);
+  align-items:stretch;
+}
+
+.premiumHeroCopy{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  align-items:flex-start;
+}
+
+.premiumTitle{
+  margin:0;
+  max-width:10.8em;
+  color:var(--soft);
+  font-size:clamp(34px, 5.2vw, 58px);
+  line-height:1.03;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.premiumLead{
+  margin:0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(15.5px, 2vw, 19px);
+  line-height:1.62;
+}
+
+.premiumPriceBox{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.premiumPriceBox > div,
+.premiumMiniCard,
+.premiumPlanBox,
+.premiumValueItem{
+  border:1px solid var(--strokeSoft);
+  background:rgba(255,255,255,.040);
+}
+
+.premiumPriceBox > div{
+  border-radius:22px;
+  padding:14px;
+}
+
+.premiumPriceLabel{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.premiumPrice{
+  margin-top:4px;
+  color:var(--gold2);
+  font-size:clamp(26px, 4vw, 38px);
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-.035em;
+}
+
+.premiumPrice--small{font-size:clamp(20px, 3vw, 28px);}
+
+.premiumActions{
+  width:100%;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:12px;
+}
+
+.premiumMicrocopy{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.52;
+}
+
+.premiumNotice{
+  width:100%;
+  border:1px solid rgba(255,179,71,.26);
+  background:rgba(255,179,71,.08);
+  color:var(--muted2);
+  border-radius:18px;
+  padding:12px 13px;
+  font-size:13px;
+  line-height:1.45;
+}
+
+.premiumHeroPanel{
+  display:grid;
+  gap:12px;
+}
+
+.premiumMiniCard{
+  border-radius:24px;
+  padding:16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.premiumMiniCard--gold{
+  background:
+    radial-gradient(220px 120px at 0% 0%, rgba(255,179,71,.18), transparent 66%),
+    rgba(255,255,255,.045);
+}
+
+.premiumMiniCard span{
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.055);
+  font-size:21px;
+  margin-bottom:10px;
+}
+
+.premiumMiniCard b,
+.premiumValueItem b{
+  display:block;
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.28;
+}
+
+.premiumMiniCard p,
+.premiumValueItem p{
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.48;
+}
+
+.premiumSectionTitle{
+  margin-top:10px;
+  max-width:18em;
+}
+
+.premiumCompareGrid,
+.premiumValueGrid{
+  display:grid;
+  gap:14px;
+}
+
+.premiumCompareGrid{grid-template-columns:1fr 1fr;}
+.premiumValueGrid{grid-template-columns:repeat(3, 1fr);}
+
+.premiumPlanBox,
+.premiumValueItem{
+  border-radius:24px;
+  padding:16px;
+  background:rgba(255,255,255,.036);
+}
+
+.premiumPlanBox--premium{
+  border-color:rgba(255,179,71,.28);
+  background:
+    radial-gradient(260px 150px at 12% 0%, rgba(255,179,71,.14), transparent 62%),
+    rgba(255,255,255,.045);
+}
+
+.premiumPlanHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.premiumPlanHead span{
+  color:var(--soft);
+  font-size:20px;
+  font-weight:950;
+  letter-spacing:-.025em;
+}
+
+.premiumPlanHead b{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.premiumList{
+  display:grid;
+  gap:10px;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.premiumList li{
+  position:relative;
+  padding-left:24px;
+  color:var(--muted2);
+  font-size:14px;
+  line-height:1.45;
+}
+
+.premiumList li::before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  top:0;
+  color:var(--ok);
+  font-weight:950;
+}
+
+.premiumPlanBox--premium .premiumList li::before{color:var(--gold2);}
+
+.premiumCtaCard{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 280px;
+  gap:18px;
+  align-items:center;
+  background:
+    radial-gradient(380px 200px at 10% 0%, rgba(255,179,71,.14), transparent 64%),
+    var(--premiumBg);
+}
+
+.premiumCtaCopy,
+.premiumCtaActions{
+  display:grid;
+  gap:12px;
+}
+
+html[data-theme="light"] .premiumPriceBox > div,
+html[data-theme="light"] .premiumMiniCard,
+html[data-theme="light"] .premiumPlanBox,
+html[data-theme="light"] .premiumValueItem{
+  background:rgba(255,255,255,.68);
+}
+
+html[data-theme="light"] .premiumPlanBox--premium{
+  background:
+    radial-gradient(260px 150px at 12% 0%, rgba(255,179,71,.24), transparent 62%),
+    rgba(255,255,255,.78);
+}
+
+@media (max-width:760px){
+  .premiumHeroGrid,
+  .premiumCompareGrid,
+  .premiumValueGrid,
+  .premiumCtaCard{
+    grid-template-columns:1fr;
+  }
+
+  .premiumTitle{
+    max-width:11.5em;
+    font-size:clamp(32px, 8.2vw, 44px);
+  }
+
+  .premiumActions,
+  .premiumPriceBox{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:430px){
+  .premiumHeroV2{padding:16px;}
+  .premiumTitle{font-size:clamp(29px, 7.9vw, 36px);}
+  .premiumLead{font-size:15px;}
+
+  .premiumPlanBox,
+  .premiumValueItem,
+  .premiumMiniCard{
+    border-radius:20px;
+    padding:14px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.40 — checklist de publicação
+   Escopo: somente rota #/launch-checklist.
+   ========================================================= */
+
+.launchPage{
+  text-align:left;
+}
+
+.launchHero{
+  padding:clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(420px 240px at 0% 0%, rgba(255,179,71,.16), transparent 64%),
+    radial-gradient(420px 260px at 100% 100%, rgba(108,166,255,.14), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.launchHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 170px;
+  gap:18px;
+  align-items:center;
+}
+
+.launchTitle{
+  margin:0;
+  max-width:12em;
+  color:var(--soft);
+  font-size:clamp(34px, 5vw, 56px);
+  line-height:1.04;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.launchLead{
+  margin:12px 0 0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.62;
+}
+
+.launchScore{
+  border:1px solid var(--strokeSoft);
+  border-radius:28px;
+  padding:18px;
+  text-align:center;
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.launchScoreValue{
+  color:var(--gold2);
+  font-size:clamp(38px, 6vw, 58px);
+  line-height:.95;
+  font-weight:950;
+  letter-spacing:-.055em;
+}
+
+.launchScoreText{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+  font-weight:800;
+}
+
+.launchSectionTitle{
+  margin-top:10px;
+  max-width:20em;
+}
+
+.launchApprovedGrid,
+.launchSafetyGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+
+.launchApprovedItem,
+.launchSafetyItem,
+.launchItem{
+  border:1px solid var(--strokeSoft);
+  background:rgba(255,255,255,.036);
+  border-radius:20px;
+  padding:13px;
+}
+
+.launchApprovedItem{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.launchApprovedItem span{
+  width:26px;
+  height:26px;
+  flex:0 0 26px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:rgba(113,207,143,.12);
+  color:var(--ok);
+  font-weight:950;
+}
+
+.launchApprovedItem b{
+  color:var(--muted2);
+  font-size:13.5px;
+  line-height:1.42;
+}
+
+.launchList{
+  display:grid;
+  gap:10px;
+}
+
+.launchItem{
+  display:grid;
+  grid-template-columns:32px minmax(0, 1fr);
+  gap:10px;
+  align-items:start;
+}
+
+.launchIcon{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--strokeSoft);
+  color:var(--muted);
+  font-size:12px;
+  font-weight:950;
+}
+
+.launchItem span:last-child{
+  color:var(--muted2);
+  font-size:14px;
+  line-height:1.45;
+  padding-top:5px;
+}
+
+.launchItem--done .launchIcon{
+  background:rgba(113,207,143,.12);
+  color:var(--ok);
+}
+
+.launchItem--done span:last-child{
+  color:var(--soft);
+}
+
+.launchSafetyItem{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.launchSafetyItem span{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  font-weight:950;
+}
+
+.launchSafetyItem b{
+  color:var(--muted2);
+  font-size:13.5px;
+  line-height:1.42;
+}
+
+.launchSafetyItem--bad span{
+  color:#ff9a9a;
+  background:rgba(217,124,124,.12);
+}
+
+.launchSafetyItem--ok span{
+  color:var(--ok);
+  background:rgba(113,207,143,.12);
+}
+
+.launchNextCard{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 280px;
+  gap:18px;
+  align-items:center;
+  background:
+    radial-gradient(380px 200px at 0% 0%, rgba(255,179,71,.14), transparent 64%),
+    var(--premiumBg);
+}
+
+.launchNextCopy,
+.launchNextActions{
+  display:grid;
+  gap:12px;
+}
+
+html[data-theme="light"] .launchScore,
+html[data-theme="light"] .launchApprovedItem,
+html[data-theme="light"] .launchSafetyItem,
+html[data-theme="light"] .launchItem{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:760px){
+  .launchHeroGrid,
+  .launchApprovedGrid,
+  .launchSafetyGrid,
+  .launchNextCard{
+    grid-template-columns:1fr;
+  }
+
+  .launchScore{
+    text-align:left;
+  }
+
+  .launchTitle{
+    font-size:clamp(31px, 8vw, 42px);
+  }
+}
+
+@media (max-width:430px){
+  .launchHero{
+    padding:16px;
+  }
+
+  .launchTitle{
+    font-size:clamp(28px, 7.6vw, 36px);
+  }
+
+  .launchApprovedItem,
+  .launchSafetyItem,
+  .launchItem{
+    border-radius:18px;
+    padding:12px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.41 — pacote comercial da loja
+   Escopo: rota #/store-kit.
+   ========================================================= */
+
+.storeKitPage{text-align:left;}
+
+.storeHero{
+  padding:clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(420px 240px at 0% 0%, rgba(255,179,71,.16), transparent 64%),
+    radial-gradient(420px 260px at 100% 100%, rgba(108,166,255,.14), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.storeHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 260px;
+  gap:18px;
+  align-items:stretch;
+}
+
+.storeTitle{
+  margin:0;
+  max-width:12em;
+  color:var(--soft);
+  font-size:clamp(34px, 5vw, 56px);
+  line-height:1.04;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.storeLead{
+  margin:12px 0 0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.62;
+}
+
+.storeHeroCard{
+  border:1px solid var(--strokeSoft);
+  border-radius:26px;
+  padding:18px;
+  background:
+    radial-gradient(220px 140px at 0% 0%, rgba(255,179,71,.18), transparent 66%),
+    rgba(255,255,255,.045);
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.storeHeroCard span{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border-radius:17px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--stroke);
+  font-size:24px;
+}
+
+.storeHeroCard b{color:var(--soft);font-size:17px;}
+.storeHeroCard p{margin:0;color:var(--muted);font-size:13px;line-height:1.48;}
+
+.storeSectionTitle{margin-top:10px;max-width:22em;}
+
+.storeCopyBox{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:15px;
+  background:rgba(255,255,255,.040);
+  color:var(--muted2);
+  font-size:14px;
+  line-height:1.62;
+  white-space:pre-wrap;
+}
+
+.storeCopyBox--long{max-height:420px;overflow:auto;}
+
+.storeGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+
+.storeShotItem,
+.storeListItem{
+  border:1px solid var(--strokeSoft);
+  border-radius:20px;
+  padding:13px;
+  background:rgba(255,255,255,.036);
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.storeShotItem span,
+.storeListItem span{
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(255,179,71,.12);
+  color:var(--gold2);
+  font-weight:950;
+  font-size:12px;
+}
+
+.storeShotItem b,
+.storeListItem b{
+  color:var(--muted2);
+  font-size:13.5px;
+  line-height:1.42;
+  padding-top:4px;
+}
+
+.storeKeywordCloud{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+}
+
+.storeKeywordCloud span{
+  display:inline-flex;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:9px 12px;
+  background:rgba(255,255,255,.040);
+  color:var(--muted2);
+  font-size:13px;
+  line-height:1;
+  font-weight:800;
+}
+
+.storeList,
+.storeSalesGrid{display:grid;gap:12px;}
+.storeSalesGrid{grid-template-columns:repeat(3, minmax(0, 1fr));}
+
+.storeNextCard{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 280px;
+  gap:18px;
+  align-items:center;
+  background:
+    radial-gradient(380px 200px at 0% 0%, rgba(255,179,71,.14), transparent 64%),
+    var(--premiumBg);
+}
+
+.storeNextCopy,
+.storeNextActions{display:grid;gap:12px;}
+
+html[data-theme="light"] .storeHeroCard,
+html[data-theme="light"] .storeCopyBox,
+html[data-theme="light"] .storeShotItem,
+html[data-theme="light"] .storeListItem,
+html[data-theme="light"] .storeKeywordCloud span{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:760px){
+  .storeHeroGrid,
+  .storeGrid,
+  .storeSalesGrid,
+  .storeNextCard{grid-template-columns:1fr;}
+
+  .storeTitle{font-size:clamp(31px, 8vw, 42px);}
+}
+
+@media (max-width:430px){
+  .storeHero{padding:16px;}
+  .storeTitle{font-size:clamp(28px, 7.6vw, 36px);}
+
+  .storeCopyBox,
+  .storeShotItem,
+  .storeListItem{
+    border-radius:18px;
+    padding:12px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.42 — ajustes minimalistas + ícone loja seguro
+   Escopo:
+   - tela de configurações;
+   - remove glifo Apple que pode aparecer como quadrado com X.
+   ========================================================= */
+
+.storeGlyph{
+  display:inline-grid;
+  place-items:center;
+  min-width:34px;
+  height:28px;
+  padding:0 8px;
+  border-radius:10px;
+  border:1px solid var(--strokeSoft);
+  background:rgba(255,255,255,.06);
+  color:var(--soft);
+  font-size:11px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.02em;
+}
+
+.storeGrid--safe .storeBtn .ic{
+  display:none;
+}
+
+.settingsPage{
+  text-align:left;
+}
+
+.settingsHero{
+  padding:clamp(18px, 4vw, 28px);
+  background:
+    radial-gradient(360px 220px at 0% 0%, rgba(255,179,71,.12), transparent 64%),
+    radial-gradient(380px 220px at 100% 100%, rgba(108,166,255,.12), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.settingsIntro{
+  display:grid;
+  gap:10px;
+}
+
+.settingsTitle{
+  margin:0;
+  max-width:12em;
+  color:var(--soft);
+  font-size:clamp(30px, 5vw, 48px);
+  line-height:1.05;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.settingsLead{
+  margin:0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(14px, 2vw, 17px);
+  line-height:1.58;
+}
+
+.settingsQuickGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+}
+
+.settingsToggleCard{
+  appearance:none;
+  border:1px solid var(--strokeSoft);
+  border-radius:24px;
+  padding:16px 14px;
+  min-height:132px;
+  text-align:left;
+  background:rgba(255,255,255,.040);
+  color:var(--soft);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+  cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.settingsToggleCard span{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  font-size:21px;
+}
+
+.settingsToggleCard b{
+  display:block;
+  color:var(--soft);
+  font-size:16px;
+  line-height:1.18;
+}
+
+.settingsToggleCard small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+.settingsDetails{
+  padding:0;
+  overflow:hidden;
+}
+
+.settingsDetails summary{
+  cursor:pointer;
+  list-style:none;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:18px;
+}
+
+.settingsDetails summary::-webkit-details-marker{
+  display:none;
+}
+
+.settingsDetails summary span{
+  color:var(--soft);
+  font-size:17px;
+  font-weight:950;
+  line-height:1.18;
+}
+
+.settingsDetails summary b{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  line-height:1.25;
+  text-align:right;
+}
+
+.settingsDetails summary::after{
+  content:"abrir";
+  grid-column:1 / -1;
+  justify-self:start;
+  display:inline-flex;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:6px 10px;
+  color:var(--muted2);
+  background:rgba(255,255,255,.04);
+  font-size:11px;
+  font-weight:900;
+}
+
+.settingsDetails[open] summary::after{
+  content:"ocultar";
+}
+
+.settingsDetailsBody{
+  display:grid;
+  gap:14px;
+  padding:0 18px 18px;
+}
+
+.settingsRangeBox{
+  border:1px solid var(--strokeSoft);
+  border-radius:20px;
+  padding:14px;
+  background:rgba(255,255,255,.035);
+}
+
+.settingsRangeHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.settingsRangeHead span{
+  color:var(--muted2);
+  font-size:13px;
+  font-weight:850;
+}
+
+.settingsRangeHead b{
+  color:var(--soft);
+  font-size:13px;
+  font-weight:950;
+}
+
+.settingsMiniGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+
+.settingsDetails--danger{
+  border-color:rgba(217,124,124,.28);
+}
+
+html[data-theme="light"] .settingsToggleCard,
+html[data-theme="light"] .settingsRangeBox,
+html[data-theme="light"] .storeGlyph{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:760px){
+  .settingsQuickGrid{
+    grid-template-columns:1fr;
+  }
+
+  .settingsToggleCard{
+    min-height:auto;
+    display:grid;
+    grid-template-columns:54px minmax(0, 1fr);
+    align-items:center;
+  }
+
+  .settingsToggleCard small{
+    grid-column:2;
+  }
+}
+
+@media (max-width:430px){
+  .settingsHero{
+    padding:16px;
+  }
+
+  .settingsTitle{
+    font-size:clamp(27px, 7.4vw, 34px);
+  }
+
+  .settingsDetails summary{
+    padding:16px;
+  }
+
+  .settingsDetailsBody{
+    padding:0 16px 16px;
+  }
+
+  .settingsMiniGrid{
+    grid-template-columns:1fr;
+  }
+}

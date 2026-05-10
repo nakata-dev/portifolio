@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.38
+   NIHONGO321 v8.5.42
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.38",
+  version: "8.5.42",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -4345,123 +4345,366 @@ function renderTerms() {
 /* ---------- checklist final ---------- */
 function renderLaunchChecklist() {
   const sum = launchChecklistSummary();
+  const checkoutOk = isRealCheckoutConfigured();
+  const supportOk = !!String(SALES.supportEmail || "").trim() && !String(SALES.supportEmail || "").includes("exemplo");
+  const playOk = !!String(SALES.playStoreUrl || "").trim() && !String(SALES.playStoreUrl || "").includes("play.google.com/store");
+  const appStoreOk = !!String(SALES.appStoreUrl || "").trim() && !String(SALES.appStoreUrl || "").includes("apps.apple.com");
+
+  const coreDone = [
+    "Treino 105x modo foco premium preservado",
+    "Backup/compartilhamento aprovado na 8.5.38",
+    "Responsividade celular/tablet/desktop trabalhada até 8.5.35",
+    "Tela Premium aprimorada na 8.5.39",
+    "Caracteres especiais liberados no cadastro",
+    "Hero mobile em duas linhas aprovado"
+  ];
+
+  const publishTasks = [
+    { label: "Testar app em celular Android + Chrome", done: true },
+    { label: "Testar app em notebook/desktop", done: true },
+    { label: "Testar backup por WhatsApp/LINE em celular real", done: true },
+    { label: "Configurar link real do checkout externo", done: checkoutOk },
+    { label: "Confirmar e-mail real de suporte", done: supportOk },
+    { label: "Preparar ícone final do app", done: false },
+    { label: "Preparar screenshots para loja", done: false },
+    { label: "Preparar descrição curta e longa", done: false },
+    { label: "Preparar política de privacidade pública", done: true },
+    { label: "Preparar termos de uso públicos", done: true },
+    { label: "Fazer teste final com usuários reais", done: false },
+    { label: "Congelar versão candidata de publicação", done: false }
+  ];
+
+  const salesTasks = [
+    { label: "Página Premium clara e vendável", done: true },
+    { label: "Preço mensal definido", done: !!SALES.monthlyPrice },
+    { label: "Preço semestral definido", done: !!SALES.semiannualPrice },
+    { label: "Checkout externo real configurado", done: checkoutOk },
+    { label: "Mensagem de suporte definida", done: supportOk },
+    { label: "Oferta grátis x Premium revisada", done: true }
+  ];
+
+  const storeTasks = [
+    { label: "Nome do app: NIHONGO321", done: true },
+    { label: "Slogan: Japonês prático no Japão", done: true },
+    { label: "Promessa principal definida", done: true },
+    { label: "Banner hero pronto no caminho ./img/banner-hero-nihongo321.png", done: true },
+    { label: "Link Google Play real", done: playOk },
+    { label: "Link App Store real", done: appStoreOk },
+    { label: "Screenshots mobile", done: false },
+    { label: "Screenshots tablet/desktop", done: false }
+  ];
+
+  const finalTotal = publishTasks.length + salesTasks.length + storeTasks.length;
+  const finalDone = [...publishTasks, ...salesTasks, ...storeTasks].filter(item => item.done).length;
+  const finalPct = Math.round((finalDone / finalTotal) * 100);
+
+  const checklistRows = (rows) => rows.map((item, index) => `
+    <div class="launchItem ${item.done ? "launchItem--done" : ""}">
+      <span class="launchIcon">${item.done ? "✓" : index + 1}</span>
+      <span>${escapeHTML(item.label)}</span>
+    </div>
+  `).join("");
 
   APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack" style="text-align:left">
+    <div class="stack launchPage">
+      <section class="card stack launchHero">
         <div class="row row--between">
-          <div class="badge">checklist final</div>
+          <div class="badge">checklist de publicação</div>
           <button class="btn" data-nav="#/settings">voltar</button>
         </div>
 
-        ${renderAppLogoBlock("checkLogo")}
-
-        <h1 class="h1">Rumo aos 100% do NIHONGO321</h1>
-
-        <div class="lockCard">
-          <h3 class="lockTitle">${sum.done}/${sum.total} itens • ${sum.pct}%</h3>
-          <p class="lockText">
-            Esta é uma área interna de publicação. Ela serve para acompanhar o que ainda falta antes dos testes reais,
-            loja, PWA, WebView ou venda Premium.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="row row--between">
-            <div class="badge">progresso interno</div>
-            <div class="badge">${sum.pct}%</div>
+        <div class="launchHeroGrid">
+          <div>
+            <h1 class="launchTitle">Rumo à primeira versão vendável do NIHONGO321.</h1>
+            <p class="launchLead">
+              Este painel é interno. Ele serve para guiar os últimos passos antes de testar com usuários reais, vender e publicar.
+            </p>
           </div>
 
-          <div class="pWrap" aria-label="progresso do checklist">
-            <div class="pBar">
-              <div class="pFill" style="transform:scaleX(${sum.total ? sum.done / sum.total : 0})"></div>
-            </div>
-            <div class="pTxt">${sum.done}/${sum.total}</div>
-          </div>
-
-          <p class="small">
-            Alguns itens dependem de teste manual, publicação, criação de arte, hospedagem pública ou configuração externa.
-          </p>
-        </div>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">configurações comerciais atuais</div>
-
-          <div class="useCaseList">
-            <div class="useCaseItem">
-              <span class="useCaseIcon">${isRealCheckoutConfigured() ? "✓" : "!"}</span>
-              <span>Checkout: ${isRealCheckoutConfigured() ? "link real configurado" : "ainda está em preparação"}</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✉</span>
-              <span>E-mail de suporte: ${escapeHTML(SALES.supportEmail || "não configurado")}</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">¥</span>
-              <span>Preço mensal atual: ${escapeHTML(SALES.monthlyPrice)}</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">¥</span>
-              <span>Preço semestral atual: ${escapeHTML(SALES.semiannualPrice)}</span>
-            </div>
+          <div class="launchScore">
+            <div class="launchScoreValue">${finalPct}%</div>
+            <div class="launchScoreText">${finalDone}/${finalTotal} itens prontos</div>
           </div>
         </div>
 
-        <div class="sheet stack" style="text-align:left">
-          <div class="row row--between">
-            <div class="badge">tarefas finais</div>
+        <div class="pWrap" aria-label="progresso de publicação">
+          <div class="pBar"><div class="pFill" style="transform:scaleX(${finalTotal ? finalDone / finalTotal : 0})"></div></div>
+          <div class="pTxt">${finalDone}/${finalTotal}</div>
+        </div>
+      </section>
+
+      <section class="card stack launchApproved">
+        <div class="row row--between">
+          <div class="badge">fases aprovadas</div>
+          <div class="badge">não voltar sem motivo forte</div>
+        </div>
+
+        <div class="launchApprovedGrid">
+          ${coreDone.map(item => `
+            <div class="launchApprovedItem">
+              <span>✓</span>
+              <b>${escapeHTML(item)}</b>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div>
             <div class="badge">publicação</div>
+            <h2 class="h2 launchSectionTitle">O que falta para colocar o app no mundo?</h2>
           </div>
-
-          <div class="useCaseList">
-            ${sum.rows.map((item, index) => `
-              <div class="useCaseItem">
-                <span class="useCaseIcon">${item.done ? "✓" : index + 1}</span>
-                <span>${escapeHTML(item.label)}</span>
-              </div>
-            `).join("")}
-          </div>
+          <div class="badge">${publishTasks.filter(x => x.done).length}/${publishTasks.length}</div>
         </div>
 
-        <div class="sheet stack" style="text-align:left">
+        <div class="launchList">
+          ${checklistRows(publishTasks)}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div>
+            <div class="badge">venda</div>
+            <h2 class="h2 launchSectionTitle">O que falta para vender com segurança?</h2>
+          </div>
+          <div class="badge">${salesTasks.filter(x => x.done).length}/${salesTasks.length}</div>
+        </div>
+
+        <div class="launchList">
+          ${checklistRows(salesTasks)}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div>
+            <div class="badge">loja / apresentação</div>
+            <h2 class="h2 launchSectionTitle">Materiais para Google Play, PWA ou WebView.</h2>
+          </div>
+          <div class="badge">${storeTasks.filter(x => x.done).length}/${storeTasks.length}</div>
+        </div>
+
+        <div class="launchList">
+          ${checklistRows(storeTasks)}
+        </div>
+      </section>
+
+      <section class="card stack launchSafety">
+        <div class="row row--between">
+          <div class="badge">segurança comercial</div>
           <div class="badge">não colocar no código</div>
-
-          <div class="useCaseList">
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>dados bancários;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>número de cartão;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✕</span>
-              <span>senha, documento, Pix, conta bancária ou endereço sensível;</span>
-            </div>
-
-            <div class="useCaseItem">
-              <span class="useCaseIcon">✓</span>
-              <span>usar apenas o link público gerado pela plataforma externa em SALES.checkoutUrl.</span>
-            </div>
-          </div>
         </div>
 
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/premium">revisar Premium</button>
-          <button class="btn btn--full" data-nav="#/home">voltar ao app</button>
+        <div class="launchSafetyGrid">
+          <div class="launchSafetyItem launchSafetyItem--bad">
+            <span>✕</span>
+            <b>Dados bancários, cartão, documento, senha ou conta pessoal.</b>
+          </div>
+          <div class="launchSafetyItem launchSafetyItem--bad">
+            <span>✕</span>
+            <b>Links privados de pagamento ou informações sensíveis do vendedor.</b>
+          </div>
+          <div class="launchSafetyItem launchSafetyItem--ok">
+            <span>✓</span>
+            <b>Usar somente o link público externo em SALES.checkoutUrl.</b>
+          </div>
+          <div class="launchSafetyItem launchSafetyItem--ok">
+            <span>✓</span>
+            <b>Manter política, termos e suporte visíveis para confiança do usuário.</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="card launchNextCard">
+        <div class="launchNextCopy">
+          <div class="badge">próxima ação depois daqui</div>
+          <h2 class="h2">Preparar o pacote comercial da loja.</h2>
+          <p class="p">
+            Depois deste checklist, o próximo bloco recomendado é escrever a descrição da loja, textos de venda,
+            screenshots necessários e versão candidata de teste.
+          </p>
+        </div>
+
+        <div class="launchNextActions">
+          <button class="primaryAction" data-nav="#/store-kit">abrir pacote comercial</button>
+          <button class="btn btn--muted btn--full" data-nav="#/premium">revisar Premium</button>
         </div>
       </section>
     </div>
   `;
 }
 
-/* ---------- landing ---------- */
+function renderStoreKit() {
+  const shortDescription = "Japonês prático para brasileiros no Japão: treine frases úteis para trabalho, prefeitura, mercado, konbini e vida real.";
+
+  const longDescription = `NIHONGO321 é um app de japonês prático feito para brasileiros que vivem no Japão e precisam aprender frases úteis para situações reais do cotidiano.
+
+O foco não é estudar por horas nem decorar teoria difícil. O objetivo é treinar frases que ajudam na vida real: fábrica, prefeitura, correio, mercado, konbini, moradia, transporte, contas, atendimento e convivência no Japão.
+
+Com o treino 105x, você escuta, lê, repete e fixa frases importantes no seu ritmo. O app também permite cadastrar frases próprias, favoritar conteúdos, revisar frases úteis e compartilhar pacotes de frases com outras pessoas.
+
+Feito para quem trabalha muito, chega cansado e ainda quer aprender um pouco por dia.
+
+Principais recursos:
+• Treino 105x para repetição guiada;
+• frases úteis em japonês e português;
+• explicações com sentido geral, palavras e partículas;
+• frases próprias;
+• favoritos;
+• backup e compartilhamento por WhatsApp/LINE;
+• temas práticos da vida no Japão;
+• visual leve para celular, tablet e computador;
+• foco em brasileiros no Japão.
+
+NIHONGO321: Japonês prático no Japão.`;
+
+  const screenshotPlan = [
+    "Tela inicial com banner do trabalhador indo para a fábrica",
+    "Treino 105x com frase curta",
+    "Treino 105x com frase longa em modo leitura",
+    "Explicação da frase aberta",
+    "Tela Premium com benefícios",
+    "Backup / Compartilhar frases por WhatsApp e LINE",
+    "Sensei IA",
+    "Gerenciar frases próprias"
+  ];
+
+  const storeKeywords = [
+    "japonês prático",
+    "japonês no Japão",
+    "dekassegui",
+    "brasileiros no Japão",
+    "frases japonesas",
+    "aprender japonês",
+    "nihongo",
+    "japonês para trabalho",
+    "japonês para fábrica",
+    "japonês cotidiano"
+  ];
+
+  const releaseNotes = [
+    "Primeira versão de testes do NIHONGO321.",
+    "Treino 105x para frases úteis.",
+    "Cadastro de frases próprias.",
+    "Backup e compartilhamento por WhatsApp/LINE.",
+    "Tela Premium e checklist de publicação."
+  ];
+
+  APP.innerHTML = `
+    <div class="stack storeKitPage">
+      <section class="card storeHero">
+        <div class="row row--between">
+          <div class="badge">pacote comercial da loja</div>
+          <button class="btn" data-nav="#/launch-checklist">voltar</button>
+        </div>
+
+        <div class="storeHeroGrid">
+          <div>
+            <h1 class="storeTitle">Textos e materiais para vender o NIHONGO321.</h1>
+            <p class="storeLead">
+              Use esta página interna para preparar Google Play, PWA, WebView, página de venda, screenshots e testes finais.
+            </p>
+          </div>
+
+          <div class="storeHeroCard">
+            <span>🚀</span>
+            <b>Próximo destino</b>
+            <p>Transformar o app em uma oferta clara, confiável e pronta para teste com usuários reais.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">descrição curta</div>
+        <h2 class="h2 storeSectionTitle">Texto curto para Google Play ou página inicial.</h2>
+        <div class="storeCopyBox">${escapeHTML(shortDescription)}</div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">descrição longa</div>
+        <h2 class="h2 storeSectionTitle">Texto principal da loja.</h2>
+        <div class="storeCopyBox storeCopyBox--long">${escapeHTML(longDescription)}</div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div>
+            <div class="badge">screenshots</div>
+            <h2 class="h2 storeSectionTitle">Imagens que precisamos preparar para vender melhor.</h2>
+          </div>
+          <div class="badge">${screenshotPlan.length} telas</div>
+        </div>
+
+        <div class="storeGrid">
+          ${screenshotPlan.map((item, index) => `
+            <div class="storeShotItem">
+              <span>${index + 1}</span>
+              <b>${escapeHTML(item)}</b>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div>
+            <div class="badge">palavras-chave</div>
+            <h2 class="h2 storeSectionTitle">Termos comerciais e busca.</h2>
+          </div>
+          <div class="badge">SEO simples</div>
+        </div>
+
+        <div class="storeKeywordCloud">
+          ${storeKeywords.map(word => `<span>${escapeHTML(word)}</span>`).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">notas da versão</div>
+        <h2 class="h2 storeSectionTitle">Texto inicial para versão de teste.</h2>
+
+        <div class="storeList">
+          ${releaseNotes.map(item => `
+            <div class="storeListItem">
+              <span>✓</span>
+              <b>${escapeHTML(item)}</b>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">textos de venda rápida</div>
+        <h2 class="h2 storeSectionTitle">Frases para WhatsApp, página de venda ou anúncio simples.</h2>
+
+        <div class="storeSalesGrid">
+          <div class="storeCopyBox">NIHONGO321 é um app para brasileiros no Japão treinarem frases úteis sem estudar por horas.</div>
+          <div class="storeCopyBox">Feito para quem trabalha muito, chega cansado e precisa aprender japonês prático aos poucos.</div>
+          <div class="storeCopyBox">Treine frases para fábrica, prefeitura, konbini, mercado, contas e vida real no Japão.</div>
+        </div>
+      </section>
+
+      <section class="card storeNextCard">
+        <div class="storeNextCopy">
+          <div class="badge">próxima ação</div>
+          <h2 class="h2">Agora precisamos criar os screenshots e a descrição visual da loja.</h2>
+          <p class="p">
+            O próximo bloco recomendado é definir o roteiro dos prints: quais telas capturar, que texto colocar em cada imagem e em qual ordem apresentar o app.
+          </p>
+        </div>
+
+        <div class="storeNextActions">
+          <button class="primaryAction" data-nav="#/launch-checklist">voltar ao checklist</button>
+          <button class="btn btn--muted btn--full" data-nav="#/premium">revisar Premium</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+
 function renderLanding() {
   APP.innerHTML = `
     <div class="stack">
@@ -4563,14 +4806,14 @@ function renderLanding() {
           <button class="btn btn--full" data-nav="#/premium">comparar planos</button>
         </div>
 
-        <div class="storeGrid">
+        <div class="storeGrid storeGrid--safe">
           <a class="storeBtn" href="${escapeHTML(SALES.playStoreUrl)}" target="_blank" rel="noopener noreferrer">
-            <span class="ic">▶</span>
+            <span class="storeGlyph">GP</span>
             <span>Google Play</span>
           </a>
 
           <a class="storeBtn" href="${escapeHTML(SALES.appStoreUrl)}" target="_blank" rel="noopener noreferrer">
-            <span class="ic"></span>
+            <span class="storeGlyph">iOS</span>
             <span>App Store</span>
           </a>
         </div>
@@ -4583,207 +4826,143 @@ function renderLanding() {
 
 /* ---------- premium ---------- */
 function renderPremium() {
-  const unlocked = isPremiumUnlocked();
-  const status = checkoutStatus();
+  const checkoutReady = isCheckoutReady();
+  const monthly = SALES.monthlyPrice || "¥980";
+  const semi = SALES.semiannualPrice || "¥4,980 / 6 meses";
 
   APP.innerHTML = `
-    <div class="stack">
-      <section class="premiumHero stack">
-        <div class="badge">premium</div>
-
-        ${renderAppLogoBlock("premiumLogo")}
-
-        <h1 class="h1">Prepare seu japonês antes das situações difíceis.</h1>
-
-        <p class="p">
-          O grátis mantém o japonês vivo. O Premium ajuda quando você precisa de mais contexto:
-          fábrica, prefeitura, mercado, transporte, moradia, gramática prática e frases criadas para o seu caso real.
-        </p>
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="row row--between">
-            <div class="badge">promessa Premium</div>
-            <div class="badge">japonês prático</div>
-          </div>
-
-          <h2 class="h2">Menos improviso. Mais preparo.</h2>
-
-          <p class="small">
-            Antes de falar com chefe, ir à prefeitura, resolver documento, perguntar no mercado,
-            explicar um problema ou entender uma estrutura como ので, você treina frases mais próximas da vida real.
-          </p>
-
-          <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="checkout">
-              ${escapeHTML(checkoutButtonLabel("primary"))}
-            </button>
-            <button class="btn btn--full" data-action="startQuickTraining">
-              continuar grátis por enquanto
-            </button>
-          </div>
-
-          <div class="small">${escapeHTML(status.shortText)}</div>
-        </div>
-
-        ${renderPlanCompareBox()}
-
-        <div class="lockCard">
-          <h3 class="lockTitle">Premium não é castigo para quem usa grátis</h3>
-          <p class="lockText">
-            A versão grátis continua útil. O Premium é para quando você quer mais preparo,
-            mais situações, mais exemplos e mais frases específicas para a rotina no Japão.
-          </p>
-        </div>
-
-        ${renderPremiumValueGrid()}
-        ${renderPremiumUseCases()}
-        ${renderPremiumTopicsBox()}
-
-        <div class="sheet stack" style="text-align:left">
-          <div class="row row--between">
-            <div class="badge">Sensei IA Premium</div>
-            <div class="badge">professor prático</div>
-          </div>
-
-          <h2 class="h2">Transforme qualquer dúvida em treino.</h2>
-
-          <p class="small">
-            Com o Sensei IA, você não fica preso apenas aos packs prontos. Você pode pedir frases para uma situação real,
-            uma partícula, uma estrutura gramatical, uma palavra japonesa ou uma expressão que apareceu no seu dia.
-          </p>
-
-          <div class="useCaseList">
-            <div class="useCaseItem">
-              <span class="useCaseIcon">文</span>
-              <span>“Me ensine o uso de ので.”</span>
-            </div>
-            <div class="useCaseItem">
-              <span class="useCaseIcon">7</span>
-              <span>“Crie 7 frases com かどうか para eu revisar durante a semana.”</span>
-            </div>
-            <div class="useCaseItem">
-              <span class="useCaseIcon">🏭</span>
-              <span>“Preciso falar com meu chefe que não entendi a tarefa.”</span>
-            </div>
-            <div class="useCaseItem">
-              <span class="useCaseIcon">💾</span>
-              <span>O material vira tópico treinável dentro do app.</span>
-            </div>
-          </div>
-
-          <p class="small">
-            A ideia é simples: 1 frase por dia, 7 frases por semana, mais autonomia para estudar japonês prático no Japão.
-          </p>
-
-          <div class="grid2">
-            <button class="btn btn--ok btn--full" data-nav="#/sensei">
-              ${unlocked ? "abrir Sensei IA" : "ver Sensei IA"}
-            </button>
-            <button class="btn btn--full" data-nav="#/home">
-              voltar ao app
-            </button>
-          </div>
-        </div>
-
-        <div class="planGrid">
-          <div class="planCard premium">
-            <div class="planTop">
-              <h3 class="planName">Mensal</h3>
-              <span class="planTag">flexível</span>
-            </div>
-
-            <div class="planPrice">${escapeHTML(SALES.monthlyPrice)}<small>/ mês</small></div>
-            <p class="planSub">
-              Para destravar temas específicos e sentir o app completo na rotina.
+    <div class="stack premiumPage">
+      <section class="card premiumHeroV2">
+        <div class="premiumHeroGrid">
+          <div class="premiumHeroCopy">
+            <div class="badge">NIHONGO321 Premium</div>
+            <h1 class="premiumTitle">Japonês prático para viver melhor no Japão.</h1>
+            <p class="premiumLead">
+              Menos teoria, mais frases úteis para fábrica, prefeitura, correio, mercado, konbini, moradia e situações reais.
             </p>
 
-            <ul class="planList">
-              <li>todos os tópicos Premium;</li>
-              <li>treino por situação mais completo;</li>
-              <li>Sensei IA para casos reais;</li>
-              <li>Sensei IA para gramática prática;</li>
-              <li>7 exemplos por tema para revisar por semana;</li>
-              <li>mais frases por contexto;</li>
-              <li>revisões mais direcionadas.</li>
-            </ul>
-
-            <div class="planFooter">
-              <button class="btn btn--ok btn--full" data-action="checkout">
-                ${escapeHTML(checkoutButtonLabel("monthly"))}
-              </button>
-            </div>
-          </div>
-
-          <div class="planCard">
-            <div class="planTop">
-              <h3 class="planName">Semestral</h3>
-              <span class="planTag">constância</span>
+            <div class="premiumPriceBox">
+              <div>
+                <div class="premiumPriceLabel">plano mensal</div>
+                <div class="premiumPrice">${escapeHTML(monthly)}</div>
+              </div>
+              <div>
+                <div class="premiumPriceLabel">plano econômico</div>
+                <div class="premiumPrice premiumPrice--small">${escapeHTML(semi)}</div>
+              </div>
             </div>
 
-            <div class="planPrice">${escapeHTML(SALES.semiannualPrice)}<small>/ plano</small></div>
-            <p class="planSub">
-              Melhor para quem quer manter ritmo por mais tempo.
+            <div class="premiumActions">
+              <button class="primaryAction" data-action="checkout">assinar Premium</button>
+              <button class="btn btn--muted btn--full" data-nav="#/105x">voltar ao treino</button>
+            </div>
+
+            <p class="premiumMicrocopy">
+              Feito para brasileiros no Japão que trabalham muito, têm pouco tempo e precisam de frases para usar de verdade.
             </p>
 
-            <ul class="planList">
-              <li>mais tempo de prática;</li>
-              <li>melhor custo por período;</li>
-              <li>mais chance de criar hábito;</li>
-              <li>preparo antes de situações reais;</li>
-              <li>mais autonomia para estudar sozinho.</li>
-            </ul>
+            ${checkoutReady ? "" : `
+              <div class="premiumNotice">
+                Checkout ainda não configurado. Coloque seu link real em <strong>SALES.checkoutUrl</strong> antes de vender oficialmente.
+              </div>
+            `}
+          </div>
 
-            <div class="planFooter">
-              <button class="btn btn--full" data-action="checkout">
-                ${escapeHTML(checkoutButtonLabel("semiannual"))}
-              </button>
+          <div class="premiumHeroPanel">
+            <div class="premiumMiniCard premiumMiniCard--gold">
+              <span>☀️</span>
+              <b>Estudo leve</b>
+              <p>Treinos rápidos para quem chega cansado do trabalho.</p>
+            </div>
+            <div class="premiumMiniCard">
+              <span>🏭</span>
+              <b>Situações reais</b>
+              <p>Frases para rotina no Japão, não exemplos soltos.</p>
+            </div>
+            <div class="premiumMiniCard">
+              <span>🧭</span>
+              <b>Direção clara</b>
+              <p>Entenda sentido, palavras e partículas sem se perder.</p>
             </div>
           </div>
         </div>
+      </section>
 
-        ${renderPremiumActivationBox()}
-        ${renderPaymentSafetyBox()}
-
-        ${unlocked ? `
-          <div class="sheet stack">
-            <div class="badge">premium liberado ✅</div>
-            <div class="small">Seu acesso Premium está liberado neste dispositivo.</div>
-
-            <div class="grid2">
-              <button class="btn btn--ok btn--full" data-nav="#/sensei">abrir Sensei IA</button>
-              <button class="btn btn--full" data-nav="#/home">voltar ao app</button>
-            </div>
+      <section class="card stack premiumCompareCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">grátis x premium</div>
+            <h2 class="h2 premiumSectionTitle">O que muda quando você desbloqueia o Premium?</h2>
           </div>
-        ` : `
-          <div class="sheet stack">
-            <div class="row row--between">
-              <div class="badge">sem pressão</div>
-              <div class="badge">${escapeHTML(status.label)}</div>
-            </div>
+        </div>
 
-            <div class="small">
-              Você pode continuar no grátis. Quando quiser treinar situações mais específicas,
-              gramática prática e materiais criados para sua necessidade, o Premium fica como próxima etapa natural.
+        <div class="premiumCompareGrid">
+          <div class="premiumPlanBox">
+            <div class="premiumPlanHead">
+              <span>Grátis</span>
+              <b>comece hoje</b>
             </div>
-
-            <div class="grid2">
-              <button class="btn btn--ok btn--full" data-action="checkout">
-                ${escapeHTML(checkoutButtonLabel("footer"))}
-              </button>
-              <button class="btn btn--full" data-nav="#/home">
-                continuar no grátis
-              </button>
-            </div>
+            <ul class="premiumList">
+              <li>Pack Essencial Japão</li>
+              <li>Treino 105x básico</li>
+              <li>Frases próprias</li>
+              <li>Favoritos</li>
+              <li>Backup e compartilhamento</li>
+            </ul>
           </div>
-        `}
 
-        ${renderLegalLinksBox(true)}
+          <div class="premiumPlanBox premiumPlanBox--premium">
+            <div class="premiumPlanHead">
+              <span>Premium</span>
+              <b>vida real no Japão</b>
+            </div>
+            <ul class="premiumList">
+              <li>Temas avançados do cotidiano</li>
+              <li>Fábrica, prefeitura, correio, konbini, mercado e mais</li>
+              <li>Treino por situação real</li>
+              <li>Explicações mais úteis para iniciantes</li>
+              <li>Conteúdo em crescimento contínuo</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack premiumValueCard">
+        <div class="badge">por que vale a pena?</div>
+        <h2 class="h2 premiumSectionTitle">O Premium economiza energia mental.</h2>
+
+        <div class="premiumValueGrid">
+          <div class="premiumValueItem">
+            <b>Você não precisa estudar por horas</b>
+            <p>O foco é repetir frases que resolvem situações reais.</p>
+          </div>
+          <div class="premiumValueItem">
+            <b>Você entende a frase antes de repetir</b>
+            <p>Sentido geral, palavras e partículas ficam mais claros.</p>
+          </div>
+          <div class="premiumValueItem">
+            <b>Você treina para a vida no Japão</b>
+            <p>Não é japonês genérico. É japonês para a rotina do dekassegui.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card premiumCtaCard">
+        <div class="premiumCtaCopy">
+          <div class="badge">próximo passo</div>
+          <h2 class="h2">Desbloqueie mais situações e continue treinando um pouco por dia.</h2>
+          <p class="p">
+            O objetivo não é virar estudante perfeito. É conseguir falar melhor, entender mais e se sentir menos perdido no Japão.
+          </p>
+        </div>
+        <div class="premiumCtaActions">
+          <button class="primaryAction" data-action="checkout">assinar Premium</button>
+          <button class="btn btn--muted btn--full" data-nav="#/home">voltar para início</button>
+        </div>
       </section>
     </div>
   `;
 }
-
-/* ---------- admin ---------- */
 function renderAdmin() {
   const unlocked = isAdminUnlocked();
   const premium = isPremiumUnlocked();
@@ -6982,93 +7161,127 @@ function renderBackup() {
 function renderSettings() {
   const currentTheme = getTheme();
   const lightActive = currentTheme === "light";
+  const soundOn = STATE.prefs.audio.enabled;
+  const vibeOn = STATE.prefs.haptics.enabled;
 
   APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
+    <div class="stack settingsPage">
+      <section class="card stack settingsHero">
         <div class="row row--between">
           <div class="badge">ajustes</div>
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <div class="grid2">
-          <button class="btn btn--full" data-action="toggleSound">${STATE.prefs.audio.enabled ? "som ligado" : "som desligado"}</button>
-          <button class="btn btn--full" data-action="toggleVibe">${STATE.prefs.haptics.enabled ? "vibração ligada" : "vibração desligada"}</button>
+        <div class="settingsIntro">
+          <h1 class="settingsTitle">Ajustes simples para estudar sem distração.</h1>
+          <p class="settingsLead">
+            Aqui ficam só os controles essenciais. O restante fica recolhido para não poluir sua tela.
+          </p>
         </div>
 
-        <div class="sheet stack" style="text-align:left">
-          <div class="row row--between">
-            <div class="badge">modo dekassegui</div>
-            <div class="badge">${lightActive ? "☀️ claro" : "🌙 escuro"}</div>
-          </div>
+        <div class="settingsQuickGrid">
+          <button class="settingsToggleCard" type="button" data-action="toggleTheme">
+            <span>${lightActive ? "☀️" : "🌙"}</span>
+            <b>${lightActive ? "Dia Vivo" : "Noite Foco"}</b>
+            <small>trocar tema</small>
+          </button>
 
-          <div class="lockCard">
-            <h3 class="lockTitle">${lightActive ? "Dia claro, estudo leve" : "Noite suave para olhos cansados"}</h3>
-            <p class="lockText">
-              Use claro para energia durante o dia e escuro para estudar depois do trabalho ou no turno da noite.
-            </p>
-          </div>
+          <button class="settingsToggleCard" type="button" data-action="toggleSound">
+            <span>${soundOn ? "🔊" : "🔇"}</span>
+            <b>${soundOn ? "Som ligado" : "Som desligado"}</b>
+            <small>feedback leve</small>
+          </button>
 
-          <button class="btn btn--ok btn--full" data-action="toggleTheme">
-            ${lightActive ? "🌙 ativar modo escuro" : "☀️ ativar modo claro"}
+          <button class="settingsToggleCard" type="button" data-action="toggleVibe">
+            <span>${vibeOn ? "📳" : "📴"}</span>
+            <b>${vibeOn ? "Vibração ligada" : "Vibração desligada"}</b>
+            <small>toque tátil</small>
           </button>
         </div>
+      </section>
 
-        <div class="sheet stack">
-          <div class="small">volume do som</div>
-          <input id="vol" type="range" min="0" max="1" step="0.05" value="${STATE.prefs.audio.volume ?? 0.35}" />
-          <div class="small">O som é leve e só toca depois do primeiro toque.</div>
-        </div>
+      <details class="card settingsDetails" open>
+        <summary>
+          <span>Estudo diário</span>
+          <b>${STATE.goals.dailyMinutes} min • ${STATE.goals.dailyCycles} ciclo</b>
+        </summary>
 
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">meta diária</div>
-            <div class="badge">${STATE.goals.dailyMinutes} min • ${STATE.goals.dailyCycles} ciclo</div>
+        <div class="settingsDetailsBody">
+          <div class="settingsRangeBox">
+            <div class="settingsRangeHead">
+              <span>volume do som</span>
+              <b>${Math.round((STATE.prefs.audio.volume ?? 0.35) * 100)}%</b>
+            </div>
+            <input id="vol" type="range" min="0" max="1" step="0.05" value="${STATE.prefs.audio.volume ?? 0.35}" />
+            <p class="small">O som é discreto e só toca depois do primeiro toque.</p>
           </div>
 
-          <div class="small">minutos por dia</div>
-          <input id="goalMin" type="range" min="3" max="15" step="1" value="${STATE.goals.dailyMinutes}" />
-          <div class="small" id="goalMinLbl">${STATE.goals.dailyMinutes} min</div>
+          <div class="settingsRangeBox">
+            <div class="settingsRangeHead">
+              <span>minutos por dia</span>
+              <b id="goalMinLbl">${STATE.goals.dailyMinutes} min</b>
+            </div>
+            <input id="goalMin" type="range" min="3" max="15" step="1" value="${STATE.goals.dailyMinutes}" />
+          </div>
 
-          <div class="small">ciclos por dia</div>
-          <input id="goalCycles" type="range" min="1" max="5" step="1" value="${STATE.goals.dailyCycles}" />
-          <div class="small" id="goalCyclesLbl">${STATE.goals.dailyCycles} ciclo(s)</div>
+          <div class="settingsRangeBox">
+            <div class="settingsRangeHead">
+              <span>ciclos por dia</span>
+              <b id="goalCyclesLbl">${STATE.goals.dailyCycles} ciclo(s)</b>
+            </div>
+            <input id="goalCycles" type="range" min="1" max="5" step="1" value="${STATE.goals.dailyCycles}" />
+          </div>
         </div>
+      </details>
 
-        ${renderLaunchChecklistBox(true)}
-        ${renderLegalLinksBox(true)}
+      <details class="card settingsDetails">
+        <summary>
+          <span>Informações do app</span>
+          <b>privacidade • termos • publicação</b>
+        </summary>
 
-        <div class="sep"></div>
-
-        <div class="grid2">
-          <button class="btn btn--ghost btn--full" data-nav="#/tutorial">tutorial</button>
-          <button class="btn btn--ghost btn--full" data-nav="#/premium">premium</button>
+        <div class="settingsDetailsBody">
+          <div class="settingsMiniGrid">
+            <button class="btn btn--ghost btn--full" data-nav="#/about">sobre</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/privacy">privacidade</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/terms">termos</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/launch-checklist">checklist</button>
+          </div>
+          <button class="btn btn--muted btn--full" data-nav="#/store-kit">pacote comercial</button>
         </div>
+      </details>
 
-        <button class="btn btn--muted btn--full" data-nav="#/admin">
-          área admin
-        </button>
+      <details class="card settingsDetails">
+        <summary>
+          <span>Ajuda e plano</span>
+          <b>tutorial • premium</b>
+        </summary>
 
-        <div class="sep"></div>
-        <button class="btn btn--bad btn--full" data-action="reset">resetar tudo</button>
-      </section>
+        <div class="settingsDetailsBody">
+          <div class="settingsMiniGrid">
+            <button class="btn btn--ghost btn--full" data-nav="#/tutorial">tutorial</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/premium">premium</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="card settingsDetails settingsDetails--danger">
+        <summary>
+          <span>Avançado</span>
+          <b>usar com cuidado</b>
+        </summary>
+
+        <div class="settingsDetailsBody">
+          <button class="btn btn--muted btn--full" data-nav="#/admin">área admin</button>
+          <button class="btn btn--bad btn--full" data-action="reset">resetar tudo</button>
+          <p class="small">
+            Resetar apaga frases, progresso, favoritos e ajustes deste aparelho.
+          </p>
+        </div>
+      </details>
     </div>
   `;
 }
-
-/* ---------- skills ---------- */
-const SKILL_PLAN_DAYS = 270;
-const BASE_MIN_PER_DAY = 30;
-
-const RANKS = [
-  { days: 7, name: "Bronze", vibe: "o japonês começa a ficar menos distante", icon: "🥉" },
-  { days: 30, name: "Aço", vibe: "a rotina de treino começa a criar forma", icon: "🛡️" },
-  { days: 90, name: "Ouro", vibe: "você já começa a responder com mais confiança", icon: "🥇" },
-  { days: 150, name: "Platina", vibe: "a repetição começa a virar reflexo", icon: "💠" },
-  { days: 210, name: "Diamante", vibe: "o cotidiano fica mais leve", icon: "💎" },
-  { days: 270, name: "Fluência", vibe: "o hábito virou resultado", icon: "🌸" }
-];
-
 function habitSummary() {
   const days = STATE.habit?.days || {};
   const keys = Object.keys(days).sort();
@@ -7338,6 +7551,7 @@ function render() {
   if (r === "#/privacy") return renderPrivacy();
   if (r === "#/terms") return renderTerms();
   if (r === "#/launch-checklist") return renderLaunchChecklist();
+  if (r === "#/store-kit") return renderStoreKit();
 
   nav("#/landing");
 }
