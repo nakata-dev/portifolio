@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.36
+   NIHONGO321 v8.5.38
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.36",
+  version: "8.5.38",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -145,6 +145,245 @@ function downloadTextFile(filename, text, mime = "application/json") {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
+
+
+function backupTopicNameById(topicId) {
+  const topic = (STATE.bank?.topics || []).find(t => t.id === topicId);
+  return topic?.name || "Frases compartilhadas";
+}
+
+function safeShareLineValue(value = "") {
+  return String(value ?? "")
+    .replace(/\r?\n/g, "\\n")
+    .trim();
+}
+
+function buildSimpleShareTextPack() {
+  ensurePhrasesHaveValidTopic();
+
+  const phrases = (STATE.bank?.phrases || []).filter(p => String(p?.jp || "").trim() && String(p?.pt || "").trim());
+  const lines = [
+    "NIHONGO321_SHARE_V1",
+    `APP: ${BRAND.name}`,
+    `VERSAO: ${BRAND.version}`,
+    `DATA: ${new Date().toISOString()}`,
+    `TOTAL_FRASES: ${phrases.length}`,
+    "",
+    "COMO USAR:",
+    "1. Copie todo este texto.",
+    "2. Abra o NIHONGO321.",
+    "3. Vá em Gerenciar / Backup.",
+    "4. Cole na área de importar.",
+    "5. Toque em importar texto.",
+    "Nada será apagado.",
+    "",
+    "INICIO_FRASES"
+  ];
+
+  for (const phrase of phrases) {
+    lines.push("");
+    lines.push("[FRASE]");
+    lines.push(`TEMA: ${safeShareLineValue(backupTopicNameById(phrase.topicId))}`);
+    lines.push(`JP: ${safeShareLineValue(phrase.jp)}`);
+    lines.push(`PT: ${safeShareLineValue(phrase.pt)}`);
+
+    if (Array.isArray(phrase.newWords) && phrase.newWords.length) {
+      const words = phrase.newWords
+        .map(w => `${safeShareLineValue(w.jp)}=${safeShareLineValue(w.pt)}`)
+        .filter(x => x !== "=")
+        .join(" | ");
+      if (words) lines.push(`PALAVRAS: ${words}`);
+    }
+  }
+
+  lines.push("");
+  lines.push("FIM_FRASES");
+  lines.push("FIM_NIHONGO321_SHARE_V1");
+
+  return {
+    text: lines.join("\n"),
+    count: phrases.length
+  };
+}
+
+function buildSimpleJsonPack() {
+  ensurePhrasesHaveValidTopic();
+
+  const phrases = (STATE.bank?.phrases || [])
+    .filter(p => String(p?.jp || "").trim() && String(p?.pt || "").trim())
+    .map(p => ({
+      id: p.id,
+      jp: p.jp,
+      pt: p.pt,
+      newWords: Array.isArray(p.newWords) ? p.newWords : [],
+      topicId: p.topicId || "topic_default",
+      createdAt: p.createdAt || now(),
+      updatedAt: p.updatedAt || now()
+    }));
+
+  const usedTopicIds = new Set(phrases.map(p => p.topicId));
+  const topics = (STATE.bank?.topics || [])
+    .filter(t => usedTopicIds.has(t.id))
+    .map(t => ({
+      id: t.id,
+      name: t.name,
+      color: t.color || "tBlue",
+      createdAt: t.createdAt || now(),
+      updatedAt: t.updatedAt || now()
+    }));
+
+  return {
+    schema: "nihongo321_content_pack_v2",
+    exportKind: "incremental_content_pack",
+    appName: BRAND.name,
+    appVersion: BRAND.version,
+    exportedAt: new Date().toISOString(),
+    mergeMode: "add_or_merge_without_erasing_local_content",
+    bank: { topics, phrases },
+    progress: {},
+    favorites: { phraseIds: [] },
+    stats: { topics: topics.length, phrases: phrases.length }
+  };
+}
+
+async function copyTextUniversal(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch { }
+
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "0";
+    textarea.setAttribute("readonly", "readonly");
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+    const ok = document.execCommand("copy");
+    textarea.remove();
+    return !!ok;
+  } catch {
+    return false;
+  }
+}
+
+async function handleBackupButtonAction(act) {
+  const msg = $("#backupMsg");
+  const box = $("#importBox");
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+
+  try {
+    const pack = buildSimpleShareTextPack();
+    const textPack = pack.text;
+
+    if (!pack.count) {
+      if (msg) msg.textContent = "não há frases para compartilhar ainda.";
+      toast("sem frases para compartilhar");
+      beep("tuk");
+      return;
+    }
+
+    if (act === "shareTextPack") {
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: "Pacote de frases NIHONGO321",
+            text: textPack
+          });
+          if (msg) msg.textContent = `compartilhamento aberto com ${pack.count} frase(s).`;
+          toast("compartilhamento aberto");
+          beep("ding");
+          return;
+        }
+      } catch {
+        /* segue para cópia */
+      }
+
+      const copied = await copyTextUniversal(textPack);
+      if (copied) {
+        if (msg) msg.textContent = "WhatsApp/LINE não abriu. Copiei o pacote; agora cole na conversa.";
+        toast("pacote copiado");
+        beep("ding");
+        return;
+      }
+
+      if (box) {
+        box.value = textPack;
+        box.focus();
+        box.select();
+      }
+      if (msg) msg.textContent = "não consegui abrir nem copiar. O pacote está na caixa abaixo: selecione tudo e envie.";
+      toast("copie manualmente");
+      beep("tuk");
+      return;
+    }
+
+    if (act === "exportCopy") {
+      const copied = await copyTextUniversal(textPack);
+      if (copied) {
+        if (msg) msg.textContent = `texto copiado com ${pack.count} frase(s).`;
+        toast("texto copiado");
+        beep("ding");
+        return;
+      }
+
+      if (box) {
+        box.value = textPack;
+        box.focus();
+        box.select();
+      }
+      if (msg) msg.textContent = "não consegui copiar automaticamente. O pacote está na caixa abaixo.";
+      toast("copie manualmente");
+      beep("tuk");
+      return;
+    }
+
+    if (act === "exportTxtFile") {
+      downloadTextFile(`nihongo321-pacote-whatsapp-line-${y}-${m}-${dd}.txt`, textPack, "text/plain;charset=utf-8");
+      if (msg) msg.textContent = `arquivo .txt baixado com ${pack.count} frase(s).`;
+      toast("arquivo .txt baixado");
+      beep("ding");
+      return;
+    }
+
+    if (act === "exportFile") {
+      const json = buildSimpleJsonPack();
+      downloadTextFile(`nihongo321-pacote-frases-${y}-${m}-${dd}.json`, JSON.stringify(json, null, 2), "application/json;charset=utf-8");
+      if (msg) msg.textContent = `arquivo .json baixado com ${json.stats.phrases} frase(s).`;
+      toast("arquivo .json baixado");
+      beep("ding");
+      return;
+    }
+  } catch (err) {
+    console.error("NIHONGO321 backup action error:", err);
+    if (msg) msg.textContent = "ocorreu um erro no compartilhamento. Tente copiar texto ou baixar .txt.";
+    toast("erro no backup");
+    beep("tuk");
+  }
+}
+
+
+try {
+  window.NIHONGO321_BACKUP_ACTION = function(actionName) {
+    try {
+      handleBackupButtonAction(actionName);
+    } catch (err) {
+      console.error("NIHONGO321 backup direct action error:", err);
+      const msg = document.querySelector("#backupMsg");
+      if (msg) msg.textContent = "erro ao executar o backup. Tente recarregar a página e tocar novamente.";
+    }
+  };
+} catch { }
+
 
 function normalizeName(s) {
   return String(s || "").trim().replace(/\s+/g, " ").slice(0, 50);
@@ -6701,10 +6940,10 @@ function renderBackup() {
         <div class="sheet stack backupShareCard">
           <div class="badge">compartilhar frases</div>
           <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="shareTextPack">WhatsApp / LINE</button>
-            <button class="btn btn--ok btn--full" data-action="exportCopy">copiar texto</button>
-            <button class="btn btn--full" data-action="exportTxtFile">baixar .txt</button>
-            <button class="btn btn--muted btn--full" data-action="exportFile">baixar .json</button>
+            <button class="btn btn--ok btn--full" type="button" data-backup-action="shareTextPack" data-action="shareTextPack" onclick="window.NIHONGO321_BACKUP_ACTION && window.NIHONGO321_BACKUP_ACTION('shareTextPack')">WhatsApp / LINE</button>
+            <button class="btn btn--ok btn--full" type="button" data-backup-action="exportCopy" data-action="exportCopy" onclick="window.NIHONGO321_BACKUP_ACTION && window.NIHONGO321_BACKUP_ACTION('exportCopy')">copiar texto</button>
+            <button class="btn btn--full" type="button" data-backup-action="exportTxtFile" data-action="exportTxtFile" onclick="window.NIHONGO321_BACKUP_ACTION && window.NIHONGO321_BACKUP_ACTION('exportTxtFile')">baixar .txt</button>
+            <button class="btn btn--muted btn--full" type="button" data-backup-action="exportFile" data-action="exportFile" onclick="window.NIHONGO321_BACKUP_ACTION && window.NIHONGO321_BACKUP_ACTION('exportFile')">baixar .json</button>
           </div>
           <div class="small">Use WhatsApp/LINE ou copie o texto do pacote. Ao importar no celular de outra pessoa, as frases entram como acréscimo e nada é apagado.</div>
         </div>
@@ -7149,6 +7388,25 @@ function hookBackTopScroll() {
 }
 
 /* ---------- click delegation ---------- */
+
+/* ---------- NIHONGO321 backup capture listener 8.5.38 ---------- */
+try {
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest("[data-backup-action]");
+    if (!btn) return;
+
+    const actionName = btn.dataset.backupAction;
+    if (!actionName) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (window.NIHONGO321_BACKUP_ACTION) {
+      window.NIHONGO321_BACKUP_ACTION(actionName);
+    }
+  }, true);
+} catch { }
+
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -7159,6 +7417,12 @@ document.addEventListener("click", (e) => {
   }
 
   const act = btn.dataset.action;
+
+  if (act === "shareTextPack" || act === "exportCopy" || act === "exportTxtFile" || act === "exportFile") {
+    unlockAudio();
+    handleBackupButtonAction(act);
+    return;
+  }
 
   if (act === "toggleTheme" || btn.id === "hudTheme") {
     unlockAudio();

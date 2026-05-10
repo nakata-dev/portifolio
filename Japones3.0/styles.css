@@ -7707,3 +7707,7 @@ html[data-theme="light"] #view105x .phraseModeXL .phraseTextPanel{
 }
 
 /* NIHONGO321 8.5.36 — corrige funções reais do botão WhatsApp/LINE e importação por texto/.txt. */
+
+/* NIHONGO321 8.5.37 — corrige clique real dos botões de backup/WhatsApp/LINE. */
+
+/* NIHONGO321 8.5.38 — backup com ação direta, listener em captura e onclick de fallback. */
