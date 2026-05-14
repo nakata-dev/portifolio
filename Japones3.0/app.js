@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.52
+   NIHONGO321 v8.5.55
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.52",
+  version: "8.5.55",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -64,7 +64,13 @@ const PREMIUM_TOPIC_IDS = new Set([
   "topic_cinema",
   "topic_department",
   "topic_trip",
-  "topic_qa"
+  "topic_qa",
+  "topic_hospital",
+  "topic_housing",
+  "topic_bills",
+  "topic_bank",
+  "topic_phone",
+  "topic_conversation"
 ]);
 
 const DAILY_GOAL_DEFAULTS = {
@@ -4879,8 +4885,8 @@ function renderScreenshotGuide() {
 
 function renderLanding() {
   APP.innerHTML = `
-    <div class="stack">
-      <section class="card heroCard stack heroCard--landing">
+    <div class="stack landingLeanPage">
+      <section class="card heroCard stack heroCard--landing heroCard--lean">
         <div class="badge heroBadgeCenter">${escapeHTML(BRAND.tagline)}</div>
 
         <div class="heroBannerSlot heroBannerSlot--ready" role="img" aria-label="Trabalhador dekassegui indo de bicicleta para a fábrica no amanhecer do Japão.">
@@ -4897,87 +4903,62 @@ function renderLanding() {
         </div>
 
         <h1 class="heroTitle">
-          Japonês útil para quem vive a rotina real do Japão.
+          Japonês útil para a rotina real do Japão.
         </h1>
 
         <p class="heroLead">
-          Estude no seu ritmo, treine frases práticas e volte amanhã com mais confiança para viver melhor no Japão.
+          Treine frases práticas, mesmo cansado, em poucos minutos por dia.
         </p>
 
         <div class="heroActions">
           <button class="bigBtn" data-nav="#/home">começar treino</button>
           <button class="btn btn--ghost btn--full" data-nav="#/premium">comparar planos</button>
         </div>
-
-        <div class="heroMiniStats">
-          <button class="statCard" type="button" data-action="startQuickTraining">
-            <div class="statVal">2 min</div>
-            <div class="statLbl">treino rápido para dias cansativos</div>
-          </button>
-
-          <button class="statCard" type="button" data-nav="#/105x">
-            <div class="statVal">105x</div>
-            <div class="statLbl">fixação guiada para criar memória</div>
-          </button>
-
-          <button class="statCard" type="button" data-nav="#/premium">
-            <div class="statVal">Sensei IA</div>
-            <div class="statLbl">premium para dúvidas, gramática e vida real</div>
-          </button>
-        </div>
       </section>
 
-      <section class="card stack">
+      <section class="card landingPillars">
         <div class="row row--between">
-          <div class="badge">feito para dekasseguis</div>
-          <div class="badge">pouco tempo</div>
+          <div class="badge">por que funciona</div>
+          <div class="badge">sem aula pesada</div>
         </div>
 
-        <h2 class="h2">Para estudar mesmo depois de um dia pesado.</h2>
-
-        <p class="p">
-          O app foi pensado para brasileiros no Japão que trabalham muito, chegam cansados e precisam de japonês prático para viver melhor.
-        </p>
-
-        <div class="valueGrid">
-          <button class="valueCard" type="button" data-action="startQuickTraining">
-            <div class="valueIcon">⚡</div>
-            <h3 class="valueTitle">2 minutos possíveis</h3>
-            <p class="valueText">Toque aqui para começar sem escolher nada.</p>
+        <div class="landingPillarGrid">
+          <button class="landingPillar" type="button" data-action="startQuickTraining">
+            <span>⚡</span>
+            <b>2 minutos</b>
+            <small>para dias cansativos</small>
           </button>
 
-          <button class="valueCard" type="button" data-nav="#/105x">
-            <div class="valueIcon">🧠</div>
-            <h3 class="valueTitle">Cria memória</h3>
-            <p class="valueText">Abra o 105x e repita até a frase ficar familiar.</p>
+          <button class="landingPillar" type="button" data-nav="#/105x">
+            <span>105x</span>
+            <b>Repetição guiada</b>
+            <small>ouça, leia e repita</small>
           </button>
 
-          <button class="valueCard" type="button" data-nav="#/home">
-            <div class="valueIcon">🔁</div>
-            <h3 class="valueTitle">Revisa por você</h3>
-            <p class="valueText">Entre no início e siga a revisão recomendada.</p>
-          </button>
-
-          <button class="valueCard" type="button" data-nav="#/premium">
-            <div class="valueIcon">文</div>
-            <h3 class="valueTitle">Professor de bolso</h3>
-            <p class="valueText">Veja como o Sensei IA transforma dúvidas em treino.</p>
+          <button class="landingPillar" type="button" data-nav="#/sensei">
+            <span>先生</span>
+            <b>Sensei IA</b>
+            <small>frases para sua situação</small>
           </button>
         </div>
       </section>
 
-      ${renderPlanCompareBox()}
-
-      <section class="ctaBand stack">
-        <div class="badge">primeiro treino</div>
-        <h2 class="h2">Abra o app, toque no treino rápido e mantenha o japonês vivo.</h2>
-        <p class="p">A versão grátis já ajuda hoje. O premium aprofunda com mais situações reais, gramática prática e Sensei IA.</p>
-
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/home">entrar no app</button>
-          <button class="btn btn--full" data-nav="#/premium">comparar planos</button>
+      <section class="card landingSimpleCta">
+        <div class="landingSimpleCopy">
+          <div class="badge">comece grátis</div>
+          <h2 class="h2">Abra o treino e mantenha o japonês vivo.</h2>
+          <p class="p">
+            O Premium aprofunda com mais situações reais, gramática prática e Sensei IA.
+          </p>
         </div>
 
+        <div class="landingSimpleActions">
+          <button class="primaryAction" data-nav="#/home">entrar no app</button>
+          <button class="btn btn--muted btn--full" data-nav="#/premium">ver Premium</button>
+        </div>
+      </section>
+
+      <section class="card landingStoreLean">
         <div class="storeGrid storeGrid--safe">
           <a class="storeBtn" href="${escapeHTML(SALES.playStoreUrl)}" target="_blank" rel="noopener noreferrer">
             <span class="storeGlyph">GP</span>
@@ -4995,8 +4976,6 @@ function renderLanding() {
     </div>
   `;
 }
-
-/* ---------- premium ---------- */
 function renderPremium() {
   const checkoutReady = isCheckoutReady();
   const monthly = SALES.monthlyPrice || "¥980";
@@ -6206,16 +6185,19 @@ function renderSensei() {
 
       <div id="senseiOutput" class="stack"></div>
 
-      <section class="card stack senseiHistoryCard">
-        <div class="row row--between">
-          <div>
-            <div class="badge">histórico</div>
-            <h2 class="h2 senseiSectionTitle">Últimos materiais.</h2>
-          </div>
-          <div class="badge">memória local</div>
+      <details class="card senseiCompactPanel senseiHistoryPanel">
+        <summary>
+          <span>Histórico</span>
+          <b>materiais salvos</b>
+        </summary>
+
+        <div class="senseiCompactBody">
+          <p class="small">
+            Abra apenas quando quiser consultar materiais antigos.
+          </p>
+          ${renderSenseiHistory()}
         </div>
-        ${renderSenseiHistory()}
-      </section>
+      </details>
     </div>
   `;
 }

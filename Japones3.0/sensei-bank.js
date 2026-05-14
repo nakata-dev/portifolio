@@ -4592,7 +4592,3139 @@
   const bank = window.NIHONGO321_SENSEI_BANK;
   if (!bank || typeof bank !== "object") return;
 
+  const NIHONGO321_8555_STRONG_CONTENT = [
+    {
+      "id": "topic_essential_japan",
+      "name": "Pack Essencial Japão",
+      "color": "tBlue",
+      "level": "iniciante",
+      "description": "Frases grátis de sobrevivência para começar com valor real.",
+      "phrases": [
+        {
+          "id": "n8555_free_001",
+          "jp": "すみません、よく わかりません。",
+          "pt": "Desculpe, não entendi bem.",
+          "newWords": [
+            {
+              "jp": "すみません",
+              "pt": "desculpe / com licença"
+            },
+            {
+              "jp": "わかりません",
+              "pt": "não entendo"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_002",
+          "jp": "もう 少{すこ}し ゆっくり お願{ねが}いします。",
+          "pt": "Um pouco mais devagar, por favor.",
+          "newWords": [
+            {
+              "jp": "少{すこ}し",
+              "pt": "um pouco"
+            },
+            {
+              "jp": "ゆっくり",
+              "pt": "devagar"
+            },
+            {
+              "jp": "お願{ねが}いします",
+              "pt": "por favor"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_003",
+          "jp": "これ を 書{か}いて もらえますか。",
+          "pt": "Você poderia escrever isto para mim?",
+          "newWords": [
+            {
+              "jp": "書{か}いて",
+              "pt": "escrever"
+            },
+            {
+              "jp": "もらえますか",
+              "pt": "poderia fazer para mim?"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_004",
+          "jp": "ここ に 名前{なまえ} を 書{か}けば いいですか。",
+          "pt": "É só escrever meu nome aqui?",
+          "newWords": [
+            {
+              "jp": "ここ",
+              "pt": "aqui"
+            },
+            {
+              "jp": "名前{なまえ}",
+              "pt": "nome"
+            },
+            {
+              "jp": "書{か}けば",
+              "pt": "se escrever"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_005",
+          "jp": "これ は どこ で 払{はら}いますか。",
+          "pt": "Onde eu pago isto?",
+          "newWords": [
+            {
+              "jp": "どこ",
+              "pt": "onde"
+            },
+            {
+              "jp": "払{はら}います",
+              "pt": "pagar"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_006",
+          "jp": "レシート を ください。",
+          "pt": "Por favor, me dê o recibo.",
+          "newWords": [
+            {
+              "jp": "レシート",
+              "pt": "recibo"
+            },
+            {
+              "jp": "ください",
+              "pt": "por favor / me dê"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_007",
+          "jp": "袋{ふくろ} は いりません。",
+          "pt": "Não preciso de sacola.",
+          "newWords": [
+            {
+              "jp": "袋{ふくろ}",
+              "pt": "sacola"
+            },
+            {
+              "jp": "いりません",
+              "pt": "não preciso"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_008",
+          "jp": "カード で 払{はら}えますか。",
+          "pt": "Posso pagar com cartão?",
+          "newWords": [
+            {
+              "jp": "カード",
+              "pt": "cartão"
+            },
+            {
+              "jp": "払{はら}えますか",
+              "pt": "posso pagar?"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_009",
+          "jp": "現金{げんきん} だけ ですか。",
+          "pt": "É só em dinheiro?",
+          "newWords": [
+            {
+              "jp": "現金{げんきん}",
+              "pt": "dinheiro em espécie"
+            },
+            {
+              "jp": "だけ",
+              "pt": "somente"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_010",
+          "jp": "これ は 使{つか}えますか。",
+          "pt": "Posso usar isto?",
+          "newWords": [
+            {
+              "jp": "これ",
+              "pt": "isto"
+            },
+            {
+              "jp": "使{つか}えますか",
+              "pt": "pode usar?"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_011",
+          "jp": "駅{えき} は どちら ですか。",
+          "pt": "Para que lado fica a estação?",
+          "newWords": [
+            {
+              "jp": "駅{えき}",
+              "pt": "estação"
+            },
+            {
+              "jp": "どちら",
+              "pt": "qual lado / direção"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_012",
+          "jp": "この バス は 駅{えき} へ 行{い}きますか。",
+          "pt": "Este ônibus vai para a estação?",
+          "newWords": [
+            {
+              "jp": "バス",
+              "pt": "ônibus"
+            },
+            {
+              "jp": "駅{えき}",
+              "pt": "estação"
+            },
+            {
+              "jp": "行{い}きますか",
+              "pt": "vai?"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_013",
+          "jp": "少{すこ}し 待{ま}って ください。",
+          "pt": "Por favor, espere um pouco.",
+          "newWords": [
+            {
+              "jp": "少{すこ}し",
+              "pt": "um pouco"
+            },
+            {
+              "jp": "待{ま}って",
+              "pt": "esperar"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_014",
+          "jp": "あと で もう 一度{いちど} 来{き}ます。",
+          "pt": "Eu volto mais uma vez depois.",
+          "newWords": [
+            {
+              "jp": "あと で",
+              "pt": "depois"
+            },
+            {
+              "jp": "もう 一度{いちど}",
+              "pt": "mais uma vez"
+            },
+            {
+              "jp": "来{き}ます",
+              "pt": "venho"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_015",
+          "jp": "今{いま}、時間{じかん} が ありません。",
+          "pt": "Agora não tenho tempo.",
+          "newWords": [
+            {
+              "jp": "今{いま}",
+              "pt": "agora"
+            },
+            {
+              "jp": "時間{じかん}",
+              "pt": "tempo"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_016",
+          "jp": "電話番号{でんわばんごう} を 教{おし}えて ください。",
+          "pt": "Por favor, me diga o número de telefone.",
+          "newWords": [
+            {
+              "jp": "電話番号{でんわばんごう}",
+              "pt": "número de telefone"
+            },
+            {
+              "jp": "教{おし}えて",
+              "pt": "me diga / ensine"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_017",
+          "jp": "住所{じゅうしょ} は ここ です。",
+          "pt": "Meu endereço é este aqui.",
+          "newWords": [
+            {
+              "jp": "住所{じゅうしょ}",
+              "pt": "endereço"
+            },
+            {
+              "jp": "ここ",
+              "pt": "aqui"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_018",
+          "jp": "これ を 見{み}て ください。",
+          "pt": "Por favor, veja isto.",
+          "newWords": [
+            {
+              "jp": "見{み}て",
+              "pt": "ver / olhar"
+            },
+            {
+              "jp": "ください",
+              "pt": "por favor"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_019",
+          "jp": "ちょっと 困{こま}って います。",
+          "pt": "Estou com um pouco de dificuldade.",
+          "newWords": [
+            {
+              "jp": "困{こま}って います",
+              "pt": "estou com dificuldade / problema"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_020",
+          "jp": "助{たす}けて もらえますか。",
+          "pt": "Você poderia me ajudar?",
+          "newWords": [
+            {
+              "jp": "助{たす}けて",
+              "pt": "ajudar"
+            },
+            {
+              "jp": "もらえますか",
+              "pt": "poderia fazer para mim?"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_021",
+          "jp": "気分{きぶん} が 悪{わる}いです。",
+          "pt": "Estou me sentindo mal.",
+          "newWords": [
+            {
+              "jp": "気分{きぶん}",
+              "pt": "sensação / estado"
+            },
+            {
+              "jp": "悪{わる}い",
+              "pt": "ruim"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_022",
+          "jp": "病院{びょういん} に 行{い}きたいです。",
+          "pt": "Quero ir ao hospital.",
+          "newWords": [
+            {
+              "jp": "病院{びょういん}",
+              "pt": "hospital"
+            },
+            {
+              "jp": "行{い}きたい",
+              "pt": "quero ir"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_023",
+          "jp": "今日{きょう} は 休{やす}み ですか。",
+          "pt": "Hoje é folga?",
+          "newWords": [
+            {
+              "jp": "今日{きょう}",
+              "pt": "hoje"
+            },
+            {
+              "jp": "休{やす}み",
+              "pt": "folga / descanso"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_024",
+          "jp": "明日{あした} は 何時{なんじ} から ですか。",
+          "pt": "Amanhã começa que horas?",
+          "newWords": [
+            {
+              "jp": "明日{あした}",
+              "pt": "amanhã"
+            },
+            {
+              "jp": "何時{なんじ}",
+              "pt": "que horas"
+            },
+            {
+              "jp": "から",
+              "pt": "a partir de"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_025",
+          "jp": "これ で 合{あ}って いますか。",
+          "pt": "Isto está certo assim?",
+          "newWords": [
+            {
+              "jp": "合{あ}って いますか",
+              "pt": "está correto?"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_026",
+          "jp": "もう 一度{いちど} 確認{かくにん} します。",
+          "pt": "Vou confirmar mais uma vez.",
+          "newWords": [
+            {
+              "jp": "確認{かくにん}",
+              "pt": "confirmação"
+            },
+            {
+              "jp": "もう 一度{いちど}",
+              "pt": "mais uma vez"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_027",
+          "jp": "すぐ 戻{もど}ります。",
+          "pt": "Volto já.",
+          "newWords": [
+            {
+              "jp": "すぐ",
+              "pt": "logo / imediatamente"
+            },
+            {
+              "jp": "戻{もど}ります",
+              "pt": "volto"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_028",
+          "jp": "少{すこ}し 遅{おく}れます。",
+          "pt": "Vou me atrasar um pouco.",
+          "newWords": [
+            {
+              "jp": "少{すこ}し",
+              "pt": "um pouco"
+            },
+            {
+              "jp": "遅{おく}れます",
+              "pt": "vou atrasar"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_029",
+          "jp": "ありがとうございます。助{たす}かりました。",
+          "pt": "Muito obrigado. Me ajudou muito.",
+          "newWords": [
+            {
+              "jp": "ありがとうございます",
+              "pt": "muito obrigado"
+            },
+            {
+              "jp": "助{たす}かりました",
+              "pt": "me ajudou / salvou"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        },
+        {
+          "id": "n8555_free_030",
+          "jp": "また 連絡{れんらく} します。",
+          "pt": "Entro em contato novamente.",
+          "newWords": [
+            {
+              "jp": "また",
+              "pt": "novamente"
+            },
+            {
+              "jp": "連絡{れんらく}",
+              "pt": "contato"
+            }
+          ],
+          "level": "iniciante",
+          "unlock": "free"
+        }
+      ]
+    },
+    {
+      "id": "topic_factory",
+      "name": "Fábrica / Chefe — Premium",
+      "color": "tOrange",
+      "icon": "🏭",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_factory_001",
+          "jp": "この 作業{さぎょう} の 手順{てじゅん} を もう 一度{いちど} 確認{かくにん} しても いいですか。",
+          "pt": "Posso confirmar mais uma vez o procedimento desta tarefa?",
+          "newWords": [
+            {
+              "jp": "作業{さぎょう}",
+              "pt": "tarefa"
+            },
+            {
+              "jp": "手順{てじゅん}",
+              "pt": "procedimento"
+            },
+            {
+              "jp": "確認{かくにん}",
+              "pt": "confirmação"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_002",
+          "jp": "この 部品{ぶひん} は どこ に 置{お}けば いいですか。",
+          "pt": "Onde devo colocar esta peça?",
+          "newWords": [
+            {
+              "jp": "部品{ぶひん}",
+              "pt": "peça"
+            },
+            {
+              "jp": "置{お}けば",
+              "pt": "se colocar / devo colocar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_003",
+          "jp": "機械{きかい} の 音{おと} が いつも と 違{ちが}います。",
+          "pt": "O som da máquina está diferente do normal.",
+          "newWords": [
+            {
+              "jp": "機械{きかい}",
+              "pt": "máquina"
+            },
+            {
+              "jp": "音{おと}",
+              "pt": "som"
+            },
+            {
+              "jp": "違{ちが}います",
+              "pt": "está diferente"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_004",
+          "jp": "この まま 続{つづ}けても 大丈夫{だいじょうぶ} ですか。",
+          "pt": "Posso continuar assim mesmo?",
+          "newWords": [
+            {
+              "jp": "この まま",
+              "pt": "assim mesmo"
+            },
+            {
+              "jp": "続{つづ}けても",
+              "pt": "mesmo continuando"
+            },
+            {
+              "jp": "大丈夫{だいじょうぶ}",
+              "pt": "tudo bem"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_005",
+          "jp": "すみません、数{かず} が 合{あ}って いない かもしれません。",
+          "pt": "Desculpe, talvez a quantidade não esteja batendo.",
+          "newWords": [
+            {
+              "jp": "数{かず}",
+              "pt": "quantidade"
+            },
+            {
+              "jp": "合{あ}って いない",
+              "pt": "não está batendo"
+            },
+            {
+              "jp": "かもしれません",
+              "pt": "talvez"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_006",
+          "jp": "この 指示{しじ} は 先{さき}ほど と 同{おな}じ ですか。",
+          "pt": "Esta instrução é igual à de agora há pouco?",
+          "newWords": [
+            {
+              "jp": "指示{しじ}",
+              "pt": "instrução"
+            },
+            {
+              "jp": "先{さき}ほど",
+              "pt": "agora há pouco"
+            },
+            {
+              "jp": "同{おな}じ",
+              "pt": "igual"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_007",
+          "jp": "危{あぶ}ない ので、先{さき}に 確認{かくにん} したいです。",
+          "pt": "Como é perigoso, quero confirmar antes.",
+          "newWords": [
+            {
+              "jp": "危{あぶ}ない",
+              "pt": "perigoso"
+            },
+            {
+              "jp": "先{さき}に",
+              "pt": "antes"
+            },
+            {
+              "jp": "確認{かくにん}",
+              "pt": "confirmação"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_008",
+          "jp": "今日{きょう} の 残業{ざんぎょう} は 何時{なんじ} まで ですか。",
+          "pt": "Até que horas vai a hora extra de hoje?",
+          "newWords": [
+            {
+              "jp": "残業{ざんぎょう}",
+              "pt": "hora extra"
+            },
+            {
+              "jp": "何時{なんじ} まで",
+              "pt": "até que horas"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_009",
+          "jp": "体調{たいちょう} が 悪{わる}い ので、リーダー に 伝{つた}えても いいですか。",
+          "pt": "Como estou passando mal, posso avisar o líder?",
+          "newWords": [
+            {
+              "jp": "体調{たいちょう}",
+              "pt": "condição física"
+            },
+            {
+              "jp": "伝{つた}えて",
+              "pt": "avisar / transmitir"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_010",
+          "jp": "次{つぎ} は 何{なに} を すれば いいですか。",
+          "pt": "O que devo fazer depois?",
+          "newWords": [
+            {
+              "jp": "次{つぎ}",
+              "pt": "próximo"
+            },
+            {
+              "jp": "何{なに}",
+              "pt": "o que"
+            },
+            {
+              "jp": "すれば いい",
+              "pt": "devo fazer"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_011",
+          "jp": "この 不良品{ふりょうひん} は どこ に 出{だ}しますか。",
+          "pt": "Onde coloco este produto defeituoso?",
+          "newWords": [
+            {
+              "jp": "不良品{ふりょうひん}",
+              "pt": "produto defeituoso"
+            },
+            {
+              "jp": "出{だ}します",
+              "pt": "colocar / enviar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_factory_012",
+          "jp": "安全{あんぜん} の ため、手袋{てぶくろ} を 使{つか}っても いいですか。",
+          "pt": "Por segurança, posso usar luvas?",
+          "newWords": [
+            {
+              "jp": "安全{あんぜん}",
+              "pt": "segurança"
+            },
+            {
+              "jp": "手袋{てぶくろ}",
+              "pt": "luvas"
+            },
+            {
+              "jp": "使{つか}っても いい",
+              "pt": "posso usar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_hospital",
+      "name": "Hospital / Saúde — Premium",
+      "color": "tPink",
+      "icon": "🏥",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_hospital_001",
+          "jp": "いつ から 痛{いた}み が ありますか、と 聞{き}かれました。",
+          "pt": "Perguntaram desde quando tenho dor.",
+          "newWords": [
+            {
+              "jp": "いつ から",
+              "pt": "desde quando"
+            },
+            {
+              "jp": "痛{いた}み",
+              "pt": "dor"
+            },
+            {
+              "jp": "聞{き}かれました",
+              "pt": "fui perguntado"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_002",
+          "jp": "仕事{しごと} に 影響{えいきょう} が 出{で}て いる ので、診断書{しんだんしょ} が 必要{ひつよう} です。",
+          "pt": "Como está afetando meu trabalho, preciso de atestado médico.",
+          "newWords": [
+            {
+              "jp": "影響{えいきょう}",
+              "pt": "impacto"
+            },
+            {
+              "jp": "診断書{しんだんしょ}",
+              "pt": "atestado médico"
+            },
+            {
+              "jp": "必要{ひつよう}",
+              "pt": "necessário"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_003",
+          "jp": "薬{くすり} の 飲{の}み方{かた} を もう 一度{いちど} 教{おし}えて ください。",
+          "pt": "Por favor, explique novamente como tomar o remédio.",
+          "newWords": [
+            {
+              "jp": "薬{くすり}",
+              "pt": "remédio"
+            },
+            {
+              "jp": "飲{の}み方{かた}",
+              "pt": "modo de tomar"
+            },
+            {
+              "jp": "教{おし}えて",
+              "pt": "explique"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_004",
+          "jp": "この 痛{いた}み は 仕事中{しごとちゅう} に 強{つよ}く なります。",
+          "pt": "Esta dor fica mais forte durante o trabalho.",
+          "newWords": [
+            {
+              "jp": "痛{いた}み",
+              "pt": "dor"
+            },
+            {
+              "jp": "仕事中{しごとちゅう}",
+              "pt": "durante o trabalho"
+            },
+            {
+              "jp": "強{つよ}く",
+              "pt": "forte"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_005",
+          "jp": "熱{ねつ} が ある ので、今日{きょう} は 仕事{しごと} を 休{やす}みたいです。",
+          "pt": "Como estou com febre, quero faltar ao trabalho hoje.",
+          "newWords": [
+            {
+              "jp": "熱{ねつ}",
+              "pt": "febre"
+            },
+            {
+              "jp": "休{やす}みたい",
+              "pt": "quero faltar / descansar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_006",
+          "jp": "保険証{ほけんしょう} を 持{も}って きました。",
+          "pt": "Trouxe meu cartão do seguro de saúde.",
+          "newWords": [
+            {
+              "jp": "保険証{ほけんしょう}",
+              "pt": "cartão do seguro"
+            },
+            {
+              "jp": "持{も}って きました",
+              "pt": "trouxe"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_007",
+          "jp": "症状{しょうじょう} を 日本語{にほんご} で うまく 説明{せつめい} できません。",
+          "pt": "Não consigo explicar bem os sintomas em japonês.",
+          "newWords": [
+            {
+              "jp": "症状{しょうじょう}",
+              "pt": "sintomas"
+            },
+            {
+              "jp": "説明{せつめい}",
+              "pt": "explicação"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_008",
+          "jp": "この 薬{くすり} は 眠{ねむ}く なりますか。",
+          "pt": "Este remédio dá sono?",
+          "newWords": [
+            {
+              "jp": "薬{くすり}",
+              "pt": "remédio"
+            },
+            {
+              "jp": "眠{ねむ}く なります",
+              "pt": "dá sono"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_009",
+          "jp": "仕事{しごと} に 戻{もど}っても 大丈夫{だいじょうぶ} ですか。",
+          "pt": "Posso voltar ao trabalho sem problema?",
+          "newWords": [
+            {
+              "jp": "戻{もど}っても",
+              "pt": "mesmo voltando"
+            },
+            {
+              "jp": "大丈夫{だいじょうぶ}",
+              "pt": "tudo bem"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_010",
+          "jp": "通訳{つうやく} は お願{ねが}い できますか。",
+          "pt": "É possível pedir intérprete?",
+          "newWords": [
+            {
+              "jp": "通訳{つうやく}",
+              "pt": "intérprete"
+            },
+            {
+              "jp": "お願{ねが}い できますか",
+              "pt": "pode pedir?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_011",
+          "jp": "明日{あした} も 痛{いた}い 場合{ばあい} は どう すれば いいですか。",
+          "pt": "Se amanhã ainda doer, o que devo fazer?",
+          "newWords": [
+            {
+              "jp": "場合{ばあい}",
+              "pt": "caso"
+            },
+            {
+              "jp": "どう すれば いい",
+              "pt": "o que devo fazer"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_hospital_012",
+          "jp": "この 診断書{しんだんしょ} を 会社{かいしゃ} に 出{だ}せば いいですか。",
+          "pt": "É só entregar este atestado para a empresa?",
+          "newWords": [
+            {
+              "jp": "会社{かいしゃ}",
+              "pt": "empresa"
+            },
+            {
+              "jp": "出{だ}せば",
+              "pt": "se entregar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_cityhall",
+      "name": "Prefeitura / Documentos — Premium",
+      "color": "tGreen",
+      "icon": "🏢",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_cityhall_001",
+          "jp": "この 手続{てつづ}き に 必要{ひつよう} な 書類{しょるい} は 何{なん}ですか。",
+          "pt": "Quais documentos são necessários para este procedimento?",
+          "newWords": [
+            {
+              "jp": "手続{てつづ}き",
+              "pt": "procedimento"
+            },
+            {
+              "jp": "必要{ひつよう}",
+              "pt": "necessário"
+            },
+            {
+              "jp": "書類{しょるい}",
+              "pt": "documento"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_002",
+          "jp": "在留{ざいりゅう}カード の コピー は 必要{ひつよう} ですか。",
+          "pt": "Precisa de cópia do cartão de residência?",
+          "newWords": [
+            {
+              "jp": "在留{ざいりゅう}カード",
+              "pt": "cartão de residência"
+            },
+            {
+              "jp": "コピー",
+              "pt": "cópia"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_003",
+          "jp": "この 書類{しょるい} の 書{か}き方{かた} を 教{おし}えて ください。",
+          "pt": "Por favor, me explique como preencher este documento.",
+          "newWords": [
+            {
+              "jp": "書類{しょるい}",
+              "pt": "documento"
+            },
+            {
+              "jp": "書{か}き方{かた}",
+              "pt": "modo de escrever"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_004",
+          "jp": "番号札{ばんごうふだ} を 取{と}れば いいですか。",
+          "pt": "É só pegar a senha?",
+          "newWords": [
+            {
+              "jp": "番号札{ばんごうふだ}",
+              "pt": "senha / ficha"
+            },
+            {
+              "jp": "取{と}れば",
+              "pt": "se pegar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_005",
+          "jp": "どの 窓口{まどぐち} に 行{い}けば いいですか。",
+          "pt": "Em qual balcão devo ir?",
+          "newWords": [
+            {
+              "jp": "窓口{まどぐち}",
+              "pt": "balcão"
+            },
+            {
+              "jp": "行{い}けば",
+              "pt": "se eu for / devo ir"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_006",
+          "jp": "住所変更{じゅうしょへんこう} の 手続{てつづ}き を したいです。",
+          "pt": "Quero fazer o procedimento de mudança de endereço.",
+          "newWords": [
+            {
+              "jp": "住所変更{じゅうしょへんこう}",
+              "pt": "mudança de endereço"
+            },
+            {
+              "jp": "手続{てつづ}き",
+              "pt": "procedimento"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_007",
+          "jp": "この 内容{ないよう} で 合{あ}って いますか。",
+          "pt": "Este conteúdo está correto?",
+          "newWords": [
+            {
+              "jp": "内容{ないよう}",
+              "pt": "conteúdo"
+            },
+            {
+              "jp": "合{あ}って いますか",
+              "pt": "está correto?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_008",
+          "jp": "印鑑{いんかん} は 必要{ひつよう} ですか。",
+          "pt": "Precisa de carimbo pessoal?",
+          "newWords": [
+            {
+              "jp": "印鑑{いんかん}",
+              "pt": "carimbo pessoal"
+            },
+            {
+              "jp": "必要{ひつよう}",
+              "pt": "necessário"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_009",
+          "jp": "もう 一度{いちど} 簡単{かんたん} に 説明{せつめい} して いただけますか。",
+          "pt": "Poderia explicar de forma simples mais uma vez?",
+          "newWords": [
+            {
+              "jp": "簡単{かんたん}",
+              "pt": "simples"
+            },
+            {
+              "jp": "説明{せつめい}",
+              "pt": "explicação"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_010",
+          "jp": "今日中{きょうじゅう} に 終{お}わりますか。",
+          "pt": "Termina ainda hoje?",
+          "newWords": [
+            {
+              "jp": "今日中{きょうじゅう}",
+              "pt": "ainda hoje"
+            },
+            {
+              "jp": "終{お}わります",
+              "pt": "termina"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_011",
+          "jp": "後日{ごじつ} また 来{く}る 必要{ひつよう} が ありますか。",
+          "pt": "Preciso voltar outro dia?",
+          "newWords": [
+            {
+              "jp": "後日{ごじつ}",
+              "pt": "outro dia"
+            },
+            {
+              "jp": "また",
+              "pt": "novamente"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_cityhall_012",
+          "jp": "この 書類{しょるい} は 会社{かいしゃ} に 出{だ}しますか。",
+          "pt": "Entrego este documento para a empresa?",
+          "newWords": [
+            {
+              "jp": "会社{かいしゃ}",
+              "pt": "empresa"
+            },
+            {
+              "jp": "出{だ}します",
+              "pt": "entregar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_bills",
+      "name": "Contas / Cobrança — Premium",
+      "color": "tAmber",
+      "icon": "💴",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_bills_001",
+          "jp": "料金{りょうきん} について 確認{かくにん} したいです。",
+          "pt": "Gostaria de confirmar sobre a cobrança.",
+          "newWords": [
+            {
+              "jp": "料金{りょうきん}",
+              "pt": "cobrança / tarifa"
+            },
+            {
+              "jp": "確認{かくにん}",
+              "pt": "confirmação"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_002",
+          "jp": "4,000円{えん} の プラン を 選{えら}んだ つもり でした。",
+          "pt": "Eu pensei que tinha escolhido o plano de 4.000 ienes.",
+          "newWords": [
+            {
+              "jp": "プラン",
+              "pt": "plano"
+            },
+            {
+              "jp": "選{えら}んだ",
+              "pt": "escolhi"
+            },
+            {
+              "jp": "つもり",
+              "pt": "intenção"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_003",
+          "jp": "今回{こんかい} の 請求{せいきゅう} が 6,000円{えん} に なって います。",
+          "pt": "A cobrança desta vez veio 6.000 ienes.",
+          "newWords": [
+            {
+              "jp": "今回{こんかい}",
+              "pt": "desta vez"
+            },
+            {
+              "jp": "請求{せいきゅう}",
+              "pt": "cobrança"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_004",
+          "jp": "これは 合{あ}って いますか。",
+          "pt": "Isso está correto?",
+          "newWords": [
+            {
+              "jp": "これ",
+              "pt": "isso"
+            },
+            {
+              "jp": "合{あ}って いますか",
+              "pt": "está correto?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_005",
+          "jp": "次回以降{じかいいこう} の 料金{りょうきん} は どう なりますか。",
+          "pt": "Como ficam as próximas cobranças?",
+          "newWords": [
+            {
+              "jp": "次回以降{じかいいこう}",
+              "pt": "da próxima vez em diante"
+            },
+            {
+              "jp": "料金{りょうきん}",
+              "pt": "cobrança"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_006",
+          "jp": "銀行口座{ぎんこうこうざ} から 直接{ちょくせつ} 引{ひ}き落{お}とし に なりますか。",
+          "pt": "Será descontado diretamente da conta bancária?",
+          "newWords": [
+            {
+              "jp": "銀行口座{ぎんこうこうざ}",
+              "pt": "conta bancária"
+            },
+            {
+              "jp": "引{ひ}き落{お}とし",
+              "pt": "débito automático"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_007",
+          "jp": "支払期限{しはらいきげん} は いつ まで ですか。",
+          "pt": "Até quando é o prazo de pagamento?",
+          "newWords": [
+            {
+              "jp": "支払期限{しはらいきげん}",
+              "pt": "prazo de pagamento"
+            },
+            {
+              "jp": "いつ まで",
+              "pt": "até quando"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_008",
+          "jp": "コンビニ で 払{はら}う 形{かたち} ですか。",
+          "pt": "É para pagar no konbini?",
+          "newWords": [
+            {
+              "jp": "コンビニ",
+              "pt": "loja de conveniência"
+            },
+            {
+              "jp": "払{はら}う",
+              "pt": "pagar"
+            },
+            {
+              "jp": "形{かたち}",
+              "pt": "forma"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_009",
+          "jp": "明細{めいさい} を 見{み}せて もらえますか。",
+          "pt": "Você poderia me mostrar o detalhamento?",
+          "newWords": [
+            {
+              "jp": "明細{めいさい}",
+              "pt": "detalhamento"
+            },
+            {
+              "jp": "見{み}せて",
+              "pt": "mostrar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_010",
+          "jp": "二重{にじゅう} に 請求{せいきゅう} されて いませんか。",
+          "pt": "Não foi cobrado em duplicidade?",
+          "newWords": [
+            {
+              "jp": "二重{にじゅう}",
+              "pt": "duplicado"
+            },
+            {
+              "jp": "請求{せいきゅう}",
+              "pt": "cobrança"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_011",
+          "jp": "プラン を 変更{へんこう} したいです。",
+          "pt": "Quero alterar o plano.",
+          "newWords": [
+            {
+              "jp": "変更{へんこう}",
+              "pt": "alteração"
+            },
+            {
+              "jp": "したい",
+              "pt": "quero fazer"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bills_012",
+          "jp": "解約{かいやく} する 場合{ばあい}、いくら かかりますか。",
+          "pt": "Se eu cancelar, quanto custa?",
+          "newWords": [
+            {
+              "jp": "解約{かいやく}",
+              "pt": "cancelamento"
+            },
+            {
+              "jp": "場合{ばあい}",
+              "pt": "caso"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_housing",
+      "name": "Moradia / Aluguel — Premium",
+      "color": "tBlue",
+      "icon": "🏠",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_housing_001",
+          "jp": "水{みず} が 出{で}ません。",
+          "pt": "A água não sai.",
+          "newWords": [
+            {
+              "jp": "水{みず}",
+              "pt": "água"
+            },
+            {
+              "jp": "出{で}ません",
+              "pt": "não sai"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_002",
+          "jp": "お湯{ゆ} が 出{で}ない ので、確認{かくにん} して ください。",
+          "pt": "Como não sai água quente, por favor verifique.",
+          "newWords": [
+            {
+              "jp": "お湯{ゆ}",
+              "pt": "água quente"
+            },
+            {
+              "jp": "確認{かくにん}",
+              "pt": "verificação"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_003",
+          "jp": "エアコン が 動{うご}きません。",
+          "pt": "O ar-condicionado não funciona.",
+          "newWords": [
+            {
+              "jp": "エアコン",
+              "pt": "ar-condicionado"
+            },
+            {
+              "jp": "動{うご}きません",
+              "pt": "não funciona"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_004",
+          "jp": "修理{しゅうり} を お願{ねが}い できますか。",
+          "pt": "É possível pedir conserto?",
+          "newWords": [
+            {
+              "jp": "修理{しゅうり}",
+              "pt": "conserto"
+            },
+            {
+              "jp": "お願{ねが}い",
+              "pt": "pedido"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_005",
+          "jp": "家賃{やちん} の 支払{しはら}い について 確認{かくにん} したいです。",
+          "pt": "Gostaria de confirmar sobre o pagamento do aluguel.",
+          "newWords": [
+            {
+              "jp": "家賃{やちん}",
+              "pt": "aluguel"
+            },
+            {
+              "jp": "支払{しはら}い",
+              "pt": "pagamento"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_006",
+          "jp": "この 音{おと} は どこ から ですか。",
+          "pt": "De onde vem este barulho?",
+          "newWords": [
+            {
+              "jp": "音{おと}",
+              "pt": "som / barulho"
+            },
+            {
+              "jp": "どこ から",
+              "pt": "de onde"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_007",
+          "jp": "鍵{かぎ} を 部屋{へや} の 中{なか} に 忘{わす}れました。",
+          "pt": "Esqueci a chave dentro do quarto.",
+          "newWords": [
+            {
+              "jp": "鍵{かぎ}",
+              "pt": "chave"
+            },
+            {
+              "jp": "部屋{へや}",
+              "pt": "quarto"
+            },
+            {
+              "jp": "忘{わす}れました",
+              "pt": "esqueci"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_008",
+          "jp": "荷物{にもつ} を 玄関{げんかん} の 袋{ふくろ} に 入{い}れて ください。",
+          "pt": "Por favor, coloque a encomenda na sacola da entrada.",
+          "newWords": [
+            {
+              "jp": "荷物{にもつ}",
+              "pt": "encomenda"
+            },
+            {
+              "jp": "玄関{げんかん}",
+              "pt": "entrada"
+            },
+            {
+              "jp": "袋{ふくろ}",
+              "pt": "sacola"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_009",
+          "jp": "退去{たいきょ} の 手続{てつづ}き を 知{し}りたいです。",
+          "pt": "Quero saber o procedimento de saída do imóvel.",
+          "newWords": [
+            {
+              "jp": "退去{たいきょ}",
+              "pt": "saída do imóvel"
+            },
+            {
+              "jp": "手続{てつづ}き",
+              "pt": "procedimento"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_010",
+          "jp": "契約{けいやく} の 内容{ないよう} を 確認{かくにん} したいです。",
+          "pt": "Quero confirmar o conteúdo do contrato.",
+          "newWords": [
+            {
+              "jp": "契約{けいやく}",
+              "pt": "contrato"
+            },
+            {
+              "jp": "内容{ないよう}",
+              "pt": "conteúdo"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_011",
+          "jp": "ゴミ の 出{だ}し方{かた} を 教{おし}えて ください。",
+          "pt": "Por favor, me ensine como jogar o lixo.",
+          "newWords": [
+            {
+              "jp": "ゴミ",
+              "pt": "lixo"
+            },
+            {
+              "jp": "出{だ}し方{かた}",
+              "pt": "modo de jogar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_housing_012",
+          "jp": "近所{きんじょ} に 迷惑{めいわく} を かけない ように 気{き}をつけます。",
+          "pt": "Vou tomar cuidado para não incomodar os vizinhos.",
+          "newWords": [
+            {
+              "jp": "近所{きんじょ}",
+              "pt": "vizinhança"
+            },
+            {
+              "jp": "迷惑{めいわく}",
+              "pt": "incômodo"
+            },
+            {
+              "jp": "気{き}をつけます",
+              "pt": "tomar cuidado"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_post",
+      "name": "Correio / Entrega — Premium",
+      "color": "tPurple",
+      "icon": "📦",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_post_001",
+          "jp": "この 不在票{ふざいひょう} について 聞{き}きたいです。",
+          "pt": "Quero perguntar sobre este aviso de ausência.",
+          "newWords": [
+            {
+              "jp": "不在票{ふざいひょう}",
+              "pt": "aviso de ausência"
+            },
+            {
+              "jp": "聞{き}きたい",
+              "pt": "quero perguntar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_002",
+          "jp": "再配達{さいはいたつ} を お願{ねが}い できますか。",
+          "pt": "É possível pedir reentrega?",
+          "newWords": [
+            {
+              "jp": "再配達{さいはいたつ}",
+              "pt": "reentrega"
+            },
+            {
+              "jp": "お願{ねが}い",
+              "pt": "pedido"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_003",
+          "jp": "荷物{にもつ} を 受{う}け取{と}りたいです。",
+          "pt": "Quero retirar/receber a encomenda.",
+          "newWords": [
+            {
+              "jp": "荷物{にもつ}",
+              "pt": "encomenda"
+            },
+            {
+              "jp": "受{う}け取{と}りたい",
+              "pt": "quero receber / retirar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_004",
+          "jp": "本人確認{ほんにんかくにん} の 書類{しょるい} は 必要{ひつよう} ですか。",
+          "pt": "Precisa de documento de identificação?",
+          "newWords": [
+            {
+              "jp": "本人確認{ほんにんかくにん}",
+              "pt": "confirmação de identidade"
+            },
+            {
+              "jp": "書類{しょるい}",
+              "pt": "documento"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_005",
+          "jp": "この 住所{じゅうしょ} に 送{おく}りたいです。",
+          "pt": "Quero enviar para este endereço.",
+          "newWords": [
+            {
+              "jp": "住所{じゅうしょ}",
+              "pt": "endereço"
+            },
+            {
+              "jp": "送{おく}りたい",
+              "pt": "quero enviar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_006",
+          "jp": "送料{そうりょう} は いくら ですか。",
+          "pt": "Quanto custa o frete?",
+          "newWords": [
+            {
+              "jp": "送料{そうりょう}",
+              "pt": "frete"
+            },
+            {
+              "jp": "いくら",
+              "pt": "quanto"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_007",
+          "jp": "追跡番号{ついせきばんごう} は どこ ですか。",
+          "pt": "Onde está o número de rastreamento?",
+          "newWords": [
+            {
+              "jp": "追跡番号{ついせきばんごう}",
+              "pt": "número de rastreamento"
+            },
+            {
+              "jp": "どこ",
+              "pt": "onde"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_008",
+          "jp": "今日{きょう} 中{じゅう} に 届{とど}きますか。",
+          "pt": "Chega ainda hoje?",
+          "newWords": [
+            {
+              "jp": "今日{きょう} 中{じゅう}",
+              "pt": "ainda hoje"
+            },
+            {
+              "jp": "届{とど}きます",
+              "pt": "chega"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_009",
+          "jp": "サイン は 必要{ひつよう} ですか。",
+          "pt": "Precisa de assinatura?",
+          "newWords": [
+            {
+              "jp": "サイン",
+              "pt": "assinatura"
+            },
+            {
+              "jp": "必要{ひつよう}",
+              "pt": "necessário"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_010",
+          "jp": "ポスト に 入{はい}らない 場合{ばあい} は どう なりますか。",
+          "pt": "Se não couber na caixa de correio, o que acontece?",
+          "newWords": [
+            {
+              "jp": "ポスト",
+              "pt": "caixa de correio"
+            },
+            {
+              "jp": "場合{ばあい}",
+              "pt": "caso"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_011",
+          "jp": "置{お}き配{はい} は できますか。",
+          "pt": "Pode deixar a entrega na porta/local combinado?",
+          "newWords": [
+            {
+              "jp": "置{お}き配{はい}",
+              "pt": "entrega deixada no local"
+            },
+            {
+              "jp": "できますか",
+              "pt": "pode?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_post_012",
+          "jp": "荷物{にもつ} が まだ 届{とど}いて いません。",
+          "pt": "A encomenda ainda não chegou.",
+          "newWords": [
+            {
+              "jp": "まだ",
+              "pt": "ainda"
+            },
+            {
+              "jp": "届{とど}いて いません",
+              "pt": "não chegou"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_market",
+      "name": "Mercado / Konbini — Premium",
+      "color": "tGreen",
+      "icon": "🛒",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_market_001",
+          "jp": "この 商品{しょうひん} は 売{う}り切{き}れ ですか。",
+          "pt": "Este produto está esgotado?",
+          "newWords": [
+            {
+              "jp": "商品{しょうひん}",
+              "pt": "produto"
+            },
+            {
+              "jp": "売{う}り切{き}れ",
+              "pt": "esgotado"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_002",
+          "jp": "賞味期限{しょうみきげん} は いつ まで ですか。",
+          "pt": "Até quando é a validade?",
+          "newWords": [
+            {
+              "jp": "賞味期限{しょうみきげん}",
+              "pt": "validade"
+            },
+            {
+              "jp": "いつ まで",
+              "pt": "até quando"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_003",
+          "jp": "温{あたた}めて ください。",
+          "pt": "Por favor, aqueça.",
+          "newWords": [
+            {
+              "jp": "温{あたた}めて",
+              "pt": "aquecer"
+            },
+            {
+              "jp": "ください",
+              "pt": "por favor"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_004",
+          "jp": "箸{はし} を ください。",
+          "pt": "Por favor, me dê hashi.",
+          "newWords": [
+            {
+              "jp": "箸{はし}",
+              "pt": "hashi"
+            },
+            {
+              "jp": "ください",
+              "pt": "por favor"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_005",
+          "jp": "ポイントカード は ありません。",
+          "pt": "Não tenho cartão de pontos.",
+          "newWords": [
+            {
+              "jp": "ポイントカード",
+              "pt": "cartão de pontos"
+            },
+            {
+              "jp": "ありません",
+              "pt": "não tenho"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_006",
+          "jp": "袋{ふくろ} は 一枚{いちまい} だけ ください。",
+          "pt": "Por favor, me dê só uma sacola.",
+          "newWords": [
+            {
+              "jp": "袋{ふくろ}",
+              "pt": "sacola"
+            },
+            {
+              "jp": "一枚{いちまい}",
+              "pt": "uma unidade"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_007",
+          "jp": "この クーポン は 使{つか}えますか。",
+          "pt": "Posso usar este cupom?",
+          "newWords": [
+            {
+              "jp": "クーポン",
+              "pt": "cupom"
+            },
+            {
+              "jp": "使{つか}えますか",
+              "pt": "posso usar?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_008",
+          "jp": "別々{べつべつ} に 会計{かいけい} できますか。",
+          "pt": "Pode passar separado?",
+          "newWords": [
+            {
+              "jp": "別々{べつべつ}",
+              "pt": "separado"
+            },
+            {
+              "jp": "会計{かいけい}",
+              "pt": "pagamento / caixa"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_009",
+          "jp": "レシート は いりません。",
+          "pt": "Não preciso do recibo.",
+          "newWords": [
+            {
+              "jp": "レシート",
+              "pt": "recibo"
+            },
+            {
+              "jp": "いりません",
+              "pt": "não preciso"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_010",
+          "jp": "この 商品{しょうひん} は どこ に ありますか。",
+          "pt": "Onde fica este produto?",
+          "newWords": [
+            {
+              "jp": "商品{しょうひん}",
+              "pt": "produto"
+            },
+            {
+              "jp": "どこ",
+              "pt": "onde"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_011",
+          "jp": "税込{ぜいこみ} で いくら ですか。",
+          "pt": "Quanto fica com imposto incluso?",
+          "newWords": [
+            {
+              "jp": "税込{ぜいこみ}",
+              "pt": "com imposto incluso"
+            },
+            {
+              "jp": "いくら",
+              "pt": "quanto"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_market_012",
+          "jp": "返品{へんぴん} は できますか。",
+          "pt": "É possível devolver?",
+          "newWords": [
+            {
+              "jp": "返品{へんぴん}",
+              "pt": "devolução"
+            },
+            {
+              "jp": "できますか",
+              "pt": "pode?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_bank",
+      "name": "Banco / Dinheiro — Premium",
+      "color": "tBlue",
+      "icon": "🏦",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_bank_001",
+          "jp": "口座{こうざ} を 作{つく}りたいです。",
+          "pt": "Quero abrir uma conta bancária.",
+          "newWords": [
+            {
+              "jp": "口座{こうざ}",
+              "pt": "conta bancária"
+            },
+            {
+              "jp": "作{つく}りたい",
+              "pt": "quero criar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_002",
+          "jp": "この お金{かね} を 両替{りょうがえ} して いただけますか。",
+          "pt": "Poderia trocar este dinheiro?",
+          "newWords": [
+            {
+              "jp": "お金{かね}",
+              "pt": "dinheiro"
+            },
+            {
+              "jp": "両替{りょうがえ}",
+              "pt": "troca de dinheiro"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_003",
+          "jp": "古{ふる}い 千円札{せんえんさつ} に 両替{りょうがえ} できますか。",
+          "pt": "Pode trocar por notas antigas de mil ienes?",
+          "newWords": [
+            {
+              "jp": "古{ふる}い",
+              "pt": "antigo"
+            },
+            {
+              "jp": "千円札{せんえんさつ}",
+              "pt": "nota de mil ienes"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_004",
+          "jp": "振込{ふりこみ} の 方法{ほうほう} を 教{おし}えて ください。",
+          "pt": "Por favor, me explique como fazer transferência.",
+          "newWords": [
+            {
+              "jp": "振込{ふりこみ}",
+              "pt": "transferência"
+            },
+            {
+              "jp": "方法{ほうほう}",
+              "pt": "método"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_005",
+          "jp": "手数料{てすうりょう} は いくら ですか。",
+          "pt": "Quanto é a taxa?",
+          "newWords": [
+            {
+              "jp": "手数料{てすうりょう}",
+              "pt": "taxa"
+            },
+            {
+              "jp": "いくら",
+              "pt": "quanto"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_006",
+          "jp": "通帳{つうちょう} を 作{つく}れますか。",
+          "pt": "Posso fazer uma caderneta bancária?",
+          "newWords": [
+            {
+              "jp": "通帳{つうちょう}",
+              "pt": "caderneta bancária"
+            },
+            {
+              "jp": "作{つく}れますか",
+              "pt": "pode fazer?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_007",
+          "jp": "キャッシュカード を なくしました。",
+          "pt": "Perdi o cartão do banco.",
+          "newWords": [
+            {
+              "jp": "キャッシュカード",
+              "pt": "cartão do banco"
+            },
+            {
+              "jp": "なくしました",
+              "pt": "perdi"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_008",
+          "jp": "暗証番号{あんしょうばんごう} を 忘{わす}れました。",
+          "pt": "Esqueci a senha.",
+          "newWords": [
+            {
+              "jp": "暗証番号{あんしょうばんごう}",
+              "pt": "senha numérica"
+            },
+            {
+              "jp": "忘{わす}れました",
+              "pt": "esqueci"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_009",
+          "jp": "給料{きゅうりょう} の 振込先{ふりこみさき} を 確認{かくにん} したいです。",
+          "pt": "Quero confirmar a conta para depósito do salário.",
+          "newWords": [
+            {
+              "jp": "給料{きゅうりょう}",
+              "pt": "salário"
+            },
+            {
+              "jp": "振込先{ふりこみさき}",
+              "pt": "destino da transferência"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_010",
+          "jp": "住所{じゅうしょ} の 変更{へんこう} を したいです。",
+          "pt": "Quero alterar meu endereço.",
+          "newWords": [
+            {
+              "jp": "住所{じゅうしょ}",
+              "pt": "endereço"
+            },
+            {
+              "jp": "変更{へんこう}",
+              "pt": "alteração"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_011",
+          "jp": "ATM の 使{つか}い方{かた} が わかりません。",
+          "pt": "Não sei usar o caixa eletrônico.",
+          "newWords": [
+            {
+              "jp": "ATM",
+              "pt": "caixa eletrônico"
+            },
+            {
+              "jp": "使{つか}い方{かた}",
+              "pt": "modo de usar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bank_012",
+          "jp": "この 明細{めいさい} を 確認{かくにん} して ください。",
+          "pt": "Por favor, confira este extrato/detalhe.",
+          "newWords": [
+            {
+              "jp": "明細{めいさい}",
+              "pt": "extrato / detalhe"
+            },
+            {
+              "jp": "確認{かくにん}",
+              "pt": "conferência"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_phone",
+      "name": "Telefone / Internet — Premium",
+      "color": "tPurple",
+      "icon": "📱",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_phone_001",
+          "jp": "30GB の 固定{こてい}プラン は ありますか。",
+          "pt": "Existe plano fixo de 30GB?",
+          "newWords": [
+            {
+              "jp": "固定{こてい}プラン",
+              "pt": "plano fixo"
+            },
+            {
+              "jp": "ありますか",
+              "pt": "existe?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_002",
+          "jp": "今月{こんげつ} の 料金{りょうきん} が 高{たか}い 理由{りゆう} を 知{し}りたいです。",
+          "pt": "Quero saber o motivo da cobrança alta deste mês.",
+          "newWords": [
+            {
+              "jp": "今月{こんげつ}",
+              "pt": "este mês"
+            },
+            {
+              "jp": "料金{りょうきん}",
+              "pt": "cobrança"
+            },
+            {
+              "jp": "理由{りゆう}",
+              "pt": "motivo"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_003",
+          "jp": "契約{けいやく} の 内容{ないよう} を 確認{かくにん} したいです。",
+          "pt": "Quero confirmar o conteúdo do contrato.",
+          "newWords": [
+            {
+              "jp": "契約{けいやく}",
+              "pt": "contrato"
+            },
+            {
+              "jp": "内容{ないよう}",
+              "pt": "conteúdo"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_004",
+          "jp": "解約{かいやく} したい 場合{ばあい} は どう すれば いいですか。",
+          "pt": "Se eu quiser cancelar, o que devo fazer?",
+          "newWords": [
+            {
+              "jp": "解約{かいやく}",
+              "pt": "cancelamento"
+            },
+            {
+              "jp": "場合{ばあい}",
+              "pt": "caso"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_005",
+          "jp": "通信{つうしん} が 遅{おそ}い です。",
+          "pt": "A internet está lenta.",
+          "newWords": [
+            {
+              "jp": "通信{つうしん}",
+              "pt": "comunicação / internet"
+            },
+            {
+              "jp": "遅{おそ}い",
+              "pt": "lento"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_006",
+          "jp": "SIMカード が 使{つか}えません。",
+          "pt": "O chip/SIM não funciona.",
+          "newWords": [
+            {
+              "jp": "SIMカード",
+              "pt": "chip / SIM"
+            },
+            {
+              "jp": "使{つか}えません",
+              "pt": "não funciona / não pode usar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_007",
+          "jp": "本人確認{ほんにんかくにん} が 必要{ひつよう} ですか。",
+          "pt": "Precisa de verificação de identidade?",
+          "newWords": [
+            {
+              "jp": "本人確認{ほんにんかくにん}",
+              "pt": "verificação de identidade"
+            },
+            {
+              "jp": "必要{ひつよう}",
+              "pt": "necessário"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_008",
+          "jp": "支払方法{しはらいほうほう} を 変更{へんこう} したいです。",
+          "pt": "Quero mudar o método de pagamento.",
+          "newWords": [
+            {
+              "jp": "支払方法{しはらいほうほう}",
+              "pt": "método de pagamento"
+            },
+            {
+              "jp": "変更{へんこう}",
+              "pt": "alteração"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_009",
+          "jp": "この プラン は 何年契約{なんねんけいやく} ですか。",
+          "pt": "Este plano tem contrato de quantos anos?",
+          "newWords": [
+            {
+              "jp": "何年契約{なんねんけいやく}",
+              "pt": "contrato de quantos anos"
+            },
+            {
+              "jp": "プラン",
+              "pt": "plano"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_010",
+          "jp": "日本語{にほんご} が 難{むずか}しい ので、簡単{かんたん} に 説明{せつめい} して ください。",
+          "pt": "Como o japonês é difícil, explique de forma simples, por favor.",
+          "newWords": [
+            {
+              "jp": "難{むずか}しい",
+              "pt": "difícil"
+            },
+            {
+              "jp": "簡単{かんたん}",
+              "pt": "simples"
+            },
+            {
+              "jp": "説明{せつめい}",
+              "pt": "explicação"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_011",
+          "jp": "この オプション は 必要{ひつよう} ありません。",
+          "pt": "Não preciso desta opção.",
+          "newWords": [
+            {
+              "jp": "オプション",
+              "pt": "opção"
+            },
+            {
+              "jp": "必要{ひつよう} ありません",
+              "pt": "não é necessário"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_phone_012",
+          "jp": "来月{らいげつ} から 安{やす}く なりますか。",
+          "pt": "A partir do mês que vem fica mais barato?",
+          "newWords": [
+            {
+              "jp": "来月{らいげつ}",
+              "pt": "mês que vem"
+            },
+            {
+              "jp": "安{やす}く",
+              "pt": "barato"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_bike",
+      "name": "Bicicleta / Transporte — Premium",
+      "color": "tOrange",
+      "icon": "🚲",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_bike_001",
+          "jp": "チェーン が 外{はず}れました。見{み}て もらえますか。",
+          "pt": "A corrente saiu. Você poderia dar uma olhada?",
+          "newWords": [
+            {
+              "jp": "チェーン",
+              "pt": "corrente"
+            },
+            {
+              "jp": "外{はず}れました",
+              "pt": "saiu / soltou"
+            },
+            {
+              "jp": "見{み}て",
+              "pt": "olhar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_002",
+          "jp": "パンク修理{しゅうり} は いくら ですか。",
+          "pt": "Quanto custa consertar o pneu furado?",
+          "newWords": [
+            {
+              "jp": "パンク",
+              "pt": "pneu furado"
+            },
+            {
+              "jp": "修理{しゅうり}",
+              "pt": "conserto"
+            },
+            {
+              "jp": "いくら",
+              "pt": "quanto"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_003",
+          "jp": "ブレーキ の 効{き}き が 悪{わる}いです。",
+          "pt": "O freio não está pegando bem.",
+          "newWords": [
+            {
+              "jp": "ブレーキ",
+              "pt": "freio"
+            },
+            {
+              "jp": "効{き}き",
+              "pt": "eficácia"
+            },
+            {
+              "jp": "悪{わる}い",
+              "pt": "ruim"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_004",
+          "jp": "ライト が つきません。",
+          "pt": "A luz não acende.",
+          "newWords": [
+            {
+              "jp": "ライト",
+              "pt": "luz"
+            },
+            {
+              "jp": "つきません",
+              "pt": "não acende"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_005",
+          "jp": "空気{くうき} を 入{い}れて もらえますか。",
+          "pt": "Você poderia encher o pneu?",
+          "newWords": [
+            {
+              "jp": "空気{くうき}",
+              "pt": "ar"
+            },
+            {
+              "jp": "入{い}れて",
+              "pt": "colocar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_006",
+          "jp": "仕事{しごと} へ 行{い}く ため に 早{はや}く 直{なお}したいです。",
+          "pt": "Quero consertar rápido para ir ao trabalho.",
+          "newWords": [
+            {
+              "jp": "仕事{しごと}",
+              "pt": "trabalho"
+            },
+            {
+              "jp": "直{なお}したい",
+              "pt": "quero consertar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_007",
+          "jp": "修理{しゅうり} に どのくらい かかりますか。",
+          "pt": "Quanto tempo leva o conserto?",
+          "newWords": [
+            {
+              "jp": "修理{しゅうり}",
+              "pt": "conserto"
+            },
+            {
+              "jp": "どのくらい",
+              "pt": "quanto tempo / quanto"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_008",
+          "jp": "中古{ちゅうこ} の 自転車{じてんしゃ} は ありますか。",
+          "pt": "Tem bicicleta usada?",
+          "newWords": [
+            {
+              "jp": "中古{ちゅうこ}",
+              "pt": "usado"
+            },
+            {
+              "jp": "自転車{じてんしゃ}",
+              "pt": "bicicleta"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_009",
+          "jp": "雨{あめ} の 日{ひ} でも 使{つか}える カッパ は ありますか。",
+          "pt": "Tem capa de chuva que dá para usar em dia de chuva?",
+          "newWords": [
+            {
+              "jp": "雨{あめ} の 日{ひ}",
+              "pt": "dia de chuva"
+            },
+            {
+              "jp": "カッパ",
+              "pt": "capa de chuva"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_010",
+          "jp": "駅{えき} まで 自転車{じてんしゃ} で 何分{なんぷん} くらい ですか。",
+          "pt": "Até a estação, quantos minutos de bicicleta?",
+          "newWords": [
+            {
+              "jp": "駅{えき}",
+              "pt": "estação"
+            },
+            {
+              "jp": "何分{なんぷん}",
+              "pt": "quantos minutos"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_011",
+          "jp": "駐輪場{ちゅうりんじょう} は どこ ですか。",
+          "pt": "Onde fica o estacionamento de bicicletas?",
+          "newWords": [
+            {
+              "jp": "駐輪場{ちゅうりんじょう}",
+              "pt": "estacionamento de bicicletas"
+            },
+            {
+              "jp": "どこ",
+              "pt": "onde"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_bike_012",
+          "jp": "この 道{みち} は 自転車{じてんしゃ} で 通{とお}れますか。",
+          "pt": "Dá para passar por esta rua de bicicleta?",
+          "newWords": [
+            {
+              "jp": "道{みち}",
+              "pt": "rua / caminho"
+            },
+            {
+              "jp": "通{とお}れますか",
+              "pt": "dá para passar?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    },
+    {
+      "id": "topic_conversation",
+      "name": "Conversa Natural — Premium",
+      "color": "tPink",
+      "icon": "🗣️",
+      "isPremium": true,
+      "level": "intermediario",
+      "description": "Conteúdo Premium voltado para situações reais de brasileiros no Japão.",
+      "phrases": [
+        {
+          "id": "n8555_conv_001",
+          "jp": "最近{さいきん}、日本語{にほんご} を 少{すこ}しずつ 勉強{べんきょう} して います。",
+          "pt": "Ultimamente estou estudando japonês aos poucos.",
+          "newWords": [
+            {
+              "jp": "最近{さいきん}",
+              "pt": "ultimamente"
+            },
+            {
+              "jp": "少{すこ}しずつ",
+              "pt": "aos poucos"
+            },
+            {
+              "jp": "勉強{べんきょう}",
+              "pt": "estudo"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_002",
+          "jp": "まだ 上手{じょうず} では ありません が、話{はな}して みたいです。",
+          "pt": "Ainda não sou bom, mas quero tentar conversar.",
+          "newWords": [
+            {
+              "jp": "上手{じょうず}",
+              "pt": "habilidoso"
+            },
+            {
+              "jp": "話{はな}して みたい",
+              "pt": "quero tentar falar"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_003",
+          "jp": "日本{にほん} の 生活{せいかつ} に だんだん 慣{な}れて きました。",
+          "pt": "Estou me acostumando aos poucos com a vida no Japão.",
+          "newWords": [
+            {
+              "jp": "生活{せいかつ}",
+              "pt": "vida"
+            },
+            {
+              "jp": "慣{な}れて きました",
+              "pt": "fui me acostumando"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_004",
+          "jp": "休{やす}み の 日{ひ} は よく 自転車{じてんしゃ} で 出{で}かけます。",
+          "pt": "Nos dias de folga, costumo sair de bicicleta.",
+          "newWords": [
+            {
+              "jp": "休{やす}み の 日{ひ}",
+              "pt": "dia de folga"
+            },
+            {
+              "jp": "出{で}かけます",
+              "pt": "sair"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_005",
+          "jp": "この 近{ちか}く で おすすめ の 店{みせ} は ありますか。",
+          "pt": "Tem alguma loja recomendada aqui perto?",
+          "newWords": [
+            {
+              "jp": "近{ちか}く",
+              "pt": "perto"
+            },
+            {
+              "jp": "おすすめ",
+              "pt": "recomendação"
+            },
+            {
+              "jp": "店{みせ}",
+              "pt": "loja"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_006",
+          "jp": "日本{にほん} の 食{た}べ物{もの} で 何{なに} が おすすめ ですか。",
+          "pt": "Qual comida japonesa você recomenda?",
+          "newWords": [
+            {
+              "jp": "食{た}べ物{もの}",
+              "pt": "comida"
+            },
+            {
+              "jp": "何{なに}",
+              "pt": "o que"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_007",
+          "jp": "今日{きょう} は 仕事{しごと} が 大変{たいへん} でした。",
+          "pt": "Hoje o trabalho foi pesado.",
+          "newWords": [
+            {
+              "jp": "仕事{しごと}",
+              "pt": "trabalho"
+            },
+            {
+              "jp": "大変{たいへん}",
+              "pt": "pesado / difícil"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_008",
+          "jp": "少{すこ}し 疲{つか}れました が、いい 一日{いちにち} でした。",
+          "pt": "Fiquei um pouco cansado, mas foi um bom dia.",
+          "newWords": [
+            {
+              "jp": "疲{つか}れました",
+              "pt": "fiquei cansado"
+            },
+            {
+              "jp": "一日{いちにち}",
+              "pt": "um dia"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_009",
+          "jp": "日本語{にほんご} で 何{なん}と 言{い}いますか。",
+          "pt": "Como se diz em japonês?",
+          "newWords": [
+            {
+              "jp": "何{なん}と",
+              "pt": "como"
+            },
+            {
+              "jp": "言{い}いますか",
+              "pt": "se diz?"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_010",
+          "jp": "もっと 自然{しぜん} な 言{い}い方{かた} は ありますか。",
+          "pt": "Existe uma forma mais natural de dizer?",
+          "newWords": [
+            {
+              "jp": "自然{しぜん}",
+              "pt": "natural"
+            },
+            {
+              "jp": "言{い}い方{かた}",
+              "pt": "forma de dizer"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_011",
+          "jp": "間違{まちが}って いたら、教{おし}えて ください。",
+          "pt": "Se eu estiver errado, por favor me corrija.",
+          "newWords": [
+            {
+              "jp": "間違{まちが}って",
+              "pt": "errando"
+            },
+            {
+              "jp": "教{おし}えて",
+              "pt": "ensine / avise"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        },
+        {
+          "id": "n8555_conv_012",
+          "jp": "少{すこ}しずつ 話{はな}せる ように なりたいです。",
+          "pt": "Quero conseguir falar aos poucos.",
+          "newWords": [
+            {
+              "jp": "話{はな}せる",
+              "pt": "conseguir falar"
+            },
+            {
+              "jp": "ように なりたい",
+              "pt": "quero me tornar capaz"
+            }
+          ],
+          "level": "intermediario",
+          "unlock": "premium",
+          "isPremium": true
+        }
+      ]
+    }
+  ];
+
   const LEGACY_APP_TOPICS = [
+    ...NIHONGO321_8555_STRONG_CONTENT,
   {
     id: "topic_essential_japan",
     name: "Pack Essencial Japão",
@@ -6143,7 +9275,7 @@
 
   bank.compatReady = true;
   bank.isReady = true;
-  bank.updatedAt = "2026-05-08";
+  bank.updatedAt = "2026-05-14";
 
   const previousCheck = typeof bank.check === "function" ? bank.check.bind(bank) : null;
   bank.check = function () {
@@ -6156,7 +9288,7 @@
       legacyTopics: LEGACY_APP_TOPICS.length,
       scenarioTopics: scenarioTopics.length,
       grammarTopics: grammarTopics.length,
-      source: "sensei-bank-completo"
+      source: "sensei-bank-completo-8.5.55"
     };
   };
 
