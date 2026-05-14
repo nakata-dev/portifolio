@@ -8686,3 +8686,1601 @@ html[data-theme="light"] .storeGlyph{
     grid-template-columns:1fr;
   }
 }
+
+
+/* =========================================================
+   NIHONGO321 8.5.43 — roteiro de screenshots da loja
+   Escopo: rota #/screenshot-guide.
+   ========================================================= */
+
+.shotGuidePage{
+  text-align:left;
+}
+
+.shotHero{
+  padding:clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(420px 240px at 0% 0%, rgba(255,179,71,.16), transparent 64%),
+    radial-gradient(420px 260px at 100% 100%, rgba(108,166,255,.14), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.shotHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 260px;
+  gap:18px;
+  align-items:stretch;
+}
+
+.shotTitle{
+  margin:0;
+  max-width:12em;
+  color:var(--soft);
+  font-size:clamp(34px, 5vw, 56px);
+  line-height:1.04;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.shotLead{
+  margin:12px 0 0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.62;
+}
+
+.shotHeroCard{
+  border:1px solid var(--strokeSoft);
+  border-radius:26px;
+  padding:18px;
+  background:
+    radial-gradient(220px 140px at 0% 0%, rgba(255,179,71,.18), transparent 66%),
+    rgba(255,255,255,.045);
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.shotHeroCard span{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border-radius:17px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--stroke);
+  font-size:24px;
+}
+
+.shotHeroCard b{color:var(--soft);font-size:17px;}
+.shotHeroCard p{margin:0;color:var(--muted);font-size:13px;line-height:1.48;}
+
+.shotSectionTitle{
+  margin-top:10px;
+  max-width:22em;
+}
+
+.shotRulesGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+
+.shotRuleItem,
+.shotMetaBox,
+.shotOverlayBox,
+.shotNote{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,.040);
+}
+
+.shotRuleItem{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.shotRuleItem span{
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(255,179,71,.12);
+  color:var(--gold2);
+  font-weight:950;
+  font-size:12px;
+}
+
+.shotRuleItem b{
+  color:var(--muted2);
+  font-size:13.5px;
+  line-height:1.42;
+  padding-top:4px;
+}
+
+.shotSequence{
+  display:grid;
+  gap:14px;
+}
+
+.shotCardTitle{
+  margin-top:2px;
+}
+
+.shotMetaGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+
+.shotMetaBox label,
+.shotOverlayBox label,
+.shotNote span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.shotMetaBox p,
+.shotNote b{
+  margin:0;
+  color:var(--muted2);
+  font-size:14px;
+  line-height:1.58;
+}
+
+.shotOverlayMain{
+  color:var(--soft);
+  font-size:clamp(22px, 3vw, 34px);
+  line-height:1.08;
+  font-weight:950;
+  letter-spacing:-.04em;
+  text-wrap:balance;
+}
+
+.shotOverlaySupport{
+  margin-top:10px;
+  color:var(--muted2);
+  font-size:14px;
+  line-height:1.55;
+}
+
+.shotNextCard{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 300px;
+  gap:18px;
+  align-items:center;
+  background:
+    radial-gradient(380px 200px at 0% 0%, rgba(255,179,71,.14), transparent 64%),
+    var(--premiumBg);
+}
+
+.shotNextCopy,
+.shotNextActions{
+  display:grid;
+  gap:12px;
+}
+
+html[data-theme="light"] .shotHeroCard,
+html[data-theme="light"] .shotRuleItem,
+html[data-theme="light"] .shotMetaBox,
+html[data-theme="light"] .shotOverlayBox,
+html[data-theme="light"] .shotNote{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:760px){
+  .shotHeroGrid,
+  .shotRulesGrid,
+  .shotMetaGrid,
+  .shotNextCard{
+    grid-template-columns:1fr;
+  }
+
+  .shotTitle{
+    font-size:clamp(31px, 8vw, 42px);
+  }
+}
+
+@media (max-width:430px){
+  .shotHero{
+    padding:16px;
+  }
+
+  .shotTitle{
+    font-size:clamp(28px, 7.6vw, 36px);
+  }
+
+  .shotRuleItem,
+  .shotMetaBox,
+  .shotOverlayBox,
+  .shotNote{
+    border-radius:18px;
+    padding:12px;
+  }
+
+  .shotOverlayMain{
+    font-size:clamp(20px, 7vw, 28px);
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.44 — Home profissional e focada
+   Escopo: somente #/home.
+   ========================================================= */
+
+.homeProPage{
+  text-align:left;
+}
+
+.homeHeroPro{
+  padding:clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(420px 240px at 0% 0%, rgba(255,179,71,.16), transparent 64%),
+    radial-gradient(420px 260px at 100% 100%, rgba(108,166,255,.14), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.homeHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 220px;
+  gap:18px;
+  align-items:stretch;
+}
+
+.homeHeroCopy{
+  display:grid;
+  align-content:center;
+  gap:14px;
+}
+
+.homeTitlePro{
+  margin:0;
+  max-width:10.6em;
+  color:var(--soft);
+  font-size:clamp(34px, 5.2vw, 56px);
+  line-height:1.04;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.homeLeadPro{
+  margin:0;
+  max-width:36em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.62;
+}
+
+.homeMainActions{
+  display:grid;
+  grid-template-columns:minmax(0, 1.1fr) minmax(180px, .9fr);
+  gap:12px;
+  margin-top:4px;
+}
+
+.homeTodayCard{
+  border:1px solid var(--strokeSoft);
+  border-radius:28px;
+  padding:18px;
+  background:rgba(255,255,255,.045);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+  display:grid;
+  align-content:center;
+  gap:10px;
+}
+
+.homeTodayValue{
+  color:var(--gold2);
+  font-size:clamp(42px, 7vw, 62px);
+  line-height:.92;
+  font-weight:950;
+  letter-spacing:-.06em;
+}
+
+.homeTodayText{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.38;
+  font-weight:850;
+}
+
+.homeTodayMini{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.homeTodayMini span{
+  display:inline-flex;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:7px 10px;
+  background:rgba(255,255,255,.04);
+  color:var(--muted2);
+  font-size:12px;
+  font-weight:900;
+}
+
+.homeSectionTitle{
+  margin-top:10px;
+  max-width:18em;
+}
+
+.homeTopicRow{
+  display:grid;
+  grid-template-columns:1fr;
+}
+
+.homeTopicRow .selectBtn{
+  width:100%;
+  min-height:54px;
+  text-align:left;
+}
+
+.homeActionGrid,
+.homePathGrid{
+  display:grid;
+  gap:12px;
+}
+
+.homeActionGrid{
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+}
+
+.homePathGrid{
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+}
+
+.homeActionCard,
+.homePathItem{
+  appearance:none;
+  border:1px solid var(--strokeSoft);
+  border-radius:24px;
+  background:rgba(255,255,255,.038);
+  color:var(--soft);
+  padding:15px;
+  text-align:left;
+  cursor:pointer;
+  min-width:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.homeActionCard{
+  display:grid;
+  gap:8px;
+  min-height:128px;
+}
+
+.homePathItem{
+  display:grid;
+  gap:10px;
+  min-height:142px;
+  align-content:space-between;
+}
+
+.homeActionCard span,
+.homePathItem span{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--gold2);
+  font-size:16px;
+  font-weight:950;
+  letter-spacing:-.02em;
+}
+
+.homeActionCard b,
+.homePathItem b{
+  display:block;
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.18;
+}
+
+.homePathItem b{
+  font-size:17px;
+}
+
+.homeActionCard small,
+.homePathItem small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.homeSoftBridge{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 280px;
+  gap:18px;
+  align-items:center;
+  background:
+    radial-gradient(380px 200px at 0% 0%, rgba(255,179,71,.14), transparent 64%),
+    var(--premiumBg);
+}
+
+.homeSoftCopy,
+.homeSoftActions{
+  display:grid;
+  gap:12px;
+}
+
+html[data-theme="light"] .homeTodayCard,
+html[data-theme="light"] .homeActionCard,
+html[data-theme="light"] .homePathItem{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:820px){
+  .homeHeroGrid,
+  .homeSoftBridge{
+    grid-template-columns:1fr;
+  }
+
+  .homeMainActions{
+    grid-template-columns:1fr;
+  }
+
+  .homeActionGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+
+  .homePathGrid{
+    grid-template-columns:1fr;
+  }
+
+  .homePathItem{
+    min-height:auto;
+    grid-template-columns:54px minmax(0, 1fr);
+    align-items:center;
+  }
+
+  .homePathItem small{
+    grid-column:2;
+  }
+}
+
+@media (max-width:430px){
+  .homeHeroPro{
+    padding:16px;
+  }
+
+  .homeTitlePro{
+    font-size:clamp(29px, 7.8vw, 36px);
+  }
+
+  .homeLeadPro{
+    font-size:15px;
+  }
+
+  .homeActionGrid{
+    grid-template-columns:1fr;
+  }
+
+  .homeActionCard{
+    min-height:auto;
+    grid-template-columns:54px minmax(0, 1fr);
+    align-items:center;
+  }
+
+  .homeActionCard small{
+    grid-column:2;
+  }
+
+  .homeTodayCard,
+  .homeActionCard,
+  .homePathItem{
+    border-radius:20px;
+    padding:14px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.45 — Gerenciar frases simplificado
+   Escopo: somente #/manage.
+   ========================================================= */
+
+.managePage{
+  text-align:left;
+}
+
+.manageHero{
+  padding:clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(420px 240px at 0% 0%, rgba(255,179,71,.14), transparent 64%),
+    radial-gradient(420px 260px at 100% 100%, rgba(108,166,255,.12), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.manageHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 260px;
+  gap:18px;
+  align-items:stretch;
+}
+
+.manageTitle{
+  margin:0;
+  max-width:11.5em;
+  color:var(--soft);
+  font-size:clamp(32px, 5vw, 52px);
+  line-height:1.04;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.manageLead{
+  margin:12px 0 0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.62;
+}
+
+.manageStats{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+.manageStats > div{
+  border:1px solid var(--strokeSoft);
+  border-radius:20px;
+  padding:12px;
+  background:rgba(255,255,255,.045);
+}
+
+.manageStats b{
+  display:block;
+  color:var(--gold2);
+  font-size:clamp(26px, 4vw, 38px);
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-.045em;
+}
+
+.manageStats span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.manageMainActions{
+  display:grid;
+  grid-template-columns:minmax(0, 1.1fr) minmax(180px, .9fr);
+  gap:12px;
+  margin-top:16px;
+}
+
+.manageSectionTitle{
+  margin-top:10px;
+  max-width:20em;
+}
+
+.manageQuickGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+}
+
+.manageQuickCard{
+  appearance:none;
+  border:1px solid var(--strokeSoft);
+  border-radius:24px;
+  background:rgba(255,255,255,.038);
+  color:var(--soft);
+  padding:15px;
+  text-align:left;
+  cursor:pointer;
+  min-width:0;
+  min-height:140px;
+  display:grid;
+  align-content:space-between;
+  gap:10px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.manageQuickCard span{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--gold2);
+  font-size:16px;
+  font-weight:950;
+}
+
+.manageQuickCard b{
+  color:var(--soft);
+  font-size:16px;
+  line-height:1.18;
+}
+
+.manageQuickCard small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.manageDetails{
+  padding:0;
+  overflow:hidden;
+}
+
+.manageDetails summary{
+  cursor:pointer;
+  list-style:none;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:18px;
+}
+
+.manageDetails summary::-webkit-details-marker{
+  display:none;
+}
+
+.manageDetails summary span{
+  color:var(--soft);
+  font-size:17px;
+  font-weight:950;
+}
+
+.manageDetails summary b{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+}
+
+.manageDetails summary::after{
+  content:"abrir";
+  grid-column:1 / -1;
+  justify-self:start;
+  display:inline-flex;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:6px 10px;
+  color:var(--muted2);
+  background:rgba(255,255,255,.04);
+  font-size:11px;
+  font-weight:900;
+}
+
+.manageDetails[open] summary::after{
+  content:"ocultar";
+}
+
+.manageDetailsBody{
+  display:grid;
+  gap:12px;
+  padding:0 18px 18px;
+}
+
+.manageNewTopicBox{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  gap:10px;
+}
+
+.manageNewTopicBox input{
+  width:100%;
+  text-align:left;
+}
+
+.manageTopicList{
+  display:grid;
+  gap:12px;
+}
+
+.manageTopicGroup{
+  border:1px solid var(--strokeSoft);
+  border-radius:24px;
+  background:rgba(255,255,255,.030);
+  overflow:hidden;
+}
+
+.manageTopicGroup .topicHdr{
+  border-radius:0;
+  border:0;
+  border-bottom:1px solid var(--strokeSoft);
+  min-height:58px;
+}
+
+.manageTopicBody{
+  padding:14px;
+}
+
+.manageTopicTools{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.managePhraseList{
+  display:grid;
+  gap:10px;
+}
+
+.managePhraseItem{
+  border-radius:20px;
+  padding:0;
+  overflow:hidden;
+}
+
+.managePhraseMain{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  gap:12px;
+  align-items:start;
+  padding:13px;
+}
+
+.managePhraseText{
+  min-width:0;
+}
+
+.managePhraseText .itemTitle{
+  margin:0;
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.55;
+  font-weight:850;
+}
+
+.managePhraseText .itemMeta{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.45;
+}
+
+.managePhraseActions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:8px;
+  max-width:240px;
+}
+
+.manageEmptyTopic{
+  border:1px dashed var(--strokeSoft);
+  border-radius:20px;
+  padding:16px;
+  background:rgba(255,255,255,.026);
+  display:grid;
+  gap:6px;
+}
+
+.manageEmptyTopic b{
+  color:var(--soft);
+  font-size:15px;
+}
+
+.manageEmptyTopic span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+html[data-theme="light"] .manageStats > div,
+html[data-theme="light"] .manageQuickCard,
+html[data-theme="light"] .manageTopicGroup,
+html[data-theme="light"] .manageEmptyTopic{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:820px){
+  .manageHeroGrid,
+  .manageMainActions,
+  .manageQuickGrid{
+    grid-template-columns:1fr;
+  }
+
+  .manageStats{
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+  }
+
+  .manageQuickCard{
+    min-height:auto;
+    grid-template-columns:54px minmax(0, 1fr);
+    align-items:center;
+  }
+
+  .manageQuickCard small{
+    grid-column:2;
+  }
+
+  .manageTopicTools{
+    grid-template-columns:1fr;
+  }
+
+  .managePhraseMain{
+    grid-template-columns:1fr;
+  }
+
+  .managePhraseActions{
+    max-width:none;
+    justify-content:flex-start;
+  }
+}
+
+@media (max-width:430px){
+  .manageHero{
+    padding:16px;
+  }
+
+  .manageTitle{
+    font-size:clamp(28px, 7.6vw, 36px);
+  }
+
+  .manageStats{
+    grid-template-columns:1fr;
+  }
+
+  .manageDetails summary,
+  .manageDetailsBody{
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  .manageNewTopicBox{
+    grid-template-columns:1fr;
+  }
+
+  .manageTopicBody{
+    padding:12px;
+  }
+
+  .managePhraseActions .btn{
+    flex:1 1 auto;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.46 — Sensei IA Guiado
+   Escopo: somente #/sensei.
+   ========================================================= */
+
+.senseiPage{
+  text-align:left;
+}
+
+.senseiHero{
+  padding:clamp(18px, 4vw, 30px);
+  background:
+    radial-gradient(420px 240px at 0% 0%, rgba(255,179,71,.16), transparent 64%),
+    radial-gradient(420px 260px at 100% 100%, rgba(108,166,255,.14), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.senseiHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 260px;
+  gap:18px;
+  align-items:stretch;
+}
+
+.senseiTitle{
+  margin:0;
+  max-width:12em;
+  color:var(--soft);
+  font-size:clamp(32px, 5vw, 54px);
+  line-height:1.04;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.senseiLead{
+  margin:12px 0 0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.62;
+}
+
+.senseiHeroMini{
+  border:1px solid var(--strokeSoft);
+  border-radius:26px;
+  padding:18px;
+  background:
+    radial-gradient(220px 140px at 0% 0%, rgba(255,179,71,.18), transparent 66%),
+    rgba(255,255,255,.045);
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.senseiHeroMini span{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:18px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--gold2);
+  font-size:20px;
+  font-weight:950;
+}
+
+.senseiHeroMini b{
+  color:var(--soft);
+  font-size:17px;
+}
+
+.senseiHeroMini p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.48;
+}
+
+.senseiSectionTitle{
+  margin-top:10px;
+  max-width:20em;
+}
+
+.senseiPromptGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+}
+
+.senseiPromptCard{
+  appearance:none;
+  border:1px solid var(--strokeSoft);
+  border-radius:24px;
+  background:rgba(255,255,255,.038);
+  color:var(--soft);
+  padding:15px;
+  text-align:left;
+  cursor:pointer;
+  min-width:0;
+  min-height:148px;
+  display:grid;
+  align-content:space-between;
+  gap:10px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.senseiPromptCard span{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  color:var(--gold2);
+  font-size:19px;
+  font-weight:950;
+}
+
+.senseiPromptCard b{
+  color:var(--soft);
+  font-size:15.5px;
+  line-height:1.18;
+}
+
+.senseiPromptCard small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.senseiRequestCard{
+  background:
+    radial-gradient(360px 200px at 0% 0%, rgba(255,179,71,.10), transparent 64%),
+    var(--card);
+}
+
+.senseiTextarea{
+  width:100%;
+  min-height:170px;
+  resize:vertical;
+  text-align:left;
+  padding:14px;
+  border-radius:20px;
+  line-height:1.6;
+}
+
+.senseiFormGrid,
+.senseiActionGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.senseiValueGrid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:12px;
+}
+
+.senseiValueCard{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,.038);
+}
+
+.senseiValueCard span{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  margin-bottom:10px;
+}
+
+.senseiValueCard b{
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.2;
+}
+
+.senseiValueCard p{
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.46;
+}
+
+html[data-theme="light"] .senseiHeroMini,
+html[data-theme="light"] .senseiPromptCard,
+html[data-theme="light"] .senseiValueCard{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:860px){
+  .senseiHeroGrid,
+  .senseiFormGrid,
+  .senseiActionGrid{
+    grid-template-columns:1fr;
+  }
+
+  .senseiPromptGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+
+  .senseiValueGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width:520px){
+  .senseiHero{
+    padding:16px;
+  }
+
+  .senseiTitle{
+    font-size:clamp(28px, 7.7vw, 36px);
+  }
+
+  .senseiPromptGrid,
+  .senseiValueGrid{
+    grid-template-columns:1fr;
+  }
+
+  .senseiPromptCard{
+    min-height:auto;
+    grid-template-columns:54px minmax(0, 1fr);
+    align-items:center;
+  }
+
+  .senseiPromptCard small{
+    grid-column:2;
+  }
+
+  .senseiTextarea{
+    min-height:150px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.47 — Sensei salva em tema escolhido
+   Escopo: saída/salvamento do Sensei IA.
+   ========================================================= */
+
+.senseiOutputSummary,
+.senseiSaveControl,
+.senseiPhrasePreview{
+  text-align:left;
+}
+
+.senseiSaveControl{
+  border-color:rgba(255,179,71,.24);
+  background:
+    radial-gradient(320px 160px at 0% 0%, rgba(255,179,71,.12), transparent 64%),
+    rgba(255,255,255,.040);
+}
+
+.senseiSaveGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.senseiSaveControl input:disabled{
+  opacity:.74;
+  cursor:not-allowed;
+}
+
+html[data-theme="light"] .senseiSaveControl{
+  background:
+    radial-gradient(320px 160px at 0% 0%, rgba(255,179,71,.22), transparent 64%),
+    rgba(255,255,255,.72);
+}
+
+@media (max-width:720px){
+  .senseiSaveGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.48 — Correções Home + Sensei tema simultâneo
+   Escopo:
+   - corrige selo "2 min" nos caminhos rápidos da Home;
+   - simplifica salvamento do Sensei IA em tema nomeado no mesmo toque.
+   ========================================================= */
+
+/* Home: evita que "2 min" estoure para fora do selo em telas estreitas */
+.homePathItem span{
+  width:56px !important;
+  height:48px !important;
+  min-width:56px !important;
+  padding:0 6px !important;
+  text-align:center !important;
+  white-space:normal !important;
+  line-height:1.04 !important;
+  font-size:13px !important;
+  overflow:hidden !important;
+}
+
+@media (max-width:820px){
+  .homePathItem{
+    grid-template-columns:68px minmax(0, 1fr) !important;
+  }
+
+  .homePathItem span{
+    width:58px !important;
+    height:50px !important;
+    min-width:58px !important;
+    font-size:13px !important;
+  }
+}
+
+/* Sensei: salvar em tema nomeado sem redundância */
+.senseiSaveSingle{
+  display:grid;
+  gap:12px;
+}
+
+.senseiExistingTopic{
+  border:1px solid var(--strokeSoft);
+  border-radius:18px;
+  background:rgba(255,255,255,.035);
+  overflow:hidden;
+}
+
+.senseiExistingTopic summary{
+  cursor:pointer;
+  list-style:none;
+  padding:13px 14px;
+  color:var(--muted2);
+  font-size:13px;
+  line-height:1.3;
+  font-weight:900;
+}
+
+.senseiExistingTopic summary::-webkit-details-marker{
+  display:none;
+}
+
+.senseiExistingTopic summary::after{
+  content:"opcional";
+  margin-left:8px;
+  display:inline-flex;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:4px 8px;
+  color:var(--muted);
+  background:rgba(255,255,255,.04);
+  font-size:10px;
+  font-weight:900;
+}
+
+.senseiExistingBody{
+  display:grid;
+  gap:10px;
+  padding:0 14px 14px;
+}
+
+html[data-theme="light"] .senseiExistingTopic{
+  background:rgba(255,255,255,.68);
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.49 — Sensei tons ampliados + acessos rápidos
+   Escopo:
+   - melhora tons de fala do Sensei IA;
+   - adiciona atalhos para Sensei IA em telas estratégicas;
+   - preserva motor do Sensei e banco externo.
+   ========================================================= */
+
+.senseiToneGuide{
+  background:
+    radial-gradient(340px 190px at 0% 0%, rgba(108,166,255,.10), transparent 64%),
+    var(--card);
+}
+
+.senseiToneGrid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:10px;
+}
+
+.senseiToneChip{
+  appearance:none;
+  border:1px solid var(--strokeSoft);
+  border-radius:18px;
+  padding:12px;
+  background:rgba(255,255,255,.038);
+  color:var(--soft);
+  text-align:left;
+  cursor:pointer;
+  min-height:92px;
+  display:grid;
+  align-content:start;
+  gap:6px;
+}
+
+.senseiToneChip b{
+  color:var(--soft);
+  font-size:13.5px;
+  line-height:1.15;
+}
+
+.senseiToneChip span{
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.35;
+  font-weight:800;
+}
+
+.senseiToneChip:active{
+  transform:translateY(1px);
+}
+
+.homeSoftActions{
+  grid-template-columns:1fr;
+}
+
+html[data-theme="light"] .senseiToneChip{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:860px){
+  .senseiToneGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width:520px){
+  .senseiToneGrid{
+    grid-template-columns:1fr;
+  }
+
+  .senseiToneChip{
+    min-height:auto;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.50 — Sensei minimalista + tons mais expressivos
+   Escopo: somente experiência visual e orientação de tom do Sensei IA.
+   ========================================================= */
+
+.senseiCompactPanel{
+  padding:0;
+  overflow:hidden;
+}
+
+.senseiCompactPanel summary{
+  cursor:pointer;
+  list-style:none;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:18px;
+}
+
+.senseiCompactPanel summary::-webkit-details-marker{
+  display:none;
+}
+
+.senseiCompactPanel summary span{
+  color:var(--soft);
+  font-size:17px;
+  line-height:1.18;
+  font-weight:950;
+}
+
+.senseiCompactPanel summary b{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.25;
+  font-weight:900;
+  text-align:right;
+}
+
+.senseiCompactPanel summary::after{
+  content:"abrir";
+  grid-column:1 / -1;
+  justify-self:start;
+  display:inline-flex;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:6px 10px;
+  color:var(--muted2);
+  background:rgba(255,255,255,.04);
+  font-size:11px;
+  font-weight:900;
+}
+
+.senseiCompactPanel[open] summary::after{
+  content:"ocultar";
+}
+
+.senseiCompactBody{
+  display:grid;
+  gap:14px;
+  padding:0 18px 18px;
+}
+
+/* deixa perguntas e tons mais compactos quando estão dentro do painel recolhível */
+.senseiCompactBody .senseiPromptGrid{
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+}
+
+.senseiCompactBody .senseiPromptCard{
+  min-height:118px;
+  border-radius:20px;
+  padding:13px;
+}
+
+.senseiCompactBody .senseiPromptCard span{
+  width:38px;
+  height:38px;
+  border-radius:14px;
+  font-size:17px;
+}
+
+.senseiCompactBody .senseiPromptCard b{
+  font-size:14px;
+}
+
+.senseiCompactBody .senseiPromptCard small{
+  font-size:11px;
+}
+
+.senseiCompactBody .senseiToneGrid{
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+}
+
+.senseiCompactBody .senseiToneChip{
+  min-height:76px;
+  border-radius:16px;
+  padding:10px;
+}
+
+.senseiCompactBody .senseiToneChip b{
+  font-size:12.5px;
+}
+
+.senseiCompactBody .senseiToneChip span{
+  font-size:10.8px;
+}
+
+html[data-theme="light"] .senseiCompactPanel{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:860px){
+  .senseiCompactBody .senseiPromptGrid,
+  .senseiCompactBody .senseiToneGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width:520px){
+  .senseiCompactPanel summary{
+    padding:16px;
+  }
+
+  .senseiCompactBody{
+    padding:0 16px 16px;
+  }
+
+  .senseiCompactBody .senseiPromptGrid,
+  .senseiCompactBody .senseiToneGrid{
+    grid-template-columns:1fr;
+  }
+
+  .senseiCompactBody .senseiPromptCard{
+    min-height:auto;
+  }
+
+  .senseiCompactBody .senseiToneChip{
+    min-height:auto;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.51 — Sensei auto recolhe + textos curtos
+   Escopo: experiência do Sensei IA.
+   ========================================================= */
+
+.senseiCompactPanel summary span{
+  font-size:16px !important;
+}
+
+.senseiCompactPanel summary b{
+  font-size:11.5px !important;
+}
+
+.senseiCompactBody{
+  gap:10px !important;
+}
+
+.senseiCompactBody .small{
+  line-height:1.45 !important;
+}
+
+.senseiLead{
+  max-width:34em !important;
+}
+
+.senseiPromptCard small,
+.senseiToneChip span{
+  line-height:1.25 !important;
+}
+
+.senseiTextarea{
+  min-height:138px !important;
+}
+
+.senseiExistingTopic summary{
+  padding:11px 12px !important;
+}
+
+.senseiExistingBody{
+  padding:0 12px 12px !important;
+}
+
+@media (max-width:520px){
+  .senseiTextarea{
+    min-height:124px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.52 — Premium com situações reais
+   Escopo: somente #/premium.
+   ========================================================= */
+
+.premiumHeroV3 .premiumTitle{
+  max-width:9.8em;
+}
+
+.premiumHeroV3 .premiumLead{
+  max-width:34em;
+}
+
+.premiumSituationGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:12px;
+}
+
+.premiumSituationItem{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,.038);
+  display:grid;
+  gap:8px;
+  min-height:134px;
+  align-content:start;
+}
+
+.premiumSituationItem span{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  border:1px solid var(--stroke);
+  background:rgba(255,255,255,.06);
+  font-size:18px;
+}
+
+.premiumSituationItem b{
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.18;
+}
+
+.premiumSituationItem small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.36;
+  font-weight:850;
+}
+
+html[data-theme="light"] .premiumSituationItem{
+  background:rgba(255,255,255,.68);
+}
+
+@media (max-width:760px){
+  .premiumSituationGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width:430px){
+  .premiumSituationGrid{
+    grid-template-columns:1fr;
+  }
+
+  .premiumSituationItem{
+    min-height:auto;
+    border-radius:20px;
+    grid-template-columns:54px minmax(0, 1fr);
+    align-items:center;
+  }
+
+  .premiumSituationItem small{
+    grid-column:2;
+  }
+}

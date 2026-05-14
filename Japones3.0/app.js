@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.42
+   NIHONGO321 v8.5.52
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.42",
+  version: "8.5.52",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -4696,8 +4696,180 @@ NIHONGO321: Japonês prático no Japão.`;
         </div>
 
         <div class="storeNextActions">
-          <button class="primaryAction" data-nav="#/launch-checklist">voltar ao checklist</button>
-          <button class="btn btn--muted btn--full" data-nav="#/premium">revisar Premium</button>
+          <button class="primaryAction" data-nav="#/screenshot-guide">roteiro de screenshots</button>
+          <button class="btn btn--muted btn--full" data-nav="#/launch-checklist">voltar ao checklist</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+
+
+function renderScreenshotGuide() {
+  const shots = [
+    {
+      id: 1,
+      title: "Tela inicial / apresentação",
+      purpose: "Mostrar a promessa do app e o clima emocional do produto.",
+      capture: "Abrir a apresentação com banner hero, título principal ajustado e botões principais visíveis.",
+      overlay: "Japonês útil para quem vive a rotina real do Japão",
+      support: "Treine frases úteis com leveza, mesmo depois de um dia cansativo.",
+      note: "Print principal da loja. Deve ser o mais bonito."
+    },
+    {
+      id: 2,
+      title: "Treino 105x com frase curta",
+      purpose: "Explicar o mecanismo central do app.",
+      capture: "Abrir uma frase curta no treino 105x, com contador, áudio e botão repetir visíveis.",
+      overlay: "Ouça. Leia. Repita. Fixe no seu ritmo.",
+      support: "Um treino simples para criar memória sem complicação.",
+      note: "Ideal para o segundo print."
+    },
+    {
+      id: 3,
+      title: "Treino 105x com frase longa",
+      purpose: "Provar que o app lida bem com frases reais do cotidiano.",
+      capture: "Abrir uma frase longa e confortável, com boa leitura em japonês e português.",
+      overlay: "Frases reais para situações reais no Japão",
+      support: "Fábrica, contas, prefeitura, atendimento, moradia e muito mais.",
+      note: "Mostra maturidade visual e utilidade prática."
+    },
+    {
+      id: 4,
+      title: "Detalhes / explicação da frase",
+      purpose: "Mostrar valor pedagógico para iniciantes.",
+      capture: "Abrir os detalhes da frase com sentido geral, palavras e partículas.",
+      overlay: "Entenda antes de repetir",
+      support: "Ideal para quem ainda sabe só hiragana e katakana.",
+      note: "Print importante para transmitir didática."
+    },
+    {
+      id: 5,
+      title: "Treino por situação real",
+      purpose: "Mostrar organização por contexto de vida.",
+      capture: "Abrir a grade com Trabalho, Mercado, Prefeitura, Konbini, Transporte, Hospital etc.",
+      overlay: "Escolha o contexto da sua vida no Japão",
+      support: "Treine por situação, não só por lista solta.",
+      note: "Mostra proposta mais vendável."
+    },
+    {
+      id: 6,
+      title: "Backup / compartilhar frases",
+      purpose: "Provar que o usuário pode levar o conteúdo para outras pessoas.",
+      capture: "Abrir a área de backup com botões WhatsApp/LINE, copiar texto e baixar .txt/.json.",
+      overlay: "Compartilhe frases pelo WhatsApp ou LINE",
+      support: "Seu conteúdo pode crescer sem apagar o de outra pessoa.",
+      note: "Ótimo diferencial do app."
+    },
+    {
+      id: 7,
+      title: "Tela Premium",
+      purpose: "Mostrar caminho de monetização e valor percebido.",
+      capture: "Abrir a tela Premium com benefícios, comparação Grátis x Premium e CTA.",
+      overlay: "Do grátis útil ao Premium que resolve mais",
+      support: "Mais temas, mais situações e mais profundidade para a vida real.",
+      note: "Deve transmitir produto vendável."
+    },
+    {
+      id: 8,
+      title: "Sensei IA",
+      purpose: "Mostrar profundidade e inteligência do produto.",
+      capture: "Abrir o Sensei IA com uma solicitação útil e exemplos gerados.",
+      overlay: "Material para a sua necessidade",
+      support: "Gramática, palavra-alvo e situações reais em japonês.",
+      note: "Fechar com tecnologia e valor."
+    }
+  ];
+
+  APP.innerHTML = `
+    <div class="stack shotGuidePage">
+      <section class="card shotHero">
+        <div class="row row--between">
+          <div class="badge">roteiro de screenshots</div>
+          <button class="btn" data-nav="#/store-kit">voltar</button>
+        </div>
+
+        <div class="shotHeroGrid">
+          <div>
+            <h1 class="shotTitle">A ordem ideal dos prints para vender o NIHONGO321.</h1>
+            <p class="shotLead">
+              Esta página organiza quais telas capturar, qual frase usar em cada imagem e que mensagem curta deve aparecer sobreposta no print.
+            </p>
+          </div>
+
+          <div class="shotHeroCard">
+            <span>📱</span>
+            <b>Prioridade: mobile</b>
+            <p>Os prints principais devem ser feitos no celular. Depois, se quiser, repita a lógica para tablet.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="row row--between">
+          <div>
+            <div class="badge">padrão visual</div>
+            <h2 class="h2 shotSectionTitle">Como todos os prints devem ser preparados.</h2>
+          </div>
+          <div class="badge">consistência</div>
+        </div>
+
+        <div class="shotRulesGrid">
+          <div class="shotRuleItem"><span>1</span><b>Usar tema escuro, porque está mais premium e cinematográfico.</b></div>
+          <div class="shotRuleItem"><span>2</span><b>Capturar telas limpas, sem excesso de rolagem cortada ou elementos quebrados.</b></div>
+          <div class="shotRuleItem"><span>3</span><b>Se for colocar texto sobreposto, usar frase curta e legível em 2 linhas no máximo.</b></div>
+          <div class="shotRuleItem"><span>4</span><b>Mostrar sempre o que resolve a dor real do dekassegui no Japão.</b></div>
+        </div>
+      </section>
+
+      <section class="stack shotSequence">
+        ${shots.map(item => `
+          <section class="card stack shotCard">
+            <div class="row row--between">
+              <div class="badge">print ${item.id}</div>
+              <div class="badge">ordem recomendada</div>
+            </div>
+
+            <h2 class="h2 shotCardTitle">${escapeHTML(item.title)}</h2>
+
+            <div class="shotMetaGrid">
+              <div class="shotMetaBox">
+                <label>objetivo</label>
+                <p>${escapeHTML(item.purpose)}</p>
+              </div>
+              <div class="shotMetaBox">
+                <label>o que capturar</label>
+                <p>${escapeHTML(item.capture)}</p>
+              </div>
+            </div>
+
+            <div class="shotOverlayBox">
+              <label>texto principal sobreposto</label>
+              <div class="shotOverlayMain">${escapeHTML(item.overlay)}</div>
+              <div class="shotOverlaySupport">${escapeHTML(item.support)}</div>
+            </div>
+
+            <div class="shotNote">
+              <span>nota</span>
+              <b>${escapeHTML(item.note)}</b>
+            </div>
+          </section>
+        `).join("")}
+      </section>
+
+      <section class="card shotNextCard">
+        <div class="shotNextCopy">
+          <div class="badge">próxima ação</div>
+          <h2 class="h2">Depois do roteiro, criamos as artes dos screenshots.</h2>
+          <p class="p">
+            O próximo bloco recomendado é gerar as imagens promocionais da loja com textos curtos, ordem comercial e cara de produto real.
+          </p>
+        </div>
+
+        <div class="shotNextActions">
+          <button class="primaryAction" data-nav="#/store-kit">voltar ao pacote comercial</button>
+          <button class="btn btn--muted btn--full" data-nav="#/launch-checklist">voltar ao checklist</button>
         </div>
       </section>
     </div>
@@ -4830,35 +5002,44 @@ function renderPremium() {
   const monthly = SALES.monthlyPrice || "¥980";
   const semi = SALES.semiannualPrice || "¥4,980 / 6 meses";
 
+  const situations = [
+    { icon: "🏭", title: "Chefe / fábrica", text: "confirmar tarefa, avisar problema, pedir ajuda" },
+    { icon: "🏢", title: "Prefeitura", text: "documentos, endereço, imposto, seguro" },
+    { icon: "🏥", title: "Hospital", text: "dor, sintomas, atestado, remédio" },
+    { icon: "🏠", title: "Moradia", text: "aluguel, conserto, conta, aviso" },
+    { icon: "💴", title: "Contas", text: "cobrança, plano, vencimento, pagamento" },
+    { icon: "🧠", title: "Sensei IA", text: "frases para sua necessidade real" }
+  ];
+
   APP.innerHTML = `
     <div class="stack premiumPage">
-      <section class="card premiumHeroV2">
+      <section class="card premiumHeroV2 premiumHeroV3">
         <div class="premiumHeroGrid">
           <div class="premiumHeroCopy">
             <div class="badge">NIHONGO321 Premium</div>
-            <h1 class="premiumTitle">Japonês prático para viver melhor no Japão.</h1>
+            <h1 class="premiumTitle">Mais japonês para resolver a vida real.</h1>
             <p class="premiumLead">
-              Menos teoria, mais frases úteis para fábrica, prefeitura, correio, mercado, konbini, moradia e situações reais.
+              Para quando o básico já ajudou, mas você precisa falar melhor no trabalho, prefeitura, hospital e contas.
             </p>
 
             <div class="premiumPriceBox">
               <div>
-                <div class="premiumPriceLabel">plano mensal</div>
+                <div class="premiumPriceLabel">mensal</div>
                 <div class="premiumPrice">${escapeHTML(monthly)}</div>
               </div>
               <div>
-                <div class="premiumPriceLabel">plano econômico</div>
+                <div class="premiumPriceLabel">econômico</div>
                 <div class="premiumPrice premiumPrice--small">${escapeHTML(semi)}</div>
               </div>
             </div>
 
             <div class="premiumActions">
               <button class="primaryAction" data-action="checkout">assinar Premium</button>
-              <button class="btn btn--muted btn--full" data-nav="#/105x">voltar ao treino</button>
+              <button class="btn btn--muted btn--full" data-nav="#/sensei">ver Sensei IA</button>
             </div>
 
             <p class="premiumMicrocopy">
-              Feito para brasileiros no Japão que trabalham muito, têm pouco tempo e precisam de frases para usar de verdade.
+              Feito para brasileiros no Japão que precisam de frases úteis, não aula pesada.
             </p>
 
             ${checkoutReady ? "" : `
@@ -4870,21 +5051,41 @@ function renderPremium() {
 
           <div class="premiumHeroPanel">
             <div class="premiumMiniCard premiumMiniCard--gold">
-              <span>☀️</span>
-              <b>Estudo leve</b>
-              <p>Treinos rápidos para quem chega cansado do trabalho.</p>
+              <span>⚡</span>
+              <b>Menos enrolação</b>
+              <p>Abra, escolha uma situação e treine.</p>
             </div>
             <div class="premiumMiniCard">
-              <span>🏭</span>
-              <b>Situações reais</b>
-              <p>Frases para rotina no Japão, não exemplos soltos.</p>
+              <span>🗣️</span>
+              <b>Mais contexto</b>
+              <p>Frases com sentido, palavras e uso.</p>
             </div>
             <div class="premiumMiniCard">
-              <span>🧭</span>
-              <b>Direção clara</b>
-              <p>Entenda sentido, palavras e partículas sem se perder.</p>
+              <span>先生</span>
+              <b>Sensei IA</b>
+              <p>Crie material para o seu caso.</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="card stack premiumSituationCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">situações reais</div>
+            <h2 class="h2 premiumSectionTitle">Onde o Premium ajuda mais?</h2>
+          </div>
+          <div class="badge">vida no Japão</div>
+        </div>
+
+        <div class="premiumSituationGrid">
+          ${situations.map(item => `
+            <div class="premiumSituationItem">
+              <span>${escapeHTML(item.icon)}</span>
+              <b>${escapeHTML(item.title)}</b>
+              <small>${escapeHTML(item.text)}</small>
+            </div>
+          `).join("")}
         </div>
       </section>
 
@@ -4892,7 +5093,7 @@ function renderPremium() {
         <div class="row row--between">
           <div>
             <div class="badge">grátis x premium</div>
-            <h2 class="h2 premiumSectionTitle">O que muda quando você desbloqueia o Premium?</h2>
+            <h2 class="h2 premiumSectionTitle">Comece grátis. Avance quando precisar.</h2>
           </div>
         </div>
 
@@ -4900,7 +5101,7 @@ function renderPremium() {
           <div class="premiumPlanBox">
             <div class="premiumPlanHead">
               <span>Grátis</span>
-              <b>comece hoje</b>
+              <b>essencial</b>
             </div>
             <ul class="premiumList">
               <li>Pack Essencial Japão</li>
@@ -4914,35 +5115,35 @@ function renderPremium() {
           <div class="premiumPlanBox premiumPlanBox--premium">
             <div class="premiumPlanHead">
               <span>Premium</span>
-              <b>vida real no Japão</b>
+              <b>mais situações</b>
             </div>
             <ul class="premiumList">
-              <li>Temas avançados do cotidiano</li>
-              <li>Fábrica, prefeitura, correio, konbini, mercado e mais</li>
-              <li>Treino por situação real</li>
+              <li>Temas específicos da vida no Japão</li>
+              <li>Treino por contexto real</li>
               <li>Explicações mais úteis para iniciantes</li>
-              <li>Conteúdo em crescimento contínuo</li>
+              <li>Sensei IA guiado</li>
+              <li>Conteúdo em crescimento</li>
             </ul>
           </div>
         </div>
       </section>
 
       <section class="card stack premiumValueCard">
-        <div class="badge">por que vale a pena?</div>
-        <h2 class="h2 premiumSectionTitle">O Premium economiza energia mental.</h2>
+        <div class="badge">valor prático</div>
+        <h2 class="h2 premiumSectionTitle">O Premium reduz o “e agora, como eu falo?”.</h2>
 
         <div class="premiumValueGrid">
           <div class="premiumValueItem">
-            <b>Você não precisa estudar por horas</b>
-            <p>O foco é repetir frases que resolvem situações reais.</p>
+            <b>Quando chega uma conta estranha</b>
+            <p>Treine como perguntar e confirmar.</p>
           </div>
           <div class="premiumValueItem">
-            <b>Você entende a frase antes de repetir</b>
-            <p>Sentido geral, palavras e partículas ficam mais claros.</p>
+            <b>Quando o chefe explica rápido</b>
+            <p>Peça repetição sem travar.</p>
           </div>
           <div class="premiumValueItem">
-            <b>Você treina para a vida no Japão</b>
-            <p>Não é japonês genérico. É japonês para a rotina do dekassegui.</p>
+            <b>Quando precisa resolver documento</b>
+            <p>Use frases educadas e claras.</p>
           </div>
         </div>
       </section>
@@ -4950,9 +5151,9 @@ function renderPremium() {
       <section class="card premiumCtaCard">
         <div class="premiumCtaCopy">
           <div class="badge">próximo passo</div>
-          <h2 class="h2">Desbloqueie mais situações e continue treinando um pouco por dia.</h2>
+          <h2 class="h2">Desbloqueie mais situações e treine com direção.</h2>
           <p class="p">
-            O objetivo não é virar estudante perfeito. É conseguir falar melhor, entender mais e se sentir menos perdido no Japão.
+            Poucos minutos por dia. Frases que servem para a rotina real no Japão.
           </p>
         </div>
         <div class="premiumCtaActions">
@@ -5022,124 +5223,147 @@ function renderHome() {
     saveState();
   }
 
-  const filterLabel = topicFilter === "ALL" ? "tudo" : topicName(topicFilter);
+  const filterLabel = topicFilter === "ALL" ? "tudo" : topicFilter === "FAV" ? "favoritas" : topicName(topicFilter);
   const favCount = favoritePhrasesAccessible().length;
   const resume = hasResumeTraining();
+  const todayGoal = todayGoalProgress();
+  const streak = getStreakInfo();
 
   APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
+    <div class="stack homeProPage">
+      <section class="card homeHeroPro">
         <div class="row row--between">
           <div class="badge">início</div>
           <button class="btn btn--ghost" data-nav="#/landing">apresentação</button>
         </div>
 
-        <h1 class="h1">Treine japonês útil hoje.</h1>
-        <p class="p">
-          Está cansado? Toque no treino rápido. Quer foco? Escolha uma situação real.
-        </p>
+        <div class="homeHeroGrid">
+          <div class="homeHeroCopy">
+            <h1 class="homeTitlePro">Treine japonês útil hoje.</h1>
+            <p class="homeLeadPro">
+              Escolha um caminho simples. Dois minutos já mantêm o japonês vivo na rotina.
+            </p>
 
-        <button class="bigBtn" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
-          ${resume ? "continuar último treino" : "treinar 2 minutos agora"}
-        </button>
-
-        <div class="sep"></div>
-
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">tema de estudo</div>
-            <div class="badge">agora: ${escapeHTML(filterLabel)}</div>
+            <div class="homeMainActions">
+              <button class="bigBtn" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
+                ${resume ? "continuar último treino" : "treinar 2 minutos agora"}
+              </button>
+              <button class="btn btn--muted btn--full" data-nav="#/105x">abrir treino 105x</button>
+            </div>
           </div>
 
-          <div class="row">
-            <select class="btn selectBtn" id="topicFilterSel" aria-label="filtro de tópicos">
-              <option value="ALL">tudo</option>
-              <option value="FAV" ${topicFilter === "FAV" ? "selected" : ""}>favoritas ${favCount ? `(${favCount})` : ""}</option>
-              ${(STATE.bank.topics || []).map(t => {
-    const lockedAttrs = topicOptionLockAttrs(t.id);
-    return `<option value="${t.id}" ${lockedAttrs} ${t.id === topicFilter ? "selected" : ""}>${topicOptionLabel(t)}</option>`;
-  }).join("")}
-            </select>
-            <button class="btn btn--ghost" data-nav="#/manage">gerenciar</button>
+          <div class="homeTodayCard">
+            <div class="badge">hoje</div>
+            <div class="homeTodayValue">${Math.round(todayGoal.overall * 100)}%</div>
+            <div class="homeTodayText">
+              meta diária • ${STATE.goals.dailyMinutes} min • ${STATE.goals.dailyCycles} ciclo
+            </div>
+            <div class="homeTodayMini">
+              <span>🔥 ${streak.current || 0} dias</span>
+              <span>🪙 ${STATE.stats.coins || 0}</span>
+            </div>
           </div>
-
-          <div class="small">Use “tudo” para seguir o fluxo, ou escolha um tema para treinar com foco.</div>
-        </div>
-
-        <div class="row">
-          <button class="btn" data-nav="#/105x">abrir treino</button>
-          <button class="btn" data-nav="#/edit">nova frase</button>
-          <button class="btn" data-nav="#/backup">backup</button>
-          <button class="btn btn--ghost" data-nav="#/skills">skills</button>
         </div>
       </section>
 
-      ${renderQuickTrainingCard()}
-      ${renderRetentionCard()}
+      <section class="card stack homeFocusCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">foco de estudo</div>
+            <h2 class="h2 homeSectionTitle">Escolha o conteúdo sem se perder.</h2>
+          </div>
+          <div class="badge">agora: ${escapeHTML(filterLabel)}</div>
+        </div>
+
+        <div class="homeTopicRow">
+          <select class="btn selectBtn" id="topicFilterSel" aria-label="filtro de tópicos">
+            <option value="ALL" ${topicFilter === "ALL" ? "selected" : ""}>tudo</option>
+            <option value="FAV" ${topicFilter === "FAV" ? "selected" : ""}>favoritas ${favCount ? `(${favCount})` : ""}</option>
+            ${(STATE.bank.topics || []).map(t => {
+              const lockedAttrs = topicOptionLockAttrs(t.id);
+              return `<option value="${t.id}" ${lockedAttrs} ${t.id === topicFilter ? "selected" : ""}>${topicOptionLabel(t)}</option>`;
+            }).join("")}
+          </select>
+        </div>
+
+        <div class="homeActionGrid">
+          <button class="homeActionCard" type="button" data-nav="#/edit">
+            <span>＋</span>
+            <b>Nova frase</b>
+            <small>adicione algo útil</small>
+          </button>
+
+          <button class="homeActionCard" type="button" data-nav="#/manage">
+            <span>文</span>
+            <b>Minhas frases</b>
+            <small>organize seu conteúdo</small>
+          </button>
+
+          <button class="homeActionCard" type="button" data-nav="#/backup">
+            <span>↗</span>
+            <b>Compartilhar</b>
+            <small>WhatsApp / LINE</small>
+          </button>
+
+          <button class="homeActionCard" type="button" data-nav="#/skills">
+            <span>★</span>
+            <b>Progresso</b>
+            <small>veja sua constância</small>
+          </button>
+        </div>
+      </section>
+
+      <section class="card stack homePathCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">caminhos rápidos</div>
+            <h2 class="h2 homeSectionTitle">O que você quer fazer agora?</h2>
+          </div>
+          <div class="badge">baixa carga mental</div>
+        </div>
+
+        <div class="homePathGrid">
+          <button class="homePathItem" type="button" data-action="startQuickTraining">
+            <span>2 min</span>
+            <b>Treino rápido</b>
+            <small>para dias cansativos</small>
+          </button>
+
+          <button class="homePathItem" type="button" data-nav="#/105x">
+            <span>105x</span>
+            <b>Modo foco</b>
+            <small>ouvir, ler e repetir</small>
+          </button>
+
+          <button class="homePathItem" type="button" data-nav="#/sensei">
+            <span>先生</span>
+            <b>Sensei IA</b>
+            <small>dúvidas e exemplos</small>
+          </button>
+        </div>
+      </section>
+
       ${renderSituationTrainingCard()}
-      ${renderSmartReviewCard()}
-      ${renderDailyGoalCard()}
+
       ${renderPhraseOfDayCard()}
-      ${renderEssentialPackHighlight()}
-      ${renderFavoritesCard()}
 
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">progresso</div>
-          <div class="badge">🪙 ${STATE.stats.coins || 0}</div>
-        </div>
-        <div class="small">ciclos: ${STATE.stats.cyclesDone || 0} • dominadas: ${STATE.stats.phrasesMastered || 0}</div>
-      </section>
-
-      ${renderFreeValueCard()}
-      ${renderPremiumSoftBridge()}
-
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">Sensei IA</div>
-          <div class="badge">${isPremiumUnlocked() ? "liberado" : "premium"}</div>
-        </div>
-
-        <div class="lockCard">
-          <h3 class="lockTitle">Material para a sua necessidade</h3>
-          <p class="lockText">
-            Crie frases para chefe, fábrica, hospital, aluguel, viagem, mercado, partículas, gramática ou qualquer situação da sua vida no Japão.
+      <section class="card homeSoftBridge">
+        <div class="homeSoftCopy">
+          <div class="badge">premium</div>
+          <h2 class="h2">Mais situações quando você quiser avançar.</h2>
+          <p class="p">
+            A versão grátis ajuda hoje. O Premium aprofunda com temas da vida real, mais contexto e Sensei IA completo.
           </p>
         </div>
 
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/sensei">
-            ${isPremiumUnlocked() ? "abrir Sensei IA" : "ver Sensei IA"}
-          </button>
-          <button class="btn btn--full" data-nav="#/premium">
-            ${isPremiumUnlocked() ? "ver premium" : "comparar planos"}
-          </button>
-        </div>
-      </section>
-
-      <section class="card stack">
-        <div class="row row--between">
-          <div class="badge">suporte</div>
-          <div class="badge">${STATE.tutorial.done ? "tutorial visto" : "recomendado"}</div>
-        </div>
-
-        <div class="lockCard">
-          <h3 class="lockTitle">Use melhor, sem se perder</h3>
-          <p class="lockText">
-            Veja o tutorial, organize suas frases ou faça backup quando quiser proteger seu progresso.
-          </p>
-        </div>
-
-        <div class="grid2">
-          <button class="btn btn--ok btn--full" data-nav="#/tutorial">
+        <div class="homeSoftActions">
+          <button class="primaryAction" data-nav="#/sensei">abrir Sensei IA</button>
+          <button class="btn btn--muted btn--full" data-nav="#/premium">comparar planos</button>
+          <button class="btn btn--muted btn--full" data-nav="#/tutorial">
             ${STATE.tutorial.done ? "rever tutorial" : "ver tutorial"}
           </button>
-          <button class="btn btn--ghost btn--full" data-nav="#/backup">abrir backup</button>
         </div>
       </section>
-
-      ${renderLaunchChecklistBox(true)}
-      ${renderLegalLinksBox(true)}
     </div>
   `;
 
@@ -5169,8 +5393,6 @@ function renderHome() {
     });
   }
 }
-
-/* ---------- tutorial ---------- */
 function renderTutorial() {
   const step = tutorialCurrentStep();
   const item = TUTORIAL_STEPS[step];
@@ -5560,6 +5782,26 @@ function normalizeSenseiScenarioPack(pack, preferredLevel = "") {
 
   return normalizeSenseiPackPhrases(pack, preferredLevel);
 }
+
+function enhanceSenseiRequestByTone(request, tone) {
+  const base = String(request || "").trim();
+  const t = String(tone || "").trim().toLowerCase();
+
+  const guides = {
+    "muito educado": "Use linguagem muito educada e segura, com expressões como 恐れ入ります, 申し訳ありません, よろしいでしょうか quando fizer sentido. Evite soar casual.",
+    "educado": "Use linguagem educada padrão, natural e segura para desconhecidos, atendentes, trabalho e situações cotidianas.",
+    "natural": "Use linguagem natural do cotidiano, sem ficar formal demais. Deve soar como uma pessoa comum falando com educação.",
+    "informal com colegas": "Use linguagem mais leve para colegas próximos, mas sem grosseria. Evite keigo pesado.",
+    "direto e respeitoso": "Use frases objetivas, claras e respeitosas, boas para trabalho, líder e instruções. Evite rodeios longos.",
+    "urgente": "Use frases curtas e imediatas, com sensação de urgência, mas ainda educadas. Foque em pedir ajuda ou ação rápida.",
+    "alerta e firme": "Use tom firme para risco, erro, cuidado ou problema sério. Deve ser claro sem ser ofensivo.",
+    "muito simples": "Use frases muito simples, fáceis de repetir, com vocabulário básico e estrutura curta."
+  };
+
+  const guide = guides[t] || "";
+  return guide ? `${base}\n\nOrientação de tom: ${guide}` : base;
+}
+
 function generateSenseiMaterial(payload) {
   const request = String(payload?.request || "").trim();
   const level = String(payload?.level || "").trim();
@@ -5615,8 +5857,20 @@ function generateSenseiMaterial(payload) {
   };
 }
 
-function saveSenseiPackToApp(pack) {
-  const topic = createTopicIfMissing(pack.topicName);
+function saveSenseiPackToApp(pack, options = {}) {
+  const selectedTopicId = String(options.topicId || "").trim();
+  const typedTopicName = normalizeName(options.topicName || "");
+
+  let topic = null;
+
+  if (selectedTopicId && selectedTopicId !== "__new__") {
+    topic = getTopic(selectedTopicId);
+  }
+
+  if (!topic) {
+    topic = createTopicIfMissing(typedTopicName || pack.topicName);
+  }
+
   let added = 0;
 
   for (const phrase of pack.phrases) {
@@ -5656,7 +5910,8 @@ function saveSenseiPackToApp(pack) {
   STATE.aiStudio.history.unshift({
     id: uid("aihist"),
     at: now(),
-    topicName: pack.topicName,
+    topicName: topic.name,
+    originalTopicName: pack.topicName,
     coachLine: pack.coachLine,
     explanation: pack.explanation || "",
     goal: pack.goal || "",
@@ -5704,47 +5959,89 @@ function renderSenseiHistory() {
 }
 
 function renderSensei() {
+  const promptCards = [
+    {
+      icon: "🏭",
+      title: "Falar com chefe/líder",
+      text: "Preciso falar com meu chefe que não entendi bem a tarefa. Crie frases educadas, simples e úteis para confirmar a instrução sem parecer mal-educado.",
+      level: "básico",
+      tone: "direto e respeitoso",
+      theme: "chefe da fábrica"
+    },
+    {
+      icon: "🏥",
+      title: "Hospital ou dor",
+      text: "Preciso explicar no hospital que estou com dor e quero entender o que o médico está dizendo. Crie frases úteis em tom educado.",
+      level: "básico",
+      tone: "muito educado",
+      theme: "hospital no Japão"
+    },
+    {
+      icon: "🏢",
+      title: "Prefeitura",
+      text: "Preciso de frases para resolver algo na prefeitura, pedir informação, confirmar documentos e dizer que ainda não entendo bem japonês.",
+      level: "básico",
+      tone: "muito educado",
+      theme: "prefeitura"
+    },
+    {
+      icon: "📦",
+      title: "Correio / encomenda",
+      text: "Crie frases para perguntar sobre encomenda, entrega, aviso dos correios e retirada de pacote no Japão.",
+      level: "básico",
+      tone: "educado",
+      theme: "correio e encomenda"
+    },
+    {
+      icon: "文",
+      title: "Gramática: ので",
+      text: "Preciso de frases que expliquem bem o uso de ので. Quero frases comuns no dia a dia, com explicação simples e exemplos úteis.",
+      level: "intermediário",
+      tone: "educado",
+      theme: "uso de ので"
+    },
+    {
+      icon: "か",
+      title: "Gramática: かどうか",
+      text: "Me ensine かどうか com frases comuns. Quero entender o sentido, quando usar e como aplicar em situações reais no Japão.",
+      level: "intermediário",
+      tone: "educado",
+      theme: "uso de かどうか"
+    }
+  ];
+
   if (!isPremiumUnlocked()) {
     APP.innerHTML = `
-      <div class="stack">
-        <section class="card stack">
+      <div class="stack senseiPage">
+        <section class="card senseiHero">
           <div class="row row--between">
             <div class="badge">Sensei IA</div>
             <button class="btn" data-nav="#/home">voltar</button>
           </div>
 
-          <div class="lockCard">
-            <h3 class="lockTitle">Quando o conteúdo pronto não basta</h3>
-            <p class="lockText">
-              O Sensei IA cria frases para situações reais e também ajuda com gramática prática,
-              partículas, palavras e expressões japonesas.
-            </p>
+          <div class="senseiHeroGrid">
+            <div>
+              <h1 class="senseiTitle">Um professor prático para situações reais.</h1>
+              <p class="senseiLead">
+                O Sensei IA transforma dúvidas, gramática e problemas do dia a dia em frases treináveis no 105x.
+              </p>
+            </div>
+
+            <div class="senseiHeroMini">
+              <span>先生</span>
+              <b>Premium</b>
+              <p>Crie material de estudo para sua rotina no Japão.</p>
+            </div>
           </div>
+        </section>
 
-          <div class="valueGrid">
-            <div class="valueCard">
-              <div class="valueIcon">🧩</div>
-              <h3 class="valueTitle">Seu caso real</h3>
-              <p class="valueText">Explique a situação e receba frases úteis para treinar.</p>
-            </div>
-
-            <div class="valueCard">
-              <div class="valueIcon">文</div>
-              <h3 class="valueTitle">Gramática prática</h3>
-              <p class="valueText">Peça exemplos com ので, かどうか, ないといけない e outras estruturas.</p>
-            </div>
-
-            <div class="valueCard">
-              <div class="valueIcon">7</div>
-              <h3 class="valueTitle">7 exemplos</h3>
-              <p class="valueText">Estude uma frase por dia durante a semana.</p>
-            </div>
-
-            <div class="valueCard">
-              <div class="valueIcon">💾</div>
-              <h3 class="valueTitle">Salva no app</h3>
-              <p class="valueText">O material vira tópico para revisar depois.</p>
-            </div>
+        <section class="card stack">
+          <div class="badge">como ele ajuda</div>
+          <div class="senseiValueGrid">
+            <div class="senseiValueCard"><span>🧩</span><b>Seu caso real</b><p>Explique uma situação e receba frases úteis.</p></div>
+            <div class="senseiValueCard"><span>文</span><b>Gramática prática</b><p>Peça exemplos com ので, かどうか, ないといけない e mais.</p></div>
+            <div class="senseiValueCard"><span>7</span><b>7 exemplos</b><p>Material leve para estudar durante a semana.</p></div>
+            <div class="senseiValueCard"><span>💾</span><b>Salva no app</b><p>O material vira tópico para revisar depois.</p></div>
           </div>
 
           <div class="grid2">
@@ -5758,96 +6055,180 @@ function renderSensei() {
   }
 
   APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
+    <div class="stack senseiPage">
+      <section class="card senseiHero">
         <div class="row row--between">
           <div class="badge">Sensei IA</div>
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <div class="lockCard">
-          <h3 class="lockTitle">Seu professor prático de japonês</h3>
-          <p class="lockText">
-            Peça frases para uma situação real ou peça explicação de uma estrutura, partícula,
-            palavra ou expressão japonesa. O Sensei cria material treinável para o 105x.
+        <div class="senseiHeroGrid">
+          <div>
+            <h1 class="senseiTitle">Peça. Gere. Treine.</h1>
+            <p class="senseiLead">
+              Use um atalho ou escreva sua dúvida. Depois salve no 105x.
+            </p>
+          </div>
+
+          <div class="senseiHeroMini">
+            <span>先生</span>
+            <b>Professor prático</b>
+            <p>Frases e gramática para a vida real.</p>
+          </div>
+        </div>
+      </section>
+
+      <details class="card senseiCompactPanel" open>
+        <summary>
+          <span>Perguntas prontas</span>
+          <b>toque e use</b>
+        </summary>
+
+        <div class="senseiCompactBody">
+          <p class="small">
+            Toque, ajuste e gere.
           </p>
+
+          <div class="senseiPromptGrid">
+            ${promptCards.map(card => `
+              <button
+                type="button"
+                class="senseiPromptCard"
+                data-action="useSenseiPrompt"
+                data-prompt="${escapeHTML(card.text)}"
+                data-level="${escapeHTML(card.level)}"
+                data-tone="${escapeHTML(card.tone)}"
+                data-theme="${escapeHTML(card.theme)}"
+              >
+                <span>${escapeHTML(card.icon)}</span>
+                <b>${escapeHTML(card.title)}</b>
+                <small>${escapeHTML(card.theme)}</small>
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      </details>
+
+      <details class="card senseiCompactPanel">
+        <summary>
+          <span>Tons de fala</span>
+          <b>contexto e relação</b>
+        </summary>
+
+        <div class="senseiCompactBody">
+          <p class="small">
+            Escolha conforme pessoa e situação.
+          </p>
+
+          <div class="senseiToneGrid">
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="muito educado">
+              <b>muito educado</b><span>prefeitura, hospital, cliente</span>
+            </button>
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="educado">
+              <b>educado</b><span>padrão seguro do dia a dia</span>
+            </button>
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="direto e respeitoso">
+              <b>direto e respeitoso</b><span>líder, fábrica, instrução</span>
+            </button>
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="natural">
+              <b>natural</b><span>conversa comum</span>
+            </button>
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="informal com colegas">
+              <b>colegas</b><span>leve, sem rudeza</span>
+            </button>
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="urgente">
+              <b>urgente</b><span>problema imediato</span>
+            </button>
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="alerta e firme">
+              <b>alerta e firme</b><span>risco, erro, cuidado</span>
+            </button>
+            <button class="senseiToneChip" type="button" data-action="setSenseiTone" data-tone="muito simples">
+              <b>muito simples</b><span>iniciante absoluto</span>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <section class="card stack senseiRequestCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">criar material</div>
+            <h2 class="h2 senseiSectionTitle">O que você precisa?</h2>
+          </div>
         </div>
 
-        <div class="sheet stack" style="text-align:left">
-          <div class="badge">exemplos de pedido</div>
-          <div class="small">“Preciso de frases que expliquem bem o uso de ので.”</div>
-          <div class="small">“Me ensine かどうか com frases comuns.”</div>
-          <div class="small">“Preciso falar com meu chefe que não entendi a tarefa.”</div>
-          <div class="small">“Crie frases para hospital em tom educado.”</div>
-        </div>
+        <textarea
+          id="senseiRequest"
+          class="senseiTextarea"
+          placeholder="ex: preciso falar com meu chefe que não entendi a tarefa."
+        ></textarea>
 
-        <div class="sheet stack" style="text-align:left">
-          <div class="small">qual é a sua necessidade agora?</div>
-          <textarea
-            id="senseiRequest"
-            class="btn"
-            style="height:150px;width:100%;text-align:left;padding:12px;border-radius:18px;"
-            placeholder="ex: preciso de frases que expliquem bem o uso de ので. Quero frases comuns no dia a dia, tom educado e nível intermediário."
-          ></textarea>
-
-          <div class="grid2">
-            <div>
+        <div class="senseiFormGrid">
+          <div>
             <div class="small">nível</div>
             <select id="senseiLevel" class="btn selectBtn" style="width:100%">
               <option value="básico">básico — sobrevivência</option>
               <option value="intermediário">intermediário — autonomia</option>
               <option value="avançado">avançado — confiança</option>
             </select>
-            </div>
-
-            <div>
-              <div class="small">tom</div>
-              <select id="senseiTone" class="btn selectBtn" style="width:100%">
-                <option value="educado">educado</option>
-                <option value="direto e respeitoso">direto e respeitoso</option>
-                <option value="muito simples">muito simples</option>
-              </select>
-            </div>
           </div>
 
           <div>
-            <div class="small">nome do tópico, opcional</div>
-            <input
-              id="senseiTheme"
-              class="btn"
-              style="height:56px;width:100%;text-align:left"
-              placeholder="ex: uso de ので, chefe da fábrica, consulta médica"
-            />
-          </div>
-
-          <div class="grid2">
-            <button class="btn btn--ok btn--full" data-action="generateSensei">gerar material</button>
-            <button class="btn btn--full" data-nav="#/manage">gerenciar frases</button>
+            <div class="small">tom escolhido</div>
+            <select id="senseiTone" class="btn selectBtn" style="width:100%">
+              <option value="educado">educado — padrão seguro</option>
+              <option value="muito educado">muito educado — prefeitura, hospital, cliente</option>
+              <option value="natural">natural — conversa comum</option>
+              <option value="informal com colegas">informal com colegas — sem rudeza</option>
+              <option value="direto e respeitoso">direto e respeitoso — trabalho</option>
+              <option value="urgente">urgente — problema imediato</option>
+              <option value="alerta e firme">alerta e firme — quando há risco ou erro</option>
+              <option value="muito simples">muito simples — iniciante absoluto</option>
+            </select>
           </div>
         </div>
 
-        <div id="senseiOutput" class="stack"></div>
+        <div>
+          <div class="small">nome do tópico, opcional</div>
+          <input
+            id="senseiTheme"
+            class="btn"
+            style="height:56px;width:100%;text-align:left"
+            placeholder="ex: uso de ので, chefe da fábrica, consulta médica"
+          />
+        </div>
+
+        <div class="senseiActionGrid">
+          <button class="primaryAction" data-action="generateSensei">gerar material</button>
+          <button class="btn btn--muted btn--full" data-nav="#/manage">gerenciar frases</button>
+        </div>
       </section>
 
-      <section class="card stack">
+      <div id="senseiOutput" class="stack"></div>
+
+      <section class="card stack senseiHistoryCard">
         <div class="row row--between">
-          <div class="badge">histórico</div>
-          <div class="small">últimos materiais</div>
+          <div>
+            <div class="badge">histórico</div>
+            <h2 class="h2 senseiSectionTitle">Últimos materiais.</h2>
+          </div>
+          <div class="badge">memória local</div>
         </div>
         ${renderSenseiHistory()}
       </section>
     </div>
   `;
 }
-
 function renderSenseiOutput(pack) {
   const box = $("#senseiOutput");
   if (!box) return;
 
   const count = Array.isArray(pack.phrases) ? pack.phrases.length : 0;
+  const topics = STATE.bank?.topics || [];
+  const defaultTopicName = normalizeName(pack.topicName || "Material do Sensei");
 
   box.innerHTML = `
-    <div class="sheet stack" style="text-align:left">
+    <div class="sheet stack senseiOutputSummary">
       <div class="row row--between">
         <div class="badge">${escapeHTML(pack.topicName)}</div>
         <div class="badge">${count} frases</div>
@@ -5858,8 +6239,47 @@ function renderSenseiOutput(pack) {
       <div class="small">${escapeHTML(pack.coachLine)}</div>
     </div>
 
+    <div class="sheet stack senseiSaveControl">
+      <div class="row row--between">
+        <div>
+          <div class="badge">salvar no app</div>
+          <h3 class="lockTitle">Dê um nome ao tema e salve direto.</h3>
+        </div>
+      </div>
+
+      <div class="senseiSaveSingle">
+        <div>
+          <div class="small">nome do tema</div>
+          <input
+            id="senseiSaveTopicName"
+            class="btn"
+            style="height:56px;width:100%;text-align:left"
+            value="${escapeHTML(defaultTopicName)}"
+            placeholder="ex: chefe da fábrica, prefeitura, uso de ので"
+          />
+        </div>
+
+        <details class="senseiExistingTopic">
+          <summary>usar um tema existente</summary>
+          <div class="senseiExistingBody">
+            <select id="senseiSaveTopicId" class="btn selectBtn" style="width:100%">
+              <option value="">não escolher agora</option>
+              ${topics.map(t => `<option value="${escapeHTML(t.id)}">${escapeHTML(t.name)}</option>`).join("")}
+            </select>
+            <div class="small">
+              O nome é preenchido e tudo salva em um toque.
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="small">
+        Se o tema não existir, o app cria. Se existir, ele incrementa.
+      </div>
+    </div>
+
     ${pack.phrases.map((p, i) => `
-      <div class="sheet stack" style="text-align:left">
+      <div class="sheet stack senseiPhrasePreview">
         <div class="badge">frase ${i + 1}</div>
         <div class="small"><b>JP:</b> ${escapeHTML(jpStripFurigana(p.jp))}</div>
         <div class="small"><b>PT:</b> ${escapeHTML(p.pt)}</div>
@@ -5869,14 +6289,31 @@ function renderSenseiOutput(pack) {
     `).join("")}
 
     <div class="grid2">
-      <button class="btn btn--ok btn--full" data-action="saveSenseiPack">salvar no app</button>
+      <button class="btn btn--ok btn--full" data-action="saveSenseiPack">salvar no tema acima</button>
       <button class="btn btn--full" data-nav="#/105x">ir ao treino</button>
     </div>
   `;
 
+  const topicSelect = $("#senseiSaveTopicId");
+  const topicNameInput = $("#senseiSaveTopicName");
+
+  if (topicSelect && topicNameInput) {
+    topicSelect.addEventListener("change", () => {
+      const selected = getTopic(topicSelect.value);
+
+      if (selected) {
+        topicNameInput.value = selected.name;
+
+        const panel = topicSelect.closest("details");
+        if (panel) panel.open = false;
+      }
+    });
+  }
+
   box.dataset.pack = JSON.stringify(pack);
 }
 
+/* ---------- treino 105x ---------- */
 /* ---------- treino 105x ---------- */
 function ensureSessionFor105x() {
   ensurePhrasesHaveValidTopic();
@@ -6329,6 +6766,7 @@ function renderManage() {
 
   const def = ensureDefaultTopic();
   const topics = STATE.bank.topics || [];
+  const phrases = STATE.bank.phrases || [];
   STATE.ui ||= {};
   STATE.ui.collapsedTopics ||= {};
   const collapsed = STATE.ui.collapsedTopics;
@@ -6336,38 +6774,108 @@ function renderManage() {
   const byTopic = new Map();
   for (const t of topics) byTopic.set(t.id, []);
 
-  for (const p of STATE.bank.phrases) {
+  for (const p of phrases) {
     if (!byTopic.has(p.topicId)) byTopic.set(def.id, byTopic.get(def.id) || []);
     (byTopic.get(p.topicId) || byTopic.get(def.id)).push(p);
   }
 
+  const favCount = favoritePhrasesAccessible().length;
+  const customTopics = topics.filter(t => t.id !== def.id).length;
+  const totalPhrases = phrases.length;
+
   APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
+    <div class="stack managePage">
+      <section class="card manageHero">
         <div class="row row--between">
-          <div class="badge">gerenciar</div>
+          <div class="badge">minhas frases</div>
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <div class="sheet stack">
-          <div class="small">criar novo tema</div>
-          <div class="row" style="gap:10px;flex-wrap:nowrap">
-            <input id="topicNewName2" class="btn" style="flex:1;min-width:0" placeholder="ex: fábrica, segurança, aeroporto..." />
+        <div class="manageHeroGrid">
+          <div>
+            <h1 class="manageTitle">Organize seu japonês sem bagunça.</h1>
+            <p class="manageLead">
+              Aqui você adiciona frases, separa por temas e compartilha conteúdo sem apagar o que já existe.
+            </p>
+          </div>
+
+          <div class="manageStats">
+            <div><b>${totalPhrases}</b><span>frases</span></div>
+            <div><b>${topics.length}</b><span>temas</span></div>
+            <div><b>${favCount}</b><span>favoritas</span></div>
+          </div>
+        </div>
+
+        <div class="manageMainActions">
+          <button class="primaryAction" data-nav="#/edit">adicionar nova frase</button>
+          <button class="btn btn--muted btn--full" data-nav="#/backup">compartilhar / importar</button>
+        </div>
+      </section>
+
+      <section class="card stack manageQuick">
+        <div class="row row--between">
+          <div>
+            <div class="badge">atalhos</div>
+            <h2 class="h2 manageSectionTitle">O que você quer fazer?</h2>
+          </div>
+        </div>
+
+        <div class="manageQuickGrid">
+          <button class="manageQuickCard" type="button" data-nav="#/edit">
+            <span>＋</span>
+            <b>Nova frase</b>
+            <small>salvar japonês útil</small>
+          </button>
+
+          <button class="manageQuickCard" type="button" data-nav="#/backup">
+            <span>↗</span>
+            <b>Compartilhar</b>
+            <small>WhatsApp / LINE</small>
+          </button>
+
+          <button class="manageQuickCard" type="button" data-nav="#/105x">
+            <span>105x</span>
+            <b>Treinar agora</b>
+            <small>voltar ao foco</small>
+          </button>
+
+          <button class="manageQuickCard" type="button" data-nav="#/sensei">
+            <span>先生</span>
+            <b>Sensei IA</b>
+            <small>criar frases guiadas</small>
+          </button>
+        </div>
+      </section>
+
+      <details class="card manageDetails">
+        <summary>
+          <span>Criar novo tema</span>
+          <b>${customTopics} personalizado(s)</b>
+        </summary>
+
+        <div class="manageDetailsBody">
+          <div class="manageNewTopicBox">
+            <input id="topicNewName2" class="btn" placeholder="ex: fábrica, segurança, aeroporto..." />
             <button class="btn btn--ok" data-action="addTopic">adicionar</button>
           </div>
           <div class="small" id="topicMsg"></div>
         </div>
+      </details>
 
-        <div class="sep"></div>
-
+      <section class="card stack manageTopicsCard">
         <div class="row row--between">
-          <div class="badge">temas organizados</div>
-          <button class="btn btn--ghost" data-nav="#/edit">nova frase</button>
+          <div>
+            <div class="badge">temas</div>
+            <h2 class="h2 manageSectionTitle">Toque em um tema para ver as frases.</h2>
+          </div>
+          <div class="badge">${topics.length}</div>
         </div>
 
-        <div class="small">Os tópicos começam fechados para manter a organização. Toque em um tema para abrir as frases.</div>
+        <div class="small">
+          Para manter a tela leve, os temas ficam recolhidos. Abra só o que você precisa organizar agora.
+        </div>
 
-        <div class="list" id="manageTopics"></div>
+        <div class="list manageTopicList" id="manageTopics"></div>
       </section>
     </div>
   `;
@@ -6382,52 +6890,54 @@ function renderManage() {
     const hasPhrases = list.length > 0;
 
     const toolsHtml = `
-      <div class="topicTools">
-        <button class="btn btn--ok" data-action="addPhraseToTopic" data-id="${escapeHTML(t.id)}">adicionar frase</button>
-        ${hasPhrases ? `<button class="btn btn--muted" data-action="clearTopic" data-id="${escapeHTML(t.id)}">limpar tema</button>` : ``}
-        ${canDeleteTopic ? `<button class="btn btn--bad" data-action="deleteTopic" data-id="${escapeHTML(t.id)}">excluir tema</button>` : `<span class="badge">fixo</span>`}
+      <div class="manageTopicTools">
+        <button class="btn btn--ok btn--full" data-action="addPhraseToTopic" data-id="${escapeHTML(t.id)}">adicionar frase neste tema</button>
+        ${hasPhrases ? `<button class="btn btn--muted btn--full" data-action="clearTopic" data-id="${escapeHTML(t.id)}">limpar tema</button>` : ``}
+        ${canDeleteTopic ? `<button class="btn btn--bad btn--full" data-action="deleteTopic" data-id="${escapeHTML(t.id)}">excluir tema</button>` : ``}
       </div>
     `;
 
     const bodyHtml = `
-      <div class="topicBody ${isCollapsed ? "isCollapsed" : ""}">
+      <div class="topicBody manageTopicBody ${isCollapsed ? "isCollapsed" : ""}">
         ${toolsHtml}
-        ${hasPhrases ? `
-          <div class="reorderList" data-reorder-list="1" data-topic="${escapeHTML(t.id)}">
-            ${list.map(p => {
-      const pr = getProg(p.id);
-      const st = pr.status === "mastered" ? "dominada" : "em treino";
 
-      return `
-                <div class="reorderItem" data-reorder-item="1" data-topic="${escapeHTML(t.id)}" data-id="${escapeHTML(p.id)}">
-                  <div class="reorderTop">
-                    <div class="reorderLeft">
+        ${hasPhrases ? `
+          <div class="reorderList managePhraseList" data-reorder-list="1" data-topic="${escapeHTML(t.id)}">
+            ${list.map(p => {
+              const pr = getProg(p.id);
+              const st = pr.status === "mastered" ? "dominada" : "em treino";
+
+              return `
+                <div class="reorderItem managePhraseItem" data-reorder-item="1" data-topic="${escapeHTML(t.id)}" data-id="${escapeHTML(p.id)}">
+                  <div class="managePhraseMain">
+                    <div class="managePhraseText">
                       <p class="itemTitle">${isFavorite(p.id) ? "★ " : ""}${escapeHTML(jpStripFurigana(p.jp))}</p>
                       <div class="itemMeta">${escapeHTML(p.pt)} • ${st}</div>
                     </div>
 
-                    <div class="row" style="gap:8px">
+                    <div class="managePhraseActions">
                       ${renderFavoriteButton(p.id, true)}
-                      <div class="dragHandle" title="segure e arraste" aria-label="segure e arraste">≡</div>
                       <button class="btn btn--ghost" data-action="editPhrase" data-id="${escapeHTML(p.id)}">editar</button>
                       <button class="btn btn--bad" data-action="deletePhrase" data-id="${escapeHTML(p.id)}">excluir</button>
+                      <div class="dragHandle" title="segure e arraste" aria-label="segure e arraste">≡</div>
                     </div>
                   </div>
                 </div>
               `;
-    }).join("")}
+            }).join("")}
           </div>
-          <div class="small">Segure no ≡ e arraste para ordenar.</div>
+          <div class="small">Opcional: segure no ≡ e arraste para ordenar.</div>
         ` : `
-          <div class="sheet stack">
-            <div class="small">Este tema ainda não tem frases.</div>
+          <div class="manageEmptyTopic">
+            <b>Este tema ainda está vazio.</b>
+            <span>Adicione uma frase quando encontrar algo útil para treinar.</span>
           </div>
         `}
       </div>
     `;
 
     const wrap = document.createElement("div");
-    wrap.className = "topicGroup";
+    wrap.className = "topicGroup manageTopicGroup";
     wrap.innerHTML = `${renderTopicHeader(t, list.length, isCollapsed)}${bodyHtml}`;
     frag.appendChild(wrap);
   }
@@ -6437,6 +6947,7 @@ function renderManage() {
 
   initReorderable();
 }
+
 
 let DRAG = null;
 
@@ -7552,6 +8063,7 @@ function render() {
   if (r === "#/terms") return renderTerms();
   if (r === "#/launch-checklist") return renderLaunchChecklist();
   if (r === "#/store-kit") return renderStoreKit();
+  if (r === "#/screenshot-guide") return renderScreenshotGuide();
 
   nav("#/landing");
 }
@@ -7861,6 +8373,44 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  if (act === "useSenseiPrompt") {
+    const requestBox = $("#senseiRequest");
+    const levelSel = $("#senseiLevel");
+    const toneSel = $("#senseiTone");
+    const themeInput = $("#senseiTheme");
+
+    if (requestBox) {
+      requestBox.value = btn.dataset.prompt || "";
+      requestBox.focus();
+    }
+
+    if (levelSel && btn.dataset.level) levelSel.value = btn.dataset.level;
+    if (toneSel && btn.dataset.tone) toneSel.value = btn.dataset.tone;
+    if (themeInput) themeInput.value = btn.dataset.theme || "";
+
+    const panel = btn.closest("details");
+    if (panel) panel.open = false;
+
+    toast("pedido carregado");
+    beep("pop");
+
+    return;
+  }
+
+  if (act === "setSenseiTone") {
+    const toneSel = $("#senseiTone");
+    if (toneSel && btn.dataset.tone) {
+      toneSel.value = btn.dataset.tone;
+
+      const panel = btn.closest("details");
+      if (panel) panel.open = false;
+
+      toast(`tom: ${btn.dataset.tone}`);
+      beep("pop");
+    }
+    return;
+  }
+
   if (act === "generateSensei") {
     const request = ($("#senseiRequest")?.value || "").trim();
     const level = ($("#senseiLevel")?.value || "iniciante").trim();
@@ -7873,7 +8423,8 @@ document.addEventListener("click", (e) => {
       return;
     }
 
-    const pack = generateSenseiMaterial({ request, level, tone, theme });
+    const enhancedRequest = enhanceSenseiRequestByTone(request, tone);
+    const pack = generateSenseiMaterial({ request: enhancedRequest, level, tone, theme });
     renderSenseiOutput(pack);
 
     const msg = pack.requestType === "grammar"
@@ -7903,10 +8454,24 @@ document.addEventListener("click", (e) => {
       return;
     }
 
-    const result = saveSenseiPackToApp(parsed);
-    toast(`${result.added} frase(s) salvas`);
+    const chosenTopicId = ($("#senseiSaveTopicId")?.value || "").trim();
+    const typedTopicName = ($("#senseiSaveTopicName")?.value || "").trim();
+
+    if (!typedTopicName && !chosenTopicId) {
+      toast("dê um nome ao tema");
+      beep("tuk");
+      $("#senseiSaveTopicName")?.focus();
+      return;
+    }
+
+    const result = saveSenseiPackToApp(parsed, {
+      topicId: chosenTopicId,
+      topicName: typedTopicName
+    });
+
+    toast(`${result.added} frase(s) salvas em ${result.topic.name}`);
     beep("ding");
-    render();
+    nav("#/manage");
 
     return;
   }
