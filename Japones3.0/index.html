@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#070a11" />
 
-  <title>NIHONGO321 | Japonês prático para brasileiros no Japão</title>
+  <title>NIHONGO321 8.5.64</title>
 
   <meta
     name="description"
@@ -388,5 +388,64 @@
        ========================================================= -->
   <script src="./sensei-bank.js?v=1.1.0" defer></script>
   <script src="./app.js?v=8.5.10" defer></script>
+
+  <script src="./sensei-bank.js"></script>
+  <script src="./app.js"></script>
+
+  <script>
+    window.NIHONGO321_NAV = function(hash){
+      if (!hash) return;
+      try {
+        if (window.location.hash !== hash) window.location.hash = hash;
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+      } catch (e) {
+        window.location.hash = hash;
+      }
+    };
+
+    document.addEventListener("click", function(event){
+      var el = event.target && event.target.closest ? event.target.closest("[data-route], a[href^='#/']") : null;
+      if (!el) return;
+      var route = el.getAttribute("data-route") || el.getAttribute("href");
+      if (!route || route.indexOf("#/") !== 0) return;
+
+      event.preventDefault();
+
+      if (route === "#/compare" && window.NIHONGO321_GO_COMPARE) {
+        window.NIHONGO321_GO_COMPARE();
+        return;
+      }
+      if (route === "#/premium-themes" && window.NIHONGO321_GO_PREMIUM_THEMES) {
+        window.NIHONGO321_GO_PREMIUM_THEMES();
+        return;
+      }
+
+      window.NIHONGO321_NAV(route);
+    }, true);
+  </script>
+
+
+  <script>
+    document.addEventListener("click", function(event){
+      var el = event.target && event.target.closest ? event.target.closest("[data-action='openCompareDirect'], [data-action='openPremiumThemesDirect']") : null;
+      if (!el) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (el.getAttribute("data-action") === "openCompareDirect") {
+        if (window.NIHONGO321_OPEN_COMPARE_DIRECT) window.NIHONGO321_OPEN_COMPARE_DIRECT();
+        else window.location.hash = "#/compare";
+        return;
+      }
+
+      if (el.getAttribute("data-action") === "openPremiumThemesDirect") {
+        if (window.NIHONGO321_OPEN_PREMIUM_THEMES_DIRECT) window.NIHONGO321_OPEN_PREMIUM_THEMES_DIRECT();
+        else window.location.hash = "#/premium-themes";
+        return;
+      }
+    }, true);
+  </script>
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.55
+   NIHONGO321 v8.5.64.3.2.2.2
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.55",
+  version: "8.5.64",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -1103,7 +1103,9 @@ function defaultState() {
 
     ui: {
       lastToast: "",
-      collapsedTopics: {}
+      collapsedTopics: {},
+      onboardingSeen: false,
+      onboardingStep: 0
     }
   };
 
@@ -1122,6 +1124,8 @@ function migrateToV7(st) {
 
   st.ui ||= {};
   st.ui.collapsedTopics ||= {};
+  st.ui.onboardingSeen = !!st.ui.onboardingSeen;
+  st.ui.onboardingStep = clamp(Number(st.ui.onboardingStep || 0), 0, 3);
 
   st.session ||= {};
   st.session.topicFilter ||= "ALL";
@@ -4907,13 +4911,19 @@ function renderLanding() {
         </h1>
 
         <p class="heroLead">
-          Treine frases práticas, mesmo cansado, em poucos minutos por dia.
+          Estude no seu ritmo, treine frases práticas e volte amanhã com mais confiança para viver melhor no Japão.
         </p>
 
         <div class="heroActions">
           <button class="bigBtn" data-nav="#/home">começar treino</button>
-          <button class="btn btn--ghost btn--full" data-nav="#/premium">comparar planos</button>
+          <button type="button" class="btn btn--ghost btn--full landingCompareDirectBtn" data-action="openCompareDirect">
+            comparar planos
+          </button>
         </div>
+
+        <p class="heroTinyProof">
+          105x · JP + PT · Pack Essencial · grátis para começar
+        </p>
       </section>
 
       <section class="card landingPillars">
@@ -4952,9 +4962,14 @@ function renderLanding() {
           </p>
         </div>
 
-        <div class="landingSimpleActions">
+        <div class="landingSimpleActions landingPremiumActionsV2">
           <button class="primaryAction" data-nav="#/home">entrar no app</button>
-          <button class="btn btn--muted btn--full" data-nav="#/premium">ver Premium</button>
+          <button type="button" class="btn btn--muted btn--full landingCompareDirectBtn" data-action="openCompareDirect">
+            comparar grátis x Premium
+          </button>
+          <button type="button" class="btn btn--ghost btn--full premiumThemesDirectBtn" data-action="openPremiumThemesDirect">
+            ver temas premium
+          </button>
         </div>
       </section>
 
@@ -4976,6 +4991,369 @@ function renderLanding() {
     </div>
   `;
 }
+function renderPremiumThemes() {
+  const themes = [
+    {
+      icon: "🏭",
+      title: "Trabalho e fábrica",
+      pain: "Quando o líder fala rápido, muda a tarefa ou algo parece errado.",
+      gain: "Você aprende a confirmar instruções, pedir repetição, avisar problema e evitar erro sem parecer mal-educado.",
+      examples: ["confirmar tarefa", "avisar defeito", "pedir ajuda", "falar de hora extra"]
+    },
+    {
+      icon: "🏥",
+      title: "Hospital e saúde",
+      pain: "Quando você está com dor, cansado ou precisa explicar sintomas.",
+      gain: "Você ganha frases para falar de dor, remédio, atestado, seguro e orientação médica com mais calma.",
+      examples: ["explicar sintomas", "pedir atestado", "entender remédio", "pedir intérprete"]
+    },
+    {
+      icon: "🏢",
+      title: "Prefeitura e documentos",
+      pain: "Quando aparece formulário, imposto, endereço, My Number ou procedimento que ninguém explicou.",
+      gain: "Você treina como perguntar o que precisa, confirmar documentos e pedir explicação simples.",
+      examples: ["documentos", "endereço", "balcão correto", "formulário"]
+    },
+    {
+      icon: "💴",
+      title: "Contas e cobranças",
+      pain: "Quando a cobrança vem diferente, o plano muda ou você não entende o valor.",
+      gain: "Você aprende a confirmar preço, vencimento, débito automático, plano e cobrança duplicada.",
+      examples: ["plano errado", "débito bancário", "vencimento", "detalhamento"]
+    },
+    {
+      icon: "🏠",
+      title: "Moradia e aluguel",
+      pain: "Quando falta água, quebra algo, chega aviso ou você precisa falar com imobiliária/Leopalace.",
+      gain: "Você ganha frases para conserto, contrato, lixo, chave, entrega e problemas do apartamento.",
+      examples: ["conserto", "contrato", "água quente", "entrega na porta"]
+    },
+    {
+      icon: "📦",
+      title: "Correio e entrega",
+      pain: "Quando chega aviso, encomenda não aparece ou você precisa remarcar entrega.",
+      gain: "Você aprende a pedir reentrega, retirar pacote, confirmar endereço e perguntar sobre rastreamento.",
+      examples: ["reentrega", "rastreamento", "retirada", "aviso dos Correios"]
+    },
+    {
+      icon: "🏦",
+      title: "Banco e dinheiro",
+      pain: "Quando precisa abrir conta, trocar dinheiro, fazer transferência ou entender taxa.",
+      gain: "Você treina frases para caixa, ATM, senha, transferência, salário e dados bancários.",
+      examples: ["abrir conta", "transferência", "taxa", "cartão perdido"]
+    },
+    {
+      icon: "📱",
+      title: "Telefone e internet",
+      pain: "Quando o plano, chip, contrato ou cobrança do celular vira confusão.",
+      gain: "Você aprende a perguntar sobre plano, internet lenta, cancelamento, opções e pagamento.",
+      examples: ["plano", "SIM", "cancelamento", "cobrança"]
+    },
+    {
+      icon: "🗣️",
+      title: "Conversa natural",
+      pain: "Quando você quer falar com japoneses sem parecer robótico ou travado.",
+      gain: "Você treina frases mais naturais para rotina, recomendações, correções e conversa leve.",
+      examples: ["rotina", "recomendação", "forma natural", "corrigir erro"]
+    },
+    {
+      icon: "文",
+      title: "Gramática prática",
+      pain: "Quando você vê ので, かどうか, かもしれません e entende a tradução, mas não sabe usar.",
+      gain: "Você aprende estruturas dentro de frases reais, sem aula pesada e com foco em repetição.",
+      examples: ["ので", "かどうか", "かもしれません", "ないといけない"]
+    }
+  ];
+
+  APP.innerHTML = `
+    <div class="stack premiumThemesPage">
+      <section class="card premiumThemesHero">
+        <div class="row row--between">
+          <div class="badge">temas Premium</div>
+          <button class="btn" data-nav="#/landing">voltar</button>
+        </div>
+
+        <div class="premiumThemesHeroGrid">
+          <div>
+            <h1 class="premiumThemesTitle">Temas que ajudam quando a vida no Japão aperta.</h1>
+            <p class="premiumThemesLead">
+              O Premium não é só “mais frases”. É um conjunto de situações reais para você depender menos dos outros.
+            </p>
+          </div>
+
+          <div class="premiumThemesMini">
+            <span>🌅</span>
+            <b>vida real</b>
+            <small>trabalho, saúde, documentos, contas e conversa.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="card premiumThemesWhy">
+        <div class="row row--between">
+          <div class="badge">por que isso importa?</div>
+          <div class="badge">menos medo</div>
+        </div>
+
+        <h2 class="h2">Cada tema Premium foi pensado para uma situação onde travar custa caro.</h2>
+        <p class="p">
+          Quando você entende a frase antes de precisar dela, fica mais fácil agir com calma no trabalho, no hospital, na prefeitura ou diante de uma cobrança estranha.
+        </p>
+      </section>
+
+      <section class="premiumThemesGrid">
+        ${themes.map(theme => `
+          <article class="card premiumThemeCard">
+            <div class="premiumThemeIcon">${escapeHTML(theme.icon)}</div>
+            <div class="premiumThemeBody">
+              <div class="badge">${escapeHTML(theme.title)}</div>
+              <h2 class="h2 premiumThemeTitle">O que isso resolve?</h2>
+
+              <div class="premiumThemePain">
+                <b>Na vida real:</b>
+                <span>${escapeHTML(theme.pain)}</span>
+              </div>
+
+              <div class="premiumThemeGain">
+                <b>Com o Premium:</b>
+                <span>${escapeHTML(theme.gain)}</span>
+              </div>
+
+              <div class="premiumThemeExamples">
+                ${theme.examples.map(ex => `<span>${escapeHTML(ex)}</span>`).join("")}
+              </div>
+            </div>
+          </article>
+        `).join("")}
+      </section>
+
+      <section class="card premiumThemesCta">
+        <div class="premiumThemesCtaCopy">
+          <div class="badge">decisão simples</div>
+          <h2 class="h2">Comece grátis. Use Premium quando quiser mais segurança para a vida real.</h2>
+          <p class="p">
+            A ideia é simples: treinar antes de precisar falar.
+          </p>
+        </div>
+
+        <div class="premiumThemesActions">
+          <button class="primaryAction" data-action="checkout">
+            ${escapeHTML(checkoutButtonLabel("primary"))}
+          </button>
+          <a class="btn btn--muted btn--full landingCompareBtn" href="#/compare" data-route="#/compare">comparar planos</a>
+          <button class="btn btn--ghost btn--full" data-nav="#/paths">ver trilhas</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+
+
+function goToPremiumThemes() {
+  try { unlockAudio(); } catch { }
+  try { toast("abrindo temas Premium"); } catch { }
+  try { beep("pop"); } catch { }
+
+  if (location.hash !== "#/premium-themes") {
+    location.hash = "#/premium-themes";
+  }
+
+  try { renderPremiumThemes(); } catch { }
+
+  try {
+    setTimeout(() => {
+      try { render(); } catch { }
+      try { window.scrollTo(0, 0); } catch { }
+    }, 0);
+  } catch { }
+}
+
+window.NIHONGO321_GO_PREMIUM_THEMES = goToPremiumThemes;
+
+
+function renderPlanCompare() {
+  const checkoutReady = isCheckoutReady();
+  const monthly = SALES.monthlyPrice || "¥980";
+  const semi = SALES.semiannualPrice || "¥4,980 / 6 meses";
+
+  const freeWins = [
+    ["Criar ritmo", "Treino 105x, Pack Essencial e frase do dia para manter contato."],
+    ["Treinar sem peso", "Poucos minutos, interface simples e frases úteis."],
+    ["Guardar o que importa", "Favoritos, frases próprias e backup por WhatsApp/LINE."]
+  ];
+
+  const premiumWins = [
+    ["Falar melhor no trabalho", "Chefe, líder, instruções, problemas, hora extra e segurança."],
+    ["Resolver vida adulta", "Prefeitura, hospital, banco, moradia, contas, correio e telefone."],
+    ["Criar material sob medida", "Sensei IA para transformar sua dúvida em frases treináveis."],
+    ["Evoluir com direção", "Trilhas Premium para sair das frases soltas e treinar por objetivo."]
+  ];
+
+  const emotionalGains = [
+    ["Menos dependência", "Você não precisa esperar sempre alguém traduzir tudo."],
+    ["Mais calma", "Quando a situação aparece, você já viu frases parecidas antes."],
+    ["Mais coragem", "Repetir frases reais diminui o medo de abrir a boca."],
+    ["Mais futuro", "Cada mês treinado vira um tijolo na sua vida no Japão."]
+  ];
+
+  APP.innerHTML = `
+    <div class="stack comparePage compareHeartPage">
+      <section class="card compareHeartHero" id="compareTop">
+        <div class="row row--between">
+          <div class="badge">grátis x premium</div>
+          <button class="btn" data-nav="#/landing">voltar</button>
+        </div>
+
+        <div class="compareHeartHeroGrid">
+          <div>
+            <h1 class="compareHeartTitle">O grátis acende a chama. O Premium abre caminho.</h1>
+            <p class="compareHeartLead">
+              Para brasileiros no Japão que trabalham muito, têm pouco tempo e precisam de japonês que ajuda amanhã.
+            </p>
+          </div>
+
+          <div class="comparePriceGlow">
+            <span>Premium</span>
+            <b>${escapeHTML(monthly)}</b>
+            <small>${escapeHTML(semi)} no plano econômico.</small>
+          </div>
+        </div>
+
+        <div class="compareHeroActions">
+          <button class="primaryAction" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
+          <button class="btn btn--muted btn--full" data-nav="#/home">começar grátis</button>
+        </div>
+      </section>
+
+      <section class="compareDuelV3">
+        <article class="card compareColumn compareColumn--free">
+          <div class="compareColumnTop">
+            <div class="badge">grátis</div>
+            <span>comece hoje</span>
+          </div>
+
+          <h2 class="h2">Para testar, criar ritmo e sentir valor.</h2>
+          <p class="p">
+            O grátis não é fraco. Ele existe para mostrar que o app ajuda de verdade, mesmo em dias cansativos.
+          </p>
+
+          <div class="compareValueQuote">
+            “Consigo treinar um pouco sem me sentir sobrecarregado.”
+          </div>
+
+          <div class="compareCleanList">
+            ${freeWins.map(([title, text]) => `
+              <div class="compareCleanItem">
+                <span>✓</span>
+                <div><b>${escapeHTML(title)}</b><small>${escapeHTML(text)}</small></div>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+
+        <article class="card compareColumn compareColumn--premium">
+          <div class="compareColumnTop">
+            <div class="badge">premium</div>
+            <span>salto de evolução</span>
+          </div>
+
+          <h2 class="h2">Para depender menos e falar com mais segurança.</h2>
+          <p class="p">
+            O Premium é para quando o japonês deixa de ser estudo e vira ferramenta de trabalho, saúde, documentos e vida real.
+          </p>
+
+          <div class="compareValueQuote compareValueQuote--gold">
+            “Cada iene investido vira menos medo na hora de falar.”
+          </div>
+
+          <div class="compareCleanList">
+            ${premiumWins.map(([title, text]) => `
+              <div class="compareCleanItem compareCleanItem--premium">
+                <span>★</span>
+                <div><b>${escapeHTML(title)}</b><small>${escapeHTML(text)}</small></div>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+      </section>
+
+      <section class="card compareLeapCard">
+        <div class="row row--between">
+          <div class="badge">o salto real</div>
+          <div class="badge">vida no Japão</div>
+        </div>
+
+        <h2 class="h2 compareLeapTitle">O Premium não promete milagre. Ele diminui o atrito do dia a dia.</h2>
+        <p class="p compareLeapText">
+          Você continua precisando praticar. Mas agora pratica com situações que provavelmente vão aparecer na sua vida.
+        </p>
+
+        <div class="compareEmotionGrid">
+          ${emotionalGains.map(([title, text]) => `
+            <div class="compareEmotionItem">
+              <b>${escapeHTML(title)}</b>
+              <span>${escapeHTML(text)}</span>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card compareScenarioCard">
+        <div class="badge">imagine amanhã</div>
+        <h2 class="h2">Você recebe uma cobrança diferente. O chefe explica rápido. Um documento trava.</h2>
+        <p class="p">
+          No grátis, você cria o hábito de estudar. No Premium, você encontra temas e trilhas para enfrentar essas situações com frases mais específicas.
+        </p>
+
+        <div class="compareScenarioActions">
+          <a class="primaryAction" href="#/premium-themes" data-route="#/premium-themes">ver temas Premium</a>
+          <a class="btn btn--muted btn--full" href="#/paths" data-route="#/paths">ver trilhas</a>
+        </div>
+      </section>
+
+      <section class="card compareFinalCard">
+        <div class="compareFinalCopy">
+          <div class="badge">decisão honesta</div>
+          <h2 class="h2">Comece grátis. Assine quando quiser transformar estudo em preparação real.</h2>
+          <p class="p">
+            O objetivo do NIHONGO321 é simples: te ajudar a viver melhor no Japão, um treino pequeno por vez.
+          </p>
+        </div>
+
+        <div class="compareFinalActions">
+          <button class="primaryAction" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
+          <button class="btn btn--muted btn--full" data-nav="#/home">continuar grátis</button>
+          ${checkoutReady ? "" : `<div class="compareNotice">Checkout ainda não configurado. Antes da venda oficial, coloque o link real em SALES.checkoutUrl.</div>`}
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+
+function goToComparePlans() {
+  try { unlockAudio(); } catch { }
+  try { toast("abrindo comparação"); } catch { }
+  try { beep("pop"); } catch { }
+
+  if (location.hash !== "#/compare") {
+    location.hash = "#/compare";
+  }
+
+  try { renderPlanCompare(); } catch { }
+
+  try {
+    setTimeout(() => {
+      try { render(); } catch { }
+      try { window.scrollTo(0, 0); } catch { }
+    }, 0);
+  } catch { }
+}
+
+window.NIHONGO321_GO_COMPARE = goToComparePlans;
+
+
 function renderPremium() {
   const checkoutReady = isCheckoutReady();
   const monthly = SALES.monthlyPrice || "¥980";
@@ -5192,6 +5570,237 @@ function renderAdmin() {
 }
 
 /* ---------- home ---------- */
+
+/* ---------- 8.5.56: Trilhas de Fluência Prática ---------- */
+const FLUENCY_PATHS = [
+  {
+    id: "survival",
+    icon: "🧭",
+    badge: "grátis",
+    title: "Sobrevivência no Japão",
+    subtitle: "Para destravar o básico e se virar melhor.",
+    promise: "Pedir ajuda, confirmar, pagar, se localizar e não travar.",
+    topicIds: ["topic_essential_japan"],
+    unlock: "free",
+    level: "iniciante"
+  },
+  {
+    id: "work",
+    icon: "🏭",
+    badge: "premium",
+    title: "Trabalho e fábrica",
+    subtitle: "Para falar com líder, chefe e colegas com mais segurança.",
+    promise: "Confirmar tarefas, avisar problema, pedir explicação e evitar erro.",
+    topicIds: ["topic_factory"],
+    unlock: "premium",
+    level: "intermediário"
+  },
+  {
+    id: "life",
+    icon: "🏢",
+    badge: "premium",
+    title: "Vida adulta no Japão",
+    subtitle: "Para resolver burocracia sem depender tanto dos outros.",
+    promise: "Prefeitura, hospital, contas, moradia, banco, correio e telefone.",
+    topicIds: ["topic_cityhall", "topic_hospital", "topic_bills", "topic_housing", "topic_bank", "topic_post", "topic_phone"],
+    unlock: "premium",
+    level: "intermediário"
+  },
+  {
+    id: "conversation",
+    icon: "🗣️",
+    badge: "premium",
+    title: "Conversa natural",
+    subtitle: "Para soar menos travado e conversar melhor.",
+    promise: "Falar da rotina, pedir formas naturais e criar mais confiança.",
+    topicIds: ["topic_conversation"],
+    unlock: "premium",
+    level: "intermediário"
+  },
+  {
+    id: "grammar",
+    icon: "文",
+    badge: "premium",
+    title: "Gramática prática",
+    subtitle: "Para entender estruturas úteis sem aula pesada.",
+    promise: "ので, かどうか, と思います, かもしれません e frases reais.",
+    topicIds: ["grammar_node", "grammar_kadouka", "grammar_toomoimasu", "grammar_kamoshiremasen"],
+    unlock: "premium",
+    level: "intermediário"
+  }
+];
+
+function getFluencyPath(pathId) {
+  return FLUENCY_PATHS.find(path => path.id === pathId) || null;
+}
+
+function getPathTopics(path) {
+  if (!path) return [];
+
+  return (path.topicIds || [])
+    .map(id => getTopic(id))
+    .filter(Boolean);
+}
+
+function getPathPhraseCount(path) {
+  return getPathTopics(path).reduce((sum, topic) => sum + topicPhraseIds(topic.id).length, 0);
+}
+
+function isPathLocked(path) {
+  if (!path) return false;
+  if (path.unlock !== "premium") return false;
+  return !isPremiumUnlocked();
+}
+
+function startFluencyPath(pathId) {
+  ensurePhrasesHaveValidTopic();
+
+  const path = getFluencyPath(pathId);
+  if (!path) {
+    return {
+      ok: false,
+      reason: "missing",
+      message: "trilha não encontrada"
+    };
+  }
+
+  if (isPathLocked(path)) {
+    return {
+      ok: false,
+      reason: "locked",
+      message: "esta trilha faz parte do Premium"
+    };
+  }
+
+  const topics = getPathTopics(path).filter(topic => canAccessTopic(topic.id));
+  const topicWithPhrases = topics.find(topic => topicPhraseIds(topic.id).length > 0);
+
+  if (!topicWithPhrases) {
+    return {
+      ok: false,
+      reason: "empty",
+      message: "ainda não há frases nesta trilha"
+    };
+  }
+
+  STATE.session.topicFilter = topicWithPhrases.id;
+  STATE.session.inProgress = true;
+  STATE.session.queue = buildQueue();
+  STATE.session.index = 0;
+  STATE.session.phraseId = STATE.session.queue[0] || null;
+
+  if (!STATE.session.phraseId) {
+    saveState();
+    return {
+      ok: false,
+      reason: "empty",
+      message: "não encontrei frases para treinar"
+    };
+  }
+
+  saveState();
+
+  return {
+    ok: true,
+    label: path.title,
+    topicName: topicWithPhrases.name
+  };
+}
+
+function renderFluencyPaths() {
+  const totalPhrases = FLUENCY_PATHS.reduce((sum, path) => sum + getPathPhraseCount(path), 0);
+
+  APP.innerHTML = `
+    <div class="stack pathsPage">
+      <section class="card pathsHero">
+        <div class="row row--between">
+          <div class="badge">trilhas de fluência</div>
+          <button class="btn" data-nav="#/home">voltar</button>
+        </div>
+
+        <div class="pathsHeroGrid">
+          <div>
+            <h1 class="pathsTitle">Escolha uma trilha. Treine com direção.</h1>
+            <p class="pathsLead">
+              O NIHONGO321 agora organiza frases por caminho de vida: sobreviver, trabalhar, resolver coisas e conversar melhor.
+            </p>
+          </div>
+
+          <div class="pathsScore">
+            <div class="pathsScoreValue">${totalPhrases}</div>
+            <div class="pathsScoreText">frases conectadas às trilhas</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card stack pathsIntro">
+        <div class="row row--between">
+          <div>
+            <div class="badge">por que trilhas?</div>
+            <h2 class="h2 pathsSectionTitle">Frases soltas ajudam. Caminho claro dá progresso.</h2>
+          </div>
+        </div>
+
+        <div class="pathsMiniGrid">
+          <div class="pathsMiniItem"><span>1</span><b>Escolha uma área da vida.</b></div>
+          <div class="pathsMiniItem"><span>2</span><b>Treine frases úteis no 105x.</b></div>
+          <div class="pathsMiniItem"><span>3</span><b>Volte amanhã com mais confiança.</b></div>
+        </div>
+      </section>
+
+      <section class="stack pathsList">
+        ${FLUENCY_PATHS.map(path => {
+          const locked = isPathLocked(path);
+          const count = getPathPhraseCount(path);
+          const topics = getPathTopics(path);
+          const topicNames = topics.map(t => t.name.replace(/ — Premium/g, "")).slice(0, 3).join(" • ");
+
+          return `
+            <section class="card pathsCard ${locked ? "pathsCard--locked" : ""}">
+              <div class="pathsCardIcon">${escapeHTML(path.icon)}</div>
+
+              <div class="pathsCardBody">
+                <div class="row row--between">
+                  <div class="badge">${escapeHTML(path.badge)}</div>
+                  <div class="badge">${count} frases</div>
+                </div>
+
+                <h2 class="h2 pathsCardTitle">${escapeHTML(path.title)}</h2>
+                <p class="p pathsCardSub">${escapeHTML(path.subtitle)}</p>
+
+                <div class="pathsPromise">${escapeHTML(path.promise)}</div>
+
+                ${topicNames ? `<div class="small">temas: ${escapeHTML(topicNames)}</div>` : ""}
+
+                <div class="pathsActions">
+                  <button class="${locked ? "btn btn--muted btn--full" : "primaryAction"}" data-action="${locked ? "goPremiumFromPath" : "startFluencyPath"}" data-id="${escapeHTML(path.id)}">
+                    ${locked ? "desbloquear trilha" : "começar esta trilha"}
+                  </button>
+                  <button class="btn btn--ghost btn--full" data-nav="#/sensei">pedir ao Sensei</button>
+                </div>
+              </div>
+            </section>
+          `;
+        }).join("")}
+      </section>
+
+      <section class="card pathsNextCard">
+        <div class="pathsNextCopy">
+          <div class="badge">premium com propósito</div>
+          <h2 class="h2">O Premium amplia as trilhas mais importantes da vida no Japão.</h2>
+          <p class="p">Trabalho, prefeitura, saúde, contas, moradia e conversa natural ficam mais organizados para treinar sem se perder.</p>
+        </div>
+
+        <div class="pathsNextActions">
+          <button type="button" class="primaryAction landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">ver Premium</button>
+          <button class="btn btn--muted btn--full" data-nav="#/home">voltar ao início</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+
 function renderHome() {
   ensurePhrasesHaveValidTopic();
 
@@ -5319,6 +5928,18 @@ function renderHome() {
             <b>Sensei IA</b>
             <small>dúvidas e exemplos</small>
           </button>
+
+          <button class="homePathItem" type="button" data-nav="#/paths">
+            <span>道</span>
+            <b>Trilhas</b>
+            <small>estude com direção</small>
+          </button>
+
+          <button class="homePathItem" type="button" data-nav="#/onboarding">
+            <span>?</span>
+            <b>Guia rápido</b>
+            <small>entenda o app</small>
+          </button>
         </div>
       </section>
 
@@ -5337,7 +5958,7 @@ function renderHome() {
 
         <div class="homeSoftActions">
           <button class="primaryAction" data-nav="#/sensei">abrir Sensei IA</button>
-          <button class="btn btn--muted btn--full" data-nav="#/premium">comparar planos</button>
+          <button type="button" class="btn btn--muted btn--full landingCompareBtn landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">ver Premium</button>
           <button class="btn btn--muted btn--full" data-nav="#/tutorial">
             ${STATE.tutorial.done ? "rever tutorial" : "ver tutorial"}
           </button>
@@ -5372,6 +5993,134 @@ function renderHome() {
     });
   }
 }
+
+/* ---------- 8.5.58: Onboarding premium de primeira abertura ---------- */
+const ONBOARDING_STEPS = [
+  {
+    icon: "🌅",
+    badge: "comece leve",
+    title: "Japonês para a sua rotina no Japão.",
+    text: "Treine frases úteis em poucos minutos. Sem aula pesada. Sem culpa.",
+    chips: ["brasileiros no Japão", "rotina cansada", "frases reais"],
+    primaryLabel: "próximo",
+    secondaryLabel: "pular"
+  },
+  {
+    icon: "🔁",
+    badge: "método 105x",
+    title: "Ouça. Leia. Repita. Fixe.",
+    text: "O treino guia a repetição até a frase ficar mais familiar.",
+    chips: ["áudio", "tradução", "repetição"],
+    primaryLabel: "próximo",
+    secondaryLabel: "ver início"
+  },
+  {
+    icon: "道",
+    badge: "trilhas",
+    title: "Escolha um caminho de vida.",
+    text: "Sobrevivência, trabalho, vida adulta, conversa natural e gramática prática.",
+    chips: ["trilhas", "progresso", "direção"],
+    primaryLabel: "próximo",
+    secondaryLabel: "ver trilhas"
+  },
+  {
+    icon: "✨",
+    badge: "Premium",
+    title: "Do grátis útil ao Premium poderoso.",
+    text: "O grátis ajuda hoje. O Premium aprofunda situações reais: fábrica, hospital, prefeitura, contas e Sensei IA.",
+    chips: ["mais temas", "Sensei IA", "vida real"],
+    primaryLabel: "começar agora",
+    secondaryLabel: "ver Premium"
+  }
+];
+
+function onboardingCurrentStep() {
+  STATE.ui ||= {};
+  return clamp(Number(STATE.ui.onboardingStep || 0), 0, ONBOARDING_STEPS.length - 1);
+}
+
+function markOnboardingSeen() {
+  STATE.ui ||= {};
+  STATE.ui.onboardingSeen = true;
+  STATE.ui.onboardingStep = ONBOARDING_STEPS.length - 1;
+  saveState();
+}
+
+function renderOnboarding() {
+  const step = onboardingCurrentStep();
+  const item = ONBOARDING_STEPS[step];
+  const pct = (step + 1) / ONBOARDING_STEPS.length;
+  const isLast = step >= ONBOARDING_STEPS.length - 1;
+
+  APP.innerHTML = `
+    <div class="stack onboardingPage">
+      <section class="card onboardingHero">
+        <div class="row row--between">
+          <div class="badge">primeiros passos</div>
+          <button class="btn btn--ghost" data-action="onboardingSkip">pular</button>
+        </div>
+
+        <div class="onboardingStage">
+          <div class="onboardingIcon">${escapeHTML(item.icon)}</div>
+          <div class="badge">${escapeHTML(item.badge)}</div>
+
+          <h1 class="onboardingTitle">${escapeHTML(item.title)}</h1>
+          <p class="onboardingLead">${escapeHTML(item.text)}</p>
+
+          <div class="onboardingChips">
+            ${item.chips.map(chip => `<span>${escapeHTML(chip)}</span>`).join("")}
+          </div>
+
+          <div class="onboardingProgress">
+            <div class="onboardingProgressTop">
+              <span>passo ${step + 1} de ${ONBOARDING_STEPS.length}</span>
+              <b>${Math.round(pct * 100)}%</b>
+            </div>
+            <div class="pBar"><div class="pFill" style="transform:scaleX(${pct})"></div></div>
+          </div>
+
+          <div class="onboardingActions">
+            <button class="primaryAction" data-action="${isLast ? "onboardingFinish" : "onboardingNext"}">
+              ${escapeHTML(item.primaryLabel)}
+            </button>
+            <button class="btn btn--muted btn--full" data-action="${step === 2 ? "onboardingGoPaths" : step === 3 ? "onboardingGoPremium" : "onboardingSkip"}">
+              ${escapeHTML(item.secondaryLabel)}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card onboardingMap">
+        <div class="row row--between">
+          <div class="badge">o que você ganha</div>
+          <div class="badge">sem se perder</div>
+        </div>
+
+        <div class="onboardingMapGrid">
+          <div class="onboardingMapItem">
+            <span>🧭</span>
+            <b>Grátis útil</b>
+            <small>Pack Essencial, 105x, frases próprias e backup.</small>
+          </div>
+
+          <div class="onboardingMapItem">
+            <span>🏭</span>
+            <b>Premium real</b>
+            <small>Fábrica, contas, hospital, moradia e mais.</small>
+          </div>
+
+          <div class="onboardingMapItem">
+            <span>先生</span>
+            <b>Sensei IA</b>
+            <small>Crie frases para sua situação e salve no app.</small>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+
 function renderTutorial() {
   const step = tutorialCurrentStep();
   const item = TUTORIAL_STEPS[step];
@@ -6024,7 +6773,7 @@ function renderSensei() {
           </div>
 
           <div class="grid2">
-            <button class="btn btn--ok btn--full" data-nav="#/premium">ver Premium</button>
+            <button type="button" class="btn btn--ok btn--full landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">ver Premium</button>
             <button class="btn btn--full" data-nav="#/home">continuar grátis</button>
           </div>
         </section>
@@ -7898,128 +8647,263 @@ function skillBars() {
 function renderSkills() {
   const sum = habitSummary();
   const streak = getStreakInfo();
+  const goal = todayGoalProgress();
   const avg = Math.max(sum.last7MinPerDay, 0);
   const avgShow = avg > 0.1 ? `${avg.toFixed(1)} min/dia` : "sem ritmo ainda";
-  const { current } = rankFromActiveDays(sum.activeDays);
+  const ranks = rankFromActiveDays(sum.activeDays);
+  const current = ranks.current;
+  const next = ranks.next;
 
   const prog = overallProgressByMinutes(sum.totalMin);
-  const finish = projectedFinishDate(avg);
-  const dates = projectedRankDates(avg);
-  const bars = skillBars();
-
   const progPct = Math.round(prog * 100);
+  const totalPhrases = (STATE.bank.phrases || []).filter(isPhraseAccessible).length;
+  const startedPhrases = Object.values(STATE.progress || {}).filter(pr => pr && phraseProgressPct(pr) > 0.04).length;
+  const mastered = STATE.stats.phrasesMastered || Object.values(STATE.progress || {}).filter(pr => pr?.status === "mastered").length || 0;
+  const coins = STATE.stats.coins || 0;
+  const cycles = STATE.stats.cyclesDone || sum.cycles || 0;
+  const totalMinutes = Math.floor(sum.totalMin || 0);
+  const finish = projectedFinishDate(avg);
+
+  const nextTxt = next
+    ? `${Math.max(0, next.days - sum.activeDays)} dia(s) até ${next.name}`
+    : "rank máximo desta fase";
 
   const projTxt = finish
-    ? `mantendo ${avgShow}, previsão: ${fmtDateShort(finish)}`
-    : `treine alguns minutos hoje para gerar projeção`;
+    ? `nesse ritmo, previsão: ${fmtDateShort(finish)}`
+    : "treine hoje para criar uma previsão";
 
-  const timeline = RANKS.map(r => {
-    const done = sum.activeDays >= r.days;
-    return `
-      <div class="tlNode ${done ? "done" : ""}">
-        <div class="tlDot"></div>
-        <div class="tlLbl">${r.icon} ${r.name}</div>
-        <div class="tlMini">${r.days}d</div>
-      </div>
-    `;
-  }).join("");
-
-  const datesList = dates.map(d => {
-    const right = d.done
-      ? `<span class="badge">feito</span>`
-      : `<span class="badge">${d.dateTS ? fmtDateShort(d.dateTS) : "..."}</span>`;
-
-    return `
-      <div class="row row--between" style="gap:10px">
-        <div class="small"><b>${d.icon} ${d.name}</b> <span style="opacity:.8">(${d.days} dias)</span></div>
-        ${right}
-      </div>
-    `;
-  }).join("");
+  const todayPct = Math.round(goal.overall * 100);
+  const bars = skillBars();
 
   const barHtml = bars.map(b => {
     const pct = Math.round(b.val * 100);
 
     return `
-      <div class="skillRow">
-        <div class="skillLeft">
-          <div class="skillName">${b.icon} ${b.name}</div>
-          <div class="skillTip">${escapeHTML(b.tip)}</div>
+      <div class="progressSkillItem">
+        <div class="progressSkillTop">
+          <span>${escapeHTML(b.icon)} ${escapeHTML(b.name)}</span>
+          <b>${pct}%</b>
         </div>
-        <div class="skillRight">
-          <div class="pBar skillBar"><div class="pFill" style="transform:scaleX(${b.val})"></div></div>
-          <div class="pTxt">${pct}%</div>
-        </div>
+        <div class="pBar progressSkillBar"><div class="pFill" style="transform:scaleX(${b.val})"></div></div>
+        <div class="small">${escapeHTML(b.tip)}</div>
       </div>
     `;
   }).join("");
 
+  const pathProgress = (typeof FLUENCY_PATHS !== "undefined" ? FLUENCY_PATHS : []).map(path => {
+    const topics = getPathTopics(path);
+    const phraseIds = topics.flatMap(topic => topicPhraseIds(topic.id));
+    const uniqueIds = Array.from(new Set(phraseIds));
+    const trained = uniqueIds.filter(id => {
+      const pr = STATE.progress?.[id];
+      return pr && phraseProgressPct(pr) > 0.04;
+    }).length;
+    const done = uniqueIds.filter(id => STATE.progress?.[id]?.status === "mastered").length;
+    const pct = uniqueIds.length ? clamp((trained / uniqueIds.length) * 0.72 + (done / uniqueIds.length) * 0.28, 0, 1) : 0;
+    const locked = isPathLocked(path);
+
+    return `
+      <div class="progressPathItem ${locked ? "progressPathItem--locked" : ""}">
+        <div class="progressPathTop">
+          <span>${escapeHTML(path.icon)} ${escapeHTML(path.title)}</span>
+          <b>${locked ? "Premium" : `${Math.round(pct * 100)}%`}</b>
+        </div>
+        <div class="pBar progressPathBar"><div class="pFill" style="transform:scaleX(${locked ? 0 : pct})"></div></div>
+        <div class="small">${locked ? "desbloqueie para acompanhar esta trilha" : `${trained}/${uniqueIds.length} frases iniciadas`}</div>
+      </div>
+    `;
+  }).join("");
+
+  const nextAction = goal.done
+    ? { label: "continuar leve", action: "startQuickTraining", text: "Você já bateu a meta. Mais um ciclo é bônus." }
+    : { label: "fazer 1 ciclo agora", action: "startQuickTraining", text: "Poucos minutos hoje mantêm o japonês vivo." };
+
   APP.innerHTML = `
-    <div class="stack">
-      <section class="card stack">
+    <div class="stack progressPage">
+      <section class="card progressHero">
         <div class="row row--between">
-          <div class="badge">skills</div>
+          <div class="badge">progresso</div>
           <button class="btn" data-nav="#/home">voltar</button>
         </div>
 
-        <div class="rankCard">
-          <div class="rankBig">
-            <div class="rankIcon">${current.icon}</div>
+        <div class="progressHeroGrid">
+          <div>
+            <h1 class="progressTitle">Seu japonês está criando raízes.</h1>
+            <p class="progressLead">
+              Pequenos treinos viram confiança. Esta tela mostra seu ritmo sem cobrança pesada.
+            </p>
+          </div>
+
+          <div class="progressRankCard">
+            <div class="progressRankIcon">${current.icon}</div>
             <div>
-              <div class="rankTitle">${current.name}</div>
-              <div class="rankSub">${escapeHTML(current.vibe)}</div>
+              <b>${escapeHTML(current.name)}</b>
+              <span>${escapeHTML(current.vibe)}</span>
             </div>
           </div>
+        </div>
 
-          <div class="row row--between">
-            <div class="badge">${sum.activeDays} dias ativos</div>
-            <div class="badge">${escapeHTML(streak.label)}</div>
+        <div class="progressHeroActions">
+          <button class="primaryAction" data-action="${escapeHTML(nextAction.action)}">${escapeHTML(nextAction.label)}</button>
+          <button class="btn btn--muted btn--full" data-nav="#/paths">ver trilhas</button>
+        </div>
+      </section>
+
+      <section class="progressStatsGrid">
+        <div class="card progressStatCard">
+          <span>🔥</span>
+          <b>${sum.activeDays}</b>
+          <small>dias ativos</small>
+        </div>
+
+        <div class="card progressStatCard">
+          <span>🔁</span>
+          <b>${cycles}</b>
+          <small>ciclos feitos</small>
+        </div>
+
+        <div class="card progressStatCard">
+          <span>✅</span>
+          <b>${mastered}</b>
+          <small>frases dominadas</small>
+        </div>
+
+        <div class="card progressStatCard">
+          <span>🪙</span>
+          <b>${coins}</b>
+          <small>moedas</small>
+        </div>
+      </section>
+
+      <section class="card stack progressTodayCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">hoje</div>
+            <h2 class="h2 progressSectionTitle">Meta leve do dia</h2>
+          </div>
+          <div class="badge">${todayPct}%</div>
+        </div>
+
+        <div class="progressTodayGrid">
+          <div class="progressTodayMain">
+            <b>${escapeHTML(streak.label)}</b>
+            <p>${escapeHTML(streak.message)}</p>
+            <small>${escapeHTML(nextAction.text)}</small>
           </div>
 
-          <div class="projWrap">
-            <div class="projTop">
-              <div class="small">progresso até fluência</div>
-              <div class="badge">${progPct}%</div>
+          <div class="progressGoalBars">
+            <div>
+              <div class="progressSkillTop"><span>minutos</span><b>${goal.minutesDone}/${goal.minGoal}</b></div>
+              <div class="pBar progressSkillBar"><div class="pFill" style="transform:scaleX(${goal.minPct})"></div></div>
             </div>
-            <div class="pBar projBar"><div class="pFill" style="transform:scaleX(${prog})"></div></div>
-            <div class="small projTxt">${projTxt}</div>
+            <div>
+              <div class="progressSkillTop"><span>ciclos</span><b>${goal.cyclesDone}/${goal.cycleGoal}</b></div>
+              <div class="pBar progressSkillBar"><div class="pFill" style="transform:scaleX(${goal.cyclePct})"></div></div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">linha do tempo</div>
-            <div class="badge">meta: 9 meses</div>
+      <section class="card stack progressJourneyCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">jornada</div>
+            <h2 class="h2 progressSectionTitle">Caminho até mais confiança</h2>
           </div>
-          <div class="tlLine">
-            <div class="tlTrack"></div>
-            <div class="tlFill" style="transform:scaleX(${clamp(sum.activeDays / SKILL_PLAN_DAYS, 0, 1)})"></div>
-            <div class="tlNodes">${timeline}</div>
-          </div>
-          <div class="small">Dia ativo = 2 minutos, 1 ciclo ou algumas escutas. Sem culpa.</div>
+          <div class="badge">${progPct}%</div>
         </div>
 
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">projeção</div>
-            <div class="badge">${avgShow}</div>
+        <div class="progressJourney">
+          <div class="progressJourneyTop">
+            <span>${totalMinutes} minutos de contato</span>
+            <b>${escapeHTML(nextTxt)}</b>
           </div>
-          <div class="stack" style="gap:8px">${datesList || `<div class="small">Treine hoje para começar a projeção.</div>`}</div>
+          <div class="pBar progressJourneyBar"><div class="pFill" style="transform:scaleX(${prog})"></div></div>
+          <div class="small">${escapeHTML(projTxt)}</div>
         </div>
 
-        <div class="sheet stack">
-          <div class="row row--between">
-            <div class="badge">habilidades</div>
-            <div class="badge">panorama</div>
+        <div class="progressMiniStats">
+          <div><b>${startedPhrases}</b><span>frases iniciadas</span></div>
+          <div><b>${totalPhrases}</b><span>frases acessíveis</span></div>
+          <div><b>${avgShow}</b><span>média 7 dias</span></div>
+        </div>
+      </section>
+
+      <section class="card stack progressPathCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">trilhas</div>
+            <h2 class="h2 progressSectionTitle">Progresso por caminho</h2>
           </div>
-          <div class="skillGrid">
-            ${barHtml}
-          </div>
+          <button class="btn btn--ghost" data-nav="#/paths">abrir trilhas</button>
+        </div>
+
+        <div class="progressPathGrid">
+          ${pathProgress || `<div class="small">As trilhas aparecerão aqui conforme o app crescer.</div>`}
+        </div>
+      </section>
+
+      <details class="card progressDetails">
+        <summary>
+          <span>Habilidades</span>
+          <b>audição • fala • repetição</b>
+        </summary>
+
+        <div class="progressDetailsBody">
+          ${barHtml}
+        </div>
+      </details>
+
+      <section class="card progressNextCard">
+        <div class="progressNextCopy">
+          <div class="badge">próximo passo</div>
+          <h2 class="h2">Treine um pouco hoje. Amanhã fica mais fácil voltar.</h2>
+          <p class="p">
+            O app não precisa te cansar. Ele só precisa manter o japonês em movimento.
+          </p>
+        </div>
+
+        <div class="progressNextActions">
+          <button class="primaryAction" data-action="startQuickTraining">treinar agora</button>
+          <button class="btn btn--muted btn--full" data-nav="#/sensei">abrir Sensei IA</button>
         </div>
       </section>
     </div>
   `;
 }
+
+
+function openCompareDirect() {
+  try { unlockAudio(); } catch { }
+  try { beep("pop"); } catch { }
+
+  history.replaceState(null, "", "#/compare");
+  renderPlanCompare();
+
+  try {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  } catch {
+    window.scrollTo(0, 0);
+  }
+}
+
+function openPremiumThemesDirect() {
+  try { unlockAudio(); } catch { }
+  try { beep("pop"); } catch { }
+
+  history.replaceState(null, "", "#/premium-themes");
+  renderPremiumThemes();
+
+  try {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  } catch {
+    window.scrollTo(0, 0);
+  }
+}
+
+window.NIHONGO321_OPEN_COMPARE_DIRECT = openCompareDirect;
+window.NIHONGO321_OPEN_PREMIUM_THEMES_DIRECT = openPremiumThemesDirect;
+
 
 /* ---------- render principal ---------- */
 function render() {
@@ -8028,11 +8912,15 @@ function render() {
 
   const r = route();
 
+  if (r === "#/onboarding") return renderOnboarding();
+  if (r === "#/premium-themes") return renderPremiumThemes();
+  if (r === "#/compare") return renderPlanCompare();
   if (r === "#/landing") return renderLanding();
   if (r === "#/premium") return renderPremium();
   if (r === "#/admin") return renderAdmin();
   if (r === "#/tutorial") return renderTutorial();
   if (r === "#/sensei") return renderSensei();
+  if (r === "#/paths") return renderFluencyPaths();
   if (r === "#/home") return renderHome();
   if (r === "#/105x") return render105x();
   if (r === "#/edit") return renderEdit();
@@ -8097,6 +8985,109 @@ function hookBackTopScroll() {
 
 /* ---------- click delegation ---------- */
 
+
+/* ---------- NIHONGO321 direct landing buttons capture 8.5.64 ---------- */
+try {
+  document.addEventListener("click", (event) => {
+    const el = event.target.closest("[data-action='openCompareDirect'], [data-action='openPremiumThemesDirect']");
+    if (!el) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (el.dataset.action === "openCompareDirect") {
+      if (window.NIHONGO321_OPEN_COMPARE_DIRECT) window.NIHONGO321_OPEN_COMPARE_DIRECT();
+      return;
+    }
+
+    if (el.dataset.action === "openPremiumThemesDirect") {
+      if (window.NIHONGO321_OPEN_PREMIUM_THEMES_DIRECT) window.NIHONGO321_OPEN_PREMIUM_THEMES_DIRECT();
+      return;
+    }
+  }, true);
+} catch { }
+
+/* ---------- NIHONGO321 premium themes capture listener 8.5.61.1 ---------- */
+try {
+  document.addEventListener("click", (event) => {
+    const el = event.target.closest("button, a, [role='button']");
+    if (!el) return;
+
+    const navTarget = el.dataset?.nav || "";
+    const actionTarget = el.dataset?.action || "";
+    const label = String(el.textContent || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const hrefTarget = el.getAttribute("href") || "";
+
+    const wantsThemes =
+      navTarget === "#/premium-themes" ||
+      hrefTarget === "#/premium-themes" ||
+      actionTarget === "goPremiumThemes" ||
+      label === "temas premium";
+
+    if (!wantsThemes) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (window.NIHONGO321_GO_PREMIUM_THEMES) {
+      window.NIHONGO321_GO_PREMIUM_THEMES();
+      return;
+    }
+
+    location.hash = "#/premium-themes";
+    try { renderPremiumThemes(); } catch { }
+    try { setTimeout(() => render(), 0); } catch { }
+  }, true);
+} catch { }
+
+/* ---------- NIHONGO321 compare capture listener 8.5.59.1 ---------- */
+try {
+  document.addEventListener("click", (event) => {
+    const el = event.target.closest("button, a, [role='button']");
+    if (!el) return;
+
+    const navTarget = el.dataset?.nav || "";
+    const actionTarget = el.dataset?.action || "";
+    const label = String(el.textContent || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const wantsCompare =
+      navTarget === "#/compare" ||
+      actionTarget === "goCompare" ||
+      label === "comparar planos" ||
+      label === "ver premium";
+
+    if (!wantsCompare) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (window.NIHONGO321_GO_COMPARE) {
+      window.NIHONGO321_GO_COMPARE();
+      return;
+    }
+
+    try { unlockAudio(); } catch { }
+    try { toast("abrindo comparação"); } catch { }
+    try { beep("pop"); } catch { }
+
+    location.hash = "#/compare";
+    try { renderPlanCompare(); } catch { }
+    try { setTimeout(() => render(), 0); } catch { }
+  }, true);
+} catch { }
+
+
 /* ---------- NIHONGO321 backup capture listener 8.5.38 ---------- */
 try {
   document.addEventListener("click", (event) => {
@@ -8118,6 +9109,22 @@ try {
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
+
+  const earlyAct = btn.dataset.action;
+
+  if (earlyAct === "openCompareDirect") {
+    e.preventDefault();
+    e.stopPropagation();
+    openCompareDirect();
+    return;
+  }
+
+  if (earlyAct === "openPremiumThemesDirect") {
+    e.preventDefault();
+    e.stopPropagation();
+    openPremiumThemesDirect();
+    return;
+  }
 
   if (btn.dataset.nav) {
     nav(btn.dataset.nav);
@@ -8157,6 +9164,72 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  if (act === "onboardingNext") {
+    STATE.ui ||= {};
+    STATE.ui.onboardingStep = clamp(Number(STATE.ui.onboardingStep || 0) + 1, 0, ONBOARDING_STEPS.length - 1);
+    saveState();
+    beep("pop");
+    render();
+    return;
+  }
+
+  if (act === "onboardingSkip") {
+    markOnboardingSeen();
+    toast("guia salvo");
+    beep("pop");
+    nav("#/home");
+    return;
+  }
+
+  if (act === "onboardingFinish") {
+    markOnboardingSeen();
+    toast("vamos treinar");
+    beep("ding");
+    nav("#/home");
+    return;
+  }
+
+  if (act === "onboardingGoPaths") {
+    markOnboardingSeen();
+    toast("abrindo trilhas");
+    beep("pop");
+    nav("#/paths");
+    return;
+  }
+
+  if (act === "onboardingGoPremium") {
+    markOnboardingSeen();
+    toast("abrindo Premium");
+    beep("pop");
+    nav("#/premium");
+    return;
+  }
+
+  if (act === "goPremiumThemes") {
+    if (window.NIHONGO321_GO_PREMIUM_THEMES) window.NIHONGO321_GO_PREMIUM_THEMES();
+    else {
+      nav("#/premium-themes");
+      try { renderPremiumThemes(); } catch { }
+    }
+    return;
+  }
+
+  if (act === "goCompare") {
+    if (window.NIHONGO321_GO_COMPARE) window.NIHONGO321_GO_COMPARE();
+    else {
+      nav("#/compare");
+      try { renderPlanCompare(); } catch { }
+    }
+    return;
+  }
+
+  if (act === "goPremium") {
+    toast("abrindo Premium");
+    beep("pop");
+    nav("#/premium");
+    return;
+  }
+
   if (act === "startTraining") {
     startAuto();
     toast("treino iniciado");
@@ -8193,6 +9266,38 @@ document.addEventListener("click", (e) => {
       startAuto();
       toast("treino iniciado");
     }
+    return;
+  }
+
+  if (act === "startFluencyPath") {
+    unlockAudio();
+
+    const id = btn.dataset.id;
+    const result = startFluencyPath(id);
+
+    if (result && result.ok) {
+      toast(`Trilha iniciada: ${result.label}`);
+      beep("ding");
+      nav("#/105x");
+      return;
+    }
+
+    if (result && result.reason === "locked") {
+      toast("trilha Premium");
+      beep("tuk");
+      nav("#/premium");
+      return;
+    }
+
+    toast(result?.message || "não consegui iniciar esta trilha");
+    beep("tuk");
+    return;
+  }
+
+  if (act === "goPremiumFromPath") {
+    toast("trilha Premium");
+    beep("pop");
+    nav("#/premium");
     return;
   }
 
@@ -9154,7 +10259,10 @@ window.addEventListener("hashchange", () => {
   applyTheme(getTheme());
   refreshHUD();
 
-  if (!location.hash) nav("#/landing");
+  if (!location.hash) {
+    if (!STATE.ui?.onboardingSeen) nav("#/onboarding");
+    else nav("#/landing");
+  }
 
   ensureBackTopButton();
   hookBackTopScroll();

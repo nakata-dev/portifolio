@@ -1,0 +1,36 @@
+NIHONGO321 8.5.59.2 — Correção Render Compare
+
+BASE:
+- NIHONGO321 8.5.59.1 — Correção Definitiva Botões Comparar
+
+ARQUIVOS ALTERADOS:
+- app.js
+- styles.css
+
+ARQUIVO PRESERVADO:
+- sensei-bank.js
+
+O QUE ESTA CORREÇÃO FAZ:
+- Corrige o caso em que o botão mostrava apenas o toast "comparando planos".
+- Cria função global window.NIHONGO321_GO_COMPARE().
+- Ao clicar em "ver Premium", "comparar planos" ou "ver temas premium", o app:
+  1. muda o hash para #/compare;
+  2. chama renderPlanCompare() imediatamente;
+  3. chama render() em seguida como segurança.
+- Isso não depende apenas do hashchange do navegador.
+
+ESCOPO PRESERVADO:
+- Não mexe no treino 105x.
+- Não mexe no backup.
+- Não mexe na voz/TTS.
+- Não mexe no Sensei IA.
+- Não mexe no conteúdo.
+- Não mexe no localStorage.
+- Não mexe no index.html.
+
+COMO TESTAR:
+1. Substitua app.js, styles.css e sensei-bank.js.
+2. Abra #/landing.
+3. Toque em "ver Premium".
+4. A tela deve trocar imediatamente para #/compare.
+5. Repita com "comparar planos" e "ver temas premium".
