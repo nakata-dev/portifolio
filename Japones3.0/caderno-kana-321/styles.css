@@ -1,0 +1,1914 @@
+:root{
+  color-scheme:dark;
+
+  --bg0:#05070f;
+  --bg1:#091528;
+  --bg2:#142a4d;
+
+  --card:rgba(255,255,255,.068);
+  --card2:rgba(255,255,255,.040);
+  --card3:rgba(255,255,255,.026);
+
+  --stroke:rgba(255,255,255,.13);
+  --stroke2:rgba(255,255,255,.22);
+  --strokeSoft:rgba(255,255,255,.085);
+
+  --text:#f2f6ff;
+  --muted:#b7c3db;
+  --muted2:#d9e4f7;
+  --soft:#fbfdff;
+  --ink:#071018;
+
+  --gold:#ffd86f;
+  --gold2:#fff0b8;
+  --orange:#ff9f38;
+  --orange2:#ff742f;
+  --blue:#6ca6ff;
+  --green:#8bc39a;
+  --bad:#d97c7c;
+
+  --r:18px;
+  --r2:24px;
+  --r3:30px;
+
+  --shadow:0 18px 42px rgba(0,0,0,.28);
+  --max:980px;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  min-height:100%;
+}
+
+body{
+  margin:0;
+  min-height:100%;
+  color:var(--text);
+  font-family:
+    Inter,
+    "Noto Sans",
+    "Noto Sans JP",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    Arial,
+    sans-serif;
+  background:
+    radial-gradient(900px 640px at 10% -8%, rgba(255,179,71,.18), transparent 58%),
+    radial-gradient(760px 540px at 112% 8%, rgba(108,166,255,.20), transparent 56%),
+    linear-gradient(180deg, var(--bg0), var(--bg1) 48%, var(--bg2));
+  background-attachment:fixed;
+  letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+button{
+  font:inherit;
+  cursor:pointer;
+}
+
+.app{
+  width:min(100%, var(--max));
+  margin:0 auto;
+  padding:18px 14px 28px;
+}
+
+.stack{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.card{
+  position:relative;
+  border:1px solid var(--stroke);
+  border-radius:var(--r2);
+  background:linear-gradient(180deg, var(--card), var(--card2));
+  box-shadow:var(--shadow);
+  padding:18px;
+  overflow:hidden;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(360px 180px at 10% 0%, rgba(255,255,255,.06), transparent 64%);
+}
+
+.card > *{
+  position:relative;
+  z-index:1;
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:32px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.052));
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1;
+  font-weight:900;
+  text-transform:lowercase;
+}
+
+.hero{
+  padding:22px;
+  background:
+    radial-gradient(520px 280px at 0% 0%, rgba(255,179,71,.20), transparent 66%),
+    radial-gradient(520px 300px at 100% 100%, rgba(108,166,255,.16), transparent 66%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.heroGrid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 240px;
+  gap:18px;
+  align-items:center;
+}
+
+.hero h1{
+  margin:0;
+  max-width:11.5em;
+  color:var(--soft);
+  font-size:clamp(34px, 6vw, 64px);
+  line-height:.98;
+  letter-spacing:-.06em;
+  text-wrap:balance;
+}
+
+.hero p{
+  margin:12px 0 0;
+  max-width:42em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 18px);
+  line-height:1.55;
+}
+
+.heroMini{
+  border:1px solid rgba(255,179,71,.28);
+  border-radius:26px;
+  padding:16px;
+  background:
+    radial-gradient(180px 130px at 20% 10%, rgba(255,179,71,.18), transparent 66%),
+    rgba(255,255,255,.045);
+  display:grid;
+  gap:8px;
+}
+
+.heroMini b{
+  color:var(--soft);
+  font-size:24px;
+  line-height:1;
+}
+
+.heroMini span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.tabs,
+.kanaPicker{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.tab,
+.kanaBtn,
+.actionBtn{
+  min-height:46px;
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.092), rgba(255,255,255,.044));
+  color:var(--text);
+  font-weight:900;
+  padding:10px 14px;
+  touch-action:manipulation;
+}
+
+.tab.is-active,
+.kanaBtn.is-active{
+  border-color:rgba(255,179,71,.42);
+  background:
+    radial-gradient(160px 80px at 20% 10%, rgba(255,179,71,.20), transparent 70%),
+    rgba(255,179,71,.10);
+  color:var(--gold2);
+}
+
+.kanaBtn{
+  min-width:58px;
+  min-height:58px;
+  font-size:24px;
+}
+
+.kanaBtn small{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1;
+}
+
+.notebookGrid{
+  display:grid;
+  grid-template-columns:minmax(280px, 420px) minmax(0, 1fr);
+  gap:16px;
+  align-items:start;
+}
+
+.writerCard{
+  display:grid;
+  gap:14px;
+  justify-items:center;
+}
+
+.kanaStage{
+  width:min(100%, 360px);
+  border:1px solid var(--stroke);
+  border-radius:28px;
+  padding:12px;
+  background:
+    radial-gradient(230px 170px at 30% 5%, rgba(255,179,71,.12), transparent 70%),
+    rgba(255,255,255,.035);
+}
+
+.kanaSvg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+.kanaBox{
+  fill:rgba(255,255,255,.026);
+  stroke:rgba(255,255,255,.14);
+  stroke-width:1.4;
+}
+
+.kanaGuide{
+  font-family:
+    "Noto Sans JP",
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    sans-serif;
+  font-size:82px;
+  font-weight:800;
+  fill:rgba(255,255,255,.105);
+  text-anchor:middle;
+  dominant-baseline:central;
+}
+
+.kanaStroke{
+  fill:none;
+  stroke:var(--gold);
+  stroke-width:7.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:260;
+  stroke-dashoffset:260;
+  filter:drop-shadow(0 0 5px rgba(255,216,111,.18));
+}
+
+.is-playing .kanaStroke:nth-of-type(1){
+  animation:drawKana .7s ease forwards;
+}
+
+.is-playing .kanaStroke:nth-of-type(2){
+  animation:drawKana .75s ease forwards;
+  animation-delay:.75s;
+}
+
+.is-playing .kanaStroke:nth-of-type(3){
+  animation:drawKana 1.15s ease forwards;
+  animation-delay:1.55s;
+}
+
+.is-playing .kanaStroke:nth-of-type(4){
+  animation:drawKana 1s ease forwards;
+  animation-delay:2.45s;
+}
+
+@keyframes drawKana{
+  to{ stroke-dashoffset:0; }
+}
+
+.kanaInfo{
+  text-align:center;
+}
+
+.kanaBig{
+  margin:0;
+  color:var(--soft);
+  font-size:52px;
+  line-height:1;
+}
+
+.kanaInfo p{
+  margin:8px 0 0;
+  color:var(--muted2);
+  font-size:15px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.actionGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:10px;
+  width:100%;
+}
+
+.actionBtn{
+  width:100%;
+}
+
+.actionBtn.primary{
+  border-color:rgba(255,179,71,.42);
+  background:
+    radial-gradient(180px 90px at 20% 10%, rgba(255,255,255,.16), transparent 65%),
+    linear-gradient(180deg, var(--orange), var(--orange2));
+  color:#fffaf2;
+}
+
+.actionBtn.good{
+  border-color:rgba(139,195,154,.40);
+}
+
+.actionBtn.bad{
+  border-color:rgba(217,124,124,.40);
+}
+
+.infoStack{
+  display:grid;
+  gap:14px;
+}
+
+.infoCard{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,.034);
+  display:grid;
+  gap:8px;
+}
+
+.infoCard b{
+  color:var(--soft);
+  font-size:15px;
+}
+
+.infoCard span,
+.infoCard p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.exampleWord{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:1px solid rgba(255,179,71,.18);
+  border-radius:18px;
+  padding:12px;
+  background:rgba(255,179,71,.055);
+}
+
+.exampleWord strong{
+  color:var(--gold2);
+  font-size:26px;
+  line-height:1;
+}
+
+.exampleWord span{
+  color:var(--muted2);
+}
+
+.progressGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+}
+
+.progressBox{
+  border:1px solid var(--strokeSoft);
+  border-radius:20px;
+  padding:13px;
+  background:rgba(255,255,255,.032);
+}
+
+.progressBox b{
+  display:block;
+  color:var(--gold2);
+  font-size:26px;
+  line-height:1;
+}
+
+.progressBox span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+.reviewList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.reviewChip{
+  border:1px solid rgba(255,179,71,.20);
+  border-radius:999px;
+  padding:8px 11px;
+  background:rgba(255,179,71,.055);
+  color:var(--muted2);
+  font-weight:900;
+}
+
+.note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+@media (max-width:820px){
+  .heroGrid,
+  .notebookGrid{
+    grid-template-columns:1fr;
+  }
+
+  .heroMini{
+    display:none;
+  }
+}
+
+@media (max-width:460px){
+  .app{
+    padding:12px 10px 24px;
+  }
+
+  .card{
+    padding:14px;
+    border-radius:22px;
+  }
+
+  .actionGrid,
+  .progressGrid{
+    grid-template-columns:1fr;
+  }
+
+  .kanaBtn{
+    min-width:52px;
+  }
+}
+
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%) translateY(20px);
+  opacity:0;
+  pointer-events:none;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(5,7,15,.90);
+  color:var(--soft);
+  font-weight:900;
+  font-size:13px;
+  box-shadow:0 12px 30px rgba(0,0,0,.28);
+  transition:opacity .18s ease, transform .18s ease;
+  z-index:50;
+}
+
+.toast.on{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+
+/* =========================================================
+   Protótipo 0.2 — Traços contados e passo a passo
+   ========================================================= */
+
+.strokeStatus{
+  width:min(100%, 360px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  padding:8px 12px;
+  background:rgba(255,255,255,.034);
+}
+
+.strokeStatus span{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+}
+
+.strokeStatus b{
+  color:var(--gold2);
+  font-size:13px;
+  line-height:1;
+  font-weight:950;
+}
+
+.kanaGuide{
+  font-size:86px;
+  fill:rgba(255,255,255,.135);
+  paint-order:stroke;
+  stroke:rgba(255,255,255,.035);
+  stroke-width:2px;
+}
+
+.kanaStroke{
+  stroke-width:7.2;
+  stroke-dasharray:280;
+  stroke-dashoffset:280;
+}
+
+.is-playing .kanaStroke{
+  animation:drawKana .82s ease forwards;
+  animation-delay:calc(var(--stroke-index) * .78s);
+}
+
+.is-hidden-stroke{
+  display:none;
+}
+
+.strokeNumberDot{
+  fill:rgba(255,179,71,.95);
+  stroke:rgba(10,14,24,.80);
+  stroke-width:1.5;
+}
+
+.strokeNumberText{
+  fill:#1b1005;
+  font-size:8px;
+  font-weight:950;
+  text-anchor:middle;
+  dominant-baseline:central;
+  pointer-events:none;
+}
+
+.strokeList{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  gap:8px;
+}
+
+.strokeList li{
+  display:grid;
+  grid-template-columns:32px minmax(0, 1fr);
+  gap:8px;
+  align-items:center;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  padding:8px;
+  background:rgba(255,255,255,.028);
+}
+
+.strokeList li.is-done{
+  border-color:rgba(255,179,71,.28);
+  background:rgba(255,179,71,.06);
+}
+
+.strokeList b{
+  width:28px;
+  height:28px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,179,71,.14);
+  color:var(--gold2);
+  font-size:12px;
+}
+
+.strokeList span{
+  color:var(--muted2);
+  font-size:12.5px;
+  line-height:1.3;
+  font-weight:850;
+}
+
+
+/* =========================================================
+   Protótipo 0.3 — Modo Caderno Real
+   ========================================================= */
+
+.realModeCard{
+  display:grid;
+  gap:14px;
+  min-height:520px;
+  align-content:start;
+}
+
+.stageLabel{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.stageLabel span{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+  text-transform:lowercase;
+}
+
+.stageLabel b{
+  border:1px solid rgba(255,179,71,.24);
+  border-radius:999px;
+  padding:7px 10px;
+  background:rgba(255,179,71,.06);
+  color:var(--gold2);
+  font-size:12px;
+  line-height:1;
+}
+
+.wordDisplay{
+  border:1px solid rgba(255,179,71,.22);
+  border-radius:28px;
+  padding:24px 16px;
+  background:
+    radial-gradient(260px 170px at 30% 0%, rgba(255,179,71,.12), transparent 70%),
+    rgba(255,255,255,.034);
+  display:grid;
+  justify-items:center;
+  gap:10px;
+  text-align:center;
+}
+
+.wordDisplay strong{
+  color:var(--soft);
+  font-size:clamp(54px, 11vw, 96px);
+  line-height:1;
+  letter-spacing:.02em;
+}
+
+.wordDisplay span{
+  color:var(--gold2);
+  font-size:22px;
+  line-height:1;
+  font-weight:950;
+}
+
+.wordDisplay em{
+  color:var(--muted2);
+  font-style:normal;
+  font-size:18px;
+  line-height:1.3;
+  font-weight:850;
+}
+
+.wordHint,
+.honestyBox,
+.hiddenPrompt,
+.answerBox{
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:20px;
+  padding:14px;
+  background:rgba(255,255,255,.032);
+}
+
+.wordHint{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.hiddenPrompt{
+  display:grid;
+  justify-items:center;
+  gap:8px;
+  text-align:center;
+}
+
+.hiddenPrompt b{
+  color:var(--gold2);
+  font-size:36px;
+  line-height:1;
+}
+
+.hiddenPrompt span{
+  color:var(--soft);
+  font-size:19px;
+  line-height:1.2;
+  font-weight:900;
+}
+
+.hiddenPrompt small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.25;
+  font-weight:850;
+}
+
+.canvasWrap{
+  border:1px solid rgba(255,179,71,.22);
+  border-radius:28px;
+  padding:10px;
+  background:
+    radial-gradient(260px 170px at 20% 0%, rgba(255,179,71,.08), transparent 70%),
+    rgba(255,255,255,.035);
+}
+
+.writeCanvas{
+  width:100%;
+  height:320px;
+  display:block;
+  border-radius:20px;
+  background:
+    linear-gradient(90deg, transparent calc(33.33% - .5px), rgba(255,255,255,.06) calc(33.33% - .5px), rgba(255,255,255,.06) calc(33.33% + .5px), transparent calc(33.33% + .5px)),
+    linear-gradient(90deg, transparent calc(66.66% - .5px), rgba(255,255,255,.06) calc(66.66% - .5px), rgba(255,255,255,.06) calc(66.66% + .5px), transparent calc(66.66% + .5px)),
+    linear-gradient(180deg, transparent calc(50% - .5px), rgba(255,255,255,.06) calc(50% - .5px), rgba(255,255,255,.06) calc(50% + .5px), transparent calc(50% + .5px)),
+    rgba(0,0,0,.14);
+  touch-action:none;
+}
+
+.answerBox{
+  display:grid;
+  justify-items:center;
+  gap:7px;
+  text-align:center;
+}
+
+.answerBox span{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+  text-transform:lowercase;
+}
+
+.answerBox strong{
+  color:var(--soft);
+  font-size:clamp(46px, 10vw, 82px);
+  line-height:1;
+}
+
+.answerBox em{
+  color:var(--muted2);
+  font-style:normal;
+  font-weight:850;
+}
+
+.kanaBreak{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(92px, 1fr));
+  gap:9px;
+}
+
+.kanaBreak div{
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  padding:11px;
+  background:rgba(255,255,255,.028);
+  display:grid;
+  gap:4px;
+  text-align:center;
+}
+
+.kanaBreak b{
+  color:var(--gold2);
+  font-size:32px;
+  line-height:1;
+}
+
+.kanaBreak span{
+  color:var(--soft);
+  font-size:12px;
+  font-weight:900;
+}
+
+.kanaBreak small{
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.25;
+  font-weight:850;
+}
+
+.honestyBox{
+  display:grid;
+  gap:5px;
+}
+
+.honestyBox b{
+  color:var(--soft);
+  font-size:16px;
+}
+
+.honestyBox span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.wordProgress{
+  height:12px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  background:rgba(255,255,255,.055);
+  overflow:hidden;
+}
+
+.wordProgress span{
+  display:block;
+  width:100%;
+  height:100%;
+  transform:scaleX(var(--p));
+  transform-origin:left center;
+  background:linear-gradient(90deg, var(--orange), var(--gold2));
+  border-radius:999px;
+}
+
+.flowList{
+  margin:0;
+  padding-left:20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.55;
+  font-weight:850;
+}
+
+.flowList li.is-now{
+  color:var(--gold2);
+  font-weight:950;
+}
+
+.wordPicker{
+  display:grid;
+  gap:8px;
+}
+
+.wordPicker button{
+  min-height:46px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:16px;
+  padding:9px 10px;
+  background:rgba(255,255,255,.032);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.wordPicker button.is-active{
+  border-color:rgba(255,179,71,.36);
+  background:rgba(255,179,71,.075);
+}
+
+.wordPicker strong{
+  color:var(--soft);
+  font-size:18px;
+}
+
+.wordPicker span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+}
+
+@media (max-width:520px){
+  .realModeCard{
+    min-height:auto;
+  }
+
+  .writeCanvas{
+    height:290px;
+  }
+
+  .wordDisplay strong{
+    font-size:52px;
+  }
+}
+
+
+/* =========================================================
+   Protótipo 0.4 — Conferência com imagem do aluno + quadros por caractere
+   ========================================================= */
+
+.compareGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.studentSnapshotBox{
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:20px;
+  padding:12px;
+  background:rgba(255,255,255,.032);
+  display:grid;
+  gap:8px;
+  align-content:start;
+}
+
+.studentSnapshotBox span{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+  text-transform:lowercase;
+  text-align:center;
+}
+
+.studentSnapshotBox img{
+  width:100%;
+  min-height:150px;
+  object-fit:contain;
+  display:block;
+  border-radius:16px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.07);
+}
+
+.emptySnapshot{
+  min-height:150px;
+  border:1px dashed rgba(255,255,255,.12);
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+.miniHintBtn{
+  border:0;
+  border-radius:999px;
+  padding:7px 8px;
+  background:rgba(255,255,255,.06);
+  color:var(--muted2);
+  font-size:10px;
+  line-height:1.1;
+  font-weight:900;
+}
+
+.visualHintCard{
+  border:1px solid rgba(255,179,71,.24);
+  border-radius:22px;
+  padding:13px;
+  background:rgba(255,179,71,.06);
+  display:grid;
+  grid-template-columns:72px minmax(0, 1fr);
+  gap:12px;
+  align-items:center;
+}
+
+.visualHintCard.is-empty{
+  grid-template-columns:1fr;
+}
+
+.visualKana{
+  width:72px;
+  height:72px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  color:var(--gold2);
+  background:rgba(0,0,0,.14);
+  font-size:44px;
+  line-height:1;
+  font-weight:900;
+}
+
+.visualHintCard b{
+  display:block;
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.25;
+}
+
+.visualHintCard span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted2);
+  font-size:12.5px;
+  line-height:1.4;
+  font-weight:850;
+}
+
+@media (max-width:620px){
+  .compareGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   Protótipo 0.6 — Folha em branco com linha de assinatura
+   ========================================================= */
+
+.paperWrap{
+  border:1px solid rgba(255,179,71,.18);
+  border-radius:28px;
+  padding:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
+}
+
+.sheetCanvas{
+  width:100%;
+  height:360px;
+  display:block;
+  border-radius:20px;
+  background:#fffefb;
+  touch-action:none;
+  box-shadow:inset 0 0 0 1px rgba(14,29,46,.08), 0 12px 24px rgba(0,0,0,.10);
+}
+
+.writeCanvas{
+  background:#fffefb;
+}
+
+.hiddenPrompt b{
+  color:var(--orange);
+}
+
+@media (max-width:520px){
+  .sheetCanvas{
+    height:330px;
+  }
+}
+
+
+/* =========================================================
+   Protótipo 0.6 — Tinta carvão + alternância folha/quadro negro
+   ========================================================= */
+
+.stageLabel--write{
+  align-items:center;
+}
+
+.toneToggleBtn{
+  border:1px solid rgba(255,179,71,.28);
+  border-radius:999px;
+  padding:8px 11px;
+  background:rgba(255,179,71,.07);
+  color:var(--gold2);
+  font-weight:950;
+  font-size:12px;
+  line-height:1;
+  min-height:34px;
+}
+
+.paperWrap{
+  border-color:rgba(255,179,71,.18);
+}
+
+.sheetCanvas{
+  background:#fffefb;
+}
+
+.sheetCanvas.is-paper{
+  background:#fffefb;
+}
+
+.sheetCanvas.is-blackboard{
+  background:#26332f;
+  box-shadow:
+    inset 0 0 0 1px rgba(238,246,232,.10),
+    inset 0 20px 60px rgba(255,255,255,.035),
+    0 12px 24px rgba(0,0,0,.12);
+}
+
+.studentSnapshotBox img{
+  background:#fffefb;
+}
+
+@media (max-width:520px){
+  .toneToggleBtn{
+    width:auto;
+    white-space:nowrap;
+  }
+}
+
+
+/* =========================================================
+   Protótipo 0.7 — Ordem de escrita do Kana
+   ========================================================= */
+
+.visualHintCard--stroke{
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.visualHintTitle{
+  display:grid;
+  gap:4px;
+}
+
+.strokeOrderBox{
+  display:grid;
+  grid-template-columns:minmax(140px, 220px) minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+}
+
+.strokeOrderSvg{
+  width:100%;
+  display:block;
+  border-radius:18px;
+  background:rgba(0,0,0,.10);
+}
+
+.strokeOrderFrame{
+  fill:rgba(255,255,255,.035);
+  stroke:rgba(255,255,255,.12);
+  stroke-width:1.3;
+}
+
+.strokeOrderGuide{
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  font-size:82px;
+  font-weight:800;
+  fill:rgba(255,255,255,.11);
+  text-anchor:middle;
+  dominant-baseline:central;
+}
+
+.strokeOrderPath{
+  fill:none;
+  stroke:var(--gold);
+  stroke-width:7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:280;
+  stroke-dashoffset:280;
+  animation:none;
+}
+
+.strokeOrderSvg.is-playing .strokeOrderPath{
+  animation:drawKana .75s ease forwards;
+  animation-delay:calc(var(--i) * .72s);
+}
+
+.strokeOrderDot{
+  fill:rgba(255,179,71,.96);
+  stroke:rgba(10,14,24,.86);
+  stroke-width:1.4;
+}
+
+.strokeOrderNumber{
+  fill:#1b1005;
+  font-size:8px;
+  font-weight:950;
+  text-anchor:middle;
+  dominant-baseline:central;
+  pointer-events:none;
+}
+
+.strokeOrderList{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  gap:7px;
+}
+
+.strokeOrderList li{
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr);
+  gap:8px;
+  align-items:center;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  padding:8px;
+  background:rgba(255,255,255,.028);
+}
+
+.strokeOrderList b{
+  width:26px;
+  height:26px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,179,71,.14);
+  color:var(--gold2);
+  font-size:12px;
+}
+
+.strokeOrderList span{
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1.3;
+  font-weight:850;
+}
+
+.strokeReplayBtn{
+  justify-self:start;
+}
+
+.strokeOrderFallback{
+  display:grid;
+  grid-template-columns:72px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+}
+
+@media (max-width:680px){
+  .strokeOrderBox{
+    grid-template-columns:1fr;
+  }
+
+  .strokeReplayBtn{
+    justify-self:stretch;
+  }
+}
+
+
+/* =========================================================
+   Protótipo 0.8 — Categorias + vocabulário denso
+   ========================================================= */
+
+.categoryTabsCard{ padding:12px; }
+.categoryTabs{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.categoryTabs button{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:20px;
+  padding:13px;
+  background:rgba(255,255,255,.032);
+  color:var(--text);
+  text-align:left;
+  display:grid;
+  gap:5px;
+}
+.categoryTabs button.is-active{
+  border-color:rgba(255,179,71,.42);
+  background:rgba(255,179,71,.08);
+}
+.categoryTabs b{ color:var(--soft); font-size:18px; line-height:1.1; }
+.categoryTabs span{ color:var(--muted2); font-size:12px; line-height:1.25; font-weight:850; }
+.categoryTabs small{ color:var(--muted); font-size:11px; line-height:1.25; font-weight:850; }
+
+.dashboardCard{ padding:16px; }
+.sectionTitle{
+  margin:8px 0 0;
+  color:var(--soft);
+  font-size:clamp(24px,4vw,38px);
+  line-height:1.05;
+  letter-spacing:-.04em;
+}
+.introBox{
+  border:1px solid rgba(255,179,71,.20);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,179,71,.055);
+  display:grid;
+  gap:5px;
+}
+.introBox b{ color:var(--soft); font-size:16px; line-height:1.25; }
+.introBox span{ color:var(--muted2); font-size:13px; line-height:1.45; font-weight:850; }
+
+.focusGrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(116px,1fr)); gap:9px; }
+.focusCard{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  padding:11px;
+  background:rgba(255,255,255,.032);
+  color:var(--text);
+  text-align:left;
+  display:grid;
+  gap:5px;
+}
+.focusCard strong{ color:var(--gold2); font-size:28px; line-height:1; }
+.focusCard span{ color:var(--muted); font-size:11.5px; line-height:1.3; font-weight:850; }
+
+.wordStudyList{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; }
+.wordStudyCard{
+  min-height:112px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:20px;
+  padding:13px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
+  color:var(--text);
+  text-align:left;
+  display:grid;
+  align-content:center;
+  gap:6px;
+}
+.wordStudyCard strong{ color:var(--soft); font-size:30px; line-height:1; }
+.wordStudyCard span{ color:var(--muted2); font-size:13px; line-height:1.35; font-weight:850; }
+.wordStudyCard small{ color:var(--muted); font-size:11px; line-height:1.25; font-weight:850; }
+
+@media (max-width:620px){
+  .categoryTabs{ grid-template-columns:1fr; }
+  .wordStudyList{ grid-template-columns:1fr; }
+}
+
+
+/* =========================================================
+   Protótipo 0.9 — Header NIHONGO321 + menus suspensos
+   ========================================================= */
+
+.appHeader{
+  position:sticky;
+  top:0;
+  z-index:40;
+  margin:-18px -14px 12px;
+  padding:10px 14px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+  background:rgba(5,7,15,.86);
+  backdrop-filter:blur(14px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.brandMini{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.brandMini img{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 8px 18px rgba(0,0,0,.25);
+}
+
+.brandMini strong{
+  display:block;
+  color:var(--soft);
+  font-size:17px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.01em;
+}
+
+.brandMini span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1;
+  font-weight:850;
+}
+
+.headerPill{
+  min-width:44px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  color:var(--gold2);
+  background:rgba(255,255,255,.055);
+  font-size:12px;
+  font-weight:950;
+}
+
+.dashboardCard--compact{
+  padding:16px;
+}
+
+.dashboardLead{
+  margin:8px 0 0;
+  color:var(--muted2);
+  font-size:14px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.studyMenus{
+  display:grid;
+  gap:10px;
+}
+
+.studyMenu{
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:24px;
+  overflow:hidden;
+  background:linear-gradient(180deg, rgba(255,255,255,.058), rgba(255,255,255,.030));
+  box-shadow:var(--shadow);
+}
+
+.studyMenu.is-open{
+  border-color:rgba(255,179,71,.34);
+}
+
+.studyMenuHead{
+  width:100%;
+  min-height:76px;
+  border:0;
+  padding:14px;
+  background:transparent;
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  text-align:left;
+}
+
+.studyMenuHead span{
+  display:grid;
+  gap:5px;
+}
+
+.studyMenuHead b{
+  color:var(--soft);
+  font-size:21px;
+  line-height:1;
+}
+
+.studyMenuHead small{
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1;
+  font-weight:850;
+}
+
+.studyMenuHead em{
+  min-width:54px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  color:var(--gold2);
+  font-size:12px;
+  font-style:normal;
+  font-weight:950;
+  background:rgba(255,179,71,.07);
+}
+
+.studyMenuBody{
+  display:none;
+  padding:0 14px 14px;
+}
+
+.studyMenu.is-open .studyMenuBody{
+  display:grid;
+  gap:12px;
+}
+
+.menuIntro{
+  border:1px solid rgba(255,179,71,.18);
+  border-radius:18px;
+  padding:11px;
+  background:rgba(255,179,71,.052);
+  display:grid;
+  gap:4px;
+}
+
+.menuIntro b{
+  color:var(--soft);
+  font-size:14px;
+}
+
+.menuIntro span{
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1.4;
+  font-weight:850;
+}
+
+.compactFocusGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(72px,1fr));
+  gap:8px;
+}
+
+.compactFocusGrid button{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:9px;
+  background:rgba(255,255,255,.035);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  gap:3px;
+}
+
+.compactFocusGrid button.is-active{
+  border-color:rgba(255,179,71,.38);
+  background:rgba(255,179,71,.085);
+}
+
+.compactFocusGrid strong{
+  color:var(--gold2);
+  font-size:25px;
+  line-height:1;
+}
+
+.compactFocusGrid span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+}
+
+.compactWordList{
+  display:grid;
+  gap:8px;
+}
+
+.compactWordList button{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,.095);
+  border-radius:17px;
+  padding:10px 11px;
+  background:rgba(255,255,255,.032);
+  color:var(--text);
+  display:grid;
+  grid-template-columns:minmax(74px,.55fr) minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  text-align:left;
+}
+
+.compactWordList strong{
+  color:var(--soft);
+  font-size:22px;
+  line-height:1;
+}
+
+.compactWordList span{
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1.3;
+  font-weight:850;
+}
+
+.compactWordList small{
+  color:var(--gold2);
+  font-size:11px;
+  font-weight:950;
+}
+
+@media (max-width:620px){
+  .appHeader{
+    margin:-12px -10px 10px;
+  }
+
+  .compactWordList button{
+    grid-template-columns:1fr auto;
+  }
+
+  .compactWordList span{
+    grid-column:1 / -1;
+  }
+}
+
+
+/* =========================================================
+   Protótipo 1.0 — Header colado no topo + menus fechados
+   ========================================================= */
+
+html,
+body{
+  margin:0 !important;
+  padding:0 !important;
+  overflow-x:hidden;
+}
+
+.app{
+  width:100%;
+  max-width:var(--max);
+  padding-top:0 !important;
+}
+
+.appHeader{
+  margin:0 calc(-1 * max(14px, env(safe-area-inset-left))) 12px !important;
+  border-radius:0;
+  padding-top:calc(10px + env(safe-area-inset-top));
+}
+
+.brandMini strong{
+  letter-spacing:.02em;
+}
+
+@media (max-width:620px){
+  .app{
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .appHeader{
+    margin:0 -10px 10px !important;
+    padding-left:14px;
+    padding-right:14px;
+  }
+}
+
+.studyMenu:not(.is-open) .studyMenuBody{
+  display:none !important;
+}
+
+
+/* =========================================================
+   Protótipo 1.1 — Famílias de kana + header refinado
+   ========================================================= */
+
+.appHeader{
+  top:0 !important;
+  margin-top:0 !important;
+  width:100vw;
+  margin-left:calc(50% - 50vw) !important;
+  margin-right:calc(50% - 50vw) !important;
+  border-radius:0 !important;
+}
+
+.brandMini > div span:empty{
+  display:none;
+}
+
+.familyBlock,
+.letterBlock,
+.wordChoiceBlock{
+  display:grid;
+  gap:8px;
+}
+
+.choiceLabel{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.choiceLabel b{
+  color:var(--soft);
+  font-size:13px;
+  line-height:1;
+}
+
+.choiceLabel span{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1;
+  font-weight:850;
+}
+
+.compactFamilyGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(64px,1fr));
+  gap:8px;
+}
+
+.compactFamilyGrid button{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:9px;
+  background:rgba(255,255,255,.035);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  gap:3px;
+}
+
+.compactFamilyGrid button.is-active{
+  border-color:rgba(255,179,71,.38);
+  background:rgba(255,179,71,.085);
+}
+
+.compactFamilyGrid strong{
+  color:var(--gold2);
+  font-size:25px;
+  line-height:1;
+}
+
+.compactFamilyGrid span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+}
+
+.compactFocusGrid button.is-disabled{
+  opacity:.42;
+  filter:saturate(.6);
+}
+
+.emptyLesson{
+  border:1px dashed rgba(255,255,255,.14);
+  border-radius:18px;
+  padding:14px;
+  background:rgba(255,255,255,.026);
+  display:grid;
+  gap:5px;
+}
+
+.emptyLesson b{
+  color:var(--soft);
+  font-size:15px;
+}
+
+.emptyLesson span{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+  font-weight:850;
+}
+
+@media (max-width:620px){
+  .appHeader{
+    width:100vw;
+    margin-left:calc(50% - 50vw) !important;
+    margin-right:calc(50% - 50vw) !important;
+  }
+
+  .compactFamilyGrid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+
+
+/* =========================================================
+   Protótipo 1.2 — Polimento para expansão gradual
+   ========================================================= */
+
+.studyMenuHead em{
+  min-width:62px;
+}
+
+.emptyLesson{
+  background:
+    radial-gradient(240px 120px at 20% 0%, rgba(255,179,71,.075), transparent 70%),
+    rgba(255,255,255,.026);
+}
+
+
+/* =========================================================
+   Protótipo 1.3 — Expansão família さ / サ
+   ========================================================= */
+
+.studyMenu.is-open{
+  box-shadow:0 18px 46px rgba(0,0,0,.26), inset 0 0 0 1px rgba(255,179,71,.08);
+}
+
+
+/* =========================================================
+   Protótipo 1.4 — Expansão família た / タ
+   ========================================================= */
+
+.compactFamilyGrid button.is-active strong,
+.compactFocusGrid button.is-active strong{
+  text-shadow:0 0 12px rgba(255,216,111,.16);
+}
+
+
+/* =========================================================
+   Protótipo 1.5 — Expansão な/ナ + modo claro/escuro
+   ========================================================= */
+
+.headerActions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.themeToggleBtn{
+  width:38px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.055);
+  color:var(--gold2);
+  font-size:15px;
+  font-weight:950;
+}
+
+:root[data-caderno-theme="light"],
+html[data-caderno-theme="light"]{
+  --bg:#f7f2e9;
+  --bg2:#fffaf1;
+  --card:rgba(255,255,255,.82);
+  --card2:rgba(255,255,255,.70);
+  --text:#1f2a32;
+  --soft:#17212a;
+  --muted:#6f756f;
+  --muted2:#4f5754;
+  --gold:#b97626;
+  --gold2:#9d5f1d;
+  --orange:#d47a2a;
+  --line:rgba(31,42,50,.13);
+  --shadow:0 14px 32px rgba(87,64,35,.12);
+}
+
+html[data-caderno-theme="light"] body{
+  background:
+    radial-gradient(900px 520px at 20% -10%, rgba(255,179,71,.22), transparent 60%),
+    linear-gradient(180deg, #fff8ec, #f3eadb);
+  color:var(--text);
+}
+
+html[data-caderno-theme="light"] .appHeader{
+  background:rgba(255,248,236,.88);
+  border-bottom-color:rgba(31,42,50,.11);
+}
+
+html[data-caderno-theme="light"] .studyMenu,
+html[data-caderno-theme="light"] .card{
+  background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68));
+  border-color:rgba(31,42,50,.10);
+}
+
+html[data-caderno-theme="light"] .studyMenuHead,
+html[data-caderno-theme="light"] .compactWordList button,
+html[data-caderno-theme="light"] .compactFamilyGrid button,
+html[data-caderno-theme="light"] .compactFocusGrid button,
+html[data-caderno-theme="light"] .actionBtn{
+  color:var(--text);
+}
+
+html[data-caderno-theme="light"] .wordDisplay,
+html[data-caderno-theme="light"] .hiddenPrompt,
+html[data-caderno-theme="light"] .answerBox,
+html[data-caderno-theme="light"] .studentSnapshotBox,
+html[data-caderno-theme="light"] .honestyBox,
+html[data-caderno-theme="light"] .visualHintCard{
+  background:rgba(255,255,255,.64);
+  border-color:rgba(31,42,50,.11);
+}
+
+html[data-caderno-theme="light"] .wordDisplay strong,
+html[data-caderno-theme="light"] .answerBox strong,
+html[data-caderno-theme="light"] .compactWordList strong{
+  color:#17212a;
+}
+
+
+/* =========================================================
+   Protótipo 1.7 — Quadro verde + expansão ま/マ
+   ========================================================= */
+
+.boardToneBtn{
+  width:38px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.055);
+  color:var(--gold2);
+  font-size:14px;
+  font-weight:950;
+}
+
+.sheetCanvas.is-greenboard{
+  background:#2f5b46;
+  box-shadow:
+    inset 0 0 0 1px rgba(238,246,232,.12),
+    inset 0 20px 60px rgba(255,255,255,.035),
+    0 12px 24px rgba(0,0,0,.12);
+}
+
+html[data-caderno-theme="light"] .boardToneBtn,
+html[data-caderno-theme="light"] .themeToggleBtn,
+html[data-caderno-theme="light"] .headerPill{
+  background:rgba(255,255,255,.65);
+  border-color:rgba(31,42,50,.14);
+}

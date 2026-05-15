@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.64.3.2.2.2
+   NIHONGO321 v8.5.70.2
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -21,7 +21,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.64",
+  version: "8.5.70.2",
   updatedAt: "2026-05-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -1293,6 +1293,319 @@ function todayGoalProgress() {
   };
 }
 
+
+/* ---------- 8.5.65: metas estilo fábrica ---------- */
+const META_FACTORY = {
+  dailyReps: 105,
+  weeklyReps: 735,
+  weeklyCycles: 7,
+  weeklyMastered: 7,
+  plateauThresholdPct: 5
+};
+
+function startOfWeekMonday(date = new Date()) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  const day = d.getDay();
+  const diff = (day + 6) % 7;
+  d.setDate(d.getDate() - diff);
+  return d;
+}
+
+function dateKeyFromDate(date) {
+  const d = new Date(date);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
+}
+
+function getWeekMetaKeys(date = new Date()) {
+  const start = startOfWeekMonday(date);
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    return dateKeyFromDate(d);
+  });
+}
+
+function getHabitMetaDay(key) {
+  return STATE.habit?.days?.[key] || { ms: 0, cycles: 0, listens: 0, calls: 0, reps: 0, mastered: 0 };
+}
+
+function getTodayMetaStats() {
+  const k = ensureHabitToday();
+  const d = getHabitMetaDay(k);
+
+  const reps = d.reps || 0;
+  const cycles = d.cycles || 0;
+  const mastered = d.mastered || 0;
+  const pct = clamp(Math.max(reps / META_FACTORY.dailyReps, cycles / 1, mastered / 1), 0, 1);
+
+  let label = "aquecer";
+  if (pct >= 1) label = "meta batida";
+  else if (pct >= .66) label = "quase lá";
+  else if (pct >= .33) label = "em produção";
+
+  return {
+    key: k,
+    reps,
+    cycles,
+    mastered,
+    pct,
+    label,
+    remainingReps: Math.max(0, META_FACTORY.dailyReps - reps)
+  };
+}
+
+function getWeeklyMetaStats() {
+  ensureHabitToday();
+
+  const keys = getWeekMetaKeys();
+  const today = todayKey();
+  const todayIndex = Math.max(0, keys.indexOf(today));
+  const elapsedKeys = keys.slice(0, todayIndex + 1);
+
+  let reps = 0;
+  let cycles = 0;
+  let mastered = 0;
+  const daily = keys.map((key, index) => {
+    const d = getHabitMetaDay(key);
+    const dayReps = d.reps || 0;
+    const dayCycles = d.cycles || 0;
+    const dayMastered = d.mastered || 0;
+    reps += dayReps;
+    cycles += dayCycles;
+    mastered += dayMastered;
+
+    const pct = clamp(Math.max(dayReps / META_FACTORY.dailyReps, dayCycles / 1, dayMastered / 1), 0, 1);
+    const hit = pct >= 1;
+
+    return { key, index, reps: dayReps, cycles: dayCycles, mastered: dayMastered, pct, hit };
+  });
+
+  const elapsed = daily.slice(0, todayIndex + 1);
+  const hitDays = elapsed.filter(d => d.hit).length;
+  const weeklyPct = clamp(Math.max(reps / META_FACTORY.weeklyReps, cycles / META_FACTORY.weeklyCycles, mastered / META_FACTORY.weeklyMastered), 0, 1);
+
+  let cumulative = 0;
+  const points = daily.map((d, index) => {
+    cumulative += d.reps || 0;
+    const pct = clamp(cumulative / META_FACTORY.weeklyReps, 0, 1);
+    return {
+      x: index,
+      y: pct,
+      label: d.key.slice(5).replace("-", "/")
+    };
+  });
+
+  const last5 = elapsed.slice(-5);
+  const last5Growth = last5.reduce((sum, d) => sum + (d.reps || 0), 0) / META_FACTORY.weeklyReps * 100;
+
+  let type = "irregular";
+  let typeLabel = "progresso irregular";
+  let typeText = "Houve altos e baixos. O próximo passo é bater a meta de hoje.";
+
+  if (elapsed.length >= 2 && hitDays === elapsed.length) {
+    type = "linear";
+    typeLabel = "progresso linear";
+    typeText = "Você está batendo as metas da semana como linha de produção bem ajustada.";
+  }
+
+  if (elapsed.length >= 5 && last5Growth <= META_FACTORY.plateauThresholdPct && cycles === 0 && mastered === 0) {
+    type = "plateau";
+    typeLabel = "progresso platô";
+    typeText = "A linha ficou quase parada. Volte com uma meta pequena hoje para sair do platô.";
+  }
+
+  return {
+    keys,
+    daily,
+    elapsed,
+    reps,
+    cycles,
+    mastered,
+    hitDays,
+    elapsedDays: elapsed.length,
+    weeklyPct,
+    points,
+    type,
+    typeLabel,
+    typeText
+  };
+}
+
+function renderDailyMetaThermometer() {
+  const t = getTodayMetaStats();
+  const pct = Math.round(t.pct * 100);
+
+  return `
+    <button class="dailyMetaThermo" type="button" data-nav="#/skills" aria-label="meta do dia">
+      <span class="dailyMetaThermoTop">
+        <b>meta do dia</b>
+        <em>${pct}%</em>
+      </span>
+      <span class="dailyMetaTrack">
+        <i style="transform:scaleX(${t.pct})"></i>
+      </span>
+      <span class="dailyMetaThermoBottom">
+        ${escapeHTML(t.label)} · ${t.reps}/${META_FACTORY.dailyReps} reps
+      </span>
+    </button>
+  `;
+}
+
+function updateDailyMetaThermometer() {
+  const box = $("#dailyMetaThermoSlot");
+  if (!box) return;
+  box.innerHTML = renderDailyMetaThermometer();
+}
+
+function renderWeeklyMetaGraph(stats) {
+  const w = 380;
+  const h = 190;
+  const padL = 42;
+  const padR = 16;
+  const padT = 18;
+  const padB = 32;
+  const graphW = w - padL - padR;
+  const graphH = h - padT - padB;
+
+  const maxCycles = META_FACTORY.weeklyCycles;
+  const dayLabels = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
+
+  let cumulativeCycles = 0;
+  const cyclePoints = stats.daily.map((d, index) => {
+    cumulativeCycles += d.cycles || 0;
+    const yVal = clamp(cumulativeCycles, 0, maxCycles);
+    return {
+      x: padL + (index / 6) * graphW,
+      y: padT + graphH - (yVal / maxCycles) * graphH,
+      cycles: cumulativeCycles,
+      dayCycles: d.cycles || 0,
+      label: dayLabels[index],
+      hit: (d.cycles || 0) >= 1
+    };
+  });
+
+  const coords = cyclePoints.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const targetPoints = Array.from({ length: 7 }, (_, index) => {
+    const target = index + 1;
+    const x = padL + (index / 6) * graphW;
+    const y = padT + graphH - (target / maxCycles) * graphH;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+
+  const todayMeta = getTodayMetaStats();
+  const currentCyclePct = clamp(stats.cycles / maxCycles, 0, 1);
+  const currentCyclePctTxt = Math.round(currentCyclePct * 100);
+
+  return `
+    <div class="weeklyMetaGraph weeklyCycleGraph" aria-label="gráfico semanal de ciclos completos">
+      <div class="weeklyCycleHeader">
+        <div>
+          <b>ciclos completos da semana</b>
+          <span>eixo vertical: 7 ciclos · eixo horizontal: segunda a domingo</span>
+        </div>
+        <em>${stats.cycles}/${maxCycles}</em>
+      </div>
+
+      <svg viewBox="0 0 ${w} ${h}" role="img" aria-label="progresso em tempo real da semana">
+        ${Array.from({ length: 8 }, (_, yVal) => {
+          const y = padT + graphH - (yVal / maxCycles) * graphH;
+          return `
+            <line x1="${padL}" y1="${y.toFixed(1)}" x2="${(w - padR).toFixed(1)}" y2="${y.toFixed(1)}" class="cycleGrid"></line>
+            <text x="${(padL - 10).toFixed(1)}" y="${(y + 4).toFixed(1)}" class="cycleAxisText">${yVal}</text>
+          `;
+        }).join("")}
+
+        ${dayLabels.map((label, index) => {
+          const x = padL + (index / 6) * graphW;
+          return `<text x="${x.toFixed(1)}" y="${(h - 8).toFixed(1)}" text-anchor="middle" class="cycleAxisText">${label}</text>`;
+        }).join("")}
+
+        <polyline points="${targetPoints}" class="cycleTargetLine"></polyline>
+        <polyline points="${coords}" class="cycleProgressLine cycleProgressLine--${escapeHTML(stats.type)}"></polyline>
+
+        ${cyclePoints.map((p, index) => `
+          <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" class="cycleDot cycleDot--${p.hit ? "hit" : "miss"}"></circle>
+          <title>${p.label}: ${p.dayCycles} ciclo(s), acumulado ${p.cycles}</title>
+        `).join("")}
+      </svg>
+
+      <div class="weeklyCycleFooter">
+        <span>meta: 1 ciclo completo por dia</span>
+        <b>${currentCyclePctTxt}% da semana</b>
+      </div>
+
+      <div class="weeklyCycleMini">
+        Hoje: ${todayMeta.cycles} ciclo(s) · ${todayMeta.reps}/${META_FACTORY.dailyReps} reps · ${todayMeta.mastered} frase(s) dominada(s)
+      </div>
+    </div>
+  `;
+}
+
+function renderHomeMetaMiniGraph() {
+  const stats = getWeeklyMetaStats();
+  const w = 210;
+  const h = 82;
+  const padL = 24;
+  const padR = 8;
+  const padT = 10;
+  const padB = 18;
+  const graphW = w - padL - padR;
+  const graphH = h - padT - padB;
+  const maxCycles = META_FACTORY.weeklyCycles;
+  const labels = ["s", "t", "q", "q", "s", "s", "d"];
+
+  let cumulativeCycles = 0;
+  const points = stats.daily.map((d, index) => {
+    cumulativeCycles += d.cycles || 0;
+    const yVal = clamp(cumulativeCycles, 0, maxCycles);
+    return {
+      x: padL + (index / 6) * graphW,
+      y: padT + graphH - (yVal / maxCycles) * graphH,
+      hit: (d.cycles || 0) >= 1
+    };
+  });
+
+  const coords = points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+
+  return `
+    <div class="homeMetaMiniGraph" aria-label="gráfico semanal de ciclos">
+      <div class="homeMetaMiniHead">
+        <span>semana</span>
+        <b>${stats.cycles}/${META_FACTORY.weeklyCycles}</b>
+      </div>
+
+      <svg viewBox="0 0 ${w} ${h}" role="img" aria-label="progresso semanal">
+        ${Array.from({ length: 4 }, (_, i) => {
+          const val = i === 0 ? 0 : i === 1 ? 2 : i === 2 ? 4 : 7;
+          const y = padT + graphH - (val / maxCycles) * graphH;
+          return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${(w - padR).toFixed(1)}" y2="${y.toFixed(1)}" class="homeMetaGridLine"></line>`;
+        }).join("")}
+
+        <text x="${(padL - 7).toFixed(1)}" y="${(padT + 4).toFixed(1)}" class="homeMetaAxis">7</text>
+        <text x="${(padL - 7).toFixed(1)}" y="${(padT + graphH + 4).toFixed(1)}" class="homeMetaAxis">0</text>
+
+        <polyline points="${coords}" class="homeMetaLine homeMetaLine--${escapeHTML(stats.type)}"></polyline>
+
+        ${points.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" class="homeMetaDot homeMetaDot--${p.hit ? "hit" : "miss"}"></circle>`).join("")}
+
+        ${labels.map((label, index) => {
+          const x = padL + (index / 6) * graphW;
+          return `<text x="${x.toFixed(1)}" y="${(h - 4).toFixed(1)}" text-anchor="middle" class="homeMetaAxis">${label}</text>`;
+        }).join("")}
+      </svg>
+
+      <div class="homeMetaMiniTip">
+        1–2 ciclos por frase/dia. Intercale frases e use “detalhes”.
+      </div>
+    </div>
+  `;
+}
+
+
 /* ---------- retenção leve ---------- */
 function hasStudyActivity(dayObj) {
   if (!dayObj) return false;
@@ -2335,8 +2648,11 @@ function ensureHabitToday() {
   if (!STATE.habit.firstDay) STATE.habit.firstDay = k;
 
   if (!STATE.habit.days[k]) {
-    STATE.habit.days[k] = { ms: 0, cycles: 0, listens: 0, calls: 0 };
+    STATE.habit.days[k] = { ms: 0, cycles: 0, listens: 0, calls: 0, reps: 0, mastered: 0 };
   }
+
+  STATE.habit.days[k].reps ||= 0;
+  STATE.habit.days[k].mastered ||= 0;
 
   return k;
 }
@@ -2898,11 +3214,14 @@ function onRepeat() {
     pr.count -= 1;
     pr.history.push({ at: now(), event: "rep", count: pr.count });
 
+    habitBump(todayKey(), "reps", 1);
+
     saveState();
     beep("pop");
     vibrate([8]);
     render105xBodyOnly();
     renderPhraseListOnly();
+    updateDailyMetaThermometer();
 
     return;
   }
@@ -2910,6 +3229,7 @@ function onRepeat() {
   pr.history.push({ at: now(), event: "cycle_done", cycleStart: cs });
 
   STATE.stats.cyclesDone = (STATE.stats.cyclesDone || 0) + 1;
+  habitBump(todayKey(), "reps", 1);
   habitBump(todayKey(), "cycles", 1);
 
   addCoins(100);
@@ -2927,6 +3247,7 @@ function onRepeat() {
     pr.status = "mastered";
     pr.masteredAt = now();
     STATE.stats.phrasesMastered = (STATE.stats.phrasesMastered || 0) + 1;
+    habitBump(todayKey(), "mastered", 1);
 
     addCoins(500);
     floatCoin("+500 🪙");
@@ -2943,6 +3264,7 @@ function onRepeat() {
   showCycleSheet(masteredNow);
   render105xBodyOnly();
   renderPhraseListOnly();
+  updateDailyMetaThermometer();
 }
 
 function showCycleSheet(masteredNow) {
@@ -5840,16 +6162,20 @@ function renderHome() {
             </div>
           </div>
 
-          <div class="homeTodayCard">
-            <div class="badge">hoje</div>
-            <div class="homeTodayValue">${Math.round(todayGoal.overall * 100)}%</div>
-            <div class="homeTodayText">
-              meta diária • ${STATE.goals.dailyMinutes} min • ${STATE.goals.dailyCycles} ciclo
+          <div class="homeTodayCard homeTodayCard--graph">
+            <div class="homeTodaySummary">
+              <div class="badge">hoje</div>
+              <div class="homeTodayValue">${Math.round(todayGoal.overall * 100)}%</div>
+              <div class="homeTodayText">
+                meta diária • ${STATE.goals.dailyMinutes} min • ${STATE.goals.dailyCycles} ciclo
+              </div>
+              <div class="homeTodayMini">
+                <span>🔥 ${streak.current || 0} dias</span>
+                <span>🪙 ${STATE.stats.coins || 0}</span>
+              </div>
             </div>
-            <div class="homeTodayMini">
-              <span>🔥 ${streak.current || 0} dias</span>
-              <span>🪙 ${STATE.stats.coins || 0}</span>
-            </div>
+
+            ${renderHomeMetaMiniGraph()}
           </div>
         </div>
       </section>
@@ -7180,6 +7506,10 @@ function render105x() {
           </div>
 
           <button class="studyExitBtn" data-nav="#/home">sair</button>
+        </div>
+
+        <div id="dailyMetaThermoSlot">
+          ${renderDailyMetaThermometer()}
         </div>
 
         <div class="phraseArea ${phraseDisplayMode(currentPhrase)}" aria-label="frase em treino">
@@ -8673,6 +9003,8 @@ function renderSkills() {
     : "treine hoje para criar uma previsão";
 
   const todayPct = Math.round(goal.overall * 100);
+  const weeklyMeta = getWeeklyMetaStats();
+  const todayMeta = getTodayMetaStats();
   const bars = skillBars();
 
   const barHtml = bars.map(b => {
@@ -8801,6 +9133,42 @@ function renderSkills() {
               <div class="pBar progressSkillBar"><div class="pFill" style="transform:scaleX(${goal.cyclePct})"></div></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="card stack factoryMetaCard">
+        <div class="row row--between">
+          <div>
+            <div class="badge">meta de fábrica</div>
+            <h2 class="h2 progressSectionTitle">Bater meta: 7 ciclos até domingo.</h2>
+          </div>
+          <div class="badge">${Math.round(weeklyMeta.weeklyPct * 100)}% semana</div>
+        </div>
+
+        <div class="factoryMetaGrid">
+          <div class="factoryMetaPanel">
+            <div class="factoryMetaStatus factoryMetaStatus--${escapeHTML(weeklyMeta.type)}">
+              <b>${escapeHTML(weeklyMeta.typeLabel)}</b>
+              <span>${escapeHTML(weeklyMeta.typeText)}</span>
+            </div>
+
+            <div class="factoryMetaNumbers">
+              <div><b>${weeklyMeta.cycles}</b><span>/ ${META_FACTORY.weeklyCycles} ciclos completos</span></div>
+              <div><b>${weeklyMeta.mastered}</b><span>/ ${META_FACTORY.weeklyMastered} frases dominadas</span></div>
+              <div><b>${weeklyMeta.reps}</b><span>/ ${META_FACTORY.weeklyReps} reps</span></div>
+            </div>
+
+            <div class="small">
+              Hoje: ${todayMeta.reps}/${META_FACTORY.dailyReps} reps · ${todayMeta.cycles} ciclo(s) · ${todayMeta.mastered} dominada(s)
+            </div>
+
+            <div class="factoryMetaAdvice">
+              <b>treino saudável de memória</b>
+              <span>1 a 2 ciclos por frase no dia é ideal. Intercale frases durante a semana e use “detalhes” para pesquisar o sentido das palavras. Mais repetição que isso pode virar esforço sem foco.</span>
+            </div>
+          </div>
+
+          ${renderWeeklyMetaGraph(weeklyMeta)}
         </div>
       </section>
 

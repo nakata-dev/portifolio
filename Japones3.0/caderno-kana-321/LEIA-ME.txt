@@ -1,0 +1,35 @@
+CADERNO321 — Protótipo 1.7
+
+Novidades:
+1. Quadro verde estilo escola:
+   - Adicionado como terceira opção de área de escrita.
+   - Agora os tons da escrita são:
+     - folha clara;
+     - quadro verde;
+     - quadro negro.
+   - Novo botão no header, ao lado do botão claro/escuro e da versão.
+
+2. Expansão gradual de conteúdo:
+   - Hiragana: família ま completa.
+   - Letras: ま, み, む, め, も.
+   - 7 palavras por letra.
+   - Total: 35 novas palavras.
+
+   - Katakana: família マ completa.
+   - Letras: マ, ミ, ム, メ, モ.
+   - 7 palavras por letra.
+   - Total: 35 novas palavras.
+
+3. Dicas básicas de traços:
+   - Adicionados dados básicos de traços para ま/み/む/め/も e マ/ミ/ム/メ/モ.
+
+Mantido:
+- Botão modo claro/escuro;
+- Header CADERNO321;
+- menus fechados ao carregar;
+- família → letra → palavra;
+- escrita no celular;
+- conferência com imagem;
+- correto/incorreto;
+- meta 7/7;
+- ordem/dica de escrita do kana.
