@@ -1,35 +1,40 @@
-CADERNO321 — Protótipo 1.7
+CADERNO321 — Protótipo 2.3
 
-Novidades:
-1. Quadro verde estilo escola:
-   - Adicionado como terceira opção de área de escrita.
-   - Agora os tons da escrita são:
-     - folha clara;
-     - quadro verde;
-     - quadro negro.
-   - Novo botão no header, ao lado do botão claro/escuro e da versão.
+Nova fase:
+- N5 lógico CADERNO321.
 
-2. Expansão gradual de conteúdo:
-   - Hiragana: família ま completa.
-   - Letras: ま, み, む, め, も.
-   - 7 palavras por letra.
-   - Total: 35 novas palavras.
+O que mudou:
+1. O N5 foi expandido de 30 para cerca de 80 kanjis essenciais.
+2. A organização foi pensada de forma lógica para memorização:
+   - tempo e natureza;
+   - números e dinheiro;
+   - tempo e rotina;
+   - lugares e direção;
+   - escola, pessoas e língua;
+   - adjetivos básicos;
+   - verbos essenciais;
+   - vida diária;
+   - pessoas e corpo;
+   - lugares e rotina.
 
-   - Katakana: família マ completa.
-   - Letras: マ, ミ, ム, メ, モ.
-   - 7 palavras por letra.
-   - Total: 35 novas palavras.
+3. Cada novo kanji recebeu:
+   - significado;
+   - onyomi;
+   - kunyomi;
+   - número de traços;
+   - 3 palavras úteis;
+   - memória rápida para facilitar associação.
 
-3. Dicas básicas de traços:
-   - Adicionados dados básicos de traços para ま/み/む/め/も e マ/ミ/ム/メ/モ.
+Observação:
+- O JLPT atual não publica lista oficial fechada de kanjis.
+- Esta é uma lista lógica e prática do CADERNO321, baseada nos kanjis essenciais de N5 mais recomendados para estudo.
 
 Mantido:
 - Botão modo claro/escuro;
+- Botão folha clara/quadro verde/quadro negro;
 - Header CADERNO321;
 - menus fechados ao carregar;
-- família → letra → palavra;
 - escrita no celular;
 - conferência com imagem;
 - correto/incorreto;
-- meta 7/7;
-- ordem/dica de escrita do kana.
+- meta 7/7.

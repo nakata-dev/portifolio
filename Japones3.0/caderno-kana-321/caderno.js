@@ -1,12 +1,12 @@
 /* =========================================================
-   CADERNO321 — Protótipo 1.7
+   CADERNO321 — Protótipo 2.3
    Header NIHONGO321 + menus suspensos por categoria.
    ========================================================= */
 
 (() => {
   "use strict";
 
-  const STORAGE_KEY = "caderno321_v17";
+  const STORAGE_KEY = "caderno321_v23";
   const $app = document.getElementById("app");
 
   const WORDS = [
@@ -7159,6 +7159,6094 @@
     "ク",
     "ロ"
   ]
+},
+{
+  "id": "h_ya_yama",
+  "category": "hiragana",
+  "focus": "や",
+  "jp": "やま",
+  "romaji": "yama",
+  "pt": "montanha",
+  "type": "hiragana",
+  "hint": "Palavra visual e muito ligada ao Japão.",
+  "chars": [
+    "や",
+    "ま"
+  ]
+},
+{
+  "id": "h_ya_yasai",
+  "category": "hiragana",
+  "focus": "や",
+  "jp": "やさい",
+  "romaji": "yasai",
+  "pt": "verdura / legumes",
+  "type": "hiragana",
+  "hint": "Mercado e comida.",
+  "chars": [
+    "や",
+    "さ",
+    "い"
+  ]
+},
+{
+  "id": "h_ya_yasui",
+  "category": "hiragana",
+  "focus": "や",
+  "jp": "やすい",
+  "romaji": "yasui",
+  "pt": "barato / fácil",
+  "type": "hiragana",
+  "hint": "Muito útil em compras.",
+  "chars": [
+    "や",
+    "す",
+    "い"
+  ]
+},
+{
+  "id": "h_ya_yasumu",
+  "category": "hiragana",
+  "focus": "や",
+  "jp": "やすむ",
+  "romaji": "yasumu",
+  "pt": "descansar / faltar",
+  "type": "hiragana",
+  "hint": "Trabalho e rotina.",
+  "chars": [
+    "や",
+    "す",
+    "む"
+  ]
+},
+{
+  "id": "h_ya_yaku",
+  "category": "hiragana",
+  "focus": "や",
+  "jp": "やく",
+  "romaji": "yaku",
+  "pt": "assar / função",
+  "type": "hiragana",
+  "hint": "Verbo e ideia útil.",
+  "chars": [
+    "や",
+    "く"
+  ]
+},
+{
+  "id": "h_ya_yakusoku",
+  "category": "hiragana",
+  "focus": "や",
+  "jp": "やくそく",
+  "romaji": "yakusoku",
+  "pt": "promessa / compromisso",
+  "type": "hiragana",
+  "hint": "Vida social e trabalho.",
+  "chars": [
+    "や",
+    "く",
+    "そ",
+    "く"
+  ]
+},
+{
+  "id": "h_ya_yatto",
+  "category": "hiragana",
+  "focus": "や",
+  "jp": "やっと",
+  "romaji": "yatto",
+  "pt": "finalmente",
+  "type": "hiragana",
+  "hint": "Muito usado em conversa.",
+  "chars": [
+    "や",
+    "っ",
+    "と"
+  ]
+},
+{
+  "id": "h_yu_yuki",
+  "category": "hiragana",
+  "focus": "ゆ",
+  "jp": "ゆき",
+  "romaji": "yuki",
+  "pt": "neve",
+  "type": "hiragana",
+  "hint": "Clima no Japão.",
+  "chars": [
+    "ゆ",
+    "き"
+  ]
+},
+{
+  "id": "h_yu_yume",
+  "category": "hiragana",
+  "focus": "ゆ",
+  "jp": "ゆめ",
+  "romaji": "yume",
+  "pt": "sonho",
+  "type": "hiragana",
+  "hint": "Palavra emocional e memorável.",
+  "chars": [
+    "ゆ",
+    "め"
+  ]
+},
+{
+  "id": "h_yu_yubi",
+  "category": "hiragana",
+  "focus": "ゆ",
+  "jp": "ゆび",
+  "romaji": "yubi",
+  "pt": "dedo",
+  "type": "hiragana",
+  "hint": "Corpo e saúde.",
+  "chars": [
+    "ゆ",
+    "び"
+  ]
+},
+{
+  "id": "h_yu_yuubin",
+  "category": "hiragana",
+  "focus": "ゆ",
+  "jp": "ゆうびん",
+  "romaji": "yuubin",
+  "pt": "correio",
+  "type": "hiragana",
+  "hint": "Documentos e entregas.",
+  "chars": [
+    "ゆ",
+    "う",
+    "び",
+    "ん"
+  ]
+},
+{
+  "id": "h_yu_yuugata",
+  "category": "hiragana",
+  "focus": "ゆ",
+  "jp": "ゆうがた",
+  "romaji": "yuugata",
+  "pt": "fim da tarde",
+  "type": "hiragana",
+  "hint": "Tempo do dia.",
+  "chars": [
+    "ゆ",
+    "う",
+    "が",
+    "た"
+  ]
+},
+{
+  "id": "h_yu_yukkuri",
+  "category": "hiragana",
+  "focus": "ゆ",
+  "jp": "ゆっくり",
+  "romaji": "yukkuri",
+  "pt": "devagar / com calma",
+  "type": "hiragana",
+  "hint": "Útil para pedir calma.",
+  "chars": [
+    "ゆ",
+    "っ",
+    "く",
+    "り"
+  ]
+},
+{
+  "id": "h_yu_yurusu",
+  "category": "hiragana",
+  "focus": "ゆ",
+  "jp": "ゆるす",
+  "romaji": "yurusu",
+  "pt": "perdoar / permitir",
+  "type": "hiragana",
+  "hint": "Verbo útil.",
+  "chars": [
+    "ゆ",
+    "る",
+    "す"
+  ]
+},
+{
+  "id": "h_yo_yoru",
+  "category": "hiragana",
+  "focus": "よ",
+  "jp": "よる",
+  "romaji": "yoru",
+  "pt": "noite",
+  "type": "hiragana",
+  "hint": "Rotina e horário.",
+  "chars": [
+    "よ",
+    "る"
+  ]
+},
+{
+  "id": "h_yo_yoko",
+  "category": "hiragana",
+  "focus": "よ",
+  "jp": "よこ",
+  "romaji": "yoko",
+  "pt": "lado",
+  "type": "hiragana",
+  "hint": "Localização.",
+  "chars": [
+    "よ",
+    "こ"
+  ]
+},
+{
+  "id": "h_yo_yomu",
+  "category": "hiragana",
+  "focus": "よ",
+  "jp": "よむ",
+  "romaji": "yomu",
+  "pt": "ler",
+  "type": "hiragana",
+  "hint": "Verbo central para estudo.",
+  "chars": [
+    "よ",
+    "む"
+  ]
+},
+{
+  "id": "h_yo_yobu",
+  "category": "hiragana",
+  "focus": "よ",
+  "jp": "よぶ",
+  "romaji": "yobu",
+  "pt": "chamar",
+  "type": "hiragana",
+  "hint": "Comunicação.",
+  "chars": [
+    "よ",
+    "ぶ"
+  ]
+},
+{
+  "id": "h_yo_yowai",
+  "category": "hiragana",
+  "focus": "よ",
+  "jp": "よわい",
+  "romaji": "yowai",
+  "pt": "fraco",
+  "type": "hiragana",
+  "hint": "Adjetivo útil.",
+  "chars": [
+    "よ",
+    "わ",
+    "い"
+  ]
+},
+{
+  "id": "h_yo_yoyaku",
+  "category": "hiragana",
+  "focus": "よ",
+  "jp": "よやく",
+  "romaji": "yoyaku",
+  "pt": "reserva",
+  "type": "hiragana",
+  "hint": "Restaurante, hospital e serviços.",
+  "chars": [
+    "よ",
+    "や",
+    "く"
+  ]
+},
+{
+  "id": "h_yo_yorokobu",
+  "category": "hiragana",
+  "focus": "よ",
+  "jp": "よろこぶ",
+  "romaji": "yorokobu",
+  "pt": "alegrar-se",
+  "type": "hiragana",
+  "hint": "Vocabulário emocional.",
+  "chars": [
+    "よ",
+    "ろ",
+    "こ",
+    "ぶ"
+  ]
+},
+{
+  "id": "k_ya_yakult",
+  "category": "katakana",
+  "focus": "ヤ",
+  "jp": "ヤクルト",
+  "romaji": "yakuruto",
+  "pt": "Yakult",
+  "type": "katakana",
+  "hint": "Produto muito comum no Japão.",
+  "chars": [
+    "ヤ",
+    "ク",
+    "ル",
+    "ト"
+  ]
+},
+{
+  "id": "k_ya_yahoo",
+  "category": "katakana",
+  "focus": "ヤ",
+  "jp": "ヤフー",
+  "romaji": "yafuu",
+  "pt": "Yahoo",
+  "type": "katakana",
+  "hint": "Serviços e internet.",
+  "chars": [
+    "ヤ",
+    "フ",
+    "ー"
+  ]
+},
+{
+  "id": "k_ya_yangu",
+  "category": "katakana",
+  "focus": "ヤ",
+  "jp": "ヤング",
+  "romaji": "yangu",
+  "pt": "jovem / young",
+  "type": "katakana",
+  "hint": "Mídia e produtos.",
+  "chars": [
+    "ヤ",
+    "ン",
+    "グ"
+  ]
+},
+{
+  "id": "k_ya_yaado",
+  "category": "katakana",
+  "focus": "ヤ",
+  "jp": "ヤード",
+  "romaji": "yaado",
+  "pt": "jarda / yard",
+  "type": "katakana",
+  "hint": "Medidas e termos estrangeiros.",
+  "chars": [
+    "ヤ",
+    "ー",
+    "ド"
+  ]
+},
+{
+  "id": "k_ya_yankii",
+  "category": "katakana",
+  "focus": "ヤ",
+  "jp": "ヤンキー",
+  "romaji": "yankii",
+  "pt": "Yankee / delinquente",
+  "type": "katakana",
+  "hint": "Mídia e conversa.",
+  "chars": [
+    "ヤ",
+    "ン",
+    "キ",
+    "ー"
+  ]
+},
+{
+  "id": "k_ya_yamaha",
+  "category": "katakana",
+  "focus": "ヤ",
+  "jp": "ヤマハ",
+  "romaji": "yamaha",
+  "pt": "Yamaha",
+  "type": "katakana",
+  "hint": "Marca comum no Japão.",
+  "chars": [
+    "ヤ",
+    "マ",
+    "ハ"
+  ]
+},
+{
+  "id": "k_ya_yakitori",
+  "category": "katakana",
+  "focus": "ヤ",
+  "jp": "ヤキトリ",
+  "romaji": "yakitori",
+  "pt": "espetinho de frango",
+  "type": "katakana",
+  "hint": "Comida comum.",
+  "chars": [
+    "ヤ",
+    "キ",
+    "ト",
+    "リ"
+  ]
+},
+{
+  "id": "k_yu_yuuzaa",
+  "category": "katakana",
+  "focus": "ユ",
+  "jp": "ユーザー",
+  "romaji": "yuuzaa",
+  "pt": "usuário",
+  "type": "katakana",
+  "hint": "Apps e serviços.",
+  "chars": [
+    "ユ",
+    "ー",
+    "ザ",
+    "ー"
+  ]
+},
+{
+  "id": "k_yu_yunifoomu",
+  "category": "katakana",
+  "focus": "ユ",
+  "jp": "ユニフォーム",
+  "romaji": "yunifoomu",
+  "pt": "uniforme",
+  "type": "katakana",
+  "hint": "Trabalho e escola.",
+  "chars": [
+    "ユ",
+    "ニ",
+    "フ",
+    "ォ",
+    "ー",
+    "ム"
+  ]
+},
+{
+  "id": "k_yu_yuumoa",
+  "category": "katakana",
+  "focus": "ユ",
+  "jp": "ユーモア",
+  "romaji": "yuumoa",
+  "pt": "humor",
+  "type": "katakana",
+  "hint": "Comunicação.",
+  "chars": [
+    "ユ",
+    "ー",
+    "モ",
+    "ア"
+  ]
+},
+{
+  "id": "k_yu_yunaiteddo",
+  "category": "katakana",
+  "focus": "ユ",
+  "jp": "ユナイテッド",
+  "romaji": "yunaiteddo",
+  "pt": "united / unido",
+  "type": "katakana",
+  "hint": "Nomes e marcas.",
+  "chars": [
+    "ユ",
+    "ナ",
+    "イ",
+    "テ",
+    "ッ",
+    "ド"
+  ]
+},
+{
+  "id": "k_yu_yuuro",
+  "category": "katakana",
+  "focus": "ユ",
+  "jp": "ユーロ",
+  "romaji": "yuuro",
+  "pt": "euro",
+  "type": "katakana",
+  "hint": "Dinheiro e países.",
+  "chars": [
+    "ユ",
+    "ー",
+    "ロ"
+  ]
+},
+{
+  "id": "k_yu_yunikuro",
+  "category": "katakana",
+  "focus": "ユ",
+  "jp": "ユニクロ",
+  "romaji": "yunikuro",
+  "pt": "Uniqlo",
+  "type": "katakana",
+  "hint": "Loja muito comum no Japão.",
+  "chars": [
+    "ユ",
+    "ニ",
+    "ク",
+    "ロ"
+  ]
+},
+{
+  "id": "k_yu_yuuchuubu",
+  "category": "katakana",
+  "focus": "ユ",
+  "jp": "ユーチューブ",
+  "romaji": "yuuchuubu",
+  "pt": "YouTube",
+  "type": "katakana",
+  "hint": "Internet e estudo.",
+  "chars": [
+    "ユ",
+    "ー",
+    "チ",
+    "ュ",
+    "ー",
+    "ブ"
+  ]
+},
+{
+  "id": "k_yo_yooguruto",
+  "category": "katakana",
+  "focus": "ヨ",
+  "jp": "ヨーグルト",
+  "romaji": "yooguruto",
+  "pt": "iogurte",
+  "type": "katakana",
+  "hint": "Mercado e comida.",
+  "chars": [
+    "ヨ",
+    "ー",
+    "グ",
+    "ル",
+    "ト"
+  ]
+},
+{
+  "id": "k_yo_yooroppa",
+  "category": "katakana",
+  "focus": "ヨ",
+  "jp": "ヨーロッパ",
+  "romaji": "yooroppa",
+  "pt": "Europa",
+  "type": "katakana",
+  "hint": "Geografia e notícias.",
+  "chars": [
+    "ヨ",
+    "ー",
+    "ロ",
+    "ッ",
+    "パ"
+  ]
+},
+{
+  "id": "k_yo_yoga",
+  "category": "katakana",
+  "focus": "ヨ",
+  "jp": "ヨガ",
+  "romaji": "yoga",
+  "pt": "yoga",
+  "type": "katakana",
+  "hint": "Saúde e exercício.",
+  "chars": [
+    "ヨ",
+    "ガ"
+  ]
+},
+{
+  "id": "k_yo_yotto",
+  "category": "katakana",
+  "focus": "ヨ",
+  "jp": "ヨット",
+  "romaji": "yotto",
+  "pt": "iate",
+  "type": "katakana",
+  "hint": "Lazer e transporte.",
+  "chars": [
+    "ヨ",
+    "ッ",
+    "ト"
+  ]
+},
+{
+  "id": "k_yo_yooku",
+  "category": "katakana",
+  "focus": "ヨ",
+  "jp": "ヨーク",
+  "romaji": "yooku",
+  "pt": "York / nome estrangeiro",
+  "type": "katakana",
+  "hint": "Nomes e marcas.",
+  "chars": [
+    "ヨ",
+    "ー",
+    "ク"
+  ]
+},
+{
+  "id": "k_yo_yodobashi",
+  "category": "katakana",
+  "focus": "ヨ",
+  "jp": "ヨドバシ",
+  "romaji": "yodobashi",
+  "pt": "Yodobashi / loja",
+  "type": "katakana",
+  "hint": "Eletrônicos no Japão.",
+  "chars": [
+    "ヨ",
+    "ド",
+    "バ",
+    "シ"
+  ]
+},
+{
+  "id": "k_yo_yoyogi",
+  "category": "katakana",
+  "focus": "ヨ",
+  "jp": "ヨヨギ",
+  "romaji": "yoyogi",
+  "pt": "Yoyogi",
+  "type": "katakana",
+  "hint": "Nome de local em Tóquio.",
+  "chars": [
+    "ヨ",
+    "ヨ",
+    "ギ"
+  ]
+},
+{
+  "id": "h_ra_raigetsu",
+  "category": "hiragana",
+  "focus": "ら",
+  "jp": "らいげつ",
+  "romaji": "raigetsu",
+  "pt": "mês que vem",
+  "type": "hiragana",
+  "hint": "Tempo e planejamento.",
+  "chars": [
+    "ら",
+    "い",
+    "げ",
+    "つ"
+  ]
+},
+{
+  "id": "h_ra_rainen",
+  "category": "hiragana",
+  "focus": "ら",
+  "jp": "らいねん",
+  "romaji": "rainen",
+  "pt": "ano que vem",
+  "type": "hiragana",
+  "hint": "Tempo e planejamento.",
+  "chars": [
+    "ら",
+    "い",
+    "ね",
+    "ん"
+  ]
+},
+{
+  "id": "h_ra_raishuu",
+  "category": "hiragana",
+  "focus": "ら",
+  "jp": "らいしゅう",
+  "romaji": "raishuu",
+  "pt": "semana que vem",
+  "type": "hiragana",
+  "hint": "Muito útil na rotina.",
+  "chars": [
+    "ら",
+    "い",
+    "し",
+    "ゅ",
+    "う"
+  ]
+},
+{
+  "id": "h_ra_raku",
+  "category": "hiragana",
+  "focus": "ら",
+  "jp": "らく",
+  "romaji": "raku",
+  "pt": "fácil / confortável",
+  "type": "hiragana",
+  "hint": "Trabalho e vida.",
+  "chars": [
+    "ら",
+    "く"
+  ]
+},
+{
+  "id": "h_ra_raamen",
+  "category": "hiragana",
+  "focus": "ら",
+  "jp": "らーめん",
+  "romaji": "raamen",
+  "pt": "lámen",
+  "type": "hiragana",
+  "hint": "Comida muito comum.",
+  "chars": [
+    "ら",
+    "ー",
+    "め",
+    "ん"
+  ]
+},
+{
+  "id": "h_ra_rappa",
+  "category": "hiragana",
+  "focus": "ら",
+  "jp": "らっぱ",
+  "romaji": "rappa",
+  "pt": "trombeta",
+  "type": "hiragana",
+  "hint": "Palavra simples para treino.",
+  "chars": [
+    "ら",
+    "っ",
+    "ぱ"
+  ]
+},
+{
+  "id": "h_ra_rando",
+  "category": "hiragana",
+  "focus": "ら",
+  "jp": "らんど",
+  "romaji": "rando",
+  "pt": "land / terra",
+  "type": "hiragana",
+  "hint": "Treino fonético simples.",
+  "chars": [
+    "ら",
+    "ん",
+    "ど"
+  ]
+},
+{
+  "id": "h_ri_risu",
+  "category": "hiragana",
+  "focus": "り",
+  "jp": "りす",
+  "romaji": "risu",
+  "pt": "esquilo",
+  "type": "hiragana",
+  "hint": "Palavra curta para fixar り.",
+  "chars": [
+    "り",
+    "す"
+  ]
+},
+{
+  "id": "h_ri_ringo",
+  "category": "hiragana",
+  "focus": "り",
+  "jp": "りんご",
+  "romaji": "ringo",
+  "pt": "maçã",
+  "type": "hiragana",
+  "hint": "Mercado e comida.",
+  "chars": [
+    "り",
+    "ん",
+    "ご"
+  ]
+},
+{
+  "id": "h_ri_riyuu",
+  "category": "hiragana",
+  "focus": "り",
+  "jp": "りゆう",
+  "romaji": "riyuu",
+  "pt": "motivo / razão",
+  "type": "hiragana",
+  "hint": "Muito útil para explicar.",
+  "chars": [
+    "り",
+    "ゆ",
+    "う"
+  ]
+},
+{
+  "id": "h_ri_ryouri",
+  "category": "hiragana",
+  "focus": "り",
+  "jp": "りょうり",
+  "romaji": "ryouri",
+  "pt": "comida / culinária",
+  "type": "hiragana",
+  "hint": "Restaurante e casa.",
+  "chars": [
+    "り",
+    "ょ",
+    "う",
+    "り"
+  ]
+},
+{
+  "id": "h_ri_ryoukin",
+  "category": "hiragana",
+  "focus": "り",
+  "jp": "りょうきん",
+  "romaji": "ryoukin",
+  "pt": "taxa / cobrança",
+  "type": "hiragana",
+  "hint": "Contas, planos e serviços.",
+  "chars": [
+    "り",
+    "ょ",
+    "う",
+    "き",
+    "ん"
+  ]
+},
+{
+  "id": "h_ri_ritsu",
+  "category": "hiragana",
+  "focus": "り",
+  "jp": "りつ",
+  "romaji": "ritsu",
+  "pt": "taxa / proporção",
+  "type": "hiragana",
+  "hint": "Vocabulário básico avançando.",
+  "chars": [
+    "り",
+    "つ"
+  ]
+},
+{
+  "id": "h_ri_rippa",
+  "category": "hiragana",
+  "focus": "り",
+  "jp": "りっぱ",
+  "romaji": "rippa",
+  "pt": "excelente / digno",
+  "type": "hiragana",
+  "hint": "Palavra comum em avaliação.",
+  "chars": [
+    "り",
+    "っ",
+    "ぱ"
+  ]
+},
+{
+  "id": "h_ru_rusu",
+  "category": "hiragana",
+  "focus": "る",
+  "jp": "るす",
+  "romaji": "rusu",
+  "pt": "ausência / estar fora",
+  "type": "hiragana",
+  "hint": "Entrega e casa.",
+  "chars": [
+    "る",
+    "す"
+  ]
+},
+{
+  "id": "h_ru_ruuru",
+  "category": "hiragana",
+  "focus": "る",
+  "jp": "るーる",
+  "romaji": "ruuru",
+  "pt": "regra",
+  "type": "hiragana",
+  "hint": "Estudo e convivência.",
+  "chars": [
+    "る",
+    "ー",
+    "る"
+  ]
+},
+{
+  "id": "h_ru_rubi",
+  "category": "hiragana",
+  "focus": "る",
+  "jp": "るび",
+  "romaji": "rubi",
+  "pt": "furigana / rubi",
+  "type": "hiragana",
+  "hint": "Útil para leitura japonesa.",
+  "chars": [
+    "る",
+    "び"
+  ]
+},
+{
+  "id": "h_ru_rui",
+  "category": "hiragana",
+  "focus": "る",
+  "jp": "るい",
+  "romaji": "rui",
+  "pt": "tipo / categoria",
+  "type": "hiragana",
+  "hint": "Classificação.",
+  "chars": [
+    "る",
+    "い"
+  ]
+},
+{
+  "id": "h_ru_rusuban",
+  "category": "hiragana",
+  "focus": "る",
+  "jp": "るすばん",
+  "romaji": "rusuban",
+  "pt": "ficar tomando conta da casa",
+  "type": "hiragana",
+  "hint": "Casa e rotina.",
+  "chars": [
+    "る",
+    "す",
+    "ば",
+    "ん"
+  ]
+},
+{
+  "id": "h_ru_ruupu",
+  "category": "hiragana",
+  "focus": "る",
+  "jp": "るーぷ",
+  "romaji": "ruupu",
+  "pt": "loop / repetição",
+  "type": "hiragana",
+  "hint": "Estudo e tecnologia.",
+  "chars": [
+    "る",
+    "ー",
+    "ぷ"
+  ]
+},
+{
+  "id": "h_ru_rusu2",
+  "category": "hiragana",
+  "focus": "る",
+  "jp": "るすでん",
+  "romaji": "rusuden",
+  "pt": "secretária eletrônica",
+  "type": "hiragana",
+  "hint": "Telefone e comunicação.",
+  "chars": [
+    "る",
+    "す",
+    "で",
+    "ん"
+  ]
+},
+{
+  "id": "h_re_rei",
+  "category": "hiragana",
+  "focus": "れ",
+  "jp": "れい",
+  "romaji": "rei",
+  "pt": "exemplo / zero",
+  "type": "hiragana",
+  "hint": "Estudo e números.",
+  "chars": [
+    "れ",
+    "い"
+  ]
+},
+{
+  "id": "h_re_rekishi",
+  "category": "hiragana",
+  "focus": "れ",
+  "jp": "れきし",
+  "romaji": "rekishi",
+  "pt": "história",
+  "type": "hiragana",
+  "hint": "Estudo e cultura.",
+  "chars": [
+    "れ",
+    "き",
+    "し"
+  ]
+},
+{
+  "id": "h_re_renraku",
+  "category": "hiragana",
+  "focus": "れ",
+  "jp": "れんらく",
+  "romaji": "renraku",
+  "pt": "contato / aviso",
+  "type": "hiragana",
+  "hint": "Trabalho e vida real.",
+  "chars": [
+    "れ",
+    "ん",
+    "ら",
+    "く"
+  ]
+},
+{
+  "id": "h_re_renkyuu",
+  "category": "hiragana",
+  "focus": "れ",
+  "jp": "れんきゅう",
+  "romaji": "renkyuu",
+  "pt": "feriado prolongado",
+  "type": "hiragana",
+  "hint": "Rotina no Japão.",
+  "chars": [
+    "れ",
+    "ん",
+    "き",
+    "ゅ",
+    "う"
+  ]
+},
+{
+  "id": "h_re_renshuu",
+  "category": "hiragana",
+  "focus": "れ",
+  "jp": "れんしゅう",
+  "romaji": "renshuu",
+  "pt": "prática / treino",
+  "type": "hiragana",
+  "hint": "Central para o app.",
+  "chars": [
+    "れ",
+    "ん",
+    "し",
+    "ゅ",
+    "う"
+  ]
+},
+{
+  "id": "h_re_reizouko",
+  "category": "hiragana",
+  "focus": "れ",
+  "jp": "れいぞうこ",
+  "romaji": "reizouko",
+  "pt": "geladeira",
+  "type": "hiragana",
+  "hint": "Casa e comida.",
+  "chars": [
+    "れ",
+    "い",
+    "ぞ",
+    "う",
+    "こ"
+  ]
+},
+{
+  "id": "h_re_retsu",
+  "category": "hiragana",
+  "focus": "れ",
+  "jp": "れつ",
+  "romaji": "retsu",
+  "pt": "fila / fileira",
+  "type": "hiragana",
+  "hint": "Trabalho, loja e eventos.",
+  "chars": [
+    "れ",
+    "つ"
+  ]
+},
+{
+  "id": "h_ro_roku",
+  "category": "hiragana",
+  "focus": "ろ",
+  "jp": "ろく",
+  "romaji": "roku",
+  "pt": "seis",
+  "type": "hiragana",
+  "hint": "Número básico.",
+  "chars": [
+    "ろ",
+    "く"
+  ]
+},
+{
+  "id": "h_ro_rouka",
+  "category": "hiragana",
+  "focus": "ろ",
+  "jp": "ろうか",
+  "romaji": "rouka",
+  "pt": "corredor",
+  "type": "hiragana",
+  "hint": "Casa, escola e trabalho.",
+  "chars": [
+    "ろ",
+    "う",
+    "か"
+  ]
+},
+{
+  "id": "h_ro_roujin",
+  "category": "hiragana",
+  "focus": "ろ",
+  "jp": "ろうじん",
+  "romaji": "roujin",
+  "pt": "idoso",
+  "type": "hiragana",
+  "hint": "Sociedade e família.",
+  "chars": [
+    "ろ",
+    "う",
+    "じ",
+    "ん"
+  ]
+},
+{
+  "id": "h_ro_ronbun",
+  "category": "hiragana",
+  "focus": "ろ",
+  "jp": "ろんぶん",
+  "romaji": "ronbun",
+  "pt": "artigo / tese",
+  "type": "hiragana",
+  "hint": "Estudo.",
+  "chars": [
+    "ろ",
+    "ん",
+    "ぶ",
+    "ん"
+  ]
+},
+{
+  "id": "h_ro_romen",
+  "category": "hiragana",
+  "focus": "ろ",
+  "jp": "ろめん",
+  "romaji": "romen",
+  "pt": "superfície da rua",
+  "type": "hiragana",
+  "hint": "Trânsito e cotidiano.",
+  "chars": [
+    "ろ",
+    "め",
+    "ん"
+  ]
+},
+{
+  "id": "h_ro_roten",
+  "category": "hiragana",
+  "focus": "ろ",
+  "jp": "ろてん",
+  "romaji": "roten",
+  "pt": "ao ar livre / barraca",
+  "type": "hiragana",
+  "hint": "Eventos e lojas.",
+  "chars": [
+    "ろ",
+    "て",
+    "ん"
+  ]
+},
+{
+  "id": "h_ro_roudou",
+  "category": "hiragana",
+  "focus": "ろ",
+  "jp": "ろうどう",
+  "romaji": "roudou",
+  "pt": "trabalho / labor",
+  "type": "hiragana",
+  "hint": "Vocabulário importante no Japão.",
+  "chars": [
+    "ろ",
+    "う",
+    "ど",
+    "う"
+  ]
+},
+{
+  "id": "k_ra_raamen",
+  "category": "katakana",
+  "focus": "ラ",
+  "jp": "ラーメン",
+  "romaji": "raamen",
+  "pt": "lámen",
+  "type": "katakana",
+  "hint": "Comida japonesa popular.",
+  "chars": [
+    "ラ",
+    "ー",
+    "メ",
+    "ン"
+  ]
+},
+{
+  "id": "k_ra_rajiio",
+  "category": "katakana",
+  "focus": "ラ",
+  "jp": "ラジオ",
+  "romaji": "rajiio",
+  "pt": "rádio",
+  "type": "katakana",
+  "hint": "Mídia e áudio.",
+  "chars": [
+    "ラ",
+    "ジ",
+    "オ"
+  ]
+},
+{
+  "id": "k_ra_rain",
+  "category": "katakana",
+  "focus": "ラ",
+  "jp": "ライン",
+  "romaji": "rain",
+  "pt": "linha / LINE",
+  "type": "katakana",
+  "hint": "App e comunicação.",
+  "chars": [
+    "ラ",
+    "イ",
+    "ン"
+  ]
+},
+{
+  "id": "k_ra_raito",
+  "category": "katakana",
+  "focus": "ラ",
+  "jp": "ライト",
+  "romaji": "raito",
+  "pt": "luz / leve",
+  "type": "katakana",
+  "hint": "Produtos e direção.",
+  "chars": [
+    "ラ",
+    "イ",
+    "ト"
+  ]
+},
+{
+  "id": "k_ra_rakku",
+  "category": "katakana",
+  "focus": "ラ",
+  "jp": "ラック",
+  "romaji": "rakku",
+  "pt": "estante / sorte",
+  "type": "katakana",
+  "hint": "Casa e produtos.",
+  "chars": [
+    "ラ",
+    "ッ",
+    "ク"
+  ]
+},
+{
+  "id": "k_ra_raberu",
+  "category": "katakana",
+  "focus": "ラ",
+  "jp": "ラベル",
+  "romaji": "raberu",
+  "pt": "rótulo / etiqueta",
+  "type": "katakana",
+  "hint": "Produtos e trabalho.",
+  "chars": [
+    "ラ",
+    "ベ",
+    "ル"
+  ]
+},
+{
+  "id": "k_ra_ranchi",
+  "category": "katakana",
+  "focus": "ラ",
+  "jp": "ランチ",
+  "romaji": "ranchi",
+  "pt": "almoço",
+  "type": "katakana",
+  "hint": "Restaurante e rotina.",
+  "chars": [
+    "ラ",
+    "ン",
+    "チ"
+  ]
+},
+{
+  "id": "k_ri_rimooto",
+  "category": "katakana",
+  "focus": "リ",
+  "jp": "リモート",
+  "romaji": "rimooto",
+  "pt": "remoto",
+  "type": "katakana",
+  "hint": "Trabalho e tecnologia.",
+  "chars": [
+    "リ",
+    "モ",
+    "ー",
+    "ト"
+  ]
+},
+{
+  "id": "k_ri_risaikuru",
+  "category": "katakana",
+  "focus": "リ",
+  "jp": "リサイクル",
+  "romaji": "risaikuru",
+  "pt": "reciclagem",
+  "type": "katakana",
+  "hint": "Vida no Japão.",
+  "chars": [
+    "リ",
+    "サ",
+    "イ",
+    "ク",
+    "ル"
+  ]
+},
+{
+  "id": "k_ri_risuto",
+  "category": "katakana",
+  "focus": "リ",
+  "jp": "リスト",
+  "romaji": "risuto",
+  "pt": "lista",
+  "type": "katakana",
+  "hint": "Apps, compras e estudo.",
+  "chars": [
+    "リ",
+    "ス",
+    "ト"
+  ]
+},
+{
+  "id": "k_ri_ringu",
+  "category": "katakana",
+  "focus": "リ",
+  "jp": "リング",
+  "romaji": "ringu",
+  "pt": "anel / ring",
+  "type": "katakana",
+  "hint": "Compras e objetos.",
+  "chars": [
+    "リ",
+    "ン",
+    "グ"
+  ]
+},
+{
+  "id": "k_ri_rippu",
+  "category": "katakana",
+  "focus": "リ",
+  "jp": "リップ",
+  "romaji": "rippu",
+  "pt": "batom / lip",
+  "type": "katakana",
+  "hint": "Cosméticos.",
+  "chars": [
+    "リ",
+    "ッ",
+    "プ"
+  ]
+},
+{
+  "id": "k_ri_riidaa",
+  "category": "katakana",
+  "focus": "リ",
+  "jp": "リーダー",
+  "romaji": "riidaa",
+  "pt": "líder",
+  "type": "katakana",
+  "hint": "Trabalho.",
+  "chars": [
+    "リ",
+    "ー",
+    "ダ",
+    "ー"
+  ]
+},
+{
+  "id": "k_ri_riaru",
+  "category": "katakana",
+  "focus": "リ",
+  "jp": "リアル",
+  "romaji": "riaru",
+  "pt": "real",
+  "type": "katakana",
+  "hint": "Conversa e mídia.",
+  "chars": [
+    "リ",
+    "ア",
+    "ル"
+  ]
+},
+{
+  "id": "k_ru_ruuru",
+  "category": "katakana",
+  "focus": "ル",
+  "jp": "ルール",
+  "romaji": "ruuru",
+  "pt": "regra",
+  "type": "katakana",
+  "hint": "Trabalho e convivência.",
+  "chars": [
+    "ル",
+    "ー",
+    "ル"
+  ]
+},
+{
+  "id": "k_ru_ruuto",
+  "category": "katakana",
+  "focus": "ル",
+  "jp": "ルート",
+  "romaji": "ruuto",
+  "pt": "rota",
+  "type": "katakana",
+  "hint": "Transporte e mapas.",
+  "chars": [
+    "ル",
+    "ー",
+    "ト"
+  ]
+},
+{
+  "id": "k_ru_ruumu",
+  "category": "katakana",
+  "focus": "ル",
+  "jp": "ルーム",
+  "romaji": "ruumu",
+  "pt": "quarto / sala",
+  "type": "katakana",
+  "hint": "Moradia e hotel.",
+  "chars": [
+    "ル",
+    "ー",
+    "ム"
+  ]
+},
+{
+  "id": "k_ru_rubii",
+  "category": "katakana",
+  "focus": "ル",
+  "jp": "ルビー",
+  "romaji": "rubii",
+  "pt": "rubi",
+  "type": "katakana",
+  "hint": "Pedra e nomes.",
+  "chars": [
+    "ル",
+    "ビ",
+    "ー"
+  ]
+},
+{
+  "id": "k_ru_rukku",
+  "category": "katakana",
+  "focus": "ル",
+  "jp": "ルック",
+  "romaji": "rukku",
+  "pt": "visual / look",
+  "type": "katakana",
+  "hint": "Moda e produtos.",
+  "chars": [
+    "ル",
+    "ッ",
+    "ク"
+  ]
+},
+{
+  "id": "k_ru_ruutaa",
+  "category": "katakana",
+  "focus": "ル",
+  "jp": "ルーター",
+  "romaji": "ruutaa",
+  "pt": "roteador",
+  "type": "katakana",
+  "hint": "Internet e casa.",
+  "chars": [
+    "ル",
+    "ー",
+    "タ",
+    "ー"
+  ]
+},
+{
+  "id": "k_ru_ruumania",
+  "category": "katakana",
+  "focus": "ル",
+  "jp": "ルーマニア",
+  "romaji": "ruumania",
+  "pt": "Romênia",
+  "type": "katakana",
+  "hint": "País em katakana.",
+  "chars": [
+    "ル",
+    "ー",
+    "マ",
+    "ニ",
+    "ア"
+  ]
+},
+{
+  "id": "k_re_reshiito",
+  "category": "katakana",
+  "focus": "レ",
+  "jp": "レシート",
+  "romaji": "reshiito",
+  "pt": "recibo",
+  "type": "katakana",
+  "hint": "Compras e comprovantes.",
+  "chars": [
+    "レ",
+    "シ",
+    "ー",
+    "ト"
+  ]
+},
+{
+  "id": "k_re_reberu",
+  "category": "katakana",
+  "focus": "レ",
+  "jp": "レベル",
+  "romaji": "reberu",
+  "pt": "nível",
+  "type": "katakana",
+  "hint": "Estudo e progresso.",
+  "chars": [
+    "レ",
+    "ベ",
+    "ル"
+  ]
+},
+{
+  "id": "k_re_renji",
+  "category": "katakana",
+  "focus": "レ",
+  "jp": "レンジ",
+  "romaji": "renji",
+  "pt": "micro-ondas / fogão",
+  "type": "katakana",
+  "hint": "Casa e comida.",
+  "chars": [
+    "レ",
+    "ン",
+    "ジ"
+  ]
+},
+{
+  "id": "k_re_rebyuu",
+  "category": "katakana",
+  "focus": "レ",
+  "jp": "レビュー",
+  "romaji": "rebyuu",
+  "pt": "avaliação / review",
+  "type": "katakana",
+  "hint": "Apps e compras.",
+  "chars": [
+    "レ",
+    "ビ",
+    "ュ",
+    "ー"
+  ]
+},
+{
+  "id": "k_re_resutoran",
+  "category": "katakana",
+  "focus": "レ",
+  "jp": "レストラン",
+  "romaji": "resutoran",
+  "pt": "restaurante",
+  "type": "katakana",
+  "hint": "Comida e lazer.",
+  "chars": [
+    "レ",
+    "ス",
+    "ト",
+    "ラ",
+    "ン"
+  ]
+},
+{
+  "id": "k_re_ressun",
+  "category": "katakana",
+  "focus": "レ",
+  "jp": "レッスン",
+  "romaji": "ressun",
+  "pt": "aula / lição",
+  "type": "katakana",
+  "hint": "Estudo.",
+  "chars": [
+    "レ",
+    "ッ",
+    "ス",
+    "ン"
+  ]
+},
+{
+  "id": "k_re_rejaa",
+  "category": "katakana",
+  "focus": "レ",
+  "jp": "レジャー",
+  "romaji": "rejaa",
+  "pt": "lazer",
+  "type": "katakana",
+  "hint": "Vida e descanso.",
+  "chars": [
+    "レ",
+    "ジ",
+    "ャ",
+    "ー"
+  ]
+},
+{
+  "id": "k_ro_rokkaa",
+  "category": "katakana",
+  "focus": "ロ",
+  "jp": "ロッカー",
+  "romaji": "rokkaa",
+  "pt": "armário / locker",
+  "type": "katakana",
+  "hint": "Trabalho, escola e academia.",
+  "chars": [
+    "ロ",
+    "ッ",
+    "カ",
+    "ー"
+  ]
+},
+{
+  "id": "k_ro_rogo",
+  "category": "katakana",
+  "focus": "ロ",
+  "jp": "ロゴ",
+  "romaji": "rogo",
+  "pt": "logo",
+  "type": "katakana",
+  "hint": "Marcas e design.",
+  "chars": [
+    "ロ",
+    "ゴ"
+  ]
+},
+{
+  "id": "k_ro_rookaru",
+  "category": "katakana",
+  "focus": "ロ",
+  "jp": "ローカル",
+  "romaji": "rookaru",
+  "pt": "local",
+  "type": "katakana",
+  "hint": "Serviços e transporte.",
+  "chars": [
+    "ロ",
+    "ー",
+    "カ",
+    "ル"
+  ]
+},
+{
+  "id": "k_ro_roodo",
+  "category": "katakana",
+  "focus": "ロ",
+  "jp": "ロード",
+  "romaji": "roodo",
+  "pt": "estrada / road",
+  "type": "katakana",
+  "hint": "Mapas e jogos.",
+  "chars": [
+    "ロ",
+    "ー",
+    "ド"
+  ]
+},
+{
+  "id": "k_ro_roomaji",
+  "category": "katakana",
+  "focus": "ロ",
+  "jp": "ローマ字",
+  "romaji": "roomaji",
+  "pt": "letras romanas / romaji",
+  "type": "katakana",
+  "hint": "Estudo de japonês.",
+  "chars": [
+    "ロ",
+    "ー",
+    "マ",
+    "字"
+  ]
+},
+{
+  "id": "k_ro_rosuto",
+  "category": "katakana",
+  "focus": "ロ",
+  "jp": "ロスト",
+  "romaji": "rosuto",
+  "pt": "perdido / lost",
+  "type": "katakana",
+  "hint": "Serviços e jogos.",
+  "chars": [
+    "ロ",
+    "ス",
+    "ト"
+  ]
+},
+{
+  "id": "k_ro_rongu",
+  "category": "katakana",
+  "focus": "ロ",
+  "jp": "ロング",
+  "romaji": "rongu",
+  "pt": "longo / long",
+  "type": "katakana",
+  "hint": "Produtos e roupas.",
+  "chars": [
+    "ロ",
+    "ン",
+    "グ"
+  ]
+},
+{
+  "id": "h_wa_watashi",
+  "category": "hiragana",
+  "focus": "わ",
+  "jp": "わたし",
+  "romaji": "watashi",
+  "pt": "eu",
+  "type": "hiragana",
+  "hint": "Palavra essencial para se apresentar.",
+  "chars": [
+    "わ",
+    "た",
+    "し"
+  ]
+},
+{
+  "id": "h_wa_warui",
+  "category": "hiragana",
+  "focus": "わ",
+  "jp": "わるい",
+  "romaji": "warui",
+  "pt": "ruim / errado",
+  "type": "hiragana",
+  "hint": "Útil para desculpas e explicações.",
+  "chars": [
+    "わ",
+    "る",
+    "い"
+  ]
+},
+{
+  "id": "h_wa_wakaru",
+  "category": "hiragana",
+  "focus": "わ",
+  "jp": "わかる",
+  "romaji": "wakaru",
+  "pt": "entender",
+  "type": "hiragana",
+  "hint": "Essencial para estudo e comunicação.",
+  "chars": [
+    "わ",
+    "か",
+    "る"
+  ]
+},
+{
+  "id": "h_wa_wasureru",
+  "category": "hiragana",
+  "focus": "わ",
+  "jp": "わすれる",
+  "romaji": "wasureru",
+  "pt": "esquecer",
+  "type": "hiragana",
+  "hint": "Muito usado no cotidiano.",
+  "chars": [
+    "わ",
+    "す",
+    "れ",
+    "る"
+  ]
+},
+{
+  "id": "h_wa_warau",
+  "category": "hiragana",
+  "focus": "わ",
+  "jp": "わらう",
+  "romaji": "warau",
+  "pt": "rir",
+  "type": "hiragana",
+  "hint": "Vocabulário emocional.",
+  "chars": [
+    "わ",
+    "ら",
+    "う"
+  ]
+},
+{
+  "id": "h_wa_wakai",
+  "category": "hiragana",
+  "focus": "わ",
+  "jp": "わかい",
+  "romaji": "wakai",
+  "pt": "jovem",
+  "type": "hiragana",
+  "hint": "Adjetivo básico.",
+  "chars": [
+    "わ",
+    "か",
+    "い"
+  ]
+},
+{
+  "id": "h_wa_wakare",
+  "category": "hiragana",
+  "focus": "わ",
+  "jp": "わかれ",
+  "romaji": "wakare",
+  "pt": "despedida / separação",
+  "type": "hiragana",
+  "hint": "Vida social e conversa.",
+  "chars": [
+    "わ",
+    "か",
+    "れ"
+  ]
+},
+{
+  "id": "h_wo_mizuwo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "みずを",
+  "romaji": "mizu o",
+  "pt": "água + partícula を",
+  "type": "hiragana",
+  "hint": "Treina を como partícula que marca o objeto da ação.",
+  "chars": [
+    "み",
+    "ず",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_panwo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "ぱんを",
+  "romaji": "pan o",
+  "pt": "pão + partícula を",
+  "type": "hiragana",
+  "hint": "Estrutura curta para fixar o を.",
+  "chars": [
+    "ぱ",
+    "ん",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_tewo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "てを",
+  "romaji": "te o",
+  "pt": "mão + partícula を",
+  "type": "hiragana",
+  "hint": "Muito usado em frases como lavar as mãos.",
+  "chars": [
+    "て",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_naniwo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "なにを",
+  "romaji": "nani o",
+  "pt": "o quê + partícula を",
+  "type": "hiragana",
+  "hint": "Base para perguntas simples.",
+  "chars": [
+    "な",
+    "に",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_korewo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "これを",
+  "romaji": "kore o",
+  "pt": "isto + partícula を",
+  "type": "hiragana",
+  "hint": "Útil em pedidos e compras.",
+  "chars": [
+    "こ",
+    "れ",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_sorewo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "それを",
+  "romaji": "sore o",
+  "pt": "isso + partícula を",
+  "type": "hiragana",
+  "hint": "Útil em conversa e atendimento.",
+  "chars": [
+    "そ",
+    "れ",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_benkyouwo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "べんきょうを",
+  "romaji": "benkyou o",
+  "pt": "estudo + partícula を",
+  "type": "hiragana",
+  "hint": "Ajuda a entender objeto da ação.",
+  "chars": [
+    "べ",
+    "ん",
+    "き",
+    "ょ",
+    "う",
+    "を"
+  ]
+},
+{
+  "id": "h_n_pan",
+  "category": "hiragana",
+  "focus": "ん",
+  "jp": "ぱん",
+  "romaji": "pan",
+  "pt": "pão",
+  "type": "hiragana",
+  "hint": "Palavra simples para fixar ん.",
+  "chars": [
+    "ぱ",
+    "ん"
+  ]
+},
+{
+  "id": "h_n_en",
+  "category": "hiragana",
+  "focus": "ん",
+  "jp": "えん",
+  "romaji": "en",
+  "pt": "iene / círculo",
+  "type": "hiragana",
+  "hint": "Muito útil para dinheiro.",
+  "chars": [
+    "え",
+    "ん"
+  ]
+},
+{
+  "id": "h_n_hon",
+  "category": "hiragana",
+  "focus": "ん",
+  "jp": "ほん",
+  "romaji": "hon",
+  "pt": "livro",
+  "type": "hiragana",
+  "hint": "Estudo e rotina.",
+  "chars": [
+    "ほ",
+    "ん"
+  ]
+},
+{
+  "id": "h_n_denwa",
+  "category": "hiragana",
+  "focus": "ん",
+  "jp": "でんわ",
+  "romaji": "denwa",
+  "pt": "telefone",
+  "type": "hiragana",
+  "hint": "Comunicação.",
+  "chars": [
+    "で",
+    "ん",
+    "わ"
+  ]
+},
+{
+  "id": "h_n_benri",
+  "category": "hiragana",
+  "focus": "ん",
+  "jp": "べんり",
+  "romaji": "benri",
+  "pt": "prático / conveniente",
+  "type": "hiragana",
+  "hint": "Muito usado no Japão.",
+  "chars": [
+    "べ",
+    "ん",
+    "り"
+  ]
+},
+{
+  "id": "h_n_kanji",
+  "category": "hiragana",
+  "focus": "ん",
+  "jp": "かんじ",
+  "romaji": "kanji",
+  "pt": "kanji",
+  "type": "hiragana",
+  "hint": "Base para a próxima fase do app.",
+  "chars": [
+    "か",
+    "ん",
+    "じ"
+  ]
+},
+{
+  "id": "h_n_nihongo",
+  "category": "hiragana",
+  "focus": "ん",
+  "jp": "にほんご",
+  "romaji": "nihongo",
+  "pt": "língua japonesa",
+  "type": "hiragana",
+  "hint": "Palavra central do projeto.",
+  "chars": [
+    "に",
+    "ほ",
+    "ん",
+    "ご"
+  ]
+},
+{
+  "id": "k_wa_wain",
+  "category": "katakana",
+  "focus": "ワ",
+  "jp": "ワイン",
+  "romaji": "wain",
+  "pt": "vinho",
+  "type": "katakana",
+  "hint": "Produto comum em mercado.",
+  "chars": [
+    "ワ",
+    "イ",
+    "ン"
+  ]
+},
+{
+  "id": "k_wa_waihai",
+  "category": "katakana",
+  "focus": "ワ",
+  "jp": "ワイファイ",
+  "romaji": "waifai",
+  "pt": "Wi-Fi",
+  "type": "katakana",
+  "hint": "Casa, trabalho e internet.",
+  "chars": [
+    "ワ",
+    "イ",
+    "フ",
+    "ァ",
+    "イ"
+  ]
+},
+{
+  "id": "k_wa_wakuchin",
+  "category": "katakana",
+  "focus": "ワ",
+  "jp": "ワクチン",
+  "romaji": "wakuchin",
+  "pt": "vacina",
+  "type": "katakana",
+  "hint": "Saúde e prefeitura.",
+  "chars": [
+    "ワ",
+    "ク",
+    "チ",
+    "ン"
+  ]
+},
+{
+  "id": "k_wa_wanpiisu",
+  "category": "katakana",
+  "focus": "ワ",
+  "jp": "ワンピース",
+  "romaji": "wanpiisu",
+  "pt": "vestido / One Piece",
+  "type": "katakana",
+  "hint": "Roupa e cultura.",
+  "chars": [
+    "ワ",
+    "ン",
+    "ピ",
+    "ー",
+    "ス"
+  ]
+},
+{
+  "id": "k_wa_wan",
+  "category": "katakana",
+  "focus": "ワ",
+  "jp": "ワン",
+  "romaji": "wan",
+  "pt": "um / one",
+  "type": "katakana",
+  "hint": "Números em nomes e produtos.",
+  "chars": [
+    "ワ",
+    "ン"
+  ]
+},
+{
+  "id": "k_wa_waaku",
+  "category": "katakana",
+  "focus": "ワ",
+  "jp": "ワーク",
+  "romaji": "waaku",
+  "pt": "trabalho / work",
+  "type": "katakana",
+  "hint": "Trabalho e tecnologia.",
+  "chars": [
+    "ワ",
+    "ー",
+    "ク"
+  ]
+},
+{
+  "id": "k_wa_wappuru",
+  "category": "katakana",
+  "focus": "ワ",
+  "jp": "ワッフル",
+  "romaji": "waffuru",
+  "pt": "waffle",
+  "type": "katakana",
+  "hint": "Comida e konbini.",
+  "chars": [
+    "ワ",
+    "ッ",
+    "フ",
+    "ル"
+  ]
+},
+{
+  "id": "k_wo_wotaku",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲタク",
+  "romaji": "wotaku",
+  "pt": "otaku / fã intenso",
+  "type": "katakana",
+  "hint": "Uso cultural de ヲ, pouco comum no cotidiano.",
+  "chars": [
+    "ヲ",
+    "タ",
+    "ク"
+  ]
+},
+{
+  "id": "k_wo_wo",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲ",
+  "romaji": "wo",
+  "pt": "kana ヲ isolado",
+  "type": "katakana",
+  "hint": "Treino direto do kana raro ヲ.",
+  "chars": [
+    "ヲ"
+  ]
+},
+{
+  "id": "k_wo_wo_shiru",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲシル",
+  "romaji": "wo shiru",
+  "pt": "treino visual de ヲ",
+  "type": "katakana",
+  "hint": "Forma didática para reconhecer ヲ.",
+  "chars": [
+    "ヲ",
+    "シ",
+    "ル"
+  ]
+},
+{
+  "id": "k_wo_wo_miru",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲミル",
+  "romaji": "wo miru",
+  "pt": "treino visual de ヲ",
+  "type": "katakana",
+  "hint": "Forma didática para praticar escrita.",
+  "chars": [
+    "ヲ",
+    "ミ",
+    "ル"
+  ]
+},
+{
+  "id": "k_wo_wo_kaku",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲカク",
+  "romaji": "wo kaku",
+  "pt": "escrever ヲ",
+  "type": "katakana",
+  "hint": "Treino didático do kana raro.",
+  "chars": [
+    "ヲ",
+    "カ",
+    "ク"
+  ]
+},
+{
+  "id": "k_wo_wo_yomu",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲヨム",
+  "romaji": "wo yomu",
+  "pt": "ler ヲ",
+  "type": "katakana",
+  "hint": "Treino didático do kana raro.",
+  "chars": [
+    "ヲ",
+    "ヨ",
+    "ム"
+  ]
+},
+{
+  "id": "k_wo_wo_oboeru",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲオボエル",
+  "romaji": "wo oboeru",
+  "pt": "memorizar ヲ",
+  "type": "katakana",
+  "hint": "Treino didático do kana raro.",
+  "chars": [
+    "ヲ",
+    "オ",
+    "ボ",
+    "エ",
+    "ル"
+  ]
+},
+{
+  "id": "k_n_pan",
+  "category": "katakana",
+  "focus": "ン",
+  "jp": "パン",
+  "romaji": "pan",
+  "pt": "pão",
+  "type": "katakana",
+  "hint": "Palavra curta para fixar ン.",
+  "chars": [
+    "パ",
+    "ン"
+  ]
+},
+{
+  "id": "k_n_konbini",
+  "category": "katakana",
+  "focus": "ン",
+  "jp": "コンビニ",
+  "romaji": "konbini",
+  "pt": "loja de conveniência",
+  "type": "katakana",
+  "hint": "Palavra essencial no Japão.",
+  "chars": [
+    "コ",
+    "ン",
+    "ビ",
+    "ニ"
+  ]
+},
+{
+  "id": "k_n_konsento",
+  "category": "katakana",
+  "focus": "ン",
+  "jp": "コンセント",
+  "romaji": "konsento",
+  "pt": "tomada",
+  "type": "katakana",
+  "hint": "Casa e trabalho.",
+  "chars": [
+    "コ",
+    "ン",
+    "セ",
+    "ン",
+    "ト"
+  ]
+},
+{
+  "id": "k_n_ranchi",
+  "category": "katakana",
+  "focus": "ン",
+  "jp": "ランチ",
+  "romaji": "ranchi",
+  "pt": "almoço",
+  "type": "katakana",
+  "hint": "Restaurante e rotina.",
+  "chars": [
+    "ラ",
+    "ン",
+    "チ"
+  ]
+},
+{
+  "id": "k_n_enjin",
+  "category": "katakana",
+  "focus": "ン",
+  "jp": "エンジン",
+  "romaji": "enjin",
+  "pt": "motor",
+  "type": "katakana",
+  "hint": "Carro e fábrica.",
+  "chars": [
+    "エ",
+    "ン",
+    "ジ",
+    "ン"
+  ]
+},
+{
+  "id": "k_n_pinku",
+  "category": "katakana",
+  "focus": "ン",
+  "jp": "ピンク",
+  "romaji": "pinku",
+  "pt": "rosa",
+  "type": "katakana",
+  "hint": "Cor em katakana.",
+  "chars": [
+    "ピ",
+    "ン",
+    "ク"
+  ]
+},
+{
+  "id": "k_n_sankan",
+  "category": "katakana",
+  "focus": "ン",
+  "jp": "サイン",
+  "romaji": "sain",
+  "pt": "assinatura / sinal",
+  "type": "katakana",
+  "hint": "Documentos e atendimento.",
+  "chars": [
+    "サ",
+    "イ",
+    "ン"
+  ]
+},
+{
+  "id": "k_i_internetto",
+  "category": "katakana",
+  "focus": "イ",
+  "jp": "インターネット",
+  "romaji": "intaanetto",
+  "pt": "internet",
+  "type": "katakana",
+  "hint": "Palavra essencial para celular, casa e serviços.",
+  "chars": [
+    "イ",
+    "ン",
+    "タ",
+    "ー",
+    "ネ",
+    "ッ",
+    "ト"
+  ]
+},
+{
+  "id": "k_i_irasuto",
+  "category": "katakana",
+  "focus": "イ",
+  "jp": "イラスト",
+  "romaji": "irasuto",
+  "pt": "ilustração",
+  "type": "katakana",
+  "hint": "Muito comum em apps, materiais e design.",
+  "chars": [
+    "イ",
+    "ラ",
+    "ス",
+    "ト"
+  ]
+},
+{
+  "id": "k_i_imeeji",
+  "category": "katakana",
+  "focus": "イ",
+  "jp": "イメージ",
+  "romaji": "imeeji",
+  "pt": "imagem / ideia",
+  "type": "katakana",
+  "hint": "Útil em explicações e conversas.",
+  "chars": [
+    "イ",
+    "メ",
+    "ー",
+    "ジ"
+  ]
+},
+{
+  "id": "k_i_iyahon",
+  "category": "katakana",
+  "focus": "イ",
+  "jp": "イヤホン",
+  "romaji": "iyahon",
+  "pt": "fone de ouvido",
+  "type": "katakana",
+  "hint": "Produto comum no Japão.",
+  "chars": [
+    "イ",
+    "ヤ",
+    "ホ",
+    "ン"
+  ]
+},
+{
+  "id": "k_i_ibento",
+  "category": "katakana",
+  "focus": "イ",
+  "jp": "イベント",
+  "romaji": "ibento",
+  "pt": "evento",
+  "type": "katakana",
+  "hint": "Lazer, trabalho e avisos.",
+  "chars": [
+    "イ",
+    "ベ",
+    "ン",
+    "ト"
+  ]
+},
+{
+  "id": "k_i_igirisu",
+  "category": "katakana",
+  "focus": "イ",
+  "jp": "イギリス",
+  "romaji": "igirisu",
+  "pt": "Reino Unido / Inglaterra",
+  "type": "katakana",
+  "hint": "País em katakana.",
+  "chars": [
+    "イ",
+    "ギ",
+    "リ",
+    "ス"
+  ]
+},
+{
+  "id": "k_i_insutooru",
+  "category": "katakana",
+  "focus": "イ",
+  "jp": "インストール",
+  "romaji": "insutooru",
+  "pt": "instalar",
+  "type": "katakana",
+  "hint": "Celular, computador e apps.",
+  "chars": [
+    "イ",
+    "ン",
+    "ス",
+    "ト",
+    "ー",
+    "ル"
+  ]
+},
+{
+  "id": "k_u_uindou",
+  "category": "katakana",
+  "focus": "ウ",
+  "jp": "ウィンドウ",
+  "romaji": "uindou",
+  "pt": "janela / window",
+  "type": "katakana",
+  "hint": "Computador, app e casa.",
+  "chars": [
+    "ウ",
+    "ィ",
+    "ン",
+    "ド",
+    "ウ"
+  ]
+},
+{
+  "id": "k_u_uinku",
+  "category": "katakana",
+  "focus": "ウ",
+  "jp": "ウインク",
+  "romaji": "uinku",
+  "pt": "piscada / wink",
+  "type": "katakana",
+  "hint": "Mídia e conversa.",
+  "chars": [
+    "ウ",
+    "イ",
+    "ン",
+    "ク"
+  ]
+},
+{
+  "id": "k_u_ueton",
+  "category": "katakana",
+  "focus": "ウ",
+  "jp": "ウエット",
+  "romaji": "uetto",
+  "pt": "úmido / wet",
+  "type": "katakana",
+  "hint": "Produtos, limpeza e clima.",
+  "chars": [
+    "ウ",
+    "エ",
+    "ッ",
+    "ト"
+  ]
+},
+{
+  "id": "k_u_uoorukuman",
+  "category": "katakana",
+  "focus": "ウ",
+  "jp": "ウォークマン",
+  "romaji": "uookuman",
+  "pt": "Walkman",
+  "type": "katakana",
+  "hint": "Produto e referência cultural.",
+  "chars": [
+    "ウ",
+    "ォ",
+    "ー",
+    "ク",
+    "マ",
+    "ン"
+  ]
+},
+{
+  "id": "k_u_uubaa",
+  "category": "katakana",
+  "focus": "ウ",
+  "jp": "ウーバー",
+  "romaji": "uubaa",
+  "pt": "Uber",
+  "type": "katakana",
+  "hint": "Serviços e entrega.",
+  "chars": [
+    "ウ",
+    "ー",
+    "バ",
+    "ー"
+  ]
+},
+{
+  "id": "k_u_uroncha",
+  "category": "katakana",
+  "focus": "ウ",
+  "jp": "ウーロン茶",
+  "romaji": "uuroncha",
+  "pt": "chá oolong",
+  "type": "katakana",
+  "hint": "Bebida comum em lojas e restaurantes.",
+  "chars": [
+    "ウ",
+    "ー",
+    "ロ",
+    "ン",
+    "茶"
+  ]
+},
+{
+  "id": "k_u_uirusu",
+  "category": "katakana",
+  "focus": "ウ",
+  "jp": "ウイルス",
+  "romaji": "uirusu",
+  "pt": "vírus",
+  "type": "katakana",
+  "hint": "Saúde, computador e notícias.",
+  "chars": [
+    "ウ",
+    "イ",
+    "ル",
+    "ス"
+  ]
+},
+{
+  "id": "k_e_eakon",
+  "category": "katakana",
+  "focus": "エ",
+  "jp": "エアコン",
+  "romaji": "eakon",
+  "pt": "ar-condicionado",
+  "type": "katakana",
+  "hint": "Essencial em casa e trabalho no Japão.",
+  "chars": [
+    "エ",
+    "ア",
+    "コ",
+    "ン"
+  ]
+},
+{
+  "id": "k_e_erebeetaa",
+  "category": "katakana",
+  "focus": "エ",
+  "jp": "エレベーター",
+  "romaji": "erebeetaa",
+  "pt": "elevador",
+  "type": "katakana",
+  "hint": "Prédio, loja e estação.",
+  "chars": [
+    "エ",
+    "レ",
+    "ベ",
+    "ー",
+    "タ",
+    "ー"
+  ]
+},
+{
+  "id": "k_e_enjin",
+  "category": "katakana",
+  "focus": "エ",
+  "jp": "エンジン",
+  "romaji": "enjin",
+  "pt": "motor",
+  "type": "katakana",
+  "hint": "Carro, fábrica e máquina.",
+  "chars": [
+    "エ",
+    "ン",
+    "ジ",
+    "ン"
+  ]
+},
+{
+  "id": "k_e_erekitto",
+  "category": "katakana",
+  "focus": "エ",
+  "jp": "エラー",
+  "romaji": "eraa",
+  "pt": "erro",
+  "type": "katakana",
+  "hint": "Celular, app e trabalho.",
+  "chars": [
+    "エ",
+    "ラ",
+    "ー"
+  ]
+},
+{
+  "id": "k_e_enerugii",
+  "category": "katakana",
+  "focus": "エ",
+  "jp": "エネルギー",
+  "romaji": "enerugii",
+  "pt": "energia",
+  "type": "katakana",
+  "hint": "Saúde, comida e trabalho.",
+  "chars": [
+    "エ",
+    "ネ",
+    "ル",
+    "ギ",
+    "ー"
+  ]
+},
+{
+  "id": "k_e_ekusupuresu",
+  "category": "katakana",
+  "focus": "エ",
+  "jp": "エクスプレス",
+  "romaji": "ekusupuresu",
+  "pt": "expresso / express",
+  "type": "katakana",
+  "hint": "Transporte e serviços.",
+  "chars": [
+    "エ",
+    "ク",
+    "ス",
+    "プ",
+    "レ",
+    "ス"
+  ]
+},
+{
+  "id": "k_e_esuenuesu",
+  "category": "katakana",
+  "focus": "エ",
+  "jp": "エスカレーター",
+  "romaji": "esukareetaa",
+  "pt": "escada rolante",
+  "type": "katakana",
+  "hint": "Lojas e estações.",
+  "chars": [
+    "エ",
+    "ス",
+    "カ",
+    "レ",
+    "ー",
+    "タ",
+    "ー"
+  ]
+},
+{
+  "id": "k_o_orenji",
+  "category": "katakana",
+  "focus": "オ",
+  "jp": "オレンジ",
+  "romaji": "orenji",
+  "pt": "laranja",
+  "type": "katakana",
+  "hint": "Cor e fruta.",
+  "chars": [
+    "オ",
+    "レ",
+    "ン",
+    "ジ"
+  ]
+},
+{
+  "id": "k_o_oobun",
+  "category": "katakana",
+  "focus": "オ",
+  "jp": "オーブン",
+  "romaji": "oobun",
+  "pt": "forno",
+  "type": "katakana",
+  "hint": "Casa e comida.",
+  "chars": [
+    "オ",
+    "ー",
+    "ブ",
+    "ン"
+  ]
+},
+{
+  "id": "k_o_ooto",
+  "category": "katakana",
+  "focus": "オ",
+  "jp": "オート",
+  "romaji": "ooto",
+  "pt": "automático / auto",
+  "type": "katakana",
+  "hint": "Carro, máquina e configuração.",
+  "chars": [
+    "オ",
+    "ー",
+    "ト"
+  ]
+},
+{
+  "id": "k_o_ofisu",
+  "category": "katakana",
+  "focus": "オ",
+  "jp": "オフィス",
+  "romaji": "ofisu",
+  "pt": "escritório",
+  "type": "katakana",
+  "hint": "Trabalho e empresa.",
+  "chars": [
+    "オ",
+    "フ",
+    "ィ",
+    "ス"
+  ]
+},
+{
+  "id": "k_o_onrain",
+  "category": "katakana",
+  "focus": "オ",
+  "jp": "オンライン",
+  "romaji": "onrain",
+  "pt": "online",
+  "type": "katakana",
+  "hint": "Celular, estudo e serviços.",
+  "chars": [
+    "オ",
+    "ン",
+    "ラ",
+    "イ",
+    "ン"
+  ]
+},
+{
+  "id": "k_o_ootobai",
+  "category": "katakana",
+  "focus": "オ",
+  "jp": "オートバイ",
+  "romaji": "ootobai",
+  "pt": "moto",
+  "type": "katakana",
+  "hint": "Transporte.",
+  "chars": [
+    "オ",
+    "ー",
+    "ト",
+    "バ",
+    "イ"
+  ]
+},
+{
+  "id": "k_o_oopun",
+  "category": "katakana",
+  "focus": "オ",
+  "jp": "オープン",
+  "romaji": "oopun",
+  "pt": "aberto / inauguração",
+  "type": "katakana",
+  "hint": "Lojas, horários e apps.",
+  "chars": [
+    "オ",
+    "ー",
+    "プ",
+    "ン"
+  ]
+},
+{
+  "id": "k_ko_kosu",
+  "category": "katakana",
+  "focus": "コ",
+  "jp": "コスト",
+  "romaji": "kosuto",
+  "pt": "custo",
+  "type": "katakana",
+  "hint": "Muito útil para comparar preços e planos.",
+  "chars": [
+    "コ",
+    "ス",
+    "ト"
+  ]
+},
+{
+  "id": "k_ko_koro",
+  "category": "katakana",
+  "focus": "コ",
+  "jp": "コロッケ",
+  "romaji": "korokke",
+  "pt": "croquete",
+  "type": "katakana",
+  "hint": "Comida comum em mercado e konbini.",
+  "chars": [
+    "コ",
+    "ロ",
+    "ッ",
+    "ケ"
+  ]
+},
+{
+  "id": "k_ko_koppu",
+  "category": "katakana",
+  "focus": "コ",
+  "jp": "コップ",
+  "romaji": "koppu",
+  "pt": "copo",
+  "type": "katakana",
+  "hint": "Casa, restaurante e trabalho.",
+  "chars": [
+    "コ",
+    "ッ",
+    "プ"
+  ]
+},
+{
+  "id": "k_su_sutaffu",
+  "category": "katakana",
+  "focus": "ス",
+  "jp": "スタッフ",
+  "romaji": "sutaffu",
+  "pt": "funcionário / staff",
+  "type": "katakana",
+  "hint": "Muito comum em lojas e trabalho.",
+  "chars": [
+    "ス",
+    "タ",
+    "ッ",
+    "フ"
+  ]
+},
+{
+  "id": "k_su_sutando",
+  "category": "katakana",
+  "focus": "ス",
+  "jp": "スタンド",
+  "romaji": "sutando",
+  "pt": "suporte / posto",
+  "type": "katakana",
+  "hint": "Produtos, carro e lojas.",
+  "chars": [
+    "ス",
+    "タ",
+    "ン",
+    "ド"
+  ]
+},
+{
+  "id": "k_su_sutoroo",
+  "category": "katakana",
+  "focus": "ス",
+  "jp": "ストロー",
+  "romaji": "sutoroo",
+  "pt": "canudo",
+  "type": "katakana",
+  "hint": "Konbini e restaurantes.",
+  "chars": [
+    "ス",
+    "ト",
+    "ロ",
+    "ー"
+  ]
+},
+{
+  "id": "k_to_toosuto",
+  "category": "katakana",
+  "focus": "ト",
+  "jp": "トースト",
+  "romaji": "toosuto",
+  "pt": "torrada",
+  "type": "katakana",
+  "hint": "Comida e café da manhã.",
+  "chars": [
+    "ト",
+    "ー",
+    "ス",
+    "ト"
+  ]
+},
+{
+  "id": "k_to_tore",
+  "category": "katakana",
+  "focus": "ト",
+  "jp": "トレー",
+  "romaji": "toree",
+  "pt": "bandeja",
+  "type": "katakana",
+  "hint": "Restaurante, trabalho e produtos.",
+  "chars": [
+    "ト",
+    "レ",
+    "ー"
+  ]
+},
+{
+  "id": "k_to_torendo",
+  "category": "katakana",
+  "focus": "ト",
+  "jp": "トレンド",
+  "romaji": "torendo",
+  "pt": "tendência",
+  "type": "katakana",
+  "hint": "Mídia, moda e internet.",
+  "chars": [
+    "ト",
+    "レ",
+    "ン",
+    "ド"
+  ]
+},
+{
+  "id": "h_wo_kagiwo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "かぎを",
+  "romaji": "kagi o",
+  "pt": "chave + partícula を",
+  "type": "hiragana",
+  "hint": "Mini estrutura útil: pegar/usar a chave.",
+  "chars": [
+    "か",
+    "ぎ",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_kusuriwo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "くすりを",
+  "romaji": "kusuri o",
+  "pt": "remédio + partícula を",
+  "type": "hiragana",
+  "hint": "Mini estrutura útil para farmácia e saúde.",
+  "chars": [
+    "く",
+    "す",
+    "り",
+    "を"
+  ]
+},
+{
+  "id": "h_wo_denwawo",
+  "category": "hiragana",
+  "focus": "を",
+  "jp": "でんわを",
+  "romaji": "denwa o",
+  "pt": "telefone + partícula を",
+  "type": "hiragana",
+  "hint": "Mini estrutura útil para ações com telefone.",
+  "chars": [
+    "で",
+    "ん",
+    "わ",
+    "を"
+  ]
+},
+{
+  "id": "k_wo_wokaku",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲカク",
+  "romaji": "wo kaku",
+  "pt": "escrever ヲ",
+  "type": "katakana",
+  "hint": "Treino didático do kana raro ヲ.",
+  "chars": [
+    "ヲ",
+    "カ",
+    "ク"
+  ]
+},
+{
+  "id": "k_wo_woyomu",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲヨム",
+  "romaji": "wo yomu",
+  "pt": "ler ヲ",
+  "type": "katakana",
+  "hint": "Treino didático do kana raro ヲ.",
+  "chars": [
+    "ヲ",
+    "ヨ",
+    "ム"
+  ]
+},
+{
+  "id": "k_wo_womiru",
+  "category": "katakana",
+  "focus": "ヲ",
+  "jp": "ヲミル",
+  "romaji": "wo miru",
+  "pt": "ver ヲ",
+  "type": "katakana",
+  "hint": "Treino didático do kana raro ヲ.",
+  "chars": [
+    "ヲ",
+    "ミ",
+    "ル"
+  ]
+},
+{
+  "id": "j_n5_hi",
+  "category": "kanji",
+  "focus": "日",
+  "jp": "日",
+  "romaji": "hi / nichi",
+  "pt": "dia / sol",
+  "type": "kanji",
+  "hint": "N5 · tempo e natureza. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "日"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e natureza",
+  "onyomi": "ニチ, ジツ",
+  "kunyomi": "ひ, か",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "日本",
+      "romaji": "nihon",
+      "pt": "Japão"
+    },
+    {
+      "jp": "日曜日",
+      "romaji": "nichiyoubi",
+      "pt": "domingo"
+    },
+    {
+      "jp": "毎日",
+      "romaji": "mainichi",
+      "pt": "todos os dias"
+    }
+  ]
+},
+{
+  "id": "j_n5_tsuki",
+  "category": "kanji",
+  "focus": "月",
+  "jp": "月",
+  "romaji": "tsuki / getsu",
+  "pt": "lua / mês",
+  "type": "kanji",
+  "hint": "N5 · tempo e natureza. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "月"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e natureza",
+  "onyomi": "ゲツ, ガツ",
+  "kunyomi": "つき",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "月曜日",
+      "romaji": "getsuyoubi",
+      "pt": "segunda-feira"
+    },
+    {
+      "jp": "今月",
+      "romaji": "kongetsu",
+      "pt": "este mês"
+    },
+    {
+      "jp": "一月",
+      "romaji": "ichigatsu",
+      "pt": "janeiro"
+    }
+  ]
+},
+{
+  "id": "j_n5_hi_fire",
+  "category": "kanji",
+  "focus": "火",
+  "jp": "火",
+  "romaji": "hi / ka",
+  "pt": "fogo",
+  "type": "kanji",
+  "hint": "N5 · tempo e natureza. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "火"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e natureza",
+  "onyomi": "カ",
+  "kunyomi": "ひ",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "火曜日",
+      "romaji": "kayoubi",
+      "pt": "terça-feira"
+    },
+    {
+      "jp": "火事",
+      "romaji": "kaji",
+      "pt": "incêndio"
+    },
+    {
+      "jp": "火",
+      "romaji": "hi",
+      "pt": "fogo"
+    }
+  ]
+},
+{
+  "id": "j_n5_mizu",
+  "category": "kanji",
+  "focus": "水",
+  "jp": "水",
+  "romaji": "mizu / sui",
+  "pt": "água",
+  "type": "kanji",
+  "hint": "N5 · tempo e natureza. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "水"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e natureza",
+  "onyomi": "スイ",
+  "kunyomi": "みず",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "水曜日",
+      "romaji": "suiyoubi",
+      "pt": "quarta-feira"
+    },
+    {
+      "jp": "水",
+      "romaji": "mizu",
+      "pt": "água"
+    },
+    {
+      "jp": "水道",
+      "romaji": "suidou",
+      "pt": "água encanada"
+    }
+  ]
+},
+{
+  "id": "j_n5_ki_tree",
+  "category": "kanji",
+  "focus": "木",
+  "jp": "木",
+  "romaji": "ki / moku",
+  "pt": "árvore / madeira",
+  "type": "kanji",
+  "hint": "N5 · tempo e natureza. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "木"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e natureza",
+  "onyomi": "モク, ボク",
+  "kunyomi": "き",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "木曜日",
+      "romaji": "mokuyoubi",
+      "pt": "quinta-feira"
+    },
+    {
+      "jp": "木",
+      "romaji": "ki",
+      "pt": "árvore"
+    },
+    {
+      "jp": "木材",
+      "romaji": "mokuzai",
+      "pt": "madeira"
+    }
+  ]
+},
+{
+  "id": "j_n5_kane",
+  "category": "kanji",
+  "focus": "金",
+  "jp": "金",
+  "romaji": "kane / kin",
+  "pt": "ouro / dinheiro",
+  "type": "kanji",
+  "hint": "N5 · tempo e natureza. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "金"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e natureza",
+  "onyomi": "キン, コン",
+  "kunyomi": "かね",
+  "strokes": "8",
+  "examples": [
+    {
+      "jp": "金曜日",
+      "romaji": "kinyoubi",
+      "pt": "sexta-feira"
+    },
+    {
+      "jp": "お金",
+      "romaji": "okane",
+      "pt": "dinheiro"
+    },
+    {
+      "jp": "料金",
+      "romaji": "ryoukin",
+      "pt": "tarifa"
+    }
+  ]
+},
+{
+  "id": "j_n5_tsuchi",
+  "category": "kanji",
+  "focus": "土",
+  "jp": "土",
+  "romaji": "tsuchi / do",
+  "pt": "terra / solo",
+  "type": "kanji",
+  "hint": "N5 · tempo e natureza. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "土"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e natureza",
+  "onyomi": "ド, ト",
+  "kunyomi": "つち",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "土曜日",
+      "romaji": "doyoubi",
+      "pt": "sábado"
+    },
+    {
+      "jp": "土地",
+      "romaji": "tochi",
+      "pt": "terreno"
+    },
+    {
+      "jp": "土",
+      "romaji": "tsuchi",
+      "pt": "terra"
+    }
+  ]
+},
+{
+  "id": "j_n5_ichi",
+  "category": "kanji",
+  "focus": "一",
+  "jp": "一",
+  "romaji": "ichi",
+  "pt": "um",
+  "type": "kanji",
+  "hint": "N5 · números e dinheiro. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "一"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "onyomi": "イチ, イツ",
+  "kunyomi": "ひと",
+  "strokes": "1",
+  "examples": [
+    {
+      "jp": "一人",
+      "romaji": "hitori",
+      "pt": "uma pessoa"
+    },
+    {
+      "jp": "一月",
+      "romaji": "ichigatsu",
+      "pt": "janeiro"
+    },
+    {
+      "jp": "一日",
+      "romaji": "tsuitachi / ichinichi",
+      "pt": "dia 1 / um dia"
+    }
+  ]
+},
+{
+  "id": "j_n5_ni",
+  "category": "kanji",
+  "focus": "二",
+  "jp": "二",
+  "romaji": "ni",
+  "pt": "dois",
+  "type": "kanji",
+  "hint": "N5 · números e dinheiro. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "二"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "onyomi": "ニ",
+  "kunyomi": "ふた",
+  "strokes": "2",
+  "examples": [
+    {
+      "jp": "二人",
+      "romaji": "futari",
+      "pt": "duas pessoas"
+    },
+    {
+      "jp": "二月",
+      "romaji": "nigatsu",
+      "pt": "fevereiro"
+    },
+    {
+      "jp": "二日",
+      "romaji": "futsuka",
+      "pt": "dia 2"
+    }
+  ]
+},
+{
+  "id": "j_n5_san",
+  "category": "kanji",
+  "focus": "三",
+  "jp": "三",
+  "romaji": "san",
+  "pt": "três",
+  "type": "kanji",
+  "hint": "N5 · números e dinheiro. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "三"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "onyomi": "サン",
+  "kunyomi": "み",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "三月",
+      "romaji": "sangatsu",
+      "pt": "março"
+    },
+    {
+      "jp": "三日",
+      "romaji": "mikka",
+      "pt": "dia 3"
+    },
+    {
+      "jp": "三人",
+      "romaji": "sannin",
+      "pt": "três pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_yon",
+  "category": "kanji",
+  "focus": "四",
+  "jp": "四",
+  "romaji": "yon / shi",
+  "pt": "quatro",
+  "type": "kanji",
+  "hint": "N5 · números e dinheiro. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "四"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "onyomi": "シ",
+  "kunyomi": "よん, よ",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "四月",
+      "romaji": "shigatsu",
+      "pt": "abril"
+    },
+    {
+      "jp": "四日",
+      "romaji": "yokka",
+      "pt": "dia 4"
+    },
+    {
+      "jp": "四人",
+      "romaji": "yonin",
+      "pt": "quatro pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_go",
+  "category": "kanji",
+  "focus": "五",
+  "jp": "五",
+  "romaji": "go",
+  "pt": "cinco",
+  "type": "kanji",
+  "hint": "N5 · números e dinheiro. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "五"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "onyomi": "ゴ",
+  "kunyomi": "いつ",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "五月",
+      "romaji": "gogatsu",
+      "pt": "maio"
+    },
+    {
+      "jp": "五日",
+      "romaji": "itsuka",
+      "pt": "dia 5"
+    },
+    {
+      "jp": "五人",
+      "romaji": "gonin",
+      "pt": "cinco pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_en",
+  "category": "kanji",
+  "focus": "円",
+  "jp": "円",
+  "romaji": "en",
+  "pt": "iene / círculo",
+  "type": "kanji",
+  "hint": "N5 · números e dinheiro. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "円"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "onyomi": "エン",
+  "kunyomi": "まる",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "百円",
+      "romaji": "hyakuen",
+      "pt": "100 ienes"
+    },
+    {
+      "jp": "円高",
+      "romaji": "endaka",
+      "pt": "iene forte"
+    },
+    {
+      "jp": "円",
+      "romaji": "en",
+      "pt": "iene"
+    }
+  ]
+},
+{
+  "id": "j_n5_hito",
+  "category": "kanji",
+  "focus": "人",
+  "jp": "人",
+  "romaji": "hito / jin",
+  "pt": "pessoa",
+  "type": "kanji",
+  "hint": "N5 · pessoas e corpo. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "人"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "onyomi": "ジン, ニン",
+  "kunyomi": "ひと",
+  "strokes": "2",
+  "examples": [
+    {
+      "jp": "日本人",
+      "romaji": "nihonjin",
+      "pt": "japonês / pessoa japonesa"
+    },
+    {
+      "jp": "一人",
+      "romaji": "hitori",
+      "pt": "uma pessoa"
+    },
+    {
+      "jp": "人",
+      "romaji": "hito",
+      "pt": "pessoa"
+    }
+  ]
+},
+{
+  "id": "j_n5_kuchi",
+  "category": "kanji",
+  "focus": "口",
+  "jp": "口",
+  "romaji": "kuchi / kou",
+  "pt": "boca / entrada",
+  "type": "kanji",
+  "hint": "N5 · pessoas e corpo. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "口"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "onyomi": "コウ, ク",
+  "kunyomi": "くち",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "入口",
+      "romaji": "iriguchi",
+      "pt": "entrada"
+    },
+    {
+      "jp": "出口",
+      "romaji": "deguchi",
+      "pt": "saída"
+    },
+    {
+      "jp": "口",
+      "romaji": "kuchi",
+      "pt": "boca"
+    }
+  ]
+},
+{
+  "id": "j_n5_me",
+  "category": "kanji",
+  "focus": "目",
+  "jp": "目",
+  "romaji": "me / moku",
+  "pt": "olho",
+  "type": "kanji",
+  "hint": "N5 · pessoas e corpo. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "目"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "onyomi": "モク",
+  "kunyomi": "め",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "目",
+      "romaji": "me",
+      "pt": "olho"
+    },
+    {
+      "jp": "目的",
+      "romaji": "mokuteki",
+      "pt": "objetivo"
+    },
+    {
+      "jp": "目薬",
+      "romaji": "megusuri",
+      "pt": "colírio"
+    }
+  ]
+},
+{
+  "id": "j_n5_mimi",
+  "category": "kanji",
+  "focus": "耳",
+  "jp": "耳",
+  "romaji": "mimi / ji",
+  "pt": "orelha",
+  "type": "kanji",
+  "hint": "N5 · pessoas e corpo. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "耳"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "onyomi": "ジ",
+  "kunyomi": "みみ",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "耳",
+      "romaji": "mimi",
+      "pt": "orelha"
+    },
+    {
+      "jp": "耳鼻科",
+      "romaji": "jibika",
+      "pt": "otorrino"
+    },
+    {
+      "jp": "耳が痛い",
+      "romaji": "mimi ga itai",
+      "pt": "a orelha dói"
+    }
+  ]
+},
+{
+  "id": "j_n5_te",
+  "category": "kanji",
+  "focus": "手",
+  "jp": "手",
+  "romaji": "te / shu",
+  "pt": "mão",
+  "type": "kanji",
+  "hint": "N5 · pessoas e corpo. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "手"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "onyomi": "シュ",
+  "kunyomi": "て",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "手",
+      "romaji": "te",
+      "pt": "mão"
+    },
+    {
+      "jp": "上手",
+      "romaji": "jouzu",
+      "pt": "habilidoso"
+    },
+    {
+      "jp": "手紙",
+      "romaji": "tegami",
+      "pt": "carta"
+    }
+  ]
+},
+{
+  "id": "j_n5_ashi",
+  "category": "kanji",
+  "focus": "足",
+  "jp": "足",
+  "romaji": "ashi / soku",
+  "pt": "pé / perna",
+  "type": "kanji",
+  "hint": "N5 · pessoas e corpo. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "足"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "onyomi": "ソク",
+  "kunyomi": "あし, た",
+  "strokes": "7",
+  "examples": [
+    {
+      "jp": "足",
+      "romaji": "ashi",
+      "pt": "pé / perna"
+    },
+    {
+      "jp": "不足",
+      "romaji": "fusoku",
+      "pt": "falta"
+    },
+    {
+      "jp": "足りない",
+      "romaji": "tarinai",
+      "pt": "não é suficiente"
+    }
+  ]
+},
+{
+  "id": "j_n5_eki",
+  "category": "kanji",
+  "focus": "駅",
+  "jp": "駅",
+  "romaji": "eki",
+  "pt": "estação",
+  "type": "kanji",
+  "hint": "N5 · lugares e rotina. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "駅"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e rotina",
+  "onyomi": "エキ",
+  "kunyomi": "",
+  "strokes": "14",
+  "examples": [
+    {
+      "jp": "駅",
+      "romaji": "eki",
+      "pt": "estação"
+    },
+    {
+      "jp": "駅前",
+      "romaji": "ekimae",
+      "pt": "em frente à estação"
+    },
+    {
+      "jp": "駅員",
+      "romaji": "ekiin",
+      "pt": "funcionário da estação"
+    }
+  ]
+},
+{
+  "id": "j_n5_kuruma",
+  "category": "kanji",
+  "focus": "車",
+  "jp": "車",
+  "romaji": "kuruma / sha",
+  "pt": "carro",
+  "type": "kanji",
+  "hint": "N5 · lugares e rotina. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "車"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e rotina",
+  "onyomi": "シャ",
+  "kunyomi": "くるま",
+  "strokes": "7",
+  "examples": [
+    {
+      "jp": "車",
+      "romaji": "kuruma",
+      "pt": "carro"
+    },
+    {
+      "jp": "電車",
+      "romaji": "densha",
+      "pt": "trem"
+    },
+    {
+      "jp": "自転車",
+      "romaji": "jitensha",
+      "pt": "bicicleta"
+    }
+  ]
+},
+{
+  "id": "j_n5_den",
+  "category": "kanji",
+  "focus": "電",
+  "jp": "電",
+  "romaji": "den",
+  "pt": "eletricidade",
+  "type": "kanji",
+  "hint": "N5 · lugares e rotina. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "電"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e rotina",
+  "onyomi": "デン",
+  "kunyomi": "",
+  "strokes": "13",
+  "examples": [
+    {
+      "jp": "電車",
+      "romaji": "densha",
+      "pt": "trem"
+    },
+    {
+      "jp": "電話",
+      "romaji": "denwa",
+      "pt": "telefone"
+    },
+    {
+      "jp": "電気",
+      "romaji": "denki",
+      "pt": "eletricidade / luz"
+    }
+  ]
+},
+{
+  "id": "j_n5_ten",
+  "category": "kanji",
+  "focus": "店",
+  "jp": "店",
+  "romaji": "mise / ten",
+  "pt": "loja",
+  "type": "kanji",
+  "hint": "N5 · lugares e rotina. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "店"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e rotina",
+  "onyomi": "テン",
+  "kunyomi": "みせ",
+  "strokes": "8",
+  "examples": [
+    {
+      "jp": "店",
+      "romaji": "mise",
+      "pt": "loja"
+    },
+    {
+      "jp": "店員",
+      "romaji": "tenin",
+      "pt": "atendente"
+    },
+    {
+      "jp": "売店",
+      "romaji": "baiten",
+      "pt": "quiosque / lojinha"
+    }
+  ]
+},
+{
+  "id": "j_n5_ie",
+  "category": "kanji",
+  "focus": "家",
+  "jp": "家",
+  "romaji": "ie / ka",
+  "pt": "casa / família",
+  "type": "kanji",
+  "hint": "N5 · lugares e rotina. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "家"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e rotina",
+  "onyomi": "カ, ケ",
+  "kunyomi": "いえ, や",
+  "strokes": "10",
+  "examples": [
+    {
+      "jp": "家",
+      "romaji": "ie",
+      "pt": "casa"
+    },
+    {
+      "jp": "家族",
+      "romaji": "kazoku",
+      "pt": "família"
+    },
+    {
+      "jp": "家賃",
+      "romaji": "yachin",
+      "pt": "aluguel"
+    }
+  ]
+},
+{
+  "id": "j_n5_mae",
+  "category": "kanji",
+  "focus": "前",
+  "jp": "前",
+  "romaji": "mae / zen",
+  "pt": "frente / antes",
+  "type": "kanji",
+  "hint": "N5 · lugares e rotina. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "前"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e rotina",
+  "onyomi": "ゼン",
+  "kunyomi": "まえ",
+  "strokes": "9",
+  "examples": [
+    {
+      "jp": "駅前",
+      "romaji": "ekimae",
+      "pt": "em frente à estação"
+    },
+    {
+      "jp": "名前",
+      "romaji": "namae",
+      "pt": "nome"
+    },
+    {
+      "jp": "午前",
+      "romaji": "gozen",
+      "pt": "manhã / antes do meio-dia"
+    }
+  ]
+},
+{
+  "id": "j_n5_ushiro",
+  "category": "kanji",
+  "focus": "後",
+  "jp": "後",
+  "romaji": "ato / go",
+  "pt": "atrás / depois",
+  "type": "kanji",
+  "hint": "N5 · lugares e rotina. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "後"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e rotina",
+  "onyomi": "ゴ, コウ",
+  "kunyomi": "あと, うし",
+  "strokes": "9",
+  "examples": [
+    {
+      "jp": "午後",
+      "romaji": "gogo",
+      "pt": "tarde / depois do meio-dia"
+    },
+    {
+      "jp": "後ろ",
+      "romaji": "ushiro",
+      "pt": "atrás"
+    },
+    {
+      "jp": "最後",
+      "romaji": "saigo",
+      "pt": "final"
+    }
+  ]
+},
+{
+  "id": "j_n5_taberu",
+  "category": "kanji",
+  "focus": "食",
+  "jp": "食",
+  "romaji": "taberu / shoku",
+  "pt": "comer",
+  "type": "kanji",
+  "hint": "N5 · vida diária. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "食"
+  ],
+  "jlpt": "N5",
+  "group": "vida diária",
+  "onyomi": "ショク",
+  "kunyomi": "た",
+  "strokes": "9",
+  "examples": [
+    {
+      "jp": "食べる",
+      "romaji": "taberu",
+      "pt": "comer"
+    },
+    {
+      "jp": "食堂",
+      "romaji": "shokudou",
+      "pt": "refeitório"
+    },
+    {
+      "jp": "食事",
+      "romaji": "shokuji",
+      "pt": "refeição"
+    }
+  ]
+},
+{
+  "id": "j_n5_nomU",
+  "category": "kanji",
+  "focus": "飲",
+  "jp": "飲",
+  "romaji": "nomu / in",
+  "pt": "beber",
+  "type": "kanji",
+  "hint": "N5 · vida diária. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "飲"
+  ],
+  "jlpt": "N5",
+  "group": "vida diária",
+  "onyomi": "イン",
+  "kunyomi": "の",
+  "strokes": "12",
+  "examples": [
+    {
+      "jp": "飲む",
+      "romaji": "nomu",
+      "pt": "beber"
+    },
+    {
+      "jp": "飲み物",
+      "romaji": "nomimono",
+      "pt": "bebida"
+    },
+    {
+      "jp": "飲食店",
+      "romaji": "inshokuten",
+      "pt": "restaurante / comércio de comida"
+    }
+  ]
+},
+{
+  "id": "j_n5_kau",
+  "category": "kanji",
+  "focus": "買",
+  "jp": "買",
+  "romaji": "kau / bai",
+  "pt": "comprar",
+  "type": "kanji",
+  "hint": "N5 · vida diária. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "買"
+  ],
+  "jlpt": "N5",
+  "group": "vida diária",
+  "onyomi": "バイ",
+  "kunyomi": "か",
+  "strokes": "12",
+  "examples": [
+    {
+      "jp": "買う",
+      "romaji": "kau",
+      "pt": "comprar"
+    },
+    {
+      "jp": "買い物",
+      "romaji": "kaimono",
+      "pt": "compras"
+    },
+    {
+      "jp": "売買",
+      "romaji": "baibai",
+      "pt": "compra e venda"
+    }
+  ]
+},
+{
+  "id": "j_n5_iku",
+  "category": "kanji",
+  "focus": "行",
+  "jp": "行",
+  "romaji": "iku / kou",
+  "pt": "ir",
+  "type": "kanji",
+  "hint": "N5 · vida diária. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "行"
+  ],
+  "jlpt": "N5",
+  "group": "vida diária",
+  "onyomi": "コウ, ギョウ",
+  "kunyomi": "い, おこな",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "行く",
+      "romaji": "iku",
+      "pt": "ir"
+    },
+    {
+      "jp": "銀行",
+      "romaji": "ginkou",
+      "pt": "banco"
+    },
+    {
+      "jp": "旅行",
+      "romaji": "ryokou",
+      "pt": "viagem"
+    }
+  ]
+},
+{
+  "id": "j_n5_miru",
+  "category": "kanji",
+  "focus": "見",
+  "jp": "見",
+  "romaji": "miru / ken",
+  "pt": "ver",
+  "type": "kanji",
+  "hint": "N5 · vida diária. Toque em detalhes para ver exemplos úteis.",
+  "chars": [
+    "見"
+  ],
+  "jlpt": "N5",
+  "group": "vida diária",
+  "onyomi": "ケン",
+  "kunyomi": "み",
+  "strokes": "7",
+  "examples": [
+    {
+      "jp": "見る",
+      "romaji": "miru",
+      "pt": "ver"
+    },
+    {
+      "jp": "見せる",
+      "romaji": "miseru",
+      "pt": "mostrar"
+    },
+    {
+      "jp": "意見",
+      "romaji": "iken",
+      "pt": "opinião"
+    }
+  ]
+},
+{
+  "id": "j_n5_roku",
+  "category": "kanji",
+  "focus": "六",
+  "jp": "六",
+  "romaji": "roku",
+  "pt": "seis",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. Pense em seis linhas de contagem mental.",
+  "chars": [
+    "六"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "Pense em seis linhas de contagem mental.",
+  "onyomi": "ロク",
+  "kunyomi": "む, むい",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "六月",
+      "romaji": "rokugatsu",
+      "pt": "junho"
+    },
+    {
+      "jp": "六日",
+      "romaji": "muika",
+      "pt": "dia 6"
+    },
+    {
+      "jp": "六人",
+      "romaji": "rokunin",
+      "pt": "seis pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_nana",
+  "category": "kanji",
+  "focus": "七",
+  "jp": "七",
+  "romaji": "nana / shichi",
+  "pt": "sete",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. Sete parece um corte rápido: curto e fácil de reconhecer.",
+  "chars": [
+    "七"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "Sete parece um corte rápido: curto e fácil de reconhecer.",
+  "onyomi": "シチ",
+  "kunyomi": "なな, なの",
+  "strokes": "2",
+  "examples": [
+    {
+      "jp": "七月",
+      "romaji": "shichigatsu",
+      "pt": "julho"
+    },
+    {
+      "jp": "七日",
+      "romaji": "nanoka",
+      "pt": "dia 7"
+    },
+    {
+      "jp": "七人",
+      "romaji": "nananin",
+      "pt": "sete pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_hachi",
+  "category": "kanji",
+  "focus": "八",
+  "jp": "八",
+  "romaji": "hachi",
+  "pt": "oito",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. Oito abre como duas pernas, simples e visual.",
+  "chars": [
+    "八"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "Oito abre como duas pernas, simples e visual.",
+  "onyomi": "ハチ",
+  "kunyomi": "や, よう",
+  "strokes": "2",
+  "examples": [
+    {
+      "jp": "八月",
+      "romaji": "hachigatsu",
+      "pt": "agosto"
+    },
+    {
+      "jp": "八日",
+      "romaji": "youka",
+      "pt": "dia 8"
+    },
+    {
+      "jp": "八人",
+      "romaji": "hachinin",
+      "pt": "oito pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_kyuu",
+  "category": "kanji",
+  "focus": "九",
+  "jp": "九",
+  "romaji": "kyuu / ku",
+  "pt": "nove",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. Nove tem uma curva que parece guardar algo dentro.",
+  "chars": [
+    "九"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "Nove tem uma curva que parece guardar algo dentro.",
+  "onyomi": "キュウ, ク",
+  "kunyomi": "ここの",
+  "strokes": "2",
+  "examples": [
+    {
+      "jp": "九月",
+      "romaji": "kugatsu",
+      "pt": "setembro"
+    },
+    {
+      "jp": "九日",
+      "romaji": "kokonoka",
+      "pt": "dia 9"
+    },
+    {
+      "jp": "九人",
+      "romaji": "kyuunin",
+      "pt": "nove pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_juu",
+  "category": "kanji",
+  "focus": "十",
+  "jp": "十",
+  "romaji": "juu",
+  "pt": "dez",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. Dez é uma cruz de contagem: vertical e horizontal.",
+  "chars": [
+    "十"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "Dez é uma cruz de contagem: vertical e horizontal.",
+  "onyomi": "ジュウ",
+  "kunyomi": "とお",
+  "strokes": "2",
+  "examples": [
+    {
+      "jp": "十月",
+      "romaji": "juugatsu",
+      "pt": "outubro"
+    },
+    {
+      "jp": "十日",
+      "romaji": "tooka",
+      "pt": "dia 10"
+    },
+    {
+      "jp": "十分",
+      "romaji": "juppun",
+      "pt": "10 minutos"
+    }
+  ]
+},
+{
+  "id": "j_n5_hyaku",
+  "category": "kanji",
+  "focus": "百",
+  "jp": "百",
+  "romaji": "hyaku",
+  "pt": "cem",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. Cem parece uma unidade grande empilhada.",
+  "chars": [
+    "百"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "Cem parece uma unidade grande empilhada.",
+  "onyomi": "ヒャク",
+  "kunyomi": "",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "百円",
+      "romaji": "hyakuen",
+      "pt": "100 ienes"
+    },
+    {
+      "jp": "三百",
+      "romaji": "sanbyaku",
+      "pt": "300"
+    },
+    {
+      "jp": "百貨店",
+      "romaji": "hyakkaten",
+      "pt": "loja de departamento"
+    }
+  ]
+},
+{
+  "id": "j_n5_sen",
+  "category": "kanji",
+  "focus": "千",
+  "jp": "千",
+  "romaji": "sen",
+  "pt": "mil",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. Mil tem um traço no topo como marcador de quantidade grande.",
+  "chars": [
+    "千"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "Mil tem um traço no topo como marcador de quantidade grande.",
+  "onyomi": "セン",
+  "kunyomi": "ち",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "千円",
+      "romaji": "senen",
+      "pt": "1.000 ienes"
+    },
+    {
+      "jp": "三千",
+      "romaji": "sanzen",
+      "pt": "3.000"
+    },
+    {
+      "jp": "千葉",
+      "romaji": "chiba",
+      "pt": "Chiba"
+    }
+  ]
+},
+{
+  "id": "j_n5_man",
+  "category": "kanji",
+  "focus": "万",
+  "jp": "万",
+  "romaji": "man",
+  "pt": "dez mil",
+  "type": "kanji",
+  "hint": "N5 lógico · números e dinheiro. No Japão, dinheiro aparece muito em blocos de 万.",
+  "chars": [
+    "万"
+  ],
+  "jlpt": "N5",
+  "group": "números e dinheiro",
+  "memo": "No Japão, dinheiro aparece muito em blocos de 万.",
+  "onyomi": "マン, バン",
+  "kunyomi": "",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "一万円",
+      "romaji": "ichimanen",
+      "pt": "10.000 ienes"
+    },
+    {
+      "jp": "万一",
+      "romaji": "manichi",
+      "pt": "por acaso / se algo acontecer"
+    },
+    {
+      "jp": "万円",
+      "romaji": "manen",
+      "pt": "dez mil ienes"
+    }
+  ]
+},
+{
+  "id": "j_n5_toshi",
+  "category": "kanji",
+  "focus": "年",
+  "jp": "年",
+  "romaji": "toshi / nen",
+  "pt": "ano",
+  "type": "kanji",
+  "hint": "N5 lógico · tempo e rotina. Ano é o calendário andando, usado em idade, datas e planos.",
+  "chars": [
+    "年"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e rotina",
+  "memo": "Ano é o calendário andando, usado em idade, datas e planos.",
+  "onyomi": "ネン",
+  "kunyomi": "とし",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "今年",
+      "romaji": "kotoshi",
+      "pt": "este ano"
+    },
+    {
+      "jp": "来年",
+      "romaji": "rainen",
+      "pt": "ano que vem"
+    },
+    {
+      "jp": "一年",
+      "romaji": "ichinen",
+      "pt": "um ano"
+    }
+  ]
+},
+{
+  "id": "j_n5_toki",
+  "category": "kanji",
+  "focus": "時",
+  "jp": "時",
+  "romaji": "toki / ji",
+  "pt": "hora / tempo",
+  "type": "kanji",
+  "hint": "N5 lógico · tempo e rotina. Tempo com sol 日 dentro: a rotina passa pelo relógio.",
+  "chars": [
+    "時"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e rotina",
+  "memo": "Tempo com sol 日 dentro: a rotina passa pelo relógio.",
+  "onyomi": "ジ",
+  "kunyomi": "とき",
+  "strokes": "10",
+  "examples": [
+    {
+      "jp": "時間",
+      "romaji": "jikan",
+      "pt": "tempo / hora"
+    },
+    {
+      "jp": "何時",
+      "romaji": "nanji",
+      "pt": "que horas"
+    },
+    {
+      "jp": "一時",
+      "romaji": "ichiji",
+      "pt": "uma hora"
+    }
+  ]
+},
+{
+  "id": "j_n5_fun",
+  "category": "kanji",
+  "focus": "分",
+  "jp": "分",
+  "romaji": "fun / bun",
+  "pt": "minuto / parte",
+  "type": "kanji",
+  "hint": "N5 lógico · tempo e rotina. Dividir algo em partes: minutos também são partes do tempo.",
+  "chars": [
+    "分"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e rotina",
+  "memo": "Dividir algo em partes: minutos também são partes do tempo.",
+  "onyomi": "ブン, フン",
+  "kunyomi": "わ",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "五分",
+      "romaji": "gofun",
+      "pt": "5 minutos"
+    },
+    {
+      "jp": "自分",
+      "romaji": "jibun",
+      "pt": "eu mesmo"
+    },
+    {
+      "jp": "十分",
+      "romaji": "juppun",
+      "pt": "10 minutos"
+    }
+  ]
+},
+{
+  "id": "j_n5_gozen",
+  "category": "kanji",
+  "focus": "午",
+  "jp": "午",
+  "romaji": "go",
+  "pt": "meio-dia",
+  "type": "kanji",
+  "hint": "N5 lógico · tempo e rotina. Use em 午前 e 午後 para entender horários.",
+  "chars": [
+    "午"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e rotina",
+  "memo": "Use em 午前 e 午後 para entender horários.",
+  "onyomi": "ゴ",
+  "kunyomi": "",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "午前",
+      "romaji": "gozen",
+      "pt": "manhã"
+    },
+    {
+      "jp": "午後",
+      "romaji": "gogo",
+      "pt": "tarde"
+    },
+    {
+      "jp": "正午",
+      "romaji": "shougo",
+      "pt": "meio-dia"
+    }
+  ]
+},
+{
+  "id": "j_n5_ima",
+  "category": "kanji",
+  "focus": "今",
+  "jp": "今",
+  "romaji": "ima / kon",
+  "pt": "agora",
+  "type": "kanji",
+  "hint": "N5 lógico · tempo e rotina. Agora é o momento que cai na sua mão.",
+  "chars": [
+    "今"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e rotina",
+  "memo": "Agora é o momento que cai na sua mão.",
+  "onyomi": "コン, キン",
+  "kunyomi": "いま",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "今",
+      "romaji": "ima",
+      "pt": "agora"
+    },
+    {
+      "jp": "今日",
+      "romaji": "kyou",
+      "pt": "hoje"
+    },
+    {
+      "jp": "今月",
+      "romaji": "kongetsu",
+      "pt": "este mês"
+    }
+  ]
+},
+{
+  "id": "j_n5_han",
+  "category": "kanji",
+  "focus": "半",
+  "jp": "半",
+  "romaji": "han",
+  "pt": "metade",
+  "type": "kanji",
+  "hint": "N5 lógico · tempo e rotina. Metade aparece muito em horário: 7:30 = 7時半.",
+  "chars": [
+    "半"
+  ],
+  "jlpt": "N5",
+  "group": "tempo e rotina",
+  "memo": "Metade aparece muito em horário: 7:30 = 7時半.",
+  "onyomi": "ハン",
+  "kunyomi": "なか",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "半分",
+      "romaji": "hanbun",
+      "pt": "metade"
+    },
+    {
+      "jp": "七時半",
+      "romaji": "shichiji han",
+      "pt": "sete e meia"
+    },
+    {
+      "jp": "半年",
+      "romaji": "hantoshi",
+      "pt": "meio ano"
+    }
+  ]
+},
+{
+  "id": "j_n5_ue",
+  "category": "kanji",
+  "focus": "上",
+  "jp": "上",
+  "romaji": "ue / jou",
+  "pt": "em cima",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. Algo subindo: use para posição e melhora.",
+  "chars": [
+    "上"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "Algo subindo: use para posição e melhora.",
+  "onyomi": "ジョウ",
+  "kunyomi": "うえ, あ",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "上",
+      "romaji": "ue",
+      "pt": "em cima"
+    },
+    {
+      "jp": "上手",
+      "romaji": "jouzu",
+      "pt": "habilidoso"
+    },
+    {
+      "jp": "上げる",
+      "romaji": "ageru",
+      "pt": "levantar"
+    }
+  ]
+},
+{
+  "id": "j_n5_shita",
+  "category": "kanji",
+  "focus": "下",
+  "jp": "下",
+  "romaji": "shita / ka",
+  "pt": "embaixo",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. Algo descendo: posição, queda ou baixar.",
+  "chars": [
+    "下"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "Algo descendo: posição, queda ou baixar.",
+  "onyomi": "カ, ゲ",
+  "kunyomi": "した, さ, くだ",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "下",
+      "romaji": "shita",
+      "pt": "embaixo"
+    },
+    {
+      "jp": "地下",
+      "romaji": "chika",
+      "pt": "subsolo"
+    },
+    {
+      "jp": "下さい",
+      "romaji": "kudasai",
+      "pt": "por favor"
+    }
+  ]
+},
+{
+  "id": "j_n5_naka",
+  "category": "kanji",
+  "focus": "中",
+  "jp": "中",
+  "romaji": "naka / chuu",
+  "pt": "dentro / meio",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. Uma linha atravessando o centro: dentro, meio, durante.",
+  "chars": [
+    "中"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "Uma linha atravessando o centro: dentro, meio, durante.",
+  "onyomi": "チュウ",
+  "kunyomi": "なか",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "中",
+      "romaji": "naka",
+      "pt": "dentro"
+    },
+    {
+      "jp": "中国",
+      "romaji": "chuugoku",
+      "pt": "China"
+    },
+    {
+      "jp": "一日中",
+      "romaji": "ichinichijuu",
+      "pt": "o dia inteiro"
+    }
+  ]
+},
+{
+  "id": "j_n5_soto",
+  "category": "kanji",
+  "focus": "外",
+  "jp": "外",
+  "romaji": "soto / gai",
+  "pt": "fora",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. O lado de fora da casa, da regra ou do grupo.",
+  "chars": [
+    "外"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "O lado de fora da casa, da regra ou do grupo.",
+  "onyomi": "ガイ, ゲ",
+  "kunyomi": "そと, はず",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "外",
+      "romaji": "soto",
+      "pt": "fora"
+    },
+    {
+      "jp": "外国",
+      "romaji": "gaikoku",
+      "pt": "país estrangeiro"
+    },
+    {
+      "jp": "外出",
+      "romaji": "gaishutsu",
+      "pt": "sair"
+    }
+  ]
+},
+{
+  "id": "j_n5_hidari",
+  "category": "kanji",
+  "focus": "左",
+  "jp": "左",
+  "romaji": "hidari / sa",
+  "pt": "esquerda",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. Direção essencial para mapa, trânsito e fábrica.",
+  "chars": [
+    "左"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "Direção essencial para mapa, trânsito e fábrica.",
+  "onyomi": "サ",
+  "kunyomi": "ひだり",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "左",
+      "romaji": "hidari",
+      "pt": "esquerda"
+    },
+    {
+      "jp": "左手",
+      "romaji": "hidarite",
+      "pt": "mão esquerda"
+    },
+    {
+      "jp": "左側",
+      "romaji": "hidarigawa",
+      "pt": "lado esquerdo"
+    }
+  ]
+},
+{
+  "id": "j_n5_migi",
+  "category": "kanji",
+  "focus": "右",
+  "jp": "右",
+  "romaji": "migi / u",
+  "pt": "direita",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. Direção essencial para rua, máquinas e instruções.",
+  "chars": [
+    "右"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "Direção essencial para rua, máquinas e instruções.",
+  "onyomi": "ウ, ユウ",
+  "kunyomi": "みぎ",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "右",
+      "romaji": "migi",
+      "pt": "direita"
+    },
+    {
+      "jp": "右手",
+      "romaji": "migite",
+      "pt": "mão direita"
+    },
+    {
+      "jp": "右側",
+      "romaji": "migigawa",
+      "pt": "lado direito"
+    }
+  ]
+},
+{
+  "id": "j_n5_higashi",
+  "category": "kanji",
+  "focus": "東",
+  "jp": "東",
+  "romaji": "higashi / tou",
+  "pt": "leste",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. O sol nasce no leste. Pense em direção do amanhecer.",
+  "chars": [
+    "東"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "O sol nasce no leste. Pense em direção do amanhecer.",
+  "onyomi": "トウ",
+  "kunyomi": "ひがし",
+  "strokes": "8",
+  "examples": [
+    {
+      "jp": "東京",
+      "romaji": "toukyou",
+      "pt": "Tóquio"
+    },
+    {
+      "jp": "東口",
+      "romaji": "higashiguchi",
+      "pt": "saída leste"
+    },
+    {
+      "jp": "東",
+      "romaji": "higashi",
+      "pt": "leste"
+    }
+  ]
+},
+{
+  "id": "j_n5_nishi",
+  "category": "kanji",
+  "focus": "西",
+  "jp": "西",
+  "romaji": "nishi / sei",
+  "pt": "oeste",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. O sol vai embora pelo oeste.",
+  "chars": [
+    "西"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "O sol vai embora pelo oeste.",
+  "onyomi": "セイ, サイ",
+  "kunyomi": "にし",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "西口",
+      "romaji": "nishiguchi",
+      "pt": "saída oeste"
+    },
+    {
+      "jp": "関西",
+      "romaji": "kansai",
+      "pt": "Kansai"
+    },
+    {
+      "jp": "西",
+      "romaji": "nishi",
+      "pt": "oeste"
+    }
+  ]
+},
+{
+  "id": "j_n5_minami",
+  "category": "kanji",
+  "focus": "南",
+  "jp": "南",
+  "romaji": "minami / nan",
+  "pt": "sul",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. Direção de mapas, estações e placas.",
+  "chars": [
+    "南"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "Direção de mapas, estações e placas.",
+  "onyomi": "ナン",
+  "kunyomi": "みなみ",
+  "strokes": "9",
+  "examples": [
+    {
+      "jp": "南口",
+      "romaji": "minamiguchi",
+      "pt": "saída sul"
+    },
+    {
+      "jp": "南",
+      "romaji": "minami",
+      "pt": "sul"
+    },
+    {
+      "jp": "東南",
+      "romaji": "tounan",
+      "pt": "sudeste"
+    }
+  ]
+},
+{
+  "id": "j_n5_kita",
+  "category": "kanji",
+  "focus": "北",
+  "jp": "北",
+  "romaji": "kita / hoku",
+  "pt": "norte",
+  "type": "kanji",
+  "hint": "N5 lógico · lugares e direção. Direção de placas e saída de estação.",
+  "chars": [
+    "北"
+  ],
+  "jlpt": "N5",
+  "group": "lugares e direção",
+  "memo": "Direção de placas e saída de estação.",
+  "onyomi": "ホク",
+  "kunyomi": "きた",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "北口",
+      "romaji": "kitaguchi",
+      "pt": "saída norte"
+    },
+    {
+      "jp": "北海道",
+      "romaji": "hokkaidou",
+      "pt": "Hokkaido"
+    },
+    {
+      "jp": "北",
+      "romaji": "kita",
+      "pt": "norte"
+    }
+  ]
+},
+{
+  "id": "j_n5_ookii",
+  "category": "kanji",
+  "focus": "大",
+  "jp": "大",
+  "romaji": "ookii / dai",
+  "pt": "grande",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Grande abre os braços: fácil de memorizar.",
+  "chars": [
+    "大"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Grande abre os braços: fácil de memorizar.",
+  "onyomi": "ダイ, タイ",
+  "kunyomi": "おお",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "大学",
+      "romaji": "daigaku",
+      "pt": "universidade"
+    },
+    {
+      "jp": "大きい",
+      "romaji": "ookii",
+      "pt": "grande"
+    },
+    {
+      "jp": "大丈夫",
+      "romaji": "daijoubu",
+      "pt": "tudo bem"
+    }
+  ]
+},
+{
+  "id": "j_n5_chiisai",
+  "category": "kanji",
+  "focus": "小",
+  "jp": "小",
+  "romaji": "chiisai / shou",
+  "pt": "pequeno",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Pequeno parece algo dividido em pedacinhos.",
+  "chars": [
+    "小"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Pequeno parece algo dividido em pedacinhos.",
+  "onyomi": "ショウ",
+  "kunyomi": "ちい, こ",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "小さい",
+      "romaji": "chiisai",
+      "pt": "pequeno"
+    },
+    {
+      "jp": "小学校",
+      "romaji": "shougakkou",
+      "pt": "escola primária"
+    },
+    {
+      "jp": "大小",
+      "romaji": "daishou",
+      "pt": "tamanho"
+    }
+  ]
+},
+{
+  "id": "j_n5_gaku",
+  "category": "kanji",
+  "focus": "学",
+  "jp": "学",
+  "romaji": "gaku",
+  "pt": "estudo / aprender",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Kanji da escola, estudo e evolução.",
+  "chars": [
+    "学"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Kanji da escola, estudo e evolução.",
+  "onyomi": "ガク",
+  "kunyomi": "まな",
+  "strokes": "8",
+  "examples": [
+    {
+      "jp": "学生",
+      "romaji": "gakusei",
+      "pt": "estudante"
+    },
+    {
+      "jp": "学校",
+      "romaji": "gakkou",
+      "pt": "escola"
+    },
+    {
+      "jp": "大学",
+      "romaji": "daigaku",
+      "pt": "universidade"
+    }
+  ]
+},
+{
+  "id": "j_n5_kou",
+  "category": "kanji",
+  "focus": "校",
+  "jp": "校",
+  "romaji": "kou",
+  "pt": "escola",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Aparece em 学校: lugar onde se aprende.",
+  "chars": [
+    "校"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Aparece em 学校: lugar onde se aprende.",
+  "onyomi": "コウ",
+  "kunyomi": "",
+  "strokes": "10",
+  "examples": [
+    {
+      "jp": "学校",
+      "romaji": "gakkou",
+      "pt": "escola"
+    },
+    {
+      "jp": "高校",
+      "romaji": "koukou",
+      "pt": "ensino médio"
+    },
+    {
+      "jp": "校長",
+      "romaji": "kouchou",
+      "pt": "diretor da escola"
+    }
+  ]
+},
+{
+  "id": "j_n5_sei",
+  "category": "kanji",
+  "focus": "生",
+  "jp": "生",
+  "romaji": "sei / ikiru",
+  "pt": "vida / estudante / nascer",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Vida que nasce do chão: aluno também está em formação.",
+  "chars": [
+    "生"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Vida que nasce do chão: aluno também está em formação.",
+  "onyomi": "セイ, ショウ",
+  "kunyomi": "い, う, なま",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "学生",
+      "romaji": "gakusei",
+      "pt": "estudante"
+    },
+    {
+      "jp": "先生",
+      "romaji": "sensei",
+      "pt": "professor"
+    },
+    {
+      "jp": "生まれる",
+      "romaji": "umareru",
+      "pt": "nascer"
+    }
+  ]
+},
+{
+  "id": "j_n5_saki",
+  "category": "kanji",
+  "focus": "先",
+  "jp": "先",
+  "romaji": "saki / sen",
+  "pt": "antes / anterior",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Quem veio antes ensina: 先生.",
+  "chars": [
+    "先"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Quem veio antes ensina: 先生.",
+  "onyomi": "セン",
+  "kunyomi": "さき",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "先生",
+      "romaji": "sensei",
+      "pt": "professor"
+    },
+    {
+      "jp": "先月",
+      "romaji": "sengetsu",
+      "pt": "mês passado"
+    },
+    {
+      "jp": "先に",
+      "romaji": "saki ni",
+      "pt": "antes / primeiro"
+    }
+  ]
+},
+{
+  "id": "j_n5_nani",
+  "category": "kanji",
+  "focus": "何",
+  "jp": "何",
+  "romaji": "nani / nan",
+  "pt": "o quê",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Kanji das perguntas: abre portas para entender.",
+  "chars": [
+    "何"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Kanji das perguntas: abre portas para entender.",
+  "onyomi": "カ",
+  "kunyomi": "なに, なん",
+  "strokes": "7",
+  "examples": [
+    {
+      "jp": "何",
+      "romaji": "nani",
+      "pt": "o quê"
+    },
+    {
+      "jp": "何時",
+      "romaji": "nanji",
+      "pt": "que horas"
+    },
+    {
+      "jp": "何人",
+      "romaji": "nannin",
+      "pt": "quantas pessoas"
+    }
+  ]
+},
+{
+  "id": "j_n5_go_language",
+  "category": "kanji",
+  "focus": "語",
+  "jp": "語",
+  "romaji": "go",
+  "pt": "idioma / palavra",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. O kanji de língua: 日本語, 英語, português.",
+  "chars": [
+    "語"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "O kanji de língua: 日本語, 英語, português.",
+  "onyomi": "ゴ",
+  "kunyomi": "かた",
+  "strokes": "14",
+  "examples": [
+    {
+      "jp": "日本語",
+      "romaji": "nihongo",
+      "pt": "japonês"
+    },
+    {
+      "jp": "英語",
+      "romaji": "eigo",
+      "pt": "inglês"
+    },
+    {
+      "jp": "言語",
+      "romaji": "gengo",
+      "pt": "língua / linguagem"
+    }
+  ]
+},
+{
+  "id": "j_n5_tomo",
+  "category": "kanji",
+  "focus": "友",
+  "jp": "友",
+  "romaji": "tomo / yuu",
+  "pt": "amigo",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. Duas mãos se aproximando: amizade.",
+  "chars": [
+    "友"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "Duas mãos se aproximando: amizade.",
+  "onyomi": "ユウ",
+  "kunyomi": "とも",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "友だち",
+      "romaji": "tomodachi",
+      "pt": "amigo"
+    },
+    {
+      "jp": "親友",
+      "romaji": "shinyuu",
+      "pt": "melhor amigo"
+    },
+    {
+      "jp": "友人",
+      "romaji": "yuujin",
+      "pt": "amigo"
+    }
+  ]
+},
+{
+  "id": "j_n5_atarashii",
+  "category": "kanji",
+  "focus": "新",
+  "jp": "新",
+  "romaji": "atarashii / shin",
+  "pt": "novo",
+  "type": "kanji",
+  "hint": "N5 lógico · adjetivos básicos. Novo aparece em produto, estação, endereço e vida nova.",
+  "chars": [
+    "新"
+  ],
+  "jlpt": "N5",
+  "group": "adjetivos básicos",
+  "memo": "Novo aparece em produto, estação, endereço e vida nova.",
+  "onyomi": "シン",
+  "kunyomi": "あたら, あら, にい",
+  "strokes": "13",
+  "examples": [
+    {
+      "jp": "新しい",
+      "romaji": "atarashii",
+      "pt": "novo"
+    },
+    {
+      "jp": "新聞",
+      "romaji": "shinbun",
+      "pt": "jornal"
+    },
+    {
+      "jp": "新幹線",
+      "romaji": "shinkansen",
+      "pt": "trem-bala"
+    }
+  ]
+},
+{
+  "id": "j_n5_furui",
+  "category": "kanji",
+  "focus": "古",
+  "jp": "古",
+  "romaji": "furui / ko",
+  "pt": "velho / antigo",
+  "type": "kanji",
+  "hint": "N5 lógico · adjetivos básicos. Antigo ajuda a comparar preço, objeto e documento.",
+  "chars": [
+    "古"
+  ],
+  "jlpt": "N5",
+  "group": "adjetivos básicos",
+  "memo": "Antigo ajuda a comparar preço, objeto e documento.",
+  "onyomi": "コ",
+  "kunyomi": "ふる",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "古い",
+      "romaji": "furui",
+      "pt": "velho / antigo"
+    },
+    {
+      "jp": "中古",
+      "romaji": "chuuko",
+      "pt": "usado"
+    },
+    {
+      "jp": "古本",
+      "romaji": "furuhon",
+      "pt": "livro usado"
+    }
+  ]
+},
+{
+  "id": "j_n5_takai",
+  "category": "kanji",
+  "focus": "高",
+  "jp": "高",
+  "romaji": "takai / kou",
+  "pt": "alto / caro",
+  "type": "kanji",
+  "hint": "N5 lógico · adjetivos básicos. No Japão, 高い pode doer no bolso: caro.",
+  "chars": [
+    "高"
+  ],
+  "jlpt": "N5",
+  "group": "adjetivos básicos",
+  "memo": "No Japão, 高い pode doer no bolso: caro.",
+  "onyomi": "コウ",
+  "kunyomi": "たか",
+  "strokes": "10",
+  "examples": [
+    {
+      "jp": "高い",
+      "romaji": "takai",
+      "pt": "alto / caro"
+    },
+    {
+      "jp": "高校",
+      "romaji": "koukou",
+      "pt": "ensino médio"
+    },
+    {
+      "jp": "円高",
+      "romaji": "endaka",
+      "pt": "iene forte"
+    }
+  ]
+},
+{
+  "id": "j_n5_yasui",
+  "category": "kanji",
+  "focus": "安",
+  "jp": "安",
+  "romaji": "yasui / an",
+  "pt": "barato / seguro",
+  "type": "kanji",
+  "hint": "N5 lógico · adjetivos básicos. Kanji de barato e tranquilidade: 安い e 安心.",
+  "chars": [
+    "安"
+  ],
+  "jlpt": "N5",
+  "group": "adjetivos básicos",
+  "memo": "Kanji de barato e tranquilidade: 安い e 安心.",
+  "onyomi": "アン",
+  "kunyomi": "やす",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "安い",
+      "romaji": "yasui",
+      "pt": "barato"
+    },
+    {
+      "jp": "安全",
+      "romaji": "anzen",
+      "pt": "segurança"
+    },
+    {
+      "jp": "安心",
+      "romaji": "anshin",
+      "pt": "tranquilidade"
+    }
+  ]
+},
+{
+  "id": "j_n5_ooi",
+  "category": "kanji",
+  "focus": "多",
+  "jp": "多",
+  "romaji": "ooi / ta",
+  "pt": "muito",
+  "type": "kanji",
+  "hint": "N5 lógico · adjetivos básicos. Muitas coisas repetidas: 多い.",
+  "chars": [
+    "多"
+  ],
+  "jlpt": "N5",
+  "group": "adjetivos básicos",
+  "memo": "Muitas coisas repetidas: 多い.",
+  "onyomi": "タ",
+  "kunyomi": "おお",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "多い",
+      "romaji": "ooi",
+      "pt": "muito / muitos"
+    },
+    {
+      "jp": "多少",
+      "romaji": "tashou",
+      "pt": "um pouco / certa quantidade"
+    },
+    {
+      "jp": "多分",
+      "romaji": "tabun",
+      "pt": "talvez"
+    }
+  ]
+},
+{
+  "id": "j_n5_sukunai",
+  "category": "kanji",
+  "focus": "少",
+  "jp": "少",
+  "romaji": "sukunai / shou",
+  "pt": "pouco",
+  "type": "kanji",
+  "hint": "N5 lógico · adjetivos básicos. Pouco é o oposto de 多い.",
+  "chars": [
+    "少"
+  ],
+  "jlpt": "N5",
+  "group": "adjetivos básicos",
+  "memo": "Pouco é o oposto de 多い.",
+  "onyomi": "ショウ",
+  "kunyomi": "すく, すこ",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "少ない",
+      "romaji": "sukunai",
+      "pt": "pouco"
+    },
+    {
+      "jp": "少し",
+      "romaji": "sukoshi",
+      "pt": "um pouco"
+    },
+    {
+      "jp": "少年",
+      "romaji": "shounen",
+      "pt": "menino / jovem"
+    }
+  ]
+},
+{
+  "id": "j_n5_nagai",
+  "category": "kanji",
+  "focus": "長",
+  "jp": "長",
+  "romaji": "nagai / chou",
+  "pt": "longo / chefe",
+  "type": "kanji",
+  "hint": "N5 lógico · adjetivos básicos. Longo também aparece em chefe, como 店長.",
+  "chars": [
+    "長"
+  ],
+  "jlpt": "N5",
+  "group": "adjetivos básicos",
+  "memo": "Longo também aparece em chefe, como 店長.",
+  "onyomi": "チョウ",
+  "kunyomi": "なが",
+  "strokes": "8",
+  "examples": [
+    {
+      "jp": "長い",
+      "romaji": "nagai",
+      "pt": "longo"
+    },
+    {
+      "jp": "店長",
+      "romaji": "tenchou",
+      "pt": "gerente de loja"
+    },
+    {
+      "jp": "社長",
+      "romaji": "shachou",
+      "pt": "presidente da empresa"
+    }
+  ]
+},
+{
+  "id": "j_n5_kuru",
+  "category": "kanji",
+  "focus": "来",
+  "jp": "来",
+  "romaji": "kuru / rai",
+  "pt": "vir",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. O kanji de chegada: vem alguém, vem o mês, vem o ano.",
+  "chars": [
+    "来"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "O kanji de chegada: vem alguém, vem o mês, vem o ano.",
+  "onyomi": "ライ",
+  "kunyomi": "く",
+  "strokes": "7",
+  "examples": [
+    {
+      "jp": "来る",
+      "romaji": "kuru",
+      "pt": "vir"
+    },
+    {
+      "jp": "来月",
+      "romaji": "raigetsu",
+      "pt": "mês que vem"
+    },
+    {
+      "jp": "来年",
+      "romaji": "rainen",
+      "pt": "ano que vem"
+    }
+  ]
+},
+{
+  "id": "j_n5_yasumu",
+  "category": "kanji",
+  "focus": "休",
+  "jp": "休",
+  "romaji": "yasumu / kyuu",
+  "pt": "descansar",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. Pessoa encostada na árvore: descanso perfeito.",
+  "chars": [
+    "休"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "Pessoa encostada na árvore: descanso perfeito.",
+  "onyomi": "キュウ",
+  "kunyomi": "やす",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "休む",
+      "romaji": "yasumu",
+      "pt": "descansar / faltar"
+    },
+    {
+      "jp": "休日",
+      "romaji": "kyuujitsu",
+      "pt": "dia de folga"
+    },
+    {
+      "jp": "休み",
+      "romaji": "yasumi",
+      "pt": "descanso / folga"
+    }
+  ]
+},
+{
+  "id": "j_n5_au",
+  "category": "kanji",
+  "focus": "会",
+  "jp": "会",
+  "romaji": "au / kai",
+  "pt": "encontrar / reunião",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. Pessoas se encontrando: 会う.",
+  "chars": [
+    "会"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "Pessoas se encontrando: 会う.",
+  "onyomi": "カイ, エ",
+  "kunyomi": "あ",
+  "strokes": "6",
+  "examples": [
+    {
+      "jp": "会う",
+      "romaji": "au",
+      "pt": "encontrar"
+    },
+    {
+      "jp": "会社",
+      "romaji": "kaisha",
+      "pt": "empresa"
+    },
+    {
+      "jp": "会議",
+      "romaji": "kaigi",
+      "pt": "reunião"
+    }
+  ]
+},
+{
+  "id": "j_n5_sha",
+  "category": "kanji",
+  "focus": "社",
+  "jp": "社",
+  "romaji": "sha",
+  "pt": "empresa / santuário",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. Aparece em 会社, essencial para vida de trabalho.",
+  "chars": [
+    "社"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "Aparece em 会社, essencial para vida de trabalho.",
+  "onyomi": "シャ",
+  "kunyomi": "やしろ",
+  "strokes": "7",
+  "examples": [
+    {
+      "jp": "会社",
+      "romaji": "kaisha",
+      "pt": "empresa"
+    },
+    {
+      "jp": "社員",
+      "romaji": "shain",
+      "pt": "funcionário da empresa"
+    },
+    {
+      "jp": "社長",
+      "romaji": "shachou",
+      "pt": "presidente da empresa"
+    }
+  ]
+},
+{
+  "id": "j_n5_otoko",
+  "category": "kanji",
+  "focus": "男",
+  "jp": "男",
+  "romaji": "otoko / dan",
+  "pt": "homem",
+  "type": "kanji",
+  "hint": "N5 lógico · pessoas e corpo. Campo + força: ideia antiga de homem trabalhando no campo.",
+  "chars": [
+    "男"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "memo": "Campo + força: ideia antiga de homem trabalhando no campo.",
+  "onyomi": "ダン, ナン",
+  "kunyomi": "おとこ",
+  "strokes": "7",
+  "examples": [
+    {
+      "jp": "男",
+      "romaji": "otoko",
+      "pt": "homem"
+    },
+    {
+      "jp": "男の人",
+      "romaji": "otoko no hito",
+      "pt": "homem"
+    },
+    {
+      "jp": "男性",
+      "romaji": "dansei",
+      "pt": "sexo masculino / homem"
+    }
+  ]
+},
+{
+  "id": "j_n5_onna",
+  "category": "kanji",
+  "focus": "女",
+  "jp": "女",
+  "romaji": "onna / jo",
+  "pt": "mulher",
+  "type": "kanji",
+  "hint": "N5 lógico · pessoas e corpo. Kanji básico para pessoas, família e documentos.",
+  "chars": [
+    "女"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "memo": "Kanji básico para pessoas, família e documentos.",
+  "onyomi": "ジョ, ニョ",
+  "kunyomi": "おんな",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "女",
+      "romaji": "onna",
+      "pt": "mulher"
+    },
+    {
+      "jp": "女の人",
+      "romaji": "onna no hito",
+      "pt": "mulher"
+    },
+    {
+      "jp": "女性",
+      "romaji": "josei",
+      "pt": "sexo feminino / mulher"
+    }
+  ]
+},
+{
+  "id": "j_n5_ko",
+  "category": "kanji",
+  "focus": "子",
+  "jp": "子",
+  "romaji": "ko / shi",
+  "pt": "criança",
+  "type": "kanji",
+  "hint": "N5 lógico · pessoas e corpo. Criança aparece em 子ども e muitos nomes.",
+  "chars": [
+    "子"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "memo": "Criança aparece em 子ども e muitos nomes.",
+  "onyomi": "シ, ス",
+  "kunyomi": "こ",
+  "strokes": "3",
+  "examples": [
+    {
+      "jp": "子ども",
+      "romaji": "kodomo",
+      "pt": "criança"
+    },
+    {
+      "jp": "女子",
+      "romaji": "joshi",
+      "pt": "menina / feminino"
+    },
+    {
+      "jp": "息子",
+      "romaji": "musuko",
+      "pt": "filho"
+    }
+  ]
+},
+{
+  "id": "j_n5_chichi",
+  "category": "kanji",
+  "focus": "父",
+  "jp": "父",
+  "romaji": "chichi / fu",
+  "pt": "pai",
+  "type": "kanji",
+  "hint": "N5 lógico · pessoas e corpo. Kanji de família básico para documentos e conversa.",
+  "chars": [
+    "父"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "memo": "Kanji de família básico para documentos e conversa.",
+  "onyomi": "フ",
+  "kunyomi": "ちち",
+  "strokes": "4",
+  "examples": [
+    {
+      "jp": "父",
+      "romaji": "chichi",
+      "pt": "meu pai"
+    },
+    {
+      "jp": "お父さん",
+      "romaji": "otousan",
+      "pt": "pai"
+    },
+    {
+      "jp": "父母",
+      "romaji": "fubo",
+      "pt": "pai e mãe"
+    }
+  ]
+},
+{
+  "id": "j_n5_haha",
+  "category": "kanji",
+  "focus": "母",
+  "jp": "母",
+  "romaji": "haha / bo",
+  "pt": "mãe",
+  "type": "kanji",
+  "hint": "N5 lógico · pessoas e corpo. Kanji de família básico para conversa e vida adulta.",
+  "chars": [
+    "母"
+  ],
+  "jlpt": "N5",
+  "group": "pessoas e corpo",
+  "memo": "Kanji de família básico para conversa e vida adulta.",
+  "onyomi": "ボ",
+  "kunyomi": "はは",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "母",
+      "romaji": "haha",
+      "pt": "minha mãe"
+    },
+    {
+      "jp": "お母さん",
+      "romaji": "okaasan",
+      "pt": "mãe"
+    },
+    {
+      "jp": "母国",
+      "romaji": "bokoku",
+      "pt": "país natal"
+    }
+  ]
+},
+{
+  "id": "j_n5_hon_book",
+  "category": "kanji",
+  "focus": "本",
+  "jp": "本",
+  "romaji": "hon",
+  "pt": "livro / origem",
+  "type": "kanji",
+  "hint": "N5 lógico · escola, pessoas e língua. A árvore 木 com uma marca na raiz: origem, base, livro.",
+  "chars": [
+    "本"
+  ],
+  "jlpt": "N5",
+  "group": "escola, pessoas e língua",
+  "memo": "A árvore 木 com uma marca na raiz: origem, base, livro.",
+  "onyomi": "ホン",
+  "kunyomi": "もと",
+  "strokes": "5",
+  "examples": [
+    {
+      "jp": "本",
+      "romaji": "hon",
+      "pt": "livro"
+    },
+    {
+      "jp": "日本",
+      "romaji": "nihon",
+      "pt": "Japão"
+    },
+    {
+      "jp": "本日",
+      "romaji": "honjitsu",
+      "pt": "hoje / este dia"
+    }
+  ]
+},
+{
+  "id": "j_n5_kaku",
+  "category": "kanji",
+  "focus": "書",
+  "jp": "書",
+  "romaji": "kaku / sho",
+  "pt": "escrever",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. Mão escrevendo no papel: perfeito para o CADERNO321.",
+  "chars": [
+    "書"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "Mão escrevendo no papel: perfeito para o CADERNO321.",
+  "onyomi": "ショ",
+  "kunyomi": "か",
+  "strokes": "10",
+  "examples": [
+    {
+      "jp": "書く",
+      "romaji": "kaku",
+      "pt": "escrever"
+    },
+    {
+      "jp": "辞書",
+      "romaji": "jisho",
+      "pt": "dicionário"
+    },
+    {
+      "jp": "書類",
+      "romaji": "shorui",
+      "pt": "documentos"
+    }
+  ]
+},
+{
+  "id": "j_n5_yomu_kanji",
+  "category": "kanji",
+  "focus": "読",
+  "jp": "読",
+  "romaji": "yomu / doku",
+  "pt": "ler",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. Kanji do objetivo final: ler japonês real.",
+  "chars": [
+    "読"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "Kanji do objetivo final: ler japonês real.",
+  "onyomi": "ドク, トク",
+  "kunyomi": "よ",
+  "strokes": "14",
+  "examples": [
+    {
+      "jp": "読む",
+      "romaji": "yomu",
+      "pt": "ler"
+    },
+    {
+      "jp": "読書",
+      "romaji": "dokusho",
+      "pt": "leitura"
+    },
+    {
+      "jp": "音読",
+      "romaji": "ondoku",
+      "pt": "leitura em voz alta"
+    }
+  ]
+},
+{
+  "id": "j_n5_kiku",
+  "category": "kanji",
+  "focus": "聞",
+  "jp": "聞",
+  "romaji": "kiku / bun",
+  "pt": "ouvir / perguntar",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. A orelha dentro do portão: ouvir com atenção.",
+  "chars": [
+    "聞"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "A orelha dentro do portão: ouvir com atenção.",
+  "onyomi": "ブン, モン",
+  "kunyomi": "き",
+  "strokes": "14",
+  "examples": [
+    {
+      "jp": "聞く",
+      "romaji": "kiku",
+      "pt": "ouvir / perguntar"
+    },
+    {
+      "jp": "新聞",
+      "romaji": "shinbun",
+      "pt": "jornal"
+    },
+    {
+      "jp": "聞こえる",
+      "romaji": "kikoeru",
+      "pt": "ser audível"
+    }
+  ]
+},
+{
+  "id": "j_n5_hanasu",
+  "category": "kanji",
+  "focus": "話",
+  "jp": "話",
+  "romaji": "hanasu / wa",
+  "pt": "falar",
+  "type": "kanji",
+  "hint": "N5 lógico · verbos essenciais. Palavra saindo da língua: falar.",
+  "chars": [
+    "話"
+  ],
+  "jlpt": "N5",
+  "group": "verbos essenciais",
+  "memo": "Palavra saindo da língua: falar.",
+  "onyomi": "ワ",
+  "kunyomi": "はな",
+  "strokes": "13",
+  "examples": [
+    {
+      "jp": "話す",
+      "romaji": "hanasu",
+      "pt": "falar"
+    },
+    {
+      "jp": "電話",
+      "romaji": "denwa",
+      "pt": "telefone"
+    },
+    {
+      "jp": "会話",
+      "romaji": "kaiwa",
+      "pt": "conversa"
+    }
+  ]
 }];
 
   const KANA_STROKES = {
@@ -7211,7 +13299,27 @@
     "ミ": { count: 3, note: "três traços curtos inclinados" },
     "ム": { count: 2, note: "diagonal principal e traço inferior" },
     "メ": { count: 2, note: "diagonal curta e diagonal longa" },
-    "モ": { count: 3, note: "duas linhas horizontais e vertical curva" }
+    "モ": { count: 3, note: "duas linhas horizontais e vertical curva" },
+    "や": { count: 3, note: "traço superior, curva vertical, traço pequeno" },
+    "ゆ": { count: 2, note: "curva ampla e traço central" },
+    "よ": { count: 2, note: "traço curto e curva inferior" },
+    "ら": { count: 2, note: "traço superior e curva principal" },
+    "り": { count: 2, note: "traço esquerdo e traço direito" },
+    "る": { count: 1, note: "traço único curvado com laço" },
+    "れ": { count: 2, note: "vertical com curva e traço final" },
+    "ろ": { count: 1, note: "traço único curvado" },
+    "ヤ": { count: 2, note: "traço superior angular e diagonal" },
+    "ユ": { count: 2, note: "linha superior/lateral e linha inferior" },
+    "ヨ": { count: 3, note: "três linhas com lateral direita" },
+    "ラ": { count: 2, note: "linha superior e curva inferior" },
+    "リ": { count: 2, note: "traço esquerdo e traço direito" },
+    "ル": { count: 2, note: "vertical esquerda e curva direita" },
+    "ロ": { count: 3, note: "lateral esquerda/topo, direita, base" },
+    "わ": { count: 2, note: "vertical com curva e traço final amplo" },
+    "を": { count: 3, note: "linha superior, curva central e curva final" },
+    "ん": { count: 1, note: "traço único com curva final" },
+    "ワ": { count: 2, note: "linha superior/lateral e diagonal final" },
+    "ヲ": { count: 3, note: "duas linhas horizontais e diagonal final" }
   };
 
   const KANA_DRAWINGS = {
@@ -7419,6 +13527,8 @@
   let openMenu = typeof state.openMenu === "string" ? state.openMenu : "";
   let selectedFocus = state.selectedFocus || {};
   let selectedFamily = state.selectedFamily || { hiragana: "あ", katakana: "ア" };
+  let selectedKanjiLevel = state.selectedKanjiLevel || "N5";
+  let selectedKanjiGroup = state.selectedKanjiGroup || "tempo e natureza";
   let drawingStrokes = [];
   let currentStroke = [];
   let drawingSnapshot = null;
@@ -7463,6 +13573,8 @@
     state.openMenu = openMenu;
     state.selectedFocus = selectedFocus;
     state.selectedFamily = selectedFamily;
+    state.selectedKanjiLevel = selectedKanjiLevel;
+    state.selectedKanjiGroup = selectedKanjiGroup;
     state.appTheme = appTheme;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
@@ -7513,6 +13625,11 @@
       if ((progressFor(w).correct || 0) >= 1) map[w.focus].correctWords += 1;
     });
     return map;
+  }
+
+  function countLabel(done, total) {
+    if (total > 7) return `${done}/${total}`;
+    return `${done}/${total}`;
   }
 
   function setScreen(next) {
@@ -7886,7 +14003,7 @@
             
           </div>
         </div>
-        <div class="headerActions">${""}<button class="themeToggleBtn" type="button" data-action="toggleTheme">${appTheme === "dark" ? "☀️" : "🌙"}</button><button class="boardToneBtn" type="button" data-action="cyclePaperTone">${paperToneIcon()}</button><div class="headerPill">1.7</div></div>
+        <div class="headerActions">${""}<button class="themeToggleBtn" type="button" data-action="toggleTheme">${appTheme === "dark" ? "☀️" : "🌙"}</button><button class="boardToneBtn" type="button" data-action="cyclePaperTone">${paperToneIcon()}</button><div class="headerPill">2.3</div></div>
       </header>
     `;
   }
@@ -7947,11 +14064,12 @@
         <div class="compactFamilyGrid">
           ${families.map(fam => {
             const totalWords = categoryWords(cat).filter(word => fam.letters.includes(word.focus)).length;
-            const doneWords = categoryWords(cat).filter(word => fam.letters.includes(word.focus) && (progressFor(word).correct || 0) >= 1).length;
+            const familyWords = categoryWords(cat).filter(word => fam.letters.includes(word.focus));
+            const doneWords = familyWords.filter(word => (progressFor(word).correct || 0) >= 1).length;
             return `
               <button class="${currentFamily === fam.key ? "is-active" : ""}" type="button" data-family-cat="${cat}" data-family="${escapeHTML(fam.key)}">
                 <strong>${escapeHTML(fam.key)}</strong>
-                <span>${doneWords}/${totalWords}</span>
+                <span>${countLabel(doneWords, totalWords)}</span>
               </button>
             `;
           }).join("")}
@@ -7972,7 +14090,7 @@
             return `
               <button class="${selected === letter ? "is-active" : ""} ${disabled ? "is-disabled" : ""}" type="button" data-focus-cat="${cat}" data-focus="${escapeHTML(letter)}" ${disabled ? "aria-disabled='true'" : ""}>
                 <strong>${escapeHTML(letter)}</strong>
-                <span>${done}/${letterWords.length}</span>
+                <span>${countLabel(done, letterWords.length)}</span>
               </button>
             `;
           }).join("")}
@@ -8006,20 +14124,139 @@
     `;
   }
 
-  function renderKanjiPicker(words) {
+  function selectKanjiLevel(level) {
+    selectedKanjiLevel = level;
+    if (level !== "N5") {
+      selectedKanjiGroup = "";
+    } else if (!selectedKanjiGroup) {
+      selectedKanjiGroup = "tempo e natureza";
+    }
+    category = "kanji";
+    openMenu = "kanji";
+    saveState();
+    render();
+  }
+
+  function selectKanjiGroup(group) {
+    selectedKanjiGroup = group;
+    selectedKanjiLevel = "N5";
+    category = "kanji";
+    openMenu = "kanji";
+    saveState();
+    render();
+  }
+
+  function kanjiGroups(level = "N5") {
+    const groups = [];
+    categoryWords("kanji").forEach(word => {
+      if (word.jlpt === level && word.group && !groups.includes(word.group)) groups.push(word.group);
+    });
+    return groups;
+  }
+
+  function renderKanjiDetails(word) {
+    if (word.category !== "kanji") return "";
     return `
-      <div class="compactWordList compactWordList--kanji">
-        ${words.map(word => {
-          const p = progressFor(word);
-          return `
-            <button type="button" data-word-id="${escapeHTML(word.id)}">
-              <strong>${escapeHTML(word.jp)}</strong>
-              <span>${escapeHTML(word.romaji)} · ${escapeHTML(word.pt)}</span>
-              <small>${p.correct || 0}/7</small>
-            </button>
-          `;
-        }).join("")}
+      <div class="kanjiDetailBox">
+        <div class="kanjiReadings">
+          <span><b>nível</b>${escapeHTML(word.jlpt || "prévia")}</span>
+          <span><b>traços</b>${escapeHTML(word.strokes || "em expansão")}</span>
+          <span><b>onyomi</b>${escapeHTML(word.onyomi || "em expansão")}</span>
+          <span><b>kunyomi</b>${escapeHTML(word.kunyomi || "em expansão")}</span>
+        </div>
+        ${word.memo ? `
+          <div class="kanjiMemo">
+            <b>memória rápida</b>
+            <span>${escapeHTML(word.memo)}</span>
+          </div>
+        ` : ""}
+        <div class="kanjiExamples">
+          <b>palavras úteis</b>
+          ${(word.examples || []).map(ex => `
+            <span>
+              <strong>${escapeHTML(ex.jp)}</strong>
+              <em>${escapeHTML(ex.romaji)} = ${escapeHTML(ex.pt)}</em>
+            </span>
+          `).join("")}
+        </div>
       </div>
+    `;
+  }
+
+  function renderKanjiPicker(words) {
+    const levels = ["N5", "N4", "N3", "N2", "N1"];
+    const groups = kanjiGroups("N5");
+    const levelWords = categoryWords("kanji").filter(word => word.jlpt === selectedKanjiLevel);
+    const visibleWords = selectedKanjiLevel === "N5"
+      ? levelWords.filter(word => word.group === selectedKanjiGroup)
+      : [];
+
+    return `
+      <div class="kanjiLevelBlock">
+        <div class="choiceLabel">
+          <b>1. escolha o nível JLPT</b>
+          <span>N5 liberado · N4-N1 em preparação</span>
+        </div>
+
+        <div class="kanjiLevelGrid">
+          ${levels.map(level => {
+            const total = categoryWords("kanji").filter(word => word.jlpt === level).length;
+            const locked = level !== "N5";
+            return `
+              <button class="${selectedKanjiLevel === level ? "is-active" : ""} ${locked ? "is-locked" : ""}" type="button" data-kanji-level="${level}">
+                <strong>${level}</strong>
+                <span>${locked ? "em preparação" : `${total} kanjis`}</span>
+              </button>
+            `;
+          }).join("")}
+        </div>
+      </div>
+
+      ${selectedKanjiLevel !== "N5" ? `
+        <div class="kanjiComingSoon">
+          <b>${escapeHTML(selectedKanjiLevel)} em preparação</b>
+          <span>Vamos liberar por etapas para manter o CADERNO321 leve, organizado e sem assustar o aluno.</span>
+        </div>
+      ` : `
+        <div class="kanjiGroupBlock">
+          <div class="choiceLabel">
+            <b>2. escolha o grupo</b>
+            <span>lista lógica N5 do CADERNO321</span>
+          </div>
+
+          <div class="kanjiGroupGrid">
+            ${groups.map(group => {
+              const total = categoryWords("kanji").filter(word => word.jlpt === "N5" && word.group === group).length;
+              return `
+                <button class="${selectedKanjiGroup === group ? "is-active" : ""}" type="button" data-kanji-group="${escapeHTML(group)}">
+                  <strong>${escapeHTML(group)}</strong>
+                  <span>${total} kanjis</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+
+        <div class="wordChoiceBlock">
+          <div class="choiceLabel">
+            <b>3. escolha o kanji</b>
+            <span>ver → entender → escrever → conferir</span>
+          </div>
+
+          <div class="compactWordList compactWordList--kanji">
+            ${visibleWords.map(word => {
+              const p = progressFor(word);
+              return `
+                <button type="button" data-word-id="${escapeHTML(word.id)}">
+                  <strong>${escapeHTML(word.jp)}</strong>
+                  <span>${escapeHTML(word.romaji)} · ${escapeHTML(word.pt)}</span>
+                  <small>${p.correct || 0}/7</small>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `}
     `;
   }
 
@@ -8042,6 +14279,7 @@
         <div class="stageLabel"><span>1. ver e entender</span><b>${categoryLabel()}</b></div>
         <div class="wordDisplay"><strong>${escapeHTML(word.jp)}</strong><span>${escapeHTML(word.romaji)}</span><em>${escapeHTML(word.pt)}</em></div>
         <div class="wordHint">${escapeHTML(word.hint)}</div>
+        ${renderKanjiDetails(word)}
         <div class="actionGrid">
           <button class="actionBtn" data-action="speak">🔊 ouvir</button>
           <button class="actionBtn primary" data-screen="write">entendi, esconder</button>
@@ -8130,6 +14368,8 @@
       selectFocus(btn.dataset.focusCat, btn.dataset.focus);
     }));
     document.querySelectorAll("[data-word-id]").forEach(btn => btn.addEventListener("click", () => startWordById(btn.dataset.wordId)));
+    document.querySelectorAll("[data-kanji-level]").forEach(btn => btn.addEventListener("click", () => selectKanjiLevel(btn.dataset.kanjiLevel)));
+    document.querySelectorAll("[data-kanji-group]").forEach(btn => btn.addEventListener("click", () => selectKanjiGroup(btn.dataset.kanjiGroup)));
     document.querySelectorAll("[data-screen]").forEach(btn => btn.addEventListener("click", () => setScreen(btn.dataset.screen)));
     document.querySelectorAll("[data-action]").forEach(btn => btn.addEventListener("click", () => {
       const action = btn.dataset.action;
