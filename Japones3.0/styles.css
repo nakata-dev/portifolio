@@ -13662,3 +13662,38 @@ a,
     max-width:820px !important;
   }
 }
+
+
+/* =========================================================
+   NIHONGO321 8.6.0 — CADERNO321 integrado nativo
+   ========================================================= */
+.cadernoIntegratedPage{
+  width:min(100%, 1120px);
+  margin:0 auto;
+}
+.cadernoIntegratedHeader .h1{
+  margin:.55rem 0 .4rem;
+  font-size:clamp(28px, 5vw, 52px);
+  line-height:1.02;
+  letter-spacing:-.04em;
+}
+.cadernoIntegratedFrameCard{
+  padding:0;
+  overflow:hidden;
+  min-height:76vh;
+}
+.cadernoIntegratedFrame{
+  display:block;
+  width:100%;
+  height:calc(100vh - 170px);
+  min-height:760px;
+  border:0;
+  background:transparent;
+}
+@media (max-width: 720px){
+  .cadernoIntegratedHeader{ padding:14px; }
+  .cadernoIntegratedFrame{
+    height:calc(100vh - 126px);
+    min-height:720px;
+  }
+}

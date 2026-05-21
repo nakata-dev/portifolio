@@ -9616,3 +9616,48 @@ html[data-caderno-theme="dark"] .genialSaveStatus span,
 html[data-theme="dark"] .genialSaveStatus span{
   color:#d9e4f7 !important;
 }
+
+/* =========================================================
+   CADERNO321 4.10.31.1 — Status de salvamento verificável
+   ========================================================= */
+.genialSaveStatus--error{
+  border-color: rgba(217, 124, 124, .38) !important;
+  background: rgba(255, 235, 235, .92) !important;
+}
+
+.genialSaveStatus--error b{
+  color: #8f1f1f !important;
+}
+
+.genialSaveStatus--error span{
+  color: #6f2a2a !important;
+}
+
+html[data-caderno-theme="dark"] .genialSaveStatus--error,
+html[data-theme="dark"] .genialSaveStatus--error{
+  background: rgba(86, 27, 27, .58) !important;
+  border-color: rgba(255, 156, 156, .35) !important;
+}
+
+html[data-caderno-theme="dark"] .genialSaveStatus--error b,
+html[data-theme="dark"] .genialSaveStatus--error b{
+  color: #ffd1d1 !important;
+}
+
+html[data-caderno-theme="dark"] .genialSaveStatus--error span,
+html[data-theme="dark"] .genialSaveStatus--error span{
+  color: #ffc2c2 !important;
+}
+
+
+/* =========================================================
+   CADERNO321 4.10.32 — modo integrado no NIHONGO321
+   ========================================================= */
+body:has(.app) {
+  overflow-x:hidden;
+}
+@media (min-width: 900px){
+  .app{
+    max-width:1080px;
+  }
+}

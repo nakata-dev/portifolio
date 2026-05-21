@@ -35615,92 +35615,161 @@
     return { ok: true, duplicate: alreadyIndex >= 0, total, phrase: finalPhrase };
   }
 
-  function savePhraseDirectlyInsideNihongo321(phrase) {
-    const jp = String(phrase?.jp || "").trim();
-    if (!jp) return { ok: false, reason: "empty" };
+  function createNihongo321WritableState() {
+    const t = Date.now();
+    const theme = localStorage.getItem("nihongo321_theme") || "dark";
+    return {
+      app: {
+        name: "NIHONGO321",
+        schemaVersion: 8.2,
+        version: "8.5.71.1",
+        createdAt: t,
+        updatedAt: t,
+        source: "CADERNO321_DIRECT_SAVE"
+      },
+      prefs: {
+        theme: theme === "light" ? "light" : "dark",
+        audio: { enabled: true, volume: 0.35, unlocked: false },
+        haptics: { enabled: true }
+      },
+      monetization: { premiumUnlocked: false, seenPaywall: false },
+      admin: { unlocked: false, lastLoginAt: null },
+      stats: { coins: 0, bestCoins: 0, cyclesDone: 0, phrasesMastered: 0, listens: 0, calls: 0 },
+      habit: { firstDay: null, days: {} },
+      aiStudio: { history: [] },
+      tutorial: { done: false, currentStep: 0, completedAt: null },
+      goals: { dailyMinutes: 5, dailyCycles: 1 },
+      favorites: { phraseIds: [] },
+      bank: { topics: [], phrases: [] },
+      progress: {},
+      session: {
+        inProgress: false,
+        queue: [],
+        index: 0,
+        phraseId: null,
+        callMode: false,
+        topicFilter: "ALL",
+        study: { day: new Date().toISOString().slice(0, 10), totalMs: 0, running: false, runStartAt: null }
+      },
+      ui: { lastToast: "", collapsedTopics: {}, onboardingSeen: false, onboardingStep: 0 }
+    };
+  }
 
-    const pt = String(phrase?.pt || "").trim() || "frase criada no CADERNO321";
+  function readWritableNihongo321State() {
     const LS_NIHONGO = "jp_105x_v7";
     const raw = localStorage.getItem(LS_NIHONGO);
-    const state = raw ? JSON.parse(raw) : {};
+    let state = null;
 
+    if (raw) {
+      try { state = JSON.parse(raw); } catch { state = null; }
+    }
+
+    if (!state || typeof state !== "object" || !state.app) {
+      state = createNihongo321WritableState();
+    }
+
+    state.app ||= {};
+    state.app.name ||= "NIHONGO321";
+    state.app.schemaVersion ||= 8.2;
+    state.app.updatedAt = Date.now();
     state.bank ||= {};
     state.bank.topics ||= [];
     state.bank.phrases ||= [];
     state.progress ||= {};
+    state.favorites ||= { phraseIds: [] };
+    state.favorites.phraseIds ||= [];
+    state.prefs ||= {};
+    state.prefs.theme = state.prefs.theme === "light" ? "light" : (localStorage.getItem("nihongo321_theme") || "dark");
+    return state;
+  }
 
-    let topic = state.bank.topics.find(t => t && t.id === "topic_caderno321");
-    if (!topic) {
-      topic = {
-        id: "topic_caderno321",
-        name: "Caderno321",
-        icon: "筆",
-        description: "Frases criadas pelo aluno no CADERNO321.",
-        isPremium: false,
-        createdAt: Date.now(),
-        updatedAt: Date.now()
+  function savePhraseDirectlyInsideNihongo321(phrase) {
+    try {
+      const jp = String(phrase?.jp || "").trim();
+      if (!jp) return { ok: false, reason: "empty" };
+
+      const pt = String(phrase?.pt || "").trim() || "frase criada no CADERNO321";
+      const LS_NIHONGO = "jp_105x_v7";
+      const state = readWritableNihongo321State();
+
+      let topic = state.bank.topics.find(t => t && t.id === "topic_caderno321");
+      if (!topic) {
+        topic = {
+          id: "topic_caderno321",
+          name: "Caderno321",
+          icon: "筆",
+          color: "tAmber",
+          description: "Frases criadas pelo aluno no CADERNO321.",
+          isPremium: false,
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        };
+        state.bank.topics.unshift(topic);
+      }
+
+      const signature = `${jp}||${pt}`;
+      const existing = state.bank.phrases.find(item => `${String(item?.jp || "").trim()}||${String(item?.pt || "").trim()}` === signature);
+      const t = Date.now();
+      const newWords = Array.isArray(phrase.newWords)
+        ? phrase.newWords.filter(w => w && String(w.jp || "").trim()).map(w => ({ jp: String(w.jp || "").trim(), pt: String(w.pt || "").trim() }))
+        : [];
+
+      const details = phrase.caderno321?.details || {};
+      const noteParts = [];
+      if (phrase.note) noteParts.push(String(phrase.note));
+      if (details.particles && !noteParts.join("\n").includes(details.particles)) noteParts.push(`Partículas: ${details.particles}`);
+      if (details.explanation && !noteParts.join("\n").includes(details.explanation)) noteParts.push(`Explicação: ${details.explanation}`);
+      if (details.situation && !noteParts.join("\n").includes(details.situation)) noteParts.push(`Situação: ${details.situation}`);
+
+      let id;
+      let duplicate = false;
+      if (existing) {
+        duplicate = true;
+        id = existing.id || uid("cad321");
+        Object.assign(existing, {
+          id,
+          jp,
+          pt,
+          newWords,
+          topicId: topic.id,
+          source: "CADERNO321",
+          caderno321: phrase.caderno321 || null,
+          note: noteParts.join("\n"),
+          updatedAt: t
+        });
+      } else {
+        id = uid("cad321");
+        state.bank.phrases.unshift({
+          id,
+          jp,
+          pt,
+          newWords,
+          topicId: topic.id,
+          source: "CADERNO321",
+          caderno321: phrase.caderno321 || null,
+          note: noteParts.join("\n"),
+          createdAt: t,
+          updatedAt: t
+        });
+      }
+
+      state.progress[id] ||= {
+        status: "training",
+        cycleStart: 14,
+        count: 14,
+        masteredAt: null,
+        history: []
       };
-      state.bank.topics.unshift(topic);
+
+      localStorage.setItem(LS_NIHONGO, JSON.stringify(state));
+      const verify = JSON.parse(localStorage.getItem(LS_NIHONGO) || "{}");
+      const ok = !!verify?.app && Array.isArray(verify?.bank?.phrases) && verify.bank.phrases.some(item => `${String(item?.jp || "").trim()}||${String(item?.pt || "").trim()}` === signature);
+      const total = Array.isArray(verify?.bank?.phrases) ? verify.bank.phrases.filter(item => item?.topicId === "topic_caderno321").length : 0;
+      return { ok, duplicate, total, id, storageKey: LS_NIHONGO };
+    } catch (err) {
+      console.error("CADERNO321 direct save error:", err);
+      return { ok: false, reason: err?.message || "direct_save_error" };
     }
-
-    const signature = `${jp}||${pt}`;
-    const existing = state.bank.phrases.find(item => `${String(item?.jp || "").trim()}||${String(item?.pt || "").trim()}` === signature);
-    const t = Date.now();
-    const newWords = Array.isArray(phrase.newWords)
-      ? phrase.newWords.filter(w => w && String(w.jp || "").trim()).map(w => ({ jp: String(w.jp || "").trim(), pt: String(w.pt || "").trim() }))
-      : [];
-
-    const details = phrase.caderno321?.details || {};
-    const noteParts = [];
-    if (phrase.note) noteParts.push(String(phrase.note));
-    if (details.particles && !noteParts.join("\n").includes(details.particles)) noteParts.push(`Partículas: ${details.particles}`);
-    if (details.explanation && !noteParts.join("\n").includes(details.explanation)) noteParts.push(`Explicação: ${details.explanation}`);
-    if (details.situation && !noteParts.join("\n").includes(details.situation)) noteParts.push(`Situação: ${details.situation}`);
-
-    let id;
-    let duplicate = false;
-    if (existing) {
-      duplicate = true;
-      id = existing.id || uid("cad321");
-      Object.assign(existing, {
-        id,
-        jp,
-        pt,
-        newWords,
-        topicId: topic.id,
-        source: "CADERNO321",
-        caderno321: phrase.caderno321 || null,
-        note: noteParts.join("\n"),
-        updatedAt: t
-      });
-    } else {
-      id = uid("cad321");
-      state.bank.phrases.unshift({
-        id,
-        jp,
-        pt,
-        newWords,
-        topicId: topic.id,
-        source: "CADERNO321",
-        caderno321: phrase.caderno321 || null,
-        note: noteParts.join("\n"),
-        createdAt: t,
-        updatedAt: t
-      });
-    }
-
-    state.progress[id] ||= {
-      status: "training",
-      cycleStart: 14,
-      count: 14,
-      masteredAt: null,
-      history: []
-    };
-
-    localStorage.setItem(LS_NIHONGO, JSON.stringify(state));
-    const verify = JSON.parse(localStorage.getItem(LS_NIHONGO) || "{}");
-    const ok = Array.isArray(verify?.bank?.phrases) && verify.bank.phrases.some(item => `${String(item?.jp || "").trim()}||${String(item?.pt || "").trim()}` === signature);
-    return { ok, duplicate, total: verify?.bank?.phrases?.filter?.(item => item?.topicId === "topic_caderno321").length || 1 };
   }
 
   function saveKanjiSentenceToBridge(wordId, index) {
@@ -37346,6 +37415,62 @@
     render();
   }
 
+
+  function encodeCaderno321TransferPayload(payload) {
+    try {
+      const json = JSON.stringify(payload);
+      return btoa(unescape(encodeURIComponent(json)));
+    } catch (err) {
+      console.error("CADERNO321 payload encode error:", err);
+      return "";
+    }
+  }
+
+  function isEmbeddedInNihongo321() {
+    try {
+      const params = new URLSearchParams(window.location.search || "");
+      return params.get("embedded") === "1" || window.parent !== window;
+    } catch {
+      return window.parent !== window;
+    }
+  }
+
+  function openNihongo321WithCadernoPhrase(phrase) {
+    const payload = {
+      schema: "caderno321_to_nihongo321_v1",
+      source: "CADERNO321",
+      exportedAt: new Date().toISOString(),
+      phrases: [phrase]
+    };
+
+    if (isEmbeddedInNihongo321()) {
+      try {
+        window.parent.postMessage({ type: "CADERNO321_SAVE_PHRASE", payload }, "*");
+        genialState.lastSavedAt = new Date().toISOString();
+        genialState.lastSaveError = "";
+        genialState.lastSaveDirect = true;
+        saveGenialState();
+        toast("frase enviada para salvar no NIHONGO321");
+        render();
+        return true;
+      } catch (err) {
+        console.error("CADERNO321 postMessage save error:", err);
+        genialState.lastSaveError = "não consegui enviar a frase para o NIHONGO321 integrado.";
+        saveGenialState();
+        render();
+      }
+    }
+
+    const encoded = encodeCaderno321TransferPayload(payload);
+    if (!encoded) {
+      toast("não consegui preparar a frase para enviar");
+      return false;
+    }
+    const target = `../index.html?caderno321_import=${encodeURIComponent(encoded)}#/home`;
+    window.location.href = target;
+    return true;
+  }
+
   function saveGenialPhrase() {
     const jp = genialConverted().trim();
     if (!jp) {
@@ -37365,10 +37490,11 @@
         romaji: genialState.romaji,
         details,
         detailsText,
-        sourceVersion: "4.10.31"
+        sourceVersion: "4.10.32"
       },
       note: detailsText,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
 
     const existingBridge = savedBridgePhrases();
@@ -37381,31 +37507,18 @@
       return;
     }
 
-    let bridgeResult;
-    let directResult;
-    try {
-      bridgeResult = savePhraseToNihongo321Bridge(phrase);
-      directResult = savePhraseDirectlyInsideNihongo321(phrase);
-    } catch (err) {
-      console.error("CADERNO321 save to NIHONGO321 error:", err);
-      toast("não consegui salvar. verifique o armazenamento do navegador");
-      return;
-    }
-
-    if (!bridgeResult?.ok && !directResult?.ok) {
-      toast("não consegui salvar essa frase");
-      return;
-    }
-
+    // CADERNO321 4.10.31.2:
+    // Salvamento profissional por transferência de URL.
+    // O CADERNO321 não tenta mais escrever no banco interno do NIHONGO321.
+    // Ele envia a frase para a página principal, e o próprio NIHONGO321 importa e salva em jp_105x_v7.
     genialState.history.unshift({ jp, romaji: genialState.romaji, pt: phrase.pt, details, mode: "mixed", at: new Date().toISOString() });
     genialState.history = genialState.history.slice(0, 20);
     genialState.lastSavedAt = new Date().toISOString();
-    genialState.lastSaveCount = bridgeResult?.total || directResult?.total || genialSavedFreeCount();
-    genialState.lastSaveDirect = !!directResult?.ok;
+    genialState.lastSaveError = "";
     saveGenialState();
 
-    toast(directResult?.duplicate || bridgeResult?.duplicate ? "frase atualizada no NIHONGO321" : "frase salva no NIHONGO321");
-    render();
+    toast("enviando frase para o NIHONGO321...");
+    openNihongo321WithCadernoPhrase(phrase);
   }
 
   function clearGenialEditor() {
@@ -37677,15 +37790,22 @@
 
           <div class="genialActions genialActions--three ideaActions">
             <button type="button" data-evaluate-genial>avaliar frase</button>
-            <button type="button" data-save-genial onclick="window.CADERNO321_SAVE_TO_NIHONGO321 && window.CADERNO321_SAVE_TO_NIHONGO321()">salvar no NIHONGO321</button>
+            <button type="button" data-save-genial>salvar no NIHONGO321</button>
             <button type="button" data-clear-genial>limpar</button>
           </div>
 
           ${genialState.lastSavedAt ? `
             <div class="genialSaveStatus" role="status">
               <b>✓ frase salva no NIHONGO321</b>
-              <span>Já salvei na memória do NIHONGO321 e também deixei na ponte de importação.</span>
+              <span>${genialState.lastSaveDirect ? "Salvei direto na memória do NIHONGO321." : "Salvei na ponte de importação do NIHONGO321."} ${genialState.lastSaveCount ? `${genialState.lastSaveCount} frase(s) no Caderno321.` : ""}</span>
               <a class="genialOpenNihongo" href="../index.html?from=caderno321">abrir NIHONGO321</a>
+            </div>
+          ` : ""}
+
+          ${genialState.lastSaveError ? `
+            <div class="genialSaveStatus genialSaveStatus--error" role="alert">
+              <b>não foi possível salvar</b>
+              <span>${escapeHTML(genialState.lastSaveError)}</span>
             </div>
           ` : ""}
         </section>
@@ -37903,6 +38023,27 @@ applyAppTheme();
     document.querySelectorAll("[data-hint-char]").forEach(btn => btn.addEventListener("click", () => { activeHintChar = btn.dataset.hintChar; render(); }));
   }
 
+
+
+  window.addEventListener("message", (event) => {
+    const data = event.data || {};
+    if (!data || data.type !== "NIHONGO321_SAVE_RESULT") return;
+
+    if (data.ok) {
+      genialState.lastSavedAt = new Date().toISOString();
+      genialState.lastSaveDirect = true;
+      genialState.lastSaveCount = Number(data.total || 0);
+      genialState.lastSaveError = "";
+      saveGenialState();
+      toast(data.imported ? "frase salva no NIHONGO321" : "frase atualizada no NIHONGO321");
+      render();
+      return;
+    }
+
+    genialState.lastSaveError = "o NIHONGO321 recebeu a frase, mas não conseguiu salvar.";
+    saveGenialState();
+    render();
+  });
 
   // Fallback forte: garante que o botão "salvar no NIHONGO321" funcione mesmo se a tela for re-renderizada.
   document.addEventListener("click", (event) => {
