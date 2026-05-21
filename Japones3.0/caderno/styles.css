@@ -9308,3 +9308,311 @@ html[data-caderno-theme="light"] .kanjiPremiumBenefits span{
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================================================
+   CADERNO321 4.10.26 — Claro legível + retorno compacto
+   ---------------------------------------------------------
+   Correção direta:
+   - modo claro deixa de apagar textos e botões;
+   - fundo claro fica menos estourado e mais quente;
+   - botão NIHONGO321 textual vira retorno compacto por logo.
+   ========================================================= */
+
+.headerBridgeLogoBtn{
+  width:42px !important;
+  min-width:42px !important;
+  height:42px !important;
+  min-height:42px !important;
+  padding:3px !important;
+  border-radius:999px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  overflow:hidden !important;
+  font-size:0 !important;
+  line-height:0 !important;
+}
+
+.headerBridgeLogoBtn::before{
+  display:none !important;
+  content:none !important;
+}
+
+.headerBridgeLogoBtn img{
+  width:34px !important;
+  height:34px !important;
+  object-fit:contain !important;
+  display:block !important;
+  border-radius:999px !important;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.25));
+}
+
+html[data-caderno-theme="dark"] .headerBridgeLogoBtn{
+  border-color:rgba(255,216,111,.42) !important;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,216,111,.20), transparent 54%),
+    linear-gradient(135deg, rgba(255,154,49,.20), rgba(12,29,58,.96)) !important;
+}
+
+html[data-caderno-theme="light"]{
+  --text:#172238 !important;
+  --muted:#4e5f78 !important;
+  --muted2:#253653 !important;
+  --soft:#0f1d35 !important;
+  --gold:#9a5b00 !important;
+  --gold2:#604000 !important;
+}
+
+html[data-caderno-theme="light"] body{
+  color:#172238 !important;
+  background:
+    radial-gradient(780px 520px at 6% -8%, rgba(255,198,78,.42), transparent 60%),
+    radial-gradient(720px 500px at 100% 0%, rgba(83,143,210,.22), transparent 58%),
+    linear-gradient(180deg, #f5ead0 0%, #efe1bf 34%, #dcebf2 76%, #d1e4ef 100%) !important;
+}
+
+html[data-caderno-theme="light"] .appHeader{
+  background:rgba(246,236,213,.96) !important;
+  border-bottom:1px solid rgba(23,34,56,.18) !important;
+  box-shadow:0 8px 22px rgba(23,34,56,.12) !important;
+}
+
+html[data-caderno-theme="light"] .brandMini strong{
+  color:#10213d !important;
+  text-shadow:0 1px 0 rgba(255,255,255,.45) !important;
+}
+
+html[data-caderno-theme="light"] .headerBridgeLogoBtn{
+  border-color:rgba(131,83,10,.34) !important;
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255,205,79,.42), transparent 56%),
+    linear-gradient(135deg, #fff2bd, #e6f0fb 68%, #cfe0f4) !important;
+  box-shadow:0 8px 18px rgba(31,59,103,.16) !important;
+}
+
+html[data-caderno-theme="light"] .themeToggleBtn,
+html[data-caderno-theme="light"] .boardToneBtn,
+html[data-caderno-theme="light"] .headerBackBtn{
+  color:#10213d !important;
+  background:linear-gradient(180deg, #fff9ea, #e8f2fb) !important;
+  border-color:rgba(23,34,56,.22) !important;
+  box-shadow:0 8px 18px rgba(31,59,103,.13) !important;
+}
+
+html[data-caderno-theme="light"] .dashboardCard--compact,
+html[data-caderno-theme="light"] .card,
+html[data-caderno-theme="light"] .studyMenu,
+html[data-caderno-theme="light"] .genialMiniDict,
+html[data-caderno-theme="light"] .genialDetailsBox,
+html[data-caderno-theme="light"] .genialEvaluation{
+  color:#172238 !important;
+  background:rgba(255,250,238,.88) !important;
+  border-color:rgba(23,34,56,.15) !important;
+  box-shadow:0 16px 34px rgba(31,59,103,.14) !important;
+}
+
+html[data-caderno-theme="light"] .studyMenuHead,
+html[data-caderno-theme="light"] .studyMenuHead b,
+html[data-caderno-theme="light"] .sectionTitle,
+html[data-caderno-theme="light"] .genialMiniDict b,
+html[data-caderno-theme="light"] .genialDetailsBox summary,
+html[data-caderno-theme="light"] .genialEvaluation b{
+  color:#13213a !important;
+  text-shadow:none !important;
+}
+
+html[data-caderno-theme="light"] .studyMenuHead small,
+html[data-caderno-theme="light"] .dashboardLead,
+html[data-caderno-theme="light"] .genialMiniDict small,
+html[data-caderno-theme="light"] .genialDetailsBox small,
+html[data-caderno-theme="light"] .genialEvaluation p{
+  color:#40516b !important;
+}
+
+html[data-caderno-theme="light"] .genialNotebook--paperModel .notebookSheet{
+  background:#fff4df !important;
+  color:#172238 !important;
+  border-color:rgba(23,34,56,.16) !important;
+  box-shadow:0 14px 30px rgba(31,59,103,.14) !important;
+}
+
+html[data-caderno-theme="light"] .genialNotebook--paperModel .notebookSheet--romaji textarea,
+html[data-caderno-theme="light"] .genialNotebook--paperModel .notebookSheet--pt textarea,
+html[data-caderno-theme="light"] .genialNotebook--paperModel .notebookSheet--jp strong[data-genial-output],
+html[data-caderno-theme="light"] textarea,
+html[data-caderno-theme="light"] input,
+html[data-caderno-theme="light"] select{
+  color:#172238 !important;
+  caret-color:#9a5b00 !important;
+}
+
+html[data-caderno-theme="light"] textarea::placeholder,
+html[data-caderno-theme="light"] input::placeholder{
+  color:#66758d !important;
+  opacity:1 !important;
+}
+
+html[data-caderno-theme="light"] .genialActions button,
+html[data-caderno-theme="light"] .genialMode button,
+html[data-caderno-theme="light"] .ideaActions button,
+html[data-caderno-theme="light"] .actionBtn{
+  color:#14213a !important;
+  background:linear-gradient(180deg, #fff9ea, #e8f1fb) !important;
+  border-color:rgba(23,34,56,.22) !important;
+  box-shadow:0 10px 20px rgba(31,59,103,.12) !important;
+  text-shadow:none !important;
+}
+
+html[data-caderno-theme="light"] .genialActions button:first-child,
+html[data-caderno-theme="light"] .genialMode button.is-active{
+  color:#4a3200 !important;
+  background:linear-gradient(180deg, #ffe9a8, #ffd16e) !important;
+  border-color:rgba(150,91,0,.30) !important;
+}
+
+html[data-caderno-theme="light"] .genialActions button[data-save-genial]{
+  color:#fff8ee !important;
+  background:linear-gradient(180deg, #245891, #122c55) !important;
+  border-color:rgba(18,44,85,.45) !important;
+}
+
+html[data-caderno-theme="light"] .genialActions button[data-clear-genial]{
+  color:#293851 !important;
+  background:linear-gradient(180deg, #ffffff, #e5edf7) !important;
+}
+
+@media (max-width:620px){
+  .headerBridgeLogoBtn{
+    width:38px !important;
+    min-width:38px !important;
+    height:38px !important;
+    min-height:38px !important;
+  }
+
+  .headerBridgeLogoBtn img{
+    width:31px !important;
+    height:31px !important;
+  }
+
+  .headerActions{
+    gap:6px !important;
+  }
+}
+
+
+/* =========================================================
+   CADERNO321 4.10.27 — salvar funcional + sem últimas criações
+   ========================================================= */
+.genialHistory,
+.ideaHistory{
+  display:none !important;
+}
+
+.genialSaveStatus{
+  display:grid;
+  gap:6px;
+  margin-top:2px;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid rgba(255,216,111,.30);
+  background:linear-gradient(180deg, rgba(255,216,111,.14), rgba(108,166,255,.08));
+  color:var(--text);
+  box-shadow:0 12px 26px rgba(0,0,0,.16);
+}
+
+.genialSaveStatus b{
+  color:var(--gold2);
+  font-size:14px;
+  line-height:1.25;
+}
+
+.genialSaveStatus span{
+  color:var(--muted2);
+  font-size:12.5px;
+  line-height:1.4;
+  font-weight:800;
+}
+
+html[data-caderno-theme="light"] .genialActions button,
+html[data-caderno-theme="light"] .ideaActions button{
+  color:#13203a !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+html[data-caderno-theme="light"] .genialActions button[data-save-genial],
+html[data-caderno-theme="light"] .ideaActions button[data-save-genial]{
+  color:#fffaf2 !important;
+  background:linear-gradient(180deg, #255f9d, #143d74) !important;
+  border-color:rgba(12,42,86,.28) !important;
+}
+
+html[data-caderno-theme="light"] .genialSaveStatus{
+  border-color:rgba(164,107,22,.24);
+  background:linear-gradient(180deg, #fff4cb, #fffaf0);
+  color:#1b2a43;
+}
+
+html[data-caderno-theme="light"] .genialSaveStatus b{
+  color:#174575;
+}
+
+html[data-caderno-theme="light"] .genialSaveStatus span{
+  color:#42536f;
+}
+
+/* =========================================================
+   CADERNO321 4.10.29 — Salvar no NIHONGO321 funcionando
+   ========================================================= */
+.genialSaveStatus{
+  display:grid !important;
+  gap:8px !important;
+  padding:14px 16px !important;
+  border-radius:20px !important;
+  border:1px solid rgba(255,179,71,.34) !important;
+  background:linear-gradient(180deg, rgba(255,246,219,.96), rgba(255,235,180,.84)) !important;
+  color:#1c2a3d !important;
+  box-shadow:0 12px 28px rgba(31,45,68,.10) !important;
+}
+
+.genialSaveStatus b{
+  color:#17355f !important;
+  font-weight:950 !important;
+}
+
+.genialSaveStatus span{
+  color:#41506a !important;
+  font-weight:800 !important;
+  line-height:1.35 !important;
+}
+
+.genialOpenNihongo{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:42px !important;
+  padding:10px 14px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,179,71,.48) !important;
+  background:linear-gradient(135deg, #ffb347, #ff7a2f) !important;
+  color:#10203a !important;
+  font-weight:950 !important;
+  text-decoration:none !important;
+}
+
+html[data-caderno-theme="dark"] .genialSaveStatus,
+html[data-theme="dark"] .genialSaveStatus{
+  background:linear-gradient(180deg, rgba(17,34,66,.96), rgba(9,18,36,.94)) !important;
+  color:#f2f6ff !important;
+}
+
+html[data-caderno-theme="dark"] .genialSaveStatus b,
+html[data-theme="dark"] .genialSaveStatus b{
+  color:#fff0b8 !important;
+}
+
+html[data-caderno-theme="dark"] .genialSaveStatus span,
+html[data-theme="dark"] .genialSaveStatus span{
+  color:#d9e4f7 !important;
+}

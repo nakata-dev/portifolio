@@ -1,0 +1,27 @@
+CADERNO321 4.10.30 + NIHONGO321 8.5.70.9 — Salvamento Direto no NIHONGO321
+
+Correção principal:
+- O botão "salvar no NIHONGO321" do CADERNO321 agora salva de duas formas:
+  1. na ponte localStorage nihongo321_caderno_saved_phrases_v1;
+  2. diretamente dentro da memória do NIHONGO321 em jp_105x_v7, no tema Caderno321.
+
+Resultado esperado:
+- Ao tocar em "salvar no NIHONGO321", aparece confirmação.
+- Ao abrir o NIHONGO321 na mesma origem/domínio, a frase já deve estar no conteúdo Caderno321.
+- A ponte de importação continua preservada como redundância segura.
+
+Preservado:
+- Kanji 100% Premium.
+- Famílias A/KA/SA grátis.
+- Limite grátis de 7 frases.
+- Responsividade do treino.
+- Treino 105x.
+- Checkout.
+- Sensei IA.
+- LocalStorage.
+- HTML/CSS/JS puro.
+
+Validação:
+- CADERNO321/caderno.js validado com: node --check caderno.js
+- NIHONGO321/app.js validado com: node --check app.js
+- NIHONGO321/sensei-bank.js validado com: node --check sensei-bank.js

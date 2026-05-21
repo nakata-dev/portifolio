@@ -22,8 +22,8 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.70.2",
-  updatedAt: "2026-05-08",
+  version: "8.5.71",
+  updatedAt: "2026-05-21",
   logoPath: "./img/logo_nihongo321.png"
 };
 
@@ -5276,6 +5276,25 @@ function renderLanding() {
         </div>
       </section>
 
+      <section class="card cadernoPresentationCard">
+        <div class="cadernoPresentationCopy">
+          <div class="badge">CADERNO321 + NIHONGO321</div>
+          <h2 class="h2">Crie no caderno. Memorize no treino.</h2>
+          <p class="p">
+            O CADERNO321 é a oficina de criação: o aluno escreve em romaji, vê o japonês nascer, registra a tradução com o próprio raciocínio e guarda detalhes para transformar a frase em treino real no NIHONGO321.
+          </p>
+        </div>
+        <div class="cadernoPresentationGrid">
+          <div><b>✍️ Escrita ativa</b><span>O aluno deixa de copiar frases e começa a construir pensamento em japonês.</span></div>
+          <div><b>🧠 Memória real</b><span>As frases criadas viram material para repetir, revisar e fixar no NIHONGO321.</span></div>
+          <div><b>📱 Feito para celular</b><span>Treino simples para quem trabalha muito e precisa estudar sem peso.</span></div>
+        </div>
+        <div class="cadernoPresentationActions">
+          <a class="primaryAction" href="./caderno/index.html?screen=dashboard">abrir CADERNO321</a>
+          <button class="btn btn--muted btn--full" data-nav="#/home">continuar no NIHONGO321</button>
+        </div>
+      </section>
+
       <section class="card landingSimpleCta">
         <div class="landingSimpleCopy">
           <div class="badge">comece grátis</div>
@@ -6261,7 +6280,9 @@ function renderHome() {
       <section class="card homeHeroPro">
         <div class="row row--between">
           <div class="badge">início</div>
-          <button class="btn btn--ghost" data-nav="#/landing">apresentação</button>
+          <div class="homeTopActions homeTopActions--compact">
+            <button class="btn btn--ghost btn--presentationMini" data-nav="#/landing">apresentação</button>
+          </div>
         </div>
 
         <div class="homeHeroGrid">
@@ -6276,6 +6297,7 @@ function renderHome() {
                 ${resume ? "continuar último treino" : "treinar 2 minutos agora"}
               </button>
               <button class="btn btn--muted btn--full" data-nav="#/105x">abrir treino 105x</button>
+              <a class="btn btn--cadernoGreen btn--full" href="./caderno/index.html?screen=dashboard&from=nihongo321">CADERNO321</a>
             </div>
           </div>
 

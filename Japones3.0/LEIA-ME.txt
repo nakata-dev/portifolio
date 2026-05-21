@@ -1,0 +1,59 @@
+NIHONGO321 8.5.71 + CADERNO321 4.10.31 — Estrutura Unificada Profissional
+
+O que foi feito:
+- O NIHONGO321 agora fica na raiz do projeto.
+- O CADERNO321 agora fica dentro da pasta /caderno.
+- O botão do NIHONGO321 abre: ./caderno/index.html
+- O botão do CADERNO321 volta para: ../index.html
+- A logo pequena do NIHONGO321 no CADERNO321 agora usa: ../img/logo_nihongo321.png
+- A ponte localStorage foi preservada com a chave: nihongo321_caderno_saved_phrases_v1
+- O salvamento direto continua usando a chave principal do NIHONGO321: jp_105x_v7
+
+Estrutura correta:
+- index.html
+- app.js
+- styles.css
+- sensei-bank.js
+- img/
+- caderno/index.html
+- caderno/caderno.js
+- caderno/styles.css
+
+Como testar corretamente:
+1. Extraia o ZIP.
+2. Abra o index.html da raiz para entrar no NIHONGO321.
+3. Clique no botão CADERNO321.
+4. Crie uma frase no Caderno Genial.
+5. Preencha a tradução.
+6. Clique em salvar no NIHONGO321.
+7. Volte pelo botão com a logo pequena do NIHONGO321.
+
+Observação profissional:
+Para o teste mais fiel, publique esta estrutura em um único domínio ou rode por um servidor local. Exemplo:
+- GitHub Pages
+- Netlify
+- Vercel
+- VS Code Live Server
+- python -m http.server
+
+Abrir tudo por file:// pode ter comportamento inconsistente em alguns navegadores, principalmente no celular.
+
+Preservado:
+- Treino 105x.
+- Checkout.
+- Sensei IA.
+- sensei-bank.js.
+- LocalStorage.
+- Kanji 100% Premium.
+- Famílias A/KA/SA grátis no Hiragana/Katakana.
+- Limite grátis de 7 frases no Caderno Genial.
+- Responsividade e modo claro/escuro já trabalhados.
+
+Validação:
+- app.js validado com: node --check app.js
+- sensei-bank.js validado com: node --check sensei-bank.js
+- caderno/caderno.js validado com: node --check caderno/caderno.js
+
+Base recomendada:
+Considerar esta versão como nova base segura:
+NIHONGO321 8.5.71 + CADERNO321 4.10.31 — Estrutura Unificada Profissional
