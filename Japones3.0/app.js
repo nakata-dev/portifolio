@@ -15,6 +15,7 @@
    ========================================================= */
 
 const LS_KEY = "jp_105x_v7";
+const CADERNO321_BRIDGE_KEY = "nihongo321_caderno_saved_phrases_v1";
 
 /* ========= IDENTIDADE DO PRODUTO ========= */
 const BRAND = {
@@ -6123,6 +6124,122 @@ function renderFluencyPaths() {
 }
 
 
+
+function caderno321BridgePhrases() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(CADERNO321_BRIDGE_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter(item => item && item.jp) : [];
+  } catch {
+    return [];
+  }
+}
+
+function ensureCaderno321Topic() {
+  STATE.bank ||= { topics: [], phrases: [] };
+  STATE.bank.topics ||= [];
+  let topic = STATE.bank.topics.find(t => t.id === "topic_caderno321");
+  if (!topic) {
+    topic = {
+      id: "topic_caderno321",
+      name: "Caderno321",
+      icon: "筆",
+      description: "Frases criadas pelo aluno no CADERNO321.",
+      isPremium: false,
+      createdAt: now(),
+      updatedAt: now()
+    };
+    STATE.bank.topics.unshift(topic);
+  }
+  return topic;
+}
+
+function caderno321PhraseSignature(item) {
+  return `${String(item.jp || "").trim()}||${String(item.pt || "").trim()}`;
+}
+
+function importCaderno321BridgePhrases() {
+  const bridge = caderno321BridgePhrases();
+  if (!bridge.length) {
+    toast("nenhuma frase do CADERNO321 encontrada");
+    return;
+  }
+
+  const topic = ensureCaderno321Topic();
+  STATE.bank.phrases ||= [];
+  STATE.progress ||= {};
+  const existing = new Set(STATE.bank.phrases.map(caderno321PhraseSignature));
+  let imported = 0;
+
+  bridge.forEach(item => {
+    const jp = String(item.jp || "").trim();
+    const pt = String(item.pt || "").trim() || "frase criada no CADERNO321";
+    const sig = `${jp}||${pt}`;
+    if (!jp || existing.has(sig)) return;
+
+    const id = uid("cad321");
+    const t = now();
+    const newWords = Array.isArray(item.newWords) ? item.newWords.filter(w => w && w.jp).map(w => ({ jp: String(w.jp || "").trim(), pt: String(w.pt || "").trim() })) : [];
+    const details = item.caderno321?.details || {};
+    const noteParts = [];
+    if (item.note) noteParts.push(String(item.note));
+    if (details.particles && !noteParts.join("\n").includes(details.particles)) noteParts.push(`Partículas: ${details.particles}`);
+    if (details.explanation && !noteParts.join("\n").includes(details.explanation)) noteParts.push(`Explicação: ${details.explanation}`);
+    if (details.situation && !noteParts.join("\n").includes(details.situation)) noteParts.push(`Situação: ${details.situation}`);
+
+    STATE.bank.phrases.unshift({
+      id,
+      jp,
+      pt,
+      newWords,
+      topicId: topic.id,
+      source: "CADERNO321",
+      caderno321: item.caderno321 || null,
+      note: noteParts.join("\n"),
+      createdAt: t,
+      updatedAt: t
+    });
+
+    STATE.progress[id] = {
+      status: "training",
+      cycleStart: 14,
+      count: 14,
+      masteredAt: null,
+      history: []
+    };
+
+    existing.add(sig);
+    imported += 1;
+  });
+
+  saveState();
+  toast(imported ? `${imported} frase(s) do CADERNO321 importada(s)` : "as frases do CADERNO321 já estavam no NIHONGO321");
+  renderHome();
+}
+
+function renderCaderno321BridgeCard() {
+  const bridge = caderno321BridgePhrases();
+  if (!bridge.length) return "";
+  const already = new Set((STATE.bank.phrases || []).map(caderno321PhraseSignature));
+  const pending = bridge.filter(item => !already.has(caderno321PhraseSignature(item))).length;
+  return `
+    <section class="card cadernoBridgeCard">
+      <div class="cadernoBridgeCopy">
+        <div class="badge">CADERNO321</div>
+        <h2 class="h2">Suas frases criadas no caderno estão prontas para memorizar.</h2>
+        <p class="p">
+          Importe para o NIHONGO321 e transforme criação própria em treino 105x.
+        </p>
+      </div>
+      <div class="cadernoBridgePanel">
+        <b>${bridge.length}</b>
+        <span>frase${bridge.length === 1 ? "" : "s"} no caderno</span>
+        <small>${pending ? `${pending} nova${pending === 1 ? "" : "s"}` : "tudo já importado"}</small>
+        <button class="btn btn--ok btn--full" type="button" data-action="importCaderno321Bridge">importar para memorizar</button>
+      </div>
+    </section>
+  `;
+}
+
 function renderHome() {
   ensurePhrasesHaveValidTopic();
 
@@ -6226,6 +6343,8 @@ function renderHome() {
           </button>
         </div>
       </section>
+
+      ${renderCaderno321BridgeCard()}
 
       <section class="card stack homePathCard">
         <div class="row row--between">
@@ -9734,6 +9853,12 @@ document.addEventListener("click", (e) => {
     beep("ding");
     nav("#/105x");
 
+    return;
+  }
+
+  if (act === "importCaderno321Bridge") {
+    unlockAudio();
+    importCaderno321BridgePhrases();
     return;
   }
 

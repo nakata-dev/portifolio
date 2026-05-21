@@ -13192,3 +13192,55 @@ a,
   display:grid !important;
 }
 
+
+/* =========================================================
+   NIHONGO321 8.5.70.3 — Ponte CADERNO321
+   ---------------------------------------------------------
+   Card discreto para importar frases criadas no CADERNO321.
+   ========================================================= */
+
+.cadernoBridgeCard{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 230px);
+  gap: 16px;
+  align-items: center;
+  border-color: rgba(210,168,109,.22);
+  background: linear-gradient(135deg, rgba(35,33,39,.96), rgba(31,29,34,.98));
+}
+
+.cadernoBridgeCopy{
+  display: grid;
+  gap: 8px;
+}
+
+.cadernoBridgePanel{
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(210,168,109,.22);
+  background: rgba(255,255,255,.04);
+  text-align: center;
+}
+
+.cadernoBridgePanel b{
+  color: var(--accent, #d2a86d);
+  font-size: clamp(28px, 7vw, 42px);
+  line-height: 1;
+}
+
+.cadernoBridgePanel span{
+  color: var(--text, #f7f3ee);
+  font-weight: 800;
+}
+
+.cadernoBridgePanel small{
+  color: var(--muted, #b8ab9c);
+  font-size: 12px;
+}
+
+@media (max-width: 720px){
+  .cadernoBridgeCard{
+    grid-template-columns: 1fr;
+  }
+}

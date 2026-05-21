@@ -12138,3 +12138,1527 @@ button[data-action="goPremiumThemes"]{
   touch-action:manipulation !important;
   cursor:pointer !important;
 }
+
+
+/* =========================================================
+   NIHONGO321 8.5.61.2 — Link real para Temas Premium
+   Escopo: apresentação/landing + rota #/premium-themes.
+   ========================================================= */
+
+.landingPremiumActionsV2{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:10px !important;
+}
+
+.premiumThemesLink,
+a.premiumThemesLink,
+a[href="#/premium-themes"]{
+  position:relative !important;
+  z-index:999 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+  cursor:pointer !important;
+  text-decoration:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+a.landingCompareBtn{
+  text-decoration:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.61.3 — Index com rotas SPA
+   Escopo: links reais #/compare e #/premium-themes.
+   ========================================================= */
+
+a.btn,
+a.primaryAction,
+a.bigBtn{
+  text-decoration:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+a[href="#/premium-themes"],
+a[data-route="#/premium-themes"],
+a[href="#/compare"],
+a[data-route="#/compare"]{
+  position:relative !important;
+  z-index:999 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.62 — Comparação emocional e link compare real
+   Escopo: #/compare + links da landing.
+   ========================================================= */
+
+.compareHeartPage{
+  text-align:left;
+}
+
+.compareHeartHero{
+  padding:clamp(18px, 4vw, 32px);
+  border-color:rgba(255,179,71,.28);
+  background:
+    radial-gradient(560px 300px at 0% 0%, rgba(255,179,71,.24), transparent 66%),
+    radial-gradient(520px 300px at 100% 100%, rgba(108,166,255,.18), transparent 66%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.compareHeartHeroGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 230px;
+  gap:18px;
+  align-items:stretch;
+}
+
+.compareHeartTitle{
+  margin:0;
+  max-width:11.5em;
+  color:var(--soft);
+  font-size:clamp(34px, 5.4vw, 62px);
+  line-height:.99;
+  letter-spacing:-.06em;
+  text-wrap:balance;
+}
+
+.compareHeartLead{
+  margin:14px 0 0;
+  max-width:40em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2vw, 19px);
+  line-height:1.55;
+}
+
+.comparePriceGlow{
+  border:1px solid rgba(255,179,71,.36);
+  border-radius:28px;
+  padding:18px;
+  display:grid;
+  align-content:center;
+  gap:8px;
+  background:
+    radial-gradient(180px 130px at 20% 10%, rgba(255,179,71,.24), transparent 66%),
+    rgba(255,255,255,.05);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.comparePriceGlow span{
+  color:var(--gold2);
+  font-size:12px;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.comparePriceGlow b{
+  color:var(--soft);
+  font-size:30px;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+
+.comparePriceGlow small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.compareHeroActions{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 220px;
+  gap:12px;
+  margin-top:18px;
+}
+
+.compareDuelV3{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.compareColumn{
+  display:grid;
+  gap:14px;
+  position:relative;
+  overflow:hidden;
+}
+
+.compareColumn--free{
+  background:
+    radial-gradient(300px 190px at 0% 0%, rgba(108,166,255,.10), transparent 66%),
+    var(--card);
+}
+
+.compareColumn--premium{
+  border-color:rgba(255,179,71,.34);
+  background:
+    radial-gradient(360px 220px at 0% 0%, rgba(255,179,71,.18), transparent 66%),
+    radial-gradient(260px 190px at 100% 100%, rgba(108,166,255,.10), transparent 70%),
+    var(--card);
+}
+
+.compareColumnTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.compareColumnTop span{
+  display:inline-flex;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:7px 10px;
+  color:var(--muted);
+  background:rgba(255,255,255,.05);
+  font-size:11px;
+  font-weight:950;
+}
+
+.compareValueQuote{
+  border:1px solid var(--strokeSoft);
+  border-radius:20px;
+  padding:13px;
+  color:var(--muted2);
+  background:rgba(255,255,255,.04);
+  font-size:15px;
+  line-height:1.42;
+  font-weight:950;
+}
+
+.compareValueQuote--gold{
+  border-color:rgba(255,179,71,.32);
+  background:rgba(255,179,71,.08);
+  color:var(--soft);
+}
+
+.compareCleanList{
+  display:grid;
+  gap:10px;
+}
+
+.compareCleanItem{
+  display:grid;
+  grid-template-columns:34px minmax(0, 1fr);
+  gap:10px;
+  border:1px solid var(--strokeSoft);
+  border-radius:18px;
+  padding:11px;
+  background:rgba(255,255,255,.034);
+}
+
+.compareCleanItem span{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  background:rgba(255,255,255,.06);
+  color:var(--gold2);
+  font-size:13px;
+  font-weight:950;
+}
+
+.compareCleanItem--premium{
+  border-color:rgba(255,179,71,.24);
+}
+
+.compareCleanItem b{
+  display:block;
+  color:var(--soft);
+  font-size:14px;
+  line-height:1.22;
+}
+
+.compareCleanItem small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.36;
+  font-weight:850;
+}
+
+.compareLeapCard,
+.compareScenarioCard{
+  display:grid;
+  gap:14px;
+  background:
+    radial-gradient(420px 230px at 0% 0%, rgba(255,179,71,.12), transparent 64%),
+    var(--card);
+}
+
+.compareLeapTitle{
+  max-width:22em;
+}
+
+.compareLeapText{
+  max-width:48em;
+}
+
+.compareEmotionGrid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:10px;
+}
+
+.compareEmotionItem{
+  border:1px solid var(--strokeSoft);
+  border-radius:20px;
+  padding:13px;
+  background:rgba(255,255,255,.038);
+  min-height:124px;
+}
+
+.compareEmotionItem b{
+  display:block;
+  color:var(--soft);
+  font-size:14px;
+  line-height:1.24;
+}
+
+.compareEmotionItem span{
+  display:block;
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+  font-weight:850;
+}
+
+.compareScenarioActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.compareFinalCard{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 280px;
+  gap:18px;
+  align-items:center;
+  background:
+    radial-gradient(380px 200px at 0% 0%, rgba(255,179,71,.16), transparent 64%),
+    var(--premiumBg);
+}
+
+.compareFinalCopy,
+.compareFinalActions{
+  display:grid;
+  gap:12px;
+}
+
+a[href="#/compare"],
+a[data-route="#/compare"],
+a[href="#/premium-themes"],
+a[data-route="#/premium-themes"]{
+  position:relative !important;
+  z-index:999 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+  text-decoration:none !important;
+}
+
+@media (max-width:900px){
+  .compareHeartHeroGrid,
+  .compareDuelV3,
+  .compareEmotionGrid,
+  .compareFinalCard{
+    grid-template-columns:1fr;
+  }
+
+  .compareHeroActions,
+  .compareScenarioActions{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:430px){
+  .compareHeartHero{
+    padding:16px;
+  }
+
+  .compareHeartTitle{
+    font-size:clamp(29px, 8vw, 40px);
+  }
+
+  .compareEmotionItem{
+    min-height:auto;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.63 — Landing hero minimalista + Compare funcional
+   Escopo: #/landing e links para #/compare.
+   ========================================================= */
+
+.heroTinyProof{
+  margin:2px auto 0 !important;
+  max-width:34em !important;
+  color:var(--muted) !important;
+  font-size:12px !important;
+  line-height:1.45 !important;
+  font-weight:900 !important;
+  text-align:center !important;
+  opacity:.88 !important;
+}
+
+.heroCard--landing .heroStats,
+.heroCard--landing .heroMiniStats,
+.heroCard--landing .heroFeatureGrid,
+.heroCard--landing .heroMetricGrid,
+.heroCard--landing .heroBadges,
+.landingTrustBadges{
+  display:none !important;
+}
+
+a.landingCompareBtn,
+a[href="#/compare"],
+a[data-route="#/compare"],
+button[data-nav="#/compare"],
+button[data-action="goCompare"]{
+  position:relative !important;
+  z-index:999 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+  cursor:pointer !important;
+  text-decoration:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.heroActions{
+  position:relative !important;
+  z-index:50 !important;
+}
+
+@media (max-width:430px){
+  .heroTinyProof{
+    font-size:11.5px !important;
+    padding-inline:8px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.64 — Comparar planos com ação direta
+   Escopo: landing e navegação direta para #/compare.
+   ========================================================= */
+
+.heroCard--landing .heroStats,
+.heroCard--landing .heroMiniStats,
+.heroCard--landing .heroFeatureGrid,
+.heroCard--landing .heroMetricGrid,
+.heroCard--landing .heroBadges,
+.landingTrustBadges{
+  display:none !important;
+}
+
+.heroTinyProof{
+  margin:2px auto 0 !important;
+  max-width:34em !important;
+  color:var(--muted) !important;
+  font-size:12px !important;
+  line-height:1.45 !important;
+  font-weight:900 !important;
+  text-align:center !important;
+  opacity:.86 !important;
+}
+
+.landingCompareDirectBtn,
+.premiumThemesDirectBtn,
+button[data-action="openCompareDirect"],
+button[data-action="openPremiumThemesDirect"]{
+  position:relative !important;
+  z-index:9999 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+  cursor:pointer !important;
+}
+
+.landingPremiumActionsV2{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:10px !important;
+}
+
+.heroActions,
+.landingSimpleActions{
+  position:relative !important;
+  z-index:100 !important;
+}
+
+@media (max-width:430px){
+  .heroTinyProof{
+    font-size:11.5px !important;
+    padding-inline:8px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.65 — Meta de Fábrica + Termômetro
+   Escopo: treino 105x + #/skills.
+   ========================================================= */
+
+.dailyMetaThermo{
+  appearance:none;
+  width:min(100%, 460px);
+  margin:0 auto -2px;
+  border:1px solid rgba(255,179,71,.22);
+  border-radius:18px;
+  padding:8px 10px;
+  background:
+    radial-gradient(180px 80px at 0% 0%, rgba(255,179,71,.12), transparent 70%),
+    rgba(255,255,255,.035);
+  color:var(--muted2);
+  display:grid;
+  gap:6px;
+  cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.dailyMetaThermoTop,
+.dailyMetaThermoBottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:11px;
+  line-height:1.2;
+  font-weight:950;
+  text-transform:lowercase;
+}
+
+.dailyMetaThermoTop b{
+  color:var(--soft);
+  font-size:12px;
+}
+
+.dailyMetaThermoTop em{
+  color:var(--gold2);
+  font-style:normal;
+}
+
+.dailyMetaThermoBottom{
+  color:var(--muted);
+  font-size:10.5px;
+}
+
+.dailyMetaTrack{
+  height:7px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.dailyMetaTrack i{
+  display:block;
+  width:100%;
+  height:100%;
+  border-radius:999px;
+  transform-origin:left center;
+  background:linear-gradient(90deg, var(--orange), var(--gold2));
+  box-shadow:0 0 16px rgba(255,179,71,.25);
+}
+
+.factoryMetaCard{
+  background:
+    radial-gradient(420px 230px at 0% 0%, rgba(255,179,71,.13), transparent 64%),
+    var(--card);
+}
+
+.factoryMetaGrid{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) minmax(280px, 390px);
+  gap:14px;
+  align-items:stretch;
+}
+
+.factoryMetaPanel{
+  display:grid;
+  gap:12px;
+}
+
+.factoryMetaStatus{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,.036);
+  display:grid;
+  gap:6px;
+}
+
+.factoryMetaStatus b{
+  color:var(--soft);
+  font-size:18px;
+  line-height:1.15;
+}
+
+.factoryMetaStatus span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.factoryMetaStatus--linear{
+  border-color:rgba(139,195,154,.34);
+}
+
+.factoryMetaStatus--plateau{
+  border-color:rgba(255,179,71,.36);
+  background:rgba(255,179,71,.055);
+}
+
+.factoryMetaNumbers{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+}
+
+.factoryMetaNumbers div{
+  border:1px solid var(--strokeSoft);
+  border-radius:18px;
+  padding:11px;
+  background:rgba(255,255,255,.032);
+}
+
+.factoryMetaNumbers b{
+  display:block;
+  color:var(--gold2);
+  font-size:24px;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+
+.factoryMetaNumbers span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.25;
+  font-weight:850;
+}
+
+.weeklyMetaGraph{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:12px;
+  background:rgba(255,255,255,.032);
+  display:grid;
+  gap:8px;
+}
+
+.weeklyMetaGraph svg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+.metaAxis{
+  stroke:rgba(255,255,255,.18);
+  stroke-width:2;
+}
+
+.metaGuide{
+  stroke:rgba(255,179,71,.28);
+  stroke-width:1.5;
+  stroke-dasharray:5 5;
+}
+
+.metaLine{
+  fill:none;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.metaLine--linear{
+  stroke:#8bc39a;
+}
+
+.metaLine--irregular{
+  stroke:var(--gold2);
+}
+
+.metaLine--plateau{
+  stroke:#d97c7c;
+}
+
+.metaDot{
+  fill:var(--card);
+  stroke-width:3;
+}
+
+.metaDot--hit{
+  stroke:#8bc39a;
+}
+
+.metaDot--miss{
+  stroke:rgba(255,255,255,.32);
+}
+
+.weeklyMetaDays{
+  display:grid;
+  grid-template-columns:repeat(7, 1fr);
+  gap:3px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:900;
+  text-align:center;
+}
+
+html[data-theme="light"] .dailyMetaThermo,
+html[data-theme="light"] .factoryMetaStatus,
+html[data-theme="light"] .factoryMetaNumbers div,
+html[data-theme="light"] .weeklyMetaGraph{
+  background:rgba(255,255,255,.70);
+}
+
+@media (max-width:820px){
+  .factoryMetaGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:520px){
+  .dailyMetaThermo{
+    border-radius:16px;
+    padding:7px 9px;
+  }
+
+  .factoryMetaNumbers{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.66 — Gráfico semanal 7 ciclos
+   Escopo: #/skills meta de fábrica.
+   ========================================================= */
+
+.weeklyCycleGraph{
+  padding:14px;
+  gap:10px;
+}
+
+.weeklyCycleHeader,
+.weeklyCycleFooter{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.weeklyCycleHeader b{
+  display:block;
+  color:var(--soft);
+  font-size:14px;
+  line-height:1.2;
+}
+
+.weeklyCycleHeader span,
+.weeklyCycleFooter span,
+.weeklyCycleMini{
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.weeklyCycleHeader em{
+  color:var(--gold2);
+  font-size:22px;
+  line-height:1;
+  font-weight:950;
+  font-style:normal;
+  letter-spacing:-.04em;
+}
+
+.weeklyCycleFooter b{
+  color:var(--soft);
+  font-size:12px;
+  line-height:1.3;
+  font-weight:950;
+  text-align:right;
+}
+
+.weeklyCycleGraph svg{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
+  padding:2px;
+}
+
+.cycleGrid{
+  stroke:rgba(255,255,255,.09);
+  stroke-width:1;
+}
+
+.cycleAxisText{
+  fill:rgba(226,234,250,.65);
+  font-size:10px;
+  font-weight:800;
+}
+
+.cycleTargetLine{
+  fill:none;
+  stroke:rgba(255,179,71,.33);
+  stroke-width:2;
+  stroke-dasharray:6 6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.cycleProgressLine{
+  fill:none;
+  stroke-width:5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 0 8px rgba(255,179,71,.18));
+}
+
+.cycleProgressLine--linear{
+  stroke:#8bc39a;
+}
+
+.cycleProgressLine--irregular{
+  stroke:var(--gold2);
+}
+
+.cycleProgressLine--plateau{
+  stroke:#d97c7c;
+}
+
+.cycleDot{
+  fill:var(--card);
+  stroke-width:3;
+}
+
+.cycleDot--hit{
+  stroke:#8bc39a;
+}
+
+.cycleDot--miss{
+  stroke:rgba(226,234,250,.38);
+}
+
+.weeklyCycleMini{
+  border:1px solid var(--strokeSoft);
+  border-radius:14px;
+  padding:9px 10px;
+  background:rgba(255,255,255,.028);
+}
+
+@media (max-width:520px){
+  .weeklyCycleHeader,
+  .weeklyCycleFooter{
+    align-items:flex-start;
+  }
+
+  .weeklyCycleHeader em{
+    font-size:19px;
+  }
+
+  .weeklyCycleGraph{
+    padding:11px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.67 — Gráfico compacto na Home + orientação de memória
+   Escopo: Home e Meta de Fábrica.
+   ========================================================= */
+
+.homeTodayCard--graph{
+  display:grid !important;
+  grid-template-columns:minmax(0, .78fr) minmax(150px, 1fr) !important;
+  align-items:center !important;
+  gap:14px !important;
+}
+
+.homeTodaySummary{
+  min-width:0;
+}
+
+.homeMetaMiniGraph{
+  min-width:0;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;
+  padding:10px;
+  background:
+    radial-gradient(140px 80px at 0% 0%, rgba(255,179,71,.10), transparent 70%),
+    rgba(255,255,255,.026);
+  display:grid;
+  gap:6px;
+}
+
+.homeMetaMiniHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.homeMetaMiniHead span{
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1;
+  font-weight:950;
+  text-transform:lowercase;
+}
+
+.homeMetaMiniHead b{
+  color:var(--gold2);
+  font-size:15px;
+  line-height:1;
+  font-weight:950;
+}
+
+.homeMetaMiniGraph svg{
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius:12px;
+  background:rgba(255,255,255,.018);
+}
+
+.homeMetaGridLine{
+  stroke:rgba(255,255,255,.09);
+  stroke-width:1;
+}
+
+.homeMetaAxis{
+  fill:rgba(226,234,250,.62);
+  font-size:8.5px;
+  font-weight:800;
+}
+
+.homeMetaLine{
+  fill:none;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.homeMetaLine--linear{
+  stroke:#8bc39a;
+}
+
+.homeMetaLine--irregular{
+  stroke:var(--gold2);
+}
+
+.homeMetaLine--plateau{
+  stroke:#d97c7c;
+}
+
+.homeMetaDot{
+  fill:var(--card);
+  stroke-width:2.4;
+}
+
+.homeMetaDot--hit{
+  stroke:#8bc39a;
+}
+
+.homeMetaDot--miss{
+  stroke:rgba(226,234,250,.38);
+}
+
+.homeMetaMiniTip{
+  color:var(--muted);
+  font-size:9.8px;
+  line-height:1.25;
+  font-weight:850;
+}
+
+.factoryMetaAdvice{
+  border:1px solid rgba(255,179,71,.22);
+  border-radius:18px;
+  padding:12px;
+  background:rgba(255,179,71,.055);
+  display:grid;
+  gap:5px;
+}
+
+.factoryMetaAdvice b{
+  color:var(--soft);
+  font-size:13px;
+  line-height:1.25;
+}
+
+.factoryMetaAdvice span{
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1.43;
+  font-weight:850;
+}
+
+html[data-theme="light"] .homeMetaMiniGraph,
+html[data-theme="light"] .factoryMetaAdvice{
+  background:rgba(255,255,255,.70);
+}
+
+@media (max-width:720px){
+  .homeTodayCard--graph{
+    grid-template-columns:1fr !important;
+  }
+
+  .homeMetaMiniGraph{
+    margin-top:4px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.70.2 — Remoção visual segura dos gráficos
+   IMPORTANTE:
+   - Não altera JavaScript de rotas.
+   - Não altera listeners.
+   - Não altera data-nav/data-action.
+   - Não altera treino 105x.
+   - Apenas remove da interface os blocos de gráfico/semáforo/metas confusas.
+   ========================================================= */
+
+.homeMetaMiniGraph,
+.weeklyMetaGraph,
+.weeklyCycleGraph,
+.weeklyCoachGraph,
+.homeMetaCoach,
+.studySemaphoreMini,
+.skillsSemaphoreBox{
+  display:none !important;
+}
+
+/* reduz poluição visual da apresentação sem mexer nos botões */
+.heroMiniStats,
+.freeValueStrip,
+.heroCard--landing .heroStats,
+.heroCard--landing .heroMiniStats,
+.heroCard--landing .heroFeatureGrid,
+.heroCard--landing .heroMetricGrid,
+.heroCard--landing .heroBadges,
+.landingTrustBadges{
+  display:none !important;
+}
+
+/* mantém botões clicáveis acima de camadas visuais */
+.heroActions,
+.landingSimpleActions,
+.homeMainActions,
+.homeActionGrid,
+.trainActions,
+.cycleActions{
+  position:relative !important;
+  z-index:20 !important;
+  pointer-events:auto !important;
+}
+
+button,
+a,
+.bigBtn,
+.primaryAction,
+.btn{
+  touch-action:manipulation;
+}
+
+/* mensagem simples no lugar do raciocínio de gráfico */
+.factoryMetaGrid{
+  grid-template-columns:1fr !important;
+}
+
+.factoryMetaAdvice{
+  display:grid !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.70.3 — Ponte CADERNO321
+   ---------------------------------------------------------
+   Card discreto para importar frases criadas no CADERNO321.
+   ========================================================= */
+
+.cadernoBridgeCard{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 230px);
+  gap: 16px;
+  align-items: center;
+  border-color: rgba(210,168,109,.22);
+  background: linear-gradient(135deg, rgba(35,33,39,.96), rgba(31,29,34,.98));
+}
+
+.cadernoBridgeCopy{
+  display: grid;
+  gap: 8px;
+}
+
+.cadernoBridgePanel{
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(210,168,109,.22);
+  background: rgba(255,255,255,.04);
+  text-align: center;
+}
+
+.cadernoBridgePanel b{
+  color: var(--accent, #d2a86d);
+  font-size: clamp(28px, 7vw, 42px);
+  line-height: 1;
+}
+
+.cadernoBridgePanel span{
+  color: var(--text, #f7f3ee);
+  font-weight: 800;
+}
+
+.cadernoBridgePanel small{
+  color: var(--muted, #b8ab9c);
+  font-size: 12px;
+}
+
+@media (max-width: 720px){
+  .cadernoBridgeCard{
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.70.4 — Botão visível para CADERNO321
+   ========================================================= */
+.appBridgeBtn{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:9999;
+  display:inline-flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:2px;
+  min-width:148px;
+  min-height:54px;
+  padding:10px 14px;
+  border-radius:18px;
+  text-decoration:none;
+  color:#fff8e8;
+  border:1px solid rgba(255,216,111,.38);
+  background:
+    radial-gradient(180px 90px at 20% 10%, rgba(255,216,111,.24), transparent 65%),
+    linear-gradient(145deg, rgba(11,22,42,.96), rgba(18,43,78,.96));
+  box-shadow:0 18px 34px rgba(0,0,0,.34);
+  -webkit-tap-highlight-color:transparent;
+}
+.appBridgeBtn span{
+  font-size:11px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.14em;
+  color:#ffd86f;
+}
+.appBridgeBtn b{
+  font-size:13px;
+  line-height:1.2;
+  font-weight:900;
+  color:#fffaf2;
+}
+.appBridgeBtn:active{
+  transform:translateY(1px) scale(.99);
+}
+@media (max-width:620px){
+  .appBridgeBtn{
+    right:12px;
+    bottom:12px;
+    min-width:132px;
+    min-height:50px;
+    padding:9px 12px;
+    border-radius:16px;
+  }
+  .appBridgeBtn span{ font-size:10px; }
+  .appBridgeBtn b{ font-size:12px; }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.70.5 — Apresentação CADERNO321 forte
+   ========================================================= */
+.cadernoPresentationCard{
+  display:grid;
+  gap:16px;
+  border-color:rgba(255,216,111,.24);
+  background:
+    radial-gradient(420px 220px at 0% 0%, rgba(255,216,111,.12), transparent 62%),
+    radial-gradient(420px 240px at 100% 100%, rgba(108,166,255,.12), transparent 62%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+.cadernoPresentationCopy{ display:grid; gap:8px; }
+.cadernoPresentationGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+}
+.cadernoPresentationGrid div{
+  display:grid;
+  gap:7px;
+  padding:14px;
+  border:1px solid var(--strokeSoft);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+}
+.cadernoPresentationGrid b{ color:var(--soft); font-size:14px; line-height:1.25; }
+.cadernoPresentationGrid span{ color:var(--muted2); font-size:12px; line-height:1.4; font-weight:750; }
+.cadernoPresentationActions{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);
+  gap:10px;
+}
+.cadernoPresentationActions a.primaryAction{
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.homeTopActions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+.homeTopActions a{ text-decoration:none; }
+@media (max-width:720px){
+  .cadernoPresentationGrid,
+  .cadernoPresentationActions{ grid-template-columns:1fr; }
+  .homeTopActions{ justify-content:flex-start; }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.70.6 — Ponte visual organizada
+   ---------------------------------------------------------
+   - remove a sensação de botão flutuante tipo WhatsApp;
+   - coloca CADERNO321 como ação principal organizada;
+   - deixa apresentação menor e discreta.
+   ========================================================= */
+
+.appBridgeBtn{
+  display:none !important;
+}
+
+.homeTopActions--compact{
+  justify-content:flex-end !important;
+}
+
+.btn--presentationMini{
+  min-height:34px !important;
+  padding:7px 12px !important;
+  border-radius:14px !important;
+  font-size:12px !important;
+  opacity:.82 !important;
+  background:rgba(255,255,255,.055) !important;
+}
+
+.homeMainActions .btn--cadernoGreen{
+  min-height:56px;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(85, 224, 139, .40);
+  border-radius:18px;
+  color:#052a18;
+  background:
+    radial-gradient(260px 120px at 20% 12%, rgba(255,255,255,.28), transparent 58%),
+    linear-gradient(180deg, #42e883, #16b86b);
+  box-shadow:0 14px 28px rgba(22,184,107,.18);
+  font-weight:950;
+  letter-spacing:.02em;
+}
+
+.homeMainActions .btn--cadernoGreen:active{
+  transform:translateY(1px) scale(.99);
+}
+
+.cadernoPresentationCard{
+  border-color:rgba(66,232,131,.22) !important;
+}
+
+.cadernoPresentationCard .badge{
+  color:#d9ffe9 !important;
+  border-color:rgba(66,232,131,.24) !important;
+  background:rgba(66,232,131,.10) !important;
+}
+
+@media (max-width:620px){
+  .btn--presentationMini{
+    min-height:30px !important;
+    padding:6px 10px !important;
+    font-size:11px !important;
+  }
+
+  .homeMainActions .btn--cadernoGreen{
+    min-height:54px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.5.70.9 — Responsividade Premium Home
+   ---------------------------------------------------------
+   Escopo: somente Home / apresentação de entrada.
+   - melhora desktop/notebook sem prejudicar mobile-first;
+   - impede card de meta diária ficar estreito/vertical;
+   - deixa CADERNO321 organizado abaixo das ações principais;
+   - melhora tablet e celular com respiros mais consistentes.
+   ========================================================= */
+
+.homeProPage{
+  width:100%;
+  max-width:1120px;
+  margin-inline:auto;
+}
+
+.homeHeroPro{
+  overflow:hidden !important;
+}
+
+.homeHeroGrid{
+  grid-template-columns:minmax(0, 1fr) minmax(280px, 320px) !important;
+  gap:clamp(18px, 2.5vw, 28px) !important;
+  align-items:center !important;
+}
+
+.homeHeroCopy{
+  min-width:0 !important;
+}
+
+.homeTitlePro{
+  max-width:12.5em !important;
+  font-size:clamp(34px, 4.4vw, 58px) !important;
+  line-height:1.02 !important;
+}
+
+.homeLeadPro{
+  max-width:42em !important;
+}
+
+.homeMainActions{
+  grid-template-columns:minmax(0, 1fr) minmax(0, 1fr) !important;
+  max-width:760px !important;
+}
+
+.homeMainActions .btn--cadernoGreen{
+  grid-column:1 / -1 !important;
+  width:100% !important;
+  max-width:none !important;
+  color:#102035 !important;
+  border-color:rgba(255,179,71,.42) !important;
+  background:
+    radial-gradient(300px 130px at 18% 12%, rgba(255,255,255,.32), transparent 58%),
+    linear-gradient(135deg, #ffd86f 0%, #ff9f38 45%, #246fe5 125%) !important;
+  box-shadow:0 16px 30px rgba(255,159,56,.16) !important;
+}
+
+.homeTodayCard--graph,
+.homeTodayCard{
+  min-width:0 !important;
+}
+
+.homeTodayCard--graph{
+  grid-template-columns:1fr !important;
+  align-content:center !important;
+}
+
+.homeTodaySummary{
+  display:grid !important;
+  gap:8px !important;
+}
+
+.homeTodayText{
+  max-width:18em !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+}
+
+.homeTodayMini{
+  align-items:center !important;
+}
+
+.homeFocusCard,
+.homePathCard{
+  padding:clamp(16px, 2.4vw, 24px) !important;
+}
+
+.homeActionGrid{
+  grid-template-columns:repeat(4, minmax(0, 1fr)) !important;
+}
+
+.homeActionCard,
+.homePathItem{
+  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+@media (hover:hover){
+  .homeActionCard:hover,
+  .homePathItem:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,216,111,.28);
+  }
+}
+
+/* Notebook menor e tablet horizontal */
+@media (max-width:1080px){
+  .homeProPage{
+    max-width:940px;
+  }
+
+  .homeHeroGrid{
+    grid-template-columns:1fr !important;
+  }
+
+  .homeTodayCard--graph{
+    max-width:100% !important;
+  }
+
+  .homeTodaySummary{
+    grid-template-columns:auto minmax(0, 1fr) !important;
+    align-items:center !important;
+    gap:8px 16px !important;
+  }
+
+  .homeTodaySummary .badge{
+    grid-column:1;
+  }
+
+  .homeTodayValue{
+    grid-column:1;
+  }
+
+  .homeTodayText,
+  .homeTodayMini{
+    grid-column:2;
+  }
+
+  .homeActionGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Tablet em pé e celular grande */
+@media (max-width:720px){
+  .homeHeroPro{
+    border-radius:24px !important;
+  }
+
+  .homeMainActions{
+    grid-template-columns:1fr !important;
+    max-width:none !important;
+  }
+
+  .homeTodaySummary{
+    grid-template-columns:1fr !important;
+  }
+
+  .homeTodaySummary .badge,
+  .homeTodayValue,
+  .homeTodayText,
+  .homeTodayMini{
+    grid-column:auto !important;
+  }
+
+  .homeActionGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .homeActionCard{
+    min-height:118px !important;
+  }
+}
+
+/* Celular estreito */
+@media (max-width:430px){
+  .homeHeroPro{
+    padding:15px !important;
+  }
+
+  .homeTitlePro{
+    font-size:clamp(28px, 8vw, 34px) !important;
+    letter-spacing:-.045em !important;
+  }
+
+  .homeLeadPro{
+    font-size:14.5px !important;
+    line-height:1.55 !important;
+  }
+
+  .btn--presentationMini{
+    min-height:28px !important;
+    padding:5px 9px !important;
+    font-size:10.5px !important;
+    border-radius:999px !important;
+  }
+
+  .homeTodayCard{
+    padding:14px !important;
+  }
+
+  .homeTodayValue{
+    font-size:clamp(38px, 13vw, 54px) !important;
+  }
+
+  .homeActionGrid{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    gap:10px !important;
+  }
+
+  .homeActionCard{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    min-height:112px !important;
+    padding:13px !important;
+  }
+
+  .homeActionCard small{
+    grid-column:auto !important;
+  }
+
+  .homePathItem{
+    grid-template-columns:54px minmax(0, 1fr) !important;
+  }
+}
+
+/* Desktop amplo: deixa a home respirar sem virar tablet gigante */
+@media (min-width:1280px){
+  .homeProPage{
+    max-width:1180px;
+  }
+
+  .homeHeroPro{
+    padding:32px !important;
+  }
+
+  .homeHeroGrid{
+    grid-template-columns:minmax(0, 1fr) minmax(300px, 340px) !important;
+  }
+
+  .homeMainActions{
+    max-width:820px !important;
+  }
+}

@@ -34331,7 +34331,15 @@
   let category = state.category || "hiragana";
   let currentIndex = state.currentIndexByCategory?.[category] || 0;
   let screen = state.screen || "dashboard";
-  let openMenu = typeof state.openMenu === "string" ? state.openMenu : "";
+  try {
+    const params = new URLSearchParams(window.location.search || "");
+    if (params.get("screen") === "dashboard" || params.get("from") === "nihongo321") {
+      screen = "dashboard";
+      state.screen = "dashboard";
+    }
+  } catch { }
+  // CADERNO321 4.10.21: ao abrir/recarregar, os menus começam fechados para uma tela mais organizada.
+  let openMenu = "";
   let selectedFocus = state.selectedFocus || {};
   let selectedFamily = state.selectedFamily || { hiragana: "あ", katakana: "ア" };
   let selectedKanjiLevel = state.selectedKanjiLevel || "N5";
@@ -34341,7 +34349,7 @@
   let drawingSnapshot = null;
   let activeHintChar = null;
   let paperTone = state.paperTone || "paper";
-  let appTheme = state.appTheme || "dark";
+  let appTheme = state.appTheme || localStorage.getItem("nihongo321_theme") || "dark";
 
   function loadState() {
     try {
@@ -34417,9 +34425,18 @@
   function isKanaCategory(cat) { return cat === "hiragana" || cat === "katakana"; }
   function isFreeKanaFamily(cat, family) { return !isKanaCategory(cat) || (FREE_KANA_FAMILIES[cat] || []).includes(family); }
   function isFamilyPremiumLocked(cat, family) { return isKanaCategory(cat) && !cadernoHasPremiumAccess() && !isFreeKanaFamily(cat, family); }
+  function isKanjiPremiumLocked() { return !cadernoHasPremiumAccess(); }
   function familyForFocus(cat, focus) { return ((KANA_FAMILIES[cat] || []).find(item => (item.letters || []).includes(focus)) || {}).key || ""; }
   function showCadernoPremiumMessage(kind = "family") {
-    toast(kind === "genial" ? "Você atingiu o seu limite grátis de frases. Adquira o Premium para continuar criando frases no Caderno Genial." : "Esta família faz parte do Premium. No grátis, treine as famílias A, KA e SA para sentir o gosto da escrita japonesa pelo celular.");
+    if (kind === "genial") {
+      toast("Você atingiu o seu limite grátis de frases. Adquira o Premium para continuar criando frases no Caderno Genial.");
+      return;
+    }
+    if (kind === "kanji") {
+      toast("Kanji é área Premium. Assine para desbloquear os níveis N5, N4, N3, N2 e N1.");
+      return;
+    }
+    toast("Esta família faz parte do Premium. No grátis, treine as famílias A, KA e SA para sentir o gosto da escrita japonesa pelo celular.");
   }
   function genialSavedFreeCount() { return (genialState.history || []).length; }
   function genialFreeLimitReached() { return !cadernoHasPremiumAccess() && genialSavedFreeCount() >= GENIAL_FREE_PHRASE_LIMIT; }
@@ -34550,6 +34567,7 @@
   function startWordById(id) {
     const word = WORDS.find(w => w.id === id);
     if (!word) return;
+    if (word.category === "kanji" && isKanjiPremiumLocked()) { showCadernoPremiumMessage("kanji"); return; }
     const focusFamily = familyForFocus(word.category, word.focus);
     if (isFamilyPremiumLocked(word.category, focusFamily)) { showCadernoPremiumMessage("family"); return; }
     category = word.category;
@@ -34567,7 +34585,9 @@
   }
 
   function nextWord() {
-    const list = categoryWords();
+    if (category === "kanji" && isKanjiPremiumLocked()) { showCadernoPremiumMessage("kanji"); setScreen("dashboard"); return; }
+    const list = categoryWords().filter(word => !(word.category === "kanji" && isKanjiPremiumLocked()));
+    if (!list.length) { setScreen("dashboard"); return; }
     currentIndex = (currentIndex + 1) % list.length;
     screen = "see";
     drawingStrokes = [];
@@ -34675,6 +34695,7 @@
 
   function toggleTheme() {
     appTheme = appTheme === "dark" ? "light" : "dark";
+    try { localStorage.setItem("nihongo321_theme", appTheme); } catch {}
     applyAppTheme();
     saveState();
     render();
@@ -35383,7 +35404,7 @@
             
           </div>
         </div>
-        <div class="headerActions">${""}<button class="themeToggleBtn" type="button" data-action="toggleTheme">${appTheme === "dark" ? "☀️" : "🌙"}</button><button class="boardToneBtn" type="button" data-action="cyclePaperTone">${paperToneIcon()}</button><button class="headerBackBtn" type="button" id="headerBackBtn" aria-label="voltar para lista de conteúdos">↩</button></div>
+        <div class="headerActions">${""}<a class="headerBridgeBtn" href="../NIHONGO321/index.html#/home" aria-label="Voltar para o NIHONGO321">NIHONGO321</a><button class="themeToggleBtn" type="button" data-action="toggleTheme">${appTheme === "dark" ? "☀️" : "🌙"}</button><button class="boardToneBtn" type="button" data-action="cyclePaperTone">${paperToneIcon()}</button><button class="headerBackBtn" type="button" id="headerBackBtn" aria-label="voltar para lista de conteúdos">↩</button></div>
       </header>
     `;
   }
@@ -35402,21 +35423,22 @@
     const stats = totalStats(cat);
     const isOpen = openMenu === cat;
     const words = categoryWords(cat);
+    const kanjiLocked = cat === "kanji" && isKanjiPremiumLocked();
 
     return `
-      <article class="studyMenu ${isOpen ? "is-open" : ""}">
+      <article class="studyMenu ${isOpen ? "is-open" : ""} ${kanjiLocked ? "is-premium-area" : ""}">
         <button class="studyMenuHead" type="button" data-menu="${cat}">
           <span>
             <b>${title}</b>
-            <small>${desc}</small>
+            <small>${kanjiLocked ? "área Premium" : desc}</small>
           </span>
-          <em>${stats.familiar}/${stats.total}</em>
+          <em>${kanjiLocked ? "Premium" : `${stats.familiar}/${stats.total}`}</em>
         </button>
 
         <div class="studyMenuBody">
           <div class="menuIntro">
-            <b>${subtitle}</b>
-            <span>${cat === "kanji" ? "Escolha uma palavra/kanji para sentir o próximo nível." : "Escolha a família, depois a letra e por fim uma palavra para escrever."}</span>
+            <b>${kanjiLocked ? "Kanji completo para assinantes" : subtitle}</b>
+            <span>${cat === "kanji" ? "Níveis N5, N4, N3, N2 e N1 ficam bloqueados na versão grátis." : "Escolha a família, depois a letra e por fim uma palavra para escrever."}</span>
           </div>
 
           ${cat === "kanji" ? renderKanjiPicker(words) : renderFocusPicker(cat)}
@@ -35510,6 +35532,7 @@
   }
 
   function selectKanjiLevel(level) {
+    if (isKanjiPremiumLocked()) { showCadernoPremiumMessage("kanji"); return; }
     selectedKanjiLevel = level;
     const groups = kanjiGroups(level);
     selectedKanjiGroup = groups[0] || "";
@@ -35520,6 +35543,7 @@
   }
 
   function selectKanjiGroup(group) {
+    if (isKanjiPremiumLocked()) { showCadernoPremiumMessage("kanji"); return; }
     selectedKanjiGroup = group;
     category = "kanji";
     openMenu = "kanji";
@@ -35880,11 +35904,13 @@
   }
 
   function showMoreKanji() {
+    if (isKanjiPremiumLocked()) { showCadernoPremiumMessage("kanji"); return; }
     kanjiVisibleLimit += 12;
     render();
   }
 
   function selectKanjiLevelCompact(level) {
+    if (isKanjiPremiumLocked()) { showCadernoPremiumMessage("kanji"); return; }
     selectedKanjiLevel = level;
     const groups = orderedKanjiGroups(level);
     selectedKanjiGroup = groups[0] || "";
@@ -35896,13 +35922,34 @@
   }
 
   function selectKanjiGroupCompact(group) {
+    if (isKanjiPremiumLocked()) { showCadernoPremiumMessage("kanji"); return; }
     selectedKanjiGroup = group;
     resetKanjiVisibleLimit();
     saveState();
     render();
   }
 
+  function renderKanjiPremiumLockedPanel() {
+    return `
+      <div class="kanjiPremiumLockPanel">
+        <div class="kanjiLockIcon" aria-hidden="true">鍵</div>
+        <div>
+          <span class="smartEyebrow">área premium</span>
+          <h2>Kanji completo é para assinantes.</h2>
+          <p>Na versão grátis, o aluno sente o gosto da escrita japonesa com Hiragana e Katakana nas famílias A, KA e SA. O Kanji fica bloqueado para valorizar o Premium.</p>
+        </div>
+        <div class="kanjiPremiumBenefits">
+          <span>N5, N4, N3, N2 e N1 desbloqueados</span>
+          <span>listas por tema e nível</span>
+          <span>treino com meta de 7 acertos</span>
+        </div>
+        <button type="button" class="kanjiPremiumBtn" data-action="goPremium">desbloquear Premium</button>
+      </div>
+    `;
+  }
+
   function renderKanjiPicker(words) {
+    if (isKanjiPremiumLocked()) return renderKanjiPremiumLockedPanel();
     const levels = ["N5", "N4", "N3", "N2", "N1"];
     const currentLevelWords = categoryWords("kanji").filter(word => word.jlpt === selectedKanjiLevel);
     const groups = orderedKanjiGroups(selectedKanjiLevel);
@@ -37352,33 +37399,38 @@
     if (!unknown && !entries.length) return "";
 
     return `
-      <section class="genialMiniDict">
-        <div class="genialMiniDictHead">
-          <b>Meu Dicionário Genial</b>
-          <span>${unknown ? `palavra nova: j:${escapeHTML(unknown)}` : "suas palavras"}</span>
+      <details class="genialMiniDict genialMiniDict--collapsed">
+        <summary class="genialMiniDictHead">
+          <span>
+            <b>Meu Dicionário Genial</b>
+            <em>${unknown ? `palavra nova: j:${escapeHTML(unknown)}` : `${entries.length} palavra${entries.length === 1 ? "" : "s"} salva${entries.length === 1 ? "" : "s"}`}</em>
+          </span>
+          <small>abrir</small>
+        </summary>
+
+        <div class="genialMiniDictBody">
+          ${unknown ? `
+            <div class="genialNewWord">
+              <input data-new-word-romaji value="${escapeHTML(unknown)}" aria-label="romaji da palavra nova">
+              <input data-new-word-jp placeholder="japonês / kanji" aria-label="japonês da palavra nova">
+              <input data-new-word-pt placeholder="português" aria-label="português da palavra nova">
+              <button type="button" data-save-new-genial-word>salvar</button>
+            </div>
+          ` : ""}
+
+          ${entries.length ? `
+            <div class="genialMiniEntries">
+              ${entries.map(([key, item]) => `
+                <div>
+                  <strong>j:${escapeHTML(key)} → ${escapeHTML(item.jp)}</strong>
+                  <span>${escapeHTML(item.pt || "sem tradução")}</span>
+                  <button type="button" data-remove-genial-word="${escapeHTML(key)}">×</button>
+                </div>
+              `).join("")}
+            </div>
+          ` : ""}
         </div>
-
-        ${unknown ? `
-          <div class="genialNewWord">
-            <input data-new-word-romaji value="${escapeHTML(unknown)}" aria-label="romaji da palavra nova">
-            <input data-new-word-jp placeholder="japonês / kanji" aria-label="japonês da palavra nova">
-            <input data-new-word-pt placeholder="português" aria-label="português da palavra nova">
-            <button type="button" data-save-new-genial-word>salvar</button>
-          </div>
-        ` : ""}
-
-        ${entries.length ? `
-          <div class="genialMiniEntries">
-            ${entries.map(([key, item]) => `
-              <div>
-                <strong>j:${escapeHTML(key)} → ${escapeHTML(item.jp)}</strong>
-                <span>${escapeHTML(item.pt || "sem tradução")}</span>
-                <button type="button" data-remove-genial-word="${escapeHTML(key)}">×</button>
-              </div>
-            `).join("")}
-          </div>
-        ` : ""}
-      </section>
+      </details>
     `;
   }
 
@@ -37488,6 +37540,11 @@
         <p class="dashboardLead">
           Escolha uma categoria e comece o treino.
         </p>
+        <div class="cadernoValueIntro">
+          <strong>Caderno321 é a oficina. NIHONGO321 é a memória.</strong>
+          <span>Crie frases próprias, escreva a tradução, adicione detalhes e depois memorize tudo no treino 105x.</span>
+          <a href="../NIHONGO321/index.html#/home">voltar ao NIHONGO321</a>
+        </div>
         ${renderGenialEntryCard()}
         ${renderBridgeSummary()}
       </section>
@@ -37565,10 +37622,17 @@
 
 applyAppTheme();
     const word = currentWord();
-    const progress = progressFor(word);
+    if (screen !== "dashboard" && word?.category === "kanji" && isKanjiPremiumLocked()) {
+      category = "kanji";
+      openMenu = "kanji";
+      screen = "dashboard";
+      saveState();
+    }
+    const safeWord = currentWord();
+    const progress = progressFor(safeWord);
     const stats = totalStats();
-    let main = screen === "dashboard" ? renderDashboard() : screen === "write" ? renderWrite(word) : screen === "check" ? renderCheck(word, progress) : renderSee(word);
-    const body = screen === "dashboard" ? main : `<section class="notebookGrid">${main}${renderSidebar(word, progress, stats)}</section>`;
+    let main = screen === "dashboard" ? renderDashboard() : screen === "write" ? renderWrite(safeWord) : screen === "check" ? renderCheck(safeWord, progress) : renderSee(safeWord);
+    const body = screen === "dashboard" ? main : `<section class="notebookGrid">${main}${renderSidebar(safeWord, progress, stats)}</section>`;
 
     $app.innerHTML = `
       <div class="stack">
@@ -37672,6 +37736,7 @@ applyAppTheme();
       if (action === "toggleTone") return togglePaperTone();
       if (action === "replayStrokeOrder") return replayStrokeOrder();
       if (action === "toggleTheme") return toggleTheme();
+      if (action === "goPremium") return showCadernoPremiumMessage("kanji");
     }));
     document.querySelectorAll("[data-result]").forEach(btn => btn.addEventListener("click", () => markResult(btn.dataset.result)));
     document.querySelectorAll("[data-hint-char]").forEach(btn => btn.addEventListener("click", () => { activeHintChar = btn.dataset.hintChar; render(); }));

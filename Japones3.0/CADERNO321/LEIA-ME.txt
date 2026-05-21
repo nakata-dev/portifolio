@@ -1,0 +1,32 @@
+CADERNO321 4.10.25 + NIHONGO321 8.5.70.9 — Kanji 100% Premium
+
+O que foi alterado no CADERNO321:
+- A área Kanji agora fica totalmente bloqueada para usuários grátis.
+- O usuário grátis não consegue selecionar nível N5/N4/N3/N2/N1, lista ou kanji.
+- Ao abrir Kanji, aparece um painel Premium elegante explicando o bloqueio.
+- O botão do painel Premium mostra a mensagem de assinatura.
+- Se algum estado antigo tentar abrir um kanji diretamente, o app retorna para a lista e bloqueia a ação.
+- Hiragana e Katakana continuam com degustação grátis nas famílias A/KA/SA.
+
+O que foi preservado:
+- Base anterior do CADERNO321.
+- Base NIHONGO321 8.5.70.9.
+- Ponte CADERNO321 ↔ NIHONGO321.
+- Modo claro premium.
+- Responsividade da Home NIHONGO321.
+- Responsividade do treino CADERNO321 em telas grandes.
+- Limite grátis de 7 frases no Caderno Genial.
+- Treino 105x.
+- Checkout.
+- Sensei IA.
+- LocalStorage.
+- HTML/CSS/JS puro.
+
+Validação:
+- CADERNO321/caderno.js validado com: node --check caderno.js
+- NIHONGO321/app.js validado com: node --check app.js
+- NIHONGO321/sensei-bank.js validado com: node --check sensei-bank.js
+
+Base recomendada:
+- Considerar esta versão como nova base segura:
+  CADERNO321 4.10.25 + NIHONGO321 8.5.70.9 — Kanji 100% Premium
