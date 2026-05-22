@@ -1,6 +1,6 @@
 /* =========================================================
-   CADERNO321 — Protótipo 4.10.15
-   Simetria real ROMAJI/JAPONÊS + tradução local mais fiel.
+   CADERNO321 — Protótipo 4.10.33
+   Salvamento no NIHONGO321 estável e preservado.
    ========================================================= */
 
 (() => {
@@ -35413,7 +35413,7 @@
             
           </div>
         </div>
-        <div class="headerActions">${""}<a class="headerBridgeBtn headerBridgeLogoBtn" href="../index.html#/home" aria-label="Voltar para o NIHONGO321" title="Voltar ao NIHONGO321"><img src="../img/logo_nihongo321.png" alt="" loading="lazy" decoding="async"></a><button class="themeToggleBtn" type="button" data-action="toggleTheme">${appTheme === "dark" ? "☀️" : "🌙"}</button><button class="boardToneBtn" type="button" data-action="cyclePaperTone">${paperToneIcon()}</button><button class="headerBackBtn" type="button" id="headerBackBtn" aria-label="voltar para lista de conteúdos">↩</button></div>
+        <div class="headerActions">${""}<a class="headerBridgeBtn headerBridgeTextBtn" href="../index.html#/home" target="_parent" target="_parent" aria-label="Voltar para o NIHONGO321" title="Voltar ao NIHONGO321">voltar</a><button class="themeToggleBtn" type="button" data-action="toggleTheme">${appTheme === "dark" ? "☀️" : "🌙"}</button><button class="boardToneBtn" type="button" data-action="cyclePaperTone">${paperToneIcon()}</button><button class="headerBackBtn" type="button" id="headerBackBtn" aria-label="voltar para lista de conteúdos">↩</button></div>
       </header>
     `;
   }
@@ -36558,6 +36558,10 @@
     error: ""
   };
 
+  let nihongo321SaveTopics = [];
+  let nihongo321DefaultTopicId = "topic_caderno321";
+  let nihongo321TopicsRequested = false;
+
   let genialState = (() => {
     try {
       const saved = JSON.parse(localStorage.getItem(GENIAL_KEY) || "{}");
@@ -36568,15 +36572,66 @@
         mode: "mixed",
         history: Array.isArray(saved.history) ? saved.history.slice(0, 20) : [],
         evaluation: saved.evaluation || null,
+        targetTopicId: saved.targetTopicId || "topic_caderno321",
         lastSavedAt: saved.lastSavedAt || ""
       };
     } catch {
-      return { romaji: "", userPt: "", details: { words: "", particles: "", explanation: "", situation: "" }, mode: "mixed", history: [], evaluation: null, lastSavedAt: "" };
+      return { romaji: "", userPt: "", details: { words: "", particles: "", explanation: "", situation: "" }, mode: "mixed", history: [], evaluation: null, targetTopicId: "topic_caderno321", lastSavedAt: "" };
     }
   })();
 
   function saveGenialState() {
     try { localStorage.setItem(GENIAL_KEY, JSON.stringify(genialState)); } catch {}
+  }
+
+  function safeSaveTopicName(topicId) {
+    const topic = nihongo321SaveTopics.find(item => item && item.id === topicId);
+    return topic?.name || "Caderno321";
+  }
+
+  function normalizedSaveTopics() {
+    const fallback = { id: "topic_caderno321", name: "Caderno321", description: "Frases criadas no CADERNO321.", isDefault: true };
+    const list = Array.isArray(nihongo321SaveTopics) ? nihongo321SaveTopics.filter(item => item && item.id && item.name) : [];
+    if (!list.some(item => item.id === fallback.id)) list.unshift(fallback);
+    return list;
+  }
+
+  function selectedSaveTopicId() {
+    const topics = normalizedSaveTopics();
+    const selected = String(genialState.targetTopicId || nihongo321DefaultTopicId || "topic_caderno321").trim();
+    return topics.some(item => item.id === selected) ? selected : (topics[0]?.id || "topic_caderno321");
+  }
+
+  function setGenialTargetTopic(topicId) {
+    genialState.targetTopicId = String(topicId || "topic_caderno321").trim() || "topic_caderno321";
+    saveGenialState();
+  }
+
+  function requestNihongo321SaveTopics(force = false) {
+    if (!isEmbeddedInNihongo321()) return;
+    if (nihongo321TopicsRequested && !force) return;
+    nihongo321TopicsRequested = true;
+    try {
+      window.parent.postMessage({ type: "CADERNO321_REQUEST_TOPICS" }, "*");
+    } catch { }
+  }
+
+  function renderGenialTopicSelector() {
+    const topics = normalizedSaveTopics();
+    const selected = selectedSaveTopicId();
+    const embedded = isEmbeddedInNihongo321();
+
+    return `
+      <label class="genialSaveTarget">
+        <span class="notebookTab">SALVAR EM</span>
+        <select data-genial-topic ${embedded ? "" : "disabled"}>
+          ${topics.map(topic => `
+            <option value="${escapeHTML(topic.id)}" ${topic.id === selected ? "selected" : ""}>${escapeHTML(topic.name)}</option>
+          `).join("")}
+        </select>
+        <small>${embedded ? "Escolha o tópico e treine essa frase logo em seguida no 105x." : "No modo isolado, a frase fica guardada para o tópico Caderno321."}</small>
+      </label>
+    `;
   }
 
   const ROMAJI_COMBOS = [
@@ -37435,6 +37490,25 @@
     }
   }
 
+  function setGenialSaveError(message) {
+    genialState.lastSavePending = false;
+    genialState.lastSaveError = String(message || "não foi possível salvar.");
+    genialState.lastSavedAt = "";
+    saveGenialState();
+    render();
+  }
+
+  function caderno321SaveErrorMessage(error = "") {
+    const key = String(error || "");
+    const map = {
+      empty_jp: "O japonês não foi gerado. Digite algo em ROMAJI antes de salvar.",
+      bridge_write_failed: "Não consegui gravar a ponte de segurança no navegador.",
+      save_failed: "O NIHONGO321 recebeu a frase, mas houve erro ao gravar no banco real.",
+      phrase_not_found: "A frase foi salva, mas não encontrei ela para abrir o treino agora."
+    };
+    return map[key] || "O NIHONGO321 recebeu a frase, mas não confirmou o salvamento.";
+  }
+
   function openNihongo321WithCadernoPhrase(phrase) {
     const payload = {
       schema: "caderno321_to_nihongo321_v1",
@@ -37444,20 +37518,30 @@
     };
 
     if (isEmbeddedInNihongo321()) {
+      const requestId = uid("save_req");
+      payload.requestId = requestId;
+
       try {
-        window.parent.postMessage({ type: "CADERNO321_SAVE_PHRASE", payload }, "*");
-        genialState.lastSavedAt = new Date().toISOString();
+        genialState.lastSaveRequestId = requestId;
+        genialState.lastSavePending = true;
         genialState.lastSaveError = "";
-        genialState.lastSaveDirect = true;
+        genialState.lastSavedAt = "";
         saveGenialState();
-        toast("frase enviada para salvar no NIHONGO321");
         render();
+
+        window.parent.postMessage({ type: "CADERNO321_SAVE_PHRASE", payload }, "*");
+        toast("enviado ao NIHONGO321 para salvar");
+
+        setTimeout(() => {
+          if (genialState.lastSavePending && genialState.lastSaveRequestId === requestId) {
+            setGenialSaveError("Enviei a frase ao NIHONGO321, mas não recebi confirmação real. A frase ficou guardada na ponte de segurança.");
+          }
+        }, 3500);
+
         return true;
       } catch (err) {
         console.error("CADERNO321 postMessage save error:", err);
-        genialState.lastSaveError = "não consegui enviar a frase para o NIHONGO321 integrado.";
-        saveGenialState();
-        render();
+        setGenialSaveError("Não consegui enviar a frase para o NIHONGO321 integrado. A frase ficou guardada na ponte de segurança.");
       }
     }
 
@@ -37473,24 +37557,46 @@
 
   function saveGenialPhrase() {
     const jp = genialConverted().trim();
-    if (!jp) {
+    const pt = String(genialState.userPt || "").trim();
+
+    if (!String(genialState.romaji || "").trim()) {
+      setGenialSaveError("Digite algo em ROMAJI primeiro.");
       toast("digite algo em romaji primeiro");
+      return;
+    }
+
+    if (!jp) {
+      setGenialSaveError("O japonês ainda não foi gerado. Revise o ROMAJI e tente novamente.");
+      toast("japonês não gerado");
+      return;
+    }
+
+    if (!pt) {
+      setGenialSaveError("Preencha a tradução da frase em português antes de salvar. Os detalhes continuam opcionais.");
+      toast("preencha a tradução");
       return;
     }
 
     const details = normalizeGenialDetails();
     const detailsText = formatGenialDetailsText(details);
+    const topicId = selectedSaveTopicId();
+
     const phrase = {
       id: uid("genial_phrase"),
       source: "CADERNO321 Caderno Genial",
       jp,
-      pt: String(genialState.userPt || "").trim() || "tradução criada pelo aluno no Caderno321",
+      pt,
+      topicId,
+      targetTopicId: topicId,
+      targetTopicName: safeSaveTopicName(topicId),
       newWords: parseGenialWords(details),
       caderno321: {
         romaji: genialState.romaji,
+        targetTopicId: topicId,
+        targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.10.32"
+        sourceVersion: "4.10.35"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -37502,23 +37608,43 @@
     const isUpdatingExisting = existingBridge.some(item => bridgePhraseSignature(item) === signature);
 
     if (!isUpdatingExisting && genialFreeLimitReached()) {
+      genialState.lastSaveError = `Limite grátis atingido: ${GENIAL_FREE_PHRASE_LIMIT} frases no Caderno Genial. A frase não foi enviada. Para testar novamente, use Premium/admin ou apague frases antigas de teste.`;
+      genialState.lastSavePending = false;
+      saveGenialState();
       showCadernoPremiumMessage("genial");
       render();
       return;
     }
 
-    // CADERNO321 4.10.31.2:
-    // Salvamento profissional por transferência de URL.
-    // O CADERNO321 não tenta mais escrever no banco interno do NIHONGO321.
-    // Ele envia a frase para a página principal, e o próprio NIHONGO321 importa e salva em jp_105x_v7.
-    genialState.history.unshift({ jp, romaji: genialState.romaji, pt: phrase.pt, details, mode: "mixed", at: new Date().toISOString() });
+    // CADERNO321 4.10.34:
+    // Salvamento cirúrgico em duas camadas:
+    // 1) guarda primeiro na ponte local, para não perder a frase;
+    // 2) se estiver integrado, envia por postMessage para o NIHONGO321 salvar no jp_105x_v7;
+    // 3) se estiver isolado, usa a transferência por URL como fallback.
+    const bridgeResult = savePhraseToNihongo321Bridge(phrase);
+    if (!bridgeResult.ok) {
+      genialState.lastSaveError = "não consegui guardar a frase na ponte de segurança.";
+      saveGenialState();
+      render();
+      return;
+    }
+
+    const finalPhrase = bridgeResult.phrase || phrase;
+
+    genialState.history.unshift({ jp, romaji: genialState.romaji, pt: finalPhrase.pt, details, mode: "mixed", at: new Date().toISOString() });
     genialState.history = genialState.history.slice(0, 20);
-    genialState.lastSavedAt = new Date().toISOString();
+    genialState.lastSavedAt = "";
     genialState.lastSaveError = "";
+    genialState.lastSavePending = false;
+    genialState.lastSaveDirect = false;
+    genialState.lastSaveCount = bridgeResult.total || 0;
+    genialState.lastSavedTopicId = topicId;
+    genialState.lastSavedTopicName = safeSaveTopicName(topicId);
+    genialState.lastSavedPhraseId = "";
     saveGenialState();
 
-    toast("enviando frase para o NIHONGO321...");
-    openNihongo321WithCadernoPhrase(phrase);
+    toast("salvando no NIHONGO321...");
+    openNihongo321WithCadernoPhrase(finalPhrase);
   }
 
   function clearGenialEditor() {
@@ -37533,6 +37659,7 @@
 
   function openGenialNotebook() {
     screen = "genial";
+    requestNihongo321SaveTopics(true);
     saveState();
     render();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -37733,6 +37860,39 @@
     return `<div class="genialLimitBox ${reached ? "is-reached" : ""}"><b>${used}/${GENIAL_FREE_PHRASE_LIMIT} frases grátis no Caderno Genial</b><span>${reached ? "Você atingiu o seu limite grátis de frases. Adquira o Premium para continuar criando." : "Crie até 7 frases completas grátis. Depois, o Premium libera o Caderno Genial sem esse limite."}</span></div>`;
   }
 
+  function renderGenialSaveStatus() {
+    if (genialState.lastSavePending) {
+      return `
+        <div class="genialSaveStatus genialSaveStatus--pending" role="status">
+          <b>salvando no NIHONGO321...</b>
+          <span>Aguardando confirmação real do app principal. Se não confirmar, a frase continua guardada na ponte de segurança.</span>
+        </div>
+      `;
+    }
+
+    if (genialState.lastSavedAt) {
+      const topicName = genialState.lastSavedTopicName || safeSaveTopicName(genialState.lastSavedTopicId || selectedSaveTopicId());
+      return `
+        <div class="genialSaveStatus" role="status">
+          <b>✓ frase salva no NIHONGO321</b>
+          <span>Salvo no tópico: <strong>${escapeHTML(topicName)}</strong>. Agora você pode memorizar essa frase no treino 105x.</span>
+          <button class="genialTrainNow" type="button" data-train-genial>treinar agora no 105x</button>
+        </div>
+      `;
+    }
+
+    if (genialState.lastSaveError) {
+      return `
+        <div class="genialSaveStatus genialSaveStatus--error" role="alert">
+          <b>não foi possível salvar</b>
+          <span>${escapeHTML(genialState.lastSaveError)}</span>
+        </div>
+      `;
+    }
+
+    return "";
+  }
+
   function renderGenialNotebook() {
     const converted = genialConverted();
     const evaluation = genialState.evaluation;
@@ -37788,26 +37948,15 @@
 
           ${renderGenialMiniDictionary()}
 
+          ${renderGenialTopicSelector()}
+
           <div class="genialActions genialActions--three ideaActions">
             <button type="button" data-evaluate-genial>avaliar frase</button>
             <button type="button" data-save-genial>salvar no NIHONGO321</button>
             <button type="button" data-clear-genial>limpar</button>
           </div>
 
-          ${genialState.lastSavedAt ? `
-            <div class="genialSaveStatus" role="status">
-              <b>✓ frase salva no NIHONGO321</b>
-              <span>${genialState.lastSaveDirect ? "Salvei direto na memória do NIHONGO321." : "Salvei na ponte de importação do NIHONGO321."} ${genialState.lastSaveCount ? `${genialState.lastSaveCount} frase(s) no Caderno321.` : ""}</span>
-              <a class="genialOpenNihongo" href="../index.html?from=caderno321">abrir NIHONGO321</a>
-            </div>
-          ` : ""}
-
-          ${genialState.lastSaveError ? `
-            <div class="genialSaveStatus genialSaveStatus--error" role="alert">
-              <b>não foi possível salvar</b>
-              <span>${escapeHTML(genialState.lastSaveError)}</span>
-            </div>
-          ` : ""}
+          ${renderGenialSaveStatus()}
         </section>
       </main>
     `;
@@ -37821,11 +37970,6 @@
         <p class="dashboardLead">
           Escolha uma categoria e comece o treino.
         </p>
-        <div class="cadernoValueIntro">
-          <strong>Caderno321 é a oficina. NIHONGO321 é a memória.</strong>
-          <span>Crie frases próprias, escreva a tradução, adicione detalhes e depois memorize tudo no treino 105x.</span>
-          <a href="../index.html#/home">voltar ao NIHONGO321</a>
-        </div>
         ${renderGenialEntryCard()}
         ${renderBridgeSummary()}
       </section>
@@ -37968,6 +38112,7 @@ applyAppTheme();
     document.querySelectorAll("[data-genial-input]").forEach(input => input.addEventListener("input", () => updateGenialRomaji(input.value)));
     document.querySelectorAll("[data-genial-pt-input]").forEach(input => input.addEventListener("input", () => updateGenialPt(input.value)));
     document.querySelectorAll("[data-genial-detail]").forEach(input => input.addEventListener("input", () => updateGenialDetail(input.dataset.genialDetail, input.value)));
+    document.querySelectorAll("[data-genial-topic]").forEach(select => select.addEventListener("change", () => setGenialTargetTopic(select.value)));
     document.querySelectorAll("[data-save-genial]").forEach(btn => btn.addEventListener("click", saveGenialPhrase));
     document.querySelectorAll("[data-clear-genial]").forEach(btn => btn.addEventListener("click", clearGenialEditor));
 
@@ -38027,26 +38172,69 @@ applyAppTheme();
 
   window.addEventListener("message", (event) => {
     const data = event.data || {};
-    if (!data || data.type !== "NIHONGO321_SAVE_RESULT") return;
+    if (!data) return;
+
+    if (data.type === "NIHONGO321_TOPIC_LIST") {
+      const topics = Array.isArray(data.topics) ? data.topics.filter(item => item && item.id && item.name) : [];
+      nihongo321SaveTopics = topics;
+      nihongo321DefaultTopicId = data.defaultTopicId || "topic_caderno321";
+
+      if (!normalizedSaveTopics().some(item => item.id === genialState.targetTopicId)) {
+        genialState.targetTopicId = nihongo321DefaultTopicId;
+        saveGenialState();
+      }
+
+      render();
+      return;
+    }
+
+    if (data.type !== "NIHONGO321_SAVE_RESULT") return;
 
     if (data.ok) {
+      if (data.requestId && genialState.lastSaveRequestId && data.requestId !== genialState.lastSaveRequestId) return;
       genialState.lastSavedAt = new Date().toISOString();
+      genialState.lastSavePending = false;
       genialState.lastSaveDirect = true;
       genialState.lastSaveCount = Number(data.total || 0);
       genialState.lastSaveError = "";
+      genialState.lastSavedTopicId = data.topicId || genialState.lastSavedTopicId || selectedSaveTopicId();
+      genialState.lastSavedTopicName = data.topicName || safeSaveTopicName(genialState.lastSavedTopicId);
+      genialState.lastSavedPhraseId = data.phraseId || genialState.lastSavedPhraseId || "";
       saveGenialState();
       toast(data.imported ? "frase salva no NIHONGO321" : "frase atualizada no NIHONGO321");
       render();
       return;
     }
 
-    genialState.lastSaveError = "o NIHONGO321 recebeu a frase, mas não conseguiu salvar.";
+    genialState.lastSavePending = false;
+    genialState.lastSaveError = caderno321SaveErrorMessage(data.error);
     saveGenialState();
     render();
   });
 
-  // Fallback forte: garante que o botão "salvar no NIHONGO321" funcione mesmo se a tela for re-renderizada.
+  // Fallback forte: garante que os botões principais funcionem mesmo se a tela for re-renderizada.
   document.addEventListener("click", (event) => {
+    const trainBtn = event.target?.closest?.("[data-train-genial]");
+    if (trainBtn) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (isEmbeddedInNihongo321()) {
+        try {
+          window.parent.postMessage({
+            type: "CADERNO321_START_TRAINING",
+            payload: {
+              phraseId: genialState.lastSavedPhraseId || "",
+              topicId: genialState.lastSavedTopicId || selectedSaveTopicId()
+            }
+          }, "*");
+          toast("abrindo treino 105x");
+          return;
+        } catch {}
+      }
+      window.location.href = "../index.html#/105x";
+      return;
+    }
+
     const btn = event.target?.closest?.("[data-save-genial]");
     if (!btn) return;
     event.preventDefault();
@@ -38059,5 +38247,6 @@ applyAppTheme();
     window.CADERNO321_BRIDGE_KEY = NIHONGO321_BRIDGE_KEY;
   } catch {}
 
+  requestNihongo321SaveTopics(true);
   render();
 })();

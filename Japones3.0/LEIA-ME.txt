@@ -1,27 +1,24 @@
-NIHONGO321 8.6.0 + CADERNO321 4.10.32 — Caderno Integrado Nativo
+NIHONGO321 8.6.4 + CADERNO321 4.10.35 — Salvamento com Diagnóstico Real
 
-O que mudou nesta versão:
-- O CADERNO321 agora abre dentro do NIHONGO321 pela rota #/caderno.
-- O botão CADERNO321 da Home não abre mais um app solto: ele abre o módulo integrado.
-- Ao tocar em “salvar no NIHONGO321”, o CADERNO321 envia a frase para o app pai por postMessage.
-- Quem salva no banco real jp_105x_v7 é o próprio NIHONGO321.
-- O fluxo antigo por URL continua como fallback para quem abrir /caderno/index.html diretamente.
-- A ponte localStorage nihongo321_caderno_saved_phrases_v1 continua existindo como apoio, mas deixou de ser o fluxo principal.
+Fase focada somente no fluxo do botão “salvar no NIHONGO321”.
 
-Como testar:
-1. Extraia o ZIP.
-2. Rode um servidor local na pasta:
-   python -m http.server
-3. Abra http://localhost:8000/
-4. Entre no CADERNO321 pelo botão da Home.
-5. Crie uma frase no Caderno Genial.
-6. Toque em salvar no NIHONGO321.
-7. Volte para Home/Gerenciar e veja a frase no tema Caderno321.
+Alterações principais:
+- Mantém CADERNO321 separado para testes e evolução.
+- Preserva integração por iframe/postMessage.
+- O CADERNO321 agora mostra diagnóstico real: aguardando confirmação, salvo, ou motivo de falha.
+- Detalhes continuam opcionais.
+- ROMAJI, JAPONÊS e TRADUÇÃO são validados antes do envio.
+- NIHONGO321 devolve confirmação com tópico, phraseId e total de frases.
+- Após salvar, aparece “treinar agora no 105x”.
+- Mantém ponte nihongo321_caderno_saved_phrases_v1 como segurança.
 
-Validação:
-- node --check app.js
-- node --check sensei-bank.js
-- node --check caderno/caderno.js
-
-Base recomendada:
-- NIHONGO321 8.6.0 + CADERNO321 4.10.32 — Caderno Integrado Nativo
+Preservado:
+- jp_105x_v7
+- treino 105x
+- CADERNO321 isolado
+- tópico escolhido ao salvar
+- Sensei Bank
+- checkout
+- backup/importação
+- tema claro/escuro
+- imagens oficiais

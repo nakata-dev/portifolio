@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.5.70.2
+   NIHONGO321 v8.6.2
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -22,8 +22,8 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.71",
-  updatedAt: "2026-05-21",
+  version: "8.6.1",
+  updatedAt: "2026-05-22",
   logoPath: "./img/logo_nihongo321.png"
 };
 
@@ -6172,6 +6172,48 @@ function ensureCaderno321Topic() {
   return topic;
 }
 
+function resolveCaderno321SaveTopic(item = {}) {
+  const fallback = ensureCaderno321Topic();
+  const requestedId = String(item.topicId || item.targetTopicId || item.caderno321?.targetTopicId || "").trim();
+  if (!requestedId) return fallback;
+
+  const topics = Array.isArray(STATE.bank?.topics) ? STATE.bank.topics : [];
+  const found = topics.find(t => t && t.id === requestedId);
+
+  if (!found) return fallback;
+  if (!canAccessTopic(found.id)) return fallback;
+  return found;
+}
+
+function caderno321AvailableSaveTopics() {
+  const fallback = ensureCaderno321Topic();
+  const seen = new Set();
+
+  return (STATE.bank?.topics || [])
+    .filter(topic => {
+      if (!topic || !topic.id || seen.has(topic.id)) return false;
+      seen.add(topic.id);
+      if (topic.id === fallback.id) return true;
+      return canAccessTopic(topic.id);
+    })
+    .map(topic => ({
+      id: topic.id,
+      name: topic.name || topic.id,
+      description: topic.description || "",
+      isDefault: topic.id === fallback.id
+    }));
+}
+
+function postCaderno321TopicList(targetWindow) {
+  try {
+    targetWindow?.postMessage?.({
+      type: "NIHONGO321_TOPIC_LIST",
+      topics: caderno321AvailableSaveTopics(),
+      defaultTopicId: "topic_caderno321"
+    }, "*");
+  } catch { }
+}
+
 function caderno321PhraseSignature(item) {
   return `${String(item.jp || "").trim()}||${String(item.pt || "").trim()}`;
 }
@@ -6184,7 +6226,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
     return { imported: 0, total: 0, pending: 0 };
   }
 
-  const topic = ensureCaderno321Topic();
+  ensureCaderno321Topic();
   STATE.bank.phrases ||= [];
   STATE.progress ||= {};
   const existing = new Set(STATE.bank.phrases.map(caderno321PhraseSignature));
@@ -6205,6 +6247,8 @@ function integrateCaderno321BridgePhrases(options = {}) {
     if (details.particles && !noteParts.join("\n").includes(details.particles)) noteParts.push(`Partículas: ${details.particles}`);
     if (details.explanation && !noteParts.join("\n").includes(details.explanation)) noteParts.push(`Explicação: ${details.explanation}`);
     if (details.situation && !noteParts.join("\n").includes(details.situation)) noteParts.push(`Situação: ${details.situation}`);
+
+    const topic = resolveCaderno321SaveTopic(item);
 
     STATE.bank.phrases.unshift({
       id,
@@ -6313,7 +6357,7 @@ function saveCaderno321PhraseNative(item = {}) {
 
   if (!jp) return { ok: false, reason: "empty_jp", imported: 0, total: (STATE.bank?.phrases || []).length };
 
-  const topic = ensureCaderno321Topic();
+  const topic = resolveCaderno321SaveTopic(item);
   STATE.bank.phrases ||= [];
   STATE.progress ||= {};
 
@@ -6345,7 +6389,7 @@ function saveCaderno321PhraseNative(item = {}) {
       updatedAt: t
     };
     saveState();
-    return { ok: true, imported: 0, updated: 1, total: STATE.bank.phrases.length, topicId: topic.id };
+    return { ok: true, imported: 0, updated: 1, total: STATE.bank.phrases.length, topicId: topic.id, topicName: topic.name || "Caderno321", phraseId: existing.id };
   }
 
   const id = uid("cad321");
@@ -6371,44 +6415,112 @@ function saveCaderno321PhraseNative(item = {}) {
   };
 
   saveState();
-  return { ok: true, imported: 1, updated: 0, total: STATE.bank.phrases.length, topicId: topic.id, phraseId: id };
+  return { ok: true, imported: 1, updated: 0, total: STATE.bank.phrases.length, topicId: topic.id, topicName: topic.name || "Caderno321", phraseId: id };
+}
+
+function upsertCaderno321BridgePhraseNative(item = {}) {
+  try {
+    const jp = String(item.jp || "").trim();
+    if (!jp) return { ok: false, reason: "empty_jp" };
+
+    const current = caderno321BridgePhrases();
+    const phrase = {
+      ...item,
+      id: item.id || uid("cad321_bridge"),
+      source: item.source || "CADERNO321",
+      savedForNihongo321: true,
+      receivedAt: item.receivedAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    const sig = caderno321PhraseSignature(phrase);
+    const index = current.findIndex(existing => caderno321PhraseSignature(existing) === sig);
+    if (index >= 0) current[index] = { ...current[index], ...phrase };
+    else current.unshift(phrase);
+
+    localStorage.setItem(CADERNO321_BRIDGE_KEY, JSON.stringify(current.slice(0, 300)));
+    return { ok: true, duplicate: index >= 0, total: current.length };
+  } catch (err) {
+    console.error("NIHONGO321 caderno bridge native save error:", err);
+    return { ok: false, reason: "bridge_write_failed" };
+  }
 }
 
 function saveCaderno321PayloadNative(payload = {}) {
   const phrases = Array.isArray(payload.phrases) ? payload.phrases : (payload.jp ? [payload] : []);
   let imported = 0;
   let updated = 0;
+  let failed = 0;
   let last = null;
+  let lastError = "";
 
   phrases.forEach(item => {
+    const bridgeResult = upsertCaderno321BridgePhraseNative(item);
     const result = saveCaderno321PhraseNative(item);
+
     if (result.ok) {
       imported += result.imported || 0;
       updated += result.updated || 0;
       last = result;
+      return;
     }
+
+    failed += 1;
+    lastError = result.reason || bridgeResult.reason || "save_failed";
   });
 
-  return { ok: imported > 0 || updated > 0, imported, updated, total: (STATE.bank?.phrases || []).length, last };
+  return {
+    ok: imported > 0 || updated > 0,
+    imported,
+    updated,
+    failed,
+    total: (STATE.bank?.phrases || []).length,
+    last,
+    error: lastError
+  };
+}
+
+function startCaderno321TrainingFromPayload(payload = {}) {
+  const phraseId = String(payload.phraseId || "").trim();
+  const topicId = String(payload.topicId || "topic_caderno321").trim() || "topic_caderno321";
+  const phrases = Array.isArray(STATE.bank?.phrases) ? STATE.bank.phrases : [];
+
+  let target = phraseId ? phrases.find(p => p && p.id === phraseId) : null;
+  if (!target && topicId) {
+    target = phrases.find(p => p && p.topicId === topicId && p.source === "CADERNO321");
+  }
+  if (!target) {
+    target = phrases.find(p => p && p.topicId === "topic_caderno321");
+  }
+
+  if (!target) return { ok: false, reason: "phrase_not_found" };
+
+  const sameTopic = phrases
+    .filter(p => p && p.topicId === target.topicId && isPhraseAccessible(p))
+    .map(p => p.id);
+
+  const queue = [target.id, ...sameTopic.filter(id => id !== target.id)];
+  if (!queue.length) return { ok: false, reason: "empty_queue" };
+
+  STATE.session.inProgress = true;
+  STATE.session.topicFilter = target.topicId || "ALL";
+  STATE.session.queue = queue;
+  STATE.session.index = 0;
+  STATE.session.phraseId = target.id;
+
+  resetCountForPhrase(target.id);
+  saveState();
+  nav("#/105x");
+  render();
+  startStudyTimerIfOn105x();
+
+  return { ok: true, phraseId: target.id, topicId: target.topicId || topicId };
 }
 
 function renderCaderno321Integrated() {
   APP.innerHTML = `
-    <div class="stack cadernoIntegratedPage">
-      <section class="card cadernoIntegratedHeader">
-        <div class="row row--between">
-          <div>
-            <div class="badge">CADERNO321 integrado</div>
-            <h1 class="h1">Crie no caderno. Salve direto no treino.</h1>
-            <p class="p">Agora o CADERNO321 abre dentro do NIHONGO321. A frase criada é salva pelo próprio NIHONGO321 no banco real do app.</p>
-          </div>
-          <button class="btn btn--muted" type="button" data-nav="#/home">voltar</button>
-        </div>
-      </section>
-
-      <section class="card cadernoIntegratedFrameCard">
-        <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard" title="CADERNO321 integrado ao NIHONGO321"></iframe>
-      </section>
+    <div class="cadernoIntegratedPage" aria-label="CADERNO321 integrado ao NIHONGO321">
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard" title="CADERNO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
@@ -9605,6 +9717,7 @@ function render() {
   applyTheme(getTheme());
 
   const r = route();
+  document.body.classList.toggle("is-caderno-route", r === "#/caderno");
 
   if (r === "#/onboarding") return renderOnboarding();
   if (r === "#/premium-themes") return renderPremiumThemes();
@@ -10949,28 +11062,51 @@ document.addEventListener("change", (e) => {
 /* ---------- CADERNO321 integrado: salvamento nativo ---------- */
 window.addEventListener("message", (event) => {
   const data = event.data || {};
-  if (!data || data.type !== "CADERNO321_SAVE_PHRASE") return;
+  if (!data) return;
+
+  if (data.type === "CADERNO321_REQUEST_TOPICS") {
+    postCaderno321TopicList(event.source);
+    return;
+  }
+
+  if (data.type === "CADERNO321_START_TRAINING") {
+    const result = startCaderno321TrainingFromPayload(data.payload || {});
+    try {
+      event.source?.postMessage?.({ type: "NIHONGO321_START_TRAINING_RESULT", ok: !!result.ok, ...result }, "*");
+    } catch { }
+    toast(result.ok ? "abrindo treino 105x" : "não encontrei a frase para treinar");
+    return;
+  }
+
+  if (data.type !== "CADERNO321_SAVE_PHRASE") return;
 
   try {
     const payload = data.payload || {};
     const result = saveCaderno321PayloadNative(payload);
+    const last = result.last || {};
 
     try {
       event.source?.postMessage?.({
         type: "NIHONGO321_SAVE_RESULT",
+        requestId: payload.requestId || "",
         ok: !!result.ok,
         imported: result.imported || 0,
         updated: result.updated || 0,
-        total: result.total || 0
+        failed: result.failed || 0,
+        total: result.total || 0,
+        error: result.error || "",
+        topicId: last.topicId || result.topicId || "topic_caderno321",
+        topicName: last.topicName || "Caderno321",
+        phraseId: last.phraseId || ""
       }, "*");
     } catch { }
 
-    toast(result.imported ? "frase salva no NIHONGO321" : result.updated ? "frase atualizada no NIHONGO321" : "nenhuma frase nova para salvar");
+    toast(result.imported ? "frase salva no NIHONGO321" : result.updated ? "frase atualizada no NIHONGO321" : "não consegui salvar a frase");
     refreshHUD();
   } catch (err) {
     console.error("NIHONGO321 caderno integrated save error:", err);
     try {
-      event.source?.postMessage?.({ type: "NIHONGO321_SAVE_RESULT", ok: false, error: "save_failed" }, "*");
+      event.source?.postMessage?.({ type: "NIHONGO321_SAVE_RESULT", requestId: data.payload?.requestId || "", ok: false, error: "save_failed" }, "*");
     } catch { }
     toast("erro ao salvar frase do CADERNO321");
   }

@@ -13665,35 +13665,47 @@ a,
 
 
 /* =========================================================
-   NIHONGO321 8.6.0 — CADERNO321 integrado nativo
+   NIHONGO321 8.6.1 — CADERNO321 integrado limpo
+   ---------------------------------------------------------
+   Remove o cabeçalho duplicado do NIHONGO321 na rota #/caderno
+   e deixa o CADERNO321 comandar a tela integrada.
    ========================================================= */
-.cadernoIntegratedPage{
-  width:min(100%, 1120px);
-  margin:0 auto;
+body.is-caderno-route .topbar{
+  display:none !important;
 }
-.cadernoIntegratedHeader .h1{
-  margin:.55rem 0 .4rem;
-  font-size:clamp(28px, 5vw, 52px);
-  line-height:1.02;
-  letter-spacing:-.04em;
-}
-.cadernoIntegratedFrameCard{
+
+body.is-caderno-route .app{
+  width:100%;
+  max-width:none;
+  min-height:100svh;
   padding:0;
-  overflow:hidden;
-  min-height:76vh;
 }
+
+.cadernoIntegratedPage{
+  width:100%;
+  min-height:100svh;
+  margin:0;
+  padding:0;
+  background:transparent;
+}
+
 .cadernoIntegratedFrame{
   display:block;
   width:100%;
-  height:calc(100vh - 170px);
-  min-height:760px;
+  height:100svh;
+  min-height:100svh;
   border:0;
   background:transparent;
 }
-@media (max-width: 720px){
-  .cadernoIntegratedHeader{ padding:14px; }
+
+@supports not (height:100svh){
+  body.is-caderno-route .app,
+  .cadernoIntegratedPage,
   .cadernoIntegratedFrame{
-    height:calc(100vh - 126px);
-    min-height:720px;
+    min-height:100vh;
+  }
+
+  .cadernoIntegratedFrame{
+    height:100vh;
   }
 }

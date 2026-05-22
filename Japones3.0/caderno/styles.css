@@ -9661,3 +9661,148 @@ body:has(.app) {
     max-width:1080px;
   }
 }
+
+
+/* =========================================================
+   CADERNO321 4.10.32 — Header integrado limpo
+   ---------------------------------------------------------
+   Retorno ao NIHONGO321 fica discreto no header do próprio
+   CADERNO321. Remove a aparência de segundo cabeçalho/promo.
+   ========================================================= */
+.headerBridgeTextBtn{
+  min-width:auto !important;
+  min-height:34px !important;
+  height:34px !important;
+  padding:0 12px !important;
+  border-radius:999px !important;
+  font-size:11px !important;
+  line-height:1 !important;
+  letter-spacing:.02em !important;
+  text-transform:lowercase !important;
+  color:#fff3c9 !important;
+  border-color:rgba(255,216,111,.24) !important;
+  background:rgba(255,216,111,.075) !important;
+  box-shadow:none !important;
+}
+
+.headerBridgeTextBtn::before{
+  content:"↩";
+  margin-right:5px;
+  font-size:12px;
+  opacity:.86;
+}
+
+.headerBridgeTextBtn:hover{
+  border-color:rgba(255,216,111,.42) !important;
+  background:rgba(255,216,111,.12) !important;
+}
+
+.cadernoValueIntro{
+  display:none !important;
+}
+
+.dashboardCard--compact{
+  margin-top:12px;
+}
+
+html[data-caderno-theme="light"] .headerBridgeTextBtn{
+  color:#704700 !important;
+  border-color:rgba(131,83,10,.22) !important;
+  background:rgba(255,216,111,.30) !important;
+}
+
+@media (max-width:620px){
+  .headerBridgeTextBtn{
+    min-height:32px !important;
+    height:32px !important;
+    padding:0 10px !important;
+    font-size:10px !important;
+  }
+}
+
+/* =========================================================
+   CADERNO321 4.10.34 — escolha de tópico ao salvar
+   ========================================================= */
+.genialSaveTarget{
+  display:grid;
+  gap:8px;
+  border:1px solid rgba(255,216,111,.22);
+  border-radius:22px;
+  padding:14px;
+  background:
+    radial-gradient(220px 120px at 10% 0%, rgba(255,216,111,.12), transparent 68%),
+    rgba(255,255,255,.038);
+}
+
+.genialSaveTarget select{
+  width:100%;
+  min-height:48px;
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:0 14px;
+  color:var(--text);
+  background:rgba(6,12,24,.72);
+  font:inherit;
+  font-weight:900;
+  outline:none;
+}
+
+.genialSaveTarget select:focus{
+  border-color:rgba(255,216,111,.48);
+  box-shadow:0 0 0 3px rgba(255,216,111,.12);
+}
+
+.genialSaveTarget select:disabled{
+  opacity:.72;
+}
+
+.genialSaveTarget small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  font-weight:800;
+}
+
+
+/* =========================================================
+   CADERNO321 4.10.35 — Salvamento com diagnóstico real
+   ========================================================= */
+.genialSaveStatus{
+  display:grid;
+  gap:10px;
+  margin-top:14px;
+  padding:16px;
+  border-radius:22px;
+  border:1px solid rgba(139,195,154,.38);
+  background:linear-gradient(180deg, rgba(139,195,154,.16), rgba(255,255,255,.045));
+  color:var(--text);
+}
+.genialSaveStatus b{
+  color:var(--soft);
+  font-size:15px;
+}
+.genialSaveStatus span{
+  color:var(--muted2);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:800;
+}
+.genialSaveStatus--pending{
+  border-color:rgba(255,216,111,.42);
+  background:linear-gradient(180deg, rgba(255,216,111,.15), rgba(255,255,255,.045));
+}
+.genialSaveStatus--error{
+  border-color:rgba(217,124,124,.48);
+  background:linear-gradient(180deg, rgba(217,124,124,.15), rgba(255,255,255,.045));
+}
+.genialTrainNow{
+  width:100%;
+  min-height:48px;
+  border:1px solid rgba(255,216,111,.42);
+  border-radius:16px;
+  background:linear-gradient(135deg, rgba(255,216,111,.95), rgba(255,159,56,.95));
+  color:#201306;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
