@@ -1,12 +1,16 @@
-NIHONGO321 8.6.7 + CADERNO321 4.10.38 — Salvar Blindado + Cache Limpo
+NIHONGO321 8.6.8 + CADERNO321 4.10.39 — Salvamento Sem Espera + Cache Limpo
 
 Correção focada no botão “salvar no NIHONGO321”.
 
-Alterações principais:
-- Adicionado versionamento/cache busting no index principal, app.js, iframe do CADERNO321, styles e caderno.js.
-- Adicionada fila segura nihongo321_caderno_save_outbox_v1 para garantir que a frase não se perca se o app pai não responder imediatamente.
-- NIHONGO321 agora sincroniza também a outbox do CADERNO321 quando a tela principal recebe sinal ou volta para a Home.
-- Preservados CADERNO321 separado, iframe/postMessage, ponte antiga, jp_105x_v7, treino 105x e escolha de tópico.
+Alterações:
+- O CADERNO321 mantém estrutura separada para testes e evolução.
+- O salvamento agora tenta gravar imediatamente no banco real jp_105x_v7 pelo próprio CADERNO321, sem depender de confirmação visual por postMessage.
+- A mensagem insegura “aguardando confirmação real” foi removida do fluxo principal.
+- O cache foi limpo por versionamento nos arquivos do CADERNO321 e no iframe integrado.
+- O NIHONGO321 recarrega o estado em memória quando recebe aviso de salvamento local do CADERNO321.
+- A ponte nihongo321_caderno_saved_phrases_v1 continua como reserva.
 
-Detalhes continuam opcionais.
-Para salvar, são necessários apenas ROMAJI, JAPONÊS gerado e TRADUÇÃO.
+Validação:
+- node --check app.js: OK
+- node --check sensei-bank.js: OK
+- node --check caderno/caderno.js: OK
