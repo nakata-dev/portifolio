@@ -1,24 +1,12 @@
-NIHONGO321 8.6.4 + CADERNO321 4.10.35 — Salvamento com Diagnóstico Real
+NIHONGO321 8.6.7 + CADERNO321 4.10.38 — Salvar Blindado + Cache Limpo
 
-Fase focada somente no fluxo do botão “salvar no NIHONGO321”.
+Correção focada no botão “salvar no NIHONGO321”.
 
 Alterações principais:
-- Mantém CADERNO321 separado para testes e evolução.
-- Preserva integração por iframe/postMessage.
-- O CADERNO321 agora mostra diagnóstico real: aguardando confirmação, salvo, ou motivo de falha.
-- Detalhes continuam opcionais.
-- ROMAJI, JAPONÊS e TRADUÇÃO são validados antes do envio.
-- NIHONGO321 devolve confirmação com tópico, phraseId e total de frases.
-- Após salvar, aparece “treinar agora no 105x”.
-- Mantém ponte nihongo321_caderno_saved_phrases_v1 como segurança.
+- Adicionado versionamento/cache busting no index principal, app.js, iframe do CADERNO321, styles e caderno.js.
+- Adicionada fila segura nihongo321_caderno_save_outbox_v1 para garantir que a frase não se perca se o app pai não responder imediatamente.
+- NIHONGO321 agora sincroniza também a outbox do CADERNO321 quando a tela principal recebe sinal ou volta para a Home.
+- Preservados CADERNO321 separado, iframe/postMessage, ponte antiga, jp_105x_v7, treino 105x e escolha de tópico.
 
-Preservado:
-- jp_105x_v7
-- treino 105x
-- CADERNO321 isolado
-- tópico escolhido ao salvar
-- Sensei Bank
-- checkout
-- backup/importação
-- tema claro/escuro
-- imagens oficiais
+Detalhes continuam opcionais.
+Para salvar, são necessários apenas ROMAJI, JAPONÊS gerado e TRADUÇÃO.

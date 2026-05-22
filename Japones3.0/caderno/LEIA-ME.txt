@@ -1,9 +1,12 @@
-CADERNO321 4.10.31.1 — Salvamento Estrutural Verificado
+CADERNO321 4.10.38 — Salvar Blindado + Cache Limpo
 
-O botão “salvar no NIHONGO321” foi corrigido estruturalmente.
+O botão “salvar no NIHONGO321” foi preservado e reforçado.
 
-Agora ele grava:
-- na ponte nihongo321_caderno_saved_phrases_v1;
-- diretamente no banco jp_105x_v7 com estrutura válida para o NIHONGO321 reconhecer.
+Agora o CADERNO321:
+- salva na ponte nihongo321_caderno_saved_phrases_v1;
+- registra uma fila segura nihongo321_caderno_save_outbox_v1;
+- tenta salvamento direto no banco real jp_105x_v7;
+- tenta sincronizar o NIHONGO321 aberto;
+- mantém postMessage como fallback.
 
-A correção também cria uma estrutura mínima válida do NIHONGO321 quando o usuário salva pelo CADERNO321 antes de abrir o NIHONGO321 no navegador.
+O arquivo continua separado para testes e evolução futura.

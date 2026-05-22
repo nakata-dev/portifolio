@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.6.2
+   NIHONGO321 v8.6.7
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -16,13 +16,14 @@
 
 const LS_KEY = "jp_105x_v7";
 const CADERNO321_BRIDGE_KEY = "nihongo321_caderno_saved_phrases_v1";
+const CADERNO321_SAVE_OUTBOX_KEY = "nihongo321_caderno_save_outbox_v1";
 
 /* ========= IDENTIDADE DO PRODUTO ========= */
 const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.6.1",
+  version: "8.6.7",
   updatedAt: "2026-05-22",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -1220,6 +1221,15 @@ let STATE = loadState();
 function saveState() {
   STATE.app.updatedAt = now();
   localStorage.setItem(LS_KEY, JSON.stringify(STATE));
+}
+
+function reloadStateFromStorage() {
+  try {
+    STATE = loadState();
+  } catch (err) {
+    console.error("NIHONGO321 reload state error:", err);
+  }
+  return STATE;
 }
 
 /* ---------- favoritos / frase do dia / meta ---------- */
@@ -6153,6 +6163,32 @@ function caderno321BridgePhrases() {
   }
 }
 
+function caderno321SaveOutboxPhrases() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(CADERNO321_SAVE_OUTBOX_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter(item => item && item.jp) : [];
+  } catch {
+    return [];
+  }
+}
+
+function clearCaderno321SaveOutbox() {
+  try { localStorage.removeItem(CADERNO321_SAVE_OUTBOX_KEY); } catch { }
+}
+
+function importCaderno321SaveOutbox(options = {}) {
+  const silent = !!options.silent;
+  const outbox = caderno321SaveOutboxPhrases();
+  if (!outbox.length) return { ok: true, imported: 0, updated: 0, total: (STATE.bank?.phrases || []).length };
+
+  const result = saveCaderno321PayloadNative({ phrases: outbox, source: "CADERNO321_SAVE_OUTBOX" });
+  if (result.ok) {
+    clearCaderno321SaveOutbox();
+    if (!silent) toast(result.imported ? `${result.imported} frase(s) salva(s) do CADERNO321` : "frase do CADERNO321 atualizada");
+  }
+  return result;
+}
+
 function ensureCaderno321Topic() {
   STATE.bank ||= { topics: [], phrases: [] };
   STATE.bank.topics ||= [];
@@ -6481,6 +6517,9 @@ function saveCaderno321PayloadNative(payload = {}) {
 }
 
 function startCaderno321TrainingFromPayload(payload = {}) {
+  try { reloadStateFromStorage(); } catch { }
+  try { integrateCaderno321BridgePhrases({ silent: true }); } catch { }
+
   const phraseId = String(payload.phraseId || "").trim();
   const topicId = String(payload.topicId || "topic_caderno321").trim() || "topic_caderno321";
   const phrases = Array.isArray(STATE.bank?.phrases) ? STATE.bank.phrases : [];
@@ -6517,10 +6556,61 @@ function startCaderno321TrainingFromPayload(payload = {}) {
   return { ok: true, phraseId: target.id, topicId: target.topicId || topicId };
 }
 
+
+function buildCaderno321SaveResponse(payload = {}, result = {}) {
+  const last = result.last || {};
+  return {
+    type: "NIHONGO321_SAVE_RESULT",
+    requestId: payload.requestId || "",
+    ok: !!result.ok,
+    imported: result.imported || 0,
+    updated: result.updated || 0,
+    failed: result.failed || 0,
+    total: result.total || 0,
+    error: result.error || "",
+    topicId: last.topicId || result.topicId || "topic_caderno321",
+    topicName: last.topicName || result.topicName || "Caderno321",
+    phraseId: last.phraseId || result.phraseId || ""
+  };
+}
+
+try {
+  window.NIHONGO321_CADERNO_GET_TOPICS = function() {
+    return {
+      type: "NIHONGO321_TOPIC_LIST",
+      topics: caderno321AvailableSaveTopics(),
+      defaultTopicId: "topic_caderno321"
+    };
+  };
+
+  window.NIHONGO321_CADERNO_SYNC_FROM_STORAGE = function() {
+    reloadStateFromStorage();
+    const outboxResult = importCaderno321SaveOutbox({ silent: true });
+    refreshHUD();
+    return { ok: true, imported: outboxResult.imported || 0, updated: outboxResult.updated || 0, total: (STATE.bank?.phrases || []).length };
+  };
+
+  window.NIHONGO321_CADERNO_SAVE_DIRECT = function(payload = {}) {
+    const result = saveCaderno321PayloadNative(payload || {});
+    const response = buildCaderno321SaveResponse(payload || {}, result || {});
+    if (response.ok) {
+      refreshHUD();
+      try { window.dispatchEvent(new CustomEvent("NIHONGO321_CADERNO_SAVED", { detail: response })); } catch { }
+    }
+    return response;
+  };
+
+  window.NIHONGO321_CADERNO_START_TRAINING_DIRECT = function(payload = {}) {
+    try { integrateCaderno321BridgePhrases({ silent: true }); } catch { }
+    return startCaderno321TrainingFromPayload(payload || {});
+  };
+} catch { }
+
 function renderCaderno321Integrated() {
+  const cadernoVersion = "4.10.38";
   APP.innerHTML = `
     <div class="cadernoIntegratedPage" aria-label="CADERNO321 integrado ao NIHONGO321">
-      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard" title="CADERNO321 integrado ao NIHONGO321"></iframe>
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=${cadernoVersion}" title="CADERNO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
@@ -6558,6 +6648,7 @@ function renderHome() {
   ensurePhrasesHaveValidTopic();
   receiveCaderno321UrlImport();
   integrateCaderno321BridgePhrases({ silent: true });
+  importCaderno321SaveOutbox({ silent: true });
 
   const topicFilter = safeTopicFilter(STATE.session.topicFilter || "ALL");
 
@@ -11069,6 +11160,21 @@ window.addEventListener("message", (event) => {
     return;
   }
 
+  if (data.type === "CADERNO321_LOCAL_SAVE_SYNC") {
+    try {
+      reloadStateFromStorage();
+      const payload = data.payload?.phrase ? { ...data.payload, phrases: [data.payload.phrase] } : (data.payload || {});
+      const result = payload?.phrases?.length ? saveCaderno321PayloadNative(payload) : importCaderno321SaveOutbox({ silent: true });
+      const response = buildCaderno321SaveResponse(payload || {}, result || {});
+      try { event.source?.postMessage?.(response, "*"); } catch { }
+      refreshHUD();
+    } catch (err) {
+      console.error("NIHONGO321 caderno local sync error:", err);
+      try { event.source?.postMessage?.({ type: "NIHONGO321_SAVE_RESULT", requestId: data.payload?.requestId || "", ok: false, error: "local_sync_failed" }, "*"); } catch { }
+    }
+    return;
+  }
+
   if (data.type === "CADERNO321_START_TRAINING") {
     const result = startCaderno321TrainingFromPayload(data.payload || {});
     try {
@@ -11083,22 +11189,10 @@ window.addEventListener("message", (event) => {
   try {
     const payload = data.payload || {};
     const result = saveCaderno321PayloadNative(payload);
-    const last = result.last || {};
+    const response = buildCaderno321SaveResponse(payload, result);
 
     try {
-      event.source?.postMessage?.({
-        type: "NIHONGO321_SAVE_RESULT",
-        requestId: payload.requestId || "",
-        ok: !!result.ok,
-        imported: result.imported || 0,
-        updated: result.updated || 0,
-        failed: result.failed || 0,
-        total: result.total || 0,
-        error: result.error || "",
-        topicId: last.topicId || result.topicId || "topic_caderno321",
-        topicName: last.topicName || "Caderno321",
-        phraseId: last.phraseId || ""
-      }, "*");
+      event.source?.postMessage?.(response, "*");
     } catch { }
 
     toast(result.imported ? "frase salva no NIHONGO321" : result.updated ? "frase atualizada no NIHONGO321" : "não consegui salvar a frase");
