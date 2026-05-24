@@ -1,16 +1,23 @@
-NIHONGO321 8.6.8 + CADERNO321 4.10.39 — Salvamento Sem Espera + Cache Limpo
+NIHONGO321 8.6.13 + DIÁRIO321 4.11.4 — Salvar Página com UID Local
 
-Correção focada no botão “salvar no NIHONGO321”.
+Correção focada somente no botão “salvar nesta página” do DIÁRIO321.
 
 Alterações:
-- O CADERNO321 mantém estrutura separada para testes e evolução.
-- O salvamento agora tenta gravar imediatamente no banco real jp_105x_v7 pelo próprio CADERNO321, sem depender de confirmação visual por postMessage.
-- A mensagem insegura “aguardando confirmação real” foi removida do fluxo principal.
-- O cache foi limpo por versionamento nos arquivos do CADERNO321 e no iframe integrado.
-- O NIHONGO321 recarrega o estado em memória quando recebe aviso de salvamento local do CADERNO321.
-- A ponte nihongo321_caderno_saved_phrases_v1 continua como reserva.
+- leitura direta dos campos visíveis antes de salvar;
+- fallback pelo texto japonês renderizado na tela;
+- função global segura DIARIO321_SAVE_PAGE;
+- onclick direto no botão como camada extra de segurança;
+- verificação após gravar no localStorage diario321_pages_360_v1;
+- mensagem clara quando salva ou quando há erro real.
 
-Validação:
-- node --check app.js: OK
-- node --check sensei-bank.js: OK
-- node --check caderno/caderno.js: OK
+Preservado:
+- DIÁRIO321 separado em /caderno;
+- rota #/caderno;
+- treino 105x;
+- jp_105x_v7;
+- nihongo321_caderno_saved_phrases_v1;
+- Sensei Bank, checkout, backup, tema e imagens oficiais.
+
+
+NIHONGO321 8.6.13 + DIÁRIO321 4.11.4 — Salvar Página com UID Local
+Correção estrutural: adicionada função uid local no DIÁRIO321 para impedir erro interno ao salvar frases na página.

@@ -1,5 +1,5 @@
 /* =========================================================
-   CADERNO321 — Protótipo 4.10.37
+   DIÁRIO321 — Protótipo 4.11.4
    Feedback de salvamento visível sem alterar o fluxo principal.
    ========================================================= */
 
@@ -13115,13 +13115,13 @@
   "romaji": "kaku / sho",
   "pt": "escrever",
   "type": "kanji",
-  "hint": "N5 lógico · verbos essenciais. Mão escrevendo no papel: perfeito para o CADERNO321.",
+  "hint": "N5 lógico · verbos essenciais. Mão escrevendo no papel: perfeito para o DIÁRIO321.",
   "chars": [
     "書"
   ],
   "jlpt": "N5",
   "group": "verbos essenciais",
-  "memo": "Mão escrevendo no papel: perfeito para o CADERNO321.",
+  "memo": "Mão escrevendo no papel: perfeito para o DIÁRIO321.",
   "onyomi": "ショ",
   "kunyomi": "か",
   "strokes": "10",
@@ -18255,13 +18255,13 @@
   "romaji": "kaku",
   "pt": "escrever",
   "type": "kanji",
-  "hint": "N5 leitura profunda · kunyomi em estudo. 書く é o coração do CADERNO321: escrever para fixar.",
+  "hint": "N5 leitura profunda · kunyomi em estudo. 書く é o coração do DIÁRIO321: escrever para fixar.",
   "chars": [
     "書"
   ],
   "jlpt": "N5",
   "group": "kunyomi em estudo",
-  "memo": "書く é o coração do CADERNO321: escrever para fixar.",
+  "memo": "書く é o coração do DIÁRIO321: escrever para fixar.",
   "onyomi": "ショ",
   "kunyomi": "か",
   "strokes": "10",
@@ -34338,7 +34338,7 @@
       state.screen = "dashboard";
     }
   } catch { }
-  // CADERNO321 4.10.21: ao abrir/recarregar, os menus começam fechados para uma tela mais organizada.
+  // DIÁRIO321 4.10.21: ao abrir/recarregar, os menus começam fechados para uma tela mais organizada.
   let openMenu = "";
   let selectedFocus = state.selectedFocus || {};
   let selectedFamily = state.selectedFamily || { hiragana: "あ", katakana: "ア" };
@@ -34429,7 +34429,7 @@
   function familyForFocus(cat, focus) { return ((KANA_FAMILIES[cat] || []).find(item => (item.letters || []).includes(focus)) || {}).key || ""; }
   function showCadernoPremiumMessage(kind = "family") {
     if (kind === "genial") {
-      toast("Você atingiu o seu limite grátis de frases. Adquira o Premium para continuar criando frases no Caderno Genial.");
+      toast("Você atingiu o seu limite grátis de frases. Adquira o Premium para continuar criando frases no Diário Genial.");
       return;
     }
     if (kind === "kanji") {
@@ -34438,8 +34438,18 @@
     }
     toast("Esta família faz parte do Premium. No grátis, treine as famílias A, KA e SA para sentir o gosto da escrita japonesa pelo celular.");
   }
+
+  function uid(prefix = "id") {
+    try {
+      if (window.crypto?.randomUUID) {
+        return `${prefix}_${window.crypto.randomUUID()}`;
+      }
+    } catch {}
+    return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+  }
+
   function isGenialBridgePhrase(item) {
-    return String(item?.source || "") === "CADERNO321 Caderno Genial" || !!item?.caderno321?.romaji;
+    return ["CADERNO321 Diário Genial", "DIÁRIO321 Diário Genial", "CADERNO321 Caderno Genial"].includes(String(item?.source || "")) || !!item?.caderno321?.romaji;
   }
 
   function genialSavedFreeCount() {
@@ -35409,7 +35419,7 @@
         <div class="brandMini">
           <img src="../img/logo_nihongo321.png" alt="NIHONGO321" onerror="this.style.display='none'">
           <div>
-            <strong>CADERNO321</strong>
+            <strong>DIÁRIO321</strong>
             
           </div>
         </div>
@@ -35600,7 +35610,7 @@
     const finalPhrase = {
       ...phrase,
       id: phrase.id || uid("genial_phrase"),
-      source: phrase.source || "CADERNO321 Caderno Genial",
+      source: phrase.source || "CADERNO321 Diário Genial",
       savedForNihongo321: true,
       updatedAt: new Date().toISOString()
     };
@@ -35688,7 +35698,7 @@
       const jp = String(phrase?.jp || "").trim();
       if (!jp) return { ok: false, reason: "empty" };
 
-      const pt = String(phrase?.pt || "").trim() || "frase criada no CADERNO321";
+      const pt = String(phrase?.pt || "").trim() || "frase criada no DIÁRIO321";
       const LS_NIHONGO = "jp_105x_v7";
       const state = readWritableNihongo321State();
 
@@ -35696,10 +35706,10 @@
       if (!topic) {
         topic = {
           id: "topic_caderno321",
-          name: "Caderno321",
+          name: "Diário321",
           icon: "筆",
           color: "tAmber",
-          description: "Frases criadas pelo aluno no CADERNO321.",
+          description: "Frases criadas pelo aluno no DIÁRIO321.",
           isPremium: false,
           createdAt: Date.now(),
           updatedAt: Date.now()
@@ -35767,7 +35777,7 @@
       const total = Array.isArray(verify?.bank?.phrases) ? verify.bank.phrases.filter(item => item?.topicId === "topic_caderno321").length : 0;
       return { ok, duplicate, total, id, storageKey: LS_NIHONGO };
     } catch (err) {
-      console.error("CADERNO321 direct save error:", err);
+      console.error("DIÁRIO321 direct save error:", err);
       return { ok: false, reason: err?.message || "direct_save_error" };
     }
   }
@@ -36549,7 +36559,14 @@
     return genialPersonalDict[String(token || "").toLowerCase()];
   }
 
-  const GENIAL_KEY = "caderno321_genial_v49";
+  const GENIAL_KEY = "diario321_genial_v49";
+  const DIARIO321_PAGES_KEY = "diario321_pages_360_v1";
+  const DIARIO321_REVEAL_KEY = "diario321_revealed_meanings_v1";
+  const DIARIO321_WORD_PAGES = [
+    { id: "page_totsuzen", number: 1, target: "突然", romaji: "totsuzen", meaning: "de repente / inesperadamente", mission: "Crie 3 frases com essa palavra.", total: 3, challenges: ["frase simples", "trabalho", "pergunta"] },
+    { id: "page_kakunin", number: 2, target: "確認", romaji: "kakunin", meaning: "confirmação / confirmar", mission: "Crie frases para confirmar algo com clareza.", total: 3, challenges: ["frase simples", "trabalho", "pedido educado"] },
+    { id: "page_yotei", number: 3, target: "予定", romaji: "yotei", meaning: "plano / programação", mission: "Crie frases sobre mudança de plano e rotina.", total: 3, challenges: ["hoje", "trabalho", "mudança"] }
+  ];
 
 
   let genialOnlineTranslation = {
@@ -36586,11 +36603,11 @@
 
   function safeSaveTopicName(topicId) {
     const topic = nihongo321SaveTopics.find(item => item && item.id === topicId);
-    return topic?.name || "Caderno321";
+    return topic?.name || "Diário321";
   }
 
   function normalizedSaveTopics() {
-    const fallback = { id: "topic_caderno321", name: "Caderno321", description: "Frases criadas no CADERNO321.", isDefault: true };
+    const fallback = { id: "topic_caderno321", name: "Diário321", description: "Frases criadas no DIÁRIO321.", isDefault: true };
     const list = Array.isArray(nihongo321SaveTopics) ? nihongo321SaveTopics.filter(item => item && item.id && item.name) : [];
     if (!list.some(item => item.id === fallback.id)) list.unshift(fallback);
     return list;
@@ -36629,7 +36646,7 @@
             <option value="${escapeHTML(topic.id)}" ${topic.id === selected ? "selected" : ""}>${escapeHTML(topic.name)}</option>
           `).join("")}
         </select>
-        <small>${embedded ? "Escolha o tópico e treine essa frase logo em seguida no 105x." : "No modo isolado, a frase fica guardada para o tópico Caderno321."}</small>
+        <small>${embedded ? "Escolha o tópico e treine essa frase logo em seguida no 105x." : "No modo isolado, a frase fica guardada para o tópico Diário321."}</small>
       </label>
     `;
   }
@@ -36913,6 +36930,7 @@
     "okane":"お金",
     "namae":"名前",
     "kyou":"今日",
+    "totsuzen":"突然",
     "ashita":"明日",
     "kinou":"昨日",
     "daijoubu":"大丈夫",
@@ -36939,7 +36957,55 @@
     "gasorin":"ガソリン",
     "paato":"パート",
     "arubaito":"アルバイト",
-    "sararii":"サラリー"
+    "sararii":"サラリー",
+
+    // DIÁRIO321 4.11.1 — nomes e palavras estrangeiras comuns no Japão real.
+    // Regra para o aluno: k: usa katakana. O dicionário abaixo evita conversões estranhas
+    // em nomes brasileiros e palavras de fábrica/rotina.
+    "eraa":"エラー",
+    "era-":"エラー",
+    "error":"エラー",
+    "miraa":"ミラー",
+    "hoteru":"ホテル",
+    "resutoran":"レストラン",
+    "koohii":"コーヒー",
+    "kafe":"カフェ",
+    "sumaho":"スマホ",
+    "pasokon":"パソコン",
+    "apuri":"アプリ",
+    "rain":"ライン",
+    "line":"ライン",
+    "wiifi":"ワイファイ",
+    "wifi":"ワイファイ",
+    "sain":"サイン",
+    "saizu":"サイズ",
+    "taimu":"タイム",
+    "riidaa":"リーダー",
+    "leader":"リーダー",
+    "marcos":"マルコス",
+    "makosu":"マルコス",
+    "ailton":"アイルトン",
+    "airuton":"アイルトン",
+    "ana":"アナ",
+    "paulo":"パウロ",
+    "pauro":"パウロ",
+    "maria":"マリア",
+    "jose":"ジョゼ",
+    "joze":"ジョゼ",
+    "carlos":"カルロス",
+    "karurosu":"カルロス",
+    "bruno":"ブルーノ",
+    "buruno":"ブルーノ",
+    "lucas":"ルーカス",
+    "rukasu":"ルーカス",
+    "rafael":"ラファエル",
+    "rafaeru":"ラファエル",
+    "daniel":"ダニエル",
+    "danieru":"ダニエル",
+    "fernando":"フェルナンド",
+    "ferunando":"フェルナンド",
+    "burajiru":"ブラジル",
+    "amerika":"アメリカ"
   };
 
   const GENIAL_PARTICLES = new Set(["wa","ga","wo","o","ni","de","to","mo","kara","made","no","he","e","ya","ka"]);
@@ -36960,7 +37026,10 @@
     // k:konbini => コンビニ
     // h:nichiyoubi => にちようび
     // j:nichiyoubi => 日曜日 se existir no dicionário
-    if (lower.startsWith("k:")) return romajiToKana(lower.slice(2), "katakana");
+    if (lower.startsWith("k:")) {
+      const body = lower.slice(2);
+      return GENIAL_KATAKANA_WORDS[body] || romajiToKana(body, "katakana");
+    }
     if (lower.startsWith("h:")) return romajiToKana(lower.slice(2), "hiragana");
     if (lower.startsWith("j:")) {
       const body = lower.slice(2);
@@ -36983,7 +37052,7 @@
     const text = String(input || "").replace(/\r\n?/g, "\n");
     if (mode === "hiragana" || mode === "katakana") return romajiToKana(text, mode);
 
-    // CADERNO321 4.10.15:
+    // DIÁRIO321 4.10.15:
     // preserva cada ENTER do aluno para ROMAJI e JAPONÊS respirarem em linhas simétricas.
     // Antes, o replace(/\s+/g, " ") achatava \n e quebrava a ideia de folha.
     return text.split("\n").map(line => {
@@ -37170,6 +37239,18 @@
     if ((raw.includes("nichiyoubi") || compact.includes("日曜日")) &&
         (raw.includes("shigoto") || compact.includes("仕事"))) {
       return "Domingo tem trabalho.";
+    }
+
+    if ((raw.includes("totsuzen") || compact.includes("突然")) &&
+        (raw.includes("eraa") || raw.includes("era-") || raw.includes("error") || compact.includes("エラー")) &&
+        (raw.includes("demashita") || raw.includes("dete") || compact.includes("出ました") || compact.includes("出て"))) {
+      return "Apareceu um erro de repente.";
+    }
+
+    if ((raw.includes("totsuzen") || compact.includes("突然")) &&
+        (raw.includes("kikai") || compact.includes("機械")) &&
+        (raw.includes("tomarimashita") || raw.includes("tomatta") || compact.includes("止まりました") || compact.includes("止まった"))) {
+      return "A máquina parou de repente.";
     }
 
     if ((raw.includes("kikai") || compact.includes("機械")) &&
@@ -37471,12 +37552,12 @@
   }
 
 
-  function encodeCaderno321TransferPayload(payload) {
+  function encodeDiário321TransferPayload(payload) {
     try {
       const json = JSON.stringify(payload);
       return btoa(unescape(encodeURIComponent(json)));
     } catch (err) {
-      console.error("CADERNO321 payload encode error:", err);
+      console.error("DIÁRIO321 payload encode error:", err);
       return "";
     }
   }
@@ -37537,7 +37618,7 @@
       const parsed = raw ? JSON.parse(raw) : null;
       if (parsed && typeof parsed === "object") return parsed;
     } catch (err) {
-      console.error("CADERNO321 direct NIHONGO state read error:", err);
+      console.error("DIÁRIO321 direct NIHONGO state read error:", err);
     }
 
     const t = Date.now();
@@ -37566,7 +37647,7 @@
       localStorage.setItem(NIHONGO321_STATE_KEY, JSON.stringify(state));
       return true;
     } catch (err) {
-      console.error("CADERNO321 direct NIHONGO state write error:", err);
+      console.error("DIÁRIO321 direct NIHONGO state write error:", err);
       return false;
     }
   }
@@ -37575,7 +37656,7 @@
     return `${String(item.jp || "").trim()}||${String(item.pt || "").trim()}`;
   }
 
-  function caderno321EnsureTopicLocal(state, requestedId = "topic_caderno321", requestedName = "Caderno321") {
+  function caderno321EnsureTopicLocal(state, requestedId = "topic_caderno321", requestedName = "Diário321") {
     state.bank ||= {};
     state.bank.topics ||= [];
     state.bank.phrases ||= [];
@@ -37589,9 +37670,9 @@
       const t = Date.now();
       fallback = {
         id: "topic_caderno321",
-        name: "Caderno321",
+        name: "Diário321",
         icon: "筆",
-        description: "Frases criadas pelo aluno no CADERNO321.",
+        description: "Frases criadas pelo aluno no DIÁRIO321.",
         isPremium: false,
         createdAt: t,
         updatedAt: t
@@ -37616,7 +37697,7 @@
     state.session ||= {};
 
     const requestedTopicId = String(phrase.topicId || phrase.targetTopicId || phrase.caderno321?.targetTopicId || "topic_caderno321").trim() || "topic_caderno321";
-    const topic = caderno321EnsureTopicLocal(state, requestedTopicId, phrase.targetTopicName || phrase.caderno321?.targetTopicName || "Caderno321");
+    const topic = caderno321EnsureTopicLocal(state, requestedTopicId, phrase.targetTopicName || phrase.caderno321?.targetTopicName || "Diário321");
     const nowMs = Date.now();
     const sig = caderno321PhraseSignatureLocal(phrase);
     const existingIndex = state.bank.phrases.findIndex(item => caderno321PhraseSignatureLocal(item) === sig);
@@ -37661,7 +37742,7 @@
       updated: existingIndex >= 0 ? 1 : 0,
       total: state.bank.phrases.length,
       topicId: topic.id,
-      topicName: topic.name || "Caderno321",
+      topicName: topic.name || "Diário321",
       phraseId: savedPhrase.id
     };
   }
@@ -37673,7 +37754,7 @@
     const wantedTopicId = String(topicId || "topic_caderno321").trim() || "topic_caderno321";
 
     let target = wantedPhraseId ? phrases.find(item => item && item.id === wantedPhraseId) : null;
-    if (!target) target = phrases.find(item => item && item.topicId === wantedTopicId && item.source === "CADERNO321");
+    if (!target) target = phrases.find(item => item && item.topicId === wantedTopicId && item.source === "DIÁRIO321");
     if (!target) target = phrases.find(item => item && item.topicId === "topic_caderno321");
     if (!target) return { ok: false, error: "phrase_not_found" };
 
@@ -37753,7 +37834,7 @@
             }
           }
         } catch (directErr) {
-          console.error("CADERNO321 direct parent save error:", directErr);
+          console.error("DIÁRIO321 direct parent save error:", directErr);
         }
 
         window.parent.postMessage({ type: "CADERNO321_SAVE_PHRASE", payload }, "*");
@@ -37767,12 +37848,12 @@
 
         return true;
       } catch (err) {
-        console.error("CADERNO321 postMessage save error:", err);
+        console.error("DIÁRIO321 postMessage save error:", err);
         setGenialSaveError("Não consegui enviar a frase para o NIHONGO321 integrado. A frase ficou guardada na ponte de segurança.");
       }
     }
 
-    const encoded = encodeCaderno321TransferPayload(payload);
+    const encoded = encodeDiário321TransferPayload(payload);
     if (!encoded) {
       toast("não consegui preparar a frase para enviar");
       return false;
@@ -37810,7 +37891,7 @@
 
     const phrase = {
       id: uid("genial_phrase"),
-      source: "CADERNO321 Caderno Genial",
+      source: "CADERNO321 Diário Genial",
       jp,
       pt,
       topicId,
@@ -37823,7 +37904,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.10.39"
+        sourceVersion: "4.11.4"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -37835,7 +37916,7 @@
     const isUpdatingExisting = existingBridge.some(item => bridgePhraseSignature(item) === signature);
 
     if (!isUpdatingExisting && genialFreeLimitReached()) {
-      genialState.lastSaveError = `Limite grátis atingido: ${GENIAL_FREE_PHRASE_LIMIT} frases no Caderno Genial. A frase não foi enviada. Para testar novamente, use Premium/admin ou apague frases antigas de teste.`;
+      genialState.lastSaveError = `Limite grátis atingido: ${GENIAL_FREE_PHRASE_LIMIT} frases no Diário Genial. A frase não foi enviada. Para testar novamente, use Premium/admin ou apague frases antigas de teste.`;
       genialState.lastSavePending = false;
       saveGenialState();
       showCadernoPremiumMessage("genial");
@@ -37855,7 +37936,7 @@
 
     const finalPhrase = bridgeResult.phrase || phrase;
 
-    // CADERNO321 4.10.39:
+    // DIÁRIO321 4.10.39:
     // Caminho principal: salvar imediatamente no localStorage real jp_105x_v7.
     // Sem mensagem de espera, sem depender de postMessage para o aluno confiar no botão.
     const directLocalResult = caderno321SavePhraseDirectlyToNihongoLocal(finalPhrase);
@@ -37883,7 +37964,7 @@
       return;
     }
 
-    console.error("CADERNO321 local direct save failed:", directLocalResult);
+    console.error("DIÁRIO321 local direct save failed:", directLocalResult);
     genialState.lastSavePending = false;
     genialState.lastSaveError = caderno321SaveErrorMessage(directLocalResult.error || directLocalResult.reason || "direct_save_failed");
     genialState.lastSavedAt = "";
@@ -37990,8 +38071,8 @@
         <button type="button" data-open-genial>
           <span>天才</span>
           <div>
-            <b>Caderno Genial</b>
-            <small>editor romaji → japonês</small>
+            <b>Diário321</b>
+            <small>páginas 360° de revisão</small>
           </div>
           <em>abrir</em>
         </button>
@@ -38098,11 +38179,285 @@
       </details>
     `;
   }
+  function loadDiario321Pages() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(DIARIO321_PAGES_KEY) || "{}");
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveDiario321Pages(pages) {
+    try { localStorage.setItem(DIARIO321_PAGES_KEY, JSON.stringify(pages || {})); } catch {}
+  }
+
+  function loadDiario321Revealed() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(DIARIO321_REVEAL_KEY) || "{}");
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveDiario321Revealed(revealed) {
+    try { localStorage.setItem(DIARIO321_REVEAL_KEY, JSON.stringify(revealed || {})); } catch {}
+  }
+
+  function currentDiario321PageInfo() {
+    const romaji = String(genialState.romaji || "").toLowerCase();
+    const found = DIARIO321_WORD_PAGES.find(page => romaji.includes(`j:${page.romaji}`) || romaji.includes(page.romaji));
+    return found || DIARIO321_WORD_PAGES[0];
+  }
+
+  function diario321PageItems(pageId) {
+    const pages = loadDiario321Pages();
+    return Array.isArray(pages[pageId]) ? pages[pageId] : [];
+  }
+
+  function diario321ReadLiveEditorValues() {
+    const romajiInput = document.querySelector("[data-genial-input]");
+    const ptInput = document.querySelector("[data-genial-pt-input]");
+    const jpOutput = document.querySelector("[data-genial-output]");
+
+    const liveRomaji = romajiInput ? String(romajiInput.value || "") : String(genialState.romaji || "");
+    const livePt = ptInput ? String(ptInput.value || "") : String(genialState.userPt || "");
+    const liveJp = jpOutput ? String(jpOutput.textContent || "") : "";
+
+    genialState.romaji = liveRomaji;
+    genialState.userPt = livePt;
+    saveGenialState();
+
+    return {
+      romaji: liveRomaji.trim(),
+      pt: livePt.trim(),
+      jpFromScreen: liveJp.trim()
+    };
+  }
+
+  function diario321ShowLocalSaveMessage(message, kind = "ok") {
+    try {
+      const existing = document.querySelector(".diario321ImmediateStatus");
+      if (existing) existing.remove();
+
+      const holder = document.createElement("div");
+      holder.className = `diario321ImmediateStatus diario321ImmediateStatus--${kind}`;
+      holder.setAttribute("role", "status");
+      holder.textContent = message;
+
+      const actions = document.querySelector(".diario321PrimaryActions") || document.querySelector("[data-save-diario321]")?.parentElement;
+      if (actions) actions.insertAdjacentElement("beforebegin", holder);
+    } catch {}
+  }
+
+  function diario321SafePageFallback() {
+    try {
+      return currentDiario321PageInfo();
+    } catch {
+      return DIARIO321_WORD_PAGES[0] || { id: "page_1", number: 1, target: "突然", romaji: "totsuzen" };
+    }
+  }
+
+  function saveGenialToDiario321Page() {
+    try {
+      const live = diario321ReadLiveEditorValues();
+      const page = diario321SafePageFallback();
+      const romaji = live.romaji;
+      let jp = "";
+
+      try {
+        jp = String(genialConverted() || "").trim();
+      } catch {
+        jp = "";
+      }
+
+      if ((!jp || jp === "ここに日本語が出ます") && live.jpFromScreen && live.jpFromScreen !== "ここに日本語が出ます") {
+        jp = live.jpFromScreen;
+      }
+
+      const pt = live.pt;
+
+      if (!romaji) {
+        diario321ShowLocalSaveMessage("Digite uma frase em romaji antes de salvar.", "warn");
+        toast("digite uma frase em romaji");
+        return false;
+      }
+
+      if (!jp || jp === "ここに日本語が出ます") {
+        diario321ShowLocalSaveMessage("Ainda não consegui gerar o japonês desta frase. Revise o romaji e tente novamente.", "warn");
+        toast("japonês não gerado");
+        return false;
+      }
+
+      const finalPt = pt || "Significado ainda não preenchido.";
+      const pages = loadDiario321Pages();
+      const list = Array.isArray(pages[page.id]) ? pages[page.id] : [];
+      const signature = `${jp}__${finalPt}`.toLowerCase();
+      const existingIndex = list.findIndex(item => String(item.signature || "") === signature);
+      const nowISO = new Date().toISOString();
+      const item = {
+        id: existingIndex >= 0 ? list[existingIndex].id : uid("diario_phrase"),
+        pageId: page.id,
+        pageNumber: page.number || 1,
+        target: page.target || "",
+        romaji,
+        jp,
+        pt: finalPt,
+        needsMeaning: !pt,
+        details: normalizeGenialDetails(),
+        signature,
+        memory: existingIndex >= 0 ? (list[existingIndex].memory || "new") : "new",
+        createdAt: existingIndex >= 0 ? list[existingIndex].createdAt : nowISO,
+        updatedAt: nowISO
+      };
+
+      if (existingIndex >= 0) list[existingIndex] = item;
+      else list.unshift(item);
+      pages[page.id] = list.slice(0, 60);
+      saveDiario321Pages(pages);
+
+      const verify = loadDiario321Pages();
+      const verifyList = Array.isArray(verify[page.id]) ? verify[page.id] : [];
+      const savedOk = verifyList.some(saved => String(saved.id || "") === String(item.id));
+      if (!savedOk) {
+        diario321ShowLocalSaveMessage("Não consegui gravar no caderno deste navegador. Verifique se o armazenamento local está liberado.", "error");
+        toast("não consegui salvar");
+        return false;
+      }
+
+      genialState.history.unshift({ jp, romaji, pt: finalPt, details: normalizeGenialDetails(), mode: "diario", at: nowISO });
+      genialState.history = genialState.history.slice(0, 20);
+      genialState.lastSavedAt = "";
+      genialState.lastSaveError = "";
+      genialState.lastSavePending = false;
+      genialState.diarioSavedAt = nowISO;
+      genialState.diarioSavedPageId = page.id;
+      genialState.diarioLastSavedPhraseId = item.id;
+      saveGenialState();
+      diario321ShowLocalSaveMessage(`Salvo na Página ${page.number || 1}. O significado ficará oculto para revisão.`, "ok");
+      toast(`salvo na Página ${page.number || 1}`);
+      render();
+      setTimeout(() => {
+        try { document.querySelector(".diario321SavedList")?.scrollIntoView({ behavior: "smooth", block: "center" }); } catch {}
+      }, 80);
+      return true;
+    } catch (err) {
+      console.error("DIÁRIO321 save page fatal error:", err);
+      diario321ShowLocalSaveMessage(`Erro interno ao salvar: ${err?.message || "erro desconhecido"}.`, "error");
+      toast("erro ao salvar nesta página");
+      return false;
+    }
+  }
+
+  function toggleDiario321Meaning(id) {
+    const revealed = loadDiario321Revealed();
+    revealed[id] = !revealed[id];
+    saveDiario321Revealed(revealed);
+    render();
+  }
+
+  function markDiario321Memory(id, value) {
+    const pages = loadDiario321Pages();
+    Object.keys(pages).forEach(pageId => {
+      pages[pageId] = (Array.isArray(pages[pageId]) ? pages[pageId] : []).map(item => item.id === id ? { ...item, memory: value, reviewedAt: new Date().toISOString() } : item);
+    });
+    saveDiario321Pages(pages);
+    toast(value === "remembered" ? "boa, essa volta depois" : value === "almost" ? "quase lá, revise amanhã" : "sem problema, vamos revisar de novo");
+    render();
+  }
+
+  function renderDiario321PageHero() {
+    const page = currentDiario321PageInfo();
+    const items = diario321PageItems(page.id);
+    const done = Math.min(items.length, page.total || 3);
+    const dots = Array.from({ length: page.total || 3 }, (_, index) => `<span class="${index < done ? "is-done" : ""}"></span>`).join("");
+    return `
+      <section class="diario321HeroPage">
+        <div class="diario321PageMeta">Página ${page.number} de ${DIARIO321_WORD_PAGES.length}</div>
+        <small>Palavra de hoje</small>
+        <strong>${escapeHTML(page.target)}</strong>
+        <em>${escapeHTML(page.meaning)}</em>
+        <div class="diario321Mission">
+          <b>Missão de hoje</b>
+          <span>${escapeHTML(page.mission)}</span>
+          <div class="diario321Dots" aria-label="progresso da página">${dots}</div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderDiario321SaveStatus() {
+    if (!genialState.diarioSavedAt) return "";
+    const page = DIARIO321_WORD_PAGES.find(item => item.id === genialState.diarioSavedPageId) || currentDiario321PageInfo();
+    return `
+      <div class="genialSaveStatus diario321LocalStatus" role="status">
+        <b>✓ salvo na Página ${page.number}</b>
+        <span>O significado fica oculto na lista para você testar a memória antes de revelar.</span>
+      </div>
+    `;
+  }
+
+  function renderDiario321SavedList() {
+    const page = currentDiario321PageInfo();
+    const items = diario321PageItems(page.id).slice(0, 8);
+    const revealed = loadDiario321Revealed();
+    if (!items.length) {
+      return `
+        <section class="diario321SavedList">
+          <div class="diario321SavedHead"><b>Minhas frases nesta página</b><span>vazio por enquanto</span></div>
+          <p class="diario321Empty">Salve sua primeira frase. Depois, tente lembrar o significado antes de revelar.</p>
+        </section>
+      `;
+    }
+    return `
+      <section class="diario321SavedList">
+        <div class="diario321SavedHead"><b>Minhas frases nesta página</b><span>${items.length} frase${items.length === 1 ? "" : "s"}</span></div>
+        ${items.map((item, index) => {
+          const isOpen = !!revealed[item.id];
+          return `
+            <article class="diario321PhraseCard">
+              <div class="diario321PhraseTop">
+                <span>${index + 1}.</span>
+                <strong>${escapeHTML(item.jp)}</strong>
+              </div>
+              <button class="diario321RevealBtn" type="button" data-diario-toggle="${escapeHTML(item.id)}">${isOpen ? "ocultar significado" : "mostrar significado"}</button>
+              ${isOpen ? `
+                <div class="diario321Meaning">
+                  <p>${escapeHTML(item.pt || "Significado ainda não preenchido.")}</p>
+                  <div class="diario321MemoryBtns">
+                    <button type="button" data-diario-memory="remembered" data-diario-memory-id="${escapeHTML(item.id)}">lembrei</button>
+                    <button type="button" data-diario-memory="almost" data-diario-memory-id="${escapeHTML(item.id)}">quase</button>
+                    <button type="button" data-diario-memory="again" data-diario-memory-id="${escapeHTML(item.id)}">não lembrei</button>
+                  </div>
+                </div>
+              ` : `<div class="diario321HiddenMeaning">significado oculto para revisar</div>`}
+            </article>
+          `;
+        }).join("")}
+      </section>
+    `;
+  }
+
+  function renderDiario321Path() {
+    const page = currentDiario321PageInfo();
+    const items = diario321PageItems(page.id);
+    const completed = new Set(items.slice(0, 3).map((_, index) => index));
+    const chips = (page.challenges || []).map((label, index) => `<span class="${completed.has(index) ? "is-done" : ""}">${completed.has(index) ? "✓" : "○"} ${escapeHTML(label)}</span>`).join("");
+    return `
+      <section class="diario321Path">
+        <b>Seu caminho com ${escapeHTML(page.target)}</b>
+        <div>${chips}</div>
+        <small>Um passo de cada vez. Escreva, esconda o significado e revise amanhã.</small>
+      </section>
+    `;
+  }
+
   function renderGenialFreeLimitBox() {
     if (cadernoHasPremiumAccess()) return "";
     const used = Math.min(genialSavedFreeCount(), GENIAL_FREE_PHRASE_LIMIT);
     const reached = used >= GENIAL_FREE_PHRASE_LIMIT;
-    return `<div class="genialLimitBox ${reached ? "is-reached" : ""}"><b>${used}/${GENIAL_FREE_PHRASE_LIMIT} frases grátis no Caderno Genial</b><span>${reached ? "Você atingiu o seu limite grátis de frases. Adquira o Premium para continuar criando." : "Crie até 7 frases completas grátis. Depois, o Premium libera o Caderno Genial sem esse limite."}</span></div>`;
+    return `<div class="genialLimitBox ${reached ? "is-reached" : ""}"><b>${used}/${GENIAL_FREE_PHRASE_LIMIT} frases grátis no Diário Genial</b><span>${reached ? "Você atingiu o seu limite grátis de frases. Adquira o Premium para continuar criando." : "Crie até 7 frases completas grátis. Depois, o Premium libera o Diário Genial sem esse limite."}</span></div>`;
   }
 
   function scrollGenialSaveStatusIntoView() {
@@ -38147,45 +38502,84 @@
     return "";
   }
 
+  function renderDiario321KatakanaGuide() {
+    return `
+      <details class="diario321KatakanaGuide">
+        <summary>
+          <span>Como escrever nomes e palavras estrangeiras?</span>
+          <small>usar k:</small>
+        </summary>
+        <div class="diario321KatakanaGrid">
+          <div><b>Nome</b><em>k:ailton → アイルトン</em></div>
+          <div><b>Erro</b><em>k:eraa → エラー</em></div>
+          <div><b>Konbini</b><em>k:konbini → コンビニ</em></div>
+          <div><b>Brasil</b><em>k:burajiru → ブラジル</em></div>
+        </div>
+        <p>Nomes de pessoas, lugares, marcas e palavras estrangeiras normalmente ficam em katakana. Use <strong>k:</strong> antes da palavra quando quiser essa escrita.</p>
+      </details>
+    `;
+  }
+
   function renderGenialNotebook() {
     const converted = genialConverted();
     const evaluation = genialState.evaluation;
 
     return `
-      <main class="appMain">
-        <section class="genialNotebook genialNotebook--paperModel">
+      <main class="appMain appMain--diario321">
+        <section class="genialNotebook genialNotebook--paperModel diario321Notebook">
 
-          <div class="ideaNotebookHero">
-            <b>Caderno Genial</b>
-            <small>digite em romaji comum, use k: para katakana e j: para kanji</small>
+          <div class="ideaNotebookHero diario321TopHero">
+            <b>Diário321</b>
+            <small>escreva com teclado normal, salve na página e revise com significado oculto</small>
           </div>
 
-          <div class="ideaHowTo">
-            <span class="ideaHowIcon">♧</span>
+          ${renderDiario321PageHero()}
+
+          <div class="ideaHowTo diario321HowTo">
+            <span class="ideaHowIcon">✎</span>
             <div>
-              <b>COMO ESCREVER</b>
-              <p>Normal vira hiragana · k: força katakana<br>j: força kanji quando cadastrado</p>
-              <em>ex.: j:nichiyoubi wa k:konbini de j:fukuro wo kaimasu.</em>
+              <b>ESCREVA SEM TECLADO JAPONÊS</b>
+              <p>Normal vira hiragana · k: é para nomes/palavras estrangeiras · j: usa kanji do diário</p>
+              <em>ex.: j:totsuzen j:kikai ga tomarimashita. / k:eraa → エラー</em>
             </div>
           </div>
 
-          <label class="notebookSheet notebookSheet--romaji">
-            <span class="notebookTab">ROMAJI</span>
-            <textarea data-genial-input placeholder="ex: j:shitsumon ha arimasuka.">${escapeHTML(String(genialState.romaji || "").replace(/\r\n?/g, "\n"))}</textarea>
+          ${renderDiario321KatakanaGuide()}
+
+          <label class="notebookSheet notebookSheet--romaji diario321WritingBox">
+            <span class="notebookTab">DIGITE COM TECLADO NORMAL</span>
+            <textarea data-genial-input placeholder="ex: j:totsuzen j:kikai ga tomarimashita">${escapeHTML(String(genialState.romaji || "").replace(/\r\n?/g, "\n"))}</textarea>
           </label>
 
-          <div class="notebookSheet notebookSheet--jp">
+          <div class="notebookSheet notebookSheet--jp diario321ResultBox">
             <span class="notebookTab">JAPONÊS</span>
             <strong data-genial-output>${escapeHTML(converted || "ここに日本語が出ます")}</strong>
           </div>
 
-          <label class="notebookSheet notebookSheet--pt">
-            <span class="notebookTab">TRADUÇÃO DA FRASE</span>
-            <textarea data-genial-pt-input placeholder="Digite aqui a tradução da frase em português, usando seu conhecimento ou busca própria.">${escapeHTML(String(genialState.userPt || "").replace(/\r\n?/g, "\n"))}</textarea>
+          <label class="notebookSheet notebookSheet--pt diario321PtBox">
+            <span class="notebookTab">SIGNIFICADO PARA REVISAR DEPOIS</span>
+            <textarea data-genial-pt-input placeholder="Opcional: escreva o significado em português. Ele ficará oculto na revisão.">${escapeHTML(String(genialState.userPt || "").replace(/\r\n?/g, "\n"))}</textarea>
           </label>
 
-          ${renderGenialDetailsBox()}
-          ${renderGenialFreeLimitBox()}
+          ${renderDiario321SaveStatus()}
+
+          <div class="genialActions diario321PrimaryActions">
+            <button class="diario321SavePageBtn" type="button" data-save-diario321 onclick="try{window.DIARIO321_SAVE_PAGE&&window.DIARIO321_SAVE_PAGE(event)}catch(e){console.error(e)}">salvar nesta página</button>
+          </div>
+
+          ${renderDiario321SavedList()}
+          ${renderDiario321Path()}
+
+          <details class="diario321SendToNihongo">
+            <summary><span>Enviar frase madura para o NIHONGO321</span><small>opcional</small></summary>
+            ${renderGenialTopicSelector()}
+            ${renderGenialSaveStatus()}
+            <div class="genialActions genialActions--three ideaActions">
+              <button type="button" data-evaluate-genial>avaliar frase</button>
+              <button type="button" data-save-genial onclick="try{window.CADERNO321_SAVE_TO_NIHONGO321&&window.CADERNO321_SAVE_TO_NIHONGO321()}catch(e){console.error(e)}">enviar para o 105x</button>
+              <button type="button" data-clear-genial>limpar</button>
+            </div>
+          </details>
 
           ${evaluation ? `
             <div class="genialEvaluation ideaEvaluation">
@@ -38201,16 +38595,7 @@
           ` : ""}
 
           ${renderGenialMiniDictionary()}
-
-          ${renderGenialTopicSelector()}
-
-          ${renderGenialSaveStatus()}
-
-          <div class="genialActions genialActions--three ideaActions">
-            <button type="button" data-evaluate-genial>avaliar frase</button>
-            <button type="button" data-save-genial onclick="try{window.CADERNO321_SAVE_TO_NIHONGO321&&window.CADERNO321_SAVE_TO_NIHONGO321()}catch(e){console.error(e)}">salvar no NIHONGO321</button>
-            <button type="button" data-clear-genial>limpar</button>
-          </div>
+          ${renderGenialDetailsBox()}
         </section>
       </main>
     `;
@@ -38219,10 +38604,10 @@
   function renderDashboard() {
     return `
       <section class="card dashboardCard dashboardCard--compact">
-        <div class="badge">caderno inteligente</div>
-        <h1 class="sectionTitle">Escolha seu treino.</h1>
+        <div class="badge">diário inteligente</div>
+        <h1 class="sectionTitle">Escolha seu caminho.</h1>
         <p class="dashboardLead">
-          Escolha uma categoria e comece o treino.
+          Abra o Diário321 para escrever, esconder o significado e revisar como um caderno real.
         </p>
         ${renderGenialEntryCard()}
         ${renderBridgeSummary()}
@@ -38327,7 +38712,7 @@ applyAppTheme();
   function downloadBridgePhrases() {
     const saved = savedBridgePhrases();
     const payload = {
-      app: "CADERNO321",
+      app: "DIÁRIO321",
       target: "NIHONGO321",
       version: "4.10.18",
       exportedAt: new Date().toISOString(),
@@ -38368,6 +38753,9 @@ applyAppTheme();
     document.querySelectorAll("[data-genial-detail]").forEach(input => input.addEventListener("input", () => updateGenialDetail(input.dataset.genialDetail, input.value)));
     document.querySelectorAll("[data-genial-topic]").forEach(select => select.addEventListener("change", () => setGenialTargetTopic(select.value)));
     document.querySelectorAll("[data-save-genial]").forEach(btn => btn.addEventListener("click", saveGenialPhrase));
+    document.querySelectorAll("[data-save-diario321]").forEach(btn => btn.addEventListener("click", saveGenialToDiario321Page));
+    document.querySelectorAll("[data-diario-toggle]").forEach(btn => btn.addEventListener("click", () => toggleDiario321Meaning(btn.dataset.diarioToggle)));
+    document.querySelectorAll("[data-diario-memory]").forEach(btn => btn.addEventListener("click", () => markDiario321Memory(btn.dataset.diarioMemoryId, btn.dataset.diarioMemory)));
     document.querySelectorAll("[data-clear-genial]").forEach(btn => btn.addEventListener("click", clearGenialEditor));
 
 
@@ -38468,6 +38856,23 @@ applyAppTheme();
     scrollGenialSaveStatusIntoView();
   });
 
+  try {
+    window.DIARIO321_SAVE_PAGE = function(event) {
+      try {
+        if (event) {
+          event.preventDefault?.();
+          event.stopPropagation?.();
+        }
+        return saveGenialToDiario321Page();
+      } catch (err) {
+        console.error("DIÁRIO321 global save error:", err);
+        diario321ShowLocalSaveMessage(`Erro interno ao salvar: ${err?.message || "erro desconhecido"}.`, "error");
+        toast("erro ao salvar");
+        return false;
+      }
+    };
+  } catch {}
+
   // Fallback forte: garante que os botões principais funcionem mesmo se a tela for re-renderizada.
   document.addEventListener("click", (event) => {
     const trainBtn = event.target?.closest?.("[data-train-genial]");
@@ -38496,6 +38901,19 @@ applyAppTheme();
       return;
     }
 
+    const diarioSaveBtn = event.target?.closest?.("[data-save-diario321]");
+    if (diarioSaveBtn) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      try {
+        saveGenialToDiario321Page();
+      } catch (err) {
+        console.error("DIÁRIO321 save page fatal error:", err);
+        toast("erro ao salvar nesta página");
+      }
+      return;
+    }
+
     const btn = event.target?.closest?.("[data-save-genial]");
     if (!btn) return;
     event.preventDefault();
@@ -38508,11 +38926,11 @@ applyAppTheme();
       try {
         saveGenialPhrase();
       } catch (err) {
-        console.error("CADERNO321 save button fatal error:", err);
+        console.error("DIÁRIO321 save button fatal error:", err);
         setGenialSaveError("O botão foi acionado, mas ocorreu um erro interno antes de salvar. Abra o console para ver o erro técnico.");
       }
     };
-    window.CADERNO321_BRIDGE_KEY = NIHONGO321_BRIDGE_KEY;
+    window.DIÁRIO321_BRIDGE_KEY = NIHONGO321_BRIDGE_KEY;
   } catch {}
 
   requestNihongo321SaveTopics(true);

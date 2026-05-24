@@ -22,8 +22,8 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.6.1",
-  updatedAt: "2026-05-22",
+  version: "8.6.13",
+  updatedAt: "2026-05-24",
   logoPath: "./img/logo_nihongo321.png"
 };
 
@@ -5278,10 +5278,10 @@ function renderLanding() {
 
       <section class="card cadernoPresentationCard">
         <div class="cadernoPresentationCopy">
-          <div class="badge">CADERNO321 + NIHONGO321</div>
-          <h2 class="h2">Crie no caderno. Memorize no treino.</h2>
+          <div class="badge">DIÁRIO321 + NIHONGO321</div>
+          <h2 class="h2">Escreva no diário. Revise com calma. Treine quando estiver pronto.</h2>
           <p class="p">
-            O CADERNO321 é a oficina de criação: o aluno escreve em romaji, vê o japonês nascer, registra a tradução com o próprio raciocínio e guarda detalhes para transformar a frase em treino real no NIHONGO321.
+            O DIÁRIO321 é o caderno real de revisão: o aluno escreve em romaji, vê o japonês nascer, salva em páginas e oculta o significado para testar a memória antes de enviar ao treino 105x.
           </p>
         </div>
         <div class="cadernoPresentationGrid">
@@ -5290,7 +5290,7 @@ function renderLanding() {
           <div><b>📱 Feito para celular</b><span>Treino simples para quem trabalha muito e precisa estudar sem peso.</span></div>
         </div>
         <div class="cadernoPresentationActions">
-          <button class="primaryAction" type="button" data-nav="#/caderno">abrir CADERNO321</button>
+          <button class="primaryAction" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
           <button class="btn btn--muted btn--full" data-nav="#/home">continuar no NIHONGO321</button>
         </div>
       </section>
@@ -6160,9 +6160,9 @@ function ensureCaderno321Topic() {
   if (!topic) {
     topic = {
       id: "topic_caderno321",
-      name: "Caderno321",
+      name: "Diário321",
       icon: "筆",
-      description: "Frases criadas pelo aluno no CADERNO321.",
+      description: "Frases criadas pelo aluno no DIÁRIO321.",
       isPremium: false,
       createdAt: now(),
       updatedAt: now()
@@ -6222,7 +6222,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
   const silent = !!options.silent;
   const bridge = caderno321BridgePhrases();
   if (!bridge.length) {
-    if (!silent) toast("nenhuma frase do CADERNO321 encontrada");
+    if (!silent) toast("nenhuma frase do DIÁRIO321 encontrada");
     return { imported: 0, total: 0, pending: 0 };
   }
 
@@ -6234,7 +6234,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
 
   bridge.forEach(item => {
     const jp = String(item.jp || "").trim();
-    const pt = String(item.pt || "").trim() || "frase criada no CADERNO321";
+    const pt = String(item.pt || "").trim() || "frase criada no DIÁRIO321";
     const sig = `${jp}||${pt}`;
     if (!jp || existing.has(sig)) return;
 
@@ -6277,7 +6277,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
 
   if (imported) saveState();
   const pending = bridge.filter(item => !new Set((STATE.bank.phrases || []).map(caderno321PhraseSignature)).has(caderno321PhraseSignature(item))).length;
-  if (!silent) toast(imported ? `${imported} frase(s) do CADERNO321 importada(s)` : "as frases do CADERNO321 já estavam no NIHONGO321");
+  if (!silent) toast(imported ? `${imported} frase(s) do DIÁRIO321 importada(s)` : "as frases do DIÁRIO321 já estavam no NIHONGO321");
   return { imported, total: bridge.length, pending };
 }
 
@@ -6347,13 +6347,13 @@ function receiveCaderno321UrlImport() {
     window.history.replaceState(null, "", `${window.location.pathname}#/home`);
   } catch { }
 
-  toast(result.imported ? `${result.imported} frase(s) do CADERNO321 salva(s)` : "frase do CADERNO321 já estava salva");
+  toast(result.imported ? `${result.imported} frase(s) do DIÁRIO321 salva(s)` : "frase do DIÁRIO321 já estava salva");
   return { received: true, imported: result.imported || 0 };
 }
 
 function saveCaderno321PhraseNative(item = {}) {
   const jp = String(item.jp || "").trim();
-  const pt = String(item.pt || "").trim() || "frase criada no CADERNO321";
+  const pt = String(item.pt || "").trim() || "frase criada no DIÁRIO321";
 
   if (!jp) return { ok: false, reason: "empty_jp", imported: 0, total: (STATE.bank?.phrases || []).length };
 
@@ -6519,8 +6519,8 @@ function startCaderno321TrainingFromPayload(payload = {}) {
 
 function renderCaderno321Integrated() {
   APP.innerHTML = `
-    <div class="cadernoIntegratedPage" aria-label="CADERNO321 integrado ao NIHONGO321">
-      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=4.10.39" title="CADERNO321 integrado ao NIHONGO321"></iframe>
+    <div class="cadernoIntegratedPage" aria-label="DIÁRIO321 integrado ao NIHONGO321">
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=4.11.4" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
@@ -6538,15 +6538,15 @@ function renderCaderno321BridgeCard() {
   return `
     <section class="card cadernoBridgeCard">
       <div class="cadernoBridgeCopy">
-        <div class="badge">CADERNO321</div>
-        <h2 class="h2">Suas frases criadas no caderno estão prontas para memorizar.</h2>
+        <div class="badge">DIÁRIO321</div>
+        <h2 class="h2">Suas frases do diário estão prontas para virar treino 105x.</h2>
         <p class="p">
           Importe para o NIHONGO321 e transforme criação própria em treino 105x.
         </p>
       </div>
       <div class="cadernoBridgePanel">
         <b>${bridge.length}</b>
-        <span>frase${bridge.length === 1 ? "" : "s"} no caderno</span>
+        <span>frase${bridge.length === 1 ? "" : "s"} no diário</span>
         <small>${pending ? `${pending} nova${pending === 1 ? "" : "s"}` : "tudo já importado"}</small>
         <button class="btn btn--ok btn--full" type="button" data-action="importCaderno321Bridge">importar para memorizar</button>
       </div>
@@ -6594,7 +6594,7 @@ function renderHome() {
                 ${resume ? "continuar último treino" : "treinar 2 minutos agora"}
               </button>
               <button class="btn btn--muted btn--full" data-nav="#/105x">abrir treino 105x</button>
-              <button class="btn btn--cadernoGreen btn--full" type="button" data-nav="#/caderno">CADERNO321</button>
+              <button class="btn btn--cadernoGreen btn--full" type="button" data-nav="#/caderno">DIÁRIO321</button>
             </div>
           </div>
 
@@ -11118,7 +11118,7 @@ window.addEventListener("message", (event) => {
     try {
       event.source?.postMessage?.({ type: "NIHONGO321_SAVE_RESULT", requestId: data.payload?.requestId || "", ok: false, error: "save_failed" }, "*");
     } catch { }
-    toast("erro ao salvar frase do CADERNO321");
+    toast("erro ao salvar frase do DIÁRIO321");
   }
 });
 

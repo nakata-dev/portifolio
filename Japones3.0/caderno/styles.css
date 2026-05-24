@@ -9806,3 +9806,505 @@ html[data-caderno-theme="light"] .headerBridgeTextBtn{
   text-transform:uppercase;
   letter-spacing:.08em;
 }
+
+/* =========================================================
+   DIÁRIO321 4.11.0 — Páginas 360° de revisão
+   Visual de diário real, significado oculto e escrita por romaji.
+   ========================================================= */
+
+.appMain--diario321{
+  padding-bottom:32px;
+}
+
+.diario321Notebook{
+  border-color:rgba(255,216,111,.24);
+  background:
+    radial-gradient(520px 280px at 18% 0%, rgba(255,216,111,.10), transparent 64%),
+    radial-gradient(560px 360px at 100% 18%, rgba(108,166,255,.10), transparent 66%),
+    linear-gradient(180deg, rgba(255,255,255,.080), rgba(255,255,255,.034));
+}
+
+.diario321TopHero{
+  text-align:center;
+  border-color:rgba(255,216,111,.26);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.035));
+}
+
+.diario321TopHero b{
+  color:var(--gold2);
+  font-size:clamp(26px, 7vw, 42px);
+  letter-spacing:-.045em;
+}
+
+.diario321TopHero small{
+  max-width:34em;
+  margin-inline:auto;
+}
+
+.diario321HeroPage{
+  position:relative;
+  display:grid;
+  justify-items:center;
+  gap:8px;
+  margin:6px 0 14px;
+  padding:24px 18px;
+  border:1px solid rgba(255,216,111,.22);
+  border-radius:28px;
+  background:
+    radial-gradient(300px 180px at 50% 0%, rgba(255,216,111,.12), transparent 72%),
+    rgba(5,13,28,.32);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  text-align:center;
+  overflow:hidden;
+}
+
+.diario321HeroPage::before{
+  content:"";
+  position:absolute;
+  left:22px;
+  top:20px;
+  bottom:20px;
+  width:3px;
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(255,216,111,.38), rgba(108,166,255,.06));
+  opacity:.7;
+}
+
+.diario321PageMeta{
+  display:inline-flex;
+  min-height:30px;
+  align-items:center;
+  justify-content:center;
+  padding:6px 12px;
+  border:1px solid rgba(255,216,111,.28);
+  border-radius:999px;
+  color:var(--gold2);
+  font-weight:950;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  background:rgba(255,216,111,.08);
+}
+
+.diario321HeroPage small{
+  color:var(--muted);
+  font-weight:900;
+}
+
+.diario321HeroPage > strong{
+  color:#fff4d6;
+  font-family:"Noto Sans JP", "Yu Gothic", system-ui, sans-serif;
+  font-size:clamp(54px, 18vw, 88px);
+  line-height:1;
+  letter-spacing:.02em;
+  text-shadow:0 10px 32px rgba(0,0,0,.30);
+}
+
+.diario321HeroPage > em{
+  color:var(--gold2);
+  font-style:normal;
+  font-size:clamp(17px, 4.6vw, 24px);
+  font-weight:900;
+}
+
+.diario321Mission{
+  display:grid;
+  gap:8px;
+  justify-items:center;
+  width:min(100%, 420px);
+  margin-top:8px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.10);
+}
+
+.diario321Mission b{
+  color:var(--muted);
+}
+
+.diario321Mission span{
+  color:var(--soft);
+  font-size:16px;
+  font-weight:900;
+  line-height:1.45;
+}
+
+.diario321Dots{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+}
+
+.diario321Dots span{
+  width:13px;
+  height:13px;
+  border-radius:999px;
+  border:1px solid rgba(255,216,111,.42);
+  background:transparent;
+}
+
+.diario321Dots span.is-done{
+  background:linear-gradient(180deg, var(--gold2), var(--gold));
+  box-shadow:0 0 0 4px rgba(255,216,111,.08);
+}
+
+.diario321HowTo{
+  border-color:rgba(255,216,111,.20);
+}
+
+.diario321WritingBox textarea,
+.diario321PtBox textarea{
+  min-height:98px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0, transparent 35px, rgba(255,216,111,.08) 36px),
+    rgba(255,255,255,.035);
+}
+
+.diario321ResultBox strong{
+  display:block;
+  min-height:72px;
+  padding:10px 0 2px;
+  font-size:clamp(24px, 6vw, 36px);
+  line-height:1.55;
+}
+
+.diario321PrimaryActions{
+  margin-top:12px;
+}
+
+.diario321SavePageBtn{
+  width:100%;
+  min-height:58px;
+  border:0;
+  border-radius:18px;
+  background:linear-gradient(180deg, #ffe8a8, #f3bd5e);
+  color:#2f210a;
+  font-weight:1000;
+  box-shadow:0 14px 30px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.40);
+}
+
+.diario321LocalStatus{
+  border-color:rgba(139,195,154,.30);
+}
+
+.diario321SavedList,
+.diario321Path,
+.diario321SendToNihongo{
+  margin-top:16px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  background:rgba(5,13,28,.30);
+  padding:14px;
+}
+
+.diario321SavedHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.diario321SavedHead b,
+.diario321Path > b{
+  color:var(--gold2);
+  font-size:17px;
+}
+
+.diario321SavedHead span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+}
+
+.diario321Empty{
+  margin:0;
+  color:var(--muted);
+  line-height:1.5;
+  font-weight:800;
+}
+
+.diario321PhraseCard{
+  display:grid;
+  gap:10px;
+  padding:13px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.035);
+}
+
+.diario321PhraseCard + .diario321PhraseCard{
+  margin-top:10px;
+}
+
+.diario321PhraseTop{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:10px;
+  align-items:start;
+}
+
+.diario321PhraseTop span{
+  color:var(--gold2);
+  font-weight:1000;
+}
+
+.diario321PhraseTop strong{
+  color:var(--soft);
+  font-family:"Noto Sans JP", "Yu Gothic", system-ui, sans-serif;
+  font-size:clamp(18px, 5vw, 25px);
+  line-height:1.45;
+}
+
+.diario321RevealBtn{
+  width:fit-content;
+  min-height:38px;
+  padding:8px 12px;
+  border:1px solid rgba(255,216,111,.26);
+  border-radius:999px;
+  background:rgba(255,216,111,.08);
+  color:var(--gold2);
+  font-size:12px;
+  font-weight:1000;
+}
+
+.diario321HiddenMeaning{
+  padding:12px;
+  border-radius:14px;
+  border:1px dashed rgba(255,216,111,.20);
+  color:var(--muted);
+  font-weight:850;
+  text-align:center;
+  background:rgba(255,255,255,.025);
+}
+
+.diario321Meaning{
+  display:grid;
+  gap:10px;
+  padding:12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.10);
+}
+
+.diario321Meaning p{
+  margin:0;
+  color:var(--soft);
+  font-weight:850;
+  line-height:1.55;
+}
+
+.diario321MemoryBtns{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:8px;
+}
+
+.diario321MemoryBtns button{
+  min-height:42px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  background:rgba(255,255,255,.052);
+  color:var(--text);
+  font-size:12px;
+  font-weight:950;
+}
+
+.diario321Path{
+  display:grid;
+  gap:12px;
+}
+
+.diario321Path div{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.diario321Path span{
+  display:inline-flex;
+  min-height:36px;
+  align-items:center;
+  padding:8px 11px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  color:var(--muted);
+  background:rgba(255,255,255,.035);
+  font-size:12px;
+  font-weight:950;
+}
+
+.diario321Path span.is-done{
+  border-color:rgba(255,216,111,.30);
+  color:var(--gold2);
+  background:rgba(255,216,111,.08);
+}
+
+.diario321Path small{
+  color:var(--muted);
+  font-weight:850;
+  line-height:1.45;
+}
+
+.diario321SendToNihongo summary{
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  list-style:none;
+  color:var(--gold2);
+  font-weight:1000;
+}
+
+.diario321SendToNihongo summary::-webkit-details-marker{
+  display:none;
+}
+
+.diario321SendToNihongo small{
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+}
+
+@media (max-width:560px){
+  .diario321HeroPage{
+    padding:22px 14px;
+  }
+
+  .diario321MemoryBtns{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.11.1 — Guia simples de katakana para nomes
+   ========================================================= */
+.diario321KatakanaGuide{
+  border:1px solid rgba(255,216,111,.24);
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.026));
+  box-shadow:0 14px 30px rgba(0,0,0,.18);
+  overflow:hidden;
+}
+
+.diario321KatakanaGuide summary{
+  list-style:none;
+  min-height:58px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+  color:var(--soft, #fbfdff);
+  font-weight:950;
+}
+
+.diario321KatakanaGuide summary::-webkit-details-marker{
+  display:none;
+}
+
+.diario321KatakanaGuide summary span{
+  line-height:1.25;
+}
+
+.diario321KatakanaGuide summary small{
+  flex:0 0 auto;
+  border:1px solid rgba(255,216,111,.30);
+  border-radius:999px;
+  padding:7px 10px;
+  color:var(--gold2, #fff0b8);
+  background:rgba(255,216,111,.08);
+  font-size:11px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.diario321KatakanaGrid{
+  padding:0 14px 12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.diario321KatakanaGrid div{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:10px;
+  background:rgba(3,12,28,.28);
+}
+
+.diario321KatakanaGrid b,
+.diario321KatakanaGrid em{
+  display:block;
+}
+
+.diario321KatakanaGrid b{
+  color:var(--gold2, #fff0b8);
+  font-size:12px;
+  line-height:1.2;
+  margin-bottom:5px;
+}
+
+.diario321KatakanaGrid em{
+  color:var(--muted2, #d9e4f7);
+  font-style:normal;
+  font-size:13px;
+  line-height:1.35;
+  word-break:break-word;
+}
+
+.diario321KatakanaGuide p{
+  margin:0;
+  padding:0 16px 16px;
+  color:var(--muted, #b7c3db);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:750;
+}
+
+.diario321KatakanaGuide p strong{
+  color:var(--gold2, #fff0b8);
+}
+
+@media (max-width:420px){
+  .diario321KatakanaGrid{
+    grid-template-columns:1fr;
+  }
+
+  .diario321KatakanaGuide summary{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.11.4 — feedback seguro do salvamento local
+   ========================================================= */
+.diario321ImmediateStatus{
+  margin:14px 0;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid rgba(255,216,111,.34);
+  background:rgba(255,216,111,.10);
+  color:var(--text);
+  font-weight:900;
+  line-height:1.45;
+}
+.diario321ImmediateStatus--ok{
+  border-color:rgba(139,195,154,.42);
+  background:rgba(139,195,154,.12);
+}
+.diario321ImmediateStatus--warn{
+  border-color:rgba(255,216,111,.42);
+  background:rgba(255,216,111,.12);
+}
+.diario321ImmediateStatus--error{
+  border-color:rgba(217,124,124,.48);
+  background:rgba(217,124,124,.14);
+}
