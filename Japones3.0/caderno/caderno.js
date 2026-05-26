@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.13.3
+   DIÁRIO321 — Protótipo 4.13.5
    Visual de diário de treino com mapa de cenários e frequência.
    ========================================================= */
 
@@ -37916,7 +37916,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.13.3"
+        sourceVersion: "4.13.5"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -39000,11 +39000,49 @@
   }
 
   function renderDiario321MethodCard() {
-    const word = String(diario321AltruistaState.wordPt || "essa palavra").trim() || "essa palavra";
     return `
-      <details class="diario321DiaryWhy">
-        <summary>por que isso funciona?</summary>
-        <p>Use ${escapeHTML(word)} em situações reais. O que serve, fica no diário.</p>
+      <details class="diario321DiaryWhy diario321StudyMethod">
+        <summary>método 7–14</summary>
+        <div class="diario321MethodSteps">
+          <p>Pegue um caderno. Escreva de 7 a 14 frases com a palavra.</p>
+          <ul>
+            <li>presente, passado e futuro;</li>
+            <li>uma afirmativa;</li>
+            <li>uma negativa;</li>
+            <li>uma pergunta.</li>
+          </ul>
+          <div class="diario321MethodExample">
+            <b>Exemplo: taberu = comer</b>
+            <span>Eu como arroz.</span>
+            <span>Ontem comi pão.</span>
+            <span>Amanhã vou comer no trabalho.</span>
+            <span>Não vou comer agora.</span>
+            <span>Você já comeu?</span>
+          </div>
+        </div>
+      </details>
+    `;
+  }
+
+  function renderDiario321ScienceCard() {
+    return `
+      <details class="diario321DiaryWhy diario321StudyMethod diario321ScienceMethod">
+        <summary>por que funciona?</summary>
+        <div class="diario321MethodSteps diario321ScienceSteps">
+          <p>O Diário321 faz você criar, testar e revisar a palavra no seu mundo real.</p>
+          <ul>
+            <li><b>memória de longo prazo:</b> repetir em dias diferentes ajuda a palavra a ficar.</li>
+            <li><b>memória analítica:</b> você entende onde a palavra aparece e como usar.</li>
+            <li><b>memória criativa:</b> você cria frases suas, não só copia frases prontas.</li>
+          </ul>
+          <div class="diario321MethodExample diario321ScienceExample">
+            <b>Treino 360°</b>
+            <span>Substantivo: use em objetos, lugares, pessoas e problemas.</span>
+            <span>Verbo: use no presente, passado, futuro, negativo e pergunta.</span>
+            <span>Partícula: teste quem faz, onde acontece, para quem vai e por quê.</span>
+          </div>
+          <p>Quando você vê a mesma palavra por vários lados, ela deixa de ser decoreba e vira ferramenta.</p>
+        </div>
       </details>
     `;
   }
@@ -39139,6 +39177,8 @@
             ${renderDiario321PracticeMap()}
             ${renderDiario321PracticeEditor()}
             ${renderDiario321PracticeEntries()}
+            ${renderDiario321MethodCard()}
+            ${renderDiario321ScienceCard()}
           ` : `
             <section class="diario321DiaryEmpty">
               <b>Comece pequeno.</b>

@@ -1,5 +1,23 @@
-NIHONGO321 8.6.29 + DIÁRIO321 4.13.3 — Fechamento Manual dos Campos
+NIHONGO321 8.6.31 + DIÁRIO321 4.13.5 — Ciência do Diário 360
 
-O fechamento automático dos blocos recolhíveis foi ajustado para acontecer somente após clicar em abrir página ou salvar anotação.
+Alteração desta versão:
+- Adicionada caixa recolhível “por que funciona?” abaixo do método 7–14.
+- Explica, em linguagem simples, as vantagens do Diário321 para memória de longo prazo, memória analítica e memória criativa.
+- Inclui explicação do treino 360° para substantivos, verbos e partículas.
 
-Campos preservados abertos durante preenchimento contínuo.
+Preservado:
+- DIÁRIO321 separado em /caderno.
+- Minhas anotações recolhível.
+- Minha anotação recolhível.
+- Minhas frases.
+- Frase praticada com risco vermelho.
+- Excluir e reordenar frases.
+- Ambientes personalizados.
+- Hiragana, Katakana e Kanji.
+- Treino 105x.
+- Sensei Bank, checkout, backup, tema e imagens oficiais.
+
+Validação:
+- node --check app.js: OK
+- node --check sensei-bank.js: OK
+- node --check caderno/caderno.js: OK
