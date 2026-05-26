@@ -1,8 +1,5 @@
-NIHONGO321 8.6.15 + DIÁRIO321 4.11.6 — Respiro no Header Mobile
+NIHONGO321 8.6.29 + DIÁRIO321 4.13.3 — Fechamento Manual dos Campos
 
-Ajustes desta versão:
-- Mantém espaço visual entre o título DIÁRIO321 e o botão voltar.
-- Remove o botão interno de retorno redundante na tela inicial do DIÁRIO321.
-- Compacta os controles do header no mobile sem encostar na marca.
-- Preserva a estabilização visual do treino Kana da versão anterior.
-- Preserva DIÁRIO321 separado em /caderno e todo o fluxo de revisão 360°.
+O fechamento automático dos blocos recolhíveis foi ajustado para acontecer somente após clicar em abrir página ou salvar anotação.
+
+Campos preservados abertos durante preenchimento contínuo.
