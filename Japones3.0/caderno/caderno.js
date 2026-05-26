@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.11.4
+   DIÁRIO321 — Protótipo 4.11.6
    Feedback de salvamento visível sem alterar o fluxo principal.
    ========================================================= */
 
@@ -34705,7 +34705,7 @@
   }
 
   function scrollTopSoon() {
-    requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
+    requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
   }
 
   function applyAppTheme() {
@@ -35414,16 +35414,22 @@
   }
 
   function renderAppHeader() {
+    const showContentBack = screen !== "dashboard";
+
     return `
       <header class="appHeader">
         <div class="brandMini">
           <img src="../img/logo_nihongo321.png" alt="NIHONGO321" onerror="this.style.display='none'">
           <div>
             <strong>DIÁRIO321</strong>
-            
           </div>
         </div>
-        <div class="headerActions">${""}<a class="headerBridgeBtn headerBridgeTextBtn" href="../index.html#/home" target="_parent" target="_parent" aria-label="Voltar para o NIHONGO321" title="Voltar ao NIHONGO321">voltar</a><button class="themeToggleBtn" type="button" data-action="toggleTheme">${appTheme === "dark" ? "☀️" : "🌙"}</button><button class="boardToneBtn" type="button" data-action="cyclePaperTone">${paperToneIcon()}</button><button class="headerBackBtn" type="button" id="headerBackBtn" aria-label="voltar para lista de conteúdos">↩</button></div>
+        <div class="headerActions">
+          <a class="headerBridgeBtn headerBridgeTextBtn" href="../index.html#/home" target="_parent" aria-label="Voltar para o NIHONGO321" title="Voltar ao NIHONGO321">voltar</a>
+          <button class="themeToggleBtn" type="button" data-action="toggleTheme" aria-label="alternar tema">${appTheme === "dark" ? "☀️" : "🌙"}</button>
+          <button class="boardToneBtn" type="button" data-action="cyclePaperTone" aria-label="alternar cor da página">${paperToneIcon()}</button>
+          ${showContentBack ? `<button class="headerBackBtn" type="button" id="headerBackBtn" aria-label="voltar para lista de conteúdos">↩</button>` : ""}
+        </div>
       </header>
     `;
   }
@@ -37904,7 +37910,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.11.4"
+        sourceVersion: "4.11.6"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -38670,9 +38676,17 @@
   }
 
   function renderSidebar(word, progress, stats) {
+    const safeLabel = word?.jp || "";
+    const safeCorrect = progress?.correct || 0;
+    const safeTotal = stats?.total || 0;
     return `
-      <div class="infoStack">
-        
+      <aside class="infoStack kanaSideInfo" aria-label="resumo do treino">
+        <div class="sideMiniCard">
+          <b>${escapeHTML(safeLabel)}</b>
+          <span>${safeCorrect}/7 nesta palavra</span>
+          <small>${safeTotal} itens no caminho atual</small>
+        </div>
+      </aside>
     `;
   }
 

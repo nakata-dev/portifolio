@@ -10308,3 +10308,196 @@ html[data-caderno-theme="light"] .headerBridgeTextBtn{
   border-color:rgba(217,124,124,.48);
   background:rgba(217,124,124,.14);
 }
+
+
+/* =========================================================
+   DIÁRIO321 4.11.5 — Estabilização Visual do Treino Kana
+   ---------------------------------------------------------
+   - corrige piscada causada por sidebar com HTML incompleto;
+   - mantém a sidebar estrutural fechada e oculta em telas pequenas;
+   - centraliza o selo Premium do card Kanji no celular.
+   ========================================================= */
+
+.kanaSideInfo{
+  display:block;
+}
+
+.kanaSideInfo .sideMiniCard{
+  border:1px solid var(--stroke, rgba(255,255,255,.13));
+  border-radius:22px;
+  padding:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.026));
+  color:var(--text, #f2f6ff);
+}
+
+.kanaSideInfo .sideMiniCard b,
+.kanaSideInfo .sideMiniCard span,
+.kanaSideInfo .sideMiniCard small{
+  display:block;
+}
+
+.studyMenu.is-premium-area .studyMenuHead{
+  display:flex !important;
+  align-items:center !important;
+  gap:14px !important;
+}
+
+.studyMenu.is-premium-area .studyMenuHead > span{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+}
+
+.studyMenu.is-premium-area .studyMenuHead em{
+  flex:0 0 auto !important;
+  min-width:112px !important;
+  max-width:132px !important;
+  min-height:44px !important;
+  height:44px !important;
+  padding:0 18px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  line-height:1 !important;
+  letter-spacing:.075em !important;
+  white-space:nowrap !important;
+  transform:none !important;
+}
+
+@media (max-width: 899px){
+  .notebookGrid > .kanaSideInfo,
+  .notebookGrid > .infoStack{
+    display:none !important;
+  }
+}
+
+@media (max-width: 420px){
+  .studyMenu.is-premium-area .studyMenuHead em{
+    min-width:104px !important;
+    max-width:118px !important;
+    height:42px !important;
+    min-height:42px !important;
+    padding-inline:14px !important;
+    font-size:12px !important;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.11.6 — Respiro no Header Mobile
+   ---------------------------------------------------------
+   - cria espaço real entre o título DIÁRIO321 e o botão voltar;
+   - remove o botão de retorno interno redundante na tela inicial;
+   - compacta os controles no celular sem encostar na marca.
+   ========================================================= */
+
+.appHeader{
+  gap:18px !important;
+}
+
+.appHeader .brandMini{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  padding-right:16px !important;
+}
+
+.appHeader .headerActions{
+  flex:0 0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:10px !important;
+  margin-left:auto !important;
+}
+
+.headerBridgeTextBtn{
+  margin-left:4px !important;
+}
+
+@media (max-width:620px){
+  .appHeader{
+    gap:12px !important;
+    padding:10px 12px !important;
+  }
+
+  .appHeader .brandMini{
+    gap:8px !important;
+    padding-right:14px !important;
+  }
+
+  .appHeader .brandMini img{
+    width:42px !important;
+    height:42px !important;
+    min-width:42px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:clamp(22px, 6.6vw, 28px) !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+
+  .appHeader .headerActions{
+    gap:8px !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:68px !important;
+    height:38px !important;
+    min-height:38px !important;
+    padding:0 12px !important;
+    margin-left:8px !important;
+    font-size:11px !important;
+  }
+
+  .themeToggleBtn,
+  .boardToneBtn,
+  .headerBackBtn{
+    width:42px !important;
+    min-width:42px !important;
+    height:42px !important;
+    min-height:42px !important;
+    padding:0 !important;
+  }
+}
+
+@media (max-width:390px){
+  .appHeader{
+    gap:10px !important;
+    padding-inline:10px !important;
+  }
+
+  .appHeader .brandMini{
+    gap:7px !important;
+    padding-right:12px !important;
+  }
+
+  .appHeader .brandMini img{
+    width:40px !important;
+    height:40px !important;
+    min-width:40px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:clamp(21px, 6.2vw, 25px) !important;
+  }
+
+  .appHeader .headerActions{
+    gap:7px !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:62px !important;
+    padding-inline:10px !important;
+    margin-left:6px !important;
+  }
+
+  .themeToggleBtn,
+  .boardToneBtn,
+  .headerBackBtn{
+    width:40px !important;
+    min-width:40px !important;
+    height:40px !important;
+    min-height:40px !important;
+  }
+}
