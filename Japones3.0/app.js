@@ -22,7 +22,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.6.37",
+  version: "8.6.44",
   updatedAt: "2026-05-24",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -6520,7 +6520,7 @@ function startCaderno321TrainingFromPayload(payload = {}) {
 function renderCaderno321Integrated() {
   APP.innerHTML = `
     <div class="cadernoIntegratedPage" aria-label="DIÁRIO321 integrado ao NIHONGO321">
-      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=4.14.1" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=4.14.8" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
