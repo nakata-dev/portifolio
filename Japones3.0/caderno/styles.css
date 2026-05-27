@@ -13181,7 +13181,7 @@ html[data-caderno-theme="light"] .diario321PhraseTools .diario321DeleteEntry--cl
 
 
 /* =========================================================
-   DIÁRIO321 4.13.9 — Confirmação antes de apagar frase
+   DIÁRIO321 4.14.1 — Confirmação antes de apagar frase preservada
    ========================================================= */
 .diario321DeleteConfirm{
   grid-column:1 / -1;
@@ -13243,4 +13243,340 @@ html[data-theme="light"] .diario321DeleteConfirm b{
 
 html[data-theme="light"] .diario321DeleteConfirm span{
   color:#703030;
+}
+
+/* =========================================================
+   DIÁRIO321 4.14.1 — Adicionar frase + fonte profissional
+   Fiel à prévia aprovada: fichário limpo, botão discreto e tipografia menos pesada.
+   ========================================================= */
+.appMain--diario321,
+.diario321AltruistaNotebook,
+.diario321PhraseBinder,
+.diario321QuickGuide,
+.diario321StudyMethod{
+  font-family:
+    Inter,
+    "Noto Sans",
+    "Noto Sans JP",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    Arial,
+    sans-serif !important;
+}
+
+.diario321SavedHead b,
+.diario321QuickGuide summary span,
+.diario321StudyMethod summary span,
+.diario321FoldSummary span{
+  font-weight:880 !important;
+  letter-spacing:-.015em !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryMain{
+  font-weight:820 !important;
+  letter-spacing:-.018em !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryMain.is-japanese{
+  font-weight:760 !important;
+  letter-spacing:.005em !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryPt,
+.diario321EntryRomaji,
+.diario321QuickText em,
+.diario321QuickText span{
+  font-weight:560 !important;
+}
+
+.diario321AddPhraseBar{
+  width:100%;
+  min-height:54px;
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  border:1px dashed rgba(255,216,111,.30);
+  border-radius:16px;
+  background:rgba(255,255,255,.018);
+  color:var(--gold2, #fff0b8);
+  font:inherit;
+  cursor:pointer;
+  transition:transform .16s ease, border-color .16s ease, background .16s ease;
+}
+
+.diario321AddPhraseBar span{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  border:1px solid rgba(255,216,111,.54);
+  color:var(--gold, #ffd86f);
+  font-size:20px;
+  line-height:1;
+  font-weight:720;
+}
+
+.diario321AddPhraseBar b{
+  font-size:16px;
+  line-height:1;
+  font-weight:760;
+  letter-spacing:.005em;
+}
+
+.diario321AddPhraseBar:hover,
+.diario321AddPhraseBar:focus-visible{
+  border-color:rgba(255,216,111,.54);
+  background:rgba(255,216,111,.045);
+  outline:none;
+}
+
+.diario321AddPhraseBar:active{
+  transform:scale(.985);
+}
+
+html[data-theme="light"] .diario321AddPhraseBar,
+html[data-caderno-theme="light"] .diario321AddPhraseBar{
+  background:rgba(255,255,255,.52);
+  border-color:rgba(166,106,10,.26);
+  color:#6a4308;
+}
+
+html[data-theme="light"] .diario321AddPhraseBar span,
+html[data-caderno-theme="light"] .diario321AddPhraseBar span{
+  color:#7b510b;
+  border-color:rgba(166,106,10,.36);
+  background:rgba(255,216,111,.18);
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.14.1 — Header com respiro + frase sem quebra vertical
+   ---------------------------------------------------------
+   Correção cirúrgica:
+   - impede o título DIÁRIO321 de invadir o botão voltar;
+   - força o card de frase a usar camadas no mobile;
+   - evita quebra letra por letra na frase principal.
+   ========================================================= */
+
+.appHeader{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:clamp(10px, 2.8vw, 22px) !important;
+  overflow:hidden !important;
+}
+
+.appHeader .brandMini{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  max-width:clamp(142px, 44vw, 270px) !important;
+  overflow:hidden !important;
+}
+
+.appHeader .brandMini > div{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+.appHeader .brandMini strong{
+  display:block !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  white-space:nowrap !important;
+}
+
+.appHeader .headerActions{
+  flex:0 0 auto !important;
+  min-width:0 !important;
+  gap:clamp(5px, 1.5vw, 10px) !important;
+  margin-left:auto !important;
+}
+
+@media (max-width:520px){
+  .appHeader{
+    padding:10px 10px !important;
+    gap:8px !important;
+  }
+
+  .appHeader .brandMini{
+    max-width:150px !important;
+    gap:7px !important;
+    padding-right:8px !important;
+  }
+
+  .appHeader .brandMini img{
+    width:40px !important;
+    height:40px !important;
+    min-width:40px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:clamp(21px, 6.4vw, 27px) !important;
+    letter-spacing:-.055em !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:56px !important;
+    height:36px !important;
+    min-height:36px !important;
+    padding:0 9px !important;
+    margin-left:6px !important;
+    font-size:10.5px !important;
+    line-height:1 !important;
+  }
+
+  .themeToggleBtn,
+  .boardToneBtn,
+  .headerBackBtn{
+    width:38px !important;
+    min-width:38px !important;
+    height:38px !important;
+    min-height:38px !important;
+    padding:0 !important;
+  }
+}
+
+@media (max-width:380px){
+  .appHeader .brandMini{
+    max-width:136px !important;
+  }
+
+  .appHeader .brandMini img{
+    width:36px !important;
+    height:36px !important;
+    min-width:36px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:22px !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:50px !important;
+    padding-inline:7px !important;
+    margin-left:4px !important;
+  }
+
+  .themeToggleBtn,
+  .boardToneBtn,
+  .headerBackBtn{
+    width:35px !important;
+    min-width:35px !important;
+    height:35px !important;
+    min-height:35px !important;
+  }
+}
+
+/* Frase: conteúdo em cima, ações embaixo. Nunca espremer o texto. */
+.diario321PhraseLineV2{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:12px !important;
+  align-items:stretch !important;
+  overflow:hidden !important;
+}
+
+.diario321PhraseTextBlock{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  display:block !important;
+  overflow:visible !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryMain{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+  hyphens:none !important;
+  text-align:left !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryMain.is-japanese{
+  word-break:keep-all !important;
+  overflow-wrap:anywhere !important;
+  line-break:strict !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryPt,
+.diario321PhraseLineV2 .diario321EntryRomaji{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+}
+
+.diario321PhraseTools{
+  width:100% !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-wrap:wrap !important;
+  justify-content:flex-end !important;
+  align-items:center !important;
+  gap:8px !important;
+  border-top:1px solid rgba(255,255,255,.08) !important;
+  padding-top:10px !important;
+}
+
+.diario321PhraseTools::before{
+  display:none !important;
+}
+
+.diario321PhraseTools .diario321MasteredCheck--clean{
+  margin-right:auto !important;
+  width:auto !important;
+  min-height:36px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+  padding:0 2px !important;
+}
+
+.diario321PhraseTools .diario321MasteredCheck--clean input{
+  flex:0 0 auto !important;
+}
+
+.diario321MovePair{
+  display:flex !important;
+  grid-template-columns:none !important;
+  gap:4px !important;
+}
+
+@media (max-width:520px){
+  .diario321PhraseLineV2{
+    padding:18px 14px !important;
+  }
+
+  .diario321PhraseLineV2 .diario321EntryMain{
+    font-size:clamp(24px, 7vw, 32px) !important;
+    line-height:1.28 !important;
+  }
+
+  .diario321PhraseLineV2 .diario321EntryMain:not(.is-japanese){
+    font-size:clamp(21px, 6vw, 27px) !important;
+  }
+
+  .diario321PhraseTools{
+    justify-content:flex-start !important;
+  }
+
+  .diario321PhraseTools .diario321MasteredCheck--clean{
+    flex:1 1 100% !important;
+    margin-right:0 !important;
+  }
 }

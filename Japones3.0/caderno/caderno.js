@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.13.9
+   DIÁRIO321 — Protótipo 4.14.1
    Visual de diário de treino com mapa de cenários e frequência.
    ========================================================= */
 
@@ -37916,7 +37916,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.13.9"
+        sourceVersion: "4.14.1"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -39316,6 +39316,30 @@
     `;
   }
 
+  function openDiario321AddPhrase() {
+    diario321NoteFoldOpen = true;
+    diario321SetupFoldOpen = false;
+    saveDiario321AltruistaState();
+    render();
+    setTimeout(() => {
+      try {
+        const box = document.querySelector(".diario321PracticeEditor");
+        box?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const first = box?.querySelector("textarea[data-altruista-field='ptIdea'], textarea[data-altruista-field='jpIdea']");
+        first?.focus?.({ preventScroll: true });
+      } catch {}
+    }, 80);
+  }
+
+  function renderDiario321AddPhraseButton() {
+    return `
+      <button class="diario321AddPhraseBar" type="button" data-open-practice-editor aria-label="adicionar nova frase">
+        <span aria-hidden="true">＋</span>
+        <b>Adicionar frase</b>
+      </button>
+    `;
+  }
+
   function renderDiario321PracticeEntries() {
     const allEntries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).slice(0, 80);
     const entries = diario321FilterEntries(allEntries).slice(0, 20);
@@ -39325,6 +39349,7 @@
         <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder">
           <div class="diario321SavedHead"><b>Minhas frases</b><span>vazio</span></div>
           <p class="diario321Empty">Salve sua primeira anotação.</p>
+          ${renderDiario321AddPhraseButton()}
         </section>
       `;
     }
@@ -39419,6 +39444,7 @@
         }).join("") : `
           <p class="diario321Empty">Nenhuma frase neste filtro.</p>
         `}
+        ${renderDiario321AddPhraseButton()}
       </section>
     `;
   }
@@ -39620,6 +39646,7 @@ applyAppTheme();
     document.querySelectorAll("[data-scenario-pick]").forEach(btn => btn.addEventListener("click", () => updateDiario321AltruistaField("environment", btn.dataset.scenarioPick || "trabalho")));
     document.querySelectorAll("[data-practice-check]").forEach(btn => btn.addEventListener("click", () => toggleDiario321PracticeCheck(btn.dataset.practiceCheck)));
     document.querySelectorAll("[data-save-practice-entry]").forEach(btn => btn.addEventListener("click", saveDiario321PracticeEntry));
+    document.querySelectorAll("[data-open-practice-editor]").forEach(btn => btn.addEventListener("click", openDiario321AddPhrase));
     document.querySelectorAll(".diario321SetupFold").forEach(box => box.addEventListener("toggle", () => { diario321SetupFoldOpen = !!box.open; }));
     document.querySelectorAll(".diario321NoteFold").forEach(box => box.addEventListener("toggle", () => { diario321NoteFoldOpen = !!box.open; }));
     document.querySelectorAll("[data-entry-check]").forEach(btn => btn.addEventListener("click", () => toggleDiario321EntryCheck(btn.dataset.entryId, btn.dataset.entryCheck)));
