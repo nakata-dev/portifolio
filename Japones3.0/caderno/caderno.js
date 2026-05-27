@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.13.5
+   DIÁRIO321 — Protótipo 4.13.6
    Visual de diário de treino com mapa de cenários e frequência.
    ========================================================= */
 
@@ -37916,7 +37916,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.13.5"
+        sourceVersion: "4.13.6"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -38652,6 +38652,8 @@
 
   let diario321SetupFoldOpen = !diario321HasPolivalencia();
   let diario321NoteFoldOpen = false;
+  let diario321EntriesFilter = "all";
+  let diario321EditingEntryId = "";
 
   function saveDiario321AltruistaState() {
     diario321AltruistaState.updatedAt = new Date().toISOString();
@@ -38807,6 +38809,7 @@
       romaji: romajiIdea,
       checklist: { ...(diario321AltruistaState.checklist || {}) },
       mastered: false,
+      favorite: false,
       masteredAt: null,
       createdAt: new Date().toISOString()
     };
@@ -38845,6 +38848,106 @@
     });
     saveDiario321AltruistaState();
     render();
+  }
+
+
+  function toggleDiario321EntryFavorite(entryId) {
+    diario321AltruistaState.entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).map(entry => {
+      if (entry.id !== entryId) return entry;
+      return { ...entry, favorite: !entry.favorite };
+    });
+    saveDiario321AltruistaState();
+    render();
+  }
+
+  function setDiario321EntriesFilter(filter) {
+    diario321EntriesFilter = String(filter || "all");
+    render();
+  }
+
+  function startDiario321EntryEdit(entryId) {
+    diario321EditingEntryId = String(entryId || "");
+    render();
+    setTimeout(() => {
+      try { document.querySelector(`[data-entry-edit-main="${CSS.escape(diario321EditingEntryId)}"]`)?.focus(); } catch {}
+    }, 60);
+  }
+
+  function cancelDiario321EntryEdit() {
+    diario321EditingEntryId = "";
+    render();
+  }
+
+  function saveDiario321EntryEdit(entryId) {
+    const id = String(entryId || "");
+    const mainInput = document.querySelector(`[data-entry-edit-main="${CSS.escape(id)}"]`);
+    const ptInput = document.querySelector(`[data-entry-edit-pt="${CSS.escape(id)}"]`);
+    const mainValue = String(mainInput?.value || "").trim();
+    const ptValue = String(ptInput?.value || "").trim();
+
+    if (!mainValue && !ptValue) {
+      toast("escreva a frase antes de salvar");
+      return;
+    }
+
+    diario321AltruistaState.entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).map(entry => {
+      if (entry.id !== id) return entry;
+      return {
+        ...entry,
+        romaji: mainValue,
+        pt: ptValue || entry.pt || "",
+        updatedAt: new Date().toISOString()
+      };
+    });
+    diario321EditingEntryId = "";
+    saveDiario321AltruistaState();
+    toast("frase editada");
+    render();
+  }
+
+  function diario321EnvironmentLabel(key) {
+    const all = diario321AllEnvironmentPresets();
+    return all[key]?.label || "Ambiente";
+  }
+
+  function diario321EnvironmentIcon(key) {
+    const all = diario321AllEnvironmentPresets();
+    return all[key]?.icon || "✦";
+  }
+
+  function diario321FilterEntries(entries) {
+    const filter = diario321EntriesFilter || "all";
+    if (filter === "favorite") return entries.filter(entry => !!entry.favorite);
+    if (filter !== "all") return entries.filter(entry => String(entry.environment || "") === filter);
+    return entries;
+  }
+
+  function renderDiario321EntryTabs(entries) {
+    const environments = [];
+    const seen = new Set();
+    for (const entry of entries) {
+      const env = String(entry.environment || "trabalho");
+      if (!seen.has(env)) {
+        seen.add(env);
+        environments.push(env);
+      }
+    }
+    const hasFavorites = entries.some(entry => !!entry.favorite);
+    const tabs = [
+      { id: "all", label: "Todas" },
+      ...environments.slice(0, 5).map(env => ({ id: env, label: diario321EnvironmentLabel(env) })),
+      ...(hasFavorites ? [{ id: "favorite", label: "Favoritas" }] : [])
+    ];
+    if (!tabs.some(tab => tab.id === diario321EntriesFilter)) diario321EntriesFilter = "all";
+    return `
+      <div class="diario321EntryTabs" aria-label="filtrar frases">
+        ${tabs.map(tab => `
+          <button type="button" class="diario321EntryTab ${tab.id === diario321EntriesFilter ? "is-active" : ""}" data-entry-filter="${escapeHTML(tab.id)}">
+            ${escapeHTML(tab.label)}
+          </button>
+        `).join("")}
+      </div>
+    `;
   }
 
   function deleteDiario321Entry(entryId) {
@@ -39121,44 +39224,77 @@
   }
 
   function renderDiario321PracticeEntries() {
-    const entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).slice(0, 12);
-    if (!entries.length) {
+    const allEntries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).slice(0, 80);
+    const entries = diario321FilterEntries(allEntries).slice(0, 20);
+
+    if (!allEntries.length) {
       return `
-        <section class="diario321PracticeEntries diario321DiaryEntries">
+        <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder">
           <div class="diario321SavedHead"><b>Minhas frases</b><span>vazio</span></div>
           <p class="diario321Empty">Salve sua primeira anotação.</p>
         </section>
       `;
     }
+
     return `
-      <section class="diario321PracticeEntries diario321DiaryEntries">
-        <div class="diario321SavedHead"><b>Minhas frases</b><span>${entries.length}</span></div>
-        ${entries.map((entry, index) => {
+      <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder">
+        <div class="diario321SavedHead"><b>Minhas frases</b><span>${allEntries.length}</span></div>
+        ${renderDiario321EntryTabs(allEntries)}
+        ${entries.length ? entries.map((entry, index) => {
           const mastered = !!entry.mastered;
+          const favorite = !!entry.favorite;
           const mainPhrase = String(entry.romaji || entry.pt || "").trim();
           const supportPhrase = entry.romaji ? String(entry.pt || "").trim() : "";
-          return `
-            <article class="diario321PracticeEntry diario321DiaryEntry ${mastered ? "is-mastered" : ""}" draggable="true" data-entry-drag-id="${escapeHTML(entry.id)}">
-              <div class="diario321EntryTop">
-                <small>Frase ${index + 1} · ${escapeHTML(entry.wordRomaji || "palavra")} = ${escapeHTML(entry.wordPt || "")}</small>
-                <div class="diario321EntryOrderBtns" aria-label="ordenar frase">
-                  <button type="button" data-entry-move="up" data-entry-id="${escapeHTML(entry.id)}" aria-label="subir frase">↑</button>
-                  <button type="button" data-entry-move="down" data-entry-id="${escapeHTML(entry.id)}" aria-label="descer frase">↓</button>
+          const envLabel = diario321EnvironmentLabel(entry.environment || "trabalho");
+          const envIcon = diario321EnvironmentIcon(entry.environment || "trabalho");
+          const isEditing = diario321EditingEntryId === entry.id;
+
+          if (isEditing) {
+            return `
+              <article class="diario321PracticeEntry diario321DiaryEntry diario321DiaryEntry--edit" data-entry-drag-id="${escapeHTML(entry.id)}">
+                <div class="diario321EntryTop diario321EntryTop--line">
+                  <small><span>${escapeHTML(envIcon)}</span> ${escapeHTML(envLabel)} · ${escapeHTML(entry.wordRomaji || "palavra")}</small>
+                  <button class="diario321EntryMiniBtn" type="button" data-entry-cancel-edit>cancelar</button>
                 </div>
+                <label class="diario321EditField">
+                  <span>Frase principal</span>
+                  <textarea data-entry-edit-main="${escapeHTML(entry.id)}">${escapeHTML(mainPhrase)}</textarea>
+                </label>
+                <label class="diario321EditField">
+                  <span>Português</span>
+                  <textarea data-entry-edit-pt="${escapeHTML(entry.id)}">${escapeHTML(supportPhrase || entry.pt || "")}</textarea>
+                </label>
+                <div class="diario321EntryActions diario321EntryActions--clean">
+                  <button class="diario321EntrySaveEdit" type="button" data-entry-save-edit="${escapeHTML(entry.id)}">salvar edição</button>
+                </div>
+              </article>
+            `;
+          }
+
+          return `
+            <article class="diario321PracticeEntry diario321DiaryEntry diario321PhraseLine ${mastered ? "is-mastered" : ""}" draggable="true" data-entry-drag-id="${escapeHTML(entry.id)}">
+              <div class="diario321EntryTop diario321EntryTop--line">
+                <small><span>${escapeHTML(envIcon)}</span> Frase ${index + 1} · ${escapeHTML(envLabel)} · ${escapeHTML(entry.wordRomaji || "palavra")} = ${escapeHTML(entry.wordPt || "")}</small>
+                <button class="diario321FavoriteBtn ${favorite ? "is-active" : ""}" type="button" data-entry-favorite="${escapeHTML(entry.id)}" aria-label="favoritar frase">${favorite ? "★" : "☆"}</button>
               </div>
               <div class="diario321EntryMain" title="frase principal">${escapeHTML(mainPhrase)}</div>
               ${supportPhrase ? `<div class="diario321EntryPt">${escapeHTML(supportPhrase)}</div>` : ""}
-              <div class="diario321EntryActions">
-                <label class="diario321MasteredCheck">
+              <div class="diario321EntryActions diario321EntryActions--clean">
+                <label class="diario321MasteredCheck diario321MasteredCheck--clean">
                   <input type="checkbox" ${mastered ? "checked" : ""} data-entry-mastered="${escapeHTML(entry.id)}">
                   <span>praticada</span>
                 </label>
-                <button class="diario321DeleteEntry" type="button" data-entry-delete="${escapeHTML(entry.id)}" aria-label="excluir frase">excluir</button>
-                <span class="diario321DragHint">arraste para ordenar</span>
+                <button class="diario321EntryMiniBtn" type="button" data-entry-edit="${escapeHTML(entry.id)}">editar</button>
+                <button class="diario321EntryMiniBtn" type="button" data-entry-move="up" data-entry-id="${escapeHTML(entry.id)}" aria-label="subir frase">↑</button>
+                <button class="diario321EntryMiniBtn" type="button" data-entry-move="down" data-entry-id="${escapeHTML(entry.id)}" aria-label="descer frase">↓</button>
+                <button class="diario321DeleteEntry diario321DeleteEntry--clean" type="button" data-entry-delete="${escapeHTML(entry.id)}" aria-label="excluir frase">excluir</button>
+                <span class="diario321DragHint">☰ arraste</span>
               </div>
             </article>
           `;
-        }).join("")}
+        }).join("") : `
+          <p class="diario321Empty">Nenhuma frase neste filtro.</p>
+        `}
       </section>
     `;
   }
@@ -39364,6 +39500,11 @@ applyAppTheme();
     document.querySelectorAll("[data-entry-check]").forEach(btn => btn.addEventListener("click", () => toggleDiario321EntryCheck(btn.dataset.entryId, btn.dataset.entryCheck)));
     document.querySelectorAll("[data-entry-write]").forEach(btn => btn.addEventListener("click", () => adjustDiario321EntryWriteCount(btn.dataset.entryId, btn.dataset.entryWrite)));
     document.querySelectorAll("[data-entry-mastered]").forEach(input => input.addEventListener("change", () => toggleDiario321EntryMastered(input.dataset.entryMastered)));
+    document.querySelectorAll("[data-entry-favorite]").forEach(btn => btn.addEventListener("click", () => toggleDiario321EntryFavorite(btn.dataset.entryFavorite)));
+    document.querySelectorAll("[data-entry-filter]").forEach(btn => btn.addEventListener("click", () => setDiario321EntriesFilter(btn.dataset.entryFilter)));
+    document.querySelectorAll("[data-entry-edit]").forEach(btn => btn.addEventListener("click", () => startDiario321EntryEdit(btn.dataset.entryEdit)));
+    document.querySelectorAll("[data-entry-save-edit]").forEach(btn => btn.addEventListener("click", () => saveDiario321EntryEdit(btn.dataset.entrySaveEdit)));
+    document.querySelectorAll("[data-entry-cancel-edit]").forEach(btn => btn.addEventListener("click", cancelDiario321EntryEdit));
     document.querySelectorAll("[data-entry-delete]").forEach(btn => btn.addEventListener("click", () => deleteDiario321Entry(btn.dataset.entryDelete)));
     document.querySelectorAll("[data-entry-move]").forEach(btn => btn.addEventListener("click", () => moveDiario321Entry(btn.dataset.entryId, btn.dataset.entryMove)));
     document.querySelectorAll("[data-entry-drag-id]").forEach(card => {

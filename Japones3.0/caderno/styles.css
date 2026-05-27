@@ -12520,3 +12520,236 @@ html[data-theme="light"] .diario321ScienceSteps b{
 .diario321ScienceExample span{
   line-height:1.35;
 }
+
+/* =========================================================
+   DIÁRIO321 4.13.6 — Fichário minimalista de frases
+   - abas por ambiente
+   - edição de frase
+   - favorito, praticada, excluir e reordenar
+   ========================================================= */
+.diario321PhraseBinder{
+  padding:14px !important;
+}
+
+.diario321EntryTabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:2px 0 10px;
+  margin:0 0 4px;
+  scrollbar-width:none;
+}
+
+.diario321EntryTabs::-webkit-scrollbar{
+  display:none;
+}
+
+.diario321EntryTab{
+  flex:0 0 auto;
+  min-height:34px;
+  border:0;
+  border-bottom:2px solid transparent;
+  background:transparent;
+  color:rgba(217,228,247,.74);
+  padding:7px 4px 8px;
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.01em;
+}
+
+.diario321EntryTab.is-active{
+  color:var(--gold2, #fff0b8);
+  border-bottom-color:rgba(255,216,111,.85);
+}
+
+.diario321PhraseLine,
+.diario321DiaryEntry--edit{
+  border:0 !important;
+  border-radius:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.10) !important;
+  background:rgba(255,255,255,.018) !important;
+  padding:13px 2px 14px !important;
+  box-shadow:none !important;
+}
+
+.diario321PhraseLine:last-child{
+  border-bottom:0 !important;
+}
+
+.diario321EntryTop--line{
+  align-items:center;
+  margin-bottom:2px;
+}
+
+.diario321EntryTop--line small{
+  color:rgba(255,240,184,.90) !important;
+  font-size:10.5px !important;
+  letter-spacing:.02em;
+  text-transform:none;
+}
+
+.diario321EntryMain{
+  color:#ffffff !important;
+  font-size:clamp(21px, 5.6vw, 29px) !important;
+  line-height:1.2 !important;
+  margin-top:4px;
+  margin-bottom:2px;
+}
+
+.diario321EntryPt{
+  color:rgba(217,228,247,.76) !important;
+  font-size:13px !important;
+  line-height:1.35 !important;
+  font-weight:780 !important;
+}
+
+.diario321EntryActions--clean{
+  gap:7px;
+  padding-top:8px;
+}
+
+.diario321MasteredCheck--clean,
+.diario321EntryMiniBtn,
+.diario321DeleteEntry--clean,
+.diario321FavoriteBtn,
+.diario321EntrySaveEdit{
+  min-height:30px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(3,13,30,.22);
+  color:rgba(217,228,247,.82);
+  padding:6px 10px;
+  font-size:11px;
+  line-height:1;
+  font-weight:920;
+}
+
+.diario321FavoriteBtn{
+  width:32px;
+  padding:0;
+  color:rgba(217,228,247,.70);
+}
+
+.diario321FavoriteBtn.is-active{
+  color:#fff0b8;
+  border-color:rgba(255,216,111,.34);
+  background:rgba(255,216,111,.10);
+}
+
+.diario321DeleteEntry--clean{
+  color:#ffd6d6;
+  border-color:rgba(255,93,126,.22);
+  background:rgba(255,93,126,.052);
+}
+
+.diario321EntrySaveEdit{
+  color:#211605;
+  border-color:rgba(255,216,111,.50);
+  background:linear-gradient(180deg, #ffe49a, #e8b94d);
+}
+
+.diario321EditField{
+  display:grid;
+  gap:7px;
+}
+
+.diario321EditField span{
+  color:var(--gold2, #fff0b8);
+  font-size:10px;
+  line-height:1;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  font-weight:1000;
+}
+
+.diario321EditField textarea{
+  width:100%;
+  min-height:76px;
+  resize:vertical;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:16px;
+  background:rgba(3,13,30,.34);
+  color:var(--soft, #fbfdff);
+  padding:12px 13px;
+  font:inherit;
+  font-size:15px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.diario321DiaryEntry.is-mastered{
+  opacity:.58;
+}
+
+.diario321DiaryEntry.is-mastered .diario321EntryMain::after{
+  height:3px !important;
+  background:linear-gradient(90deg, rgba(255,45,45,.14), rgba(255,45,45,.98), rgba(255,45,45,.16)) !important;
+}
+
+@media (max-width:480px){
+  .diario321PhraseBinder{
+    padding:13px !important;
+  }
+  .diario321EntryActions--clean{
+    align-items:center;
+  }
+  .diario321MasteredCheck--clean,
+  .diario321EntryMiniBtn,
+  .diario321DeleteEntry--clean{
+    flex:0 0 auto;
+  }
+  .diario321DragHint{
+    width:auto !important;
+    margin-left:auto !important;
+    text-align:right !important;
+  }
+}
+
+html[data-theme="light"] .diario321EntryTab{
+  color:#5a6b84;
+}
+
+html[data-theme="light"] .diario321EntryTab.is-active{
+  color:#6a4308;
+  border-bottom-color:rgba(166,106,10,.75);
+}
+
+html[data-theme="light"] .diario321PhraseLine,
+html[data-theme="light"] .diario321DiaryEntry--edit{
+  border-bottom-color:rgba(31,59,103,.14) !important;
+  background:rgba(255,255,255,.24) !important;
+}
+
+html[data-theme="light"] .diario321EntryMain{
+  color:#0d203d !important;
+}
+
+html[data-theme="light"] .diario321EntryPt{
+  color:#40536f !important;
+}
+
+html[data-theme="light"] .diario321EntryMiniBtn,
+html[data-theme="light"] .diario321DeleteEntry--clean,
+html[data-theme="light"] .diario321FavoriteBtn,
+html[data-theme="light"] .diario321MasteredCheck--clean{
+  background:rgba(255,255,255,.58);
+  border-color:rgba(31,59,103,.18);
+  color:#40536f;
+}
+
+html[data-theme="light"] .diario321FavoriteBtn.is-active{
+  color:#7b510b;
+  border-color:rgba(166,106,10,.26);
+  background:rgba(255,216,111,.28);
+}
+
+html[data-theme="light"] .diario321EditField span{
+  color:#7b510b;
+}
+
+html[data-theme="light"] .diario321EditField textarea{
+  border-color:rgba(31,59,103,.18);
+  background:rgba(255,255,255,.88);
+  color:#10213b;
+}
