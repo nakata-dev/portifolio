@@ -1,18 +1,12 @@
-NIHONGO321 8.6.32 + DIÁRIO321 4.13.6 — Fichário de Frases Editável
+NIHONGO321 8.6.35 + DIÁRIO321 4.13.9 — Confirmação Antes de Apagar Frase
 
-Alterações:
-- Adiciona edição das frases em Minhas frases.
-- Organiza Minhas frases com abas minimalistas: Todas, ambientes usados e Favoritas.
-- Adiciona favorito por frase.
-- Mantém praticada com risco vermelho.
-- Mantém excluir, subir/descer e arrastar para reordenar.
-- Simplifica o visual da lista para parecer fichário de treino, com mais foco na frase principal.
+Alterado:
+- Adicionada caixa de confirmação antes de excluir uma frase no DIÁRIO321.
+- O clique na lixeira agora apenas abre a confirmação.
+- A frase só é removida ao tocar em “apagar”.
+- Botão “cancelar” fecha a confirmação sem apagar nada.
 
 Preservado:
 - DIÁRIO321 separado em /caderno.
-- Minhas anotações recolhível.
-- Minha anotação recolhível.
-- Método 7–14 e Por que funciona?.
-- Ambientes personalizados.
-- Hiragana, Katakana e Kanji.
-- Treino 105x, Sensei Bank, checkout, backup, tema e imagens oficiais.
+- Guia rápido, modelos com japonês, edição, favoritar, praticada e reordenação.
+- Hiragana, Katakana, Kanji, treino 105x, Sensei Bank, checkout, backup, tema e imagens oficiais.

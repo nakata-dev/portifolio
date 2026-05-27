@@ -12753,3 +12753,494 @@ html[data-theme="light"] .diario321EditField textarea{
   background:rgba(255,255,255,.88);
   color:#10213b;
 }
+
+/* =========================================================
+   DIÁRIO321 4.13.7 — Guia rápido de sobrevivência
+   Layout fiel à prévia aprovada: limpo, profissional e sem poluição.
+   ========================================================= */
+.diario321PhraseBinder,
+.diario321QuickGuide{
+  border:1px solid rgba(255,216,111,.34) !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(280px 160px at 12% 0%, rgba(255,216,111,.055), transparent 65%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  box-shadow:0 18px 38px rgba(0,0,0,.18) !important;
+}
+
+.diario321PhraseLineV2{
+  display:grid !important;
+  grid-template-columns:minmax(0, 1fr) auto !important;
+  gap:12px !important;
+  align-items:center !important;
+  margin:0 !important;
+  border:1px solid rgba(255,255,255,.085) !important;
+  border-radius:18px !important;
+  border-bottom:1px solid rgba(255,255,255,.085) !important;
+  background:rgba(255,255,255,.026) !important;
+  padding:14px !important;
+}
+
+.diario321PhraseLineV2 + .diario321PhraseLineV2{
+  margin-top:10px !important;
+}
+
+.diario321PhraseTextBlock{
+  min-width:0;
+}
+
+.diario321PhraseLineV2 .diario321EntryTop--line{
+  margin:0 0 5px !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryTop--line small{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  color:rgba(255,240,184,.82) !important;
+}
+
+.diario321PhraseLineV2 .diario321EntryMain{
+  position:relative;
+  display:inline-block;
+  max-width:100%;
+  color:#fff !important;
+  font-size:clamp(22px, 5.4vw, 31px) !important;
+  line-height:1.18 !important;
+  font-weight:950 !important;
+  letter-spacing:-.02em;
+  word-break:break-word;
+}
+
+.diario321PhraseLineV2 .diario321EntryPt{
+  margin-top:5px;
+  color:rgba(217,228,247,.78) !important;
+  font-size:13.5px !important;
+  line-height:1.32 !important;
+  font-style:italic;
+}
+
+.diario321PhraseTools{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-wrap:nowrap;
+  min-width:max-content;
+}
+
+.diario321PhraseTools .diario321MasteredCheck--clean{
+  display:grid;
+  place-items:center;
+  gap:4px;
+  width:62px;
+  min-height:54px;
+  padding:6px 4px;
+  border:0;
+  background:transparent;
+  color:rgba(217,228,247,.68);
+}
+
+.diario321PhraseTools .diario321MasteredCheck--clean input{
+  width:24px;
+  height:24px;
+  accent-color:#ffd86f;
+}
+
+.diario321PhraseTools .diario321MasteredCheck--clean span{
+  font-size:11px;
+  line-height:1;
+  font-weight:800;
+  text-transform:lowercase;
+}
+
+.diario321PhraseTools::before{
+  content:"";
+  width:1px;
+  height:54px;
+  background:rgba(255,255,255,.12);
+  margin-right:3px;
+}
+
+.diario321IconBtn,
+.diario321PhraseTools .diario321FavoriteBtn,
+.diario321PhraseTools .diario321EntryMiniBtn,
+.diario321PhraseTools .diario321DeleteEntry--clean{
+  width:38px !important;
+  height:38px !important;
+  min-height:38px !important;
+  display:grid !important;
+  place-items:center !important;
+  padding:0 !important;
+  border-radius:999px !important;
+  font-size:17px !important;
+  line-height:1 !important;
+  background:rgba(255,255,255,.035) !important;
+}
+
+.diario321PhraseTools .diario321EntryMiniBtn{
+  color:#ffd86f !important;
+  border-color:rgba(255,216,111,.18) !important;
+}
+
+.diario321PhraseTools .diario321DeleteEntry--clean{
+  color:#ff7272 !important;
+  border-color:rgba(255,114,114,.20) !important;
+}
+
+.diario321MovePair{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:4px;
+}
+
+.diario321MovePair .diario321IconBtn{
+  width:28px !important;
+  height:24px !important;
+  min-height:24px !important;
+  font-size:13px !important;
+}
+
+.diario321PhraseTools .diario321DragHint{
+  width:30px !important;
+  margin:0 !important;
+  color:rgba(217,228,247,.54) !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  letter-spacing:-.2em;
+}
+
+.diario321QuickGuide{
+  padding:14px !important;
+  margin-top:12px !important;
+}
+
+.diario321QuickGuide summary{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  column-gap:10px;
+  min-height:46px;
+  padding:0 2px 8px;
+  color:var(--gold2, #fff0b8);
+  cursor:pointer;
+}
+
+.diario321QuickGuide summary::before{
+  content:"💡";
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:rgba(255,216,111,.12);
+  border:1px solid rgba(255,216,111,.12);
+  font-size:18px;
+}
+
+.diario321QuickGuide summary span{
+  font-size:20px;
+  line-height:1.1;
+  font-weight:1000;
+  letter-spacing:.01em;
+  text-transform:none;
+}
+
+.diario321QuickGuide summary small{
+  grid-column:2;
+  margin-top:3px;
+  color:rgba(217,228,247,.70);
+  font-size:13px;
+  line-height:1.1;
+  font-weight:760;
+}
+
+.diario321QuickGuide summary::after{
+  grid-column:3;
+  grid-row:1 / span 2;
+}
+
+.diario321QuickGrid{
+  display:grid;
+  gap:10px;
+  padding-top:4px;
+}
+
+.diario321QuickItem{
+  display:grid;
+  grid-template-columns:68px minmax(0, 1fr) auto;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.085);
+  background:rgba(255,255,255,.026);
+}
+
+.diario321ParticleBadge{
+  width:58px;
+  height:58px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  color:#fff0b8;
+  background:radial-gradient(circle at 30% 20%, rgba(255,216,111,.22), rgba(255,216,111,.06));
+  border:1px solid rgba(255,216,111,.16);
+  font-family:"Noto Sans JP", "Yu Gothic", system-ui, sans-serif;
+  font-size:32px;
+  font-weight:950;
+  box-shadow:inset 0 0 18px rgba(255,216,111,.06);
+}
+
+.diario321QuickText{
+  display:grid;
+  gap:3px;
+  min-width:0;
+}
+
+.diario321QuickText b{
+  color:#fff;
+  font-size:16px;
+  line-height:1.16;
+  font-weight:1000;
+}
+
+.diario321QuickText span{
+  color:rgba(242,246,255,.88);
+  font-size:15px;
+  line-height:1.25;
+  font-weight:850;
+  font-family:"Noto Sans JP", "Yu Gothic", system-ui, sans-serif;
+}
+
+.diario321QuickText em{
+  color:rgba(217,228,247,.70);
+  font-size:13px;
+  line-height:1.25;
+  font-style:normal;
+  font-weight:760;
+}
+
+.diario321QuickItem button{
+  min-height:42px;
+  border-radius:14px;
+  border:1px solid rgba(255,216,111,.45);
+  background:rgba(255,216,111,.045);
+  color:#fff0b8;
+  padding:8px 12px;
+  font-size:12px;
+  line-height:1.1;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+@media (max-width:560px){
+  .diario321PhraseLineV2{
+    grid-template-columns:1fr;
+    gap:9px !important;
+  }
+
+  .diario321PhraseTools{
+    width:100%;
+    justify-content:flex-end;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:9px;
+  }
+
+  .diario321PhraseTools::before{
+    display:none;
+  }
+
+  .diario321PhraseTools .diario321MasteredCheck--clean{
+    margin-right:auto;
+    width:auto;
+    min-height:38px;
+    grid-auto-flow:column;
+    grid-template-columns:auto auto;
+    padding:0;
+  }
+
+  .diario321QuickItem{
+    grid-template-columns:50px minmax(0, 1fr);
+    gap:10px;
+  }
+
+  .diario321ParticleBadge{
+    width:48px;
+    height:48px;
+    font-size:27px;
+  }
+
+  .diario321QuickItem button{
+    grid-column:1 / -1;
+    width:100%;
+  }
+}
+
+html[data-theme="light"] .diario321PhraseBinder,
+html[data-theme="light"] .diario321QuickGuide,
+html[data-caderno-theme="light"] .diario321PhraseBinder,
+html[data-caderno-theme="light"] .diario321QuickGuide{
+  background:rgba(255,255,255,.72) !important;
+  border-color:rgba(166,106,10,.22) !important;
+  box-shadow:0 14px 28px rgba(36,68,116,.12) !important;
+}
+
+html[data-theme="light"] .diario321PhraseLineV2,
+html[data-caderno-theme="light"] .diario321PhraseLineV2,
+html[data-theme="light"] .diario321QuickItem,
+html[data-caderno-theme="light"] .diario321QuickItem{
+  background:rgba(255,255,255,.58) !important;
+  border-color:rgba(31,59,103,.13) !important;
+}
+
+html[data-theme="light"] .diario321PhraseLineV2 .diario321EntryMain,
+html[data-caderno-theme="light"] .diario321PhraseLineV2 .diario321EntryMain,
+html[data-theme="light"] .diario321QuickText b,
+html[data-caderno-theme="light"] .diario321QuickText b{
+  color:#0b1b31 !important;
+}
+
+html[data-theme="light"] .diario321QuickText span,
+html[data-caderno-theme="light"] .diario321QuickText span{
+  color:#233958 !important;
+}
+
+html[data-theme="light"] .diario321QuickText em,
+html[data-caderno-theme="light"] .diario321QuickText em,
+html[data-theme="light"] .diario321QuickGuide summary small,
+html[data-caderno-theme="light"] .diario321QuickGuide summary small{
+  color:#51627a !important;
+}
+
+html[data-theme="light"] .diario321QuickGuide summary span,
+html[data-caderno-theme="light"] .diario321QuickGuide summary span,
+html[data-theme="light"] .diario321ParticleBadge,
+html[data-caderno-theme="light"] .diario321ParticleBadge{
+  color:#7a500b !important;
+}
+
+html[data-theme="light"] .diario321QuickItem button,
+html[data-caderno-theme="light"] .diario321QuickItem button{
+  color:#6a4308;
+  background:rgba(255,216,111,.18);
+  border-color:rgba(166,106,10,.30);
+}
+
+/* =========================================================
+   DIÁRIO321 4.13.8 — Lixeira real + japonês nos modelos
+   ========================================================= */
+.diario321EntryRomaji{
+  margin-top:4px;
+  color:rgba(217,228,247,.64) !important;
+  font-size:13px !important;
+  line-height:1.3 !important;
+  font-weight:720 !important;
+  font-style:italic;
+}
+
+.diario321PhraseLineV2 .diario321EntryMain.is-japanese{
+  font-family:"Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  letter-spacing:.01em;
+  font-size:clamp(24px, 6vw, 32px) !important;
+}
+
+.diario321TrashIcon{
+  width:20px;
+  height:20px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.diario321PhraseTools .diario321DeleteEntry--clean{
+  color:#ff6d7f !important;
+  background:rgba(255,93,126,.055) !important;
+  border-color:rgba(255,93,126,.26) !important;
+}
+
+.diario321PhraseTools .diario321DeleteEntry--clean:active{
+  transform:scale(.96);
+}
+
+html[data-theme="light"] .diario321EntryRomaji,
+html[data-caderno-theme="light"] .diario321EntryRomaji{
+  color:#607089 !important;
+}
+
+html[data-theme="light"] .diario321PhraseTools .diario321DeleteEntry--clean,
+html[data-caderno-theme="light"] .diario321PhraseTools .diario321DeleteEntry--clean{
+  color:#c93652 !important;
+  background:rgba(255,93,126,.10) !important;
+  border-color:rgba(201,47,88,.22) !important;
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.13.9 — Confirmação antes de apagar frase
+   ========================================================= */
+.diario321DeleteConfirm{
+  grid-column:1 / -1;
+  margin-top:12px;
+  padding:14px;
+  border:1px solid rgba(255,96,96,.36);
+  border-radius:18px;
+  background:linear-gradient(180deg, rgba(255,96,96,.12), rgba(255,255,255,.035));
+  display:grid;
+  gap:8px;
+}
+
+.diario321DeleteConfirm b{
+  color:var(--soft);
+  font-size:14px;
+}
+
+.diario321DeleteConfirm span{
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1.35;
+}
+
+.diario321DeleteConfirm div{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+
+.diario321DeleteCancel,
+.diario321DeleteConfirmBtn{
+  min-height:38px;
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:12px;
+  font-weight:950;
+  border:1px solid var(--stroke);
+}
+
+.diario321DeleteCancel{
+  color:var(--text);
+  background:rgba(255,255,255,.055);
+}
+
+.diario321DeleteConfirmBtn{
+  border-color:rgba(255,96,96,.50);
+  color:#fff5f5;
+  background:linear-gradient(180deg, rgba(210,70,70,.92), rgba(150,38,38,.92));
+}
+
+html[data-theme="light"] .diario321DeleteConfirm{
+  background:linear-gradient(180deg, rgba(255,238,238,.96), rgba(255,255,255,.86));
+}
+
+html[data-theme="light"] .diario321DeleteConfirm b{
+  color:#5a1616;
+}
+
+html[data-theme="light"] .diario321DeleteConfirm span{
+  color:#703030;
+}
