@@ -1,7 +1,3 @@
-NIHONGO321 8.6.44 + DIÁRIO321 4.14.8 — Títulos Semente e Terreno
+NIHONGO321 8.6.45 + DIÁRIO321 4.14.9 — Edição Romaji Atualiza Japonês
 
-Ajuste visual e conceitual no DIÁRIO321:
-- “Minhas anotações” passou a ser “Escolhendo a Semente”;
-- “Minha anotação” passou a ser “Preparando o Terreno”;
-- fonte do título aberto no modo claro foi reduzida para não dominar a tela;
-- preservadas conversão romaji em tempo real, Guia rápido, Minhas frases e demais fluxos.
+Correção cirúrgica: ao editar o Romaji de uma frase já salva, o campo Japonês é regenerado em tempo real usando o tom Educado/Natural selecionado.

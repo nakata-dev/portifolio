@@ -13804,7 +13804,7 @@ html[data-caderno-theme="light"] .diario321EditField input{
 }
 
 /* =========================================================
-   DIÁRIO321 4.14.8 — Campo de edição fiel à prévia aprovada
+   DIÁRIO321 4.14.9 — Campo de edição fiel à prévia aprovada
    Foco: contraste real para dekassegui com vista cansada.
    ========================================================= */
 html[data-theme="light"] .appMain--diario321,
@@ -14012,7 +14012,7 @@ html[data-caderno-theme="light"] .diario321ParticleBadge{
 }
 
 /* =========================================================
-   DIÁRIO321 4.14.8 — Campo de edição fiel à prévia aprovada
+   DIÁRIO321 4.14.9 — Campo de edição fiel à prévia aprovada
    ========================================================= */
 .diario321ToneBox{
   gap:10px;
@@ -14090,7 +14090,7 @@ html[data-theme="light"] .diario321ToneOption small{
 
 
 /* =========================================================
-   DIÁRIO321 4.14.8 — Campo de edição fiel à prévia aprovada
+   DIÁRIO321 4.14.9 — Campo de edição fiel à prévia aprovada
    Foco: modo claro legível, minimalista e com aparência premium.
    ========================================================= */
 html[data-theme="light"] .diario321PracticeEditor.diario321DiaryWriteBox,
@@ -14343,7 +14343,7 @@ html[data-caderno-theme="light"] .diario321PracticeEditor .diario321PrimaryBtn--
 
 
 /* =========================================================
-   DIÁRIO321 4.14.8 — Títulos Semente e Terreno + fonte equilibrada
+   DIÁRIO321 4.14.9 — Títulos Semente e Terreno + fonte equilibrada
    Corrige título aberto grande demais no modo claro.
    ========================================================= */
 html[data-theme="light"] .diario321PracticeEditor .diario321FoldSummary span,

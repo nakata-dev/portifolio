@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.14.8
+   DIÁRIO321 — Protótipo 4.14.9
    Visual de diário de treino com mapa de cenários e frequência.
    ========================================================= */
 
@@ -37916,7 +37916,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.14.8"
+        sourceVersion: "4.14.9"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -38972,6 +38972,19 @@
     render();
   }
 
+  function updateDiario321EntryEditJapanese(entryId) {
+    const id = String(entryId || "");
+    if (!id) return;
+    const romajiInput = document.querySelector(`[data-entry-edit-romaji="${CSS.escape(id)}"]`);
+    const jpInput = document.querySelector(`[data-entry-edit-jp="${CSS.escape(id)}"]`);
+    const toneInput = document.querySelector(`[name="entry-tone-${CSS.escape(id)}"]:checked`);
+    if (!romajiInput || !jpInput) return;
+
+    const toneValue = toneInput?.value === "natural" ? "natural" : "polite";
+    const romajiValue = String(romajiInput.value || "");
+    jpInput.value = diario321JapaneseFromRomajiInput(romajiValue, toneValue);
+  }
+
   function saveDiario321EntryEdit(entryId) {
     const id = String(entryId || "");
     const jpInput = document.querySelector(`[data-entry-edit-jp="${CSS.escape(id)}"]`);
@@ -39793,6 +39806,8 @@ applyAppTheme();
     document.querySelectorAll("[data-entry-favorite]").forEach(btn => btn.addEventListener("click", () => toggleDiario321EntryFavorite(btn.dataset.entryFavorite)));
     document.querySelectorAll("[data-entry-filter]").forEach(btn => btn.addEventListener("click", () => setDiario321EntriesFilter(btn.dataset.entryFilter)));
     document.querySelectorAll("[data-entry-edit]").forEach(btn => btn.addEventListener("click", () => startDiario321EntryEdit(btn.dataset.entryEdit)));
+    document.querySelectorAll("[data-entry-edit-romaji]").forEach(input => input.addEventListener("input", () => updateDiario321EntryEditJapanese(input.dataset.entryEditRomaji)));
+    document.querySelectorAll('input[type="radio"][name^="entry-tone-"]').forEach(input => input.addEventListener("change", () => updateDiario321EntryEditJapanese(input.name.replace(/^entry-tone-/, ""))));
     document.querySelectorAll("[data-entry-save-edit]").forEach(btn => btn.addEventListener("click", () => saveDiario321EntryEdit(btn.dataset.entrySaveEdit)));
     document.querySelectorAll("[data-entry-cancel-edit]").forEach(btn => btn.addEventListener("click", cancelDiario321EntryEdit));
     document.querySelectorAll("[data-entry-delete]").forEach(btn => btn.addEventListener("click", () => requestDeleteDiario321Entry(btn.dataset.entryDelete)));
