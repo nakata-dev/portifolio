@@ -14393,3 +14393,105 @@ html[data-caderno-theme="light"] .diario321DiarySetup .diario321FoldSummary b{
     max-width:68% !important;
   }
 }
+
+/* =========================================================
+   DIÁRIO321 4.15.0 — Header responsivo da entrada
+   ---------------------------------------------------------
+   Correção comercial: evita corte do título DIÁRIO321 no
+   modo escuro/mobile, mantendo respiro visual entre marca e ações.
+   ========================================================= */
+.appHeader{
+  grid-template-columns: minmax(0, 1fr) auto !important;
+}
+
+.appHeader .brandMini{
+  max-width:none !important;
+  width:auto !important;
+  flex:1 1 auto !important;
+  min-width:0 !important;
+}
+
+.appHeader .brandMini strong{
+  font-size:clamp(19px, 5.2vw, 30px) !important;
+  letter-spacing:-.035em !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  line-height:1.05 !important;
+}
+
+@media (max-width:520px){
+  .appHeader{
+    padding:10px 8px !important;
+    gap:clamp(7px, 2.4vw, 12px) !important;
+  }
+
+  .appHeader .brandMini{
+    gap:7px !important;
+    padding-right:4px !important;
+    max-width:none !important;
+  }
+
+  .appHeader .brandMini img{
+    width:34px !important;
+    height:34px !important;
+    min-width:34px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:clamp(18px, 5.3vw, 24px) !important;
+    letter-spacing:-.035em !important;
+  }
+
+  .appHeader .headerActions{
+    gap:5px !important;
+    flex-shrink:0 !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:52px !important;
+    max-width:58px !important;
+    height:34px !important;
+    min-height:34px !important;
+    padding:0 7px !important;
+    margin-left:2px !important;
+    font-size:10px !important;
+  }
+
+  .themeToggleBtn,
+  .boardToneBtn,
+  .headerBackBtn{
+    width:34px !important;
+    min-width:34px !important;
+    height:34px !important;
+    min-height:34px !important;
+  }
+}
+
+@media (max-width:380px){
+  .appHeader .brandMini img{
+    width:31px !important;
+    height:31px !important;
+    min-width:31px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:clamp(17px, 5vw, 20px) !important;
+    letter-spacing:-.035em !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:48px !important;
+    max-width:52px !important;
+    padding-inline:6px !important;
+  }
+
+  .themeToggleBtn,
+  .boardToneBtn,
+  .headerBackBtn{
+    width:32px !important;
+    min-width:32px !important;
+    height:32px !important;
+    min-height:32px !important;
+  }
+}
