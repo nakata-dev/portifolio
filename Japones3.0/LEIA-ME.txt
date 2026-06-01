@@ -1,3 +1,10 @@
-NIHONGO321 8.6.45 + DIÁRIO321 4.14.9 — Edição Romaji Atualiza Japonês
+NIHONGO321 8.8.0 + DIÁRIO321 4.16.0 — Produto Vendável Completo
 
-Correção cirúrgica: ao editar o Romaji de uma frase já salva, o campo Japonês é regenerado em tempo real usando o tom Educado/Natural selecionado.
+Pacote completo pronto para substituir.
+
+Foco desta versão:
+- Home mais comercial e clara.
+- DIÁRIO321 apresentado como diferencial do produto.
+- Premium com benefícios práticos.
+- Textos curtos para brasileiros no Japão.
+- Preservação das funções aprovadas do DIÁRIO321 e treino 105x.

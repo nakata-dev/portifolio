@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.15.0
+   DIÁRIO321 — Protótipo 4.16.0
    Visual de diário de treino com mapa de cenários e frequência.
    ========================================================= */
 
@@ -35433,7 +35433,6 @@
         <div class="headerActions">
           <a class="headerBridgeBtn headerBridgeTextBtn" href="../index.html#/home" target="_parent" aria-label="Voltar para o NIHONGO321" title="Voltar ao NIHONGO321">voltar</a>
           <button class="themeToggleBtn" type="button" data-action="toggleTheme" aria-label="alternar tema">${appTheme === "dark" ? "☀️" : "🌙"}</button>
-          <button class="boardToneBtn" type="button" data-action="cyclePaperTone" aria-label="alternar cor da página">${paperToneIcon()}</button>
           ${showContentBack ? `<button class="headerBackBtn" type="button" id="headerBackBtn" aria-label="voltar para lista de conteúdos">↩</button>` : ""}
         </div>
       </header>
@@ -37916,7 +37915,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.15.0"
+        sourceVersion: "4.16.0"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -38636,6 +38635,7 @@
       jpIdea: "",
       romajiIdea: "",
       speechStyle: "polite",
+      customTones: [],
       checklist: { paper: false, voice: false, useful: false },
       entries: [],
       createdAt: new Date().toISOString(),
@@ -38657,11 +38657,184 @@
   let diario321EntriesFilter = "all";
   let diario321EditingEntryId = "";
   let diario321DeleteConfirmId = "";
+  let diario321ToneModalOpen = false;
+  let diario321ToneDraft = { label: "", hint: "" };
+  let diario321ToneDeleteConfirmId = "";
   let diario321LastAutoJapaneseIdea = "";
 
   function saveDiario321AltruistaState() {
     diario321AltruistaState.updatedAt = new Date().toISOString();
     try { localStorage.setItem(DIARIO321_ALTRUISTA_KEY, JSON.stringify(diario321AltruistaState)); } catch {}
+  }
+
+  function diario321SafeCustomToneId(name = "") {
+    const base = String(name || "tom")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "") || "tom";
+    return `custom_tone_${base}_${Date.now().toString(36).slice(-4)}`;
+  }
+
+  function diario321CustomTones() {
+    const list = Array.isArray(diario321AltruistaState.customTones) ? diario321AltruistaState.customTones : [];
+    return list
+      .map(item => ({
+        id: String(item?.id || "").trim(),
+        label: String(item?.label || "").trim(),
+        hint: String(item?.hint || "").trim()
+      }))
+      .filter(item => item.id && item.label)
+      .slice(0, 12);
+  }
+
+  function diario321ToneOptions() {
+    return [
+      { id: "polite", label: "Educado", hint: "líder, loja, hospital", builtIn: true },
+      { id: "natural", label: "Natural", hint: "colega, conversa simples", builtIn: true },
+      ...diario321CustomTones().map(item => ({ ...item, builtIn: false }))
+    ];
+  }
+
+  function diario321NormalizeTone(style = "polite") {
+    const id = String(style || "polite").trim();
+    if (id === "natural" || id === "polite") return id;
+    return diario321ToneOptions().some(item => item.id === id) ? id : "polite";
+  }
+
+  function diario321ToneIsNatural(style = "polite") {
+    return diario321NormalizeTone(style) === "natural";
+  }
+
+  function openDiario321CustomToneModal() {
+    const current = diario321CustomTones();
+    if (current.length >= 12) {
+      toast("limite de tons personalizados atingido");
+      return;
+    }
+    diario321ToneDraft = { label: "", hint: "" };
+    diario321ToneModalOpen = true;
+    diario321NoteFoldOpen = true;
+    render();
+    setTimeout(() => {
+      try { document.querySelector("[data-tone-draft-label]")?.focus?.(); } catch {}
+    }, 50);
+  }
+
+  function closeDiario321CustomToneModal() {
+    diario321ToneModalOpen = false;
+    diario321ToneDraft = { label: "", hint: "" };
+    render();
+  }
+
+  function requestDeleteDiario321CustomTone(toneId) {
+    const id = String(toneId || "").trim();
+    if (!id || id === "polite" || id === "natural") return;
+    const exists = diario321CustomTones().some(item => item.id === id);
+    if (!exists) return;
+    diario321ToneDeleteConfirmId = id;
+    render();
+  }
+
+  function cancelDeleteDiario321CustomTone() {
+    diario321ToneDeleteConfirmId = "";
+    render();
+  }
+
+  function deleteDiario321CustomTone(toneId) {
+    const id = String(toneId || "").trim();
+    if (!id || id === "polite" || id === "natural") return;
+    const before = diario321CustomTones();
+    const tone = before.find(item => item.id === id);
+    if (!tone) {
+      diario321ToneDeleteConfirmId = "";
+      render();
+      return;
+    }
+
+    diario321AltruistaState.customTones = before.filter(item => item.id !== id);
+    if (String(diario321AltruistaState.speechStyle || "") === id) {
+      diario321AltruistaState.speechStyle = "polite";
+    }
+    diario321AltruistaState.entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).map(entry => {
+      if (String(entry?.speechStyle || "") !== id) return entry;
+      return { ...entry, speechStyle: "polite", updatedAt: new Date().toISOString() };
+    });
+    diario321ToneDeleteConfirmId = "";
+    saveDiario321AltruistaState();
+    toast(`tom ${tone.label} apagado`);
+    render();
+  }
+
+  function updateDiario321ToneDraft(field, value) {
+    if (!diario321ToneDraft || typeof diario321ToneDraft !== "object") diario321ToneDraft = { label: "", hint: "" };
+    diario321ToneDraft[field === "hint" ? "hint" : "label"] = String(value || "");
+  }
+
+  function saveDiario321CustomToneFromModal() {
+    const current = diario321CustomTones();
+    if (current.length >= 12) {
+      toast("limite de tons personalizados atingido");
+      closeDiario321CustomToneModal();
+      return;
+    }
+    const label = String(diario321ToneDraft?.label || "").trim();
+    if (!label) {
+      toast("digite o nome do tom");
+      try { document.querySelector("[data-tone-draft-label]")?.focus?.(); } catch {}
+      return;
+    }
+    const taken = diario321ToneOptions().some(item => item.label.toLowerCase() === label.toLowerCase());
+    if (taken) {
+      toast("esse tom já existe");
+      return;
+    }
+    const hint = String(diario321ToneDraft?.hint || "").trim();
+    const tone = {
+      id: diario321SafeCustomToneId(label),
+      label: label.slice(0, 18),
+      hint: hint.slice(0, 60),
+      createdAt: new Date().toISOString()
+    };
+    diario321AltruistaState.customTones = [...current, tone];
+    diario321AltruistaState.speechStyle = tone.id;
+    diario321ToneModalOpen = false;
+    diario321ToneDraft = { label: "", hint: "" };
+    saveDiario321AltruistaState();
+    diario321NoteFoldOpen = true;
+    toast("tom adicionado");
+    render();
+  }
+
+  function renderDiario321ToneSelector({ selected = "polite", entryId = "", edit = false } = {}) {
+    const safeSelected = diario321NormalizeTone(selected);
+    const tones = diario321ToneOptions();
+    const attr = edit ? `name="entry-tone-${escapeHTML(entryId)}"` : "";
+    return `
+      ${tones.map(tone => edit ? `
+        <label class="diario321ToneRadio ${safeSelected === tone.id ? "is-active" : ""}">
+          <input type="radio" ${attr} value="${escapeHTML(tone.id)}" ${safeSelected === tone.id ? "checked" : ""}>
+          ${escapeHTML(tone.label)}
+        </label>
+      ` : `
+        <div class="diario321ToneOption ${tone.builtIn ? "" : "is-custom"}">
+          <div class="diario321ToneCustomRow">
+            <button type="button" class="diario321ToneBtn ${safeSelected === tone.id ? "is-active" : ""}" data-diary-style="${escapeHTML(tone.id)}">${escapeHTML(tone.label)}</button>
+            ${tone.builtIn ? "" : `<button type="button" class="diario321ToneDeleteBtn" data-delete-custom-tone="${escapeHTML(tone.id)}" aria-label="apagar tom ${escapeHTML(tone.label)}">×</button>`}
+          </div>
+          ${tone.hint ? `<small>${escapeHTML(tone.hint)}</small>` : ""}
+          ${(!tone.builtIn && diario321ToneDeleteConfirmId === tone.id) ? `
+            <div class="diario321ToneDeleteInline" role="alert">
+              <b>Apagar tom?</b>
+              <button type="button" data-cancel-delete-custom-tone>cancelar</button>
+              <button type="button" data-confirm-delete-custom-tone="${escapeHTML(tone.id)}">apagar</button>
+            </div>
+          ` : ""}
+        </div>
+      `).join("")}
+      ${edit ? "" : `<button type="button" class="diario321ToneAddBtn" data-open-custom-tone-modal aria-label="adicionar tom">＋</button>`}
+    `;
   }
 
   function diario321CustomEnvironmentPresets() {
@@ -38812,7 +38985,7 @@
   }
 
   function setDiario321SpeechStyle(style) {
-    diario321AltruistaState.speechStyle = style === "natural" ? "natural" : "polite";
+    diario321AltruistaState.speechStyle = diario321NormalizeTone(style || "polite");
     updateDiario321RomajiIdea(diario321AltruistaState.romajiIdea || "", { force: true });
     diario321NoteFoldOpen = true;
     saveDiario321AltruistaState();
@@ -38980,7 +39153,7 @@
     const toneInput = document.querySelector(`[name="entry-tone-${CSS.escape(id)}"]:checked`);
     if (!romajiInput || !jpInput) return;
 
-    const toneValue = toneInput?.value === "natural" ? "natural" : "polite";
+    const toneValue = diario321NormalizeTone(toneInput?.value || "polite");
     const romajiValue = String(romajiInput.value || "");
     jpInput.value = diario321JapaneseFromRomajiInput(romajiValue, toneValue);
   }
@@ -38998,7 +39171,7 @@
     const ptValue = String(ptInput?.value || "").trim();
     const wordValue = String(wordInput?.value || "").trim();
     const wordPtValue = String(wordPtInput?.value || "").trim();
-    const toneValue = toneInput?.value === "natural" ? "natural" : "polite";
+    const toneValue = diario321NormalizeTone(toneInput?.value || "polite");
 
     if (!jpValue && !romajiValue && !ptValue) {
       toast("escreva a frase antes de salvar");
@@ -39035,11 +39208,15 @@
   }
 
   function diario321ToneLabel(style) {
-    return style === "natural" ? "Natural" : "Educado";
+    const id = diario321NormalizeTone(style || "polite");
+    const found = diario321ToneOptions().find(item => item.id === id);
+    return found?.label || "Educado";
   }
 
   function diario321ToneHint(style) {
-    return style === "natural" ? "colega / conversa simples" : "líder / loja / hospital";
+    const id = diario321NormalizeTone(style || "polite");
+    const found = diario321ToneOptions().find(item => item.id === id);
+    return found?.hint || (id === "natural" ? "colega / conversa simples" : "líder / loja / hospital");
   }
 
   function diario321FilterEntries(entries) {
@@ -39426,23 +39603,16 @@
             <small>normal → hiragana • k: katakana • j: kanji</small>
             <textarea data-altruista-field="romajiIdea" placeholder="ex.: j:kikai ga tomarimashita">${escapeHTML(diario321AltruistaState.romajiIdea || "")}</textarea>
           </label>
-          <div class="diario321ToneBox" aria-label="tom da frase">
-            <span>Como quer falar?</span>
-            <div class="diario321ToneChoices">
-              <div class="diario321ToneOption">
-                <button type="button" class="diario321ToneBtn ${(diario321AltruistaState.speechStyle || "polite") !== "natural" ? "is-active" : ""}" data-diary-style="polite">Educado</button>
-                <small>líder, loja, hospital</small>
-              </div>
-              <div class="diario321ToneOption">
-                <button type="button" class="diario321ToneBtn ${(diario321AltruistaState.speechStyle || "polite") === "natural" ? "is-active" : ""}" data-diary-style="natural">Natural</button>
-                <small>colega, conversa simples</small>
-              </div>
-            </div>
-          </div>
           <label class="diario321Field diario321Field--quiet diario321JapaneseLiveField">
             <span>Japonês</span>
             <textarea data-altruista-field="jpIdea" placeholder="ex.: 機械が止まりました。">${escapeHTML(diario321AltruistaState.jpIdea || "")}</textarea>
           </label>
+          <div class="diario321ToneBox" aria-label="tom da frase">
+            <span>Como quer falar?</span>
+            <div class="diario321ToneChoices diario321ToneChoices--custom">
+              ${renderDiario321ToneSelector({ selected: diario321AltruistaState.speechStyle || "polite" })}
+            </div>
+          </div>
           <button class="diario321PrimaryBtn diario321PrimaryBtn--diary" type="button" data-save-practice-entry>salvar anotação</button>
         </div>
       </details>
@@ -39503,7 +39673,8 @@
           const envLabel = diario321EnvironmentLabel(entry.environment || "trabalho");
           const envIcon = diario321EnvironmentIcon(entry.environment || "trabalho");
           const toneLabel = diario321ToneLabel(entry.speechStyle || "polite");
-          const toneClass = (entry.speechStyle || "polite") === "natural" ? "is-natural" : "is-polite";
+          const toneId = diario321NormalizeTone(entry.speechStyle || "polite");
+          const toneClass = toneId === "natural" ? "is-natural" : toneId === "polite" ? "is-polite" : "is-custom";
           const isEditing = diario321EditingEntryId === entry.id;
 
           if (isEditing) {
@@ -39525,8 +39696,7 @@
                 </div>
                 <div class="diario321EditTone" aria-label="tom da frase">
                   <span>Tom</span>
-                  <label><input type="radio" name="entry-tone-${escapeHTML(entry.id)}" value="polite" ${(entry.speechStyle || "polite") !== "natural" ? "checked" : ""}> Educado</label>
-                  <label><input type="radio" name="entry-tone-${escapeHTML(entry.id)}" value="natural" ${(entry.speechStyle || "polite") === "natural" ? "checked" : ""}> Natural</label>
+                  ${renderDiario321ToneSelector({ selected: entry.speechStyle || "polite", entryId: entry.id, edit: true })}
                 </div>
                 <label class="diario321EditField">
                   <span>Japonês</span>
@@ -39551,7 +39721,7 @@
             <article class="diario321PracticeEntry diario321DiaryEntry diario321PhraseLine diario321PhraseLineV2 ${mastered ? "is-mastered" : ""}" draggable="true" data-entry-drag-id="${escapeHTML(entry.id)}">
               <div class="diario321PhraseTextBlock">
                 <div class="diario321EntryTop diario321EntryTop--line">
-                  <small><span>${escapeHTML(envIcon)}</span> Frase ${index + 1} · ${escapeHTML(envLabel)} · ${escapeHTML(entry.wordRomaji || "palavra")} = ${escapeHTML(entry.wordPt || "")} <em class="diario321ToneChip ${toneClass}">${escapeHTML(toneLabel)}</em></small>
+                  <small><span>${escapeHTML(envIcon)}</span> Frase ${index + 1} · ${escapeHTML(envLabel)} · ${escapeHTML(entry.wordRomaji || "palavra")} = ${escapeHTML(entry.wordPt || "")}</small>
                   <button class="diario321FavoriteBtn ${favorite ? "is-active" : ""}" type="button" data-entry-favorite="${escapeHTML(entry.id)}" aria-label="favoritar frase">${favorite ? "★" : "☆"}</button>
                 </div>
                 <div class="diario321EntryMain ${jpPhrase ? "is-japanese" : ""}" title="frase principal">${escapeHTML(mainPhrase)}</div>
@@ -39563,6 +39733,7 @@
                   <input type="checkbox" ${mastered ? "checked" : ""} data-entry-mastered="${escapeHTML(entry.id)}">
                   <span>praticada</span>
                 </label>
+                <em class="diario321ToneChip diario321ToneChip--tools ${toneClass}" aria-label="tom da frase">${escapeHTML(toneLabel)}</em>
                 <button class="diario321EntryMiniBtn diario321IconBtn" type="button" data-entry-edit="${escapeHTML(entry.id)}" aria-label="editar frase">✎</button>
                 <button class="diario321DeleteEntry diario321DeleteEntry--clean diario321IconBtn" type="button" data-entry-delete="${escapeHTML(entry.id)}" aria-label="excluir frase">
                   <svg class="diario321TrashIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -39599,6 +39770,37 @@
     `;
   }
 
+  function renderDiario321CustomToneModal() {
+    if (!diario321ToneModalOpen) return "";
+    const label = String(diario321ToneDraft?.label || "");
+    const hint = String(diario321ToneDraft?.hint || "");
+    return `
+      <div class="diario321ModalBackdrop" role="presentation" data-close-custom-tone-modal>
+        <section class="diario321ToneModal" role="dialog" aria-modal="true" aria-labelledby="diario321ToneModalTitle" onclick="event.stopPropagation()">
+          <div class="diario321ToneModalHead">
+            <div>
+              <small>Novo tom</small>
+              <h2 id="diario321ToneModalTitle">Criar tom de conversa</h2>
+            </div>
+            <button type="button" class="diario321ToneModalClose" data-close-custom-tone-modal aria-label="fechar">×</button>
+          </div>
+          <label class="diario321ToneModalField">
+            <span>Nome do tom</span>
+            <input data-tone-draft-label value="${escapeHTML(label)}" maxlength="18" placeholder="ex.: Chefe">
+          </label>
+          <label class="diario321ToneModalField">
+            <span>Quando usar</span>
+            <textarea data-tone-draft-hint maxlength="60" placeholder="ex.: para falar com líder ou superior">${escapeHTML(hint)}</textarea>
+          </label>
+          <div class="diario321ToneModalActions">
+            <button type="button" class="diario321ToneModalCancel" data-close-custom-tone-modal>cancelar</button>
+            <button type="button" class="diario321ToneModalSave" data-save-custom-tone-modal>salvar tom</button>
+          </div>
+        </section>
+      </div>
+    `;
+  }
+
   function renderDiario321AltruistaNotebook() {
     const hasMap = diario321HasPolivalencia();
     return `
@@ -39623,6 +39825,7 @@
             </section>
           `}
         </section>
+        ${renderDiario321CustomToneModal()}
       </main>
     `;
   }
@@ -39797,6 +40000,14 @@ applyAppTheme();
     document.querySelectorAll("[data-practice-check]").forEach(btn => btn.addEventListener("click", () => toggleDiario321PracticeCheck(btn.dataset.practiceCheck)));
     document.querySelectorAll("[data-save-practice-entry]").forEach(btn => btn.addEventListener("click", saveDiario321PracticeEntry));
     document.querySelectorAll("[data-diary-style]").forEach(btn => btn.addEventListener("click", () => setDiario321SpeechStyle(btn.dataset.diaryStyle || "polite")));
+    document.querySelectorAll("[data-open-custom-tone-modal]").forEach(btn => btn.addEventListener("click", openDiario321CustomToneModal));
+    document.querySelectorAll("[data-close-custom-tone-modal]").forEach(btn => btn.addEventListener("click", closeDiario321CustomToneModal));
+    document.querySelectorAll("[data-save-custom-tone-modal]").forEach(btn => btn.addEventListener("click", saveDiario321CustomToneFromModal));
+    document.querySelectorAll("[data-delete-custom-tone]").forEach(btn => btn.addEventListener("click", (ev) => { ev.stopPropagation(); requestDeleteDiario321CustomTone(btn.dataset.deleteCustomTone); }));
+    document.querySelectorAll("[data-cancel-delete-custom-tone]").forEach(btn => btn.addEventListener("click", (ev) => { ev.stopPropagation(); cancelDeleteDiario321CustomTone(); }));
+    document.querySelectorAll("[data-confirm-delete-custom-tone]").forEach(btn => btn.addEventListener("click", (ev) => { ev.stopPropagation(); deleteDiario321CustomTone(btn.dataset.confirmDeleteCustomTone); }));
+    document.querySelectorAll("[data-tone-draft-label]").forEach(input => input.addEventListener("input", () => updateDiario321ToneDraft("label", input.value)));
+    document.querySelectorAll("[data-tone-draft-hint]").forEach(input => input.addEventListener("input", () => updateDiario321ToneDraft("hint", input.value)));
     document.querySelectorAll("[data-open-practice-editor]").forEach(btn => btn.addEventListener("click", openDiario321AddPhrase));
     document.querySelectorAll(".diario321SetupFold").forEach(box => box.addEventListener("toggle", () => { diario321SetupFoldOpen = !!box.open; }));
     document.querySelectorAll(".diario321NoteFold").forEach(box => box.addEventListener("toggle", () => { diario321NoteFoldOpen = !!box.open; }));

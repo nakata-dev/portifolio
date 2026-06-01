@@ -14395,7 +14395,7 @@ html[data-caderno-theme="light"] .diario321DiarySetup .diario321FoldSummary b{
 }
 
 /* =========================================================
-   DIÁRIO321 4.15.0 — Header responsivo da entrada
+   DIÁRIO321 4.15.1 — Header responsivo da entrada
    ---------------------------------------------------------
    Correção comercial: evita corte do título DIÁRIO321 no
    modo escuro/mobile, mantendo respiro visual entre marca e ações.
@@ -14493,5 +14493,605 @@ html[data-caderno-theme="light"] .diario321DiarySetup .diario321FoldSummary b{
     min-width:32px !important;
     height:32px !important;
     min-height:32px !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.15.1 — Header Comercial Unificado
+   ---------------------------------------------------------
+   - remove o ícone de página/tom do header de entrada;
+   - iguala escala do título no modo claro e escuro;
+   - mantém respiro entre marca e ações para evitar corte visual.
+   ========================================================= */
+
+.boardToneBtn{
+  display:none !important;
+}
+
+.appHeader{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:clamp(10px, 3vw, 18px) !important;
+  overflow:hidden !important;
+}
+
+.appHeader .brandMini{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+  gap:8px !important;
+  padding-right:clamp(8px, 2vw, 16px) !important;
+  overflow:hidden !important;
+}
+
+.appHeader .brandMini > div{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+.appHeader .brandMini strong{
+  display:block !important;
+  font-size:clamp(20px, 5.6vw, 27px) !important;
+  line-height:1.05 !important;
+  letter-spacing:-.035em !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  max-width:none !important;
+}
+
+.appHeader .headerActions{
+  flex:0 0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:clamp(7px, 2vw, 10px) !important;
+  margin-left:auto !important;
+}
+
+html[data-caderno-theme="light"] .appHeader .brandMini strong,
+html[data-theme="light"] .appHeader .brandMini strong,
+html[data-caderno-theme="dark"] .appHeader .brandMini strong,
+html[data-theme="dark"] .appHeader .brandMini strong{
+  font-size:clamp(20px, 5.6vw, 27px) !important;
+  line-height:1.05 !important;
+  letter-spacing:-.035em !important;
+}
+
+@media (max-width:520px){
+  .appHeader{
+    padding:10px 10px !important;
+    gap:9px !important;
+  }
+
+  .appHeader .brandMini{
+    gap:7px !important;
+    padding-right:8px !important;
+  }
+
+  .appHeader .brandMini img{
+    width:36px !important;
+    height:36px !important;
+    min-width:36px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:clamp(19px, 5.4vw, 24px) !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:52px !important;
+    max-width:58px !important;
+    height:34px !important;
+    min-height:34px !important;
+    padding:0 7px !important;
+    margin-left:2px !important;
+    font-size:10px !important;
+  }
+
+  .themeToggleBtn,
+  .headerBackBtn{
+    width:34px !important;
+    min-width:34px !important;
+    height:34px !important;
+    min-height:34px !important;
+  }
+}
+
+@media (max-width:380px){
+  .appHeader .brandMini img{
+    width:33px !important;
+    height:33px !important;
+    min-width:33px !important;
+  }
+
+  .appHeader .brandMini strong{
+    font-size:clamp(18px, 5.15vw, 22px) !important;
+    letter-spacing:-.03em !important;
+  }
+
+  .appHeader .headerActions{
+    gap:6px !important;
+  }
+
+  .headerBridgeTextBtn{
+    min-width:48px !important;
+    max-width:52px !important;
+    padding-inline:6px !important;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.16.0 — tom visível na faixa de ações do card
+   ========================================================= */
+.diario321PhraseTools .diario321ToneChip--tools{
+  margin:0 2px 0 0;
+  min-height:28px;
+  padding:7px 10px;
+  border-radius:999px;
+  white-space:nowrap;
+  flex:0 0 auto;
+  font-size:10px;
+  letter-spacing:.08em;
+}
+
+.diario321PhraseTools .diario321ToneChip--tools.is-polite{
+  border-color:rgba(255,216,111,.36);
+  background:rgba(255,216,111,.12);
+  color:#ffe49a;
+}
+
+.diario321PhraseTools .diario321ToneChip--tools.is-natural{
+  border-color:rgba(108,166,255,.30);
+  background:rgba(108,166,255,.10);
+  color:#cfe0ff;
+}
+
+html[data-theme="light"] .diario321PhraseTools .diario321ToneChip--tools.is-polite,
+html[data-caderno-theme="light"] .diario321PhraseTools .diario321ToneChip--tools.is-polite{
+  color:#5a3a06;
+  background:rgba(214,149,31,.15);
+  border-color:rgba(166,106,10,.34);
+}
+
+html[data-theme="light"] .diario321PhraseTools .diario321ToneChip--tools.is-natural,
+html[data-caderno-theme="light"] .diario321PhraseTools .diario321ToneChip--tools.is-natural{
+  color:#173a77;
+  background:rgba(36,111,229,.11);
+  border-color:rgba(36,111,229,.24);
+}
+
+@media (max-width: 520px){
+  .diario321PhraseTools .diario321ToneChip--tools{
+    order:2;
+    margin-left:auto;
+  }
+  .diario321PhraseTools .diario321MasteredCheck--clean{
+    order:1;
+  }
+  .diario321PhraseTools .diario321EntryMiniBtn,
+  .diario321PhraseTools .diario321DeleteEntry--clean,
+  .diario321PhraseTools .diario321MovePair,
+  .diario321PhraseTools .diario321DragHint{
+    order:3;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.16.0 — tons personalizados com (+)
+   ========================================================= */
+.diario321ToneChoices--custom{
+  grid-template-columns:repeat(2, minmax(0, 1fr)) auto;
+  align-items:start;
+}
+.diario321ToneOption.is-custom .diario321ToneBtn{
+  border-color:rgba(255,216,111,.22);
+  background:rgba(255,255,255,.035);
+}
+.diario321ToneAddBtn{
+  width:42px;
+  min-height:42px;
+  border-radius:999px;
+  border:1px solid rgba(255,216,111,.36);
+  background:rgba(255,216,111,.10);
+  color:var(--gold2, #fff0b8);
+  font-size:22px;
+  line-height:1;
+  font-weight:950;
+  cursor:pointer;
+}
+.diario321ToneRadio{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  background:rgba(255,255,255,.045);
+  color:var(--text, #f2f6ff);
+  font-size:12px;
+  font-weight:900;
+}
+.diario321ToneRadio.is-active{
+  border-color:rgba(255,216,111,.42);
+  color:var(--gold2, #fff0b8);
+  background:rgba(255,216,111,.10);
+}
+.diario321ToneRadio input{
+  accent-color:var(--gold, #ffd86f);
+}
+.diario321PhraseTools .diario321ToneChip--tools.is-custom{
+  border-color:rgba(195,154,255,.32);
+  background:rgba(195,154,255,.10);
+  color:#e4d3ff;
+}
+html[data-theme="light"] .diario321ToneAddBtn,
+html[data-caderno-theme="light"] .diario321ToneAddBtn{
+  border-color:rgba(166,106,10,.32);
+  background:rgba(255,216,111,.22);
+  color:#5b3908;
+}
+html[data-theme="light"] .diario321ToneRadio,
+html[data-caderno-theme="light"] .diario321ToneRadio{
+  border-color:rgba(31,59,103,.16);
+  background:rgba(255,255,255,.72);
+  color:#14233c;
+}
+html[data-theme="light"] .diario321ToneRadio.is-active,
+html[data-caderno-theme="light"] .diario321ToneRadio.is-active{
+  border-color:rgba(166,106,10,.32);
+  background:rgba(255,216,111,.24);
+  color:#5b3908;
+}
+html[data-theme="light"] .diario321PhraseTools .diario321ToneChip--tools.is-custom,
+html[data-caderno-theme="light"] .diario321PhraseTools .diario321ToneChip--tools.is-custom{
+  border-color:rgba(102,54,160,.24);
+  background:rgba(102,54,160,.10);
+  color:#4a2877;
+}
+@media (max-width: 520px){
+  .diario321ToneChoices--custom{
+    grid-template-columns:1fr 1fr auto;
+  }
+  .diario321ToneAddBtn{
+    width:38px;
+    min-height:38px;
+    font-size:19px;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.16.0 — modal profissional para novo tom
+   ========================================================= */
+.diario321ModalBackdrop{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:rgba(2, 7, 18, .72);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+}
+.diario321ToneModal{
+  width:min(440px, 100%);
+  border:1px solid rgba(255,216,111,.28);
+  border-radius:28px;
+  background:linear-gradient(180deg, rgba(22,30,45,.98), rgba(9,15,28,.98));
+  box-shadow:0 22px 70px rgba(0,0,0,.48);
+  padding:20px;
+  color:var(--text, #f7fbff);
+}
+.diario321ToneModalHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:16px;
+}
+.diario321ToneModalHead small{
+  display:block;
+  margin-bottom:3px;
+  color:var(--gold2, #fff0b8);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.diario321ToneModalHead h2{
+  margin:0;
+  color:var(--text, #f7fbff);
+  font-size:22px;
+  line-height:1.05;
+  letter-spacing:-.03em;
+}
+.diario321ToneModalClose{
+  width:38px;
+  height:38px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:var(--text, #f7fbff);
+  font-size:24px;
+  font-weight:900;
+  cursor:pointer;
+}
+.diario321ToneModalField{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+.diario321ToneModalField span{
+  color:var(--gold2, #fff0b8);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.diario321ToneModalField input,
+.diario321ToneModalField textarea{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:18px;
+  background:rgba(255,255,255,.055);
+  color:var(--text, #f7fbff);
+  padding:13px 14px;
+  font:inherit;
+  font-weight:800;
+  outline:none;
+}
+.diario321ToneModalField textarea{
+  min-height:82px;
+  resize:vertical;
+}
+.diario321ToneModalField input:focus,
+.diario321ToneModalField textarea:focus{
+  border-color:rgba(255,216,111,.55);
+  box-shadow:0 0 0 3px rgba(255,216,111,.12);
+}
+.diario321ToneModalActions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:18px;
+}
+.diario321ToneModalCancel,
+.diario321ToneModalSave{
+  min-height:42px;
+  border-radius:999px;
+  padding:10px 16px;
+  font-weight:950;
+  cursor:pointer;
+}
+.diario321ToneModalCancel{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:var(--text, #f7fbff);
+}
+.diario321ToneModalSave{
+  border:1px solid rgba(255,216,111,.45);
+  background:linear-gradient(180deg, #ffe394, #dba43d);
+  color:#17120a;
+  box-shadow:0 10px 24px rgba(0,0,0,.25);
+}
+html[data-theme="light"] .diario321ModalBackdrop,
+html[data-caderno-theme="light"] .diario321ModalBackdrop{
+  background:rgba(24, 29, 38, .42);
+}
+html[data-theme="light"] .diario321ToneModal,
+html[data-caderno-theme="light"] .diario321ToneModal{
+  border-color:rgba(166,106,10,.18);
+  background:linear-gradient(180deg, #fffdf7, #f7eedc);
+  color:#071834;
+  box-shadow:0 22px 70px rgba(61,48,25,.22);
+}
+html[data-theme="light"] .diario321ToneModalHead h2,
+html[data-caderno-theme="light"] .diario321ToneModalHead h2{
+  color:#071834;
+}
+html[data-theme="light"] .diario321ToneModalHead small,
+html[data-caderno-theme="light"] .diario321ToneModalHead small,
+html[data-theme="light"] .diario321ToneModalField span,
+html[data-caderno-theme="light"] .diario321ToneModalField span{
+  color:#6b4307;
+}
+html[data-theme="light"] .diario321ToneModalClose,
+html[data-caderno-theme="light"] .diario321ToneModalClose,
+html[data-theme="light"] .diario321ToneModalCancel,
+html[data-caderno-theme="light"] .diario321ToneModalCancel{
+  border-color:rgba(31,59,103,.14);
+  background:rgba(255,255,255,.70);
+  color:#071834;
+}
+html[data-theme="light"] .diario321ToneModalField input,
+html[data-caderno-theme="light"] .diario321ToneModalField input,
+html[data-theme="light"] .diario321ToneModalField textarea,
+html[data-caderno-theme="light"] .diario321ToneModalField textarea{
+  border-color:rgba(31,59,103,.18);
+  background:#fff;
+  color:#071834;
+}
+@media (max-width:520px){
+  .diario321ToneModal{
+    border-radius:24px;
+    padding:18px;
+  }
+  .diario321ToneModalActions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.16.0 — apagar tons personalizados com segurança
+   ========================================================= */
+.diario321ToneCustomRow{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  align-items:center;
+  gap:6px;
+}
+.diario321ToneCustomRow .diario321ToneBtn{
+  width:100%;
+}
+.diario321ToneDeleteBtn{
+  width:34px;
+  min-height:34px;
+  border-radius:999px;
+  border:1px solid rgba(255,106,128,.34);
+  background:rgba(255,106,128,.10);
+  color:#ff8b9a;
+  font-size:20px;
+  font-weight:950;
+  line-height:1;
+  cursor:pointer;
+}
+.diario321ToneDeleteInline{
+  grid-column:1 / -1;
+  margin-top:8px;
+  padding:10px;
+  border:1px solid rgba(255,106,128,.28);
+  border-radius:16px;
+  background:rgba(255,106,128,.08);
+  display:grid;
+  gap:8px;
+  color:var(--text, #f7fbff);
+}
+.diario321ToneDeleteInline b{
+  font-size:12px;
+  color:#ffd7dd;
+}
+.diario321ToneDeleteInline div,
+.diario321ToneDeleteInline{
+  font-size:12px;
+}
+.diario321ToneDeleteInline button{
+  min-height:32px;
+  border-radius:999px;
+  padding:7px 10px;
+  font-weight:950;
+  cursor:pointer;
+}
+.diario321ToneDeleteInline button[data-cancel-delete-custom-tone]{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  color:var(--text, #f7fbff);
+}
+.diario321ToneDeleteInline button[data-confirm-delete-custom-tone]{
+  border:1px solid rgba(255,106,128,.42);
+  background:rgba(255,106,128,.16);
+  color:#ffd7dd;
+}
+html[data-theme="light"] .diario321ToneDeleteBtn,
+html[data-caderno-theme="light"] .diario321ToneDeleteBtn{
+  border-color:rgba(180,36,55,.28);
+  background:rgba(180,36,55,.08);
+  color:#9b1f32;
+}
+html[data-theme="light"] .diario321ToneDeleteInline,
+html[data-caderno-theme="light"] .diario321ToneDeleteInline{
+  border-color:rgba(180,36,55,.18);
+  background:rgba(180,36,55,.055);
+  color:#071834;
+}
+html[data-theme="light"] .diario321ToneDeleteInline b,
+html[data-caderno-theme="light"] .diario321ToneDeleteInline b{
+  color:#9b1f32;
+}
+html[data-theme="light"] .diario321ToneDeleteInline button[data-cancel-delete-custom-tone],
+html[data-caderno-theme="light"] .diario321ToneDeleteInline button[data-cancel-delete-custom-tone]{
+  border-color:rgba(31,59,103,.14);
+  background:#fff;
+  color:#071834;
+}
+html[data-theme="light"] .diario321ToneDeleteInline button[data-confirm-delete-custom-tone],
+html[data-caderno-theme="light"] .diario321ToneDeleteInline button[data-confirm-delete-custom-tone]{
+  border-color:rgba(180,36,55,.26);
+  background:rgba(180,36,55,.10);
+  color:#8d1b2b;
+}
+@media (max-width:520px){
+  .diario321ToneDeleteBtn{
+    width:32px;
+    min-height:32px;
+    font-size:18px;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.16.0 — correção de bordas dos tons personalizados
+   Foco: impedir Educado/Natural/tom criado de vazarem da caixa.
+   ========================================================= */
+.diario321PracticeEditor .diario321ToneChoices--custom,
+.diario321ToneChoices--custom{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:flex-start !important;
+  gap:10px !important;
+  grid-template-columns:none !important;
+  width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+.diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneOption,
+.diario321ToneChoices--custom .diario321ToneOption{
+  flex:1 1 124px !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+.diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneOption.is-custom,
+.diario321ToneChoices--custom .diario321ToneOption.is-custom{
+  flex:1 1 168px !important;
+}
+.diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneBtn,
+.diario321ToneChoices--custom .diario321ToneBtn{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+.diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneOption small,
+.diario321ToneChoices--custom .diario321ToneOption small{
+  width:100% !important;
+  max-width:100% !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+}
+.diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneCustomRow,
+.diario321ToneChoices--custom .diario321ToneCustomRow{
+  width:100% !important;
+  min-width:0 !important;
+}
+.diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneAddBtn,
+.diario321ToneChoices--custom .diario321ToneAddBtn{
+  flex:0 0 42px !important;
+  width:42px !important;
+  min-width:42px !important;
+  align-self:start !important;
+}
+@media (max-width:420px){
+  .diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneOption,
+  .diario321ToneChoices--custom .diario321ToneOption{
+    flex:1 1 calc(50% - 8px) !important;
+  }
+  .diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneOption.is-custom,
+  .diario321ToneChoices--custom .diario321ToneOption.is-custom{
+    flex:1 1 calc(100% - 52px) !important;
+  }
+  .diario321PracticeEditor .diario321ToneChoices--custom .diario321ToneAddBtn,
+  .diario321ToneChoices--custom .diario321ToneAddBtn{
+    flex:0 0 38px !important;
+    width:38px !important;
+    min-width:38px !important;
   }
 }

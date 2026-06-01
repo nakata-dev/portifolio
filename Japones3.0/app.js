@@ -22,7 +22,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.7.0",
+  version: "8.8.0",
   updatedAt: "2026-05-24",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -5230,22 +5230,23 @@ function renderLanding() {
         </div>
 
         <h1 class="heroTitle">
-          Japonês útil para a rotina real do Japão.
+          Japonês prático para brasileiros que vivem e trabalham no Japão.
         </h1>
 
         <p class="heroLead">
-          Estude no seu ritmo, treine frases práticas e volte amanhã com mais confiança para viver melhor no Japão.
+          Crie frases reais no DIÁRIO321, treine no 105x e use no trabalho, mercado, prefeitura e rotina.
         </p>
 
         <div class="heroActions">
           <button class="bigBtn" data-nav="#/home">começar treino</button>
+          <button class="btn btn--cadernoGreen btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
           <button type="button" class="btn btn--ghost btn--full landingCompareDirectBtn" data-action="openCompareDirect">
-            comparar planos
+            ver Premium
           </button>
         </div>
 
         <p class="heroTinyProof">
-          105x · JP + PT · Pack Essencial · grátis para começar
+          DIÁRIO321 · 105x · guia rápido · grátis para começar
         </p>
       </section>
 
@@ -5279,15 +5280,15 @@ function renderLanding() {
       <section class="card cadernoPresentationCard">
         <div class="cadernoPresentationCopy">
           <div class="badge">DIÁRIO321 + NIHONGO321</div>
-          <h2 class="h2">Escreva no diário. Revise com calma. Treine quando estiver pronto.</h2>
+          <h2 class="h2">Transforme sua rotina em frases treináveis.</h2>
           <p class="p">
-            O DIÁRIO321 é o caderno real de revisão: o aluno escreve em romaji, vê o japonês nascer, salva em páginas e oculta o significado para testar a memória antes de enviar ao treino 105x.
+            Escolha uma palavra da sua rotina, crie uma frase real, veja em japonês, salve no Diário e treine até conseguir usar.
           </p>
         </div>
         <div class="cadernoPresentationGrid">
-          <div><b>✍️ Escrita ativa</b><span>O aluno deixa de copiar frases e começa a construir pensamento em japonês.</span></div>
-          <div><b>🧠 Memória real</b><span>As frases criadas viram material para repetir, revisar e fixar no NIHONGO321.</span></div>
-          <div><b>📱 Feito para celular</b><span>Treino simples para quem trabalha muito e precisa estudar sem peso.</span></div>
+          <div><b>🌱 Palavra-semente</b><span>Comece por uma palavra que aparece no seu dia.</span></div>
+          <div><b>✍️ Frase real</b><span>Escreva do seu jeito e veja o japonês nascer.</span></div>
+          <div><b>🔁 Treino 105x</b><span>Leve as melhores frases para memorizar.</span></div>
         </div>
         <div class="cadernoPresentationActions">
           <button class="primaryAction" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
@@ -5716,9 +5717,9 @@ function renderPremium() {
         <div class="premiumHeroGrid">
           <div class="premiumHeroCopy">
             <div class="badge">NIHONGO321 Premium</div>
-            <h1 class="premiumTitle">Mais japonês para resolver a vida real.</h1>
+            <h1 class="premiumTitle">Premium para falar melhor na vida real.</h1>
             <p class="premiumLead">
-              Para quando o básico já ajudou, mas você precisa falar melhor no trabalho, prefeitura, hospital e contas.
+              Mais tópicos, DIÁRIO321 completo e treino guiado para trabalho, prefeitura, hospital, contas e rotina no Japão.
             </p>
 
             <div class="premiumPriceBox">
@@ -5738,7 +5739,7 @@ function renderPremium() {
             </div>
 
             <p class="premiumMicrocopy">
-              Feito para brasileiros no Japão que precisam de frases úteis, não aula pesada.
+              Para brasileiros no Japão que precisam de frases úteis, sem aula pesada.
             </p>
 
             ${checkoutReady ? "" : `
@@ -5750,19 +5751,19 @@ function renderPremium() {
 
           <div class="premiumHeroPanel">
             <div class="premiumMiniCard premiumMiniCard--gold">
-              <span>⚡</span>
-              <b>Menos enrolação</b>
-              <p>Abra, escolha uma situação e treine.</p>
+              <span>🌱</span>
+              <b>DIÁRIO321 completo</b>
+              <p>Crie frases da sua rotina e organize por ambiente.</p>
             </div>
             <div class="premiumMiniCard">
-              <span>🗣️</span>
-              <b>Mais contexto</b>
-              <p>Frases com sentido, palavras e uso.</p>
+              <span>🔁</span>
+              <b>Treino 105x completo</b>
+              <p>Repita, revise e fixe frases úteis.</p>
             </div>
             <div class="premiumMiniCard">
               <span>先生</span>
               <b>Sensei IA</b>
-              <p>Crie material para o seu caso.</p>
+              <p>Transforme dúvidas em material de treino.</p>
             </div>
           </div>
         </div>
@@ -5804,8 +5805,8 @@ function renderPremium() {
             </div>
             <ul class="premiumList">
               <li>Pack Essencial Japão</li>
-              <li>Treino 105x básico</li>
-              <li>Frases próprias</li>
+              <li>Treino básico 105x</li>
+              <li>DIÁRIO321 limitado</li>
               <li>Favoritos</li>
               <li>Backup e compartilhamento</li>
             </ul>
@@ -5817,11 +5818,11 @@ function renderPremium() {
               <b>mais situações</b>
             </div>
             <ul class="premiumList">
-              <li>Temas específicos da vida no Japão</li>
-              <li>Treino por contexto real</li>
-              <li>Explicações mais úteis para iniciantes</li>
-              <li>Sensei IA guiado</li>
-              <li>Conteúdo em crescimento</li>
+              <li>DIÁRIO321 completo</li>
+              <li>Treino 105x sem limite comercial</li>
+              <li>Mais tópicos de sobrevivência</li>
+              <li>Frases por ambiente</li>
+              <li>Revisão prática, trilhas e Sensei IA</li>
             </ul>
           </div>
         </div>
@@ -5829,20 +5830,20 @@ function renderPremium() {
 
       <section class="card stack premiumValueCard">
         <div class="badge">valor prático</div>
-        <h2 class="h2 premiumSectionTitle">O Premium reduz o “e agora, como eu falo?”.</h2>
+        <h2 class="h2 premiumSectionTitle">O Premium prepara você para situações específicas.</h2>
 
         <div class="premiumValueGrid">
           <div class="premiumValueItem">
-            <b>Quando chega uma conta estranha</b>
-            <p>Treine como perguntar e confirmar.</p>
+            <b>Quando aparece problema na fábrica</b>
+            <p>Avise, peça ajuda e confirme antes de errar.</p>
           </div>
           <div class="premiumValueItem">
-            <b>Quando o chefe explica rápido</b>
-            <p>Peça repetição sem travar.</p>
+            <b>Quando precisa resolver atendimento</b>
+            <p>Use frases educadas em loja, hospital e prefeitura.</p>
           </div>
           <div class="premiumValueItem">
-            <b>Quando precisa resolver documento</b>
-            <p>Use frases educadas e claras.</p>
+            <b>Quando quer criar frases próprias</b>
+            <p>Use o DIÁRIO321 para transformar rotina em treino.</p>
           </div>
         </div>
       </section>
@@ -5850,9 +5851,9 @@ function renderPremium() {
       <section class="card premiumCtaCard">
         <div class="premiumCtaCopy">
           <div class="badge">próximo passo</div>
-          <h2 class="h2">Desbloqueie mais situações e treine com direção.</h2>
+          <h2 class="h2">Desbloqueie o app completo e treine com direção.</h2>
           <p class="p">
-            Poucos minutos por dia. Frases que servem para a rotina real no Japão.
+            Crie, revise e memorize frases que servem para a sua rotina real no Japão.
           </p>
         </div>
         <div class="premiumCtaActions">
@@ -6520,7 +6521,7 @@ function startCaderno321TrainingFromPayload(payload = {}) {
 function renderCaderno321Integrated() {
   APP.innerHTML = `
     <div class="cadernoIntegratedPage" aria-label="DIÁRIO321 integrado ao NIHONGO321">
-      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=4.15.0" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=4.16.0" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
@@ -6539,16 +6540,16 @@ function renderCaderno321BridgeCard() {
     <section class="card cadernoBridgeCard">
       <div class="cadernoBridgeCopy">
         <div class="badge">DIÁRIO321</div>
-        <h2 class="h2">Suas frases do diário estão prontas para virar treino 105x.</h2>
+        <h2 class="h2">Suas frases do DIÁRIO321 podem virar treino 105x.</h2>
         <p class="p">
-          Importe para o NIHONGO321 e transforme criação própria em treino 105x.
+          Quando uma frase ficar útil, leve para o NIHONGO321 e memorize com repetição guiada.
         </p>
       </div>
       <div class="cadernoBridgePanel">
         <b>${bridge.length}</b>
         <span>frase${bridge.length === 1 ? "" : "s"} no diário</span>
         <small>${pending ? `${pending} nova${pending === 1 ? "" : "s"}` : "tudo já importado"}</small>
-        <button class="btn btn--ok btn--full" type="button" data-action="importCaderno321Bridge">importar para memorizar</button>
+        <button class="btn btn--ok btn--full" type="button" data-action="importCaderno321Bridge">levar para o 105x</button>
       </div>
     </section>
   `;
@@ -6584,17 +6585,17 @@ function renderHome() {
 
         <div class="homeHeroGrid">
           <div class="homeHeroCopy">
-            <h1 class="homeTitlePro">Treine japonês útil hoje.</h1>
+            <h1 class="homeTitlePro">Japonês prático para usar hoje.</h1>
             <p class="homeLeadPro">
-              Escolha um caminho simples. Dois minutos já mantêm o japonês vivo na rotina.
+              Crie frases da sua vida no DIÁRIO321, treine no 105x e fale melhor no Japão real.
             </p>
 
             <div class="homeMainActions">
               <button class="bigBtn" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
-                ${resume ? "continuar último treino" : "treinar 2 minutos agora"}
+                ${resume ? "continuar último treino" : "começar treino"}
               </button>
               <button class="btn btn--muted btn--full" data-nav="#/105x">abrir treino 105x</button>
-              <button class="btn btn--cadernoGreen btn--full" type="button" data-nav="#/caderno">DIÁRIO321</button>
+              <button class="btn btn--cadernoGreen btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
             </div>
           </div>
 
@@ -6620,7 +6621,7 @@ function renderHome() {
         <div class="row row--between">
           <div>
             <div class="badge">foco de estudo</div>
-            <h2 class="h2 homeSectionTitle">Escolha o conteúdo sem se perder.</h2>
+            <h2 class="h2 homeSectionTitle">Escolha o que precisa falar.</h2>
           </div>
           <div class="badge">agora: ${escapeHTML(filterLabel)}</div>
         </div>
@@ -6669,7 +6670,7 @@ function renderHome() {
         <div class="row row--between">
           <div>
             <div class="badge">caminhos rápidos</div>
-            <h2 class="h2 homeSectionTitle">O que você quer fazer agora?</h2>
+            <h2 class="h2 homeSectionTitle">O que você precisa hoje?</h2>
           </div>
           <div class="badge">baixa carga mental</div>
         </div>
@@ -6714,9 +6715,9 @@ function renderHome() {
       <section class="card homeSoftBridge">
         <div class="homeSoftCopy">
           <div class="badge">premium</div>
-          <h2 class="h2">Mais situações quando você quiser avançar.</h2>
+          <h2 class="h2">Premium: mais situações para a vida real.</h2>
           <p class="p">
-            A versão grátis ajuda hoje. O Premium aprofunda com temas da vida real, mais contexto e Sensei IA completo.
+            O grátis ajuda a começar. O Premium libera mais temas, DIÁRIO321 completo, revisão prática e treino avançado.
           </p>
         </div>
 
