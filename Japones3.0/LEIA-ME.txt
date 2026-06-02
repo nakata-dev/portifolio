@@ -1,10 +1,23 @@
-NIHONGO321 8.8.0 + DIÁRIO321 4.16.0 — Produto Vendável Completo
+NIHONGO321 8.8.16-R + DIÁRIO321 4.16.16-R — Premium Único + Rotas Estáveis
 
 Pacote completo pronto para substituir.
 
-Foco desta versão:
-- Home mais comercial e clara.
-- DIÁRIO321 apresentado como diferencial do produto.
-- Premium com benefícios práticos.
-- Textos curtos para brasileiros no Japão.
-- Preservação das funções aprovadas do DIÁRIO321 e treino 105x.
+Correções:
+- Botões “Ver Premium” e “Ver Premium completo” levam para a mesma página de vendas: #/premium-final.
+- A rota #/premium agora é normalizada para #/premium-final.
+- Mantido boot limpo sem carregamento duplicado de app.js/sensei-bank.js.
+- Proteção extra contra cliques antigos que antes levavam para comparação ou telas indevidas.
+
+Preservado:
+- Treino 105x.
+- DIÁRIO321 separado em /caderno.
+- Cadastrar frase.
+- Gerenciar frases.
+- Backup.
+- Sensei.
+- Trilhas.
+- Progresso.
+- Ajustes.
+- Tutorial.
+- Banner oficial.
+- LocalStorage e rotas principais.

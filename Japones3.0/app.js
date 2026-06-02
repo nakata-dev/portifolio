@@ -1,5 +1,5 @@
 /* =========================================================
-   NIHONGO321 v8.6.5
+   NIHONGO321 v8.5.70.2
    Bloco 2C + Bloco 3A + Bloco 3B + Bloco 3C + Bloco 3D
    + Bloco 3E + Bloco 3F + Bloco 3G + Bloco 3I
    + Bloco 3J + Bloco 3K + Bloco 4A + Bloco 4B
@@ -22,8 +22,8 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.8.0",
-  updatedAt: "2026-05-24",
+  version: "8.5.71",
+  updatedAt: "2026-05-21",
   logoPath: "./img/logo_nihongo321.png"
 };
 
@@ -497,11 +497,18 @@ function routeInfo() {
 }
 
 function route() {
-  return routeInfo().path;
+  const path = routeInfo().path;
+  if (path === "#/premium") return "#/premium-final";
+  return path;
+}
+
+function normalizeNavTarget(hash) {
+  if (hash === "#/premium") return "#/premium-final";
+  return hash;
 }
 
 function nav(hash) {
-  location.hash = hash;
+  location.hash = normalizeNavTarget(hash);
 }
 
 /* ---------- validação JP ---------- */
@@ -3873,7 +3880,7 @@ function renderPlanCompareBox() {
               ${escapeHTML(checkoutButtonLabel("primary"))}
             </button>
 
-            <button class="btn btn--ghost btn--full" data-nav="#/premium">
+            <button class="btn btn--ghost btn--full" data-nav="#/premium-final">
               ver detalhes do Premium
             </button>
           </div>
@@ -4072,7 +4079,7 @@ function renderPremiumSoftBridge() {
       </div>
 
       <div class="grid2">
-        <button class="btn btn--ok btn--full" data-nav="#/premium">
+        <button class="btn btn--ok btn--full" data-nav="#/premium-final">
           ver como o premium ajuda
         </button>
         <button class="btn btn--full" data-action="startQuickTraining">
@@ -4862,7 +4869,7 @@ function renderLaunchChecklist() {
 
         <div class="launchNextActions">
           <button class="primaryAction" data-nav="#/store-kit">abrir pacote comercial</button>
-          <button class="btn btn--muted btn--full" data-nav="#/premium">revisar Premium</button>
+          <button class="btn btn--muted btn--full" data-nav="#/premium-final">revisar Premium</button>
         </div>
       </section>
     </div>
@@ -5212,13 +5219,22 @@ function renderScreenshotGuide() {
 
 function renderLanding() {
   APP.innerHTML = `
-    <div class="stack landingLeanPage">
-      <section class="card heroCard stack heroCard--landing heroCard--lean">
-        <div class="badge heroBadgeCenter">${escapeHTML(BRAND.tagline)}</div>
+    <div class="stack salesLandingPage">
+      <section class="card salesHeroCard">
+        <div class="salesHeroTop">
+          <span class="badge">NIHONGO321</span>
+          <span class="salesHeroProof">feito para brasileiros no Japão</span>
+        </div>
 
-        <div class="heroBannerSlot heroBannerSlot--ready" role="img" aria-label="Trabalhador dekassegui indo de bicicleta para a fábrica no amanhecer do Japão.">
+        <div class="salesHeroCopy">
+          <h1 class="salesHeroTitle">Japonês prático para a vida real no Japão.</h1>
+          <p class="salesHeroLead">
+            Crie frases da sua rotina, treine no 105x e use no trabalho, mercado, prefeitura e dia a dia.
+          </p>
+        </div>
+
+        <figure class="salesHeroBanner" aria-label="Rotina dekassegui no Japão">
           <img
-            class="heroBannerImg"
             src="./img/banner-hero-nihongo321.png"
             alt="Trabalhador dekassegui indo de bicicleta para a fábrica no amanhecer do Japão."
             width="1200"
@@ -5226,107 +5242,140 @@ function renderLanding() {
             loading="eager"
             decoding="async"
           />
-          <div class="heroBannerShade" aria-hidden="true"></div>
+          <figcaption>Rotina real no Japão • treino feito para dekasseguis</figcaption>
+        </figure>
+
+        <div class="salesMethodLine" aria-label="método principal do aplicativo">
+          <span>palavra</span>
+          <b>→</b>
+          <span>frase real</span>
+          <b>→</b>
+          <span>treino 105x</span>
         </div>
 
-        <h1 class="heroTitle">
-          Japonês prático para brasileiros que vivem e trabalham no Japão.
-        </h1>
-
-        <p class="heroLead">
-          Crie frases reais no DIÁRIO321, treine no 105x e use no trabalho, mercado, prefeitura e rotina.
-        </p>
-
-        <div class="heroActions">
-          <button class="bigBtn" data-nav="#/home">começar treino</button>
-          <button class="btn btn--cadernoGreen btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
-          <button type="button" class="btn btn--ghost btn--full landingCompareDirectBtn" data-action="openCompareDirect">
-            ver Premium
-          </button>
+        <div class="salesHeroActions">
+          <button class="bigBtn" type="button" data-nav="#/home">entrar no NIHONGO321</button>
+          <button class="btn btn--muted btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
+          <button class="btn btn--ghost btn--full" type="button" data-nav="#/premium-final">ver Premium</button>
         </div>
-
-        <p class="heroTinyProof">
-          DIÁRIO321 · 105x · guia rápido · grátis para começar
-        </p>
       </section>
 
-      <section class="card landingPillars">
+      <section class="card salesValueCard">
         <div class="row row--between">
-          <div class="badge">por que funciona</div>
-          <div class="badge">sem aula pesada</div>
+          <div>
+            <div class="badge">por que é diferente</div>
+            <h2 class="h2">Sua rotina vira treino.</h2>
+            <p class="salesValueLead">Entenda o método em três respostas rápidas.</p>
+          </div>
         </div>
 
-        <div class="landingPillarGrid">
-          <button class="landingPillar" type="button" data-action="startQuickTraining">
-            <span>⚡</span>
-            <b>2 minutos</b>
-            <small>para dias cansativos</small>
-          </button>
+        <div class="salesFaqStack" aria-label="perguntas sobre o método NIHONGO321">
+          <details class="salesFaqItem">
+            <summary>
+              <span>Método 105x</span>
+              <b aria-hidden="true">＋</b>
+            </summary>
+            <div class="salesFaqBody">
+              <p><strong>Ideia simples:</strong> repetir frases reais até elas ficarem familiares aos olhos, ouvidos e boca.</p>
+              <ul>
+                <li>Você começa com ciclos maiores e reduz aos poucos.</li>
+                <li>Os primeiros ciclos vencem tédio, preguiça e indecisão.</li>
+                <li>A meta não é decorar regra: é conseguir usar a frase com naturalidade.</li>
+              </ul>
+            </div>
+          </details>
 
-          <button class="landingPillar" type="button" data-nav="#/105x">
-            <span>105x</span>
-            <b>Repetição guiada</b>
-            <small>ouça, leia e repita</small>
-          </button>
+          <details class="salesFaqItem">
+            <summary>
+              <span>DIÁRIO321</span>
+              <b aria-hidden="true">＋</b>
+            </summary>
+            <div class="salesFaqBody">
+              <p><strong>Ele transforma sua vida em treino.</strong> Você escolhe uma palavra, cria uma frase real, vê em japonês e organiza para revisar.</p>
+              <ul>
+                <li>Português, romaji e japonês no mesmo fluxo.</li>
+                <li>Tons de fala para líder, colega, loja ou prefeitura.</li>
+                <li>Frases criadas por você viram material de estudo de verdade.</li>
+              </ul>
+            </div>
+          </details>
 
-          <button class="landingPillar" type="button" data-nav="#/sensei">
-            <span>先生</span>
-            <b>Sensei IA</b>
-            <small>frases para sua situação</small>
-          </button>
+          <details class="salesFaqItem">
+            <summary>
+              <span>Vida de fábrica</span>
+              <b aria-hidden="true">＋</b>
+            </summary>
+            <div class="salesFaqBody">
+              <p><strong>A fábrica ensina tarefa. O app organiza o idioma.</strong> O dekassegui ouve japonês todos os dias, mas quase sempre com pressa, barulho e medo de errar.</p>
+              <ul>
+                <li>O NIHONGO321 separa frases por problema, pedido, confirmação e rotina.</li>
+                <li>Você treina antes de precisar falar na hora da pressão.</li>
+                <li>Em vez de aprender no susto, você transforma o cotidiano em prática guiada.</li>
+              </ul>
+            </div>
+          </details>
         </div>
       </section>
 
-      <section class="card cadernoPresentationCard">
-        <div class="cadernoPresentationCopy">
-          <div class="badge">DIÁRIO321 + NIHONGO321</div>
-          <h2 class="h2">Transforme sua rotina em frases treináveis.</h2>
+      <section class="card salesSoftPremium salesPremiumStory">
+        <div class="salesPremiumIntro">
+          <div class="badge">Premium</div>
+          <h2 class="h2">Avance quando sentir que o japonês já faz parte da sua rotina.</h2>
           <p class="p">
-            Escolha uma palavra da sua rotina, crie uma frase real, veja em japonês, salve no Diário e treine até conseguir usar.
+            O Premium amplia o método para mais ambientes, mais frases e mais segurança na vida real do Japão.
           </p>
         </div>
-        <div class="cadernoPresentationGrid">
-          <div><b>🌱 Palavra-semente</b><span>Comece por uma palavra que aparece no seu dia.</span></div>
-          <div><b>✍️ Frase real</b><span>Escreva do seu jeito e veja o japonês nascer.</span></div>
-          <div><b>🔁 Treino 105x</b><span>Leve as melhores frases para memorizar.</span></div>
-        </div>
-        <div class="cadernoPresentationActions">
-          <button class="primaryAction" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
-          <button class="btn btn--muted btn--full" data-nav="#/home">continuar no NIHONGO321</button>
-        </div>
-      </section>
 
-      <section class="card landingSimpleCta">
-        <div class="landingSimpleCopy">
-          <div class="badge">comece grátis</div>
-          <h2 class="h2">Abra o treino e mantenha o japonês vivo.</h2>
-          <p class="p">
-            O Premium aprofunda com mais situações reais, gramática prática e Sensei IA.
-          </p>
+        <div class="salesFaqStack salesPremiumFaqStack" aria-label="benefícios do Premium no NIHONGO321">
+          <details class="salesFaqItem salesBenefitItem">
+            <summary>
+              <span>Curto prazo</span>
+              <b aria-hidden="true">＋</b>
+            </summary>
+            <div class="salesFaqBody">
+              <p><strong>Você começa a destravar o básico.</strong> Frases úteis deixam de parecer estranhas e passam a ficar mais familiares.</p>
+              <ul>
+                <li>Ativa olhos, ouvidos e boca com repetição guiada.</li>
+                <li>Ajuda a falar melhor em situações simples do dia a dia.</li>
+                <li>Dá direção para não estudar no escuro depois do trabalho.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="salesFaqItem salesBenefitItem">
+            <summary>
+              <span>Médio prazo</span>
+              <b aria-hidden="true">＋</b>
+            </summary>
+            <div class="salesFaqBody">
+              <p><strong>Você começa a se virar em mais lugares.</strong> O estudo sai da tela e entra na fábrica, no konbini, na prefeitura e no dentista.</p>
+              <ul>
+                <li>Mais frases para pedir ajuda, confirmar e explicar problemas.</li>
+                <li>DIÁRIO321 completo para criar frases da sua própria rotina.</li>
+                <li>Mais segurança para conversar com líder, atendente e funcionário.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="salesFaqItem salesBenefitItem">
+            <summary>
+              <span>Longo prazo</span>
+              <b aria-hidden="true">＋</b>
+            </summary>
+            <div class="salesFaqBody">
+              <p><strong>O japonês começa a trabalhar a seu favor.</strong> Mais autonomia melhora rotina, relacionamentos e confiança no Japão.</p>
+              <ul>
+                <li>Menos dependência de tradução para situações repetidas.</li>
+                <li>Relacionamento mais leve com japoneses no trabalho e na vida diária.</li>
+                <li>Memória de longo prazo fortalecida por prática real e constante.</li>
+              </ul>
+            </div>
+          </details>
         </div>
 
-        <div class="landingSimpleActions landingPremiumActionsV2">
-          <button class="primaryAction" data-nav="#/home">entrar no app</button>
-          <button type="button" class="btn btn--muted btn--full landingCompareDirectBtn" data-action="openCompareDirect">
-            comparar grátis x Premium
-          </button>
-          <button type="button" class="btn btn--ghost btn--full premiumThemesDirectBtn" data-action="openPremiumThemesDirect">
-            ver temas premium
-          </button>
-        </div>
-      </section>
-
-      <section class="card landingStoreLean">
-        <div class="storeGrid storeGrid--safe">
-          <a class="storeBtn" href="${escapeHTML(SALES.playStoreUrl)}" target="_blank" rel="noopener noreferrer">
-            <span class="storeGlyph">GP</span>
-            <span>Google Play</span>
-          </a>
-
-          <a class="storeBtn" href="${escapeHTML(SALES.appStoreUrl)}" target="_blank" rel="noopener noreferrer">
-            <span class="storeGlyph">iOS</span>
-            <span>App Store</span>
-          </a>
+        <div class="salesPremiumActions salesPremiumActionsRefined">
+          <button class="primaryAction" type="button" data-action="openPremiumFinalDirect">ver Premium completo</button>
+          <button class="btn btn--muted btn--full" type="button" data-nav="#/home">continuar grátis</button>
         </div>
       </section>
 
@@ -5334,6 +5383,142 @@ function renderLanding() {
     </div>
   `;
 }
+
+function renderPremiumFinal() {
+  const monthly = SALES.monthlyPrice || "¥980";
+  const semi = SALES.semiannualPrice || "¥4,980 / 6 meses";
+  const checkoutReady = isCheckoutReady();
+
+  const shortGains = [
+    ["Destravar frases úteis", "Treine pedidos, problemas e confirmações que aparecem amanhã no trabalho ou na rua."],
+    ["Ativar memória pela rotina", "Português, romaji, japonês e 105x fazem a frase passar por olhos, ouvidos e boca."],
+    ["Menos medo de falar", "Você revisa antes da pressão real, sem depender só do susto da fábrica."]
+  ];
+
+  const lifeGains = [
+    ["Trabalho", "avisar erro, confirmar tarefa, pedir ajuda e explicar quando algo está estranho."],
+    ["Konbini e mercado", "sacola, pagamento, produto, validade, recibo e perguntas rápidas."],
+    ["Prefeitura e saúde", "documentos, balcão, procedimento, dentista, hospital e explicações simples."],
+    ["Relacionamento", "falar com mais educação, menos travado e com mais respeito no tom certo."]
+  ];
+
+  APP.innerHTML = `
+    <div class="stack premiumFinalPage">
+      <section class="card premiumFinalHero">
+        <div class="row row--between premiumFinalTop">
+          <div class="badge">Premium completo</div>
+          <button class="btn" type="button" data-nav="#/landing">voltar</button>
+        </div>
+
+        <div class="premiumFinalHeroCopy">
+          <h1 class="premiumFinalTitle">Seu japonês precisa trabalhar junto com você.</h1>
+          <p class="premiumFinalLead">
+            O NIHONGO321 Premium foi pensado para brasileiros no Japão que trabalham muito, chegam cansados e precisam de frases úteis para viver melhor.
+          </p>
+        </div>
+
+        <div class="premiumFinalPriceBox" aria-label="preço do Premium">
+          <span>Plano Premium</span>
+          <b>${escapeHTML(monthly)}</b>
+          <small>${escapeHTML(semi)} no plano econômico.</small>
+        </div>
+
+        <div class="premiumFinalActions">
+          <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
+          <button class="btn btn--muted btn--full" type="button" data-nav="#/home">continuar grátis</button>
+        </div>
+
+        ${!checkoutReady ? `
+          <p class="premiumFinalNote">Checkout ainda precisa receber o link final antes da publicação.</p>
+        ` : ``}
+      </section>
+
+      <section class="card premiumFinalSection">
+        <div class="badge">benefício real</div>
+        <h2 class="h2">O Premium não entrega só frases. Ele entrega direção.</h2>
+        <p class="premiumFinalText">
+          A ideia é simples: transformar sua rotina em treino organizado, para você não estudar no escuro depois de um turno pesado.
+        </p>
+
+        <div class="premiumGainGrid">
+          ${shortGains.map(([title, text]) => `
+            <article class="premiumGainCard">
+              <b>${escapeHTML(title)}</b>
+              <span>${escapeHTML(text)}</span>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card premiumFinalSection">
+        <div class="badge">onde isso ajuda</div>
+        <h2 class="h2">Mais autonomia em ambientes que pesam na vida real.</h2>
+
+        <div class="premiumLifeList">
+          ${lifeGains.map(([title, text]) => `
+            <article class="premiumLifeItem">
+              <b>${escapeHTML(title)}</b>
+              <span>${escapeHTML(text)}</span>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card premiumFinalSection premiumMemorySection">
+        <div class="badge">memória e confiança</div>
+        <h2 class="h2">Curto, médio e longo prazo.</h2>
+
+        <div class="salesFaqStack premiumFinalFaqStack">
+          <details class="salesFaqItem" open>
+            <summary><span>Curto prazo</span><b aria-hidden="true">＋</b></summary>
+            <div class="salesFaqBody">
+              <p><strong>Você para de só assistir japonês passar.</strong> Começa a repetir frases pequenas que cabem na rotina.</p>
+              <ul>
+                <li>mais contato com sons reais;</li>
+                <li>frases úteis para situações simples;</li>
+                <li>primeira sensação de direção no estudo.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="salesFaqItem">
+            <summary><span>Médio prazo</span><b aria-hidden="true">＋</b></summary>
+            <div class="salesFaqBody">
+              <p><strong>Você começa a reconhecer padrões.</strong> O que antes parecia barulho começa a virar frase conhecida.</p>
+              <ul>
+                <li>melhor relacionamento com colegas e líderes;</li>
+                <li>mais coragem para perguntar e confirmar;</li>
+                <li>menos dependência em situações repetidas.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="salesFaqItem">
+            <summary><span>Longo prazo</span><b aria-hidden="true">＋</b></summary>
+            <div class="salesFaqBody">
+              <p><strong>Você constrói repertório próprio.</strong> O japonês deixa de ser só curso e começa a virar ferramenta de vida.</p>
+              <ul>
+                <li>memória fortalecida por repetição e uso real;</li>
+                <li>mais autonomia no Japão;</li>
+                <li>mais tranquilidade para resolver problemas sem travar.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card premiumFinalCta">
+        <h2 class="h2">Comece pelo essencial. Avance quando quiser ir mais longe.</h2>
+        <p>
+          O grátis mantém o contato. O Premium aprofunda o método, amplia os ambientes e transforma sua rotina em um caminho de estudo mais completo.
+        </p>
+        <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
+        <button class="btn btn--ghost btn--full" type="button" data-nav="#/landing">voltar à apresentação</button>
+      </section>
+    </div>
+  `;
+}
+
 function renderPremiumThemes() {
   const themes = [
     {
@@ -5717,9 +5902,9 @@ function renderPremium() {
         <div class="premiumHeroGrid">
           <div class="premiumHeroCopy">
             <div class="badge">NIHONGO321 Premium</div>
-            <h1 class="premiumTitle">Premium para falar melhor na vida real.</h1>
+            <h1 class="premiumTitle">Mais japonês para resolver a vida real.</h1>
             <p class="premiumLead">
-              Mais tópicos, DIÁRIO321 completo e treino guiado para trabalho, prefeitura, hospital, contas e rotina no Japão.
+              Para quando o básico já ajudou, mas você precisa falar melhor no trabalho, prefeitura, hospital e contas.
             </p>
 
             <div class="premiumPriceBox">
@@ -5739,7 +5924,7 @@ function renderPremium() {
             </div>
 
             <p class="premiumMicrocopy">
-              Para brasileiros no Japão que precisam de frases úteis, sem aula pesada.
+              Feito para brasileiros no Japão que precisam de frases úteis, não aula pesada.
             </p>
 
             ${checkoutReady ? "" : `
@@ -5751,19 +5936,19 @@ function renderPremium() {
 
           <div class="premiumHeroPanel">
             <div class="premiumMiniCard premiumMiniCard--gold">
-              <span>🌱</span>
-              <b>DIÁRIO321 completo</b>
-              <p>Crie frases da sua rotina e organize por ambiente.</p>
+              <span>⚡</span>
+              <b>Menos enrolação</b>
+              <p>Abra, escolha uma situação e treine.</p>
             </div>
             <div class="premiumMiniCard">
-              <span>🔁</span>
-              <b>Treino 105x completo</b>
-              <p>Repita, revise e fixe frases úteis.</p>
+              <span>🗣️</span>
+              <b>Mais contexto</b>
+              <p>Frases com sentido, palavras e uso.</p>
             </div>
             <div class="premiumMiniCard">
               <span>先生</span>
               <b>Sensei IA</b>
-              <p>Transforme dúvidas em material de treino.</p>
+              <p>Crie material para o seu caso.</p>
             </div>
           </div>
         </div>
@@ -5805,8 +5990,8 @@ function renderPremium() {
             </div>
             <ul class="premiumList">
               <li>Pack Essencial Japão</li>
-              <li>Treino básico 105x</li>
-              <li>DIÁRIO321 limitado</li>
+              <li>Treino 105x básico</li>
+              <li>Frases próprias</li>
               <li>Favoritos</li>
               <li>Backup e compartilhamento</li>
             </ul>
@@ -5818,11 +6003,11 @@ function renderPremium() {
               <b>mais situações</b>
             </div>
             <ul class="premiumList">
-              <li>DIÁRIO321 completo</li>
-              <li>Treino 105x sem limite comercial</li>
-              <li>Mais tópicos de sobrevivência</li>
-              <li>Frases por ambiente</li>
-              <li>Revisão prática, trilhas e Sensei IA</li>
+              <li>Temas específicos da vida no Japão</li>
+              <li>Treino por contexto real</li>
+              <li>Explicações mais úteis para iniciantes</li>
+              <li>Sensei IA guiado</li>
+              <li>Conteúdo em crescimento</li>
             </ul>
           </div>
         </div>
@@ -5830,20 +6015,20 @@ function renderPremium() {
 
       <section class="card stack premiumValueCard">
         <div class="badge">valor prático</div>
-        <h2 class="h2 premiumSectionTitle">O Premium prepara você para situações específicas.</h2>
+        <h2 class="h2 premiumSectionTitle">O Premium reduz o “e agora, como eu falo?”.</h2>
 
         <div class="premiumValueGrid">
           <div class="premiumValueItem">
-            <b>Quando aparece problema na fábrica</b>
-            <p>Avise, peça ajuda e confirme antes de errar.</p>
+            <b>Quando chega uma conta estranha</b>
+            <p>Treine como perguntar e confirmar.</p>
           </div>
           <div class="premiumValueItem">
-            <b>Quando precisa resolver atendimento</b>
-            <p>Use frases educadas em loja, hospital e prefeitura.</p>
+            <b>Quando o chefe explica rápido</b>
+            <p>Peça repetição sem travar.</p>
           </div>
           <div class="premiumValueItem">
-            <b>Quando quer criar frases próprias</b>
-            <p>Use o DIÁRIO321 para transformar rotina em treino.</p>
+            <b>Quando precisa resolver documento</b>
+            <p>Use frases educadas e claras.</p>
           </div>
         </div>
       </section>
@@ -5851,9 +6036,9 @@ function renderPremium() {
       <section class="card premiumCtaCard">
         <div class="premiumCtaCopy">
           <div class="badge">próximo passo</div>
-          <h2 class="h2">Desbloqueie o app completo e treine com direção.</h2>
+          <h2 class="h2">Desbloqueie mais situações e treine com direção.</h2>
           <p class="p">
-            Crie, revise e memorize frases que servem para a sua rotina real no Japão.
+            Poucos minutos por dia. Frases que servem para a rotina real no Japão.
           </p>
         </div>
         <div class="premiumCtaActions">
@@ -5892,7 +6077,7 @@ function renderAdmin() {
             </div>
 
             <div class="grid2">
-              <button class="btn btn--ghost btn--full" data-nav="#/premium">ver premium</button>
+              <button class="btn btn--ghost btn--full" data-nav="#/premium-final">ver premium</button>
               <button class="btn btn--full" data-nav="#/launch-checklist">checklist final</button>
             </div>
 
@@ -6161,9 +6346,9 @@ function ensureCaderno321Topic() {
   if (!topic) {
     topic = {
       id: "topic_caderno321",
-      name: "Diário321",
+      name: "Caderno321",
       icon: "筆",
-      description: "Frases criadas pelo aluno no DIÁRIO321.",
+      description: "Frases criadas pelo aluno no CADERNO321.",
       isPremium: false,
       createdAt: now(),
       updatedAt: now()
@@ -6171,48 +6356,6 @@ function ensureCaderno321Topic() {
     STATE.bank.topics.unshift(topic);
   }
   return topic;
-}
-
-function resolveCaderno321SaveTopic(item = {}) {
-  const fallback = ensureCaderno321Topic();
-  const requestedId = String(item.topicId || item.targetTopicId || item.caderno321?.targetTopicId || "").trim();
-  if (!requestedId) return fallback;
-
-  const topics = Array.isArray(STATE.bank?.topics) ? STATE.bank.topics : [];
-  const found = topics.find(t => t && t.id === requestedId);
-
-  if (!found) return fallback;
-  if (!canAccessTopic(found.id)) return fallback;
-  return found;
-}
-
-function caderno321AvailableSaveTopics() {
-  const fallback = ensureCaderno321Topic();
-  const seen = new Set();
-
-  return (STATE.bank?.topics || [])
-    .filter(topic => {
-      if (!topic || !topic.id || seen.has(topic.id)) return false;
-      seen.add(topic.id);
-      if (topic.id === fallback.id) return true;
-      return canAccessTopic(topic.id);
-    })
-    .map(topic => ({
-      id: topic.id,
-      name: topic.name || topic.id,
-      description: topic.description || "",
-      isDefault: topic.id === fallback.id
-    }));
-}
-
-function postCaderno321TopicList(targetWindow) {
-  try {
-    targetWindow?.postMessage?.({
-      type: "NIHONGO321_TOPIC_LIST",
-      topics: caderno321AvailableSaveTopics(),
-      defaultTopicId: "topic_caderno321"
-    }, "*");
-  } catch { }
 }
 
 function caderno321PhraseSignature(item) {
@@ -6223,11 +6366,11 @@ function integrateCaderno321BridgePhrases(options = {}) {
   const silent = !!options.silent;
   const bridge = caderno321BridgePhrases();
   if (!bridge.length) {
-    if (!silent) toast("nenhuma frase do DIÁRIO321 encontrada");
+    if (!silent) toast("nenhuma frase do CADERNO321 encontrada");
     return { imported: 0, total: 0, pending: 0 };
   }
 
-  ensureCaderno321Topic();
+  const topic = ensureCaderno321Topic();
   STATE.bank.phrases ||= [];
   STATE.progress ||= {};
   const existing = new Set(STATE.bank.phrases.map(caderno321PhraseSignature));
@@ -6235,7 +6378,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
 
   bridge.forEach(item => {
     const jp = String(item.jp || "").trim();
-    const pt = String(item.pt || "").trim() || "frase criada no DIÁRIO321";
+    const pt = String(item.pt || "").trim() || "frase criada no CADERNO321";
     const sig = `${jp}||${pt}`;
     if (!jp || existing.has(sig)) return;
 
@@ -6248,8 +6391,6 @@ function integrateCaderno321BridgePhrases(options = {}) {
     if (details.particles && !noteParts.join("\n").includes(details.particles)) noteParts.push(`Partículas: ${details.particles}`);
     if (details.explanation && !noteParts.join("\n").includes(details.explanation)) noteParts.push(`Explicação: ${details.explanation}`);
     if (details.situation && !noteParts.join("\n").includes(details.situation)) noteParts.push(`Situação: ${details.situation}`);
-
-    const topic = resolveCaderno321SaveTopic(item);
 
     STATE.bank.phrases.unshift({
       id,
@@ -6278,7 +6419,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
 
   if (imported) saveState();
   const pending = bridge.filter(item => !new Set((STATE.bank.phrases || []).map(caderno321PhraseSignature)).has(caderno321PhraseSignature(item))).length;
-  if (!silent) toast(imported ? `${imported} frase(s) do DIÁRIO321 importada(s)` : "as frases do DIÁRIO321 já estavam no NIHONGO321");
+  if (!silent) toast(imported ? `${imported} frase(s) do CADERNO321 importada(s)` : "as frases do CADERNO321 já estavam no NIHONGO321");
   return { imported, total: bridge.length, pending };
 }
 
@@ -6348,17 +6489,17 @@ function receiveCaderno321UrlImport() {
     window.history.replaceState(null, "", `${window.location.pathname}#/home`);
   } catch { }
 
-  toast(result.imported ? `${result.imported} frase(s) do DIÁRIO321 salva(s)` : "frase do DIÁRIO321 já estava salva");
+  toast(result.imported ? `${result.imported} frase(s) do CADERNO321 salva(s)` : "frase do CADERNO321 já estava salva");
   return { received: true, imported: result.imported || 0 };
 }
 
 function saveCaderno321PhraseNative(item = {}) {
   const jp = String(item.jp || "").trim();
-  const pt = String(item.pt || "").trim() || "frase criada no DIÁRIO321";
+  const pt = String(item.pt || "").trim() || "frase criada no CADERNO321";
 
   if (!jp) return { ok: false, reason: "empty_jp", imported: 0, total: (STATE.bank?.phrases || []).length };
 
-  const topic = resolveCaderno321SaveTopic(item);
+  const topic = ensureCaderno321Topic();
   STATE.bank.phrases ||= [];
   STATE.progress ||= {};
 
@@ -6390,7 +6531,7 @@ function saveCaderno321PhraseNative(item = {}) {
       updatedAt: t
     };
     saveState();
-    return { ok: true, imported: 0, updated: 1, total: STATE.bank.phrases.length, topicId: topic.id, topicName: topic.name || "Caderno321", phraseId: existing.id };
+    return { ok: true, imported: 0, updated: 1, total: STATE.bank.phrases.length, topicId: topic.id };
   }
 
   const id = uid("cad321");
@@ -6416,112 +6557,31 @@ function saveCaderno321PhraseNative(item = {}) {
   };
 
   saveState();
-  return { ok: true, imported: 1, updated: 0, total: STATE.bank.phrases.length, topicId: topic.id, topicName: topic.name || "Caderno321", phraseId: id };
-}
-
-function upsertCaderno321BridgePhraseNative(item = {}) {
-  try {
-    const jp = String(item.jp || "").trim();
-    if (!jp) return { ok: false, reason: "empty_jp" };
-
-    const current = caderno321BridgePhrases();
-    const phrase = {
-      ...item,
-      id: item.id || uid("cad321_bridge"),
-      source: item.source || "CADERNO321",
-      savedForNihongo321: true,
-      receivedAt: item.receivedAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    const sig = caderno321PhraseSignature(phrase);
-    const index = current.findIndex(existing => caderno321PhraseSignature(existing) === sig);
-    if (index >= 0) current[index] = { ...current[index], ...phrase };
-    else current.unshift(phrase);
-
-    localStorage.setItem(CADERNO321_BRIDGE_KEY, JSON.stringify(current.slice(0, 300)));
-    return { ok: true, duplicate: index >= 0, total: current.length };
-  } catch (err) {
-    console.error("NIHONGO321 caderno bridge native save error:", err);
-    return { ok: false, reason: "bridge_write_failed" };
-  }
+  return { ok: true, imported: 1, updated: 0, total: STATE.bank.phrases.length, topicId: topic.id, phraseId: id };
 }
 
 function saveCaderno321PayloadNative(payload = {}) {
   const phrases = Array.isArray(payload.phrases) ? payload.phrases : (payload.jp ? [payload] : []);
   let imported = 0;
   let updated = 0;
-  let failed = 0;
   let last = null;
-  let lastError = "";
 
   phrases.forEach(item => {
-    const bridgeResult = upsertCaderno321BridgePhraseNative(item);
     const result = saveCaderno321PhraseNative(item);
-
     if (result.ok) {
       imported += result.imported || 0;
       updated += result.updated || 0;
       last = result;
-      return;
     }
-
-    failed += 1;
-    lastError = result.reason || bridgeResult.reason || "save_failed";
   });
 
-  return {
-    ok: imported > 0 || updated > 0,
-    imported,
-    updated,
-    failed,
-    total: (STATE.bank?.phrases || []).length,
-    last,
-    error: lastError
-  };
-}
-
-function startCaderno321TrainingFromPayload(payload = {}) {
-  const phraseId = String(payload.phraseId || "").trim();
-  const topicId = String(payload.topicId || "topic_caderno321").trim() || "topic_caderno321";
-  const phrases = Array.isArray(STATE.bank?.phrases) ? STATE.bank.phrases : [];
-
-  let target = phraseId ? phrases.find(p => p && p.id === phraseId) : null;
-  if (!target && topicId) {
-    target = phrases.find(p => p && p.topicId === topicId && p.source === "CADERNO321");
-  }
-  if (!target) {
-    target = phrases.find(p => p && p.topicId === "topic_caderno321");
-  }
-
-  if (!target) return { ok: false, reason: "phrase_not_found" };
-
-  const sameTopic = phrases
-    .filter(p => p && p.topicId === target.topicId && isPhraseAccessible(p))
-    .map(p => p.id);
-
-  const queue = [target.id, ...sameTopic.filter(id => id !== target.id)];
-  if (!queue.length) return { ok: false, reason: "empty_queue" };
-
-  STATE.session.inProgress = true;
-  STATE.session.topicFilter = target.topicId || "ALL";
-  STATE.session.queue = queue;
-  STATE.session.index = 0;
-  STATE.session.phraseId = target.id;
-
-  resetCountForPhrase(target.id);
-  saveState();
-  nav("#/105x");
-  render();
-  startStudyTimerIfOn105x();
-
-  return { ok: true, phraseId: target.id, topicId: target.topicId || topicId };
+  return { ok: imported > 0 || updated > 0, imported, updated, total: (STATE.bank?.phrases || []).length, last };
 }
 
 function renderCaderno321Integrated() {
   APP.innerHTML = `
-    <div class="cadernoIntegratedPage" aria-label="DIÁRIO321 integrado ao NIHONGO321">
-      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard&v=4.16.0" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
+    <div class="cadernoIntegratedPage">
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
@@ -6539,17 +6599,17 @@ function renderCaderno321BridgeCard() {
   return `
     <section class="card cadernoBridgeCard">
       <div class="cadernoBridgeCopy">
-        <div class="badge">DIÁRIO321</div>
-        <h2 class="h2">Suas frases do DIÁRIO321 podem virar treino 105x.</h2>
+        <div class="badge">CADERNO321</div>
+        <h2 class="h2">Suas frases criadas no caderno estão prontas para memorizar.</h2>
         <p class="p">
-          Quando uma frase ficar útil, leve para o NIHONGO321 e memorize com repetição guiada.
+          Importe para o NIHONGO321 e transforme criação própria em treino 105x.
         </p>
       </div>
       <div class="cadernoBridgePanel">
         <b>${bridge.length}</b>
-        <span>frase${bridge.length === 1 ? "" : "s"} no diário</span>
+        <span>frase${bridge.length === 1 ? "" : "s"} no caderno</span>
         <small>${pending ? `${pending} nova${pending === 1 ? "" : "s"}` : "tudo já importado"}</small>
-        <button class="btn btn--ok btn--full" type="button" data-action="importCaderno321Bridge">levar para o 105x</button>
+        <button class="btn btn--ok btn--full" type="button" data-action="importCaderno321Bridge">importar para memorizar</button>
       </div>
     </section>
   `;
@@ -6574,243 +6634,157 @@ function renderHome() {
   const streak = getStreakInfo();
 
   APP.innerHTML = `
-    <div class="stack homeProPage">
-      <section class="card homeHeroPro">
-        <div class="row row--between">
-          <div class="badge">início</div>
-          <div class="homeTopActions homeTopActions--compact">
-            <button class="btn btn--ghost btn--presentationMini" data-nav="#/landing">apresentação</button>
-          </div>
+    <div class="stack appCentralPage appCentralPage--catalogs appCentralPage--seiton">
+      <section class="card appCentralHero appCentralHero--calm">
+        <div class="row row--between appCentralHeroTop">
+          <div></div>
+          <button class="btn btn--ghost btn--presentationMini" type="button" data-nav="#/landing">apresentação</button>
         </div>
 
-        <div class="homeHeroGrid">
-          <div class="homeHeroCopy">
-            <h1 class="homeTitlePro">Japonês prático para usar hoje.</h1>
-            <p class="homeLeadPro">
-              Crie frases da sua vida no DIÁRIO321, treine no 105x e fale melhor no Japão real.
-            </p>
-
-            <div class="homeMainActions">
-              <button class="bigBtn" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
-                ${resume ? "continuar último treino" : "começar treino"}
-              </button>
-              <button class="btn btn--muted btn--full" data-nav="#/105x">abrir treino 105x</button>
-              <button class="btn btn--cadernoGreen btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
-            </div>
-          </div>
-
-          <div class="homeTodayCard homeTodayCard--graph">
-            <div class="homeTodaySummary">
-              <div class="badge">hoje</div>
-              <div class="homeTodayValue">${Math.round(todayGoal.overall * 100)}%</div>
-              <div class="homeTodayText">
-                meta diária • ${STATE.goals.dailyMinutes} min • ${STATE.goals.dailyCycles} ciclo
-              </div>
-              <div class="homeTodayMini">
-                <span>🔥 ${streak.current || 0} dias</span>
-                <span>🪙 ${STATE.stats.coins || 0}</span>
-              </div>
-            </div>
-
-            ${renderHomeMetaMiniGraph()}
-          </div>
+        <div class="appCentralIntro">
+          <h1 class="appCentralTitle">Ferramentas Organizadas</h1>
         </div>
       </section>
 
-      <section class="card stack homeFocusCard">
-        <div class="row row--between">
-          <div>
-            <div class="badge">foco de estudo</div>
-            <h2 class="h2 homeSectionTitle">Escolha o que precisa falar.</h2>
+
+      <section class="stack toolCatalogStack" aria-label="catálogos de ferramentas do NIHONGO321">
+        <details class="card toolCatalog toolCatalog--main">
+          <summary class="toolCatalogSummary">
+            <span class="toolCatalogIcon">⚡</span>
+            <span class="toolCatalogText">
+              <b>Estudar agora</b>
+              <small>treinos rápidos para manter constância</small>
+              <span class="toolCatalogPreview">Treino rápido • 105x • DIÁRIO321</span>
+            </span>
+          </summary>
+
+          <div class="toolGrid toolGrid--catalog">
+            <button class="toolCard toolCard--main" type="button" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
+              <span class="toolIcon">⚡</span>
+              <b>${resume ? "Continuar treino" : "Treino rápido"}</b>
+              <small>${resume ? "retome de onde parou" : "2 minutos para manter o japonês vivo"}</small>
+            </button>
+
+            <button class="toolCard toolCard--main" type="button" data-nav="#/105x">
+              <span class="toolIcon">105x</span>
+              <b>Treino 105x</b>
+              <small>ouça, leia e repita até memorizar</small>
+            </button>
+
+            <button class="toolCard toolCard--main toolCard--diario" type="button" data-nav="#/caderno">
+              <span class="toolIcon">日</span>
+              <b>DIÁRIO321</b>
+              <small>transforme sua rotina em frases treináveis</small>
+            </button>
           </div>
-          <div class="badge">agora: ${escapeHTML(filterLabel)}</div>
-        </div>
+        </details>
 
-        <div class="homeTopicRow">
-          <select class="btn selectBtn" id="topicFilterSel" aria-label="filtro de tópicos">
-            <option value="ALL" ${topicFilter === "ALL" ? "selected" : ""}>tudo</option>
-            <option value="FAV" ${topicFilter === "FAV" ? "selected" : ""}>favoritas ${favCount ? `(${favCount})` : ""}</option>
-            ${(STATE.bank.topics || []).map(t => {
-              const lockedAttrs = topicOptionLockAttrs(t.id);
-              return `<option value="${t.id}" ${lockedAttrs} ${t.id === topicFilter ? "selected" : ""}>${topicOptionLabel(t)}</option>`;
-            }).join("")}
-          </select>
-        </div>
+        <details class="card toolCatalog">
+          <summary class="toolCatalogSummary">
+            <span class="toolCatalogIcon">＋</span>
+            <span class="toolCatalogText">
+              <b>Criar e organizar</b>
+              <small>material próprio, tópicos e dúvidas</small>
+              <span class="toolCatalogPreview">Cadastrar • Gerenciar • Sensei • Tutorial</span>
+            </span>
+          </summary>
 
-        <div class="homeActionGrid">
-          <button class="homeActionCard" type="button" data-nav="#/edit">
-            <span>＋</span>
-            <b>Nova frase</b>
-            <small>adicione algo útil</small>
-          </button>
+          <div class="toolGrid toolGrid--catalog">
+            <button class="toolCard" type="button" data-nav="#/edit">
+              <span class="toolIcon">＋</span>
+              <b>Cadastrar frase</b>
+              <small>adicione algo útil para treinar</small>
+            </button>
 
-          <button class="homeActionCard" type="button" data-nav="#/manage">
-            <span>文</span>
-            <b>Minhas frases</b>
-            <small>organize seu conteúdo</small>
-          </button>
+            <button class="toolCard" type="button" data-nav="#/manage">
+              <span class="toolIcon">文</span>
+              <b>Gerenciar frases</b>
+              <small>edite, organize e revise conteúdo</small>
+            </button>
 
-          <button class="homeActionCard" type="button" data-nav="#/backup">
-            <span>↗</span>
-            <b>Compartilhar</b>
-            <small>WhatsApp / LINE</small>
-          </button>
+            <button class="toolCard" type="button" data-nav="#/sensei">
+              <span class="toolIcon">先生</span>
+              <b>Sensei</b>
+              <small>entenda frases e tire dúvidas</small>
+            </button>
 
-          <button class="homeActionCard" type="button" data-nav="#/skills">
-            <span>★</span>
-            <b>Progresso</b>
-            <small>veja sua constância</small>
-          </button>
-        </div>
+            <button class="toolCard" type="button" data-nav="#/tutorial">
+              <span class="toolIcon">?</span>
+              <b>${STATE.tutorial.done ? "Rever tutorial" : "Tutorial"}</b>
+              <small>entenda o app em poucos passos</small>
+            </button>
+          </div>
+        </details>
+
+        <details class="card toolCatalog">
+          <summary class="toolCatalogSummary">
+            <span class="toolCatalogIcon">道</span>
+            <span class="toolCatalogText">
+              <b>Evoluir com direção</b>
+              <small>rota clara para não estudar no escuro</small>
+              <span class="toolCatalogPreview">Trilhas • Progresso • Premium</span>
+            </span>
+          </summary>
+
+          <div class="toolGrid toolGrid--catalog">
+            <button class="toolCard" type="button" data-nav="#/paths">
+              <span class="toolIcon">道</span>
+              <b>Trilhas</b>
+              <small>situações reais em sequência</small>
+            </button>
+
+            <button class="toolCard" type="button" data-nav="#/skills">
+              <span class="toolIcon">★</span>
+              <b>Progresso</b>
+              <small>veja sua constância e evolução</small>
+            </button>
+
+            <button class="toolCard" type="button" data-nav="#/premium-final">
+              <span class="toolIcon">鍵</span>
+              <b>Premium</b>
+              <small>libere o método completo</small>
+            </button>
+          </div>
+        </details>
+
+        <details class="card toolCatalog">
+          <summary class="toolCatalogSummary">
+            <span class="toolCatalogIcon">🛡</span>
+            <span class="toolCatalogText">
+              <b>Segurança e ajustes</b>
+              <small>proteja seu progresso e personalize o app</small>
+              <span class="toolCatalogPreview">Backup • Ajustes</span>
+            </span>
+          </summary>
+
+          <div class="toolGrid toolGrid--catalog toolGrid--compact">
+            <button class="toolCard" type="button" data-nav="#/backup">
+              <span class="toolIcon">↗</span>
+              <b>Backup</b>
+              <small>proteja e compartilhe seus dados</small>
+            </button>
+
+            <button class="toolCard" type="button" data-nav="#/settings">
+              <span class="toolIcon">⚙</span>
+              <b>Ajustes</b>
+              <small>tema, som e preferências</small>
+            </button>
+          </div>
+        </details>
       </section>
 
-      ${renderCaderno321BridgeCard()}
-
-      <section class="card stack homePathCard">
-        <div class="row row--between">
-          <div>
-            <div class="badge">caminhos rápidos</div>
-            <h2 class="h2 homeSectionTitle">O que você precisa hoje?</h2>
-          </div>
-          <div class="badge">baixa carga mental</div>
+      <section class="card stack toolShelf toolShelf--quiet">
+        <div>
+          <div class="badge">prática real</div>
+          <h2 class="h2">Ideias úteis para hoje.</h2>
+          <p class="p p--tight">Use como kaizen do estudo: uma situação, uma frase, uma repetição bem feita.</p>
         </div>
-
-        <div class="homePathGrid">
-          <button class="homePathItem" type="button" data-action="startQuickTraining">
-            <span>2 min</span>
-            <b>Treino rápido</b>
-            <small>para dias cansativos</small>
-          </button>
-
-          <button class="homePathItem" type="button" data-nav="#/105x">
-            <span>105x</span>
-            <b>Modo foco</b>
-            <small>ouvir, ler e repetir</small>
-          </button>
-
-          <button class="homePathItem" type="button" data-nav="#/sensei">
-            <span>先生</span>
-            <b>Sensei IA</b>
-            <small>dúvidas e exemplos</small>
-          </button>
-
-          <button class="homePathItem" type="button" data-nav="#/paths">
-            <span>道</span>
-            <b>Trilhas</b>
-            <small>estude com direção</small>
-          </button>
-
-          <button class="homePathItem" type="button" data-nav="#/onboarding">
-            <span>?</span>
-            <b>Guia rápido</b>
-            <small>entenda o app</small>
-          </button>
-        </div>
-      </section>
-
-      ${renderSituationTrainingCard()}
-
-      ${renderPhraseOfDayCard()}
-
-      <section class="card homeSoftBridge">
-        <div class="homeSoftCopy">
-          <div class="badge">premium</div>
-          <h2 class="h2">Premium: mais situações para a vida real.</h2>
-          <p class="p">
-            O grátis ajuda a começar. O Premium libera mais temas, DIÁRIO321 completo, revisão prática e treino avançado.
-          </p>
-        </div>
-
-        <div class="homeSoftActions">
-          <button class="primaryAction" data-nav="#/sensei">abrir Sensei IA</button>
-          <button type="button" class="btn btn--muted btn--full landingCompareBtn landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">ver Premium</button>
-          <button class="btn btn--muted btn--full" data-nav="#/tutorial">
-            ${STATE.tutorial.done ? "rever tutorial" : "ver tutorial"}
-          </button>
-        </div>
+        ${renderSituationTrainingCard()}
+        ${renderPhraseOfDayCard()}
       </section>
     </div>
   `;
-
-  const sel = $("#topicFilterSel");
-  if (sel) {
-    sel.addEventListener("change", () => {
-      const chosen = sel.value;
-
-      if (chosen !== "ALL" && chosen !== "FAV" && isTopicPremium(chosen) && !isPremiumUnlocked()) {
-        showPremiumLockedMessage(chosen);
-        sel.value = STATE.session.topicFilter || "ALL";
-        return;
-      }
-
-      STATE.session.topicFilter = chosen;
-
-      if (STATE.session.inProgress) {
-        STATE.session.queue = buildQueue();
-        STATE.session.index = 0;
-        STATE.session.phraseId = STATE.session.queue[0] || null;
-      }
-
-      saveState();
-      toast("tema aplicado");
-      beep("ding");
-      render();
-    });
-  }
 }
-
-/* ---------- 8.5.58: Onboarding premium de primeira abertura ---------- */
-const ONBOARDING_STEPS = [
-  {
-    icon: "🌅",
-    badge: "comece leve",
-    title: "Japonês para a sua rotina no Japão.",
-    text: "Treine frases úteis em poucos minutos. Sem aula pesada. Sem culpa.",
-    chips: ["brasileiros no Japão", "rotina cansada", "frases reais"],
-    primaryLabel: "próximo",
-    secondaryLabel: "pular"
-  },
-  {
-    icon: "🔁",
-    badge: "método 105x",
-    title: "Ouça. Leia. Repita. Fixe.",
-    text: "O treino guia a repetição até a frase ficar mais familiar.",
-    chips: ["áudio", "tradução", "repetição"],
-    primaryLabel: "próximo",
-    secondaryLabel: "ver início"
-  },
-  {
-    icon: "道",
-    badge: "trilhas",
-    title: "Escolha um caminho de vida.",
-    text: "Sobrevivência, trabalho, vida adulta, conversa natural e gramática prática.",
-    chips: ["trilhas", "progresso", "direção"],
-    primaryLabel: "próximo",
-    secondaryLabel: "ver trilhas"
-  },
-  {
-    icon: "✨",
-    badge: "Premium",
-    title: "Do grátis útil ao Premium poderoso.",
-    text: "O grátis ajuda hoje. O Premium aprofunda situações reais: fábrica, hospital, prefeitura, contas e Sensei IA.",
-    chips: ["mais temas", "Sensei IA", "vida real"],
-    primaryLabel: "começar agora",
-    secondaryLabel: "ver Premium"
-  }
-];
-
-function onboardingCurrentStep() {
-  STATE.ui ||= {};
-  return clamp(Number(STATE.ui.onboardingStep || 0), 0, ONBOARDING_STEPS.length - 1);
-}
-
-function markOnboardingSeen() {
-  STATE.ui ||= {};
-  STATE.ui.onboardingSeen = true;
-  STATE.ui.onboardingStep = ONBOARDING_STEPS.length - 1;
-  saveState();
-}
-
 function renderOnboarding() {
   const step = onboardingCurrentStep();
   const item = ONBOARDING_STEPS[step];
@@ -9271,7 +9245,7 @@ function renderSettings() {
         <div class="settingsDetailsBody">
           <div class="settingsMiniGrid">
             <button class="btn btn--ghost btn--full" data-nav="#/tutorial">tutorial</button>
-            <button class="btn btn--ghost btn--full" data-nav="#/premium">premium</button>
+            <button class="btn btn--ghost btn--full" data-nav="#/premium-final">premium</button>
           </div>
         </div>
       </details>
@@ -9711,6 +9685,22 @@ function openPremiumThemesDirect() {
 window.NIHONGO321_OPEN_COMPARE_DIRECT = openCompareDirect;
 window.NIHONGO321_OPEN_PREMIUM_THEMES_DIRECT = openPremiumThemesDirect;
 
+function openPremiumFinalDirect() {
+  try { unlockAudio(); } catch { }
+  try { beep("pop"); } catch { }
+
+  history.replaceState(null, "", "#/premium-final");
+  renderPremiumFinal();
+
+  try {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  } catch {
+    window.scrollTo(0, 0);
+  }
+}
+
+window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT = openPremiumFinalDirect;
+
 
 /* ---------- render principal ---------- */
 function render() {
@@ -9718,13 +9708,13 @@ function render() {
   applyTheme(getTheme());
 
   const r = route();
-  document.body.classList.toggle("is-caderno-route", r === "#/caderno");
 
   if (r === "#/onboarding") return renderOnboarding();
   if (r === "#/premium-themes") return renderPremiumThemes();
   if (r === "#/compare") return renderPlanCompare();
   if (r === "#/landing") return renderLanding();
-  if (r === "#/premium") return renderPremium();
+  if (r === "#/premium") return renderPremiumFinal();
+  if (r === "#/premium-final") return renderPremiumFinal();
   if (r === "#/admin") return renderAdmin();
   if (r === "#/tutorial") return renderTutorial();
   if (r === "#/sensei") return renderSensei();
@@ -9873,8 +9863,7 @@ try {
     const wantsCompare =
       navTarget === "#/compare" ||
       actionTarget === "goCompare" ||
-      label === "comparar planos" ||
-      label === "ver premium";
+      label === "comparar planos";
 
     if (!wantsCompare) return;
 
@@ -9892,6 +9881,48 @@ try {
 
     location.hash = "#/compare";
     try { renderPlanCompare(); } catch { }
+    try { setTimeout(() => render(), 0); } catch { }
+  }, true);
+} catch { }
+
+/* ---------- NIHONGO321 premium final capture listener 8.8.16-R ---------- */
+try {
+  document.addEventListener("click", (event) => {
+    const el = event.target.closest("button, a, [role='button']");
+    if (!el) return;
+
+    const navTarget = el.dataset?.nav || "";
+    const actionTarget = el.dataset?.action || "";
+    const hrefTarget = el.getAttribute("href") || "";
+    const label = String(el.textContent || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const wantsPremiumFinal =
+      navTarget === "#/premium" ||
+      navTarget === "#/premium-final" ||
+      hrefTarget === "#/premium" ||
+      hrefTarget === "#/premium-final" ||
+      actionTarget === "openPremiumFinalDirect" ||
+      label === "ver premium" ||
+      label === "ver premium completo" ||
+      label === "assinar premium";
+
+    if (!wantsPremiumFinal) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT) {
+      window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT();
+      return;
+    }
+
+    location.hash = "#/premium-final";
+    try { renderPremiumFinal(); } catch { }
     try { setTimeout(() => render(), 0); } catch { }
   }, true);
 } catch { }
@@ -9932,6 +9963,13 @@ document.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
     openPremiumThemesDirect();
+    return;
+  }
+
+  if (earlyAct === "openPremiumFinalDirect") {
+    e.preventDefault();
+    e.stopPropagation();
+    openPremiumFinalDirect();
     return;
   }
 
@@ -11063,98 +11101,32 @@ document.addEventListener("change", (e) => {
 /* ---------- CADERNO321 integrado: salvamento nativo ---------- */
 window.addEventListener("message", (event) => {
   const data = event.data || {};
-  if (!data) return;
-
-  if (data.type === "CADERNO321_LOCAL_SAVE_DONE") {
-    try {
-      const reloaded = loadState();
-      if (reloaded && reloaded.app) STATE = reloaded;
-    } catch { }
-    try { refreshHUD(); } catch { }
-    toast("frase salva no NIHONGO321");
-    return;
-  }
-
-  if (data.type === "CADERNO321_REQUEST_TOPICS") {
-    postCaderno321TopicList(event.source);
-    return;
-  }
-
-  if (data.type === "CADERNO321_START_TRAINING") {
-    const result = startCaderno321TrainingFromPayload(data.payload || {});
-    try {
-      event.source?.postMessage?.({ type: "NIHONGO321_START_TRAINING_RESULT", ok: !!result.ok, ...result }, "*");
-    } catch { }
-    toast(result.ok ? "abrindo treino 105x" : "não encontrei a frase para treinar");
-    return;
-  }
-
-  if (data.type !== "CADERNO321_SAVE_PHRASE") return;
+  if (!data || data.type !== "CADERNO321_SAVE_PHRASE") return;
 
   try {
     const payload = data.payload || {};
     const result = saveCaderno321PayloadNative(payload);
-    const last = result.last || {};
 
     try {
       event.source?.postMessage?.({
         type: "NIHONGO321_SAVE_RESULT",
-        requestId: payload.requestId || "",
         ok: !!result.ok,
         imported: result.imported || 0,
         updated: result.updated || 0,
-        failed: result.failed || 0,
-        total: result.total || 0,
-        error: result.error || "",
-        topicId: last.topicId || result.topicId || "topic_caderno321",
-        topicName: last.topicName || "Caderno321",
-        phraseId: last.phraseId || ""
+        total: result.total || 0
       }, "*");
     } catch { }
 
-    toast(result.imported ? "frase salva no NIHONGO321" : result.updated ? "frase atualizada no NIHONGO321" : "não consegui salvar a frase");
+    toast(result.imported ? "frase salva no NIHONGO321" : result.updated ? "frase atualizada no NIHONGO321" : "nenhuma frase nova para salvar");
     refreshHUD();
   } catch (err) {
     console.error("NIHONGO321 caderno integrated save error:", err);
     try {
-      event.source?.postMessage?.({ type: "NIHONGO321_SAVE_RESULT", requestId: data.payload?.requestId || "", ok: false, error: "save_failed" }, "*");
+      event.source?.postMessage?.({ type: "NIHONGO321_SAVE_RESULT", ok: false, error: "save_failed" }, "*");
     } catch { }
-    toast("erro ao salvar frase do DIÁRIO321");
+    toast("erro ao salvar frase do CADERNO321");
   }
 });
-
-
-/* ---------- CADERNO321 integrado: salvamento direto mesmo domínio ---------- */
-try {
-  window.NIHONGO321_CADERNO321_DIRECT_SAVE = function(payload = {}) {
-    try {
-      const result = saveCaderno321PayloadNative(payload || {});
-      const last = result.last || {};
-      refreshHUD();
-      return {
-        type: "NIHONGO321_SAVE_RESULT",
-        requestId: payload.requestId || "",
-        ok: !!result.ok,
-        imported: result.imported || 0,
-        updated: result.updated || 0,
-        failed: result.failed || 0,
-        total: result.total || 0,
-        error: result.error || "",
-        topicId: last.topicId || result.topicId || "topic_caderno321",
-        topicName: last.topicName || "Caderno321",
-        phraseId: last.phraseId || ""
-      };
-    } catch (err) {
-      console.error("NIHONGO321 direct caderno save error:", err);
-      return {
-        type: "NIHONGO321_SAVE_RESULT",
-        requestId: payload?.requestId || "",
-        ok: false,
-        error: "direct_save_failed"
-      };
-    }
-  };
-} catch {}
 
 /* ---------- rota ---------- */
 window.addEventListener("hashchange", () => {
@@ -11172,8 +11144,7 @@ window.addEventListener("hashchange", () => {
   refreshHUD();
 
   if (!location.hash) {
-    if (!STATE.ui?.onboardingSeen) nav("#/onboarding");
-    else nav("#/landing");
+    nav("#/landing");
   }
 
   ensureBackTopButton();

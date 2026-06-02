@@ -13709,3 +13709,1751 @@ body.is-caderno-route .app{
     height:100vh;
   }
 }
+
+/* =========================================================
+   NIHONGO321 8.8.2-R — Página de venda + Central em catálogos
+   Regra: organizar sem remover ferramentas funcionais.
+   ========================================================= */
+
+.salesLandingPage,
+.appCentralPage{
+  width:min(100%, 980px);
+  margin:0 auto;
+}
+
+.salesHeroCard{
+  padding:clamp(16px, 3.6vw, 28px);
+  overflow:hidden;
+}
+
+.salesHeroTop,
+.appCentralStats{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.salesHeroProof{
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1.2;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+
+.salesHeroCopy{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+
+.salesHeroTitle{
+  margin:0;
+  max-width:12em;
+  color:var(--soft);
+  font-size:clamp(34px, 8vw, 64px);
+  line-height:.98;
+  letter-spacing:-.06em;
+  text-wrap:balance;
+}
+
+.salesHeroLead{
+  margin:0;
+  max-width:46em;
+  color:var(--muted2);
+  font-size:clamp(15px, 2.4vw, 18px);
+  line-height:1.55;
+  font-weight:800;
+}
+
+.salesHeroBanner{
+  position:relative;
+  margin:16px 0 0;
+  border:1px solid rgba(255,216,111,.22);
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:var(--shadowSoft);
+  background:rgba(255,255,255,.04);
+}
+
+.salesHeroBanner img{
+  width:100%;
+  aspect-ratio:1200 / 520;
+  object-fit:cover;
+  object-position:center;
+}
+
+.salesHeroBanner::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg, rgba(5,7,15,.02), rgba(5,7,15,.34));
+}
+
+html[data-theme="light"] .salesHeroBanner::after{
+  background:linear-gradient(180deg, rgba(255,248,220,.02), rgba(20,33,58,.16));
+}
+
+.salesHeroBanner figcaption{
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:12px;
+  z-index:1;
+  display:inline-flex;
+  width:max-content;
+  max-width:calc(100% - 24px);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;
+  padding:8px 12px;
+  background:rgba(5,7,15,.64);
+  color:#fff7db;
+  font-size:12px;
+  font-weight:950;
+  backdrop-filter:blur(12px);
+}
+
+html[data-theme="light"] .salesHeroBanner figcaption{
+  background:rgba(255,255,255,.78);
+  color:#1d2a42;
+  border-color:rgba(31,59,103,.18);
+}
+
+.salesMethodLine{
+  margin-top:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  border:1px solid rgba(255,216,111,.20);
+  border-radius:999px;
+  padding:10px 12px;
+  background:rgba(255,216,111,.075);
+  color:var(--gold2);
+  font-size:13px;
+  line-height:1.2;
+  font-weight:950;
+}
+
+html[data-theme="light"] .salesMethodLine{
+  color:#4f3510;
+  background:rgba(255,216,111,.24);
+}
+
+.salesHeroActions,
+.salesPremiumActions{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:1.35fr 1fr 1fr;
+  gap:10px;
+  align-items:stretch;
+}
+
+.salesValueGrid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+}
+
+.salesValueItem{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,.04);
+  display:grid;
+  gap:6px;
+}
+
+.salesValueItem b{
+  color:var(--soft);
+  font-size:16px;
+}
+
+.salesValueItem span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+html[data-theme="light"] .salesValueItem{
+  background:rgba(255,255,255,.72);
+}
+
+.salesSoftPremium{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(220px, 320px);
+  gap:16px;
+  align-items:center;
+}
+
+.appCentralHero{
+  padding:clamp(16px, 3.4vw, 26px);
+}
+
+.appCentralIntro{
+  margin-top:14px;
+  display:grid;
+  gap:8px;
+}
+
+.appCentralTitle{
+  margin:0;
+  color:var(--soft);
+  font-size:clamp(30px, 7vw, 52px);
+  line-height:1;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+}
+
+.appCentralLead{
+  margin:0;
+  color:var(--muted2);
+  font-size:clamp(14px, 2.4vw, 17px);
+  line-height:1.5;
+  font-weight:850;
+}
+
+.appCentralStats{
+  justify-content:flex-start;
+  margin-top:14px;
+}
+
+.appCentralStats span{
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:8px 11px;
+  background:rgba(255,255,255,.05);
+  color:var(--muted2);
+  font-size:12px;
+  font-weight:950;
+}
+
+.toolShelf{
+  gap:14px;
+}
+
+.toolGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+}
+
+.toolGrid--featured{
+  grid-template-columns:repeat(3, minmax(0,1fr));
+}
+
+.toolCard{
+  width:100%;
+  min-height:128px;
+  border:1px solid var(--strokeSoft);
+  border-radius:24px;
+  padding:15px;
+  background:linear-gradient(180deg, rgba(255,255,255,.070), rgba(255,255,255,.034));
+  color:var(--text);
+  text-align:left;
+  display:grid;
+  align-content:start;
+  gap:8px;
+  box-shadow:none;
+  touch-action:manipulation;
+}
+
+.toolCard:hover,
+.toolCard:focus-visible{
+  border-color:rgba(255,216,111,.36);
+  background:
+    radial-gradient(180px 100px at 20% 10%, rgba(255,216,111,.12), transparent 70%),
+    rgba(255,255,255,.05);
+}
+
+.toolCard--main{
+  min-height:142px;
+}
+
+.toolCard--diario{
+  border-color:rgba(255,216,111,.30);
+  background:
+    radial-gradient(220px 120px at 20% 10%, rgba(255,216,111,.14), transparent 72%),
+    rgba(255,255,255,.045);
+}
+
+.toolIcon{
+  width:42px;
+  min-width:42px;
+  height:42px;
+  border:1px solid rgba(255,216,111,.22);
+  border-radius:16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold2);
+  background:rgba(255,216,111,.075);
+  font-size:16px;
+  line-height:1;
+  font-weight:950;
+}
+
+.toolCard b{
+  color:var(--soft);
+  font-size:17px;
+  line-height:1.1;
+  letter-spacing:-.02em;
+}
+
+.toolCard small{
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.toolTopicRow{
+  margin-top:-2px;
+}
+
+html[data-theme="light"] .toolCard,
+html[data-theme="light"] .appCentralStats span{
+  background:rgba(255,255,255,.76);
+}
+
+html[data-theme="light"] .toolCard:hover,
+html[data-theme="light"] .toolCard:focus-visible{
+  background:
+    radial-gradient(180px 100px at 20% 10%, rgba(255,216,111,.26), transparent 70%),
+    rgba(255,255,255,.92);
+}
+
+html[data-theme="light"] .toolIcon{
+  color:#5c3800;
+  background:rgba(255,216,111,.22);
+}
+
+@media (max-width:760px){
+  .salesHeroActions,
+  .salesPremiumActions,
+  .salesSoftPremium{
+    grid-template-columns:1fr;
+  }
+
+  .salesValueGrid,
+  .toolGrid,
+  .toolGrid--featured{
+    grid-template-columns:1fr;
+  }
+
+  .toolCard,
+  .toolCard--main{
+    min-height:104px;
+    grid-template-columns:48px minmax(0,1fr);
+    align-items:center;
+    column-gap:12px;
+  }
+
+  .toolCard b,
+  .toolCard small{
+    grid-column:2;
+  }
+
+  .toolIcon{
+    grid-row:1 / span 2;
+  }
+
+  .salesHeroTitle{
+    font-size:clamp(32px, 9.8vw, 42px);
+  }
+
+  .appCentralTitle{
+    font-size:clamp(30px, 9vw, 40px);
+  }
+}
+
+@media (max-width:430px){
+  .salesHeroBanner{
+    border-radius:22px;
+  }
+
+  .salesHeroBanner figcaption{
+    font-size:11px;
+    padding:7px 10px;
+  }
+
+  .salesMethodLine{
+    border-radius:20px;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.2-R — Central em catálogos minimalistas
+   Regra: esconder a poluição visual sem remover ferramentas.
+   ========================================================= */
+.srOnly{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+
+.appCentralPage--catalogs{
+  gap:14px;
+}
+
+.appCentralHero--calm{
+  padding:clamp(16px, 3.4vw, 24px);
+}
+
+.toolCatalogStack{
+  gap:12px;
+}
+
+.toolCatalog{
+  padding:0;
+  overflow:hidden;
+}
+
+.toolCatalogSummary{
+  list-style:none;
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  padding:16px;
+  min-height:84px;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+.toolCatalogSummary::-webkit-details-marker{
+  display:none;
+}
+
+.toolCatalogSummary::after{
+  content:"⌄";
+  width:34px;
+  height:34px;
+  border:1px solid rgba(255,216,111,.28);
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold2);
+  font-size:18px;
+  font-weight:950;
+  background:rgba(255,216,111,.06);
+  grid-column:3;
+  grid-row:1;
+  margin-left:4px;
+  transition:transform .18s ease;
+}
+
+.toolCatalog[open] > .toolCatalogSummary::after{
+  transform:rotate(180deg);
+}
+
+.toolCatalogIcon{
+  width:46px;
+  height:46px;
+  border:1px solid rgba(255,216,111,.24);
+  border-radius:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold2);
+  background:rgba(255,216,111,.075);
+  font-weight:950;
+  line-height:1;
+}
+
+.toolCatalogText{
+  display:grid;
+  gap:4px;
+  min-width:0;
+}
+
+.toolCatalogText b{
+  color:var(--soft);
+  font-size:clamp(17px, 4.2vw, 22px);
+  line-height:1.06;
+  letter-spacing:-.03em;
+}
+
+.toolCatalogText small,
+.toolCatalogHint{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.toolCatalogCount{
+  min-width:28px;
+  height:28px;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted2);
+  background:rgba(255,255,255,.045);
+  font-size:12px;
+  font-weight:950;
+  grid-column:3;
+  grid-row:1;
+  margin-right:42px;
+}
+
+.toolCatalog[open]{
+  border-color:rgba(255,216,111,.25);
+}
+
+.toolCatalog[open] > .toolCatalogSummary{
+  border-bottom:1px solid var(--strokeSoft);
+}
+
+.toolGrid--catalog{
+  padding:14px;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+}
+
+.toolGrid--compact{
+  grid-template-columns:repeat(2, minmax(0,1fr));
+}
+
+.toolTopicRow--catalog{
+  padding:14px 14px 0;
+  display:grid;
+  gap:8px;
+}
+
+.toolShelf--quiet{
+  opacity:.96;
+}
+
+.toolShelf--quiet > .card,
+.toolShelf--quiet .quickCard,
+.toolShelf--quiet .phraseDayCard{
+  margin-top:0;
+}
+
+@media (max-width:760px){
+  .toolCatalogSummary{
+    grid-template-columns:44px minmax(0,1fr) auto;
+    min-height:78px;
+    padding:14px;
+  }
+
+  .toolCatalogIcon{
+    width:42px;
+    height:42px;
+    border-radius:16px;
+  }
+
+  .toolCatalogCount{
+    margin-right:38px;
+  }
+
+  .toolGrid--catalog,
+  .toolGrid--compact{
+    grid-template-columns:1fr;
+    padding:12px;
+  }
+
+  .toolGrid--catalog .toolCard,
+  .toolGrid--catalog .toolCard--main{
+    min-height:86px;
+  }
+}
+
+html[data-theme="light"] .toolCatalogIcon{
+  color:#5c3800;
+  background:rgba(255,216,111,.22);
+}
+
+html[data-theme="light"] .toolCatalogSummary::after{
+  color:#5c3800;
+  background:rgba(255,216,111,.22);
+  border-color:rgba(169,102,0,.22);
+}
+
+html[data-theme="light"] .toolCatalogCount{
+  color:#253a5e;
+  background:rgba(255,255,255,.76);
+}
+
+/* =========================================================
+   NIHONGO321 8.8.3-R — Central em 5S
+   Mantém ferramentas, reduz poluição e mostra o conteúdo dos catálogos.
+   ========================================================= */
+.appCentralPage--seiton{
+  gap:12px;
+}
+
+.appCentralPage--seiton .appCentralHero--calm{
+  border-color:rgba(255,216,111,.16);
+}
+
+.toolCatalogPreview{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  color:var(--gold2);
+  font-size:12px;
+  line-height:1.25;
+  font-weight:950;
+  opacity:.94;
+}
+
+.toolCatalog[open] .toolCatalogPreview{
+  color:var(--muted);
+  opacity:.78;
+}
+
+.dailyKaizenCard{
+  padding:14px;
+  border-color:rgba(255,216,111,.18);
+  background:
+    radial-gradient(320px 160px at 0% 0%, rgba(255,216,111,.10), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.dailyKaizenHead{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+}
+
+.dailyKaizenIcon{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  border:1px solid rgba(255,216,111,.26);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,216,111,.08);
+  color:var(--gold2);
+  font-size:13px;
+  font-weight:950;
+  letter-spacing:.02em;
+}
+
+.dailyKaizenHead b{
+  display:block;
+  color:var(--soft);
+  font-size:clamp(18px, 4vw, 22px);
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+
+.dailyKaizenHead small{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.dailyKaizenGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+
+.dailyKaizenGrid span{
+  min-height:38px;
+  border:1px solid var(--strokeSoft);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 10px;
+  background:rgba(255,255,255,.036);
+  color:var(--muted2);
+  font-size:12px;
+  font-weight:900;
+  text-align:center;
+}
+
+.p--tight{
+  margin-top:6px;
+  margin-bottom:0;
+}
+
+html[data-theme="light"] .toolCatalogPreview{
+  color:#5c3800;
+}
+
+html[data-theme="light"] .toolCatalog[open] .toolCatalogPreview{
+  color:#42536f;
+}
+
+html[data-theme="light"] .dailyKaizenCard{
+  border-color:rgba(169,102,0,.18);
+  background:
+    radial-gradient(320px 160px at 0% 0%, rgba(255,216,111,.28), transparent 64%),
+    rgba(255,255,255,.84);
+}
+
+html[data-theme="light"] .dailyKaizenIcon{
+  color:#5c3800;
+  background:rgba(255,216,111,.22);
+  border-color:rgba(169,102,0,.22);
+}
+
+html[data-theme="light"] .dailyKaizenGrid span{
+  color:#253a5e;
+  background:rgba(255,255,255,.78);
+}
+
+@media (max-width:760px){
+  .toolCatalogSummary{
+    min-height:92px;
+  }
+
+  .toolCatalogPreview{
+    font-size:11px;
+  }
+
+  .dailyKaizenGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.5-R — Central Enxuta sem sugestões
+   Escopo: Central NIHONGO321. Não remove ferramentas.
+   ========================================================= */
+.appCentralHeroTop{
+  min-height:0;
+}
+
+.appCentralPage--seiton .appCentralHero--calm{
+  padding:18px;
+}
+
+.appCentralPage--seiton .appCentralHero--calm .appCentralStats,
+.appCentralPage--seiton .appCentralHero--calm .badge:not(.btn .badge){
+  display:none !important;
+}
+
+.appCentralPage--seiton .appCentralTitle{
+  font-size:clamp(30px, 7vw, 48px);
+  line-height:1.02;
+  letter-spacing:-.055em;
+}
+
+.appCentralPage--seiton .appCentralLead{
+  max-width:34em;
+}
+
+.toolCatalogCount,
+.toolCatalogChevron{
+  display:none !important;
+}
+
+.toolCatalogSummary{
+  grid-template-columns:48px minmax(0,1fr) 38px;
+}
+
+.toolCatalogSummary::after{
+  grid-column:3;
+  margin-left:0;
+  margin-right:0;
+}
+
+.dailyKaizenCard{
+  display:none !important;
+}
+
+.dailyKaizenInfo{
+  padding:14px 15px;
+  border-color:rgba(255,216,111,.16);
+  background:
+    radial-gradient(260px 140px at 0% 0%, rgba(255,216,111,.08), transparent 64%),
+    linear-gradient(180deg, var(--card), var(--card2));
+}
+
+.dailyKaizenInfoText{
+  display:grid;
+  gap:4px;
+}
+
+.dailyKaizenInfoText b{
+  color:var(--soft);
+  font-size:clamp(16px, 4vw, 20px);
+  line-height:1.1;
+  letter-spacing:-.03em;
+}
+
+.dailyKaizenInfoText small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+  font-weight:850;
+}
+
+.dailyKaizenInfoChips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.dailyKaizenInfoChips span{
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:7px 10px;
+  background:rgba(255,255,255,.032);
+  color:var(--muted2);
+  font-size:12px;
+  font-weight:900;
+  line-height:1.1;
+}
+
+.toolShelf--quiet{
+  display:none !important;
+}
+
+html[data-theme="light"] .dailyKaizenInfo{
+  border-color:rgba(169,102,0,.16);
+  background:
+    radial-gradient(260px 140px at 0% 0%, rgba(255,216,111,.20), transparent 64%),
+    rgba(255,255,255,.82);
+}
+
+html[data-theme="light"] .dailyKaizenInfoChips span{
+  background:rgba(255,255,255,.78);
+  color:#253a5e;
+}
+
+@media (max-width:760px){
+  .toolCatalogSummary{
+    grid-template-columns:42px minmax(0,1fr) 36px;
+  }
+
+  .appCentralPage--seiton .appCentralHero--calm{
+    padding:16px;
+  }
+
+  .dailyKaizenInfoChips{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.7-R — Central com harmonia da logo
+   Escopo: Central NIHONGO321. Organização visual sem remover funções.
+   ========================================================= */
+.appCentralPage--seiton .appCentralHero--calm{
+  padding:16px 18px 18px !important;
+  border-color:rgba(255,216,111,.22) !important;
+  background:
+    radial-gradient(420px 210px at 0% 0%, rgba(255,183,64,.22), transparent 64%),
+    radial-gradient(380px 220px at 100% 0%, rgba(108,166,255,.18), transparent 66%),
+    radial-gradient(420px 260px at 50% 130%, rgba(255,122,47,.10), transparent 66%),
+    linear-gradient(135deg, rgba(12,18,31,.96), rgba(22,41,73,.94) 58%, rgba(9,18,34,.96)) !important;
+}
+
+html[data-theme="light"] .appCentralPage--seiton .appCentralHero--calm{
+  background:
+    radial-gradient(420px 210px at 0% 0%, rgba(255,183,64,.36), transparent 64%),
+    radial-gradient(380px 220px at 100% 0%, rgba(71,143,230,.20), transparent 66%),
+    radial-gradient(420px 260px at 50% 130%, rgba(255,122,47,.14), transparent 66%),
+    linear-gradient(135deg, rgba(255,250,232,.98), rgba(236,246,255,.92) 60%, rgba(255,244,216,.96)) !important;
+}
+
+.appCentralPage--seiton .appCentralIntro{
+  margin-top:6px !important;
+  justify-items:center !important;
+  text-align:center !important;
+}
+
+.appCentralPage--seiton .appCentralTitle{
+  width:100%;
+  max-width:14.5em;
+  margin-inline:auto !important;
+  text-align:center !important;
+  font-size:clamp(25px, 6.1vw, 40px) !important;
+  line-height:1.04 !important;
+  letter-spacing:-.045em !important;
+  text-wrap:balance;
+}
+
+.appCentralPage--seiton .appCentralLead{
+  width:100%;
+  max-width:24em !important;
+  margin-inline:auto !important;
+  text-align:center !important;
+  color:var(--gold2) !important;
+  font-size:clamp(13px, 3.4vw, 15px) !important;
+  line-height:1.32 !important;
+  font-weight:950 !important;
+}
+
+html[data-theme="light"] .appCentralPage--seiton .appCentralLead{
+  color:#6b4100 !important;
+}
+
+/* Centraliza o conteúdo dos catálogos sem esconder ferramentas. */
+.appCentralPage--seiton .toolCatalogSummary{
+  grid-template-columns:42px minmax(0,1fr) 36px !important;
+  gap:10px !important;
+}
+
+.appCentralPage--seiton .toolCatalogText{
+  justify-items:center !important;
+  text-align:center !important;
+}
+
+.appCentralPage--seiton .toolCatalogText b,
+.appCentralPage--seiton .toolCatalogText small{
+  width:100%;
+  text-align:center !important;
+}
+
+.appCentralPage--seiton .toolCatalogText b{
+  font-size:clamp(18px, 4.6vw, 24px) !important;
+  letter-spacing:-.035em !important;
+}
+
+.appCentralPage--seiton .toolCatalogPreview{
+  width:100%;
+  justify-content:center !important;
+  text-align:center !important;
+  font-size:clamp(11px, 3.1vw, 12.5px) !important;
+  line-height:1.25 !important;
+}
+
+.appCentralPage--seiton .toolCatalogIcon{
+  align-self:center;
+}
+
+.appCentralPage--seiton .toolCatalogSummary::after{
+  align-self:center;
+}
+
+@media (max-width:430px){
+  .appCentralPage--seiton .appCentralHero--calm{
+    padding:14px 14px 16px !important;
+  }
+
+  .appCentralPage--seiton .appCentralTitle{
+    font-size:clamp(24px, 6.4vw, 30px) !important;
+  }
+
+  .appCentralPage--seiton .toolCatalogSummary{
+    grid-template-columns:38px minmax(0,1fr) 34px !important;
+    min-height:86px !important;
+    padding:13px 12px !important;
+  }
+
+  .appCentralPage--seiton .toolCatalogIcon{
+    width:38px !important;
+    height:38px !important;
+    border-radius:15px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.7-R — Central logo + banner restaurado
+   Escopo: Central NIHONGO321 e apresentação. Não remove funções.
+   ========================================================= */
+.appCentralPage--seiton .appCentralHero--calm{
+  border-color:rgba(255,216,111,.30) !important;
+  background:
+    radial-gradient(220px 150px at 8% 0%, rgba(255,216,111,.36), transparent 62%),
+    radial-gradient(260px 180px at 96% 12%, rgba(255,122,47,.22), transparent 62%),
+    radial-gradient(320px 230px at 72% 100%, rgba(65,135,230,.24), transparent 66%),
+    linear-gradient(135deg, #07111f 0%, #122a52 46%, #081427 100%) !important;
+}
+
+html[data-theme="light"] .appCentralPage--seiton .appCentralHero--calm{
+  border-color:rgba(169,102,0,.26) !important;
+  background:
+    radial-gradient(220px 150px at 8% 0%, rgba(255,216,111,.58), transparent 62%),
+    radial-gradient(260px 180px at 96% 12%, rgba(255,122,47,.25), transparent 62%),
+    radial-gradient(320px 230px at 72% 100%, rgba(65,135,230,.22), transparent 66%),
+    linear-gradient(135deg, #fff5cc 0%, #eaf5ff 52%, #fff0c8 100%) !important;
+}
+
+.appCentralPage--seiton .appCentralLead{
+  display:none !important;
+}
+
+.appCentralPage--seiton .appCentralIntro{
+  margin-top:4px !important;
+}
+
+.appCentralPage--seiton .appCentralTitle{
+  text-shadow:0 2px 16px rgba(0,0,0,.22);
+}
+
+html[data-theme="light"] .appCentralPage--seiton .appCentralTitle{
+  text-shadow:none;
+}
+
+.salesHeroBanner{
+  aspect-ratio:1200 / 520 !important;
+  max-height:240px !important;
+}
+
+.salesHeroBanner img{
+  width:100% !important;
+  height:100% !important;
+  aspect-ratio:1200 / 520 !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+
+@media (max-width:430px){
+  .salesHeroBanner{
+    max-height:190px !important;
+    border-radius:22px !important;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.8-R — Central com respiro no header
+   Escopo: remover filtro visual do catálogo e compactar HUD sem remover funções.
+   ========================================================= */
+.appCentralPage--seiton .toolTopicRow--catalog,
+.appCentralPage--seiton .toolCatalogHint{
+  display:none !important;
+}
+
+@media (max-width:520px){
+  .topbar{
+    gap:8px !important;
+    padding-left:calc(9px + var(--safeLeft)) !important;
+    padding-right:calc(8px + var(--safeRight)) !important;
+  }
+
+  .brand{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    gap:8px !important;
+  }
+
+  .logo{
+    width:44px !important;
+    height:44px !important;
+    flex-basis:44px !important;
+  }
+
+  .brandTitle{
+    font-size:14px !important;
+    max-width:clamp(86px, 26vw, 132px) !important;
+  }
+
+  .brandSub{
+    font-size:10.5px !important;
+    max-width:clamp(86px, 28vw, 132px) !important;
+  }
+
+  .hud{
+    flex:0 0 auto !important;
+    gap:5px !important;
+  }
+
+  .hudBtn{
+    height:38px !important;
+    min-width:38px !important;
+    width:38px !important;
+    padding:0 !important;
+    font-size:15px !important;
+  }
+
+  .hudItem{
+    min-height:38px !important;
+    padding:7px 9px !important;
+    gap:5px !important;
+    font-size:13px !important;
+  }
+}
+
+@media (max-width:380px){
+  .brandSub{
+    display:none !important;
+  }
+
+  .brandTitle{
+    max-width:clamp(94px, 32vw, 126px) !important;
+  }
+
+  .hudBtn{
+    height:36px !important;
+    min-width:36px !important;
+    width:36px !important;
+  }
+
+  .hudItem{
+    padding:6px 8px !important;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.9-R — Perguntas minimalistas na página de vendas
+   Regra: explicar valor sem poluir a primeira impressão.
+   ========================================================= */
+.salesFaqStack{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+
+.salesFaqItem{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,.058), rgba(255,255,255,.030));
+  overflow:hidden;
+}
+
+.salesFaqItem summary{
+  min-height:64px;
+  list-style:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:15px 16px;
+  color:var(--soft);
+  font-weight:950;
+  line-height:1.18;
+}
+
+.salesFaqItem summary::-webkit-details-marker{
+  display:none;
+}
+
+.salesFaqItem summary span{
+  min-width:0;
+  font-size:clamp(16px, 3.8vw, 19px);
+  text-wrap:balance;
+}
+
+.salesFaqItem summary b{
+  flex:0 0 auto;
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:1px solid rgba(255,216,111,.32);
+  background:rgba(255,216,111,.075);
+  color:var(--gold2);
+  display:grid;
+  place-items:center;
+  font-size:18px;
+  line-height:1;
+}
+
+.salesFaqItem[open] summary b{
+  transform:rotate(45deg);
+}
+
+.salesFaqBody{
+  border-top:1px solid var(--strokeSoft);
+  padding:14px 16px 16px;
+  display:grid;
+  gap:10px;
+}
+
+.salesFaqBody p{
+  margin:0;
+  color:var(--muted2);
+  font-size:14px;
+  line-height:1.58;
+  font-weight:760;
+}
+
+html[data-theme="light"] .salesFaqItem{
+  background:rgba(255,255,255,.76);
+}
+
+html[data-theme="light"] .salesFaqItem summary{
+  color:#16233b;
+}
+
+html[data-theme="light"] .salesFaqBody p{
+  color:#34445f;
+}
+
+html[data-theme="light"] .salesFaqItem summary b{
+  color:#684208;
+  border-color:rgba(169,102,0,.28);
+  background:rgba(255,216,111,.18);
+}
+
+/* =========================================================
+   NIHONGO321 8.8.10-R — Perguntas mais leves na venda
+   Regra: título e perguntas não competem; leitura calma no celular.
+   ========================================================= */
+.salesValueCard .badge{
+  font-size:11px;
+  padding:7px 10px;
+  opacity:.92;
+}
+
+.salesValueCard .h2{
+  max-width:14.5em;
+  margin:8px auto 0;
+  text-align:center;
+  font-size:clamp(18px, 4.6vw, 22px);
+  line-height:1.12;
+  font-weight:780;
+  letter-spacing:-.018em;
+}
+
+.salesFaqStack{
+  margin-top:16px;
+  gap:9px;
+}
+
+.salesFaqItem{
+  border-radius:20px;
+  background:linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.026));
+}
+
+.salesFaqItem summary{
+  min-height:56px;
+  padding:12px 14px;
+  gap:10px;
+  font-weight:780;
+  line-height:1.18;
+}
+
+.salesFaqItem summary span{
+  font-size:clamp(14px, 3.45vw, 17px);
+  letter-spacing:-.006em;
+}
+
+.salesFaqItem summary b{
+  width:30px;
+  height:30px;
+  font-size:17px;
+}
+
+.salesFaqBody{
+  padding:12px 14px 14px;
+  gap:9px;
+}
+
+.salesFaqBody p{
+  font-size:13.5px;
+  line-height:1.56;
+  font-weight:650;
+}
+
+@media (max-width:420px){
+  .salesValueCard{
+    padding:16px 14px;
+  }
+
+  .salesValueCard .h2{
+    font-size:20px;
+    max-width:13.5em;
+  }
+
+  .salesFaqItem summary{
+    min-height:54px;
+    padding:12px 13px;
+  }
+
+  .salesFaqItem summary span{
+    font-size:15px;
+  }
+}
+
+html[data-theme="light"] .salesFaqItem{
+  background:rgba(255,255,255,.72);
+}
+
+/* =========================================================
+   NIHONGO321 8.8.11-R — Perguntas 10/10: método premium, leitura leve
+   Regra: menos texto corrido, mais clareza comercial e respiração visual.
+   ========================================================= */
+.salesValueCard{
+  padding:18px 16px;
+}
+
+.salesValueCard .row--between{
+  justify-content:center;
+  text-align:center;
+}
+
+.salesValueCard .h2{
+  max-width:12.5em;
+  margin:8px auto 0;
+  font-size:clamp(20px, 5vw, 26px);
+  line-height:1.06;
+  font-weight:880;
+  letter-spacing:-.035em;
+}
+
+.salesValueLead{
+  max-width:24em;
+  margin:8px auto 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+  font-weight:780;
+  text-align:center;
+}
+
+.salesFaqStack{
+  margin-top:14px;
+  gap:10px;
+}
+
+.salesFaqItem{
+  border-radius:18px;
+  background:
+    radial-gradient(220px 80px at 12% 0%, rgba(255,216,111,.055), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.050), rgba(255,255,255,.024));
+}
+
+.salesFaqItem summary{
+  min-height:52px;
+  padding:12px 13px 12px 15px;
+  align-items:center;
+  font-weight:820;
+}
+
+.salesFaqItem summary span{
+  font-size:clamp(15px, 3.7vw, 17px);
+  letter-spacing:-.012em;
+  text-align:left;
+}
+
+.salesFaqItem summary b{
+  width:28px;
+  height:28px;
+  font-size:16px;
+  opacity:.95;
+}
+
+.salesFaqBody{
+  padding:13px 15px 15px;
+  gap:10px;
+  text-align:left;
+}
+
+.salesFaqBody p{
+  margin:0;
+  color:var(--muted2);
+  font-size:13.8px;
+  line-height:1.52;
+  font-weight:680;
+  text-align:left;
+}
+
+.salesFaqBody p strong{
+  color:var(--soft);
+  font-weight:920;
+}
+
+.salesFaqBody ul{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  gap:8px;
+}
+
+.salesFaqBody li{
+  position:relative;
+  margin:0;
+  padding-left:18px;
+  color:var(--muted2);
+  font-size:13.4px;
+  line-height:1.42;
+  font-weight:680;
+  text-align:left;
+}
+
+.salesFaqBody li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.58em;
+  width:7px;
+  height:7px;
+  border-radius:999px;
+  background:var(--gold);
+  box-shadow:0 0 0 3px rgba(255,216,111,.12);
+}
+
+html[data-theme="light"] .salesValueLead{
+  color:#46536a;
+}
+
+html[data-theme="light"] .salesFaqItem{
+  background:
+    radial-gradient(220px 80px at 12% 0%, rgba(255,179,71,.16), transparent 70%),
+    rgba(255,255,255,.82);
+  border-color:rgba(31,59,103,.14);
+}
+
+html[data-theme="light"] .salesFaqBody p,
+html[data-theme="light"] .salesFaqBody li{
+  color:#344057;
+}
+
+html[data-theme="light"] .salesFaqBody p strong{
+  color:#14213a;
+}
+
+html[data-theme="light"] .salesFaqBody li::before{
+  background:#a96600;
+  box-shadow:0 0 0 3px rgba(169,102,0,.12);
+}
+
+@media (max-width:420px){
+  .salesValueCard .h2{
+    font-size:23px;
+  }
+
+  .salesValueLead{
+    font-size:12.5px;
+  }
+
+  .salesFaqItem summary span{
+    font-size:15.5px;
+  }
+
+  .salesFaqBody p{
+    font-size:13.4px;
+  }
+
+  .salesFaqBody li{
+    font-size:13.1px;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.13-R — Premium com benefícios recolhíveis
+   ========================================================= */
+.salesPremiumStory{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+  align-items:stretch;
+  text-align:center;
+}
+
+.salesPremiumIntro{
+  max-width:680px;
+  margin:0 auto;
+  display:grid;
+  justify-items:center;
+  gap:8px;
+}
+
+.salesPremiumStory .h2{
+  max-width:15em;
+  margin:0;
+  font-size:clamp(22px, 5.5vw, 34px);
+  line-height:1.08;
+  letter-spacing:-.04em;
+  text-wrap:balance;
+}
+
+.salesPremiumStory .p{
+  max-width:39em;
+  margin:0;
+  color:var(--muted2);
+  font-size:clamp(13.8px, 3.4vw, 16px);
+  line-height:1.48;
+  font-weight:760;
+  text-wrap:balance;
+}
+
+.salesPremiumFaqStack{
+  width:100%;
+  max-width:760px;
+  margin:2px auto 0;
+}
+
+.salesBenefitItem summary{
+  min-height:48px;
+  padding:11px 13px 11px 15px;
+}
+
+.salesBenefitItem summary span{
+  font-size:clamp(15px, 3.8vw, 17px);
+  font-weight:880;
+}
+
+.salesPremiumActionsRefined{
+  width:100%;
+  max-width:560px;
+  margin:4px auto 0;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+html[data-theme="light"] .salesPremiumStory .p{
+  color:#394967;
+}
+
+@media (min-width:720px){
+  .salesPremiumActionsRefined{
+    grid-template-columns:1.2fr 1fr;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.13-R — Página de finalização Premium
+   Regra: converter sem poluir, vender benefício real e manter calma visual.
+   ========================================================= */
+.premiumFinalPage{
+  gap:16px;
+}
+
+.premiumFinalHero,
+.premiumFinalSection,
+.premiumFinalCta{
+  background:
+    radial-gradient(420px 220px at 10% 0%, rgba(255,216,111,.105), transparent 62%),
+    radial-gradient(360px 220px at 100% 100%, rgba(108,166,255,.115), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.066), rgba(255,255,255,.030));
+}
+
+.premiumFinalTop{
+  align-items:center;
+}
+
+.premiumFinalHeroCopy{
+  display:grid;
+  gap:10px;
+  justify-items:center;
+  text-align:center;
+  margin-top:6px;
+}
+
+.premiumFinalTitle{
+  max-width:12em;
+  margin:0 auto;
+  color:var(--soft);
+  font-size:clamp(30px, 7vw, 58px);
+  line-height:.98;
+  letter-spacing:-.065em;
+  text-wrap:balance;
+}
+
+.premiumFinalLead,
+.premiumFinalText,
+.premiumFinalCta p{
+  max-width:42em;
+  margin:0 auto;
+  color:var(--muted2);
+  font-size:clamp(14px, 3.5vw, 17px);
+  line-height:1.5;
+  font-weight:760;
+  text-align:center;
+  text-wrap:balance;
+}
+
+.premiumFinalPriceBox{
+  margin:16px auto 0;
+  max-width:420px;
+  border:1px solid rgba(255,216,111,.28);
+  border-radius:28px;
+  padding:16px;
+  display:grid;
+  justify-items:center;
+  gap:4px;
+  background:
+    radial-gradient(260px 120px at 20% 0%, rgba(255,216,111,.18), transparent 68%),
+    rgba(255,255,255,.045);
+}
+
+.premiumFinalPriceBox span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:930;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.premiumFinalPriceBox b{
+  color:var(--gold2);
+  font-size:clamp(34px, 9vw, 54px);
+  line-height:1;
+  letter-spacing:-.045em;
+}
+
+.premiumFinalPriceBox small{
+  color:var(--muted2);
+  font-size:13px;
+  font-weight:760;
+  text-align:center;
+}
+
+.premiumFinalActions{
+  width:100%;
+  max-width:520px;
+  margin:16px auto 0;
+  display:grid;
+  gap:10px;
+}
+
+.premiumFinalNote{
+  margin:10px auto 0;
+  max-width:38em;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+  font-weight:760;
+  text-align:center;
+}
+
+.premiumFinalSection{
+  display:grid;
+  justify-items:center;
+  gap:12px;
+  text-align:center;
+}
+
+.premiumFinalSection .h2,
+.premiumFinalCta .h2{
+  max-width:13.5em;
+  margin:0 auto;
+  font-size:clamp(22px, 5.5vw, 34px);
+  line-height:1.08;
+  letter-spacing:-.04em;
+  text-align:center;
+  text-wrap:balance;
+}
+
+.premiumGainGrid{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+  margin-top:4px;
+}
+
+.premiumGainCard,
+.premiumLifeItem{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,.040);
+  display:grid;
+  gap:6px;
+  text-align:left;
+}
+
+.premiumGainCard b,
+.premiumLifeItem b{
+  color:var(--gold2);
+  font-size:15px;
+  line-height:1.2;
+  font-weight:940;
+}
+
+.premiumGainCard span,
+.premiumLifeItem span{
+  color:var(--muted2);
+  font-size:13px;
+  line-height:1.42;
+  font-weight:720;
+}
+
+.premiumLifeList{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:10px;
+  margin-top:4px;
+}
+
+.premiumMemorySection .salesFaqStack,
+.premiumFinalFaqStack{
+  width:100%;
+  margin-top:4px;
+}
+
+.premiumFinalCta{
+  display:grid;
+  justify-items:center;
+  gap:12px;
+  text-align:center;
+}
+
+.premiumFinalCta .primaryAction,
+.premiumFinalCta .btn{
+  width:100%;
+  max-width:520px;
+}
+
+html[data-theme="light"] .premiumFinalHero,
+html[data-theme="light"] .premiumFinalSection,
+html[data-theme="light"] .premiumFinalCta{
+  background:
+    radial-gradient(420px 220px at 10% 0%, rgba(255,179,71,.30), transparent 62%),
+    radial-gradient(360px 220px at 100% 100%, rgba(61,139,238,.18), transparent 62%),
+    rgba(255,255,255,.82);
+}
+
+html[data-theme="light"] .premiumFinalLead,
+html[data-theme="light"] .premiumFinalText,
+html[data-theme="light"] .premiumFinalCta p,
+html[data-theme="light"] .premiumGainCard span,
+html[data-theme="light"] .premiumLifeItem span{
+  color:#35445d;
+}
+
+html[data-theme="light"] .premiumFinalPriceBox,
+html[data-theme="light"] .premiumGainCard,
+html[data-theme="light"] .premiumLifeItem{
+  background:rgba(255,255,255,.76);
+  border-color:rgba(31,59,103,.15);
+}
+
+html[data-theme="light"] .premiumGainCard b,
+html[data-theme="light"] .premiumLifeItem b{
+  color:#6c4300;
+}
+
+@media (max-width:720px){
+  .premiumGainGrid,
+  .premiumLifeList{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:420px){
+  .premiumFinalHero,
+  .premiumFinalSection,
+  .premiumFinalCta{
+    padding:16px 14px;
+  }
+
+  .premiumFinalTitle{
+    font-size:34px;
+  }
+
+  .premiumFinalSection .h2,
+  .premiumFinalCta .h2{
+    font-size:24px;
+  }
+}
