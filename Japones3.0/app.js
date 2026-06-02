@@ -5242,7 +5242,6 @@ function renderLanding() {
             loading="eager"
             decoding="async"
           />
-          <figcaption>Rotina real no Japão • treino feito para dekasseguis</figcaption>
         </figure>
 
         <div class="salesMethodLine" aria-label="método principal do aplicativo">
@@ -5256,7 +5255,7 @@ function renderLanding() {
         <div class="salesHeroActions">
           <button class="bigBtn" type="button" data-nav="#/home">entrar no NIHONGO321</button>
           <button class="btn btn--muted btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
-          <button class="btn btn--ghost btn--full" type="button" data-nav="#/premium-final">ver Premium</button>
+          <button class="btn btn--ghost btn--full" type="button" data-nav="#/premium-final">Assinar Premium</button>
         </div>
       </section>
 
@@ -5374,7 +5373,7 @@ function renderLanding() {
         </div>
 
         <div class="salesPremiumActions salesPremiumActionsRefined">
-          <button class="primaryAction" type="button" data-action="openPremiumFinalDirect">ver Premium completo</button>
+          <button class="primaryAction" type="button" data-action="openPremiumFinalDirect">Assinar Premium</button>
           <button class="btn btn--muted btn--full" type="button" data-nav="#/home">continuar grátis</button>
         </div>
       </section>
@@ -6077,7 +6076,7 @@ function renderAdmin() {
             </div>
 
             <div class="grid2">
-              <button class="btn btn--ghost btn--full" data-nav="#/premium-final">ver premium</button>
+              <button class="btn btn--ghost btn--full" data-nav="#/premium-final">Assinar Premium</button>
               <button class="btn btn--full" data-nav="#/launch-checklist">checklist final</button>
             </div>
 
@@ -6320,7 +6319,7 @@ function renderFluencyPaths() {
         </div>
 
         <div class="pathsNextActions">
-          <button type="button" class="primaryAction landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">ver Premium</button>
+          <button type="button" class="primaryAction landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">Assinar Premium</button>
           <button class="btn btn--muted btn--full" data-nav="#/home">voltar ao início</button>
         </div>
       </section>
@@ -6342,13 +6341,25 @@ function caderno321BridgePhrases() {
 function ensureCaderno321Topic() {
   STATE.bank ||= { topics: [], phrases: [] };
   STATE.bank.topics ||= [];
+
+  // Compatibilidade: o id antigo continua existindo para não quebrar frases já salvas,
+  // mas o nome visual não pode mais aparecer como Caderno321 no app.
+  STATE.bank.topics.forEach((t) => {
+    if (t?.id === "topic_caderno321" || /caderno321/i.test(String(t?.name || ""))) {
+      t.name = "DIÁRIO321";
+      t.icon = "記";
+      t.description = "Frases criadas pelo aluno no DIÁRIO321.";
+      t.updatedAt = now();
+    }
+  });
+
   let topic = STATE.bank.topics.find(t => t.id === "topic_caderno321");
   if (!topic) {
     topic = {
       id: "topic_caderno321",
-      name: "Caderno321",
+      name: "DIÁRIO321",
       icon: "筆",
-      description: "Frases criadas pelo aluno no CADERNO321.",
+      description: "Frases criadas pelo aluno no DIÁRIO321.",
       isPremium: false,
       createdAt: now(),
       updatedAt: now()
@@ -6366,7 +6377,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
   const silent = !!options.silent;
   const bridge = caderno321BridgePhrases();
   if (!bridge.length) {
-    if (!silent) toast("nenhuma frase do CADERNO321 encontrada");
+    if (!silent) toast("nenhuma frase do DIÁRIO321 encontrada");
     return { imported: 0, total: 0, pending: 0 };
   }
 
@@ -6378,7 +6389,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
 
   bridge.forEach(item => {
     const jp = String(item.jp || "").trim();
-    const pt = String(item.pt || "").trim() || "frase criada no CADERNO321";
+    const pt = String(item.pt || "").trim() || "frase criada no DIÁRIO321";
     const sig = `${jp}||${pt}`;
     if (!jp || existing.has(sig)) return;
 
@@ -6398,7 +6409,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
       pt,
       newWords,
       topicId: topic.id,
-      source: "CADERNO321",
+      source: "DIÁRIO321",
       caderno321: item.caderno321 || null,
       note: noteParts.join("\n"),
       createdAt: t,
@@ -6419,7 +6430,7 @@ function integrateCaderno321BridgePhrases(options = {}) {
 
   if (imported) saveState();
   const pending = bridge.filter(item => !new Set((STATE.bank.phrases || []).map(caderno321PhraseSignature)).has(caderno321PhraseSignature(item))).length;
-  if (!silent) toast(imported ? `${imported} frase(s) do CADERNO321 importada(s)` : "as frases do CADERNO321 já estavam no NIHONGO321");
+  if (!silent) toast(imported ? `${imported} frase(s) do DIÁRIO321 importada(s)` : "as frases do DIÁRIO321 já estavam no NIHONGO321");
   return { imported, total: bridge.length, pending };
 }
 
@@ -6455,7 +6466,7 @@ function receiveCaderno321UrlImport() {
 
   if (!incoming.length) {
     try { window.history.replaceState(null, "", `${window.location.pathname}#/home`); } catch { }
-    toast("não consegui ler a frase enviada pelo CADERNO321");
+    toast("não consegui ler a frase enviada pelo DIÁRIO321");
     return { received: true, imported: 0 };
   }
 
@@ -6467,7 +6478,7 @@ function receiveCaderno321UrlImport() {
     const phrase = {
       ...item,
       id: item.id || uid("cad321_in"),
-      source: item.source || "CADERNO321",
+      source: item.source || "DIÁRIO321",
       savedForNihongo321: true,
       receivedAt: new Date().toISOString()
     };
@@ -6489,13 +6500,13 @@ function receiveCaderno321UrlImport() {
     window.history.replaceState(null, "", `${window.location.pathname}#/home`);
   } catch { }
 
-  toast(result.imported ? `${result.imported} frase(s) do CADERNO321 salva(s)` : "frase do CADERNO321 já estava salva");
+  toast(result.imported ? `${result.imported} frase(s) do DIÁRIO321 salva(s)` : "frase do DIÁRIO321 já estava salva");
   return { received: true, imported: result.imported || 0 };
 }
 
 function saveCaderno321PhraseNative(item = {}) {
   const jp = String(item.jp || "").trim();
-  const pt = String(item.pt || "").trim() || "frase criada no CADERNO321";
+  const pt = String(item.pt || "").trim() || "frase criada no DIÁRIO321";
 
   if (!jp) return { ok: false, reason: "empty_jp", imported: 0, total: (STATE.bank?.phrases || []).length };
 
@@ -6525,7 +6536,7 @@ function saveCaderno321PhraseNative(item = {}) {
       pt,
       newWords: newWords.length ? newWords : (existing.newWords || []),
       topicId: topic.id,
-      source: "CADERNO321",
+      source: "DIÁRIO321",
       caderno321: item.caderno321 || existing.caderno321 || null,
       note: noteParts.join("\n") || existing.note || "",
       updatedAt: t
@@ -6541,7 +6552,7 @@ function saveCaderno321PhraseNative(item = {}) {
     pt,
     newWords,
     topicId: topic.id,
-    source: "CADERNO321",
+    source: "DIÁRIO321",
     caderno321: item.caderno321 || null,
     note: noteParts.join("\n"),
     createdAt: t,
@@ -6599,7 +6610,7 @@ function renderCaderno321BridgeCard() {
   return `
     <section class="card cadernoBridgeCard">
       <div class="cadernoBridgeCopy">
-        <div class="badge">CADERNO321</div>
+        <div class="badge">DIÁRIO321</div>
         <h2 class="h2">Suas frases criadas no caderno estão prontas para memorizar.</h2>
         <p class="p">
           Importe para o NIHONGO321 e transforme criação própria em treino 105x.
@@ -7512,7 +7523,7 @@ function renderSensei() {
           </div>
 
           <div class="grid2">
-            <button type="button" class="btn btn--ok btn--full landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">ver Premium</button>
+            <button type="button" class="btn btn--ok btn--full landingCompareBtn" data-action="goCompare" onclick="window.NIHONGO321_GO_COMPARE && window.NIHONGO321_GO_COMPARE()">Assinar Premium</button>
             <button class="btn btn--full" data-nav="#/home">continuar grátis</button>
           </div>
         </section>
@@ -9870,22 +9881,18 @@ try {
     event.preventDefault();
     event.stopPropagation();
 
-    if (window.NIHONGO321_GO_COMPARE) {
-      window.NIHONGO321_GO_COMPARE();
+    if (window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT) {
+      window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT();
       return;
     }
 
-    try { unlockAudio(); } catch { }
-    try { toast("abrindo comparação"); } catch { }
-    try { beep("pop"); } catch { }
-
-    location.hash = "#/compare";
-    try { renderPlanCompare(); } catch { }
+    location.hash = "#/premium-final";
+    try { renderPremiumFinal(); } catch { }
     try { setTimeout(() => render(), 0); } catch { }
   }, true);
 } catch { }
 
-/* ---------- NIHONGO321 premium final capture listener 8.8.16-R ---------- */
+/* ---------- NIHONGO321 premium final capture listener 8.8.19-R ---------- */
 try {
   document.addEventListener("click", (event) => {
     const el = event.target.closest("button, a, [role='button']");
@@ -10062,11 +10069,7 @@ document.addEventListener("click", (e) => {
   }
 
   if (act === "goCompare") {
-    if (window.NIHONGO321_GO_COMPARE) window.NIHONGO321_GO_COMPARE();
-    else {
-      nav("#/compare");
-      try { renderPlanCompare(); } catch { }
-    }
+    openPremiumFinalDirect();
     return;
   }
 
@@ -11124,7 +11127,7 @@ window.addEventListener("message", (event) => {
     try {
       event.source?.postMessage?.({ type: "NIHONGO321_SAVE_RESULT", ok: false, error: "save_failed" }, "*");
     } catch { }
-    toast("erro ao salvar frase do CADERNO321");
+    toast("erro ao salvar frase do DIÁRIO321");
   }
 });
 

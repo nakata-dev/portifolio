@@ -1,12 +1,12 @@
-NIHONGO321 8.8.16-R + DIÁRIO321 4.16.16-R — Premium Único + Rotas Estáveis
+NIHONGO321 8.8.19-R + DIÁRIO321 4.16.19-R — Botões Premium para Assinatura
 
 Pacote completo pronto para substituir.
 
 Correções:
-- Botões “Ver Premium” e “Ver Premium completo” levam para a mesma página de vendas: #/premium-final.
-- A rota #/premium agora é normalizada para #/premium-final.
-- Mantido boot limpo sem carregamento duplicado de app.js/sensei-bank.js.
-- Proteção extra contra cliques antigos que antes levavam para comparação ou telas indevidas.
+- Troca visual de “Ver Premium” e “Ver Premium completo” para “Assinar Premium”.
+- Botões Premium continuam levando para a página final de venda/assinatura (#/premium-final).
+- Ações antigas de comparação/Premium também foram protegidas para cair na mesma página final.
+- Mantido boot limpo, sem carregamento duplicado de app.js ou sensei-bank.js.
 
 Preservado:
 - Treino 105x.

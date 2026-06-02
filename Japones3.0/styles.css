@@ -15457,3 +15457,9 @@ html[data-theme="light"] .premiumLifeItem b{
     font-size:24px;
   }
 }
+
+
+/* NIHONGO321 8.8.18-R — banner limpo sem texto sobre a foto */
+.salesHeroBanner figcaption{
+  display:none !important;
+}
