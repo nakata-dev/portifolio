@@ -1,0 +1,27 @@
+CAÇA-PALAVRAS — v2.1.0 — Banco Novo Sem Repetição
+
+Arquivos alterados:
+- app.js
+
+Arquivos preservados sem alteração funcional:
+- index.html
+- style.css
+
+Resumo técnico:
+- Mantidos 100 níveis.
+- Mantidas 9 palavras por nível.
+- Mantidas as grades 5x5, 6x6, 7x7 e 8x8.
+- Mantidos botões, som, dica, reiniciar, próximo, editor, moedas, tempo, movimentos, progresso e localStorage.
+- Banco padrão atualizado para 900 termos usados, sem repetição entre níveis.
+- Seleção de palavras deixou de ser aleatória por nível e passou a usar palavras fixas do nível, evitando repetição no decorrer do jogo.
+- SCHEMA_VERSION atualizado para 4 com migração segura: preserva progresso, melhores tempos e preferência de som, mas troca o banco antigo.
+
+Validação feita:
+- node --check app.js: OK.
+- 100 níveis gerados: OK.
+- 900 termos usados: OK.
+- 900 termos únicos: OK.
+- Duplicatas no pacote padrão: 0.
+
+Observação:
+- Nos níveis 5x5 foram usados microtermos de 2 a 3 letras para manter a estabilidade de 9 palavras em uma grade pequena.

@@ -1,19 +1,28 @@
 /* ==========================
-   Caça-Palavras PRO (Clean) - PATCH 2026
+   Caça-Palavras PRO - v2.1.3 Anti-confusão Total
    ✅ Android sem travar (geração assíncrona)
    ✅ 100 níveis 5..8, 9 palavras, 8 direções
    ✅ Garantia de 9 palavras com fallback seguro
    ✅ Cores por palavra (melhor leitura)
    ✅ Som leve + moedas (sem arquivos, sem travar)
 
-   UPGRADE (palavras criativas + aleatórias sempre):
-   ✅ a cada nível/jogo, escolhe 9 palavras aleatórias do banco do tamanho
-   ✅ palavras comuns (treino de escrita para terceira idade)
-   ✅ tenta vários conjuntos aleatórios e, se preciso, fallback determinístico
+   UPGRADE v2.1.0:
+   ✅ banco novo com 900 termos distribuídos nos 100 níveis
+   ✅ sem repetição de palavras no pacote padrão
+   ✅ seleção fixa por nível para reduzir tédio e preservar progressão
+
+   UPGRADE v2.1.2:
+   ✅ editor técnico removido da interface pública
+   ✅ botão discreto para resetar progresso e restaurar níveis padrão
+
+   UPGRADE v2.1.3:
+   ✅ bloqueio de termos iguais e termos com as mesmas letras em ordem diferente
+   ✅ corrige casos como UBS/USB, AI/IA, EVA/AVE
+   ✅ validação estrutural impede pacote antigo salvo no navegador
 ========================== */
 
 const LS_KEY = "wordsearch_pro_v1";
-const SCHEMA_VERSION = 3; // mantém o mesmo (não muda estrutura de storage)
+const SCHEMA_VERSION = 7; // v2.1.3: força atualização e remove termos visualmente confundíveis como UBS/USB
 
 const DIRS = [
   [1, 0], [-1, 0], [0, 1], [0, -1],
@@ -26,8 +35,9 @@ const MAX_WORD_ATTEMPTS = 260;
 const YIELD_EVERY = 6;
 const FALLBACK_SETS_TRIES = 40;
 
-// ✅ novo: tentativas com conjuntos aleatórios antes do fallback determinístico
-const RANDOM_SETS_TRIES = 24;
+// v2.1.1: mantido por compatibilidade, mas não é usado para trocar palavras entre níveis
+const RANDOM_SETS_TRIES = 0;
+const MAX_LOCKED_BACKTRACK_STEPS = 30000; // evita travamento em celulares quando um pacote customizado for impossível
 
 const $ = (id) => document.getElementById(id);
 
@@ -41,6 +51,14 @@ function sanitizeWord(w) {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^A-Z]/g, "")
     .trim();
+}
+
+function wordVisualSignature(w) {
+  return sanitizeWord(w).split("").sort().join("");
+}
+
+function hasSameLettersAsUsed(word, usedSignatures) {
+  return usedSignatures.has(wordVisualSignature(word));
 }
 
 function randInt(min, max) {
@@ -148,47 +166,159 @@ function hashWordToColor(word) {
 }
 
 /* =========================
-   Bancos por tamanho (palavras comuns e bem escritas)
-   - focadas em memória/ortografia (terceira idade)
-   - respeitam maxLen por grid
+   Bancos por tamanho - v2.1.1
+   - 100 níveis preservados
+   - 9 palavras por nível preservadas
+   - 25 níveis por grade: 5x5, 6x6, 7x7 e 8x8
+   - sem repetição de palavras no pacote padrão
+   - seleção fixa por nível para evitar tédio e repetição
+   - fallback não troca mais as palavras do nível
 ========================= */
 function sanitizeBank(list, size) {
   const maxLen = maxLenFor(size);
-  return list
+  const seen = new Set();
+  const out = [];
+
+  list
     .map(sanitizeWord)
     .filter(Boolean)
-    .filter(w => w.length >= 2 && w.length <= maxLen);
+    .filter(w => w.length >= 2 && w.length <= maxLen)
+    .forEach(w => {
+      if (seen.has(w)) return;
+      seen.add(w);
+      out.push(w);
+    });
+
+  return out;
 }
 
-// 5x5: 2-3 letras (bem comuns)
+// 5x5: microtermos de 2-3 letras para manter 9 itens em grade pequena.
 const WORD_BANK_5 = sanitizeBank([
-  "SOL","LUA","MAR","RIO","DIA","PAZ","CHA","MEL","SAL","CEU","VOZ","SOM",
-  "MAE","PAI","VO","TIA","TIO","LA","LE","LI","LO","LU","SIM","NAO","BOM","MAU"
+  "AI", "OI", "UI", "EU", "TU", "TV", "PC", "CD", "RG",
+  "CPF", "CEP", "PIX", "SUS", "UBS", "ONU", "OAB", "USB", "SMS",
+  "LED", "GPS", "APP", "WEB", "DVD", "HD", "SD", "IA", "QR",
+  "PJ", "MEI", "SOL", "LUA", "MAR", "RIO", "DIA", "PAZ", "CHA",
+  "MEL", "SAL", "CEU", "VOZ", "SOM", "MAE", "PAI", "AVO", "TIA",
+  "TIO", "BOM", "MAU", "SIM", "NAO", "RUA", "PIA", "ASA", "ABA",
+  "ECO", "EGO", "ELA", "ELE", "ELO", "ERA", "EVA", "AVE", "OVO",
+  "OCA", "UVA", "BOI", "CAO", "GOL", "GEL", "FIM", "FIO", "FOI",
+  "FIZ", "LAR", "LEI", "LER", "LUZ", "MAL", "MAO", "MAS", "MES",
+  "MEU", "MIL", "MIM", "REI", "SER", "SEU", "SOB", "SUL", "TUA",
+  "VIA", "VIM", "VIR", "VAI", "VER", "VOO", "DOR", "DOM", "DEU",
+  "DEI", "DEZ", "DOS", "DAS", "POR", "PRA", "PRO", "POS", "PRE",
+  "ATE", "ATO", "ATA", "ALA", "AMA", "AME", "AMO", "ANO", "ANA",
+  "APE", "BIS", "BOA", "BEM", "BAR", "CEM", "COM", "COR", "CRU",
+  "DAR", "DIZ", "DOU", "EIS", "FEZ", "FUI", "GAS", "GIZ", "IRA",
+  "IRM", "JAR", "JET", "JUS", "LEO", "LHE", "LIA", "LIL", "LIX",
+  "MAC", "MAN", "MEX", "MIR", "MIX", "MOR", "NEM", "NET", "NOZ",
+  "NUA", "OPA", "ORA", "PAO", "PAR", "PAU", "PES", "PER", "PIO",
+  "PIS", "POM", "PON", "RIR", "ROL", "ROS", "RUI", "RUM", "SAC",
+  "SAO", "SAP", "SED", "SEN", "SEO", "SIR", "SOR", "SUA", "TAL",
+  "TAM", "TAO", "TAR", "TEM", "TER", "TES", "TIL", "TIM", "TIR",
+  "TOM", "TOR", "TRI", "UNA", "UNO", "UPA", "URI", "URU", "USO",
+  "VEM", "VEL", "VES", "VIL", "VIP", "VIS", "VOS", "ZEN", "ZOO",
+  "ZUM", "BA", "BE", "BI", "BO", "BU", "CA", "CE", "CI",
+  "CO", "CU", "DA", "DE", "DI", "DO", "DU", "FA", "FE",
+  "FI", "FO", "FU", "GA", "GE", "GI", "GO", "GU", "HA",
+  "HE", "HI", "HO", "HU", "JA", "JE", "JI", "JO", "JU",
+  "KA", "KE", "KI", "KO", "KU", "MA", "ME", "CPU", "RAM",
+  "PDF", "ZIP", "JPG", "PNG", "MP3", "MP4"
 ], 5);
 
-// 6x6: 2-4 letras (objetos/animais simples)
+// 6x6: palavras de 4 letras, todas diferentes das demais etapas.
 const WORD_BANK_6 = sanitizeBank([
-  "GATO","SAPO","PATO","URSO","LOBO","RATO","LEAO",
-  "CASA","RUA","PORTA","MESA","BOLA","DADO","JOGO","CIMA","BAIXO",
-  "AGUA","SUCO","CAFE","PANO","CHAO","LADO","FOTO","LUVA","BICO"
+  "CASA", "MESA", "BOLA", "PATO", "GATO", "SAPO", "URSO", "LOBO", "RATO",
+  "LEAO", "FOCA", "AGUA", "SUCO", "CAFE", "PANO", "CHAO", "LADO", "FOTO",
+  "LUVA", "BICO", "DADO", "JOGO", "CIMA", "ALTO", "ALTA", "BALA", "BOLO",
+  "BOCA", "VIDA", "AMOR", "FLOR", "FOGO", "VELA", "ARTE", "AULA", "ANEL",
+  "AZUL", "ROSA", "LIMA", "PESO", "LEVE", "DURO", "MOLE", "DOCE", "AMAR",
+  "OLER", "FALA", "FALO", "COME", "COMO", "BEBE", "BEBO", "VIVE", "VIVO",
+  "OLHA", "OLHO", "OUVE", "OUCO", "LIGA", "LIGO", "PULA", "PULO", "ANDA",
+  "ANDO", "ABRE", "ABRO", "POVO", "CAMA", "SOFA", "TETO", "PISO", "MURO",
+  "ROTA", "MAPA", "RODA", "RODO", "RISO", "RIMA", "REDE", "REZA", "RUMO",
+  "RALO", "REMO", "RAMO", "POTE", "COPA", "COPO", "CUIA", "FACA", "COLA",
+  "FITA", "LATA", "TELA", "TUBO", "TACO", "TALO", "TAPA", "TIPO", "TOPO",
+  "NAVE", "NOME", "NORA", "NOJO", "NADO", "NADA", "NINA", "NILO", "NEVE",
+  "NOVO", "NOVA", "NOVE", "PENA", "PELE", "PELO", "PERA", "PIAO", "PICO",
+  "PIPA", "CURA", "CARA", "CORO", "CORA", "CERA", "CEDO", "CENA", "CANO",
+  "CAVA", "COVA", "CUBO", "COCO", "COLO", "CALO", "CABO", "CACO", "CAIS",
+  "DAMA", "DEDO", "DUNA", "DICA", "DITO", "DOTE", "DATA", "DURA", "FAMA",
+  "FATO", "FERA", "FEIO", "FEIA", "FINA", "FINO", "FOFO", "FUGA", "FUMA",
+  "FUSO", "GEMA", "GERA", "GIRA", "GIRO", "GOTA", "GULA", "GURI", "GATA",
+  "GALO", "GELA", "GOGO", "HORA", "HINO", "HIFI", "HOJE", "HERA", "HIJO",
+  "ILHA", "INCA", "IRMA", "IRMO", "ISIS", "IARA", "JACA", "JATO", "JADE",
+  "JUDO", "JURA", "JURO", "JUBA", "JANE", "JOIA", "JULI", "LAGO", "LAMA",
+  "LISO", "LISA", "LONA", "LOJA", "LOTE", "LUTA", "LUME", "LUXO", "MALA",
+  "MATO", "MATA", "MICO", "MILO", "MIRA", "MOLA", "MOTO", "MUDO", "MIMO",
+  "MINA", "MITO", "MODA", "MOCO", "NATA", "NIDO", "NOEL", "NOTA", "NODO",
+  "NUCA", "NULO", "OURO", "OITO", "OLEO", "ONDA", "ONZE", "ORLA", "OSLO",
+  "BASE", "BELA", "BELO", "BIFE", "BOTA", "BRIO", "CAJU", "CINE", "CRIA",
+  "CRUZ", "DOIS", "DUAS", "ENJO", "ERRO", "FARO", "FIEL", "FILA", "FOME",
+  "FREI", "FRIO", "GADO", "GOLA", "GUIA", "JOAO", "KILO", "LAJE", "LIRA",
+  "MACA", "MAGO", "MANO", "MATE", "MEDO", "META", "OVAL", "PAVO", "PINO"
 ], 6);
 
-// 7x7: 2-6 letras (rotina, casa, bem-estar)
+// 7x7: palavras de 5-6 letras para dificuldade intermediária.
 const WORD_BANK_7 = sanitizeBank([
-  "AMOR","PAZ","CALMA","SAUDE","FORCA","ALEGRIA","CUIDAR",
-  "LIVRO","LAPIS","CANETA","ESCOLA",
-  "JARDIM","FOLHA","FLOR","FRUTA","RAIZ","TRONCO",
-  "MUSICA","CANTO","RITMO",
-  "CADEIA","CADEIRA","JANELA","COZINHA","CAMA","BANHO",
-  "OCULOS","SABAO","ROUPA","MEIAS","SAPATO","CHAVE"
+  "AMIGO", "AMIGA", "CUIDAR", "SAUDE", "FORCA", "CALMA", "FELIZ", "ALEGRE", "BEIJO",
+  "ABRACO", "SORRI", "LIVRO", "LAPIS", "CANETA", "ESCOLA", "JARDIM", "FOLHA", "FRUTA",
+  "FLORA", "TRONCO", "MUSICA", "CANTO", "RITMO", "CADEIA", "JANELA", "BANHO", "OCULOS",
+  "SABAO", "ROUPA", "MEIAS", "SAPATO", "CHAVE", "PRAIA", "CAMPO", "MUNDO", "TERRA",
+  "CHUVA", "NUVEM", "VENTO", "PEDRA", "AREIA", "GRAMA", "LAGOA", "MORRO", "VERDE",
+  "AZUIS", "CLARO", "ESCURO", "LEITE", "ARROZ", "FEIJAO", "FRANGO", "CARNE", "PEIXE",
+  "SALADA", "TOMATE", "BATATA", "CEBOLA", "ALFACE", "BANANA", "MANGA", "LIMAO", "MAMAO",
+  "MELAO", "GOIABA", "PANELA", "PRATO", "GARFO", "TALHER", "COLHER", "XICARA", "TIGELA",
+  "FOGAO", "FORNO", "GELAR", "TAPETE", "CAMISA", "CALCA", "CASACO", "BOLSA", "CINTOS",
+  "TENIS", "BOTINA", "ROUPAS", "TREINO", "ESTUDO", "LICAO", "AGENDA", "ROTINA", "TEMPO",
+  "MINUTO", "NOITE", "MANHA", "TARDE", "SEMANA", "CONTA", "NUMERO", "LETRA", "FRASE",
+  "TEXTO", "LINHA", "PAGINA", "TURNO", "CHEFE", "EQUIPE", "SETOR", "PECAS", "CARTAO",
+  "JAPAO", "BRASIL", "NAGOYA", "FUKUI", "TOKYO", "OSAKA", "KYOTO", "SENDAI", "TOYOTA",
+  "KOMAKI", "AICHI", "CHIBA", "MELHOR", "BONITO", "BONITA", "FORTE", "FRACO", "DOENTE",
+  "SADIO", "LIMPO", "VELHO", "RAPIDO", "LENTO", "FACIL", "ANDAR", "CORRER", "PULAR",
+  "SUBIR", "DESCER", "ABRIR", "FECHAR", "PEGAR", "LEVAR", "TRAZER", "COMER", "BEBER",
+  "FALAR", "OUVIR", "OLHAR", "SENTAR", "DEITAR", "DORMIR", "LAVAR", "SECAR", "VARRER",
+  "LIMPAR", "CORTAR", "RALAR", "MEXER", "ASSAR", "FRITAR", "PENSAR", "AJUDAR", "CHAMAR",
+  "MORAR", "VIVER", "SORRIR", "CHORAR", "CANTAR", "DANCAR", "MARIA", "JOANA", "PAULO",
+  "PEDRO", "LUCAS", "BRUNO", "CARLOS", "MARCOS", "TIAGO", "DIEGO", "FELIPE", "RAFAEL",
+  "ANDRE", "JULIA", "CLARA", "LAURA", "SOFIA", "ALICE", "HELENA", "AMANDA", "RENATA",
+  "MONICA", "MATEUS", "MURILO", "SAMUEL", "RENATO", "VICTOR", "VITOR", "EMILIA", "BIANCA",
+  "CAMILA", "MARINA", "TAINA", "KEIKO", "AKIRA", "CORAL", "VIOLA", "PIANO", "VIOLAO",
+  "FLAUTA", "TAMBOR", "RADIO", "CAMERA", "VIDEO", "FILME", "TEATRO", "DANCA", "NAVIO",
+  "AVIAO", "CARRO", "METRO", "ONIBUS", "BARCO", "PONTE", "PORTA", "TELHA", "QUARTO",
+  "ABERTO", "ACENTO", "ACERTO", "ALTURA", "AMOLAR", "ARRUMA", "ATENTO",
+  "BARATO", "BILHAR", "BRILHO", "CABANA", "CAMADA", "CANELA", "CINEMA",
+  "CIDADE", "COLETA", "CORUJA", "DENTRO", "ENXUTO", "FERIAS"
 ], 7);
 
-// 8x8: 3-7 letras (palavras “boas de escrever” e do cotidiano)
+// 8x8: palavras de 7 letras para dificuldade maior.
 const WORD_BANK_8 = sanitizeBank([
-  "FAMILIA","AMIZADE","SORRISO","CUIDADO","BONDADE","MEMORIA","LEITURA",
-  "CORAGEM","ROTINA","HABITO","SAUDADE",
-  "CADEIRA","JANELA","COZINHA","CADERNO","CAMINHO","VIAGEM",
-  "PACIENCIA","RESPEITO","CARINHO","ALIMENTO","FRUTAS","VERDURA"
+  "FAMILIA", "AMIZADE", "SORRISO", "CUIDADO", "BONDADE", "MEMORIA", "LEITURA", "CORAGEM", "SAUDADE",
+  "CADEIRA", "CAMINHO", "CARINHO", "VERDURA", "FABRICA", "MAQUINA", "ESTEIRA", "CADERNO", "PALAVRA",
+  "FRASEAR", "ESTUDAR", "ENSINAR", "ANIMAIS", "PASSARO", "MACACOS", "CAVALOS", "GATINHO", "COELHOS",
+  "GALINHA", "FORMIGA", "MERCADO", "PADARIA", "COZINHA", "QUINTAL", "VARANDA", "GARAGEM", "QUARTOS",
+  "TELHADO", "PAREDES", "JARDINS", "TOMATES", "BATATAS", "CEBOLAS", "BANANAS", "LARANJA", "MORANGO",
+  "ABACATE", "GOIABAS", "CASACOS", "SAPATOS", "CHINELO", "BERMUDA", "JAQUETA", "MOCHILA", "RELOGIO",
+  "ALEGRIA", "VONTADE", "ESPERAR", "ACORDAR", "ANDANDO", "CORRIDA", "PASSEIO", "BRINCAR", "LEMBRAR",
+  "ABRACAR", "PALHACO", "CRIANCA", "VIZINHO", "COLEGAS", "BAIRROS", "AVENIDA", "ESQUINA", "CALCADA",
+  "ESTACAO", "RODOVIA", "PISCINA", "CAMPEAO", "JOGADOR", "GOLEIRO", "BOLICHE", "FUTEBOL", "VIOLINO",
+  "SANFONA", "FLAUTAS", "MUSICAL", "DESENHO", "PINTURA", "CARTOES", "SALARIO", "COMPRAS", "REMEDIO",
+  "CLINICA", "JAPONES", "FUKUOKA", "HIROSHI", "SAPPORO", "OKINAWA", "RICARDO", "GABRIEL", "DANIELA",
+  "VANESSA", "LUCIANA", "ADRIANA", "EDUARDO", "LETICIA", "MATHEUS", "RODRIGO", "ROBERTO", "ALBERTO",
+  "MARCELO", "LEANDRO", "GUSTAVO", "CAMILLY", "ISABELA", "BEATRIZ", "GEOVANA", "JULIANA", "MARIANA",
+  "TAKASHI", "SATOSHI", "CAMINHA", "CANTIGA", "CARICIA", "CEREAIS", "CERVEJA", "COLECAO", "CREDITO",
+  "CORTINA", "DELICIA", "DETALHE", "DOENCAS", "ENERGIA", "ENFEITE", "ESCOLHA", "ESFORCO", "ESPERTO",
+  "ESTRELA", "EXEMPLO", "FARINHA", "FIGURAS", "FORMATO", "FRALDAS", "FRESCOR", "GALERIA", "GAROTAS",
+  "GAVETAS", "HORARIO", "INVERNO", "JANELAS", "JOELHOS", "LAVANDA", "LIMPEZA", "LIXEIRA", "MARMELO",
+  "MELHORA", "MERENDA", "MISTURA", "MONTADO", "MORADIA", "NERVOSO", "NOTICIA", "OFICINA", "ORGULHO",
+  "PASSADO", "PEDIDOS", "PENEIRA", "PESSOAL", "PINTADO", "PLANTAS", "PORTAIS", "QUADROS", "QUERIDO",
+  "RECEITA", "REMENDO", "RETORNO", "SEGREDO", "SENHORA", "SISTEMA", "SORVETE", "TALENTO", "TAPETES",
+  "TAREFAS", "TEMPERO", "TESOURA", "VALENTE", "VELHICE", "VERDADE", "VITRINE", "ALGODAO", "ALUGUEL",
+  "AMARELO", "AMASSAR", "ARRUMAR", "ASSENTO", "ASSINAR", "BALANCO", "BARALHO", "BARRIGA", "BATIDAS",
+  "BATISMO", "BEBIDAS", "BILHETE", "BONECAS", "BUZINAR", "CABELOS", "CABIDES", "CAIXOTE", "CAMADAS",
+  "CAMARAO", "CANDEIA", "CARTELO", "CARTELA", "CASINHA", "CAVEIRA", "CENOURA", "CHAMADO", "CHAMADA",
+  "CHAVECO", "CHEGADA", "CIGARRO", "CIMENTO", "CIRANDA", "COBERTO", "COLINAS", "COLMEIA", "COMANDO",
+  "ABERTOU", "ACEROLA", "AMIGOSO", "ARMAZEM", "BARBEAR", "CALCULO",
+  "CAMPANA", "CANTEIRO", "CEREBRO", "CORDEIRO", "DENTISTA", "ENXOVAL"
 ], 8);
 
 const WORD_BANKS = {
@@ -198,36 +328,79 @@ const WORD_BANKS = {
   8: WORD_BANK_8,
 };
 
-function buildLevelsBySize(size, count, bank, wordsPerLevel, baseSeed) {
+function buildLevelsBySize(size, count, bank, wordsPerLevel, globalUsedTerms, globalUsedVisualSignatures) {
   const out = [];
   const maxLen = maxLenFor(size);
   const cleanBank = bank.filter(w => w.length <= maxLen);
+  const needed = count * wordsPerLevel;
+  const levelWords = [];
 
-  if (cleanBank.length < wordsPerLevel) {
-    console.warn("Banco insuficiente para size", size, cleanBank.length);
+  for (const candidate of cleanBank) {
+    if (levelWords.length >= needed) break;
+
+    const word = sanitizeWord(candidate);
+    const signature = wordVisualSignature(word);
+
+    // v2.1.3: bloqueia repetição exata e também termos com as mesmas letras em outra ordem.
+    // Exemplo: UBS e USB não podem coexistir no pacote, pois confundem o jogador.
+    if (globalUsedTerms.has(word)) continue;
+    if (globalUsedVisualSignatures.has(signature)) continue;
+
+    globalUsedTerms.add(word);
+    globalUsedVisualSignatures.add(signature);
+    levelWords.push(word);
+  }
+
+  if (levelWords.length < needed) {
+    throw new Error(`Banco insuficiente para ${size}x${size}: ${levelWords.length}/${needed} termos seguros.`);
   }
 
   for (let i = 0; i < count; i++) {
-    const seed = baseSeed + i * 977;
-    const picks = pickDeterministicUnique(cleanBank, wordsPerLevel, seed);
-
-    while (picks.length < wordsPerLevel && cleanBank.length) {
-      const extra = cleanBank[randInt(0, cleanBank.length - 1)];
-      if (!picks.includes(extra)) picks.push(extra);
-    }
-
-    out.push({ size, words: picks.slice(0, wordsPerLevel), directions: 8 });
+    const start = i * wordsPerLevel;
+    const picks = levelWords.slice(start, start + wordsPerLevel);
+    out.push({ size, words: picks, directions: 8 });
   }
+
   return out;
 }
 
 function buildDefaultLevels100() {
   const out = [];
-  out.push(...buildLevelsBySize(5, 25, WORD_BANKS[5], 9, 50101));
-  out.push(...buildLevelsBySize(6, 25, WORD_BANKS[6], 9, 60101));
-  out.push(...buildLevelsBySize(7, 25, WORD_BANKS[7], 9, 70101));
-  out.push(...buildLevelsBySize(8, 25, WORD_BANKS[8], 9, 80101));
+  const globalUsedTerms = new Set();
+  const globalUsedVisualSignatures = new Set();
+
+  out.push(...buildLevelsBySize(5, 25, WORD_BANKS[5], 9, globalUsedTerms, globalUsedVisualSignatures));
+  out.push(...buildLevelsBySize(6, 25, WORD_BANKS[6], 9, globalUsedTerms, globalUsedVisualSignatures));
+  out.push(...buildLevelsBySize(7, 25, WORD_BANKS[7], 9, globalUsedTerms, globalUsedVisualSignatures));
+  out.push(...buildLevelsBySize(8, 25, WORD_BANKS[8], 9, globalUsedTerms, globalUsedVisualSignatures));
   return out;
+}
+
+function hasValidDefaultLevelShape(levelsArr) {
+  if (!Array.isArray(levelsArr) || levelsArr.length !== 100) return false;
+
+  const seen = new Set();
+  const visualSignatures = new Set();
+
+  for (const lvl of levelsArr) {
+    if (!lvl || typeof lvl !== "object") return false;
+    if (!Number.isInteger(lvl.size) || lvl.size < 5 || lvl.size > 8) return false;
+    if (!Array.isArray(lvl.words) || lvl.words.length !== 9) return false;
+
+    for (const raw of lvl.words) {
+      const w = sanitizeWord(raw);
+      if (!w || w.length < 2 || w.length > maxLenFor(lvl.size)) return false;
+
+      const visualSignature = wordVisualSignature(w);
+      if (seen.has(w)) return false;
+      if (visualSignatures.has(visualSignature)) return false;
+
+      seen.add(w);
+      visualSignatures.add(visualSignature);
+    }
+  }
+
+  return true;
 }
 
 const DEFAULT_LEVELS = buildDefaultLevels100();
@@ -249,6 +422,7 @@ const btnRestart = $("btnRestart");
 const btnNext = $("btnNext");
 const btnDev = $("btnDev");
 const btnSound = $("btnSound");
+const btnResetAllLevels = $("btnResetAllLevels");
 
 const devPanel = $("devPanel");
 const levelsInput = $("levelsInput");
@@ -337,21 +511,30 @@ function setSoundPref(on) {
 function loadLevels() {
   const data = readAllStorage();
 
-  if (Number(data.schemaVersion || 0) !== SCHEMA_VERSION) {
-    const fresh = safeClone(DEFAULT_LEVELS);
-    writeAllStorage({
-      schemaVersion: SCHEMA_VERSION,
-      levels: fresh,
-      progress: { levelIndex: 0 },
-      bestTimes: {},
-      overrides: {},
-      settings: { soundOn: true }
-    });
-    return fresh;
+  if (Number(data.schemaVersion || 0) === SCHEMA_VERSION && hasValidDefaultLevelShape(data.levels)) {
+    return data.levels;
   }
 
-  if (Array.isArray(data.levels) && data.levels.length === 100) return data.levels;
-  return safeClone(DEFAULT_LEVELS);
+  const fresh = safeClone(DEFAULT_LEVELS);
+  const previousProgress = data?.progress || {};
+  const previousBestTimes = data?.bestTimes || {};
+  const previousSettings = data?.settings || { soundOn: true };
+
+  writeAllStorage({
+    schemaVersion: SCHEMA_VERSION,
+    levels: fresh,
+    progress: {
+      ...previousProgress,
+      levelIndex: clamp(Number(previousProgress.levelIndex || 0), 0, fresh.length - 1)
+    },
+    bestTimes: previousBestTimes,
+    overrides: {},
+    settings: {
+      soundOn: previousSettings.soundOn == null ? true : !!previousSettings.soundOn
+    }
+  });
+
+  return fresh;
 }
 
 function saveLevels(levelsArr) {
@@ -363,10 +546,44 @@ function saveLevels(levelsArr) {
   writeAllStorage(data);
 }
 
+function resetAllLevelsProgress() {
+  const ok = confirm("Resetar todo o progresso e voltar ao nível 1?");
+  if (!ok) return;
+
+  const previous = readAllStorage();
+  const previousSound = previous?.settings?.soundOn;
+  const keepSoundOn = previousSound == null ? soundOn : !!previousSound;
+  const fresh = safeClone(DEFAULT_LEVELS);
+
+  writeAllStorage({
+    schemaVersion: SCHEMA_VERSION,
+    levels: fresh,
+    progress: { levelIndex: 0 },
+    bestTimes: {},
+    overrides: {},
+    settings: { soundOn: keepSoundOn }
+  });
+
+  levels = fresh;
+  levelIndex = 0;
+  moves = 0;
+  soundOn = keepSoundOn;
+  syncSoundButton();
+
+  if (movesLabel) movesLabel.textContent = "0";
+  if (devPanel) devPanel.hidden = true;
+
+  startLevel(0, { resetStats: true });
+  toast("✔ Progresso resetado. Você voltou ao nível 1.");
+}
+
 /* =========================
    Validação editor
 ========================= */
 function validateLevels(arr) {
+  const seen = new Set();
+  const visualSignatures = new Set();
+
   arr.forEach((lvl, idx) => {
     if (typeof lvl !== "object") throw new Error("Nível inválido");
     if (!Number.isInteger(lvl.size) || lvl.size < 5 || lvl.size > 8) throw new Error("size inválido (use 5 a 8)");
@@ -375,6 +592,15 @@ function validateLevels(arr) {
       const s = sanitizeWord(w);
       if (!s) throw new Error("word vazia");
       if (s.length > maxLenFor(lvl.size)) throw new Error(`word grande demais no nível ${idx + 1}: ${s}`);
+
+      const visualSignature = wordVisualSignature(s);
+      if (seen.has(s)) throw new Error(`palavra repetida no pacote: ${s}`);
+      if (visualSignatures.has(visualSignature)) {
+        throw new Error(`termo com mesmas letras já usado no pacote: ${s}`);
+      }
+
+      seen.add(s);
+      visualSignatures.add(visualSignature);
     });
     if (lvl.directions != null && lvl.directions !== 8) throw new Error("directions deve ser 8");
   });
@@ -574,11 +800,14 @@ function wireUI() {
     if (soundOn) playBeep(880, 70, "triangle", 0.02);
   });
 
-  btnDev.addEventListener("click", toggleDevPanel);
+  btnResetAllLevels?.addEventListener("click", resetAllLevelsProgress);
 
-  closeDev.addEventListener("click", () => { devPanel.hidden = true; });
+  // Editor técnico preservado no código, mas sem botão público na interface.
+  btnDev?.addEventListener("click", toggleDevPanel);
 
-  applyLevels.addEventListener("click", () => {
+  closeDev?.addEventListener("click", () => { devPanel.hidden = true; });
+
+  applyLevels?.addEventListener("click", () => {
     try {
       const parsed = JSON.parse(levelsInput.value);
       if (!Array.isArray(parsed)) throw new Error("JSON deve ser um array");
@@ -605,7 +834,7 @@ function wireUI() {
     }
   });
 
-  resetLevels.addEventListener("click", () => {
+  resetLevels?.addEventListener("click", () => {
     const ok = confirm("Restaurar níveis padrão?");
     if (!ok) return;
 
@@ -631,10 +860,11 @@ function wireUI() {
     clearSelection();
   });
 
-  levelsInput.value = JSON.stringify(levels, null, 2);
+  if (levelsInput) levelsInput.value = JSON.stringify(levels, null, 2);
 }
 
 function toggleDevPanel() {
+  if (!devPanel || !levelsInput) return;
   devPanel.hidden = !devPanel.hidden;
   if (!devPanel.hidden) levelsInput.value = JSON.stringify(levels, null, 2);
 }
@@ -679,10 +909,10 @@ async function startLevel(index, opts = {}) {
   renderWords([], { silent: true });
   updateProgress();
 
-  // ✅ upgrade: ignora as palavras fixas e sorteia sempre do banco do tamanho
+  // ✅ v2.1.3: usa somente as palavras fixas e anti-confusão do nível
   const result = await generateBoardGuaranteedWithFallback({
     size,
-    words: null,          // <- sinaliza “quero sorteio”
+    words: level.words,
     levelIndex: index,
     token: myToken
   });
@@ -732,50 +962,167 @@ function nextLevel() {
 ========================= */
 async function generateBoardGuaranteedWithFallback({ size, words, levelIndex, token }) {
   const maxLen = maxLenFor(size);
-  const bank = (WORD_BANKS[size] || []).filter(w => w.length <= maxLen);
+  const seenPrimaryTerms = new Set();
+  const seenPrimaryVisualSignatures = new Set();
+  const primarySet = [];
 
-  if (bank.length < 9) {
-    console.warn("Banco insuficiente para size", size, bank.length);
-    return { ok: false, usedFallback: false, words: [] };
+  for (const raw of (Array.isArray(words) ? words : [])) {
+    const w = sanitizeWord(raw);
+    if (!w || w.length < 2 || w.length > maxLen) continue;
+
+    const signature = wordVisualSignature(w);
+    if (seenPrimaryTerms.has(w)) continue;
+    if (seenPrimaryVisualSignatures.has(signature)) continue;
+
+    seenPrimaryTerms.add(w);
+    seenPrimaryVisualSignatures.add(signature);
+    primarySet.push(w);
+
+    if (primarySet.length >= 9) break;
   }
 
-  // ✅ 1) tentativas com conjuntos aleatórios (para ficar sempre “diferente”)
-  for (let t = 0; t < RANDOM_SETS_TRIES; t++) {
-    if (token !== genToken) return { ok: false, usedFallback: false, words: [] };
-
-    const randomSet = pickRandomUnique(bank, 9).slice(0, 9);
-    if (randomSet.length !== 9) continue;
-
-    const ok = await generateBoardGuaranteedAsync({ size, words: randomSet, token });
-    if (token !== genToken) return { ok: false, usedFallback: false, words: randomSet };
-
-    if (ok) return { ok: true, usedFallback: false, words: randomSet };
-
-    if (t % YIELD_EVERY === 0) await nextTick();
+  if (primarySet.length !== 9) {
+    console.warn("Nível com palavras inválidas", { size, levelIndex, primarySet });
+    return { ok: false, usedFallback: false, words: primarySet };
   }
 
-  // ✅ 2) fallback determinístico (garantia 100%)
-  for (let t = 0; t < FALLBACK_SETS_TRIES; t++) {
-    if (token !== genToken) return { ok: false, usedFallback: false, words: [] };
+  // 1) Tentativa rápida original: mantém tabuleiros variados sem mudar palavras.
+  const okFast = await generateBoardGuaranteedAsync({ size, words: primarySet, token });
+  if (token !== genToken) return { ok: false, usedFallback: false, words: primarySet };
+  if (okFast) return { ok: true, usedFallback: false, words: primarySet };
 
-    const seed = 200000 + (size * 999) + (levelIndex * 37) + (t * 7919);
-    const alt = pickDeterministicUnique(bank, 9, seed);
+  // 2) Fallback estrutural v2.1.1: reorganiza o tabuleiro, mas NÃO troca termos.
+  // Isso fecha a brecha que permitia uma palavra de outro nível reaparecer.
+  const okLocked = await generateBoardLockedWordsAsync({ size, words: primarySet, token });
+  if (token !== genToken) return { ok: false, usedFallback: false, words: primarySet };
+  if (okLocked) return { ok: true, usedFallback: true, words: primarySet };
 
-    if (alt.length !== 9) continue;
-    if (alt.some(w => w.length > maxLen)) continue;
+  return { ok: false, usedFallback: false, words: primarySet };
+}
 
-    const ok = await generateBoardGuaranteedAsync({ size, words: alt, token });
-    if (token !== genToken) return { ok: false, usedFallback: false, words: alt };
 
-    if (ok) return { ok: true, usedFallback: true, words: alt };
+async function generateBoardLockedWordsAsync({ size, words, token }) {
+  const ordered = [...words].sort((a, b) => b.length - a.length || a.localeCompare(b));
+  const workGrid = Array.from({ length: size }, () => Array(size).fill(""));
+  const workPlacements = [];
+  let steps = 0;
 
-    if (t % YIELD_EVERY === 0) await nextTick();
+  async function backtrack(idx) {
+    if (token !== genToken) return false;
+    if (steps > MAX_LOCKED_BACKTRACK_STEPS) return false;
+
+    if (idx >= ordered.length) {
+      grid = workGrid.map(row => row.slice());
+      placements = workPlacements.map(p => ({
+        word: p.word,
+        cells: p.cells.map(c => ({ x: c.x, y: c.y })),
+        hint: { x: p.hint.x, y: p.hint.y }
+      }));
+      return true;
+    }
+
+    const word = ordered[idx];
+    const options = buildLockedPlacementOptions(workGrid, word, size);
+
+    for (const option of options) {
+      if (token !== genToken) return false;
+
+      const written = applyLockedPlacement(workGrid, option);
+      workPlacements.push({ word, cells: option.cells, hint: option.hint });
+
+      steps++;
+      if (steps % 260 === 0) await nextTick();
+
+      if (await backtrack(idx + 1)) return true;
+
+      workPlacements.pop();
+      undoLockedPlacement(workGrid, written);
+    }
+
+    return false;
   }
 
-  // Se chegou aqui, não achou conjunto que encaixa (muito improvável com banco adequado)
-  // Mantém contrato do app: falha controlada
-  const safe = (Array.isArray(words) ? words : []).map(sanitizeWord).filter(Boolean).slice(0, 9);
-  return { ok: false, usedFallback: false, words: safe };
+  return backtrack(0);
+}
+
+function buildLockedPlacementOptions(workGrid, word, size) {
+  const out = [];
+  const forms = [
+    { letters: word.split(""), isReversed: false },
+    { letters: word.split("").reverse(), isReversed: true }
+  ];
+
+  for (const form of forms) {
+    for (const dir of DIRS) {
+      const len = form.letters.length;
+
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const endX = x + dir[0] * (len - 1);
+          const endY = y + dir[1] * (len - 1);
+          if (endX < 0 || endY < 0 || endX >= size || endY >= size) continue;
+
+          const candidate = canPlaceLocked(workGrid, x, y, dir, form.letters, size);
+          if (!candidate.ok) continue;
+
+          const cells = [];
+          for (let i = 0; i < len; i++) {
+            cells.push({ x: x + dir[0] * i, y: y + dir[1] * i });
+          }
+
+          const hintIndex = form.isReversed ? (len - 1) : 0;
+          out.push({
+            word,
+            letters: form.letters,
+            dir,
+            x,
+            y,
+            cells,
+            hint: { x: x + dir[0] * hintIndex, y: y + dir[1] * hintIndex },
+            score: candidate.overlaps
+          });
+        }
+      }
+    }
+  }
+
+  return out.sort((a, b) => b.score - a.score || a.cells.length - b.cells.length);
+}
+
+function canPlaceLocked(workGrid, x, y, dir, letters, size) {
+  let overlaps = 0;
+
+  for (let i = 0; i < letters.length; i++) {
+    const nx = x + dir[0] * i;
+    const ny = y + dir[1] * i;
+    if (nx < 0 || ny < 0 || nx >= size || ny >= size) return { ok: false, overlaps: 0 };
+
+    const existing = workGrid[ny][nx];
+    if (existing && existing !== letters[i]) return { ok: false, overlaps: 0 };
+    if (existing === letters[i]) overlaps++;
+  }
+
+  return { ok: true, overlaps };
+}
+
+function applyLockedPlacement(workGrid, option) {
+  const written = [];
+
+  for (let i = 0; i < option.letters.length; i++) {
+    const cell = option.cells[i];
+    if (!workGrid[cell.y][cell.x]) {
+      workGrid[cell.y][cell.x] = option.letters[i];
+      written.push({ x: cell.x, y: cell.y });
+    }
+  }
+
+  return written;
+}
+
+function undoLockedPlacement(workGrid, written) {
+  for (const cell of written) {
+    workGrid[cell.y][cell.x] = "";
+  }
 }
 
 async function generateBoardGuaranteedAsync({ size, words, token }) {
@@ -1022,6 +1369,23 @@ function clearSelection() {
   selectionVector = null;
 }
 
+function selectedPathMatchesPlacement(selectedPath, placementCells) {
+  if (!Array.isArray(selectedPath) || !Array.isArray(placementCells)) return false;
+  if (selectedPath.length !== placementCells.length) return false;
+
+  const sameForward = selectedPath.every((cell, idx) =>
+    cell.x === placementCells[idx].x && cell.y === placementCells[idx].y
+  );
+  if (sameForward) return true;
+
+  const sameBackward = selectedPath.every((cell, idx) => {
+    const opposite = placementCells[placementCells.length - 1 - idx];
+    return cell.x === opposite.x && cell.y === opposite.y;
+  });
+
+  return sameBackward;
+}
+
 function validateSelection() {
   if (selectedCells.length < 2) {
     clearSelection();
@@ -1034,8 +1398,15 @@ function validateSelection() {
   const selectedWord = selectedCells.map(c => c.textContent).join("");
   const reversed = selectedWord.split("").reverse().join("");
 
+  const selectedPath = selectedCells.map(c => ({
+    x: Number(c.dataset.x),
+    y: Number(c.dataset.y)
+  }));
+
   const match = placements.find(p =>
-    !foundWords.has(p.word) && (p.word === selectedWord || p.word === reversed)
+    !foundWords.has(p.word) &&
+    (p.word === selectedWord || p.word === reversed) &&
+    selectedPathMatchesPlacement(selectedPath, p.cells)
   );
 
   if (match) {
