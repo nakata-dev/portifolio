@@ -15095,3 +15095,4285 @@ html[data-caderno-theme="light"] .diario321ToneDeleteInline button[data-confirm-
     min-width:38px !important;
   }
 }
+
+/* =========================================================
+   DIÁRIO321 4.17.0-R — Oficina Viva inspirada no preview
+   Visual premium, cards claros, IA manual e desafios 360°.
+   Não altera motor de kana/kanji nem ponte com NIHONGO321.
+   ========================================================= */
+
+.appMain--diarioModern{
+  width:min(100%, 980px);
+  margin:0 auto;
+  padding:14px 12px 92px;
+}
+
+.diario321ModernNotebook{
+  display:grid;
+  gap:14px;
+  width:min(100%, 760px);
+  margin:0 auto;
+}
+
+.diario321ModernHero{
+  position:relative;
+  min-height:330px;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:32px;
+  overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,.34);
+  background:
+    linear-gradient(180deg, rgba(6,19,44,.10), rgba(6,16,36,.92)),
+    url("../img/banner-hero-nihongo321.png") center/cover no-repeat;
+  isolation:isolate;
+}
+
+.diario321ModernHeroShade{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(420px 260px at 10% 20%, rgba(255,165,45,.20), transparent 62%),
+    linear-gradient(90deg, rgba(4,18,43,.92), rgba(4,18,43,.44) 52%, rgba(4,18,43,.18));
+  z-index:0;
+}
+
+.diario321ModernHeroTop,
+.diario321ModernHeroText{
+  position:relative;
+  z-index:1;
+}
+
+.diario321ModernHeroTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:18px 18px 0;
+}
+
+.diario321ModernBrand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.diario321ModernBrand img{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  box-shadow:0 10px 22px rgba(0,0,0,.28);
+}
+
+.diario321ModernBrand span{
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+
+.diario321ModernBrand b{
+  color:#fffaf2;
+  font-size:18px;
+  letter-spacing:-.03em;
+  line-height:1;
+}
+
+.diario321ModernBrand small{
+  color:rgba(255,255,255,.78);
+  font-size:11px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.diario321ModernStreak{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-height:42px;
+  padding:9px 13px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:16px;
+  background:rgba(3,21,57,.64);
+  color:#fff;
+  font-weight:950;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.diario321ModernHeroText{
+  display:grid;
+  gap:8px;
+  max-width:510px;
+  padding:54px 22px 26px;
+}
+
+.diario321NotebookIcon{
+  width:42px;
+  height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  background:linear-gradient(135deg, #ffb23f, #ff7a2f);
+  box-shadow:0 14px 26px rgba(255,122,47,.28);
+  font-size:24px;
+}
+
+.diario321ModernHero h1{
+  margin:0;
+  color:#fff;
+  font-size:clamp(44px, 11vw, 66px);
+  line-height:.9;
+  letter-spacing:-.08em;
+  text-shadow:0 8px 24px rgba(0,0,0,.32);
+}
+
+.diario321ModernHero h1 span{
+  color:#ffb23f;
+}
+
+.diario321ModernHero p{
+  max-width:11.5em;
+  margin:0;
+  color:#fff;
+  font-size:clamp(25px, 7vw, 39px);
+  line-height:1.08;
+  font-weight:950;
+  letter-spacing:-.055em;
+  text-wrap:balance;
+  text-shadow:0 10px 26px rgba(0,0,0,.42);
+}
+
+.diario321ModernHero p strong{
+  color:#ffb23f;
+}
+
+.diario321PlayPanel{
+  display:grid;
+  gap:12px;
+  margin-top:-50px;
+  position:relative;
+  z-index:3;
+}
+
+.diario321PlayQuestion{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:14px;
+  min-height:92px;
+  padding:16px;
+  border:1px solid rgba(15,39,79,.12);
+  border-radius:24px;
+  background:linear-gradient(135deg, #fff8e9, #fff2dc);
+  color:#081d42;
+  box-shadow:0 18px 34px rgba(0,0,0,.18);
+}
+
+.diario321SunIcon{
+  width:46px;
+  height:46px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  color:#ff7a2f;
+  font-size:38px;
+  line-height:1;
+}
+
+.diario321PlayQuestion b{
+  font-size:clamp(18px, 4.5vw, 26px);
+  line-height:1.16;
+  letter-spacing:-.035em;
+}
+
+.diario321PlayQuestion em{
+  color:#ff742f;
+  font-style:normal;
+}
+
+.diario321PlayQuestion button{
+  width:60px;
+  height:60px;
+  border:0;
+  border-radius:50%;
+  background:#073273;
+  color:#fff;
+  font-size:24px;
+  box-shadow:0 14px 28px rgba(7,50,115,.22);
+}
+
+.diario321SeedCard{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:14px;
+  padding:14px;
+  border:1px solid rgba(116,178,255,.28);
+  border-radius:22px;
+  background:
+    radial-gradient(220px 160px at 10% 0%, rgba(255,178,63,.13), transparent 70%),
+    linear-gradient(135deg, rgba(5,48,105,.96), rgba(0,28,69,.98));
+  box-shadow:0 18px 38px rgba(0,0,0,.22);
+}
+
+.diario321SeedKanji{
+  width:98px;
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.82);
+  border-radius:18px;
+  background:linear-gradient(180deg, #fffaf2, #f3e9dc);
+  color:#071d45;
+  font-size:clamp(35px, 11vw, 54px);
+  font-weight:950;
+  line-height:1;
+  letter-spacing:-.08em;
+}
+
+.diario321SeedMeta{
+  display:grid;
+  gap:4px;
+  min-width:0;
+}
+
+.diario321SeedMeta strong{
+  color:#ffb23f;
+  font-size:clamp(27px, 7vw, 39px);
+  line-height:1;
+  letter-spacing:-.045em;
+}
+
+.diario321SeedMeta span{
+  color:#f7fbff;
+  font-size:clamp(18px, 4.5vw, 25px);
+  font-weight:850;
+}
+
+.diario321SeedAudio{
+  width:42px;
+  height:42px;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:14px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+}
+
+.diario321SeedCard img{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  box-shadow:0 12px 24px rgba(0,0,0,.26);
+}
+
+.diario321SeedSetup{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;
+  background:rgba(255,255,255,.052);
+  overflow:hidden;
+}
+
+.diario321SeedSetup summary{
+  min-height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:13px 15px;
+  color:var(--text);
+  font-weight:950;
+  cursor:pointer;
+}
+
+.diario321SeedSetupGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:0 13px 13px;
+}
+
+.diario321SeedSetupGrid label{
+  display:grid;
+  gap:6px;
+  color:var(--muted2);
+  font-size:12px;
+  font-weight:900;
+}
+
+.diario321SeedSetupGrid input{
+  width:100%;
+  min-height:48px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:15px;
+  background:rgba(255,255,255,.07);
+  color:var(--text);
+  padding:10px 12px;
+  font-weight:900;
+}
+
+.diario321SeedOpenBtn{
+  grid-column:1 / -1;
+  min-height:52px;
+  border:0;
+  border-radius:16px;
+  background:linear-gradient(135deg, #ffad34, #ff742f);
+  color:#fffaf2;
+  font-weight:950;
+}
+
+.diario321ModernCard{
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(255,248,237,.96), rgba(255,243,229,.92));
+  color:#071d45;
+  box-shadow:0 18px 34px rgba(0,0,0,.16);
+  overflow:hidden;
+}
+
+.diario321ModernCardHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:15px 18px 10px;
+}
+
+.diario321ModernCardHead span{
+  color:#071d45;
+  font-size:18px;
+  font-weight:950;
+  letter-spacing:-.025em;
+}
+
+.diario321ModernCardHead small{
+  color:#526174;
+  font-size:12px;
+  font-weight:900;
+}
+
+.diario321SeedChips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 18px 16px;
+}
+
+.diario321SeedChips button{
+  min-height:38px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid rgba(7,29,69,.12);
+  border-radius:13px;
+  background:#f7f9ff;
+  color:#0b2758;
+  padding:8px 11px;
+  font-size:13px;
+  font-weight:950;
+  box-shadow:0 6px 14px rgba(12,37,79,.06);
+}
+
+.diario321SeedChips button.is-active{
+  border-color:rgba(255,122,47,.38);
+  background:linear-gradient(135deg, #ff9f38, #ff742f);
+  color:#fff;
+}
+
+.diario321WritingCard{
+  padding-bottom:16px;
+}
+
+.diario321WritingGrid{
+  display:grid;
+  gap:8px;
+  margin:0 16px 14px;
+  border:1px solid rgba(7,29,69,.16);
+  border-radius:16px;
+  overflow:hidden;
+  background:rgba(255,255,255,.58);
+}
+
+.diario321ModernField{
+  display:grid;
+  grid-template-columns:118px minmax(0,1fr);
+  gap:0;
+  margin:0;
+  border-bottom:1px solid rgba(7,29,69,.12);
+}
+
+.diario321ModernField:last-child{
+  border-bottom:0;
+}
+
+.diario321ModernField span{
+  display:flex;
+  align-items:center;
+  padding:11px 12px;
+  color:#071d45;
+  font-size:14px;
+  font-weight:950;
+  background:rgba(7,29,69,.035);
+  border-right:1px solid rgba(7,29,69,.12);
+}
+
+.diario321ModernField small{
+  display:none;
+}
+
+.diario321ModernField textarea{
+  width:100%;
+  min-height:46px;
+  height:46px;
+  resize:vertical;
+  border:0;
+  outline:0;
+  color:#071d45;
+  background:transparent;
+  padding:11px 12px;
+  font-size:16px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.diario321ModernField--pt textarea,
+.diario321ModernField--romaji textarea{
+  min-height:50px;
+}
+
+.diario321ToneBox--modern{
+  margin:0 16px 14px;
+  border:1px solid rgba(7,29,69,.12);
+  border-radius:18px;
+  background:rgba(255,255,255,.64);
+  padding:12px;
+}
+
+.diario321ToneBox--modern > span{
+  display:block;
+  margin:0 0 8px;
+  color:#071d45;
+  font-weight:950;
+}
+
+.diario321ToneChoices--modern{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.diario321ToneChoices--modern .diario321ToneBtn,
+.diario321ToneChoices--modern .diario321ToneAddBtn{
+  min-height:40px;
+  border-radius:13px;
+}
+
+.diario321PrimaryBtn--wide{
+  width:calc(100% - 32px);
+  margin:0 16px;
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:17px;
+}
+
+.diario321AIButtons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:0 18px 18px;
+}
+
+.diario321AIButton{
+  min-height:74px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border:0;
+  border-radius:16px;
+  color:#fff;
+  font-size:15px;
+  line-height:1.18;
+  font-weight:950;
+  text-align:left;
+  box-shadow:0 14px 24px rgba(0,0,0,.15);
+}
+
+.diario321AIButton span{
+  font-size:24px;
+}
+
+.diario321AIButton--copy{
+  background:linear-gradient(135deg, #073273, #04479a);
+}
+
+.diario321AIButton--paste{
+  background:linear-gradient(135deg, #ff9a24, #ff6b13);
+}
+
+.diario321ChallengeGrid{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:8px;
+  padding:0 16px 18px;
+}
+
+.diario321ChallengeGrid button{
+  min-height:76px;
+  display:grid;
+  place-items:center;
+  gap:5px;
+  border:1px solid rgba(7,29,69,.12);
+  border-radius:16px;
+  background:linear-gradient(180deg, #fff, #f7f1e9);
+  color:#10224a;
+  padding:8px 4px;
+  font-weight:950;
+}
+
+.diario321ChallengeGrid em{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  border-radius:11px;
+  background:#eef5ff;
+  color:#0b3d83;
+  font-style:normal;
+  font-size:20px;
+}
+
+.diario321ChallengeGrid span{
+  font-size:11px;
+  line-height:1.05;
+}
+
+.diario321ProgressBody{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 78px;
+  align-items:center;
+  gap:14px;
+  padding:0 16px 16px;
+}
+
+.diario321ProgressBadges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.diario321ProgressBadges span{
+  min-height:34px;
+  display:inline-flex;
+  align-items:center;
+  border:1px solid rgba(7,29,69,.10);
+  border-radius:13px;
+  background:#fff9ef;
+  color:#10224a;
+  padding:7px 10px;
+  font-size:13px;
+  font-weight:900;
+}
+
+.diario321ProgressRing{
+  --p:0;
+  width:70px;
+  height:70px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:
+    radial-gradient(circle closest-side, #fff9ef 73%, transparent 75%),
+    conic-gradient(#ff9f24 calc(var(--p) * 1%), #eadfd0 0);
+  color:#10224a;
+  font-weight:950;
+}
+
+.diario321ActionDock{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.diario321ActionDock button{
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border:0;
+  border-radius:18px;
+  color:#fff;
+  padding:10px 12px;
+  font-size:18px;
+  font-weight:950;
+  line-height:1.12;
+  box-shadow:0 16px 30px rgba(0,0,0,.20);
+}
+
+.diario321ActionSave{
+  background:linear-gradient(135deg, #073273, #0750ac);
+}
+
+.diario321ActionTrain{
+  background:linear-gradient(135deg, #ff9f24, #ff6b13);
+}
+
+.diario321ActionDock span{
+  font-size:24px;
+}
+
+.diario321ModernLearningShelf{
+  display:grid;
+  gap:12px;
+}
+
+.appMain--diarioModern .diario321PracticeEntries,
+.appMain--diarioModern .diario321QuickGuide,
+.appMain--diarioModern .diario321DiaryWhy{
+  border-radius:24px;
+  box-shadow:0 18px 34px rgba(0,0,0,.14);
+}
+
+html[data-caderno-theme="light"] .diario321ModernHero{
+  border-color:rgba(7,29,69,.12);
+  box-shadow:0 24px 60px rgba(38,67,108,.16);
+}
+
+html[data-caderno-theme="light"] .diario321SeedCard{
+  box-shadow:0 18px 34px rgba(38,67,108,.16);
+}
+
+html[data-caderno-theme="light"] .diario321SeedSetup{
+  background:rgba(255,255,255,.72);
+  border-color:rgba(31,59,103,.14);
+}
+
+html[data-caderno-theme="light"] .diario321SeedSetup summary,
+html[data-caderno-theme="light"] .diario321SeedSetupGrid label{
+  color:#10224a;
+}
+
+html[data-caderno-theme="light"] .diario321SeedSetupGrid input{
+  background:#fffdf6;
+  border-color:rgba(31,59,103,.14);
+  color:#10224a;
+}
+
+@media (max-width:680px){
+  .appMain--diarioModern{
+    padding:10px 10px 86px;
+  }
+
+  .diario321ModernNotebook{
+    gap:12px;
+  }
+
+  .diario321ModernHero{
+    min-height:315px;
+    border-radius:28px;
+  }
+
+  .diario321ModernHeroTop{
+    padding:15px 14px 0;
+  }
+
+  .diario321ModernBrand img{
+    width:42px;
+    height:42px;
+  }
+
+  .diario321ModernBrand b{
+    font-size:16px;
+  }
+
+  .diario321ModernBrand small{
+    font-size:9px;
+  }
+
+  .diario321ModernStreak{
+    min-height:38px;
+    padding:8px 10px;
+  }
+
+  .diario321ModernHeroText{
+    padding:48px 17px 24px;
+  }
+
+  .diario321PlayPanel{
+    margin-top:-42px;
+  }
+
+  .diario321PlayQuestion{
+    min-height:86px;
+    gap:10px;
+    padding:13px;
+    border-radius:22px;
+  }
+
+  .diario321PlayQuestion button{
+    width:54px;
+    height:54px;
+  }
+
+  .diario321SeedCard{
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:10px;
+  }
+
+  .diario321SeedKanji{
+    width:86px;
+    min-height:82px;
+  }
+
+  .diario321SeedCard img{
+    display:none;
+  }
+
+  .diario321SeedSetupGrid{
+    grid-template-columns:1fr;
+  }
+
+  .diario321AIButtons,
+  .diario321ActionDock{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .diario321AIButton{
+    min-height:68px;
+    font-size:13px;
+    text-align:center;
+    flex-direction:column;
+    gap:5px;
+  }
+
+  .diario321ChallengeGrid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+
+  .diario321ProgressBody{
+    grid-template-columns:minmax(0,1fr) 70px;
+  }
+
+  .diario321ModernField{
+    grid-template-columns:98px minmax(0,1fr);
+  }
+
+  .diario321ActionDock button{
+    min-height:60px;
+    font-size:15px;
+  }
+}
+
+@media (max-width:430px){
+  .diario321ModernHero{
+    min-height:300px;
+  }
+
+  .diario321ModernHeroText{
+    padding-top:40px;
+  }
+
+  .diario321ModernHero h1{
+    font-size:42px;
+  }
+
+  .diario321ModernHero p{
+    font-size:26px;
+  }
+
+  .diario321SunIcon{
+    display:none;
+  }
+
+  .diario321PlayQuestion{
+    grid-template-columns:1fr auto;
+  }
+
+  .diario321SeedMeta strong{
+    font-size:28px;
+  }
+
+  .diario321SeedMeta span{
+    font-size:18px;
+  }
+
+  .diario321ModernCardHead{
+    padding:14px 14px 9px;
+  }
+
+  .diario321SeedChips,
+  .diario321AIButtons,
+  .diario321ChallengeGrid,
+  .diario321ProgressBody{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  .diario321WritingGrid,
+  .diario321ToneBox--modern{
+    margin-left:14px;
+    margin-right:14px;
+  }
+
+  .diario321ModernField{
+    grid-template-columns:88px minmax(0,1fr);
+  }
+
+  .diario321ModernField span{
+    font-size:12px;
+    padding:10px 9px;
+  }
+
+  .diario321ModernField textarea{
+    font-size:15px;
+    padding:10px;
+  }
+
+  .diario321ChallengeGrid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .diario321ActionDock{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.17.1-R — Aproximação fiel do preview
+   - remove sensação de header duplicado quando embutido
+   - reduz títulos para não cortar no celular
+   - deixa hero, cards e espaçamentos mais próximos do mockup
+   ========================================================= */
+html,
+body{
+  background:
+    radial-gradient(700px 520px at 8% 0%, rgba(255,170,58,.18), transparent 60%),
+    radial-gradient(760px 520px at 100% 8%, rgba(80,145,230,.18), transparent 60%),
+    linear-gradient(180deg, #06101f, #071936 42%, #061325 100%) !important;
+}
+
+.appMain--diarioModern{
+  width:100%;
+  max-width:none;
+  padding:14px 10px 96px;
+  background:
+    radial-gradient(520px 340px at 8% 4%, rgba(255,155,45,.16), transparent 62%),
+    radial-gradient(620px 420px at 96% 0%, rgba(93,162,255,.13), transparent 64%),
+    linear-gradient(180deg, rgba(5,13,31,.94), rgba(6,18,42,.96));
+}
+
+.diario321ModernNotebook{
+  width:min(100%, 720px);
+  gap:13px;
+}
+
+.diario321ModernHero{
+  min-height:342px;
+  border-radius:30px;
+  background:
+    linear-gradient(180deg, rgba(6,19,44,.05), rgba(6,16,36,.92)),
+    url("../img/banner-hero-nihongo321.png") center/cover no-repeat;
+}
+
+.diario321ModernHeroShade{
+  background:
+    radial-gradient(380px 230px at 12% 24%, rgba(255,165,45,.17), transparent 62%),
+    linear-gradient(90deg, rgba(4,18,43,.94), rgba(4,18,43,.58) 48%, rgba(4,18,43,.18));
+}
+
+.diario321ModernHeroTop{
+  padding:16px 16px 0;
+}
+
+.diario321ModernHeroActions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  flex:0 0 auto;
+}
+
+.diario321ModernBack,
+.diario321ModernTheme{
+  min-height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;
+  background:rgba(3,21,57,.58);
+  color:#fffaf2;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10), 0 10px 22px rgba(0,0,0,.18);
+  text-decoration:none;
+  font-weight:950;
+}
+
+.diario321ModernBack{
+  padding:7px 11px;
+  font-size:12px;
+}
+
+.diario321ModernTheme{
+  width:38px;
+  padding:0;
+  font-size:16px;
+}
+
+.diario321ModernStreak{
+  min-height:38px;
+  padding:8px 11px;
+}
+
+.diario321ModernHeroText{
+  max-width:430px;
+  padding:42px 21px 78px;
+}
+
+.diario321NotebookIcon{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  font-size:22px;
+}
+
+.diario321ModernHero h1{
+  font-size:clamp(38px, 8.8vw, 56px);
+  line-height:.94;
+  letter-spacing:-.072em;
+}
+
+.diario321ModernHero p{
+  max-width:12.4em;
+  font-size:clamp(22px, 5.1vw, 32px);
+  line-height:1.12;
+  letter-spacing:-.045em;
+}
+
+.diario321PlayPanel{
+  margin-top:-46px;
+}
+
+.diario321PlayQuestion{
+  min-height:84px;
+  border-radius:23px;
+}
+
+.diario321PlayQuestion b{
+  font-size:clamp(18px, 4.2vw, 24px);
+}
+
+.diario321SeedCard{
+  border-radius:23px;
+}
+
+.diario321ModernCard{
+  border-radius:23px;
+}
+
+@media (max-width:680px){
+  .appMain--diarioModern{
+    padding:10px 8px 86px;
+  }
+
+  .diario321ModernNotebook{
+    gap:12px;
+  }
+
+  .diario321ModernHero{
+    min-height:338px;
+    border-radius:28px;
+  }
+
+  .diario321ModernHeroTop{
+    padding:14px 13px 0;
+  }
+
+  .diario321ModernBrand img{
+    width:40px;
+    height:40px;
+  }
+
+  .diario321ModernBrand b{
+    font-size:15px;
+  }
+
+  .diario321ModernBrand small{
+    font-size:9px;
+  }
+
+  .diario321ModernBack{
+    min-height:34px;
+    padding:6px 9px;
+    font-size:11px;
+  }
+
+  .diario321ModernTheme{
+    width:34px;
+    min-height:34px;
+  }
+
+  .diario321ModernStreak{
+    min-height:34px;
+    padding:7px 9px;
+  }
+
+  .diario321ModernHeroText{
+    padding:38px 17px 76px;
+  }
+
+  .diario321ModernHero h1{
+    font-size:clamp(37px, 8.2vw, 46px);
+  }
+
+  .diario321ModernHero p{
+    max-width:12.2em;
+    font-size:clamp(21px, 5vw, 27px);
+    line-height:1.13;
+  }
+
+  .diario321PlayPanel{
+    margin-top:-38px;
+  }
+
+  .diario321PlayQuestion{
+    min-height:80px;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:10px;
+    padding:12px 13px;
+  }
+
+  .diario321PlayQuestion button{
+    width:54px;
+    height:54px;
+  }
+
+  .diario321SeedKanji{
+    width:84px;
+    min-height:80px;
+    font-size:42px;
+  }
+}
+
+@media (max-width:430px){
+  .diario321ModernHero{
+    min-height:332px;
+  }
+
+  .diario321ModernHeroActions{
+    gap:6px;
+  }
+
+  .diario321ModernBack{
+    padding:6px 8px;
+  }
+
+  .diario321ModernTheme{
+    display:none;
+  }
+
+  .diario321ModernHeroText{
+    padding:36px 16px 78px;
+  }
+
+  .diario321ModernHero h1{
+    font-size:38px;
+  }
+
+  .diario321ModernHero p{
+    max-width:11.8em;
+    font-size:22px;
+  }
+
+  .diario321PlayQuestion b{
+    font-size:19px;
+  }
+
+  .diario321SunIcon{
+    display:inline-flex;
+    width:40px;
+    height:40px;
+    font-size:32px;
+  }
+
+  .diario321PlayQuestion{
+    grid-template-columns:auto minmax(0,1fr) auto;
+    border-radius:22px;
+  }
+
+  .diario321PlayQuestion button{
+    width:50px;
+    height:50px;
+  }
+}
+
+@media (max-width:370px){
+  .diario321ModernBrand small,
+  .diario321ModernTheme{
+    display:none;
+  }
+
+  .diario321ModernStreak{
+    padding-inline:8px;
+  }
+
+  .diario321ModernHero h1{
+    font-size:35px;
+  }
+
+  .diario321ModernHero p{
+    font-size:20px;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.17.2-R — Refino Visual + Biblioteca Limpa
+   - trabalhador mais presente no hero
+   - seletor de tom legível
+   - botões de IA com respiro profissional
+   - Minhas frases em biblioteca compacta com expansão sob demanda
+   ========================================================= */
+
+.diario321ModernHero{
+  min-height:350px !important;
+  background:
+    linear-gradient(180deg, rgba(5,14,34,.02), rgba(4,13,32,.64) 76%, rgba(4,13,32,.88)),
+    url("../img/banner-hero-nihongo321.png") center center/cover no-repeat !important;
+}
+
+.diario321ModernHeroShade{
+  background:
+    radial-gradient(420px 250px at 70% 32%, rgba(255,186,96,.20), transparent 66%),
+    linear-gradient(90deg, rgba(3,13,33,.94) 0%, rgba(3,13,33,.74) 36%, rgba(3,13,33,.22) 68%, rgba(3,13,33,.08) 100%) !important;
+}
+
+.diario321ModernHero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(300px 210px at 63% 44%, rgba(255,255,255,.10), transparent 72%),
+    linear-gradient(180deg, transparent 0%, rgba(4,13,32,.20) 100%);
+  mix-blend-mode:screen;
+  opacity:.55;
+}
+
+.diario321ModernHeroText,
+.diario321ModernHeroTop{
+  z-index:2 !important;
+}
+
+.diario321ModernHeroText{
+  padding-top:34px !important;
+  max-width:430px !important;
+}
+
+.diario321ModernHero h1,
+.diario321ModernHero p{
+  text-shadow:0 8px 24px rgba(0,0,0,.48), 0 2px 8px rgba(0,0,0,.46) !important;
+}
+
+.diario321ToneBox--modern{
+  margin:0 16px 16px !important;
+  padding:14px !important;
+  border:1px solid rgba(12,42,89,.16) !important;
+  border-radius:20px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,250,239,.86)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.94), 0 8px 18px rgba(12,37,79,.07) !important;
+}
+
+.diario321ToneBox--modern > span{
+  display:flex !important;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:10px;
+  margin:0 0 11px !important;
+  color:#071d45 !important;
+  font-size:12px !important;
+  letter-spacing:.10em !important;
+  text-transform:uppercase !important;
+}
+
+.diario321ToneBox--modern > span::after{
+  content:"escolha o tom da frase";
+  color:#526174;
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:0;
+  text-transform:none;
+}
+
+.diario321ToneChoices--modern{
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0,1fr)) auto !important;
+  gap:10px !important;
+  align-items:stretch !important;
+}
+
+.diario321ToneChoices--modern .diario321ToneOption{
+  min-width:0 !important;
+  display:grid !important;
+  gap:7px !important;
+  align-content:start !important;
+  padding:10px 10px 9px !important;
+  border:1px solid rgba(7,29,69,.13) !important;
+  border-radius:16px !important;
+  background:linear-gradient(180deg, #ffffff, #fff8eb) !important;
+  box-shadow:0 7px 18px rgba(12,37,79,.06) !important;
+}
+
+.diario321ToneChoices--modern .diario321ToneOption:has(.diario321ToneBtn.is-active){
+  border-color:rgba(255,154,36,.52) !important;
+  background:linear-gradient(180deg, #fff5d6, #fffdfa) !important;
+  box-shadow:0 0 0 2px rgba(255,154,36,.10), 0 8px 18px rgba(255,154,36,.10) !important;
+}
+
+.diario321ToneChoices--modern .diario321ToneCustomRow{
+  display:flex !important;
+  gap:7px !important;
+  align-items:center !important;
+}
+
+.diario321ToneChoices--modern .diario321ToneBtn{
+  width:100% !important;
+  min-height:38px !important;
+  border:0 !important;
+  border-radius:12px !important;
+  background:transparent !important;
+  color:#10224a !important;
+  font-size:15px !important;
+  font-weight:1000 !important;
+  box-shadow:none !important;
+}
+
+.diario321ToneChoices--modern .diario321ToneBtn.is-active{
+  color:#ba6308 !important;
+}
+
+.diario321ToneChoices--modern .diario321ToneOption small{
+  min-height:0 !important;
+  color:#53637a !important;
+  font-size:12px !important;
+  line-height:1.22 !important;
+  font-weight:850 !important;
+}
+
+.diario321ToneChoices--modern .diario321ToneAddBtn{
+  width:48px !important;
+  min-width:48px !important;
+  height:100% !important;
+  min-height:74px !important;
+  border:1px solid rgba(255,154,36,.28) !important;
+  border-radius:16px !important;
+  background:linear-gradient(180deg, #fff9ea, #fff0d4) !important;
+  color:#cf7215 !important;
+  font-size:22px !important;
+  box-shadow:0 7px 18px rgba(255,154,36,.08) !important;
+}
+
+.diario321AIButtons--refined{
+  gap:14px !important;
+  padding:0 18px 18px !important;
+}
+
+.diario321AIButtons--refined .diario321AIButton{
+  min-height:82px !important;
+  display:grid !important;
+  grid-template-columns:34px minmax(0,1fr) !important;
+  grid-template-rows:auto auto !important;
+  align-content:center !important;
+  justify-content:stretch !important;
+  column-gap:11px !important;
+  row-gap:3px !important;
+  padding:15px 16px !important;
+  border-radius:18px !important;
+  text-align:left !important;
+  line-height:1.1 !important;
+}
+
+.diario321AIButtons--refined .diario321AIButton span{
+  grid-row:1 / 3;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(255,255,255,.15);
+  font-size:22px !important;
+}
+
+.diario321AIButtons--refined .diario321AIButton b{
+  color:#fff;
+  font-size:16px;
+  line-height:1.05;
+  font-weight:1000;
+  letter-spacing:-.02em;
+  white-space:normal;
+}
+
+.diario321AIButtons--refined .diario321AIButton small{
+  color:rgba(255,255,255,.82);
+  font-size:12px;
+  line-height:1.1;
+  font-weight:850;
+}
+
+.diario321PhraseLibrary{
+  padding:16px !important;
+  border-radius:26px !important;
+  background:linear-gradient(180deg, rgba(8,20,45,.96), rgba(8,18,39,.98)) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+}
+
+.diario321LibraryHead{
+  margin:0 0 12px !important;
+}
+
+.diario321LibraryHead b{
+  color:#fff0b8 !important;
+}
+
+.diario321LibraryStats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin:0 0 12px;
+}
+
+.diario321LibraryStats span{
+  display:grid;
+  gap:2px;
+  min-height:54px;
+  align-content:center;
+  justify-items:center;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:15px;
+  background:rgba(255,255,255,.045);
+}
+
+.diario321LibraryStats b{
+  color:#fff;
+  font-size:18px;
+  line-height:1;
+  font-weight:1000;
+}
+
+.diario321LibraryStats small{
+  color:#b7c3db;
+  font-size:10px;
+  line-height:1;
+  font-weight:900;
+  text-transform:lowercase;
+}
+
+.diario321LibraryList{
+  display:grid;
+  gap:9px;
+  margin-top:12px;
+}
+
+.diario321LibraryItem{
+  padding:0 !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.035)) !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+}
+
+.diario321LibraryItem + .diario321LibraryItem{
+  margin-top:0 !important;
+}
+
+.diario321LibraryDetails{
+  display:block;
+}
+
+.diario321LibrarySummary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px 12px;
+  align-items:center;
+  padding:13px 14px;
+}
+
+.diario321LibrarySummary::-webkit-details-marker{
+  display:none;
+}
+
+.diario321LibrarySummary::after{
+  content:"abrir";
+  grid-column:2;
+  grid-row:1 / 3;
+  align-self:center;
+  min-width:52px;
+  text-align:center;
+  padding:7px 9px;
+  border-radius:999px;
+  border:1px solid rgba(255,216,111,.18);
+  color:#fff0b8;
+  background:rgba(255,216,111,.07);
+  font-size:11px;
+  font-weight:950;
+}
+
+.diario321LibraryDetails[open] .diario321LibrarySummary::after{
+  content:"fechar";
+}
+
+.diario321LibrarySummaryMeta,
+.diario321LibrarySummaryText,
+.diario321LibrarySummaryBadges{
+  min-width:0;
+}
+
+.diario321LibrarySummaryMeta{
+  display:grid;
+  gap:3px;
+}
+
+.diario321LibrarySummaryMeta small{
+  color:#ffd86f !important;
+  font-size:11px !important;
+  line-height:1.1 !important;
+  font-weight:950 !important;
+  opacity:1 !important;
+}
+
+.diario321LibrarySummaryMeta b{
+  color:#e6efff;
+  font-size:12px;
+  line-height:1.1;
+  font-weight:900;
+}
+
+.diario321LibrarySummaryText{
+  grid-column:1 / 2;
+  display:grid;
+  gap:3px;
+}
+
+.diario321LibrarySummaryText strong{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#fff;
+  font-size:18px;
+  line-height:1.18;
+  font-weight:950;
+  letter-spacing:-.025em;
+}
+
+.diario321LibrarySummaryText strong.is-japanese{
+  font-family:"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+  font-size:20px;
+  letter-spacing:.015em;
+}
+
+.diario321LibrarySummaryText em{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#c7d4ea;
+  font-size:13px;
+  line-height:1.15;
+  font-style:normal;
+  font-weight:800;
+}
+
+.diario321LibrarySummaryBadges{
+  grid-column:1 / 3;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.diario321LibrarySummaryBadges .diario321ToneChip{
+  margin:0 !important;
+}
+
+.diario321LibraryState,
+.diario321LibraryStar{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:24px;
+  padding:5px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.045);
+  color:#b7c3db;
+  font-size:10px;
+  line-height:1;
+  font-style:normal;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+.diario321LibraryState.is-done{
+  border-color:rgba(51,216,118,.22);
+  background:rgba(51,216,118,.09);
+  color:#a9f2c6;
+}
+
+.diario321LibraryStar{
+  color:#ffd86f;
+}
+
+.diario321LibraryExpanded{
+  padding:4px 14px 12px !important;
+}
+
+.diario321LibraryExpanded .diario321EntryMain{
+  font-size:clamp(24px, 6vw, 34px) !important;
+  line-height:1.22 !important;
+  margin-top:6px !important;
+}
+
+.diario321LibraryTools{
+  padding:10px 14px 14px !important;
+  border-top:1px solid rgba(255,255,255,.08) !important;
+}
+
+.diario321LibraryItem .diario321DeleteConfirm{
+  margin:0 14px 14px !important;
+}
+
+html[data-caderno-theme="light"] .diario321PhraseLibrary,
+html[data-theme="light"] .diario321PhraseLibrary{
+  background:linear-gradient(180deg, #fffdf7, #fff7e9) !important;
+  border-color:rgba(31,59,103,.16) !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryHead b,
+html[data-theme="light"] .diario321LibraryHead b{
+  color:#071d45 !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryStats span,
+html[data-theme="light"] .diario321LibraryStats span{
+  background:#fff !important;
+  border-color:rgba(31,59,103,.12) !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryStats b,
+html[data-theme="light"] .diario321LibraryStats b{
+  color:#071d45 !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryStats small,
+html[data-theme="light"] .diario321LibraryStats small{
+  color:#526174 !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryItem,
+html[data-theme="light"] .diario321LibraryItem{
+  background:linear-gradient(180deg, #ffffff, #f7f2e9) !important;
+  border-color:rgba(31,59,103,.14) !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibrarySummary::after,
+html[data-theme="light"] .diario321LibrarySummary::after{
+  color:#87520b;
+  background:rgba(255,216,111,.22);
+  border-color:rgba(166,106,10,.18);
+}
+
+html[data-caderno-theme="light"] .diario321LibrarySummaryMeta small,
+html[data-theme="light"] .diario321LibrarySummaryMeta small{
+  color:#8a520b !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibrarySummaryMeta b,
+html[data-theme="light"] .diario321LibrarySummaryMeta b,
+html[data-caderno-theme="light"] .diario321LibrarySummaryText strong,
+html[data-theme="light"] .diario321LibrarySummaryText strong{
+  color:#071d45 !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibrarySummaryText em,
+html[data-theme="light"] .diario321LibrarySummaryText em{
+  color:#394b66 !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryState,
+html[data-theme="light"] .diario321LibraryState{
+  background:#fffaf0;
+  border-color:rgba(31,59,103,.12);
+  color:#526174;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryState.is-done,
+html[data-theme="light"] .diario321LibraryState.is-done{
+  background:#ecfff4;
+  border-color:rgba(15,143,80,.18);
+  color:#0f7f48;
+}
+
+@media (max-width:680px){
+  .diario321ModernHero{
+    min-height:344px !important;
+    background-position:center center !important;
+  }
+
+  .diario321ModernHeroShade{
+    background:
+      radial-gradient(280px 190px at 68% 36%, rgba(255,186,96,.18), transparent 68%),
+      linear-gradient(90deg, rgba(3,13,33,.93) 0%, rgba(3,13,33,.68) 44%, rgba(3,13,33,.18) 76%, rgba(3,13,33,.06) 100%) !important;
+  }
+
+  .diario321ModernHeroText{
+    padding:34px 18px 82px !important;
+  }
+
+  .diario321ToneChoices--modern{
+    grid-template-columns:repeat(2,minmax(0,1fr)) 48px !important;
+  }
+
+  .diario321AIButtons--refined{
+    grid-template-columns:1fr 1fr !important;
+    gap:12px !important;
+    padding-left:16px !important;
+    padding-right:16px !important;
+  }
+
+  .diario321AIButtons--refined .diario321AIButton{
+    min-height:86px !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:auto auto auto !important;
+    justify-items:center !important;
+    text-align:center !important;
+    padding:14px 12px !important;
+  }
+
+  .diario321AIButtons--refined .diario321AIButton span{
+    grid-row:auto;
+  }
+
+  .diario321LibraryStats{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:6px;
+  }
+
+  .diario321LibraryStats span{
+    min-height:48px;
+  }
+
+  .diario321LibraryStats b{
+    font-size:16px;
+  }
+}
+
+@media (max-width:430px){
+  .diario321ModernHero{
+    min-height:342px !important;
+  }
+
+  .diario321ModernHero h1{
+    font-size:38px !important;
+  }
+
+  .diario321ModernHero p{
+    max-width:11.4em !important;
+    font-size:22px !important;
+  }
+
+  .diario321ToneBox--modern{
+    margin-left:14px !important;
+    margin-right:14px !important;
+  }
+
+  .diario321ToneChoices--modern{
+    gap:8px !important;
+  }
+
+  .diario321ToneChoices--modern .diario321ToneOption{
+    padding:9px 7px !important;
+  }
+
+  .diario321ToneChoices--modern .diario321ToneOption small{
+    font-size:11px !important;
+  }
+
+  .diario321AIButtons--refined .diario321AIButton b{
+    font-size:14px !important;
+  }
+
+  .diario321AIButtons--refined .diario321AIButton small{
+    font-size:11px !important;
+  }
+
+  .diario321PhraseLibrary{
+    padding:14px !important;
+  }
+
+  .diario321LibrarySummary{
+    padding:12px !important;
+  }
+
+  .diario321LibrarySummaryText strong{
+    font-size:16px !important;
+  }
+
+  .diario321LibrarySummaryText strong.is-japanese{
+    font-size:18px !important;
+  }
+}
+
+@media (max-width:370px){
+  .diario321LibraryStats{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .diario321ToneBox--modern > span::after{
+    display:none;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.17.5-R — Placeholders claros + romaji guiado
+   - remove CTA global "Enviar para 105x"
+   - treino 105x fica dentro de cada frase
+   - contador segue 14..1, 13..1, 12..1...
+   - guia visual: normal/hiragana, j:/kanji, k:/katakana
+   ========================================================= */
+
+.diario321ModernHero{
+  background:
+    linear-gradient(180deg, rgba(5,14,34,.00), rgba(4,13,32,.42) 68%, rgba(4,13,32,.84)),
+    url("../img/banner-hero-nihongo321.png") 58% center/cover no-repeat !important;
+}
+
+.diario321ModernHeroShade{
+  background:
+    radial-gradient(420px 250px at 61% 38%, rgba(255,207,139,.24), transparent 68%),
+    linear-gradient(90deg, rgba(3,13,33,.95) 0%, rgba(3,13,33,.78) 34%, rgba(3,13,33,.18) 62%, rgba(3,13,33,.02) 100%) !important;
+}
+
+.diario321ModernHero::after{
+  background:
+    radial-gradient(320px 230px at 59% 42%, rgba(255,255,255,.18), transparent 70%),
+    linear-gradient(180deg, transparent 0%, rgba(4,13,32,.12) 100%) !important;
+  opacity:.72 !important;
+}
+
+.diario321ActionDock--single{
+  grid-template-columns:1fr !important;
+}
+
+.diario321ActionDock--single .diario321ActionSave{
+  width:100% !important;
+  min-height:60px !important;
+}
+
+.diario321RomajiSyntaxCard{
+  margin:0 16px 12px;
+  padding:12px;
+  display:grid;
+  gap:10px;
+  border:1px solid rgba(7,29,69,.13);
+  border-radius:18px;
+  background:
+    radial-gradient(240px 110px at 0% 0%, rgba(255,216,111,.18), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.80), rgba(255,255,255,.60));
+  color:#071d45;
+  box-shadow:0 12px 24px rgba(7,29,69,.06);
+}
+
+.diario321RomajiSyntaxCard > div:first-child{
+  display:grid;
+  gap:3px;
+}
+
+.diario321RomajiSyntaxCard b{
+  font-size:14px;
+  line-height:1.1;
+  font-weight:1000;
+  color:#071d45;
+}
+
+.diario321RomajiSyntaxCard small,
+.diario321RomajiSyntaxCard p{
+  margin:0;
+  color:#53627a;
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.diario321RomajiSyntaxRules{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+}
+
+.diario321RomajiSyntaxRules span{
+  min-height:42px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:2px;
+  border-radius:14px;
+  border:1px solid rgba(7,50,115,.12);
+  background:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88);
+}
+
+.diario321RomajiSyntaxRules span b{
+  color:#073273;
+  font-size:13px;
+  line-height:1;
+}
+
+.diario321RomajiSyntaxRules span em{
+  color:#647088;
+  font-size:10px;
+  line-height:1;
+  font-style:normal;
+  font-weight:950;
+  text-transform:lowercase;
+}
+
+.diario321RomajiSyntaxCard p{
+  padding:8px 10px;
+  border-radius:13px;
+  background:rgba(7,29,69,.045);
+  color:#3e4d65;
+  overflow-wrap:anywhere;
+}
+
+
+.diario321WritingHelp{
+  margin:0 16px 12px;
+  padding:13px;
+  display:grid;
+  gap:11px;
+  border:1px solid rgba(7,29,69,.13);
+  border-radius:18px;
+  background:
+    radial-gradient(240px 110px at 0% 0%, rgba(255,216,111,.16), transparent 72%),
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.66));
+  color:#071d45;
+  box-shadow:0 12px 24px rgba(7,29,69,.06);
+}
+
+.diario321WritingHelpHead{
+  display:grid;
+  gap:3px;
+}
+
+.diario321WritingHelpHead b{
+  color:#071d45;
+  font-size:14px;
+  line-height:1.1;
+  font-weight:1000;
+}
+
+.diario321WritingHelpHead small{
+  color:#4d5f78;
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.diario321WritingHelpSteps{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+}
+
+.diario321WritingHelpSteps span{
+  min-height:58px;
+  padding:8px 9px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-areas:
+    "num label"
+    "num text";
+  align-items:center;
+  column-gap:8px;
+  border:1px solid rgba(7,50,115,.12);
+  border-radius:14px;
+  background:#fff;
+}
+
+.diario321WritingHelpSteps span b{
+  grid-area:num;
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:linear-gradient(135deg, #ffb84d, #ff742f);
+  color:#fff;
+  font-size:12px;
+  font-weight:1000;
+}
+
+.diario321WritingHelpSteps span em{
+  grid-area:label;
+  color:#073273;
+  font-size:12px;
+  line-height:1;
+  font-style:normal;
+  font-weight:1000;
+}
+
+.diario321WritingHelpSteps span strong{
+  grid-area:text;
+  color:#5f6c80;
+  font-size:10px;
+  line-height:1.15;
+  font-weight:950;
+}
+
+.diario321ShortcutGuide{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+}
+
+.diario321ShortcutGuide div{
+  min-height:44px;
+  display:grid;
+  gap:2px;
+  align-content:center;
+  padding:8px 10px;
+  border:1px solid rgba(7,50,115,.12);
+  border-radius:14px;
+  background:rgba(7,29,69,.045);
+}
+
+.diario321ShortcutGuide div b{
+  color:#073273;
+  font-size:12px;
+  line-height:1;
+  font-weight:1000;
+}
+
+.diario321ShortcutGuide div span{
+  color:#647088;
+  font-size:10px;
+  line-height:1.1;
+  font-weight:950;
+}
+
+.diario321WritingExample{
+  margin:0;
+  padding:10px 11px;
+  border-radius:13px;
+  background:rgba(7,29,69,.055);
+  color:#384a62;
+  font-size:12px;
+  line-height:1.4;
+  font-weight:850;
+  overflow-wrap:anywhere;
+}
+
+.diario321WritingExample span{
+  display:block;
+  margin-bottom:3px;
+  color:#071d45;
+  font-size:11px;
+  line-height:1.1;
+  font-weight:1000;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+.diario321ModernField textarea::placeholder{
+  color:rgba(7,29,69,.56);
+  opacity:1;
+  font-weight:800;
+}
+
+html[data-caderno-theme="light"] .diario321WritingHelp,
+html[data-theme="light"] .diario321WritingHelp{
+  background:
+    radial-gradient(240px 110px at 0% 0%, rgba(255,216,111,.22), transparent 72%),
+    linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+}
+
+@media (max-width:430px){
+  .diario321WritingHelp{
+    margin-left:14px;
+    margin-right:14px;
+    padding:12px;
+    gap:10px;
+  }
+
+  .diario321WritingHelpSteps,
+  .diario321ShortcutGuide{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+
+  .diario321WritingHelpSteps span{
+    min-height:46px;
+  }
+}
+
+.diario321EntryTrainBtn{
+  min-height:42px;
+  padding:9px 14px;
+  border:1px solid rgba(255,216,111,.30);
+  border-radius:999px;
+  background:linear-gradient(135deg, rgba(255,216,111,.18), rgba(255,122,47,.16));
+  color:#fff0b8;
+  font-size:12px;
+  font-weight:1000;
+  letter-spacing:.01em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.diario321EntryTrainingPanel{
+  margin:4px 14px 12px;
+  padding:14px;
+  border:1px solid rgba(255,216,111,.22);
+  border-radius:20px;
+  background:
+    radial-gradient(280px 160px at 12% 8%, rgba(255,216,111,.15), transparent 68%),
+    linear-gradient(180deg, rgba(4,21,55,.96), rgba(3,14,35,.98));
+  box-shadow:0 18px 34px rgba(0,0,0,.20);
+}
+
+.diario321EntryTrainingHead{
+  display:flex;
+  align-items:start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.diario321EntryTrainingHead div{
+  display:grid;
+  gap:3px;
+}
+
+.diario321EntryTrainingHead small{
+  color:#ffdc84;
+  font-size:11px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.diario321EntryTrainingHead b{
+  color:#fff;
+  font-size:20px;
+  line-height:1;
+  letter-spacing:-.03em;
+}
+
+.diario321EntryTrainingHead > span{
+  min-height:32px;
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  font-size:12px;
+  font-weight:950;
+}
+
+.diario321TrainingCore{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:13px;
+  align-items:center;
+}
+
+.diario321TrainingCounter{
+  width:86px;
+  height:86px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:3px;
+  border-radius:26px;
+  background:linear-gradient(180deg, #fff5d5, #f5bd45);
+  color:#091d42;
+  box-shadow:0 16px 30px rgba(255,173,51,.22), inset 0 1px 0 rgba(255,255,255,.80);
+}
+
+.diario321TrainingCounter strong{
+  font-size:42px;
+  line-height:.9;
+  font-weight:1000;
+  letter-spacing:-.06em;
+}
+
+.diario321TrainingCounter span{
+  font-size:11px;
+  line-height:1;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+.diario321TrainingCounter.is-complete{
+  background:linear-gradient(180deg, #d9ffe8, #56dc87);
+}
+
+.diario321TrainingPhrase{
+  display:grid;
+  gap:5px;
+  min-width:0;
+}
+
+.diario321TrainingPhrase b{
+  color:#fff;
+  font-family:"Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+  font-size:clamp(20px, 5.2vw, 30px);
+  line-height:1.18;
+  font-weight:950;
+  overflow-wrap:anywhere;
+}
+
+.diario321TrainingPhrase em{
+  color:#e3edff;
+  font-size:14px;
+  line-height:1.25;
+  font-style:normal;
+  font-weight:850;
+}
+
+.diario321TrainingPhrase small{
+  color:#aebdda;
+  font-size:12px;
+  line-height:1.25;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+
+.diario321TrainingCycleHint{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin:12px 0 9px;
+  color:#dfe9ff;
+}
+
+.diario321TrainingCycleHint span,
+.diario321TrainingCycleHint small{
+  font-size:12px;
+  line-height:1.2;
+  font-weight:900;
+}
+
+.diario321TrainingCycleHint small{
+  color:#ffdc84;
+}
+
+.diario321TrainingBar{
+  height:10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.diario321TrainingBar span{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg, #ffd86f, #ff7a2f);
+  transition:width .25s ease;
+}
+
+.diario321TrainingActions{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+
+.diario321TrainingActions button{
+  min-height:40px;
+  padding:8px 9px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:14px;
+  background:rgba(255,255,255,.065);
+  color:#eaf2ff;
+  font-size:12px;
+  line-height:1.05;
+  font-weight:950;
+}
+
+.diario321TrainingActions button.is-main{
+  border-color:rgba(255,154,36,.36);
+  background:linear-gradient(135deg, #ffb23f, #ff742f);
+  color:#fffaf2;
+  box-shadow:0 12px 22px rgba(255,122,47,.18);
+}
+
+html[data-caderno-theme="light"] .diario321RomajiSyntaxCard,
+html[data-theme="light"] .diario321RomajiSyntaxCard{
+  background:linear-gradient(180deg, #fffaf0, #fff4e2);
+  border-color:rgba(31,59,103,.14);
+}
+
+html[data-caderno-theme="light"] .diario321EntryTrainBtn,
+html[data-theme="light"] 
+.diario321WritingHelp{
+  margin:0 16px 12px;
+  padding:13px;
+  display:grid;
+  gap:11px;
+  border:1px solid rgba(7,29,69,.13);
+  border-radius:18px;
+  background:
+    radial-gradient(240px 110px at 0% 0%, rgba(255,216,111,.16), transparent 72%),
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.66));
+  color:#071d45;
+  box-shadow:0 12px 24px rgba(7,29,69,.06);
+}
+
+.diario321WritingHelpHead{
+  display:grid;
+  gap:3px;
+}
+
+.diario321WritingHelpHead b{
+  color:#071d45;
+  font-size:14px;
+  line-height:1.1;
+  font-weight:1000;
+}
+
+.diario321WritingHelpHead small{
+  color:#4d5f78;
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.diario321WritingHelpSteps{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+}
+
+.diario321WritingHelpSteps span{
+  min-height:58px;
+  padding:8px 9px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-areas:
+    "num label"
+    "num text";
+  align-items:center;
+  column-gap:8px;
+  border:1px solid rgba(7,50,115,.12);
+  border-radius:14px;
+  background:#fff;
+}
+
+.diario321WritingHelpSteps span b{
+  grid-area:num;
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:linear-gradient(135deg, #ffb84d, #ff742f);
+  color:#fff;
+  font-size:12px;
+  font-weight:1000;
+}
+
+.diario321WritingHelpSteps span em{
+  grid-area:label;
+  color:#073273;
+  font-size:12px;
+  line-height:1;
+  font-style:normal;
+  font-weight:1000;
+}
+
+.diario321WritingHelpSteps span strong{
+  grid-area:text;
+  color:#5f6c80;
+  font-size:10px;
+  line-height:1.15;
+  font-weight:950;
+}
+
+.diario321ShortcutGuide{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:8px;
+}
+
+.diario321ShortcutGuide div{
+  min-height:44px;
+  display:grid;
+  gap:2px;
+  align-content:center;
+  padding:8px 10px;
+  border:1px solid rgba(7,50,115,.12);
+  border-radius:14px;
+  background:rgba(7,29,69,.045);
+}
+
+.diario321ShortcutGuide div b{
+  color:#073273;
+  font-size:12px;
+  line-height:1;
+  font-weight:1000;
+}
+
+.diario321ShortcutGuide div span{
+  color:#647088;
+  font-size:10px;
+  line-height:1.1;
+  font-weight:950;
+}
+
+.diario321WritingExample{
+  margin:0;
+  padding:10px 11px;
+  border-radius:13px;
+  background:rgba(7,29,69,.055);
+  color:#384a62;
+  font-size:12px;
+  line-height:1.4;
+  font-weight:850;
+  overflow-wrap:anywhere;
+}
+
+.diario321WritingExample span{
+  display:block;
+  margin-bottom:3px;
+  color:#071d45;
+  font-size:11px;
+  line-height:1.1;
+  font-weight:1000;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+.diario321ModernField textarea::placeholder{
+  color:rgba(7,29,69,.56);
+  opacity:1;
+  font-weight:800;
+}
+
+html[data-caderno-theme="light"] .diario321WritingHelp,
+html[data-theme="light"] .diario321WritingHelp{
+  background:
+    radial-gradient(240px 110px at 0% 0%, rgba(255,216,111,.22), transparent 72%),
+    linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+}
+
+@media (max-width:430px){
+  .diario321WritingHelp{
+    margin-left:14px;
+    margin-right:14px;
+    padding:12px;
+    gap:10px;
+  }
+
+  .diario321WritingHelpSteps,
+  .diario321ShortcutGuide{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+
+  .diario321WritingHelpSteps span{
+    min-height:46px;
+  }
+}
+
+.diario321EntryTrainBtn{
+  background:linear-gradient(180deg, #fff5d6, #ffe4a5);
+  color:#6d4308;
+  border-color:rgba(166,106,10,.22);
+}
+
+html[data-caderno-theme="light"] .diario321EntryTrainingPanel,
+html[data-theme="light"] .diario321EntryTrainingPanel{
+  background:linear-gradient(180deg, #fffaf0, #fff2dd);
+  border-color:rgba(166,106,10,.18);
+  box-shadow:0 14px 28px rgba(31,59,103,.12);
+}
+
+html[data-caderno-theme="light"] .diario321EntryTrainingHead small,
+html[data-theme="light"] .diario321EntryTrainingHead small{
+  color:#9a5b00;
+}
+
+html[data-caderno-theme="light"] .diario321EntryTrainingHead b,
+html[data-theme="light"] .diario321EntryTrainingHead b,
+html[data-caderno-theme="light"] .diario321TrainingPhrase b,
+html[data-theme="light"] .diario321TrainingPhrase b{
+  color:#071d45;
+}
+
+html[data-caderno-theme="light"] .diario321EntryTrainingHead > span,
+html[data-theme="light"] .diario321EntryTrainingHead > span,
+html[data-caderno-theme="light"] .diario321TrainingActions button,
+html[data-theme="light"] .diario321TrainingActions button{
+  background:#fff;
+  border-color:rgba(31,59,103,.14);
+  color:#172238;
+}
+
+html[data-caderno-theme="light"] .diario321TrainingPhrase em,
+html[data-theme="light"] .diario321TrainingPhrase em{
+  color:#394b66;
+}
+
+html[data-caderno-theme="light"] .diario321TrainingPhrase small,
+html[data-theme="light"] .diario321TrainingPhrase small{
+  color:#526174;
+}
+
+html[data-caderno-theme="light"] .diario321TrainingCycleHint,
+html[data-theme="light"] .diario321TrainingCycleHint{
+  color:#394b66;
+}
+
+html[data-caderno-theme="light"] .diario321TrainingCycleHint small,
+html[data-theme="light"] .diario321TrainingCycleHint small{
+  color:#9a5b00;
+}
+
+html[data-caderno-theme="light"] .diario321TrainingBar,
+html[data-theme="light"] .diario321TrainingBar{
+  background:rgba(31,59,103,.10);
+  border-color:rgba(31,59,103,.10);
+}
+
+@media (max-width:680px){
+  .diario321ModernHero{
+    background-position:60% center !important;
+  }
+
+  .diario321TrainingActions{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (max-width:430px){
+  .diario321RomajiSyntaxCard{
+    margin-left:14px;
+    margin-right:14px;
+    padding:11px;
+    gap:9px;
+  }
+
+  .diario321RomajiSyntaxRules{
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+
+  .diario321RomajiSyntaxRules span{
+    min-height:36px;
+    grid-template-columns:auto 1fr;
+    place-items:center start;
+    align-content:center;
+    padding:8px 10px;
+  }
+}
+
+@media (max-width:430px){
+  .diario321EntryTrainingPanel{
+    margin-left:12px;
+    margin-right:12px;
+    padding:12px;
+  }
+
+  .diario321TrainingCore{
+    grid-template-columns:1fr;
+  }
+
+  .diario321TrainingCounter{
+    width:100%;
+    height:78px;
+    border-radius:20px;
+  }
+
+  .diario321TrainingCounter strong{
+    font-size:38px;
+  }
+
+  .diario321TrainingCycleHint{
+    display:grid;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.17.6-R — Formulário profissional
+   - exemplos discretos dentro dos campos
+   - guia de j:/k: sem ocupar espaço excessivo
+   - menos poluição visual na área de escrita
+   ========================================================= */
+
+.diario321WritingGrid--professional{
+  margin-top:0;
+  background:rgba(255,255,255,.70);
+  border-color:rgba(7,29,69,.14);
+  box-shadow:0 12px 26px rgba(7,29,69,.055);
+}
+
+.diario321WritingGrid--professional .diario321ModernField{
+  grid-template-columns:116px minmax(0,1fr);
+  align-items:stretch;
+  background:rgba(255,255,255,.44);
+}
+
+.diario321WritingGrid--professional .diario321ModernField span{
+  align-items:flex-start;
+  padding-top:13px;
+  color:#071d45;
+  font-size:13px;
+  letter-spacing:-.01em;
+}
+
+.diario321WritingGrid--professional .diario321ModernField textarea{
+  min-height:48px;
+  height:48px;
+  padding:12px 13px;
+  font-size:15px;
+  line-height:1.35;
+  font-weight:850;
+  letter-spacing:-.01em;
+}
+
+.diario321WritingGrid--professional .diario321ModernField--romaji textarea{
+  min-height:52px;
+  height:52px;
+  padding-bottom:7px;
+}
+
+.diario321WritingGrid--professional .diario321ModernField textarea::placeholder{
+  color:rgba(7,29,69,.43);
+  opacity:1;
+  font-size:12.5px;
+  line-height:1.32;
+  font-weight:750;
+  letter-spacing:-.015em;
+}
+
+.diario321WritingGrid--professional .diario321FieldHint{
+  grid-column:2;
+  display:block;
+  margin:-4px 12px 10px 13px;
+  padding:7px 10px;
+  border-radius:12px;
+  background:rgba(7,29,69,.038);
+  color:rgba(7,29,69,.62);
+  font-size:10.5px;
+  line-height:1.25;
+  font-weight:850;
+  letter-spacing:-.005em;
+}
+
+.diario321WritingGrid--professional .diario321FieldHint b{
+  color:#073273;
+  font-weight:1000;
+}
+
+html[data-caderno-theme="light"] .diario321WritingGrid--professional,
+html[data-theme="light"] .diario321WritingGrid--professional{
+  background:rgba(255,255,255,.82);
+  border-color:rgba(31,59,103,.15);
+  box-shadow:0 12px 24px rgba(31,59,103,.08);
+}
+
+html[data-caderno-theme="light"] .diario321WritingGrid--professional .diario321FieldHint,
+html[data-theme="light"] .diario321WritingGrid--professional .diario321FieldHint{
+  background:rgba(31,59,103,.042);
+  color:rgba(20,33,58,.62);
+}
+
+@media (max-width:430px){
+  .diario321WritingGrid--professional .diario321ModernField{
+    grid-template-columns:96px minmax(0,1fr);
+  }
+
+  .diario321WritingGrid--professional .diario321ModernField span{
+    padding:11px 9px;
+    font-size:12px;
+  }
+
+  .diario321WritingGrid--professional .diario321ModernField textarea{
+    padding:10px 11px;
+    font-size:14px;
+  }
+
+  .diario321WritingGrid--professional .diario321ModernField textarea::placeholder{
+    font-size:11.5px;
+    line-height:1.28;
+    font-weight:750;
+  }
+
+  .diario321WritingGrid--professional .diario321FieldHint{
+    margin:-3px 10px 9px 11px;
+    padding:6px 8px;
+    font-size:10px;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.17.8-R — Layout fiel ao preview aprovado
+   - aplica o mockup como direção visual real do app
+   - hero mais amplo, trabalhador mais visível, cards com respiro
+   - CTA visual balanceado sem remover o treino interno por card
+   ========================================================= */
+
+:root{
+  --diarioPreviewNavy:#061a3c;
+  --diarioPreviewDeep:#031229;
+  --diarioPreviewBlue:#073273;
+  --diarioPreviewOrange:#ff7a13;
+  --diarioPreviewGold:#ffb23f;
+  --diarioPreviewCream:#fff7ea;
+  --diarioPreviewInk:#071d45;
+}
+
+.appMain--diarioModern{
+  width:min(100%, 540px) !important;
+  margin:0 auto !important;
+  padding:0 0 96px !important;
+  background:
+    radial-gradient(420px 260px at 96% 4%, rgba(255,178,63,.16), transparent 62%),
+    linear-gradient(180deg, var(--diarioPreviewDeep), var(--diarioPreviewNavy) 52%, #0b234b) !important;
+}
+
+.diario321ModernNotebook{
+  width:100% !important;
+  max-width:540px !important;
+  gap:12px !important;
+  padding:0 14px 16px !important;
+}
+
+.diario321ModernHero{
+  min-height:390px !important;
+  margin:0 -14px !important;
+  border:0 !important;
+  border-radius:0 0 34px 34px !important;
+  box-shadow:none !important;
+  background:
+    linear-gradient(180deg, rgba(3,14,35,.08) 0%, rgba(3,14,35,.16) 34%, rgba(3,14,35,.68) 100%),
+    url("../img/banner-hero-nihongo321.png") 59% center/auto 100% no-repeat !important;
+}
+
+.diario321ModernHeroShade{
+  background:
+    radial-gradient(360px 240px at 64% 42%, rgba(255,224,165,.16), transparent 72%),
+    linear-gradient(90deg, rgba(3,14,35,.94) 0%, rgba(3,14,35,.68) 37%, rgba(3,14,35,.16) 70%, rgba(3,14,35,.02) 100%) !important;
+}
+
+.diario321ModernHero::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(250px 180px at 64% 43%, rgba(255,255,255,.18), transparent 72%),
+    linear-gradient(180deg, transparent 0%, rgba(3,14,35,.20) 100%) !important;
+  opacity:.72 !important;
+}
+
+.diario321ModernHeroTop{
+  padding:20px 28px 0 !important;
+  align-items:center !important;
+}
+
+.diario321ModernBrand img{
+  width:58px !important;
+  height:58px !important;
+  border:2px solid rgba(255,255,255,.24) !important;
+}
+
+.diario321ModernBrand b{
+  font-size:20px !important;
+}
+
+.diario321ModernBrand small{
+  font-size:12px !important;
+  color:rgba(255,255,255,.82) !important;
+}
+
+.diario321ModernHeroActions{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+.diario321ModernBack,
+.diario321ModernTheme,
+.diario321ModernStreak{
+  min-width:46px !important;
+  height:46px !important;
+  min-height:46px !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  border-radius:17px !important;
+  background:rgba(4,22,56,.62) !important;
+  color:#fff !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 12px 24px rgba(0,0,0,.18) !important;
+}
+
+.diario321ModernBack{
+  width:46px !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  font-size:0 !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-decoration:none !important;
+}
+
+.diario321ModernBack::before{
+  content:"↩";
+  font-size:18px;
+  line-height:1;
+  font-weight:1000;
+}
+
+.diario321ModernTheme{
+  display:none !important;
+}
+
+.diario321ModernStreak{
+  gap:7px !important;
+  padding:0 14px !important;
+  width:auto !important;
+  font-size:19px !important;
+}
+
+.diario321ModernHeroText{
+  padding:58px 28px 102px !important;
+  gap:14px !important;
+  max-width:390px !important;
+}
+
+.diario321NotebookIcon{
+  display:none !important;
+}
+
+.diario321ModernHero h1{
+  font-size:clamp(52px, 14vw, 74px) !important;
+  line-height:.9 !important;
+  letter-spacing:-.075em !important;
+}
+
+.diario321ModernHero p{
+  max-width:12.2em !important;
+  font-size:clamp(24px, 6.4vw, 34px) !important;
+  line-height:1.14 !important;
+  letter-spacing:-.045em !important;
+}
+
+.diario321PlayPanel{
+  margin-top:-58px !important;
+  gap:12px !important;
+  z-index:5 !important;
+}
+
+.diario321PlayQuestion{
+  min-height:86px !important;
+  padding:16px 18px !important;
+  border-radius:24px !important;
+  border:1px solid rgba(255,255,255,.78) !important;
+  background:linear-gradient(135deg, #fffaf2, #fff0dd) !important;
+  box-shadow:0 18px 34px rgba(2,11,30,.22) !important;
+}
+
+.diario321SunIcon{
+  width:50px !important;
+  height:50px !important;
+  font-size:40px !important;
+}
+
+.diario321PlayQuestion b{
+  font-size:clamp(19px, 4.8vw, 26px) !important;
+  line-height:1.14 !important;
+}
+
+.diario321PlayQuestion button{
+  width:58px !important;
+  height:58px !important;
+  font-size:22px !important;
+  background:#053477 !important;
+}
+
+.diario321SeedCard{
+  min-height:118px !important;
+  grid-template-columns:112px minmax(0,1fr) 34px 68px !important;
+  gap:14px !important;
+  padding:14px !important;
+  border-radius:24px !important;
+  border:1px solid rgba(91,163,255,.28) !important;
+  background:
+    radial-gradient(220px 150px at 12% 0%, rgba(255,178,63,.12), transparent 70%),
+    linear-gradient(135deg, #063a7a, #001d49 72%) !important;
+}
+
+.diario321SeedKanji{
+  width:100% !important;
+  min-height:90px !important;
+  border-radius:18px !important;
+  font-size:clamp(44px, 12vw, 58px) !important;
+}
+
+.diario321SeedMeta strong{
+  font-size:clamp(34px, 8vw, 46px) !important;
+}
+
+.diario321SeedMeta span{
+  font-size:clamp(18px, 4.8vw, 24px) !important;
+}
+
+.diario321SeedCard img{
+  width:66px !important;
+  height:66px !important;
+}
+
+.diario321ModernCard{
+  border-radius:24px !important;
+  background:linear-gradient(180deg, #fffaf3, #fff3e8) !important;
+  border:1px solid rgba(255,255,255,.78) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.15) !important;
+}
+
+.diario321ModernCardHead{
+  padding:16px 18px 10px !important;
+}
+
+.diario321ModernCardHead span{
+  font-size:20px !important;
+  letter-spacing:-.025em !important;
+}
+
+.diario321ModernCardHead small{
+  font-size:11px !important;
+  color:#5f6a7b !important;
+}
+
+.diario321SeedChips{
+  gap:10px !important;
+  padding:0 18px 17px !important;
+  flex-wrap:nowrap !important;
+  overflow-x:auto !important;
+  scrollbar-width:none !important;
+}
+
+.diario321SeedChips::-webkit-scrollbar{
+  display:none !important;
+}
+
+.diario321SeedChips button{
+  min-height:42px !important;
+  border-radius:14px !important;
+  padding:9px 13px !important;
+  font-size:14px !important;
+  white-space:nowrap !important;
+}
+
+.diario321WritingGrid--professional{
+  margin:0 18px 17px !important;
+  border-radius:16px !important;
+  background:#fffdf9 !important;
+  box-shadow:none !important;
+}
+
+.diario321WritingGrid--professional .diario321ModernField{
+  grid-template-columns:120px minmax(0,1fr) !important;
+}
+
+.diario321WritingGrid--professional .diario321ModernField span{
+  padding:13px 14px !important;
+  font-size:15px !important;
+  background:rgba(7,29,69,.035) !important;
+}
+
+.diario321WritingGrid--professional .diario321ModernField textarea{
+  min-height:50px !important;
+  height:50px !important;
+  padding:13px 14px !important;
+  font-size:16px !important;
+  font-weight:850 !important;
+}
+
+.diario321WritingGrid--professional .diario321ModernField textarea::placeholder{
+  color:rgba(7,29,69,.38) !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+}
+
+.diario321WritingGrid--professional .diario321FieldHint{
+  margin:-2px 14px 10px !important;
+  font-size:10px !important;
+  background:transparent !important;
+  color:rgba(7,29,69,.52) !important;
+}
+
+.diario321ToneBox--modern{
+  margin:0 18px 17px !important;
+  border-radius:20px !important;
+  background:#fffdf8 !important;
+}
+
+.diario321AIButtons--refined{
+  grid-template-columns:1fr 1fr !important;
+  gap:14px !important;
+  padding:0 18px 18px !important;
+}
+
+.diario321AIButtons--refined .diario321AIButton{
+  min-height:78px !important;
+  border-radius:17px !important;
+  padding:14px 16px !important;
+  grid-template-columns:auto 1fr !important;
+  justify-items:start !important;
+  text-align:left !important;
+}
+
+.diario321AIButtons--refined .diario321AIButton b{
+  font-size:15px !important;
+}
+
+.diario321AIButtons--refined .diario321AIButton small{
+  font-size:12px !important;
+}
+
+.diario321ChallengeGrid{
+  grid-template-columns:repeat(7, minmax(74px,1fr)) !important;
+  gap:9px !important;
+  padding:0 18px 18px !important;
+  overflow-x:auto !important;
+  scrollbar-width:none !important;
+}
+
+.diario321ChallengeGrid::-webkit-scrollbar{
+  display:none !important;
+}
+
+.diario321ChallengeGrid button{
+  min-height:76px !important;
+  border-radius:16px !important;
+  padding:10px 8px !important;
+}
+
+.diario321ProgressBody{
+  padding:0 18px 18px !important;
+  grid-template-columns:minmax(0,1fr) 76px !important;
+}
+
+.diario321ProgressBadges{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:10px !important;
+}
+
+.diario321ProgressBadges span{
+  min-height:44px !important;
+  padding:9px 10px !important;
+  border-radius:13px !important;
+  text-align:center !important;
+}
+
+.diario321ProgressRing{
+  width:72px !important;
+  height:72px !important;
+}
+
+.diario321ActionDock--preview{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:14px !important;
+  padding:0 !important;
+}
+
+.diario321ActionDock--preview button{
+  min-height:66px !important;
+  border:0 !important;
+  border-radius:18px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  color:#fff !important;
+  font-size:18px !important;
+  font-weight:950 !important;
+  letter-spacing:-.02em !important;
+  box-shadow:0 16px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+.diario321ActionDock--preview .diario321ActionSave{
+  background:linear-gradient(135deg, #063a7a, #042962) !important;
+}
+
+.diario321ActionDock--preview .diario321ActionTrain{
+  background:linear-gradient(135deg, #ff9f25, #ff6b13) !important;
+}
+
+.diario321ActionDock--preview span{
+  font-size:23px !important;
+  line-height:1 !important;
+}
+
+.diario321BottomNav{
+  position:sticky !important;
+  bottom:0 !important;
+  z-index:20 !important;
+  width:calc(100% + 28px) !important;
+  margin:2px -14px -16px !important;
+  min-height:78px !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr 72px 1fr 1fr !important;
+  align-items:center !important;
+  gap:0 !important;
+  padding:10px 14px 12px !important;
+  border-radius:26px 26px 0 0 !important;
+  border:1px solid rgba(255,255,255,.74) !important;
+  border-bottom:0 !important;
+  background:linear-gradient(180deg, #fffdf8, #f8efe4) !important;
+  box-shadow:0 -14px 34px rgba(3,14,35,.22) !important;
+}
+
+.diario321BottomNav a{
+  text-decoration:none !important;
+}
+
+.diario321BottomNavItem{
+  min-height:54px !important;
+  display:grid !important;
+  place-items:center !important;
+  align-content:center !important;
+  gap:3px !important;
+  color:#4f5c6d !important;
+  font-weight:900 !important;
+}
+
+.diario321BottomNavItem span{
+  font-size:23px !important;
+  line-height:1 !important;
+}
+
+.diario321BottomNavItem b{
+  font-size:12px !important;
+  line-height:1 !important;
+}
+
+.diario321BottomNavItem.is-active{
+  color:#ff6b13 !important;
+}
+
+.diario321BottomNavLogo{
+  width:64px !important;
+  height:64px !important;
+  display:grid !important;
+  place-items:center !important;
+  border-radius:50% !important;
+  margin:-24px auto 0 !important;
+  background:linear-gradient(180deg, #fff9e8, #ffd98b) !important;
+  box-shadow:0 14px 28px rgba(255,122,47,.24), 0 0 0 4px #fff7ea !important;
+}
+
+.diario321BottomNavLogo img{
+  width:58px !important;
+  height:58px !important;
+  border-radius:50% !important;
+}
+
+@media (max-width:430px){
+  .diario321ModernNotebook{
+    padding-left:12px !important;
+    padding-right:12px !important;
+  }
+
+  .diario321ModernHero{
+    margin-left:-12px !important;
+    margin-right:-12px !important;
+    min-height:354px !important;
+    background-position:59% center !important;
+    background-size:auto 100% !important;
+  }
+
+  .diario321ModernHeroTop{
+    padding:14px 18px 0 !important;
+  }
+
+  .diario321ModernBrand img{
+    width:48px !important;
+    height:48px !important;
+  }
+
+  .diario321ModernBrand b{
+    font-size:15px !important;
+  }
+
+  .diario321ModernBrand small{
+    font-size:9.5px !important;
+  }
+
+  .diario321ModernBack,
+  .diario321ModernStreak{
+    min-width:42px !important;
+    height:42px !important;
+    min-height:42px !important;
+    border-radius:15px !important;
+  }
+
+  .diario321ModernStreak{
+    padding:0 12px !important;
+    font-size:16px !important;
+  }
+
+  .diario321ModernHeroText{
+    padding:56px 18px 88px !important;
+    max-width:330px !important;
+  }
+
+  .diario321ModernHero h1{
+    font-size:47px !important;
+  }
+
+  .diario321ModernHero p{
+    font-size:25px !important;
+    max-width:11.8em !important;
+  }
+
+  .diario321PlayPanel{
+    margin-top:-52px !important;
+  }
+
+  .diario321PlayQuestion{
+    grid-template-columns:42px 1fr 54px !important;
+    gap:10px !important;
+    min-height:80px !important;
+    padding:13px 14px !important;
+  }
+
+  .diario321SunIcon{
+    width:42px !important;
+    height:42px !important;
+    font-size:34px !important;
+  }
+
+  .diario321PlayQuestion b{
+    font-size:18px !important;
+  }
+
+  .diario321PlayQuestion button{
+    width:52px !important;
+    height:52px !important;
+  }
+
+  .diario321SeedCard{
+    grid-template-columns:86px minmax(0,1fr) 30px 52px !important;
+    min-height:100px !important;
+    gap:10px !important;
+    padding:12px !important;
+  }
+
+  .diario321SeedKanji{
+    min-height:76px !important;
+    font-size:39px !important;
+  }
+
+  .diario321SeedMeta strong{
+    font-size:31px !important;
+  }
+
+  .diario321SeedMeta span{
+    font-size:17px !important;
+  }
+
+  .diario321SeedCard img{
+    width:52px !important;
+    height:52px !important;
+  }
+
+  .diario321ModernCardHead span{
+    font-size:18px !important;
+  }
+
+  .diario321WritingGrid--professional .diario321ModernField{
+    grid-template-columns:92px minmax(0,1fr) !important;
+  }
+
+  .diario321WritingGrid--professional .diario321ModernField span{
+    font-size:12px !important;
+    padding:12px 10px !important;
+  }
+
+  .diario321WritingGrid--professional .diario321ModernField textarea{
+    font-size:14px !important;
+  }
+
+  .diario321AIButtons--refined .diario321AIButton{
+    min-height:72px !important;
+    padding:12px 10px !important;
+  }
+
+  .diario321AIButtons--refined .diario321AIButton b{
+    font-size:12.5px !important;
+  }
+
+  .diario321AIButtons--refined .diario321AIButton small{
+    font-size:10px !important;
+  }
+
+  .diario321ProgressBody{
+    grid-template-columns:1fr 64px !important;
+  }
+
+  .diario321ProgressBadges{
+    grid-template-columns:1fr !important;
+    gap:7px !important;
+  }
+
+  .diario321ProgressBadges span{
+    min-height:34px !important;
+  }
+
+  .diario321ProgressRing{
+    width:62px !important;
+    height:62px !important;
+  }
+
+  .diario321ActionDock--preview{
+    gap:10px !important;
+  }
+
+  .diario321ActionDock--preview button{
+    min-height:58px !important;
+    font-size:15px !important;
+  }
+
+  .diario321BottomNav{
+    width:calc(100% + 24px) !important;
+    margin-left:-12px !important;
+    margin-right:-12px !important;
+  }
+}
+
+@media (max-width:360px){
+  .diario321ModernHero h1{
+    font-size:41px !important;
+  }
+
+  .diario321ModernHero p{
+    font-size:22px !important;
+  }
+
+  .diario321AIButtons--refined,
+  .diario321ActionDock--preview{
+    grid-template-columns:1fr !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.17.8-R — Hero dekassegui real
+   - usa recorte mobile dedicado para mostrar o trabalhador
+   - reduz excesso de altura visual e libera o chamariz do fundo
+   - texto continua legível sem apagar a imagem
+   ========================================================= */
+
+.diario321ModernHero{
+  min-height:332px !important;
+  background:
+    linear-gradient(180deg, rgba(3,14,35,.04) 0%, rgba(3,14,35,.10) 40%, rgba(3,14,35,.56) 100%),
+    url("../img/banner-diario321-hero-mobile.png") 57% 50%/cover no-repeat !important;
+}
+
+.diario321ModernHeroShade{
+  background:
+    radial-gradient(280px 220px at 68% 43%, rgba(255,220,150,.14), transparent 72%),
+    linear-gradient(90deg,
+      rgba(3,14,35,.92) 0%,
+      rgba(3,14,35,.76) 32%,
+      rgba(3,14,35,.30) 55%,
+      rgba(3,14,35,.06) 82%,
+      rgba(3,14,35,.02) 100%) !important;
+}
+
+.diario321ModernHero::after{
+  background:
+    radial-gradient(260px 230px at 68% 46%, rgba(255,255,255,.08), transparent 74%),
+    linear-gradient(180deg, rgba(3,14,35,.02) 0%, rgba(3,14,35,.16) 100%) !important;
+  opacity:.42 !important;
+}
+
+.diario321ModernHeroText{
+  padding:44px 28px 88px !important;
+  max-width:310px !important;
+}
+
+.diario321ModernHero h1{
+  font-size:clamp(44px, 10.5vw, 62px) !important;
+  line-height:.94 !important;
+  letter-spacing:-.065em !important;
+  text-shadow:0 4px 18px rgba(0,0,0,.34) !important;
+}
+
+.diario321ModernHero p{
+  max-width:12.4em !important;
+  font-size:clamp(19px, 4.6vw, 27px) !important;
+  line-height:1.18 !important;
+  letter-spacing:-.035em !important;
+  text-shadow:0 4px 18px rgba(0,0,0,.38) !important;
+}
+
+.diario321PlayPanel{
+  margin-top:-42px !important;
+}
+
+@media (max-width:430px){
+  .diario321ModernHero{
+    min-height:306px !important;
+    background-position:58% 50% !important;
+    background-size:cover !important;
+  }
+
+  .diario321ModernHeroTop{
+    padding:12px 18px 0 !important;
+  }
+
+  .diario321ModernHeroText{
+    padding:38px 18px 76px !important;
+    max-width:246px !important;
+  }
+
+  .diario321ModernHero h1{
+    font-size:37px !important;
+    line-height:.96 !important;
+    letter-spacing:-.055em !important;
+  }
+
+  .diario321ModernHero p{
+    max-width:11.7em !important;
+    font-size:18px !important;
+    line-height:1.18 !important;
+    letter-spacing:-.026em !important;
+  }
+
+  .diario321PlayPanel{
+    margin-top:-36px !important;
+  }
+}
+
+@media (max-width:360px){
+  .diario321ModernHero{
+    min-height:292px !important;
+    background-position:59% 50% !important;
+  }
+
+  .diario321ModernHeroText{
+    max-width:224px !important;
+  }
+
+  .diario321ModernHero h1{
+    font-size:34px !important;
+  }
+
+  .diario321ModernHero p{
+    font-size:16.5px !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.17.9-R — Hero fechado no banner
+   - mantém título e subtítulo dentro do quadro do hero
+   - dá mais presença ao trabalhador no mobile
+   - evita que o texto escorra para baixo do banner
+   ========================================================= */
+
+.diario321ModernHero{
+  min-height:252px !important;
+  border-radius:0 0 28px 28px !important;
+  background:
+    linear-gradient(180deg, rgba(3,14,35,.10) 0%, rgba(3,14,35,.14) 34%, rgba(3,14,35,.28) 100%),
+    url("../img/banner-diario321-hero-mobile.png") 61% 42%/148% auto no-repeat !important;
+}
+
+.diario321ModernHeroShade{
+  background:
+    radial-gradient(240px 200px at 69% 45%, rgba(255,221,162,.14), transparent 72%),
+    linear-gradient(90deg,
+      rgba(3,14,35,.96) 0%,
+      rgba(3,14,35,.88) 27%,
+      rgba(3,14,35,.44) 53%,
+      rgba(3,14,35,.10) 76%,
+      rgba(3,14,35,.04) 100%) !important;
+}
+
+.diario321ModernHero::after{
+  background:
+    radial-gradient(250px 210px at 69% 46%, rgba(255,255,255,.12), transparent 74%),
+    linear-gradient(180deg, rgba(3,14,35,.08) 0%, rgba(3,14,35,.22) 100%) !important;
+  opacity:.52 !important;
+}
+
+.diario321ModernHeroTop{
+  padding:10px 14px 0 !important;
+  align-items:flex-start !important;
+}
+
+.diario321ModernBrand img{
+  width:42px !important;
+  height:42px !important;
+}
+
+.diario321ModernBrand b{
+  font-size:13px !important;
+  line-height:1 !important;
+}
+
+.diario321ModernBrand small{
+  font-size:9px !important;
+  line-height:1.12 !important;
+}
+
+.diario321ModernHeroActions{
+  gap:8px !important;
+}
+
+.diario321ModernBack,
+.diario321ModernTheme,
+.diario321ModernStreak{
+  height:40px !important;
+  min-height:40px !important;
+  min-width:40px !important;
+  border-radius:15px !important;
+}
+
+.diario321ModernStreak{
+  font-size:15px !important;
+  padding:0 12px !important;
+}
+
+.diario321ModernHeroText{
+  padding:20px 14px 16px !important;
+  gap:8px !important;
+  max-width:220px !important;
+}
+
+.diario321NotebookIcon{
+  display:none !important;
+}
+
+.diario321ModernHero h1{
+  margin:0 !important;
+  font-size:33px !important;
+  line-height:.92 !important;
+  letter-spacing:-.055em !important;
+}
+
+.diario321ModernHero p{
+  margin:0 !important;
+  max-width:10.1em !important;
+  font-size:17px !important;
+  line-height:1.08 !important;
+  letter-spacing:-.028em !important;
+}
+
+.diario321PlayPanel{
+  margin-top:10px !important;
+}
+
+@media (max-width:430px){
+  .diario321ModernHero{
+    min-height:246px !important;
+    background-position:62% 41% !important;
+    background-size:154% auto !important;
+  }
+
+  .diario321ModernHeroTop{
+    padding:10px 12px 0 !important;
+  }
+
+  .diario321ModernBrand img{
+    width:40px !important;
+    height:40px !important;
+  }
+
+  .diario321ModernBrand b{
+    font-size:12px !important;
+  }
+
+  .diario321ModernBrand small{
+    font-size:8.6px !important;
+  }
+
+  .diario321ModernBack,
+  .diario321ModernTheme,
+  .diario321ModernStreak{
+    height:38px !important;
+    min-height:38px !important;
+    min-width:38px !important;
+    border-radius:14px !important;
+  }
+
+  .diario321ModernBack::before{
+    font-size:16px !important;
+  }
+
+  .diario321ModernStreak{
+    font-size:14px !important;
+    padding:0 11px !important;
+  }
+
+  .diario321ModernHeroText{
+    padding:16px 12px 14px !important;
+    max-width:206px !important;
+  }
+
+  .diario321ModernHero h1{
+    font-size:31px !important;
+  }
+
+  .diario321ModernHero p{
+    font-size:16px !important;
+    max-width:9.8em !important;
+  }
+
+  .diario321PlayPanel{
+    margin-top:8px !important;
+  }
+}
+
+@media (max-width:360px){
+  .diario321ModernHero{
+    min-height:236px !important;
+    background-position:63% 40% !important;
+    background-size:160% auto !important;
+  }
+
+  .diario321ModernHeroText{
+    max-width:192px !important;
+  }
+
+  .diario321ModernHero h1{
+    font-size:29px !important;
+  }
+
+  .diario321ModernHero p{
+    font-size:14.8px !important;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.17.10-R — Minimalista e discreto
+   - remove prompt nativo de IA
+   - alinha áudio da semente
+   - tira peso das barras de rolagem
+   - renomeia ambientes e deixa botões mais profissionais
+   ========================================================= */
+
+.diario321SeedCard{
+  grid-template-columns:auto minmax(0,1fr) auto !important;
+  gap:12px !important;
+  padding:12px !important;
+}
+
+.diario321SeedCard img{
+  display:none !important;
+}
+
+.diario321SeedAudio{
+  width:52px !important;
+  height:52px !important;
+  min-width:52px !important;
+  min-height:52px !important;
+  border-radius:18px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  justify-self:end !important;
+  align-self:center !important;
+  border:1px solid rgba(255,255,255,.20) !important;
+  background:rgba(255,255,255,.095) !important;
+  color:#fff !important;
+  font-size:18px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
+.diario321ModernField textarea{
+  resize:none !important;
+  overflow:hidden !important;
+  scrollbar-width:none !important;
+  -ms-overflow-style:none !important;
+  min-height:44px !important;
+  height:44px !important;
+  padding:10px 12px !important;
+  font-size:14px !important;
+  font-weight:750 !important;
+  line-height:1.28 !important;
+}
+
+.diario321ModernField textarea::-webkit-scrollbar,
+.diario321AIPasteSheet textarea::-webkit-scrollbar{
+  width:0 !important;
+  height:0 !important;
+  display:none !important;
+}
+
+.diario321ModernField textarea::placeholder{
+  color:rgba(7,29,69,.44) !important;
+  font-size:12.5px !important;
+  font-weight:750 !important;
+  line-height:1.22 !important;
+}
+
+.diario321ModernField--pt textarea,
+.diario321ModernField--romaji textarea{
+  min-height:48px !important;
+  height:48px !important;
+}
+
+.diario321ModernField--jp textarea{
+  min-height:44px !important;
+  height:44px !important;
+}
+
+.diario321SeedDictionary .diario321ModernCardHead span{
+  letter-spacing:-.02em !important;
+}
+
+.diario321SeedChips{
+  padding:0 18px 18px !important;
+  gap:8px !important;
+}
+
+.diario321SeedChips button{
+  min-height:34px !important;
+  border-radius:999px !important;
+  padding:7px 11px !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+  box-shadow:none !important;
+  background:rgba(255,255,255,.72) !important;
+}
+
+.diario321SeedChips button.is-active{
+  background:linear-gradient(135deg, #ff9f38, #ff742f) !important;
+  box-shadow:0 8px 16px rgba(255,116,47,.16) !important;
+}
+
+.diario321AIBox{
+  padding-bottom:16px !important;
+}
+
+.diario321AIButtons,
+.diario321AIButtons--refined{
+  grid-template-columns:1fr 1fr !important;
+  gap:12px !important;
+  padding:0 18px !important;
+}
+
+.diario321AIButton{
+  min-height:58px !important;
+  border-radius:17px !important;
+  padding:12px 14px !important;
+  display:grid !important;
+  grid-template-columns:auto minmax(0,1fr) !important;
+  grid-template-rows:auto auto !important;
+  column-gap:10px !important;
+  row-gap:1px !important;
+  align-items:center !important;
+  justify-content:start !important;
+  text-align:left !important;
+  box-shadow:0 10px 18px rgba(0,0,0,.10) !important;
+}
+
+.diario321AIButton span{
+  grid-row:1 / span 2 !important;
+  width:30px !important;
+  height:30px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:10px !important;
+  background:rgba(255,255,255,.12) !important;
+  font-size:17px !important;
+}
+
+.diario321AIButton b{
+  font-size:14px !important;
+  line-height:1.05 !important;
+  white-space:nowrap !important;
+}
+
+.diario321AIButton small{
+  font-size:11px !important;
+  line-height:1 !important;
+  opacity:.78 !important;
+  white-space:nowrap !important;
+}
+
+.diario321AIPasteOverlay{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:9999 !important;
+  display:flex !important;
+  align-items:flex-end !important;
+  justify-content:center !important;
+  padding:16px !important;
+  background:rgba(3,8,18,.56) !important;
+  backdrop-filter:blur(10px) !important;
+}
+
+.diario321AIPasteSheet{
+  width:min(100%, 560px) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  border-radius:26px !important;
+  background:linear-gradient(180deg, rgba(255,252,245,.98), rgba(247,241,231,.98)) !important;
+  box-shadow:0 24px 70px rgba(0,0,0,.36) !important;
+  padding:16px !important;
+  color:#071d45 !important;
+}
+
+.diario321AIPasteHead{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  margin-bottom:8px !important;
+}
+
+.diario321AIPasteHead span{
+  font-size:18px !important;
+  font-weight:1000 !important;
+}
+
+.diario321AIPasteHead button{
+  width:38px !important;
+  height:38px !important;
+  border:0 !important;
+  border-radius:14px !important;
+  background:rgba(7,29,69,.08) !important;
+  color:#071d45 !important;
+  font-size:24px !important;
+  line-height:1 !important;
+}
+
+.diario321AIPasteSheet p{
+  margin:0 0 12px !important;
+  color:rgba(7,29,69,.68) !important;
+  font-size:13px !important;
+  line-height:1.4 !important;
+  font-weight:750 !important;
+}
+
+.diario321AIPasteSheet textarea{
+  width:100% !important;
+  min-height:150px !important;
+  resize:none !important;
+  overflow:auto !important;
+  border:1px solid rgba(7,29,69,.14) !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.76) !important;
+  color:#071d45 !important;
+  outline:0 !important;
+  padding:13px !important;
+  font-size:14px !important;
+  line-height:1.45 !important;
+  font-weight:750 !important;
+}
+
+.diario321AIPasteActions{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:10px !important;
+  margin-top:12px !important;
+}
+
+.diario321AIPasteActions button{
+  min-height:46px !important;
+  border:0 !important;
+  border-radius:16px !important;
+  font-weight:950 !important;
+}
+
+.diario321AIPasteActions button:first-child{
+  background:rgba(7,29,69,.08) !important;
+  color:#071d45 !important;
+}
+
+.diario321AIPasteActions button:last-child{
+  background:linear-gradient(135deg, #ff9f38, #ff742f) !important;
+  color:#fff !important;
+}
+
+@media (max-width:430px){
+  .diario321SeedKanji{
+    width:82px !important;
+    min-height:76px !important;
+    font-size:42px !important;
+  }
+
+  .diario321SeedMeta strong{
+    font-size:32px !important;
+  }
+
+  .diario321SeedMeta span{
+    font-size:18px !important;
+  }
+
+  .diario321SeedAudio{
+    width:46px !important;
+    height:46px !important;
+    min-width:46px !important;
+    min-height:46px !important;
+    border-radius:16px !important;
+  }
+
+  .diario321AIButton{
+    min-height:54px !important;
+    padding:10px 11px !important;
+    column-gap:8px !important;
+  }
+
+  .diario321AIButton b{
+    font-size:12.5px !important;
+  }
+
+  .diario321AIButton small{
+    font-size:10px !important;
+  }
+
+  .diario321AIButton span{
+    width:27px !important;
+    height:27px !important;
+    font-size:15px !important;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.17.11-R — UX minimalista refinado
+   - laranja padrão nos pontos de treino
+   - efeito ouro ao ouvir
+   - IA com instrução clara e sem prompt nativo
+   - barras de rolagem discretas nos campos
+   ========================================================= */
+
+.diario321SeedAudio{
+  width:48px !important;
+  height:48px !important;
+  min-width:48px !important;
+  min-height:48px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  background:
+    radial-gradient(54px 34px at 30% 18%, rgba(255,255,255,.14), transparent 64%),
+    linear-gradient(180deg, #0a4b94, #07316d) !important;
+  color:#fff9ec !important;
+  box-shadow:0 12px 24px rgba(0,37,87,.20), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+
+.diario321SeedAudio:active,
+.diario321TrainingActions button[data-entry-train-speak]:active{
+  transform:translateY(1px) !important;
+}
+
+.diario321EntryTrainBtn{
+  border-color:rgba(255,154,36,.42) !important;
+  background:
+    radial-gradient(180px 78px at 20% 10%, rgba(255,255,255,.20), transparent 64%),
+    linear-gradient(135deg, #ffb23f, #ff742f) !important;
+  color:#fffaf2 !important;
+  box-shadow:0 10px 20px rgba(255,122,47,.18), inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+.diario321TrainingCounter{
+  background:
+    radial-gradient(96px 60px at 30% 18%, rgba(255,255,255,.28), transparent 62%),
+    linear-gradient(135deg, #ffb23f, #ff742f) !important;
+  color:#fffaf2 !important;
+  box-shadow:0 16px 30px rgba(255,122,47,.24), inset 0 1px 0 rgba(255,255,255,.24) !important;
+}
+
+.diario321TrainingCounter strong,
+.diario321TrainingCounter span{
+  color:#fffaf2 !important;
+  text-shadow:0 2px 8px rgba(95,34,0,.20) !important;
+}
+
+.diario321TrainingCounter.is-complete{
+  background:
+    radial-gradient(96px 60px at 30% 18%, rgba(255,255,255,.24), transparent 62%),
+    linear-gradient(135deg, #ffd86f, #ff9f38) !important;
+}
+
+.diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase b{
+  color:#ffd86f !important;
+  text-shadow:0 0 18px rgba(255,216,111,.34), 0 4px 14px rgba(0,0,0,.22) !important;
+}
+
+.diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase em,
+.diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase small{
+  color:#fff0b8 !important;
+}
+
+.diario321EntryTrainingPanel.is-speaking .diario321TrainingActions button[data-entry-train-speak]{
+  border-color:rgba(255,216,111,.36) !important;
+  background:rgba(255,216,111,.12) !important;
+  color:#ffd86f !important;
+}
+
+.diario321WritingGrid--professional .diario321ModernField textarea,
+.diario321ModernField textarea,
+.diario321AIPasteSheet textarea{
+  resize:none !important;
+  scrollbar-width:none !important;
+  -ms-overflow-style:none !important;
+}
+
+.diario321WritingGrid--professional .diario321ModernField textarea{
+  overflow:hidden !important;
+}
+
+.diario321WritingGrid--professional .diario321ModernField textarea::-webkit-scrollbar,
+.diario321ModernField textarea::-webkit-scrollbar,
+.diario321AIPasteSheet textarea::-webkit-scrollbar{
+  width:0 !important;
+  height:0 !important;
+  display:none !important;
+}
+
+.diario321AIHelp{
+  margin:0 18px 12px !important;
+  color:rgba(7,29,69,.62) !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+  font-weight:750 !important;
+}
+
+html[data-caderno-theme="dark"] .diario321AIHelp,
+html[data-theme="dark"] .diario321AIHelp{
+  color:rgba(234,242,255,.70) !important;
+}
+
+.diario321AIButtons,
+.diario321AIButtons--refined{
+  gap:10px !important;
+}
+
+.diario321AIButton{
+  min-height:56px !important;
+  border-radius:16px !important;
+  padding:11px 12px !important;
+  box-shadow:0 8px 16px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
+.diario321AIButton span{
+  width:26px !important;
+  height:26px !important;
+  border-radius:9px !important;
+  font-size:14px !important;
+}
+
+.diario321AIButton b{
+  font-size:13px !important;
+  line-height:1.05 !important;
+}
+
+.diario321AIButton small{
+  font-size:9.8px !important;
+  line-height:1.1 !important;
+  opacity:.74 !important;
+}
+
+.diario321AIButton--copy{
+  background:
+    radial-gradient(140px 70px at 15% 10%, rgba(255,255,255,.16), transparent 68%),
+    linear-gradient(180deg, #0a4b94, #07316d) !important;
+}
+
+.diario321AIButton--paste{
+  background:
+    radial-gradient(140px 70px at 15% 10%, rgba(255,255,255,.20), transparent 68%),
+    linear-gradient(135deg, #ff9f38, #ff742f) !important;
+}
+
+.diario321SeedDictionary .diario321ModernCardHead span{
+  font-weight:1000 !important;
+}
+
+@media (max-width:430px){
+  .diario321SeedAudio{
+    width:44px !important;
+    height:44px !important;
+    min-width:44px !important;
+    min-height:44px !important;
+  }
+
+  .diario321AIHelp{
+    margin:0 16px 10px !important;
+    font-size:11.5px !important;
+  }
+
+  .diario321AIButton{
+    min-height:54px !important;
+    padding:10px 10px !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.17.10-R — IA contextual do formulário
+   - botão Criar pedido agora pertence aos campos de escrita
+   - painel e botões mais discretos e autoexplicativos
+   ========================================================= */
+
+.diario321WritingCard .diario321AIBox--contextual{
+  margin:14px 0 0 !important;
+  padding:14px !important;
+  border-radius:20px !important;
+  box-shadow:none !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,250,241,.58)) !important;
+  border:1px solid rgba(7,29,69,.10) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingCard .diario321AIBox--contextual{
+  background:linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.045)) !important;
+  border-color:rgba(255,255,255,.13) !important;
+}
+
+.diario321AIBox--contextual .diario321ModernCardHead{
+  margin-bottom:6px !important;
+}
+
+.diario321AIContextHint{
+  margin:0 0 12px !important;
+  color:rgba(7,29,69,.62) !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+  font-weight:750 !important;
+}
+
+html[data-caderno-theme="dark"] .diario321AIContextHint{
+  color:rgba(242,246,255,.70) !important;
+}
+
+.diario321AIBox--contextual .diario321AIButtons{
+  gap:10px !important;
+}
+
+.diario321AIBox--contextual .diario321AIButton{
+  min-height:58px !important;
+  padding:11px 12px !important;
+  border-radius:17px !important;
+  grid-template-columns:30px minmax(0,1fr) !important;
+  grid-template-areas:"icon title" "icon sub" !important;
+  text-align:left !important;
+  align-content:center !important;
+}
+
+.diario321AIBox--contextual .diario321AIButton span{
+  grid-area:icon !important;
+  width:30px !important;
+  height:30px !important;
+  font-size:16px !important;
+}
+
+.diario321AIBox--contextual .diario321AIButton b{
+  grid-area:title !important;
+  font-size:13px !important;
+  line-height:1.05 !important;
+  letter-spacing:-.01em !important;
+}
+
+.diario321AIBox--contextual .diario321AIButton small{
+  grid-area:sub !important;
+  font-size:10.5px !important;
+  line-height:1.05 !important;
+  opacity:.78 !important;
+}
+
+.diario321AIPasteSheet p{
+  font-size:12.5px !important;
+  line-height:1.45 !important;
+}
+
+.diario321AIPasteSheet textarea{
+  min-height:190px !important;
+  font-size:12.5px !important;
+  font-weight:700 !important;
+  line-height:1.42 !important;
+}
+
+@media (max-width:380px){
+  .diario321AIBox--contextual .diario321AIButtons{
+    grid-template-columns:1fr !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.17.13-R — Fluxo IA direto + foco de nova frase
+   - prompt de IA copiado automaticamente com confirmação limpa
+   - Adicionar frase leva direto ao formulário correto
+   - Guia rápido inicia recolhido pelo JS
+   ========================================================= */
+
+.diario321WritingCard.is-focus-target{
+  outline:2px solid rgba(255,166,54,.58);
+  box-shadow:
+    0 0 0 6px rgba(255,166,54,.12),
+    var(--shadow, 0 18px 42px rgba(0,0,0,.28));
+  transition:outline-color .25s ease, box-shadow .25s ease;
+}
+
+.diario321AIPasteSheet.is-copied .diario321AIPasteHead span::before{
+  content:"✓";
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  margin-right:8px;
+  border-radius:999px;
+  background:linear-gradient(180deg, #ffb347, #ff742f);
+  color:#fffaf2;
+  font-size:14px;
+  font-weight:1000;
+  vertical-align:middle;
+}
+
+.diario321AIPasteSheet.is-copied textarea[readonly]{
+  min-height:112px;
+  opacity:.82;
+}
+
+.diario321AIPasteSheet.is-copied .diario321AIPasteActions button[data-apply-ai-paste]{
+  background:linear-gradient(180deg, #ffb347, #ff742f);
+  color:#fffaf2;
+}
+
+/* =========================================================
+   DIÁRIO321 4.17.14-R — Criação de frase recolhida
+   - área de escrita começa compacta para reduzir ruído visual
+   - Adicionar frase abre, rola e foca no formulário
+   ========================================================= */
+
+.diario321WritingCard{
+  padding:0 !important;
+  overflow:hidden !important;
+}
+
+.diario321WritingCard > summary{
+  list-style:none !important;
+}
+
+.diario321WritingCard > summary::-webkit-details-marker{
+  display:none !important;
+}
+
+.diario321WritingSummary{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:14px !important;
+  min-height:78px !important;
+  padding:18px 18px !important;
+  cursor:pointer !important;
+  user-select:none !important;
+}
+
+.diario321WritingSummary span{
+  display:grid !important;
+  gap:5px !important;
+  min-width:0 !important;
+}
+
+.diario321WritingSummary b{
+  color:#061e4b !important;
+  font-size:20px !important;
+  line-height:1.05 !important;
+  font-weight:1000 !important;
+  letter-spacing:-.035em !important;
+}
+
+.diario321WritingSummary small{
+  color:rgba(7,29,69,.58) !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  font-weight:850 !important;
+}
+
+.diario321WritingSummary em{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:34px !important;
+  padding:8px 12px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,122,47,.30) !important;
+  background:rgba(255,255,255,.64) !important;
+  color:#9a5510 !important;
+  font-size:11px !important;
+  line-height:1 !important;
+  font-style:normal !important;
+  font-weight:1000 !important;
+  white-space:nowrap !important;
+}
+
+.diario321WritingCard[open] .diario321WritingSummary{
+  border-bottom:1px solid rgba(7,29,69,.09) !important;
+}
+
+.diario321WritingFoldBody{
+  padding:16px 0 16px !important;
+}
+
+.diario321WritingCard:not([open]) .diario321WritingFoldBody{
+  display:none !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingSummary b{
+  color:#fff6d8 !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingSummary small{
+  color:rgba(242,246,255,.66) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingSummary em{
+  background:rgba(255,122,47,.14) !important;
+  border-color:rgba(255,179,71,.32) !important;
+  color:#ffd86f !important;
+}
+
+@media (max-width:430px){
+  .diario321WritingSummary{
+    min-height:72px !important;
+    padding:16px 16px !important;
+  }
+
+  .diario321WritingSummary b{
+    font-size:18px !important;
+  }
+
+  .diario321WritingSummary small{
+    font-size:11.5px !important;
+  }
+}

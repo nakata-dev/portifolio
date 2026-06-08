@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.16.0
+   DIÁRIO321 — Protótipo 4.17.9-R — IA expansiva 10 variações
    Visual de diário de treino com mapa de cenários e frequência.
    ========================================================= */
 
@@ -34339,7 +34339,11 @@
   let screen = state.screen || "dashboard";
   try {
     const params = new URLSearchParams(window.location.search || "");
-    if (params.get("screen") === "dashboard" || params.get("from") === "nihongo321") {
+    const requestedScreen = params.get("screen");
+    if (requestedScreen === "genial" || params.get("from") === "nihongo321") {
+      screen = "genial";
+      state.screen = "genial";
+    } else if (requestedScreen === "dashboard") {
       screen = "dashboard";
       state.screen = "dashboard";
     }
@@ -37915,7 +37919,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.16.0"
+        sourceVersion: "4.17.9-R"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -38654,6 +38658,10 @@
 
   let diario321SetupFoldOpen = !diario321HasPolivalencia();
   let diario321NoteFoldOpen = false;
+  let diario321AIPasteOpen = false;
+  let diario321AIPasteDraft = "";
+  let diario321AIPasteMode = "paste";
+  let diario321AIPromptWasCopied = false;
   let diario321EntriesFilter = "all";
   let diario321EditingEntryId = "";
   let diario321DeleteConfirmId = "";
@@ -38661,6 +38669,31 @@
   let diario321ToneDraft = { label: "", hint: "" };
   let diario321ToneDeleteConfirmId = "";
   let diario321LastAutoJapaneseIdea = "";
+  let diario321ActiveTrainingEntryId = "";
+  let diario321OpenEntryId = "";
+
+  function keepDiario321EntryOpen(entryId) {
+    const id = String(entryId || "");
+    if (id) diario321OpenEntryId = id;
+  }
+
+  function diario321NormalizeRomajiMarkers(value = "") {
+    return String(value || "")
+      .replace(/(^|\s)([jkh]):\s+/gi, "$1$2:")
+      .replace(/([.,!?、。！？])([jkh]):/gi, "$1 $2:");
+  }
+
+  function diario321Sum1To(n) {
+    const value = Math.max(0, Number(n) || 0);
+    return (value * (value + 1)) / 2;
+  }
+
+  function diario321StripFurigana(text = "") {
+    return String(text || "")
+      .replace(/\{[^}]*\}/g, "")
+      .replace(/[|｜]/g, "")
+      .trim();
+  }
 
   function saveDiario321AltruistaState() {
     diario321AltruistaState.updatedAt = new Date().toISOString();
@@ -38914,7 +38947,7 @@
   }
 
   function diario321ApplySpeechStyleToRomaji(value = "", style = "polite") {
-    const text = String(value || "");
+    const text = diario321NormalizeRomajiMarkers(value);
     const politeMap = {
       tomatta: "tomarimashita",
       deta: "demashita",
@@ -38959,7 +38992,7 @@
   }
 
   function diario321JapaneseFromRomajiInput(value = "", style = diario321AltruistaState.speechStyle || "polite") {
-    const raw = String(value || "").trim();
+    const raw = diario321NormalizeRomajiMarkers(value).trim();
     if (!raw) return "";
     const prepared = diario321ApplySpeechStyleToRomaji(raw, style);
     return romajiToSmartJapanese(prepared, "mixed").trim();
@@ -38968,20 +39001,36 @@
   function updateDiario321RomajiIdea(value, options = {}) {
     const romajiValue = String(value || "");
     const jpInput = document.querySelector("[data-altruista-field='jpIdea']");
-    const currentJp = String(jpInput?.value ?? diario321AltruistaState.jpIdea ?? "");
     const generatedJp = diario321JapaneseFromRomajiInput(romajiValue, diario321AltruistaState.speechStyle || "polite");
-    const canReplaceJp = options.force || !currentJp.trim() || currentJp === diario321LastAutoJapaneseIdea;
 
     diario321AltruistaState.romajiIdea = romajiValue;
 
-    if (canReplaceJp) {
-      diario321AltruistaState.jpIdea = generatedJp;
-      diario321LastAutoJapaneseIdea = generatedJp;
-      if (jpInput) jpInput.value = generatedJp;
-    }
+    /*
+      DIÁRIO321 4.17.13-R:
+      O campo Romaji é a fonte viva da escrita japonesa.
+      Sempre que o aluno digitar Romaji, o campo Japonês acompanha em tempo real.
+      Isso evita conflito com frases antigas e torna a criação previsível no celular.
+    */
+    diario321AltruistaState.jpIdea = generatedJp;
+    diario321LastAutoJapaneseIdea = generatedJp;
+    if (jpInput) jpInput.value = generatedJp;
 
     diario321NoteFoldOpen = true;
     saveDiario321AltruistaState();
+  }
+
+  function clearDiario321PracticeDraft({ keepOpen = false } = {}) {
+    diario321AltruistaState.ptIdea = "";
+    diario321AltruistaState.romajiIdea = "";
+    diario321AltruistaState.jpIdea = "";
+    diario321AltruistaState.checklist = { paper: false, voice: false, useful: false };
+    diario321LastAutoJapaneseIdea = "";
+    diario321NoteFoldOpen = !!keepOpen;
+
+    ["ptIdea", "romajiIdea", "jpIdea"].forEach(name => {
+      const el = document.querySelector(`[data-altruista-field='${name}']`);
+      if (el) el.value = "";
+    });
   }
 
   function setDiario321SpeechStyle(style) {
@@ -39034,9 +39083,10 @@
 
     diario321AltruistaState.environment = String(env || "trabalho");
     diario321AltruistaState.role = String(role || "").trim();
-    diario321AltruistaState.wordRomaji = String(wordRomaji || "").trim();
-    diario321AltruistaState.wordPt = String(wordPt || "").trim();
-    diario321AltruistaState.chance = clamp(Number(chance || 0), 0, 100);
+    const selectedEnvPreset = diario321AllEnvironmentPresets()[diario321AltruistaState.environment] || DIARIO321_ENVIRONMENT_PRESETS.trabalho;
+    diario321AltruistaState.wordRomaji = String(wordRomaji || selectedEnvPreset.exampleWord || "kikai").trim();
+    diario321AltruistaState.wordPt = String(wordPt || selectedEnvPreset.exampleMeaning || "máquina").trim();
+    diario321AltruistaState.chance = clamp(Number(chance || diario321AltruistaState.chance || 65), 0, 100);
     diario321AltruistaState.note = String(note || "").trim();
 
     if (!diario321AltruistaState.wordRomaji || !diario321AltruistaState.wordPt) {
@@ -39083,13 +39133,9 @@
     diario321AltruistaState.entries = Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : [];
     diario321AltruistaState.entries.unshift(entry);
     diario321AltruistaState.entries = diario321AltruistaState.entries.slice(0, 80);
-    diario321AltruistaState.ptIdea = "";
-    diario321AltruistaState.jpIdea = "";
-    diario321AltruistaState.romajiIdea = "";
-    diario321AltruistaState.checklist = { paper: false, voice: false, useful: false };
+    clearDiario321PracticeDraft({ keepOpen: false });
     saveDiario321AltruistaState();
-    diario321NoteFoldOpen = false;
-    toast("anotação salva");
+    toast("frase salva e campos limpos");
     render();
     setTimeout(() => {
       try { document.querySelector(".diario321PracticeEntries")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
@@ -39108,21 +39154,25 @@
   }
 
   function toggleDiario321EntryMastered(entryId) {
+    const id = String(entryId || "");
     diario321AltruistaState.entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).map(entry => {
-      if (entry.id !== entryId) return entry;
+      if (entry.id !== id) return entry;
       const mastered = !entry.mastered;
       return { ...entry, mastered, masteredAt: mastered ? new Date().toISOString() : null };
     });
+    keepDiario321EntryOpen(id);
     saveDiario321AltruistaState();
     render();
   }
 
 
   function toggleDiario321EntryFavorite(entryId) {
+    const id = String(entryId || "");
     diario321AltruistaState.entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).map(entry => {
-      if (entry.id !== entryId) return entry;
+      if (entry.id !== id) return entry;
       return { ...entry, favorite: !entry.favorite };
     });
+    keepDiario321EntryOpen(id);
     saveDiario321AltruistaState();
     render();
   }
@@ -39256,11 +39306,14 @@
 
   function requestDeleteDiario321Entry(entryId) {
     diario321DeleteConfirmId = String(entryId || "");
+    keepDiario321EntryOpen(diario321DeleteConfirmId);
     render();
   }
 
   function cancelDeleteDiario321Entry() {
+    const keepId = diario321DeleteConfirmId;
     diario321DeleteConfirmId = "";
+    keepDiario321EntryOpen(keepId);
     render();
   }
 
@@ -39269,21 +39322,28 @@
     if (!id) return;
     diario321AltruistaState.entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).filter(entry => entry.id !== id);
     diario321DeleteConfirmId = "";
+    if (diario321OpenEntryId === id) diario321OpenEntryId = "";
+    if (diario321ActiveTrainingEntryId === id) diario321ActiveTrainingEntryId = "";
     saveDiario321AltruistaState();
     toast("frase removida");
     render();
   }
 
   function moveDiario321Entry(entryId, direction) {
+    const id = String(entryId || "");
     const entries = Array.isArray(diario321AltruistaState.entries) ? [...diario321AltruistaState.entries] : [];
-    const index = entries.findIndex(entry => entry.id === entryId);
+    const index = entries.findIndex(entry => entry.id === id);
     if (index < 0) return;
     const step = direction === "up" ? -1 : 1;
     const nextIndex = index + step;
-    if (nextIndex < 0 || nextIndex >= entries.length) return;
+    if (nextIndex < 0 || nextIndex >= entries.length) {
+      keepDiario321EntryOpen(id);
+      return;
+    }
     const [entry] = entries.splice(index, 1);
     entries.splice(nextIndex, 0, entry);
     diario321AltruistaState.entries = entries;
+    keepDiario321EntryOpen(id);
     saveDiario321AltruistaState();
     render();
   }
@@ -39304,6 +39364,205 @@
   function adjustDiario321EntryWriteCount(entryId, delta) {
     // Mantido apenas como compatibilidade com versões antigas.
     toggleDiario321EntryMastered(entryId);
+  }
+
+  function diario321InitialTraining105x() {
+    return {
+      cycleStart: 14,
+      count: 14,
+      repsDone: 0,
+      cyclesDone: 0,
+      completed: false,
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  function diario321EntryTrainingInfo(entry = {}) {
+    const raw = entry && typeof entry.training105x === "object" ? entry.training105x : {};
+    const cycleStart = clamp(Number(raw.cycleStart || 14), 1, 14);
+    const count = clamp(Number(raw.count || cycleStart), 1, cycleStart);
+    const remaining = count + diario321Sum1To(cycleStart - 1);
+    const repsDone = clamp(105 - remaining, 0, 105);
+    const cycleNumber = clamp(15 - cycleStart, 1, 14);
+    const percent = Math.round((repsDone / 105) * 100);
+    const completed = !!raw.completed || repsDone >= 105;
+    return {
+      cycleStart,
+      count,
+      cycleNumber,
+      repsDone,
+      remaining,
+      percent,
+      completed,
+      nextCycleStart: cycleStart > 1 ? cycleStart - 1 : 1
+    };
+  }
+
+  function updateDiario321EntryTraining(entryId, updater) {
+    const id = String(entryId || "");
+    if (!id) return;
+    diario321AltruistaState.entries = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).map(entry => {
+      if (entry.id !== id) return entry;
+      return updater(entry) || entry;
+    });
+    saveDiario321AltruistaState();
+    render();
+  }
+
+  function startDiario321EntryTraining(entryId) {
+    const id = String(entryId || "");
+    const exists = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).some(entry => entry.id === id);
+    if (!exists) return;
+    diario321ActiveTrainingEntryId = id;
+    keepDiario321EntryOpen(id);
+    updateDiario321EntryTraining(id, entry => ({
+      ...entry,
+      training105x: entry.training105x && typeof entry.training105x === "object" ? entry.training105x : diario321InitialTraining105x(),
+      updatedAt: new Date().toISOString()
+    }));
+    toast("treino 105x do Diário aberto");
+    setTimeout(() => {
+      try { document.querySelector(`[data-diario-training-panel="${CSS.escape(id)}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" }); } catch {}
+    }, 90);
+  }
+
+  function closeDiario321EntryTraining(entryId) {
+    const id = String(entryId || "");
+    if (!entryId || diario321ActiveTrainingEntryId === id) diario321ActiveTrainingEntryId = "";
+    keepDiario321EntryOpen(id);
+    render();
+  }
+
+  function resetDiario321EntryTraining(entryId) {
+    const id = String(entryId || "");
+    diario321ActiveTrainingEntryId = id;
+    keepDiario321EntryOpen(id);
+    updateDiario321EntryTraining(id, entry => ({
+      ...entry,
+      training105x: diario321InitialTraining105x(),
+      mastered: false,
+      masteredAt: null,
+      updatedAt: new Date().toISOString()
+    }));
+    toast("treino reiniciado");
+  }
+
+  function repeatDiario321EntryTraining(entryId) {
+    const id = String(entryId || "");
+    diario321ActiveTrainingEntryId = id;
+    keepDiario321EntryOpen(id);
+    let finished = false;
+    updateDiario321EntryTraining(id, entry => {
+      const info = diario321EntryTrainingInfo(entry);
+      if (info.completed) return entry;
+
+      let cycleStart = info.cycleStart;
+      let count = info.count;
+      let completed = false;
+
+      if (count > 1) {
+        count -= 1;
+      } else if (cycleStart > 1) {
+        cycleStart -= 1;
+        count = cycleStart;
+      } else {
+        completed = true;
+        count = 1;
+        finished = true;
+      }
+
+      const updatedInfo = diario321EntryTrainingInfo({ training105x: { cycleStart, count, completed } });
+      return {
+        ...entry,
+        training105x: {
+          cycleStart,
+          count,
+          repsDone: updatedInfo.repsDone,
+          cyclesDone: completed ? 14 : Math.max(0, 14 - cycleStart),
+          completed,
+          updatedAt: new Date().toISOString()
+        },
+        mastered: completed ? true : entry.mastered,
+        masteredAt: completed ? new Date().toISOString() : entry.masteredAt,
+        updatedAt: new Date().toISOString()
+      };
+    });
+    toast(finished ? "frase dominada no Diário" : "repetição registrada");
+  }
+
+  function speakDiario321EntryTraining(entryId) {
+    const entry = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).find(item => item.id === entryId);
+    if (!entry) return;
+    const text = diario321StripFurigana(entry.jp || diario321JapaneseFromRomajiInput(entry.romaji || "", entry.speechStyle || "polite") || entry.romaji || entry.pt || "");
+    if (!text) {
+      toast("sem frase para ouvir");
+      return;
+    }
+    try {
+      const panel = document.querySelector(`[data-diario-training-panel="${CSS.escape(String(entryId || ""))}"]`);
+      panel?.classList?.add?.("is-speaking");
+      window.clearTimeout(window.__diario321SpeakingTimer);
+      window.__diario321SpeakingTimer = window.setTimeout(() => {
+        try { panel?.classList?.remove?.("is-speaking"); } catch {}
+      }, 1800);
+
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "ja-JP";
+      u.rate = 0.92;
+      u.onend = () => { try { panel?.classList?.remove?.("is-speaking"); } catch {} };
+      u.onerror = () => { try { panel?.classList?.remove?.("is-speaking"); } catch {} };
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+      toast("ouvindo frase");
+    } catch {
+      toast("voz indisponível");
+    }
+  }
+
+  function renderDiario321EntryTrainingPanel(entry = {}) {
+    if (diario321ActiveTrainingEntryId !== entry.id) return "";
+    const info = diario321EntryTrainingInfo(entry);
+    const jpPhrase = String(entry.jp || "").trim();
+    const romajiPhrase = String(entry.romaji || "").trim();
+    const ptPhrase = String(entry.pt || "").trim();
+    const mainPhrase = jpPhrase || diario321JapaneseFromRomajiInput(romajiPhrase, entry.speechStyle || "polite") || romajiPhrase || ptPhrase || "frase";
+    return `
+      <section class="diario321EntryTrainingPanel" data-diario-training-panel="${escapeHTML(entry.id)}" aria-label="treino 105x do Diário">
+        <div class="diario321EntryTrainingHead">
+          <div>
+            <small>Treino 105x do Diário</small>
+            <b>${info.completed ? "Frase dominada" : `Ciclo ${info.cycleNumber}`}</b>
+          </div>
+          <span>${info.repsDone}/105</span>
+        </div>
+
+        <div class="diario321TrainingCore">
+          <div class="diario321TrainingCounter ${info.completed ? "is-complete" : ""}">
+            <strong>${info.completed ? "✓" : info.count}</strong>
+            <span>${info.completed ? "dominada" : `ciclo ${info.cycleNumber}`}</span>
+          </div>
+          <div class="diario321TrainingPhrase">
+            <b>${escapeHTML(mainPhrase)}</b>
+            ${ptPhrase ? `<em>${escapeHTML(ptPhrase)}</em>` : ""}
+            ${romajiPhrase ? `<small>${escapeHTML(romajiPhrase)}</small>` : ""}
+          </div>
+        </div>
+
+        <div class="diario321TrainingCycleHint">
+          <span>${info.completed ? "105 repetições concluídas" : `${info.count}, ${Math.max(1, info.count - 1)}, ${Math.max(1, info.count - 2)}...1`}</span>
+          <small>${info.completed ? "você pode reiniciar quando quiser" : `depois começa ${info.nextCycleStart}...1`}</small>
+        </div>
+
+        <div class="diario321TrainingBar" aria-label="progresso do treino"><span style="width:${info.percent}%"></span></div>
+
+        <div class="diario321TrainingActions">
+          <button type="button" data-entry-train-speak="${escapeHTML(entry.id)}">🔊 ouvir</button>
+          <button class="is-main" type="button" data-entry-train-repeat="${escapeHTML(entry.id)}">${info.completed ? "concluído" : "repeti"}</button>
+          <button type="button" data-entry-train-reset="${escapeHTML(entry.id)}">reiniciar</button>
+          <button type="button" data-entry-train-close="${escapeHTML(entry.id)}">fechar</button>
+        </div>
+      </section>
+    `;
   }
 
   function resetDiario321Altruista() {
@@ -39421,7 +39680,7 @@
 
   function renderDiario321QuickGuide() {
     return `
-      <details class="diario321QuickGuide diario321StudyMethod" open>
+      <details class="diario321QuickGuide diario321StudyMethod">
         <summary>
           <span>Guia rápido</span>
           <small>Use pouco. Fale melhor.</small>
@@ -39586,52 +39845,71 @@
 
   function renderDiario321PracticeEditor() {
     const hasEntries = Array.isArray(diario321AltruistaState.entries) && diario321AltruistaState.entries.length > 0;
+    const hasDraft = !!String(diario321AltruistaState.ptIdea || diario321AltruistaState.romajiIdea || diario321AltruistaState.jpIdea || "").trim();
+    const isOpen = !!diario321NoteFoldOpen;
+    const summaryStatus = hasDraft ? "rascunho em andamento" : hasEntries ? "toque para criar nova frase" : "toque para criar a primeira frase";
     return `
-      <details class="diario321PracticeEditor diario321DiaryWriteBox diario321CollapsibleCard diario321NoteFold" ${(!hasEntries || diario321NoteFoldOpen) ? "open" : ""}>
-        <summary class="diario321FoldSummary">
-          <span>Preparando o Terreno</span>
-          <b>nova frase</b>
+      <details id="diario321WritingCard" class="diario321ModernCard diario321WritingCard diario321PracticeEditor diario321NoteFold ${isOpen ? "is-open" : ""}" aria-label="sua escrita de hoje" ${isOpen ? "open" : ""}>
+        <summary class="diario321WritingSummary" aria-label="abrir criação de frase">
+          <span>
+            <b>✎ Sua escrita de hoje</b>
+            <small>${escapeHTML(summaryStatus)}</small>
+          </span>
+          <em>${isOpen ? "recolher" : "nova frase"}</em>
         </summary>
-        <div class="diario321FoldBody">
-          <p>Crie uma frase simples a partir da sua semente.</p>
-          <label class="diario321Field diario321Field--quiet">
-            <span>Português</span>
-            <textarea data-altruista-field="ptIdea" placeholder="ex.: A máquina parou de repente.">${escapeHTML(diario321AltruistaState.ptIdea || "")}</textarea>
-          </label>
-          <label class="diario321Field diario321Field--quiet diario321Field--compactText diario321RomajiLiveField">
-            <span>Romaji</span>
-            <small>normal → hiragana • k: katakana • j: kanji</small>
-            <textarea data-altruista-field="romajiIdea" placeholder="ex.: j:kikai ga tomarimashita">${escapeHTML(diario321AltruistaState.romajiIdea || "")}</textarea>
-          </label>
-          <label class="diario321Field diario321Field--quiet diario321JapaneseLiveField">
-            <span>Japonês</span>
-            <textarea data-altruista-field="jpIdea" placeholder="ex.: 機械が止まりました。">${escapeHTML(diario321AltruistaState.jpIdea || "")}</textarea>
-          </label>
-          <div class="diario321ToneBox" aria-label="tom da frase">
+
+        <div class="diario321WritingFoldBody">
+          <div class="diario321WritingGrid diario321WritingGrid--professional">
+            <label class="diario321ModernField diario321ModernField--pt">
+              <span>Português</span>
+              <textarea data-altruista-field="ptIdea" placeholder="Ex.: A máquina parou de repente e apareceu um erro que eu não sei.">${escapeHTML(diario321AltruistaState.ptIdea || "")}</textarea>
+            </label>
+
+            <label class="diario321ModernField diario321ModernField--romaji">
+              <span>Romaji</span>
+              <textarea data-altruista-field="romajiIdea" placeholder="j: kikai ga totsuzen tomatte, shiranai k:era- ga hyouji saremashita.">${escapeHTML(diario321AltruistaState.romajiIdea || "")}</textarea>
+              <small class="diario321FieldHint">Atalhos: <b>j:</b> kanji · <b>k:</b> katakana · sem prefixo = hiragana</small>
+            </label>
+
+            <label class="diario321ModernField diario321ModernField--jp">
+              <span>Japonês</span>
+              <textarea data-altruista-field="jpIdea" placeholder="機械が突然止まって、しらないエラーが表示されました。">${escapeHTML(diario321AltruistaState.jpIdea || "")}</textarea>
+            </label>
+          </div>
+
+          ${renderDiario321AIBox()}
+
+          <div class="diario321ToneBox diario321ToneBox--modern" aria-label="tom da frase">
             <span>Como quer falar?</span>
-            <div class="diario321ToneChoices diario321ToneChoices--custom">
+            <div class="diario321ToneChoices diario321ToneChoices--custom diario321ToneChoices--modern">
               ${renderDiario321ToneSelector({ selected: diario321AltruistaState.speechStyle || "polite" })}
             </div>
           </div>
-          <button class="diario321PrimaryBtn diario321PrimaryBtn--diary" type="button" data-save-practice-entry>salvar anotação</button>
+
+          <button class="diario321PrimaryBtn diario321PrimaryBtn--diary diario321PrimaryBtn--wide" type="button" data-save-practice-entry>
+            <span>▣</span> Salvar no Diário
+          </button>
         </div>
       </details>
     `;
   }
 
   function openDiario321AddPhrase() {
-    diario321NoteFoldOpen = true;
+    clearDiario321PracticeDraft({ keepOpen: true });
     diario321SetupFoldOpen = false;
     saveDiario321AltruistaState();
     render();
     setTimeout(() => {
       try {
-        const box = document.querySelector(".diario321PracticeEditor");
-        box?.scrollIntoView({ behavior: "smooth", block: "start" });
-        const first = box?.querySelector("textarea[data-altruista-field='ptIdea'], textarea[data-altruista-field='jpIdea']");
+        const box = document.getElementById("diario321WritingCard") || document.querySelector(".diario321WritingCard");
+        box?.classList?.add("is-focus-target");
+        box?.scrollIntoView({ behavior: "smooth", block: "center" });
+        const first = box?.querySelector("textarea[data-altruista-field='ptIdea'], textarea[data-altruista-field='romajiIdea'], textarea[data-altruista-field='jpIdea']");
         first?.focus?.({ preventScroll: true });
+        setTimeout(() => { try { box?.classList?.remove("is-focus-target"); } catch {} }, 1400);
       } catch {}
-    }, 80);
+    }, 100);
+    toast("campo de nova frase aberto");
   }
 
   function renderDiario321AddPhraseButton() {
@@ -39657,10 +39935,21 @@
       `;
     }
 
+    const practicedCount = allEntries.filter(entry => !!entry.mastered).length;
+    const favoriteCount = allEntries.filter(entry => !!entry.favorite).length;
+    const readyCount = allEntries.filter(entry => String(entry?.jp || "").trim() && String(entry?.pt || "").trim()).length;
+
     return `
-      <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder">
-        <div class="diario321SavedHead"><b>Minhas frases</b><span>${allEntries.length}</span></div>
+      <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder diario321PhraseLibrary" id="diario321PhraseLibrary">
+        <div class="diario321SavedHead diario321LibraryHead"><b>Minhas frases</b><span>${allEntries.length}</span></div>
+        <div class="diario321LibraryStats" aria-label="resumo das frases criadas">
+          <span><b>${allEntries.length}</b><small>criadas</small></span>
+          <span><b>${practicedCount}</b><small>praticadas</small></span>
+          <span><b>${favoriteCount}</b><small>favoritas</small></span>
+          <span><b>${readyCount}</b><small>prontas</small></span>
+        </div>
         ${renderDiario321EntryTabs(allEntries)}
+        <div class="diario321LibraryList">
         ${entries.length ? entries.map((entry, index) => {
           const mastered = !!entry.mastered;
           const favorite = !!entry.favorite;
@@ -39675,7 +39964,10 @@
           const toneLabel = diario321ToneLabel(entry.speechStyle || "polite");
           const toneId = diario321NormalizeTone(entry.speechStyle || "polite");
           const toneClass = toneId === "natural" ? "is-natural" : toneId === "polite" ? "is-polite" : "is-custom";
+          const trainingInfo = diario321EntryTrainingInfo(entry);
           const isEditing = diario321EditingEntryId === entry.id;
+          const isTrainingOpen = diario321ActiveTrainingEntryId === entry.id;
+          const isEntryOpen = isTrainingOpen || diario321OpenEntryId === entry.id || diario321DeleteConfirmId === entry.id;
 
           if (isEditing) {
             return `
@@ -39717,54 +40009,79 @@
             `;
           }
 
+          const compactTitle = jpPhrase || ptPhrase || romajiPhrase || "frase sem texto";
+          const compactPreview = ptPhrase || romajiPhrase || jpPhrase;
+          const pageNumber = Math.max(1, Math.ceil((index + 1) / 7));
+
           return `
-            <article class="diario321PracticeEntry diario321DiaryEntry diario321PhraseLine diario321PhraseLineV2 ${mastered ? "is-mastered" : ""}" draggable="true" data-entry-drag-id="${escapeHTML(entry.id)}">
-              <div class="diario321PhraseTextBlock">
-                <div class="diario321EntryTop diario321EntryTop--line">
-                  <small><span>${escapeHTML(envIcon)}</span> Frase ${index + 1} · ${escapeHTML(envLabel)} · ${escapeHTML(entry.wordRomaji || "palavra")} = ${escapeHTML(entry.wordPt || "")}</small>
-                  <button class="diario321FavoriteBtn ${favorite ? "is-active" : ""}" type="button" data-entry-favorite="${escapeHTML(entry.id)}" aria-label="favoritar frase">${favorite ? "★" : "☆"}</button>
-                </div>
-                <div class="diario321EntryMain ${jpPhrase ? "is-japanese" : ""}" title="frase principal">${escapeHTML(mainPhrase)}</div>
-                ${supportPhrase ? `<div class="diario321EntryPt">${escapeHTML(supportPhrase)}</div>` : ""}
-                ${romajiSupport ? `<div class="diario321EntryRomaji">${escapeHTML(romajiSupport)}</div>` : ""}
-              </div>
-              <div class="diario321PhraseTools" aria-label="ações da frase">
-                <label class="diario321MasteredCheck diario321MasteredCheck--clean" title="marcar como praticada">
-                  <input type="checkbox" ${mastered ? "checked" : ""} data-entry-mastered="${escapeHTML(entry.id)}">
-                  <span>praticada</span>
-                </label>
-                <em class="diario321ToneChip diario321ToneChip--tools ${toneClass}" aria-label="tom da frase">${escapeHTML(toneLabel)}</em>
-                <button class="diario321EntryMiniBtn diario321IconBtn" type="button" data-entry-edit="${escapeHTML(entry.id)}" aria-label="editar frase">✎</button>
-                <button class="diario321DeleteEntry diario321DeleteEntry--clean diario321IconBtn" type="button" data-entry-delete="${escapeHTML(entry.id)}" aria-label="excluir frase">
-                  <svg class="diario321TrashIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M4 7h16"/>
-                    <path d="M10 11v6"/>
-                    <path d="M14 11v6"/>
-                    <path d="M6 7l1 14h10l1-14"/>
-                    <path d="M9 7V4h6v3"/>
-                  </svg>
-                </button>
-                <div class="diario321MovePair" aria-label="reordenar frase">
-                  <button class="diario321EntryMiniBtn diario321IconBtn" type="button" data-entry-move="up" data-entry-id="${escapeHTML(entry.id)}" aria-label="subir frase">↑</button>
-                  <button class="diario321EntryMiniBtn diario321IconBtn" type="button" data-entry-move="down" data-entry-id="${escapeHTML(entry.id)}" aria-label="descer frase">↓</button>
-                </div>
-                <span class="diario321DragHint" title="arraste para ordenar">☷</span>
-              </div>
-              ${diario321DeleteConfirmId === entry.id ? `
-                <div class="diario321DeleteConfirm" role="alert">
-                  <b>Apagar esta frase?</b>
-                  <span>Essa ação remove a anotação do Diário321.</span>
-                  <div>
-                    <button type="button" class="diario321DeleteCancel" data-entry-delete-cancel>cancelar</button>
-                    <button type="button" class="diario321DeleteConfirmBtn" data-entry-delete-confirm="${escapeHTML(entry.id)}">apagar</button>
+            <article class="diario321PracticeEntry diario321DiaryEntry diario321PhraseLine diario321PhraseLineV2 diario321LibraryItem ${mastered ? "is-mastered" : ""}" draggable="true" data-entry-drag-id="${escapeHTML(entry.id)}">
+              <details class="diario321LibraryDetails" ${isEntryOpen ? "open" : ""}>
+                <summary class="diario321LibrarySummary">
+                  <span class="diario321LibrarySummaryMeta">
+                    <small>${escapeHTML(envIcon)} Página ${pageNumber} · ${escapeHTML(envLabel)}</small>
+                    <b>${escapeHTML(entry.wordRomaji || "palavra")} ${entry.wordPt ? `= ${escapeHTML(entry.wordPt)}` : ""}</b>
+                  </span>
+                  <span class="diario321LibrarySummaryText">
+                    <strong class="${jpPhrase ? "is-japanese" : ""}">${escapeHTML(compactTitle)}</strong>
+                    ${compactPreview && compactPreview !== compactTitle ? `<em>${escapeHTML(compactPreview)}</em>` : ""}
+                  </span>
+                  <span class="diario321LibrarySummaryBadges">
+                    <i class="diario321ToneChip diario321ToneChip--tools ${toneClass}" aria-label="tom da frase">${escapeHTML(toneLabel)}</i>
+                    ${mastered ? `<i class="diario321LibraryState is-done">praticada</i>` : `<i class="diario321LibraryState">revisar</i>`}
+                    <i class="diario321LibraryState diario321LibraryTrainState ${trainingInfo.completed ? "is-done" : ""}">${trainingInfo.completed ? "105x" : `${trainingInfo.repsDone}/105`}</i>
+                    ${favorite ? `<i class="diario321LibraryStar">★</i>` : ""}
+                  </span>
+                </summary>
+
+                <div class="diario321PhraseTextBlock diario321LibraryExpanded">
+                  <div class="diario321EntryTop diario321EntryTop--line">
+                    <small><span>${escapeHTML(envIcon)}</span> Frase ${index + 1} · ${escapeHTML(envLabel)} · ${escapeHTML(entry.wordRomaji || "palavra")} ${entry.wordPt ? `= ${escapeHTML(entry.wordPt)}` : ""}</small>
+                    <button class="diario321FavoriteBtn ${favorite ? "is-active" : ""}" type="button" data-entry-favorite="${escapeHTML(entry.id)}" aria-label="favoritar frase">${favorite ? "★" : "☆"}</button>
                   </div>
+                  <div class="diario321EntryMain ${jpPhrase ? "is-japanese" : ""}" title="frase principal">${escapeHTML(mainPhrase)}</div>
+                  ${supportPhrase ? `<div class="diario321EntryPt">${escapeHTML(supportPhrase)}</div>` : ""}
+                  ${romajiSupport ? `<div class="diario321EntryRomaji">${escapeHTML(romajiSupport)}</div>` : ""}
                 </div>
-              ` : ""}
+                ${renderDiario321EntryTrainingPanel(entry)}
+                <div class="diario321PhraseTools diario321LibraryTools" aria-label="ações da frase">
+                  <button class="diario321EntryTrainBtn" type="button" data-entry-start-train="${escapeHTML(entry.id)}">🔁 Treinar 105x</button>
+                  <label class="diario321MasteredCheck diario321MasteredCheck--clean" title="marcar como praticada">
+                    <input type="checkbox" ${mastered ? "checked" : ""} data-entry-mastered="${escapeHTML(entry.id)}">
+                    <span>praticada</span>
+                  </label>
+                  <button class="diario321EntryMiniBtn diario321IconBtn" type="button" data-entry-edit="${escapeHTML(entry.id)}" aria-label="editar frase">✎</button>
+                  <button class="diario321DeleteEntry diario321DeleteEntry--clean diario321IconBtn" type="button" data-entry-delete="${escapeHTML(entry.id)}" aria-label="excluir frase">
+                    <svg class="diario321TrashIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M4 7h16"/>
+                      <path d="M10 11v6"/>
+                      <path d="M14 11v6"/>
+                      <path d="M6 7l1 14h10l1-14"/>
+                      <path d="M9 7V4h6v3"/>
+                    </svg>
+                  </button>
+                  <div class="diario321MovePair" aria-label="reordenar frase">
+                    <button class="diario321EntryMiniBtn diario321IconBtn" type="button" data-entry-move="up" data-entry-id="${escapeHTML(entry.id)}" aria-label="subir frase">↑</button>
+                    <button class="diario321EntryMiniBtn diario321IconBtn" type="button" data-entry-move="down" data-entry-id="${escapeHTML(entry.id)}" aria-label="descer frase">↓</button>
+                  </div>
+                  <span class="diario321DragHint" title="arraste para ordenar">☷</span>
+                </div>
+                ${diario321DeleteConfirmId === entry.id ? `
+                  <div class="diario321DeleteConfirm" role="alert">
+                    <b>Apagar esta frase?</b>
+                    <span>Essa ação remove a anotação do Diário321.</span>
+                    <div>
+                      <button type="button" class="diario321DeleteCancel" data-entry-delete-cancel>cancelar</button>
+                      <button type="button" class="diario321DeleteConfirmBtn" data-entry-delete-confirm="${escapeHTML(entry.id)}">apagar</button>
+                    </div>
+                  </div>
+                ` : ""}
+              </details>
             </article>
           `;
         }).join("") : `
           <p class="diario321Empty">Nenhuma frase neste filtro.</p>
         `}
+        </div>
         ${renderDiario321AddPhraseButton()}
       </section>
     `;
@@ -39801,31 +40118,659 @@
     `;
   }
 
-  function renderDiario321AltruistaNotebook() {
-    const hasMap = diario321HasPolivalencia();
+
+  function diario321SeedInfo() {
+    const env = diario321SelectedEnvironment();
+    const romaji = String(diario321AltruistaState.wordRomaji || env.exampleWord || "kikai").trim().toLowerCase();
+    const meaning = String(diario321AltruistaState.wordPt || env.exampleMeaning || "máquina").trim();
+    let jp = "";
+    try {
+      jp = GENIAL_KANJI_WORDS[romaji] || GENIAL_KATAKANA_WORDS[romaji] || diario321JapaneseFromRomajiInput(`j:${romaji}`, diario321AltruistaState.speechStyle || "polite") || romajiToSmartJapanese(romaji, "mixed");
+    } catch {
+      jp = romaji === "kikai" ? "機械" : romaji;
+    }
+    return {
+      env,
+      envKey: diario321AltruistaState.environment || "trabalho",
+      romaji: romaji || "kikai",
+      meaning: meaning || "máquina",
+      jp: jp || "機械",
+      chance: clamp(Number(diario321AltruistaState.chance || 65), 0, 100)
+    };
+  }
+
+  function diario321ProgressInfo() {
+    const seed = diario321SeedInfo();
+    const entries = Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : [];
+    const seedEntries = entries.filter(entry => String(entry?.wordRomaji || "").toLowerCase() === seed.romaji || !String(entry?.wordRomaji || "").trim());
+    const written = entries.length ? seedEntries.length || entries.length : 0;
+    const variations = Math.min(7, written);
+    const percent = Math.max(0, Math.min(100, Math.round((variations / 7) * 100)));
+    return { written, variations, percent };
+  }
+
+  function diario321ChallengeTemplates(kind = "simple") {
+    const seed = diario321SeedInfo();
+    const word = seed.meaning || "palavra";
+    const romaji = seed.romaji || "kikai";
+    const templates = {
+      simple: {
+        pt: `A ${word} é importante.`,
+        romaji: `j:${romaji} wa taisetsu desu.`
+      },
+      work: {
+        pt: `A ${word} parou no trabalho.`,
+        romaji: `j:${romaji} ga tomarimashita.`
+      },
+      question: {
+        pt: `Você pode verificar a ${word}?`,
+        romaji: `j:${romaji} o mite moraemasu ka.`
+      },
+      negative: {
+        pt: `A ${word} não está funcionando.`,
+        romaji: `j:${romaji} wa ugoiteimasen.`
+      },
+      polite: {
+        pt: `Poderia confirmar a ${word}, por favor?`,
+        romaji: `j:${romaji} o kakunin shite itadakemasu ka.`
+      },
+      past: {
+        pt: `A ${word} parou ontem também.`,
+        romaji: `kinou mo j:${romaji} ga tomarimashita.`
+      },
+      real: {
+        pt: `A ${word} parou e apareceu um erro desconhecido.`,
+        romaji: `j:${romaji} ga tomatte, shiranai k:era- ga hyouji saremashita.`
+      }
+    };
+    return templates[kind] || templates.simple;
+  }
+
+  function useDiario321Challenge(kind = "simple") {
+    const model = diario321ChallengeTemplates(kind);
+    diario321AltruistaState.ptIdea = model.pt;
+    diario321AltruistaState.romajiIdea = model.romaji;
+    diario321AltruistaState.jpIdea = diario321JapaneseFromRomajiInput(model.romaji, diario321AltruistaState.speechStyle || "polite");
+    diario321LastAutoJapaneseIdea = diario321AltruistaState.jpIdea;
+    diario321NoteFoldOpen = true;
+    saveDiario321AltruistaState();
+    toast("desafio enviado para sua escrita");
+    render();
+    setTimeout(() => {
+      try { document.querySelector(".diario321WritingCard")?.scrollIntoView({ behavior: "smooth", block: "center" }); } catch {}
+    }, 80);
+  }
+
+  function diario321CurrentEditorField(name = "") {
+    const el = document.querySelector(`[data-altruista-field='${name}']`);
+    return String(el?.value || diario321AltruistaState?.[name] || "").trim();
+  }
+
+  function diario321BuildAIPrompt() {
+    const seed = diario321SeedInfo();
+    const env = seed.env?.label || "vida real no Japão";
+    const tone = diario321ToneLabel(diario321AltruistaState.speechStyle || "polite");
+    const currentPt = diario321CurrentEditorField("ptIdea");
+    const currentRomaji = diario321CurrentEditorField("romajiIdea");
+    const currentJp = diario321CurrentEditorField("jpIdea");
+    const hasDraft = !!(currentPt || currentRomaji || currentJp);
+
+    const lines = [
+      "Você é um professor de japonês prático para brasileiros que vivem e trabalham no Japão.",
+      "Crie um material expansivo para o DIÁRIO321 com exatamente 10 frases curtas, naturais e úteis.",
+      `Palavra em estudo: ${seed.jp} (${seed.romaji} = ${seed.meaning}).`,
+      `Contexto da frase: ${env}. Tom desejado: ${tone}.`,
+      "",
+      hasDraft ? "Use a frase abaixo como base principal e crie variações úteis a partir dela:" : "Crie as frases com base na palavra e no contexto acima:",
+      currentPt ? `Português base: ${currentPt}` : "Português base: ainda não preenchido",
+      currentRomaji ? `Romaji base: ${currentRomaji}` : "Romaji base: ainda não preenchido",
+      currentJp ? `Japonês base: ${currentJp}` : "Japonês base: ainda não preenchido",
+      "",
+      "As 10 frases precisam cobrir obrigatoriamente:",
+      "1. presente afirmativo",
+      "2. presente negativo",
+      "3. passado afirmativo",
+      "4. passado negativo",
+      "5. futuro ou intenção",
+      "6. pergunta simples",
+      "7. pergunta educada",
+      "8. frase de trabalho",
+      "9. frase natural do cotidiano",
+      "10. frase para problema ou emergência leve",
+      "",
+      "Entregue exatamente neste formato para o Diário conseguir importar:",
+      "Frase 1 - presente afirmativo",
+      "Japonês: kanji{leitura} com espaços corretos antes de kanji com furigana",
+      "Romaji:",
+      "Português:",
+      "Tipo: presente afirmativo",
+      "Tom: Educado ou Natural",
+      "Uso: Trabalho / Cotidiano / Pergunta / Negativa / Passado / Futuro / Problema",
+      "Explicação curta:",
+      "",
+      "Repita o mesmo formato até a Frase 10.",
+      "",
+      "Regras:",
+      "- Use japonês natural, curto e seguro para vida real no Japão.",
+      "- Priorize frases que um brasileiro no Japão realmente usaria.",
+      "- Se aparecer palavra estrangeira, deixe em katakana.",
+      "- Evite frases longas demais.",
+      "- Cada frase precisa ser boa para repetir no treino 105x do Diário321.",
+      "- Não escreva explicações longas; seja direto."
+    ];
+
+    return lines.join("\n");
+  }
+
+  async function diario321CopyText(text) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {}
+    try {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "readonly");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      area.remove();
+      return !!ok;
+    } catch {
+      return false;
+    }
+  }
+
+  async function copyDiario321AIPrompt(ev) {
+    try { ev?.preventDefault?.(); ev?.stopPropagation?.(); } catch {}
+    const text = diario321BuildAIPrompt();
+    const ok = await diario321CopyText(text);
+    diario321AIPromptWasCopied = !!ok;
+    openDiario321AIPastePanel(text, "prompt");
+    toast(ok ? "pedido de variações copiado" : "pedido pronto para copiar");
+  }
+
+
+  function diario321FindAIBlockValue(block = "", labels = []) {
+    const lines = String(block || "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    const safeLabels = labels.map(label => String(label || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const pattern = new RegExp(`^(?:${safeLabels.join("|")})\\s*[:：-]\\s*(.+)$`, "i");
+    const found = lines.find(line => pattern.test(line));
+    return found ? found.replace(pattern, "$1").trim() : "";
+  }
+
+  function diario321ExtractAIVariationEntries(text = "") {
+    const raw = String(text || "").trim();
+    if (!raw) return [];
+
+    const blocks = [];
+    const regex = /(?:^|\n)\s*(?:#{1,4}\s*)?(?:Frase\s*)?(\d{1,2})\s*(?:[.\)\-–—:：]|\s+-\s+)?[^\n]*\n([\s\S]*?)(?=\n\s*(?:#{1,4}\s*)?(?:Frase\s*)?\d{1,2}\s*(?:[.\)\-–—:：]|\s+-\s+)|$)/gi;
+    let match;
+    while ((match = regex.exec(raw))) {
+      const n = Number(match[1] || 0);
+      const body = String(match[2] || "").trim();
+      if (n >= 1 && n <= 20 && body) blocks.push({ n, body });
+    }
+
+    if (blocks.length < 2) return [];
+
+    const seed = diario321SeedInfo();
+    const env = diario321AltruistaState.environment || "trabalho";
+    const normalizedTone = diario321NormalizeTone(diario321AltruistaState.speechStyle || "polite");
+    const nowIso = new Date().toISOString();
+
+    const entries = blocks.map(item => {
+      const jp = diario321FindAIBlockValue(item.body, ["Japonês", "Japones", "JP", "日本語"]);
+      const romaji = diario321FindAIBlockValue(item.body, ["Romaji", "Rōmaji", "Roomaji"]);
+      const pt = diario321FindAIBlockValue(item.body, ["Português", "Portugues", "Tradução", "Traducao", "PT"]);
+      const tipo = diario321FindAIBlockValue(item.body, ["Tipo", "Variação", "Variacao"]);
+      const tom = diario321FindAIBlockValue(item.body, ["Tom"]);
+      const uso = diario321FindAIBlockValue(item.body, ["Uso", "Contexto"]);
+      const explanation = diario321FindAIBlockValue(item.body, ["Explicação curta", "Explicacao curta", "Explicação", "Explicacao"]);
+
+      if (!jp && !romaji && !pt) return null;
+
+      const toneValue = /natural/i.test(tom) ? "natural" : (/educad|polid/i.test(tom) ? "polite" : normalizedTone);
+      return {
+        id: uid("diario_ai_variacao"),
+        environment: env,
+        wordRomaji: diario321AltruistaState.wordRomaji || seed.romaji,
+        wordPt: diario321AltruistaState.wordPt || seed.meaning,
+        jp,
+        pt,
+        romaji,
+        speechStyle: toneValue,
+        variationType: tipo || uso || `variação ${item.n}`,
+        source: "ia_expansiva_10",
+        note: explanation || "Variação criada pela IA para revisão 360°.",
+        checklist: { paper: false, voice: false, useful: true },
+        mastered: false,
+        favorite: false,
+        masteredAt: null,
+        createdAt: nowIso
+      };
+    }).filter(Boolean);
+
+    const unique = [];
+    const seen = new Set();
+    for (const entry of entries) {
+      const key = `${String(entry.jp || "").trim()}||${String(entry.pt || "").trim()}||${String(entry.romaji || "").trim()}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(entry);
+    }
+    return unique.slice(0, 10);
+  }
+
+  function diario321ApplyAIText(text = "") {
+    const raw = String(text || "").trim();
+    if (!raw) return false;
+
+    const variationEntries = diario321ExtractAIVariationEntries(raw);
+    if (variationEntries.length >= 2) {
+      diario321AltruistaState.entries = Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : [];
+      diario321AltruistaState.entries = [...variationEntries, ...diario321AltruistaState.entries].slice(0, 80);
+      diario321OpenEntryId = variationEntries[0]?.id || "";
+      clearDiario321PracticeDraft({ keepOpen: false });
+      saveDiario321AltruistaState();
+      render();
+      toast(`${variationEntries.length} variações adicionadas ao Diário`);
+      setTimeout(() => {
+        try { document.querySelector(".diario321PracticeEntries")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
+      }, 80);
+      return true;
+    }
+
+    const lines = raw.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    const findValue = (labels) => {
+      const pattern = new RegExp(`^(?:${labels.join("|")})\\s*[:：-]\\s*(.+)$`, "i");
+      const found = lines.find(line => pattern.test(line));
+      return found ? found.replace(pattern, "$1").trim() : "";
+    };
+    const jp = findValue(["japon[eê]s", "jp", "日本語"]);
+    const romaji = findValue(["romaji", "r[oô]maji"]);
+    const pt = findValue(["portugu[eê]s", "tradu[cç][aã]o", "pt"]);
+    if (jp) diario321AltruistaState.jpIdea = jp;
+    if (romaji) diario321AltruistaState.romajiIdea = romaji;
+    if (pt) diario321AltruistaState.ptIdea = pt;
+    if (!jp && !romaji && !pt) {
+      diario321AltruistaState.ptIdea = raw.slice(0, 800);
+    }
+    diario321NoteFoldOpen = true;
+    saveDiario321AltruistaState();
+    render();
+    return true;
+  }
+
+  function openDiario321AIPastePanel(initialText = "", mode = "paste") {
+    diario321AIPasteDraft = String(initialText || diario321AIPasteDraft || "");
+    diario321AIPasteMode = mode === "prompt" ? "prompt" : "paste";
+    diario321AIPasteOpen = true;
+    render();
+    setTimeout(() => {
+      try {
+        const area = document.querySelector("[data-ai-paste-text]");
+        area?.focus?.({ preventScroll: true });
+      } catch {}
+    }, 60);
+  }
+
+  function closeDiario321AIPastePanel() {
+    diario321AIPasteOpen = false;
+    diario321AIPasteDraft = "";
+    diario321AIPasteMode = "paste";
+    diario321AIPromptWasCopied = false;
+    render();
+  }
+
+  async function copyDiario321AIPastePanelText() {
+    const area = document.querySelector("[data-ai-paste-text]");
+    const text = String(area?.value || diario321AIPasteDraft || "").trim();
+    if (!text) return toast("nada para copiar");
+    const ok = await diario321CopyText(text);
+    toast(ok ? "texto copiado" : "não consegui copiar automaticamente");
+  }
+
+  async function applyDiario321AIPastePanel() {
+    if (diario321AIPasteMode === "prompt") {
+      if (diario321AIPromptWasCopied) {
+        closeDiario321AIPastePanel();
+        return;
+      }
+      await copyDiario321AIPastePanelText();
+      diario321AIPromptWasCopied = true;
+      toast("pedido de variações copiado");
+      render();
+      return;
+    }
+    const area = document.querySelector("[data-ai-paste-text]");
+    const text = String(area?.value || diario321AIPasteDraft || "").trim();
+    if (!text) {
+      toast("cole a resposta da IA primeiro");
+      return;
+    }
+    if (diario321ApplyAIText(text)) {
+      diario321AIPasteOpen = false;
+      diario321AIPasteDraft = "";
+      toast("resposta aplicada");
+      render();
+      return;
+    }
+    toast("não consegui entender o texto");
+  }
+
+  async function pasteDiario321AIResponse() {
+    try {
+      if (navigator.clipboard?.readText) {
+        const text = await navigator.clipboard.readText();
+        if (diario321ApplyAIText(text)) {
+          toast("resposta da IA colada");
+          return;
+        }
+        if (String(text || "").trim()) {
+          openDiario321AIPastePanel(text);
+          return;
+        }
+      }
+    } catch {}
+    openDiario321AIPastePanel("");
+  }
+
+  function saveDiario321CurrentToNihongoAndTrain() {
+    const seed = diario321SeedInfo();
+    const ptIdea = String(document.querySelector("[data-altruista-field='ptIdea']")?.value || diario321AltruistaState.ptIdea || "").trim();
+    const romajiIdea = String(document.querySelector("[data-altruista-field='romajiIdea']")?.value || diario321AltruistaState.romajiIdea || "").trim();
+    let jpIdea = String(document.querySelector("[data-altruista-field='jpIdea']")?.value || diario321AltruistaState.jpIdea || "").trim();
+
+    if (!jpIdea && romajiIdea) jpIdea = diario321JapaneseFromRomajiInput(romajiIdea, diario321AltruistaState.speechStyle || "polite");
+    if (!jpIdea || !ptIdea) {
+      toast(!jpIdea ? "preencha japonês ou romaji" : "preencha português");
+      return;
+    }
+
+    const topicId = selectedSaveTopicId ? selectedSaveTopicId() : "topic_caderno321";
+    const phrase = {
+      id: uid("diario321_train"),
+      source: "DIÁRIO321",
+      jp: jpIdea,
+      pt: ptIdea,
+      topicId,
+      targetTopicId: topicId,
+      targetTopicName: safeSaveTopicName ? safeSaveTopicName(topicId) : "Diário321",
+      newWords: [{ jp: seed.jp, pt: seed.meaning }],
+      caderno321: {
+        romaji: romajiIdea,
+        targetTopicId: topicId,
+        targetTopicName: safeSaveTopicName ? safeSaveTopicName(topicId) : "Diário321",
+        details: { words: `${seed.jp}=${seed.meaning}`, particles: "", explanation: "Frase criada na Oficina Viva do DIÁRIO321.", situation: seed.env?.label || "vida real" },
+        sourceVersion: "4.17.9-R"
+      },
+      note: `Palavra de estudo: ${seed.jp} = ${seed.meaning}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    const result = caderno321SavePhraseDirectlyToNihongoLocal(phrase);
+    if (!result.ok) {
+      toast(caderno321SaveErrorMessage ? caderno321SaveErrorMessage(result.error || result.reason) : "não consegui enviar");
+      return;
+    }
+
+    genialState.lastSavedAt = new Date().toISOString();
+    genialState.lastSaveError = "";
+    genialState.lastSavedTopicId = result.topicId || topicId;
+    genialState.lastSavedTopicName = result.topicName || "Diário321";
+    genialState.lastSavedPhraseId = result.phraseId || "";
+    saveGenialState();
+
+    try { saveDiario321PracticeEntry(); } catch {}
+
+    const prepared = caderno321PrepareTrainingDirectlyInNihongoLocal(result.phraseId || "", result.topicId || topicId);
+    const targetUrl = new URL("../index.html#/105x", window.location.href).href;
+    toast(prepared.ok ? "enviando para o treino 105x" : "frase salva no NIHONGO321");
+    setTimeout(() => {
+      try {
+        if (isEmbeddedInNihongo321() && window.parent && window.parent !== window) window.parent.location.href = targetUrl;
+        else window.location.href = targetUrl;
+      } catch {
+        window.location.href = targetUrl;
+      }
+    }, 180);
+  }
+
+  function renderDiario321ModernHero() {
+    const embedded = isEmbeddedInNihongo321();
     return `
-      <main class="appMain appMain--diario321 appMain--altruista appMain--diarioMinimal">
-        <section class="genialNotebook diario321AltruistaNotebook diario321MinimalNotebook">
-          <div class="diario321DiaryCover diario321DiaryCover--line">
-            <b>Diário de treino</b>
-            <span>Observe. Escreva. Pratique.</span>
+      <section class="diario321ModernHero" aria-label="entrada do Diário321">
+        <div class="diario321ModernHeroShade"></div>
+        <div class="diario321ModernHeroTop">
+          <div class="diario321ModernBrand">
+            <img src="../img/logo_nihongo321.png" alt="" onerror="this.style.display='none'">
+            <span><b>NIHONGO321</b><small>日本語で、未来をつくる。</small></span>
           </div>
-          ${renderDiario321PolivalenciaCard()}
-          ${hasMap ? `
-            ${renderDiario321PracticeMap()}
-            ${renderDiario321PracticeEditor()}
-            ${renderDiario321PracticeEntries()}
+          <div class="diario321ModernHeroActions">
+            ${embedded ? `<a class="diario321ModernBack" href="../index.html#/home" target="_parent" aria-label="voltar ao NIHONGO321">↩ voltar</a>` : ""}
+            <button class="diario321ModernTheme" type="button" data-action="toggleTheme" aria-label="alternar tema">${appTheme === "dark" ? "☀️" : "🌙"}</button>
+            <div class="diario321ModernStreak"><span>🔥</span><b>105</b></div>
+          </div>
+        </div>
+        <div class="diario321ModernHeroText">
+          <span class="diario321NotebookIcon">📒</span>
+          <h1>DIÁRIO<span>321</span></h1>
+          <p>Escreva o japonês que vai <strong>salvar</strong> seu dia amanhã.</p>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderDiario321WordPlayCard() {
+    const seed = diario321SeedInfo();
+    const hasWord = diario321HasPolivalencia();
+    return `
+      <section class="diario321PlayPanel" aria-label="palavra de treino">
+        <div class="diario321PlayQuestion">
+          <span class="diario321SunIcon">☀</span>
+          <b>Qual palavra vai dar <em>play</em><br>no seu treino hoje?</b>
+          <button type="button" data-save-polivalencia aria-label="abrir página">▶</button>
+        </div>
+
+        <div class="diario321SeedCard">
+          <div class="diario321SeedKanji">${escapeHTML(seed.jp)}</div>
+          <div class="diario321SeedMeta">
+            <strong>${escapeHTML(seed.romaji)}</strong>
+            <span>${escapeHTML(seed.meaning)}</span>
+          </div>
+          <button class="diario321SeedAudio" type="button" data-speak-seed aria-label="ouvir palavra">🔊</button>
+        </div>
+
+        <details class="diario321SeedSetup" ${hasWord ? "" : "open"}>
+          <summary>${hasWord ? "trocar semente" : "escolher minha primeira semente"}</summary>
+          <div class="diario321SeedSetupGrid">
+            <label><span>Palavra em romaji</span><input data-altruista-field="wordRomaji" value="${escapeHTML(diario321AltruistaState.wordRomaji || "")}" placeholder="ex.: ${escapeHTML(seed.env.exampleWord || "kikai")}"></label>
+            <label><span>Significado</span><input data-altruista-field="wordPt" value="${escapeHTML(diario321AltruistaState.wordPt || "")}" placeholder="ex.: ${escapeHTML(seed.env.exampleMeaning || "máquina")}"></label>
+            <label><span>Frequência: ${seed.chance}%</span><input type="range" min="0" max="100" step="5" value="${seed.chance}" data-altruista-field="chance"></label>
+            <button class="diario321SeedOpenBtn" type="button" data-save-polivalencia>abrir página</button>
+          </div>
+        </details>
+      </section>
+    `;
+  }
+
+  function renderDiario321SeedDictionary() {
+    const selected = diario321AltruistaState.environment || "trabalho";
+    return `
+      <section class="diario321ModernCard diario321SeedDictionary" aria-label="dicionário de sementes">
+        <div class="diario321ModernCardHead"><span>📍 Contexto da frase</span><small>escolha o ambiente</small></div>
+        <div class="diario321SeedChips">
+          ${Object.entries(diario321AllEnvironmentPresets()).map(([key, item]) => `
+            <button class="${selected === key ? "is-active" : ""}" type="button" data-scenario-pick="${escapeHTML(key)}">
+              <em>${escapeHTML(item.icon || "📍")}</em>${escapeHTML(item.label.replace(/^No\s+|^Na\s+/, ""))}
+            </button>
+          `).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderDiario321AIBox() {
+    return `
+      <section class="diario321ModernCard diario321AIBox diario321AIBox--contextual" aria-label="assistente de criação com inteligência artificial">
+        <div class="diario321ModernCardHead"><span>✦ Assistente da frase</span><small>usa os campos acima</small></div>
+        <p class="diario321AIHelp diario321AIContextHint">Gere 10 variações para o ChatGPT/Gemini com presente, passado, futuro, negativas e perguntas essenciais.</p>
+        <div class="diario321AIButtons diario321AIButtons--refined">
+          <button class="diario321AIButton diario321AIButton--copy" type="button" data-copy-ai-prompt>
+            <span aria-hidden="true">⧉</span>
+            <b>Gerar variações</b>
+            <small>10 frases 360°</small>
+          </button>
+          <button class="diario321AIButton diario321AIButton--paste" type="button" data-paste-ai-response>
+            <span aria-hidden="true">▣</span>
+            <b>Colar resposta</b>
+            <small>preencher campos</small>
+          </button>
+        </div>
+      </section>
+    `;
+  }
+
+
+  function renderDiario321Challenge360() {
+    const items = [
+      ["simple", "🌿", "Simples"],
+      ["work", "💼", "Trabalho"],
+      ["question", "?", "Pergunta"],
+      ["negative", "⊘", "Negativa"],
+      ["polite", "🙏", "Educada"],
+      ["past", "◷", "Passado"],
+      ["real", "👥", "Situação real"]
+    ];
+    return `
+      <section class="diario321ModernCard diario321Challenge360" aria-label="desafio 360 graus">
+        <div class="diario321ModernCardHead"><span>◎ Desafio 360°</span><small>crie variações</small></div>
+        <div class="diario321ChallengeGrid">
+          ${items.map(([key, icon, label]) => `<button type="button" data-use-challenge="${key}"><em>${icon}</em><span>${label}</span></button>`).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderDiario321ProgressCard() {
+    const seed = diario321SeedInfo();
+    const progress = diario321ProgressInfo();
+    const pageNumber = Math.max(1, Math.min(99, Math.ceil((Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries.length : 0) / 7) || 1));
+    return `
+      <section class="diario321ModernCard diario321ProgressCard" aria-label="progresso da página">
+        <div class="diario321ModernCardHead"><span>📖 Página ${pageNumber} — ${escapeHTML(seed.jp)}</span><small>${progress.percent}%</small></div>
+        <div class="diario321ProgressBody">
+          <div class="diario321ProgressBadges">
+            <span>🌱 semente criada</span>
+            <span>✍️ ${progress.written} frase${progress.written === 1 ? "" : "s"} escrita${progress.written === 1 ? "" : "s"}</span>
+            <span>🔥 ${progress.variations}/7 variações</span>
+          </div>
+          <div class="diario321ProgressRing" style="--p:${progress.percent}"><b>${progress.percent}%</b></div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderDiario321ModernActions() {
+    return `
+      <section class="diario321ActionDock diario321ActionDock--preview" aria-label="ações principais">
+        <button class="diario321ActionSave" type="button" data-save-practice-entry><span>▣</span>Salvar no Diário</button>
+        <button class="diario321ActionTrain" type="button" data-scroll-diario321-library><span>➤</span>Treinar 105x</button>
+      </section>
+    `;
+  }
+
+  function renderDiario321AIPastePanel() {
+    if (!diario321AIPasteOpen) return "";
+    const isPrompt = diario321AIPasteMode === "prompt";
+    const title = isPrompt ? (diario321AIPromptWasCopied ? "Pedido de variações copiado" : "Pedido de variações pronto") : "Colar resposta da IA";
+    const helper = isPrompt
+      ? (diario321AIPromptWasCopied
+        ? "O pedido de 10 variações já foi copiado. Cole no ChatGPT/Gemini, copie a resposta e volte no botão Colar resposta."
+        : "O Diário criou um pedido expansivo com 10 frases. Toque em Copiar pedido e cole no ChatGPT/Gemini.")
+      : "Cole aqui a resposta do ChatGPT/Gemini. O Diário tenta separar japonês, romaji e português.";
+    const actionLabel = isPrompt ? (diario321AIPromptWasCopied ? "Entendi" : "Copiar pedido") : "Aplicar no Diário";
+    const cancelLabel = isPrompt ? "Fechar" : "Cancelar";
+    const placeholder = isPrompt
+      ? "pedido para IA"
+      : "Ex.:\nJaponês: 機械が突然止まって、しらないエラーが表示されました。\nRomaji: kikai ga totsuzen tomatte, shiranai era- ga hyouji saremashita.\nPortuguês: A máquina parou de repente e apareceu um erro que eu não sei.";
+    return `
+      <div class="diario321AIPasteOverlay" role="dialog" aria-modal="true" aria-label="${escapeHTML(title)}">
+        <div class="diario321AIPasteSheet ${isPrompt && diario321AIPromptWasCopied ? "is-copied" : ""}">
+          <div class="diario321AIPasteHead">
+            <span>${escapeHTML(title)}</span>
+            <button type="button" data-close-ai-paste aria-label="fechar">×</button>
+          </div>
+          <p>${escapeHTML(helper)}</p>
+          <textarea data-ai-paste-text ${isPrompt ? "readonly" : ""} placeholder="${escapeHTML(placeholder)}">${escapeHTML(diario321AIPasteDraft || "")}</textarea>
+          <div class="diario321AIPasteActions">
+            <button type="button" data-close-ai-paste>${escapeHTML(cancelLabel)}</button>
+            <button type="button" data-apply-ai-paste>${escapeHTML(actionLabel)}</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderDiario321BottomNav() {
+    return `
+      <nav class="diario321BottomNav" aria-label="navegação principal do Diário321">
+        <a href="../index.html#/home" target="_parent" class="diario321BottomNavItem">
+          <span>⌂</span><b>Início</b>
+        </a>
+        <a href="../index.html#/caderno" target="_parent" class="diario321BottomNavItem is-active">
+          <span>▣</span><b>Diário</b>
+        </a>
+        <a href="../index.html#/home" target="_parent" class="diario321BottomNavLogo" aria-label="NIHONGO321">
+          <img src="../img/logo_nihongo321.png" alt="" onerror="this.style.display='none'">
+        </a>
+        <a href="../index.html#/105x" target="_parent" class="diario321BottomNavItem">
+          <span>▥</span><b>Treino</b>
+        </a>
+        <a href="../index.html#/settings" target="_parent" class="diario321BottomNavItem">
+          <span>♙</span><b>Perfil</b>
+        </a>
+      </nav>
+    `;
+  }
+
+  function scrollDiario321Library() {
+    try {
+      const target = document.getElementById("diario321PhraseLibrary") || document.querySelector(".diario321PhraseLibrary");
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+      toast("abra uma frase e toque em Treinar 105x");
+    } catch {
+      toast("abra uma frase e toque em Treinar 105x");
+    }
+  }
+
+  function renderDiario321AltruistaNotebook() {
+    return `
+      <main class="appMain appMain--diario321 appMain--altruista appMain--diarioModern">
+        <section class="genialNotebook diario321AltruistaNotebook diario321ModernNotebook">
+          ${renderDiario321ModernHero()}
+          ${renderDiario321WordPlayCard()}
+          ${renderDiario321SeedDictionary()}
+          ${renderDiario321PracticeEditor()}
+          ${renderDiario321Challenge360()}
+          ${renderDiario321ProgressCard()}
+          ${renderDiario321ModernActions()}
+          ${renderDiario321PracticeEntries()}
+          <section class="diario321ModernLearningShelf">
             ${renderDiario321QuickGuide()}
             ${renderDiario321MethodCard()}
             ${renderDiario321ScienceCard()}
-          ` : `
-            <section class="diario321DiaryEmpty">
-              <b>Comece pequeno.</b>
-              <p>Uma palavra já basta.</p>
-            </section>
-          `}
+          </section>
         </section>
+        ${renderDiario321BottomNav()}
         ${renderDiario321CustomToneModal()}
+        ${renderDiario321AIPastePanel()}
       </main>
     `;
   }
@@ -39920,7 +40865,7 @@
   function render() {
     if (screen === "genial") {
       const root = document.getElementById("app") || document.querySelector("[data-app]") || document.body;
-      root.innerHTML = `${renderAppHeader()}${renderGenialNotebook()}`;
+      root.innerHTML = `${isEmbeddedInNihongo321() ? "" : renderAppHeader()}${renderGenialNotebook()}`;
       bindEvents();
       return;
     }
@@ -39999,6 +40944,7 @@ applyAppTheme();
     document.querySelectorAll("[data-scenario-pick]").forEach(btn => btn.addEventListener("click", () => updateDiario321AltruistaField("environment", btn.dataset.scenarioPick || "trabalho")));
     document.querySelectorAll("[data-practice-check]").forEach(btn => btn.addEventListener("click", () => toggleDiario321PracticeCheck(btn.dataset.practiceCheck)));
     document.querySelectorAll("[data-save-practice-entry]").forEach(btn => btn.addEventListener("click", saveDiario321PracticeEntry));
+    document.querySelectorAll("[data-scroll-diario321-library]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); scrollDiario321Library(); }));
     document.querySelectorAll("[data-diary-style]").forEach(btn => btn.addEventListener("click", () => setDiario321SpeechStyle(btn.dataset.diaryStyle || "polite")));
     document.querySelectorAll("[data-open-custom-tone-modal]").forEach(btn => btn.addEventListener("click", openDiario321CustomToneModal));
     document.querySelectorAll("[data-close-custom-tone-modal]").forEach(btn => btn.addEventListener("click", closeDiario321CustomToneModal));
@@ -40009,22 +40955,46 @@ applyAppTheme();
     document.querySelectorAll("[data-tone-draft-label]").forEach(input => input.addEventListener("input", () => updateDiario321ToneDraft("label", input.value)));
     document.querySelectorAll("[data-tone-draft-hint]").forEach(input => input.addEventListener("input", () => updateDiario321ToneDraft("hint", input.value)));
     document.querySelectorAll("[data-open-practice-editor]").forEach(btn => btn.addEventListener("click", openDiario321AddPhrase));
+    document.querySelectorAll(".diario321WritingSummary").forEach(summary => summary.addEventListener("click", (ev) => {
+      const box = summary.closest(".diario321NoteFold");
+      if (box && !box.open) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        openDiario321AddPhrase();
+      }
+    }));
     document.querySelectorAll(".diario321SetupFold").forEach(box => box.addEventListener("toggle", () => { diario321SetupFoldOpen = !!box.open; }));
     document.querySelectorAll(".diario321NoteFold").forEach(box => box.addEventListener("toggle", () => { diario321NoteFoldOpen = !!box.open; }));
+    document.querySelectorAll(".diario321LibraryDetails").forEach(box => box.addEventListener("toggle", () => {
+      const id = box.closest("[data-entry-drag-id]")?.dataset.entryDragId || "";
+      if (box.open) {
+        keepDiario321EntryOpen(id);
+      } else if (diario321OpenEntryId === id && diario321ActiveTrainingEntryId !== id && diario321DeleteConfirmId !== id) {
+        diario321OpenEntryId = "";
+      }
+    }));
     document.querySelectorAll("[data-entry-check]").forEach(btn => btn.addEventListener("click", () => toggleDiario321EntryCheck(btn.dataset.entryId, btn.dataset.entryCheck)));
     document.querySelectorAll("[data-entry-write]").forEach(btn => btn.addEventListener("click", () => adjustDiario321EntryWriteCount(btn.dataset.entryId, btn.dataset.entryWrite)));
-    document.querySelectorAll("[data-entry-mastered]").forEach(input => input.addEventListener("change", () => toggleDiario321EntryMastered(input.dataset.entryMastered)));
-    document.querySelectorAll("[data-entry-favorite]").forEach(btn => btn.addEventListener("click", () => toggleDiario321EntryFavorite(btn.dataset.entryFavorite)));
+    document.querySelectorAll("[data-entry-mastered]").forEach(input => {
+      input.addEventListener("click", (ev) => ev.stopPropagation());
+      input.addEventListener("change", (ev) => { ev.stopPropagation(); toggleDiario321EntryMastered(input.dataset.entryMastered); });
+    });
+    document.querySelectorAll("[data-entry-start-train]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); startDiario321EntryTraining(btn.dataset.entryStartTrain); }));
+    document.querySelectorAll("[data-entry-train-repeat]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); repeatDiario321EntryTraining(btn.dataset.entryTrainRepeat); }));
+    document.querySelectorAll("[data-entry-train-speak]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); speakDiario321EntryTraining(btn.dataset.entryTrainSpeak); }));
+    document.querySelectorAll("[data-entry-train-reset]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); resetDiario321EntryTraining(btn.dataset.entryTrainReset); }));
+    document.querySelectorAll("[data-entry-train-close]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); closeDiario321EntryTraining(btn.dataset.entryTrainClose); }));
+    document.querySelectorAll("[data-entry-favorite]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); toggleDiario321EntryFavorite(btn.dataset.entryFavorite); }));
     document.querySelectorAll("[data-entry-filter]").forEach(btn => btn.addEventListener("click", () => setDiario321EntriesFilter(btn.dataset.entryFilter)));
-    document.querySelectorAll("[data-entry-edit]").forEach(btn => btn.addEventListener("click", () => startDiario321EntryEdit(btn.dataset.entryEdit)));
+    document.querySelectorAll("[data-entry-edit]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); keepDiario321EntryOpen(btn.dataset.entryEdit); startDiario321EntryEdit(btn.dataset.entryEdit); }));
     document.querySelectorAll("[data-entry-edit-romaji]").forEach(input => input.addEventListener("input", () => updateDiario321EntryEditJapanese(input.dataset.entryEditRomaji)));
     document.querySelectorAll('input[type="radio"][name^="entry-tone-"]').forEach(input => input.addEventListener("change", () => updateDiario321EntryEditJapanese(input.name.replace(/^entry-tone-/, ""))));
     document.querySelectorAll("[data-entry-save-edit]").forEach(btn => btn.addEventListener("click", () => saveDiario321EntryEdit(btn.dataset.entrySaveEdit)));
     document.querySelectorAll("[data-entry-cancel-edit]").forEach(btn => btn.addEventListener("click", cancelDiario321EntryEdit));
-    document.querySelectorAll("[data-entry-delete]").forEach(btn => btn.addEventListener("click", () => requestDeleteDiario321Entry(btn.dataset.entryDelete)));
-    document.querySelectorAll("[data-entry-delete-confirm]").forEach(btn => btn.addEventListener("click", () => deleteDiario321Entry(btn.dataset.entryDeleteConfirm)));
-    document.querySelectorAll("[data-entry-delete-cancel]").forEach(btn => btn.addEventListener("click", cancelDeleteDiario321Entry));
-    document.querySelectorAll("[data-entry-move]").forEach(btn => btn.addEventListener("click", () => moveDiario321Entry(btn.dataset.entryId, btn.dataset.entryMove)));
+    document.querySelectorAll("[data-entry-delete]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); requestDeleteDiario321Entry(btn.dataset.entryDelete); }));
+    document.querySelectorAll("[data-entry-delete-confirm]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); deleteDiario321Entry(btn.dataset.entryDeleteConfirm); }));
+    document.querySelectorAll("[data-entry-delete-cancel]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); cancelDeleteDiario321Entry(); }));
+    document.querySelectorAll("[data-entry-move]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); moveDiario321Entry(btn.dataset.entryId, btn.dataset.entryMove); }));
     document.querySelectorAll("[data-entry-drag-id]").forEach(card => {
       card.addEventListener("dragstart", (ev) => {
         try { ev.dataTransfer.setData("text/plain", card.dataset.entryDragId || ""); } catch {}
@@ -40042,6 +41012,14 @@ applyAppTheme();
     document.querySelectorAll("[data-reset-altruista]").forEach(btn => btn.addEventListener("click", resetDiario321Altruista));
     document.querySelectorAll("[data-use-idea]").forEach(btn => btn.addEventListener("click", () => { diario321AltruistaState.ptIdea = btn.dataset.useIdea || ""; saveDiario321AltruistaState(); render(); }));
     document.querySelectorAll("[data-use-question]").forEach(btn => btn.addEventListener("click", () => { diario321AltruistaState.ptIdea = btn.dataset.useQuestion || ""; saveDiario321AltruistaState(); render(); }));
+    document.querySelectorAll("[data-use-challenge]").forEach(btn => btn.addEventListener("click", () => useDiario321Challenge(btn.dataset.useChallenge || "simple")));
+    document.querySelectorAll("[data-copy-ai-prompt]").forEach(btn => btn.addEventListener("click", (ev) => copyDiario321AIPrompt(ev), { capture: true }));
+    document.querySelectorAll("[data-paste-ai-response]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); pasteDiario321AIResponse(); }, { capture: true }));
+    document.querySelectorAll("[data-close-ai-paste]").forEach(btn => btn.addEventListener("click", closeDiario321AIPastePanel));
+    document.querySelectorAll("[data-apply-ai-paste]").forEach(btn => btn.addEventListener("click", applyDiario321AIPastePanel));
+    document.querySelectorAll("[data-ai-paste-text]").forEach(area => area.addEventListener("input", () => { diario321AIPasteDraft = area.value || ""; }));
+    document.querySelectorAll("[data-save-train-current]").forEach(btn => btn.addEventListener("click", saveDiario321CurrentToNihongoAndTrain));
+    document.querySelectorAll("[data-speak-seed]").forEach(btn => btn.addEventListener("click", () => { try { const seed = diario321SeedInfo(); const u = new SpeechSynthesisUtterance(seed.jp); u.lang = "ja-JP"; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch { toast("voz indisponível"); } }));
     document.querySelectorAll("[data-survival-model]").forEach(btn => btn.addEventListener("click", () => useDiario321SurvivalModel(btn.dataset.survivalModel || "ga")));
     document.querySelectorAll("[data-genial-topic]").forEach(select => select.addEventListener("change", () => setGenialTargetTopic(select.value)));
     document.querySelectorAll("[data-save-genial]").forEach(btn => btn.addEventListener("click", saveGenialPhrase));

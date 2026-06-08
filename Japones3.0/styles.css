@@ -13711,7 +13711,7 @@ body.is-caderno-route .app{
 }
 
 /* =========================================================
-   NIHONGO321 8.8.2-R — Página de venda + Central em catálogos
+   NIHONGO321 8.8.20-R — Página de venda + Central em catálogos
    Regra: organizar sem remover ferramentas funcionais.
    ========================================================= */
 
@@ -14089,7 +14089,7 @@ html[data-theme="light"] .toolIcon{
 }
 
 /* =========================================================
-   NIHONGO321 8.8.2-R — Central em catálogos minimalistas
+   NIHONGO321 8.8.20-R — Central em catálogos minimalistas
    Regra: esconder a poluição visual sem remover ferramentas.
    ========================================================= */
 .srOnly{
@@ -15462,4 +15462,248 @@ html[data-theme="light"] .premiumLifeItem b{
 /* NIHONGO321 8.8.18-R — banner limpo sem texto sobre a foto */
 .salesHeroBanner figcaption{
   display:none !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.20-R — Entrada vendável + Central profissional
+   Escopo: vitrine, botões de venda, comparação e hierarquia da central.
+   Não altera treino 105x, backup, Sensei, localStorage ou banco.
+   ========================================================= */
+
+.salesLandingPage--professional{
+  gap:18px;
+}
+
+.salesHeroCard--dekassegui{
+  border-color:rgba(255,216,111,.28);
+  background:
+    radial-gradient(420px 220px at 10% 0%, rgba(255,216,111,.16), transparent 62%),
+    radial-gradient(520px 260px at 100% 12%, rgba(108,166,255,.13), transparent 66%),
+    linear-gradient(180deg, rgba(255,255,255,.078), rgba(255,255,255,.034));
+}
+
+.salesHeroCard--dekassegui .salesHeroTitle{
+  max-width:13.2em;
+  font-size:clamp(36px, 7.2vw, 68px);
+  line-height:1.02;
+  letter-spacing:-.055em;
+}
+
+.salesHeroCard--dekassegui .salesHeroLead{
+  max-width:54em;
+}
+
+.salesTrustStrip{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:8px;
+}
+
+.salesTrustStrip span{
+  min-height:38px;
+  border:1px solid var(--strokeSoft);
+  border-radius:999px;
+  padding:9px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.046);
+  color:var(--muted2);
+  font-size:12px;
+  line-height:1.1;
+  font-weight:950;
+  text-align:center;
+}
+
+.salesHeroActions--focused{
+  grid-template-columns:1.35fr 1fr 1fr;
+}
+
+.salesValueCard--clarity{
+  border-color:rgba(108,166,255,.18);
+}
+
+.salesAnswerGrid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+
+.salesAnswerCard{
+  border:1px solid var(--strokeSoft);
+  border-radius:22px;
+  padding:14px;
+  background:
+    radial-gradient(180px 100px at 18% 0%, rgba(255,216,111,.10), transparent 70%),
+    rgba(255,255,255,.040);
+  display:grid;
+  gap:7px;
+}
+
+.salesAnswerCard b{
+  color:var(--soft);
+  font-size:15px;
+  line-height:1.2;
+}
+
+.salesAnswerCard span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.premiumFinalActions{
+  grid-template-columns:1.25fr 1fr 1fr;
+}
+
+.premiumStoreNotice{
+  margin-top:12px;
+  border:1px solid rgba(255,216,111,.24);
+  border-radius:20px;
+  padding:12px 14px;
+  background:rgba(255,216,111,.075);
+  display:grid;
+  gap:5px;
+}
+
+.premiumStoreNotice b{
+  color:var(--gold2);
+  font-size:14px;
+  line-height:1.2;
+}
+
+.premiumStoreNotice span{
+  color:var(--muted2);
+  font-size:12.5px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.appCentralHero--professional{
+  display:grid;
+  gap:16px;
+}
+
+.appCentralLead--visible{
+  display:block !important;
+  max-width:46em;
+  margin:0 auto;
+  text-align:center;
+}
+
+.centralQuickStart{
+  display:grid;
+  grid-template-columns:1.25fr 1fr 1fr;
+  gap:10px;
+  margin-top:2px;
+}
+
+.centralQuickBtn{
+  width:100%;
+  min-height:112px;
+  border:1px solid var(--strokeSoft);
+  border-radius:24px;
+  padding:14px;
+  color:var(--text);
+  background:
+    radial-gradient(190px 100px at 22% 0%, rgba(255,255,255,.08), transparent 66%),
+    rgba(255,255,255,.045);
+  display:grid;
+  align-content:start;
+  gap:7px;
+  text-align:left;
+  box-shadow:none;
+}
+
+.centralQuickBtn--main{
+  border-color:rgba(255,216,111,.34);
+  background:
+    radial-gradient(240px 120px at 24% 4%, rgba(255,216,111,.18), transparent 68%),
+    rgba(255,216,111,.070);
+}
+
+.centralQuickBtn span{
+  width:42px;
+  height:42px;
+  border-radius:16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,216,111,.22);
+  background:rgba(255,216,111,.075);
+  color:var(--gold2);
+  font-weight:950;
+}
+
+.centralQuickBtn b{
+  color:var(--soft);
+  font-size:16px;
+  line-height:1.15;
+}
+
+.centralQuickBtn small{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.centralQuickBtn:hover,
+.centralQuickBtn:focus-visible{
+  border-color:rgba(255,216,111,.38);
+  filter:brightness(1.04);
+}
+
+html[data-theme="light"] .salesHeroCard--dekassegui,
+html[data-theme="light"] .salesAnswerCard,
+html[data-theme="light"] .centralQuickBtn,
+html[data-theme="light"] .premiumStoreNotice,
+html[data-theme="light"] .salesTrustStrip span{
+  background:rgba(255,255,255,.82);
+}
+
+html[data-theme="light"] .premiumStoreNotice b,
+html[data-theme="light"] .centralQuickBtn span{
+  color:#5c3800;
+}
+
+@media (max-width:760px){
+  .salesHeroActions--focused,
+  .salesAnswerGrid,
+  .centralQuickStart,
+  .premiumFinalActions{
+    grid-template-columns:1fr;
+  }
+
+  .centralQuickBtn{
+    min-height:92px;
+    grid-template-columns:46px minmax(0,1fr);
+    align-items:center;
+    text-align:left;
+    column-gap:12px;
+  }
+
+  .centralQuickBtn span{
+    grid-row:1 / span 2;
+  }
+
+  .centralQuickBtn b,
+  .centralQuickBtn small{
+    grid-column:2;
+  }
+}
+
+@media (max-width:520px){
+  .salesTrustStrip{
+    grid-template-columns:repeat(2, minmax(0,1fr));
+  }
+
+  .salesHeroCard--dekassegui .salesHeroTitle{
+    font-size:clamp(31px, 8.6vw, 42px);
+    letter-spacing:-.045em;
+  }
 }

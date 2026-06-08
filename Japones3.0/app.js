@@ -22,8 +22,8 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.5.71",
-  updatedAt: "2026-05-21",
+  version: "8.8.28-R",
+  updatedAt: "2026-06-08",
   logoPath: "./img/logo_nihongo321.png"
 };
 
@@ -577,6 +577,10 @@ function isRealCheckoutConfigured() {
     !/SEU-CHECKOUT-AQUI/i.test(SALES.checkoutUrl);
 }
 
+function isCheckoutReady() {
+  return isRealCheckoutConfigured();
+}
+
 function getCheckoutStatus() {
   const url = String(SALES.checkoutUrl || "").trim();
   const hasUrl = !!url;
@@ -587,9 +591,9 @@ function getCheckoutStatus() {
     return {
       ready: false,
       mode: "placeholder",
-      badge: "checkout em preparação",
-      button: "checkout em preparação",
-      message: "O pagamento ainda não foi conectado. Cadastre seus dados bancários na plataforma de checkout externa e cole aqui o link gerado."
+      badge: "assinatura em preparação",
+      button: "assinatura pela loja em preparação",
+      message: "A assinatura final deve ser conectada pela loja oficial ou por um checkout externo. Enquanto o app não estiver publicado, esta tela explica o Premium sem abrir pagamento falso."
     };
   }
 
@@ -2576,22 +2580,22 @@ function checkoutStatus() {
     configured,
     url,
     supportEmail,
-    label: configured ? "checkout externo pronto" : "checkout em preparação",
-    badge: configured ? "pagamento seguro externo" : "configure antes de vender",
-    buttonLabel: configured ? "abrir pagamento seguro" : "checkout em preparação",
-    primaryLabel: configured ? "assinar Premium agora" : "checkout em preparação",
-    monthlyLabel: configured ? `assinar mensal ${SALES.monthlyPrice}` : "checkout em preparação",
-    semiannualLabel: configured ? `assinar semestral ${SALES.semiannualPrice}` : "checkout em preparação",
-    footerLabel: configured ? "ativar Premium" : "checkout em preparação",
+    label: configured ? "checkout externo pronto" : "assinatura em preparação",
+    badge: configured ? "pagamento seguro externo" : "loja oficial em preparação",
+    buttonLabel: configured ? "abrir pagamento seguro" : "assinatura pela loja em preparação",
+    primaryLabel: configured ? "assinar Premium agora" : "assinatura pela loja em preparação",
+    monthlyLabel: configured ? `assinar mensal ${SALES.monthlyPrice}` : "assinatura mensal em preparação",
+    semiannualLabel: configured ? `assinar semestral ${SALES.semiannualPrice}` : "assinatura semestral em preparação",
+    footerLabel: configured ? "ativar Premium" : "assinatura em preparação",
     shortText: configured
       ? "Pagamento em ambiente externo seguro. O app não coleta dados bancários."
-      : "Checkout ainda não conectado. Troque SALES.checkoutUrl pelo link real antes da venda.",
+      : "A assinatura final será conectada pela Google Play, App Store ou checkout externo quando o app estiver pronto para publicação.",
     helpText: configured
       ? "O pagamento será aberto em uma página externa segura. Depois da confirmação, libere o Premium pelo fluxo definido no seu checkout."
-      : "Antes de vender, cadastre seu produto em uma plataforma de pagamento e troque SALES.checkoutUrl pelo link real.",
+      : "Antes da venda oficial, configure a assinatura nas lojas ou cole um link real em SALES.checkoutUrl. Não use link genérico nem botão morto.",
     toast: configured
       ? "abrindo pagamento seguro"
-      : "checkout em preparação. configure SALES.checkoutUrl"
+      : "assinatura em preparação pelas lojas oficiais"
   };
 }
 
@@ -2599,7 +2603,7 @@ function checkoutButtonLabel(kind = "primary") {
   const status = checkoutStatus();
 
   if (!status.configured) {
-    return "checkout em preparação";
+    return "assinatura pela loja em preparação";
   }
 
   if (kind === "monthly") return status.monthlyLabel;
@@ -2617,7 +2621,7 @@ function openCheckout() {
   saveState();
 
   if (!status.configured) {
-    toast("checkout em preparação");
+    toast("assinatura em preparação pelas lojas oficiais");
     return false;
   }
 
@@ -5219,17 +5223,17 @@ function renderScreenshotGuide() {
 
 function renderLanding() {
   APP.innerHTML = `
-    <div class="stack salesLandingPage">
-      <section class="card salesHeroCard">
+    <div class="stack salesLandingPage salesLandingPage--professional">
+      <section class="card salesHeroCard salesHeroCard--dekassegui">
         <div class="salesHeroTop">
           <span class="badge">NIHONGO321</span>
-          <span class="salesHeroProof">feito para brasileiros no Japão</span>
+          <span class="salesHeroProof">japonês prático para brasileiros no Japão</span>
         </div>
 
         <div class="salesHeroCopy">
-          <h1 class="salesHeroTitle">Japonês prático para a vida real no Japão.</h1>
+          <h1 class="salesHeroTitle">Japonês útil para viver melhor no Japão.</h1>
           <p class="salesHeroLead">
-            Crie frases da sua rotina, treine no 105x e use no trabalho, mercado, prefeitura e dia a dia.
+            Treine frases reais para fábrica, mercado, prefeitura, saúde, moradia e conversas do dia a dia. O app foi pensado para quem trabalha muito e precisa estudar sem complicar a rotina.
           </p>
         </div>
 
@@ -5244,18 +5248,50 @@ function renderLanding() {
           />
         </figure>
 
-        <div class="salesMethodLine" aria-label="método principal do aplicativo">
-          <span>palavra</span>
-          <b>→</b>
-          <span>frase real</span>
-          <b>→</b>
-          <span>treino 105x</span>
+        <div class="salesTrustStrip" aria-label="principais situações do aplicativo">
+          <span>🏭 fábrica</span>
+          <span>🏪 mercado</span>
+          <span>🏢 prefeitura</span>
+          <span>🏥 saúde</span>
         </div>
 
-        <div class="salesHeroActions">
-          <button class="bigBtn" type="button" data-nav="#/home">entrar no NIHONGO321</button>
-          <button class="btn btn--muted btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
-          <button class="btn btn--ghost btn--full" type="button" data-nav="#/premium-final">Assinar Premium</button>
+        <div class="salesMethodLine" aria-label="método principal do aplicativo">
+          <span>frase real</span>
+          <b>→</b>
+          <span>repetição guiada</span>
+          <b>→</b>
+          <span>confiança no uso</span>
+        </div>
+
+        <div class="salesHeroActions salesHeroActions--focused">
+          <button class="bigBtn" type="button" data-nav="#/home">começar grátis</button>
+          <button class="btn btn--muted btn--full" type="button" data-action="goCompare">comparar planos</button>
+          <button class="btn btn--ghost btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
+        </div>
+      </section>
+
+      <section class="card salesValueCard salesValueCard--clarity">
+        <div class="row row--between">
+          <div>
+            <div class="badge">explicação simples</div>
+            <h2 class="h2">O que o app faz por você?</h2>
+            <p class="salesValueLead">Ele transforma necessidades reais em frases treináveis, sem aula longa e sem enrolação.</p>
+          </div>
+        </div>
+
+        <div class="salesAnswerGrid">
+          <article class="salesAnswerCard">
+            <b>1. Você escolhe uma situação</b>
+            <span>Trabalho, mercado, prefeitura, hospital, moradia, contas ou conversa natural.</span>
+          </article>
+          <article class="salesAnswerCard">
+            <b>2. Treina uma frase útil</b>
+            <span>Português e japonês aparecem juntos para você entender antes de repetir.</span>
+          </article>
+          <article class="salesAnswerCard">
+            <b>3. Repete no método 105x</b>
+            <span>O treino guia olhos, ouvidos e boca até a frase ficar familiar.</span>
+          </article>
         </div>
       </section>
 
@@ -5269,7 +5305,7 @@ function renderLanding() {
         </div>
 
         <div class="salesFaqStack" aria-label="perguntas sobre o método NIHONGO321">
-          <details class="salesFaqItem">
+          <details class="salesFaqItem" open>
             <summary>
               <span>Método 105x</span>
               <b aria-hidden="true">＋</b>
@@ -5319,14 +5355,14 @@ function renderLanding() {
       <section class="card salesSoftPremium salesPremiumStory">
         <div class="salesPremiumIntro">
           <div class="badge">Premium</div>
-          <h2 class="h2">Avance quando sentir que o japonês já faz parte da sua rotina.</h2>
+          <h2 class="h2">Avance quando quiser treinar situações que pesam mais.</h2>
           <p class="p">
-            O Premium amplia o método para mais ambientes, mais frases e mais segurança na vida real do Japão.
+            O Premium amplia o método para mais ambientes, mais frases, mais trilhas e mais segurança na vida real do Japão.
           </p>
         </div>
 
         <div class="salesFaqStack salesPremiumFaqStack" aria-label="benefícios do Premium no NIHONGO321">
-          <details class="salesFaqItem salesBenefitItem">
+          <details class="salesFaqItem salesBenefitItem" open>
             <summary>
               <span>Curto prazo</span>
               <b aria-hidden="true">＋</b>
@@ -5373,8 +5409,8 @@ function renderLanding() {
         </div>
 
         <div class="salesPremiumActions salesPremiumActionsRefined">
-          <button class="primaryAction" type="button" data-action="openPremiumFinalDirect">Assinar Premium</button>
-          <button class="btn btn--muted btn--full" type="button" data-nav="#/home">continuar grátis</button>
+          <button class="primaryAction" type="button" data-nav="#/premium-final">ver Premium</button>
+          <button class="btn btn--muted btn--full" type="button" data-action="goCompare">comparar planos</button>
         </div>
       </section>
 
@@ -5424,11 +5460,15 @@ function renderPremiumFinal() {
 
         <div class="premiumFinalActions">
           <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
-          <button class="btn btn--muted btn--full" type="button" data-nav="#/home">continuar grátis</button>
+          <button class="btn btn--muted btn--full" type="button" data-action="goCompare">comparar planos</button>
+          <button class="btn btn--ghost btn--full" type="button" data-nav="#/home">continuar grátis</button>
         </div>
 
         ${!checkoutReady ? `
-          <p class="premiumFinalNote">Checkout ainda precisa receber o link final antes da publicação.</p>
+          <div class="premiumStoreNotice" role="note">
+            <b>Assinatura oficial em preparação</b>
+            <span>Para Google Play e App Store, esta tela funciona como explicação interna. O botão final deve ser conectado à assinatura oficial da loja quando o app for publicado.</span>
+          </div>
         ` : ``}
       </section>
 
@@ -5512,6 +5552,7 @@ function renderPremiumFinal() {
           O grátis mantém o contato. O Premium aprofunda o método, amplia os ambientes e transforma sua rotina em um caminho de estudo mais completo.
         </p>
         <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
+        <button class="btn btn--muted btn--full" type="button" data-action="goCompare">comparar planos</button>
         <button class="btn btn--ghost btn--full" type="button" data-nav="#/landing">voltar à apresentação</button>
       </section>
     </div>
@@ -6592,7 +6633,7 @@ function saveCaderno321PayloadNative(payload = {}) {
 function renderCaderno321Integrated() {
   APP.innerHTML = `
     <div class="cadernoIntegratedPage">
-      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=dashboard" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=genial" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
@@ -6646,20 +6687,39 @@ function renderHome() {
 
   APP.innerHTML = `
     <div class="stack appCentralPage appCentralPage--catalogs appCentralPage--seiton">
-      <section class="card appCentralHero appCentralHero--calm">
+      <section class="card appCentralHero appCentralHero--calm appCentralHero--professional">
         <div class="row row--between appCentralHeroTop">
-          <div></div>
+          <div class="badge">central NIHONGO321</div>
           <button class="btn btn--ghost btn--presentationMini" type="button" data-nav="#/landing">apresentação</button>
         </div>
 
         <div class="appCentralIntro">
-          <h1 class="appCentralTitle">Ferramentas Organizadas</h1>
+          <h1 class="appCentralTitle">Escolha seu próximo passo.</h1>
+          <p class="appCentralLead appCentralLead--visible">Treine agora, crie frases da sua rotina ou organize seu caminho sem perder nenhuma ferramenta do app.</p>
+        </div>
+
+        <div class="centralQuickStart" aria-label="ações principais do NIHONGO321">
+          <button class="centralQuickBtn centralQuickBtn--main" type="button" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
+            <span>⚡</span>
+            <b>${resume ? "Continuar treino" : "Treino rápido"}</b>
+            <small>${resume ? "retomar sem se perder" : "2 minutos para manter constância"}</small>
+          </button>
+          <button class="centralQuickBtn" type="button" data-nav="#/caderno">
+            <span>日</span>
+            <b>DIÁRIO321</b>
+            <small>criar frases da vida real</small>
+          </button>
+          <button class="centralQuickBtn" type="button" data-nav="#/105x">
+            <span>105</span>
+            <b>Treino 105x</b>
+            <small>memorizar com repetição guiada</small>
+          </button>
         </div>
       </section>
 
 
       <section class="stack toolCatalogStack" aria-label="catálogos de ferramentas do NIHONGO321">
-        <details class="card toolCatalog toolCatalog--main">
+        <details class="card toolCatalog toolCatalog--main" open>
           <summary class="toolCatalogSummary">
             <span class="toolCatalogIcon">⚡</span>
             <span class="toolCatalogText">
@@ -9719,6 +9779,7 @@ function render() {
   applyTheme(getTheme());
 
   const r = route();
+  document.body.classList.toggle("is-caderno-route", r === "#/caderno");
 
   if (r === "#/onboarding") return renderOnboarding();
   if (r === "#/premium-themes") return renderPremiumThemes();
@@ -9881,13 +9942,13 @@ try {
     event.preventDefault();
     event.stopPropagation();
 
-    if (window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT) {
-      window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT();
+    if (window.NIHONGO321_OPEN_COMPARE_DIRECT) {
+      window.NIHONGO321_OPEN_COMPARE_DIRECT();
       return;
     }
 
-    location.hash = "#/premium-final";
-    try { renderPremiumFinal(); } catch { }
+    location.hash = "#/compare";
+    try { renderPlanCompare(); } catch { }
     try { setTimeout(() => render(), 0); } catch { }
   }, true);
 } catch { }
