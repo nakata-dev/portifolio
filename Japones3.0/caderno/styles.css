@@ -19377,3 +19377,130 @@ html[data-caderno-theme="dark"] .diario321WritingSummary em{
     font-size:11.5px !important;
   }
 }
+
+/* =========================================================
+   DIÁRIO321 — Paleta oficial NIHONGO321 8.8.43-R
+   Mantém o Diário alinhado ao padrão do produto.
+   ========================================================= */
+:root{
+  --brand-navy:#1A365D;
+  --brand-orange:#FF6B00;
+  --brand-white:#FFFFFF;
+  --brand-light:#F7FAFC;
+}
+
+.diario321ActionTrain,
+.diario321ActionSave,
+.diario321AIButton--paste,
+.diario321PracticeRepeatBtn{
+  background:linear-gradient(135deg, #C94E00, var(--brand-orange)) !important;
+  border-color:rgba(255,107,0,.42) !important;
+  color:var(--brand-white) !important;
+}
+
+.diario321ModernCard,
+.diario321PlayQuestion,
+.diario321SeedSetup,
+.diario321WritingPanel,
+.diario321QuickGuide,
+.diario321Library{
+  border-color:rgba(26,54,93,.16) !important;
+}
+
+html[data-caderno-theme="light"] .diario321ModernCard,
+html[data-caderno-theme="light"] .diario321PlayQuestion,
+html[data-caderno-theme="light"] .diario321WritingPanel,
+html[data-caderno-theme="light"] .diario321QuickGuide{
+  background:var(--brand-light) !important;
+  color:var(--brand-navy) !important;
+}
+
+.diario321SeedCard,
+.diario321PracticeBox{
+  background:
+    radial-gradient(220px 120px at 100% 0%, rgba(255,255,255,.10), transparent 68%),
+    linear-gradient(135deg, #102A4C, var(--brand-navy)) !important;
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.17.17-R — Ouvir com ouro progressivo igual ao 105x
+   - o texto não fica todo dourado de uma vez
+   - cada caractere acende em sequência durante o áudio
+   - preserva leitura branca antes e depois da animação
+   ========================================================= */
+
+.diario321TrainingPhrase b{
+  color:#fffaf2 !important;
+  -webkit-text-fill-color:currentColor !important;
+  text-shadow:0 1px 0 rgba(0,0,0,.54) !important;
+}
+
+.diario321TrainingPhrase .diario321Kseg{
+  display:inline !important;
+  color:inherit !important;
+  -webkit-text-fill-color:currentColor !important;
+  background:none !important;
+  text-shadow:inherit !important;
+  transition:filter .18s ease, transform .18s ease !important;
+}
+
+.diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase b{
+  color:#fffaf2 !important;
+  -webkit-text-fill-color:currentColor !important;
+  text-shadow:0 1px 0 rgba(0,0,0,.62) !important;
+}
+
+.diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase .diario321Kseg.is-on{
+  color:#ffd15a !important;
+  background-image:linear-gradient(180deg, #fff0a6 0%, #ffd25c 30%, #f4a62b 66%, #e2741d 100%) !important;
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.72),
+    0 0 3px rgba(255,220,115,.58),
+    0 0 7px rgba(255,171,49,.34) !important;
+  filter:contrast(1.12) saturate(1.12) brightness(1.04) !important;
+  animation:diario321GoldPulse .28s ease-out both !important;
+}
+
+@keyframes diario321GoldPulse{
+  0%{ transform:translateY(0); filter:contrast(1.02) saturate(1.02) brightness(1); }
+  45%{ transform:translateY(-1px); filter:contrast(1.12) saturate(1.14) brightness(1.08); }
+  100%{ transform:translateY(0); filter:contrast(1.08) saturate(1.08) brightness(1.02); }
+}
+
+html[data-theme="light"] .diario321TrainingPhrase b{
+  color:#1a365d !important;
+  text-shadow:none !important;
+}
+
+html[data-theme="light"] .diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase b{
+  color:#1a365d !important;
+  text-shadow:none !important;
+}
+
+html[data-theme="light"] .diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase .diario321Kseg.is-on{
+  color:#d96f13 !important;
+  background-image:linear-gradient(180deg, #ffcf58 0%, #ffad32 35%, #eb741d 70%, #c94f13 100%) !important;
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:
+    0 1px 0 rgba(80,32,0,.48),
+    0 2px 3px rgba(90,42,0,.24),
+    0 0 5px rgba(255,166,38,.22) !important;
+}
+
+.diario321EntryTrainingPanel.is-speaking .diario321TrainingActions button[data-entry-train-speak]{
+  border-color:rgba(255,216,111,.42) !important;
+  background:rgba(255,216,111,.12) !important;
+  color:#ffd86f !important;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .diario321EntryTrainingPanel.is-speaking .diario321TrainingPhrase .diario321Kseg.is-on{
+    animation:none !important;
+  }
+}

@@ -22,7 +22,7 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.8.28-R",
+  version: "8.8.40-R",
   updatedAt: "2026-06-08",
   logoPath: "./img/logo_nihongo321.png"
 };
@@ -6694,26 +6694,12 @@ function renderHome() {
         </div>
 
         <div class="appCentralIntro">
-          <h1 class="appCentralTitle">Escolha seu próximo passo.</h1>
-          <p class="appCentralLead appCentralLead--visible">Treine agora, crie frases da sua rotina ou organize seu caminho sem perder nenhuma ferramenta do app.</p>
+          <h1 class="appCentralTitle">Ferramentas organizadas</h1>
+          <p class="appCentralLead appCentralLead--visible">Tudo que você precisa para estudar japonês prático no Japão, sem bagunça.</p>
         </div>
 
-        <div class="centralQuickStart" aria-label="ações principais do NIHONGO321">
-          <button class="centralQuickBtn centralQuickBtn--main" type="button" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
-            <span>⚡</span>
-            <b>${resume ? "Continuar treino" : "Treino rápido"}</b>
-            <small>${resume ? "retomar sem se perder" : "2 minutos para manter constância"}</small>
-          </button>
-          <button class="centralQuickBtn" type="button" data-nav="#/caderno">
-            <span>日</span>
-            <b>DIÁRIO321</b>
-            <small>criar frases da vida real</small>
-          </button>
-          <button class="centralQuickBtn" type="button" data-nav="#/105x">
-            <span>105</span>
-            <b>Treino 105x</b>
-            <small>memorizar com repetição guiada</small>
-          </button>
+        <div class="appCentralHeroGuide" aria-label="orientação da central">
+          <span>Escolha um catálogo e continue de onde faz sentido para você.</span>
         </div>
       </section>
 
@@ -6730,8 +6716,8 @@ function renderHome() {
           </summary>
 
           <div class="toolGrid toolGrid--catalog">
-            <button class="toolCard toolCard--main" type="button" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
-              <span class="toolIcon">⚡</span>
+            <button class="toolCard toolCard--main toolCard--cta" type="button" data-action="${resume ? "resumeTraining" : "startQuickTraining"}">
+              <span class="toolIcon">★</span>
               <b>${resume ? "Continuar treino" : "Treino rápido"}</b>
               <small>${resume ? "retome de onde parou" : "2 minutos para manter o japonês vivo"}</small>
             </button>
@@ -9780,6 +9766,7 @@ function render() {
 
   const r = route();
   document.body.classList.toggle("is-caderno-route", r === "#/caderno");
+  document.body.classList.toggle("is-home-route", r === "#/home");
 
   if (r === "#/onboarding") return renderOnboarding();
   if (r === "#/premium-themes") return renderPremiumThemes();

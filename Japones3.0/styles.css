@@ -15707,3 +15707,1369 @@ html[data-theme="light"] .centralQuickBtn span{
     letter-spacing:-.045em;
   }
 }
+
+/* =========================================================
+   NIHONGO321 8.8.40-R — Home com paleta viva da logo
+   Escopo: tela principal #/home. Harmoniza a Central com o Diário321
+   sem remover ferramentas e sem tocar no treino 105x/localStorage.
+   ========================================================= */
+
+body.is-home-route{
+  --homeNavy:#03142f;
+  --homeNavy2:#06265a;
+  --homeBlue:#0b3e86;
+  --homeOrange:#ff7a16;
+  --homeOrange2:#ffa538;
+  --homeGold:#ffd86f;
+  --homeCream:#fff7e9;
+}
+
+body.is-home-route .topbar{
+  border-bottom:1px solid rgba(255,216,111,.16) !important;
+  background:
+    radial-gradient(220px 90px at 8% 0%, rgba(255,122,22,.17), transparent 70%),
+    radial-gradient(240px 110px at 96% 0%, rgba(108,166,255,.13), transparent 70%),
+    linear-gradient(180deg, rgba(3,12,29,.98), rgba(3,12,29,.86)) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.22) !important;
+}
+
+body.is-home-route .logo{
+  border-color:rgba(255,216,111,.38) !important;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,216,111,.38), transparent 42%),
+    rgba(255,255,255,.06) !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 12px 26px rgba(0,0,0,.24) !important;
+}
+
+body.is-home-route .hudBtn,
+body.is-home-route .hudItem{
+  border-color:rgba(255,216,111,.18) !important;
+  background:rgba(255,255,255,.055) !important;
+}
+
+body.is-home-route .appCentralPage--seiton{
+  gap:14px !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+  position:relative !important;
+  overflow:hidden !important;
+  padding:18px !important;
+  border:1px solid rgba(255,216,111,.28) !important;
+  border-radius:30px !important;
+  background:
+    radial-gradient(340px 220px at 0% 0%, rgba(255,166,56,.32), transparent 64%),
+    radial-gradient(330px 230px at 100% 0%, rgba(108,166,255,.22), transparent 68%),
+    radial-gradient(380px 280px at 92% 120%, rgba(255,122,22,.16), transparent 64%),
+    linear-gradient(135deg, #03142f 0%, #073270 48%, #03142f 100%) !important;
+  box-shadow:0 22px 54px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::before{
+  content:"";
+  position:absolute;
+  right:-42px;
+  top:-58px;
+  width:210px;
+  height:210px;
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 33% 31%, rgba(255,216,111,.28), transparent 0 24%, rgba(255,122,22,.16) 25% 42%, transparent 43%),
+    radial-gradient(circle at 65% 63%, rgba(108,166,255,.18), transparent 0 38%, transparent 39%);
+  opacity:.82;
+  pointer-events:none;
+  filter:blur(.2px);
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,.045), transparent 42%, rgba(0,0,0,.12));
+  opacity:.7;
+}
+
+body.is-home-route .appCentralHero--professional > *{
+  position:relative;
+  z-index:1;
+}
+
+body.is-home-route .appCentralHeroTop{
+  align-items:center !important;
+  gap:10px !important;
+}
+
+body.is-home-route .appCentralHeroTop .badge{
+  min-height:31px !important;
+  border-color:rgba(255,216,111,.28) !important;
+  background:rgba(255,216,111,.09) !important;
+  color:#fff1b8 !important;
+  letter-spacing:.06em !important;
+  text-transform:uppercase !important;
+}
+
+body.is-home-route .btn--presentationMini{
+  border-color:rgba(255,255,255,.15) !important;
+  background:rgba(255,255,255,.055) !important;
+  color:rgba(255,247,225,.88) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralIntro{
+  margin-top:4px !important;
+  text-align:left !important;
+  justify-items:start !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralTitle{
+  max-width:11em !important;
+  margin-inline:0 !important;
+  text-align:left !important;
+  color:#fffdf8 !important;
+  font-size:clamp(31px, 8.3vw, 48px) !important;
+  line-height:.98 !important;
+  letter-spacing:-.058em !important;
+  text-shadow:0 10px 28px rgba(0,0,0,.28) !important;
+}
+
+body.is-home-route .appCentralLead--visible{
+  display:block !important;
+  max-width:34em !important;
+  margin:0 !important;
+  text-align:left !important;
+  color:rgba(255,247,225,.90) !important;
+  font-size:clamp(14px, 3.35vw, 16px) !important;
+  line-height:1.45 !important;
+  font-weight:900 !important;
+}
+
+body.is-home-route .centralQuickStart{
+  gap:10px !important;
+  margin-top:0 !important;
+}
+
+body.is-home-route .centralQuickBtn{
+  min-height:118px !important;
+  border-radius:24px !important;
+  border-color:rgba(255,255,255,.13) !important;
+  background:
+    radial-gradient(170px 92px at 24% 0%, rgba(255,255,255,.11), transparent 68%),
+    rgba(255,255,255,.062) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+body.is-home-route .centralQuickBtn--main{
+  border-color:rgba(255,183,64,.42) !important;
+  background:
+    radial-gradient(210px 110px at 20% 0%, rgba(255,255,255,.20), transparent 62%),
+    linear-gradient(135deg, rgba(255,166,56,.98), rgba(255,112,22,.96)) !important;
+  color:#fffaf2 !important;
+}
+
+body.is-home-route .centralQuickBtn:nth-child(2){
+  border-color:rgba(255,216,111,.30) !important;
+  background:
+    radial-gradient(200px 100px at 22% 0%, rgba(255,216,111,.18), transparent 66%),
+    linear-gradient(135deg, rgba(3,32,78,.96), rgba(5,58,128,.88)) !important;
+}
+
+body.is-home-route .centralQuickBtn:nth-child(3){
+  border-color:rgba(108,166,255,.24) !important;
+  background:
+    radial-gradient(190px 92px at 22% 0%, rgba(108,166,255,.16), transparent 66%),
+    linear-gradient(135deg, rgba(4,21,48,.95), rgba(8,47,99,.84)) !important;
+}
+
+body.is-home-route .centralQuickBtn span{
+  width:44px !important;
+  height:44px !important;
+  border-radius:17px !important;
+  border-color:rgba(255,255,255,.20) !important;
+  background:rgba(255,255,255,.12) !important;
+  color:#fff6cc !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+body.is-home-route .centralQuickBtn b{
+  color:#fffdf8 !important;
+  font-size:17px !important;
+  letter-spacing:-.025em !important;
+}
+
+body.is-home-route .centralQuickBtn small{
+  color:rgba(255,247,225,.80) !important;
+  font-size:12px !important;
+}
+
+body.is-home-route .toolCatalog{
+  border:1px solid rgba(255,216,111,.14) !important;
+  border-radius:26px !important;
+  background:
+    radial-gradient(240px 130px at 6% 0%, rgba(255,216,111,.09), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.064), rgba(255,255,255,.034)) !important;
+  box-shadow:0 16px 34px rgba(0,0,0,.20) !important;
+}
+
+body.is-home-route .toolCatalog[open]{
+  border-color:rgba(255,216,111,.28) !important;
+  background:
+    radial-gradient(280px 150px at 0% 0%, rgba(255,166,56,.16), transparent 66%),
+    radial-gradient(260px 150px at 100% 10%, rgba(108,166,255,.10), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.078), rgba(255,255,255,.040)) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogSummary{
+  min-height:82px !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText{
+  justify-items:start !important;
+  text-align:left !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText b,
+body.is-home-route .appCentralPage--seiton .toolCatalogText small{
+  text-align:left !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText b{
+  color:#fffdf8 !important;
+  font-size:clamp(18px, 4.5vw, 23px) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText small{
+  color:rgba(222,232,255,.74) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogPreview{
+  justify-content:flex-start !important;
+  text-align:left !important;
+  color:rgba(255,216,111,.88) !important;
+}
+
+body.is-home-route .toolCatalog[open] .toolCatalogPreview{
+  color:rgba(222,232,255,.70) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogIcon,
+body.is-home-route .toolCatalogSummary::after{
+  border-color:rgba(255,216,111,.26) !important;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,216,111,.18), transparent 58%),
+    rgba(255,216,111,.07) !important;
+  color:#ffe7a0 !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard{
+  min-height:116px !important;
+  border-radius:22px !important;
+  border-color:rgba(255,255,255,.10) !important;
+  background:
+    radial-gradient(190px 90px at 20% 0%, rgba(255,255,255,.075), transparent 66%),
+    rgba(4,20,48,.56) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard--main,
+body.is-home-route .toolGrid--catalog .toolCard--diario{
+  border-color:rgba(255,216,111,.24) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard:hover,
+body.is-home-route .toolGrid--catalog .toolCard:focus-visible{
+  transform:translateY(-1px);
+  border-color:rgba(255,166,56,.48) !important;
+  background:
+    radial-gradient(200px 96px at 20% 0%, rgba(255,166,56,.14), transparent 66%),
+    rgba(5,31,74,.66) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolIcon{
+  border-color:rgba(255,216,111,.24) !important;
+  background:rgba(255,216,111,.09) !important;
+  color:#ffe7a0 !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard b{
+  color:#fffdf8 !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard small{
+  color:rgba(222,232,255,.72) !important;
+}
+
+body.is-home-route .toolShelf--quiet{
+  display:none !important;
+}
+
+html[data-theme="light"] body.is-home-route .topbar{
+  background:
+    radial-gradient(220px 90px at 8% 0%, rgba(255,122,22,.24), transparent 70%),
+    radial-gradient(240px 110px at 96% 0%, rgba(71,143,230,.16), transparent 70%),
+    linear-gradient(180deg, rgba(255,248,225,.98), rgba(255,248,225,.86)) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+  border-color:rgba(169,102,0,.24) !important;
+  background:
+    radial-gradient(340px 220px at 0% 0%, rgba(255,166,56,.42), transparent 64%),
+    radial-gradient(330px 230px at 100% 0%, rgba(71,143,230,.22), transparent 68%),
+    radial-gradient(380px 280px at 92% 120%, rgba(255,122,22,.18), transparent 64%),
+    linear-gradient(135deg, #fff2bd 0%, #eaf5ff 50%, #fff8de 100%) !important;
+  box-shadow:0 18px 42px rgba(36,68,116,.16), inset 0 1px 0 rgba(255,255,255,.62) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralHeroTop .badge,
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralLead,
+html[data-theme="light"] body.is-home-route .appCentralLead--visible{
+  color:#5e3b05 !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralTitle{
+  color:#14213a !important;
+  text-shadow:none !important;
+}
+
+html[data-theme="light"] body.is-home-route .btn--presentationMini{
+  color:#253a5e !important;
+  background:rgba(255,255,255,.70) !important;
+}
+
+html[data-theme="light"] body.is-home-route .centralQuickBtn:not(.centralQuickBtn--main),
+html[data-theme="light"] body.is-home-route .toolCatalog,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard{
+  background:rgba(255,255,255,.80) !important;
+  border-color:rgba(31,59,103,.13) !important;
+  box-shadow:0 14px 32px rgba(36,68,116,.12) !important;
+}
+
+html[data-theme="light"] body.is-home-route .centralQuickBtn:not(.centralQuickBtn--main) b,
+html[data-theme="light"] body.is-home-route .toolCatalogText b,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard b{
+  color:#14213a !important;
+}
+
+html[data-theme="light"] body.is-home-route .centralQuickBtn:not(.centralQuickBtn--main) small,
+html[data-theme="light"] body.is-home-route .toolCatalogText small,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard small{
+  color:#42536f !important;
+}
+
+html[data-theme="light"] body.is-home-route .toolCatalogPreview{
+  color:#8d5200 !important;
+}
+
+@media (max-width:760px){
+  body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+    padding:16px !important;
+    border-radius:26px !important;
+  }
+
+  body.is-home-route .appCentralPage--seiton .appCentralIntro{
+    margin-top:2px !important;
+  }
+
+  body.is-home-route .centralQuickBtn{
+    min-height:88px !important;
+    border-radius:22px !important;
+  }
+
+  body.is-home-route .toolGrid--catalog .toolCard,
+  body.is-home-route .toolGrid--catalog .toolCard--main{
+    min-height:84px !important;
+  }
+}
+
+@media (max-width:430px){
+  body.is-home-route .appCentralPage--seiton .appCentralTitle{
+    font-size:clamp(29px, 8vw, 35px) !important;
+  }
+
+  body.is-home-route .appCentralLead--visible{
+    font-size:13.5px !important;
+  }
+
+  body.is-home-route .toolCatalog{
+    border-radius:24px !important;
+  }
+
+  body.is-home-route .appCentralPage--seiton .toolCatalogSummary{
+    min-height:82px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.41-R — Paleta da logo padronizada
+   - remove vulto do hero da home
+   - espalha a paleta azul + laranja + dourado para home e apresentação
+   - substitui o raio por estrela no destaque do treino
+   ========================================================= */
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+  border-color:rgba(255,214,107,.24) !important;
+  background:
+    radial-gradient(360px 220px at 100% 0%, rgba(81,143,231,.18), transparent 66%),
+    radial-gradient(320px 180px at 100% 100%, rgba(255,132,32,.14), transparent 62%),
+    linear-gradient(135deg, #04152f 0%, #083a7a 54%, #03142f 100%) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::before{
+  content:none !important;
+  display:none !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::after{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), transparent 45%, rgba(0,0,0,.10)) !important;
+  opacity:.55 !important;
+}
+
+body.is-home-route .appCentralHeroTop .badge{
+  background:rgba(255,255,255,.08) !important;
+  color:#fff2bf !important;
+}
+
+body.is-home-route .btn--presentationMini{
+  border-color:rgba(255,214,107,.18) !important;
+  background:rgba(255,255,255,.06) !important;
+  color:#fff5d4 !important;
+}
+
+body.is-home-route .centralQuickBtn,
+body.is-home-route .toolCatalog,
+body.is-home-route .toolGrid--catalog .toolCard{
+  border-color:rgba(255,214,107,.14) !important;
+}
+
+body.is-home-route .centralQuickBtn{
+  background:
+    radial-gradient(180px 88px at 18% 0%, rgba(255,255,255,.08), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035)) !important;
+}
+
+body.is-home-route .centralQuickBtn--main{
+  border-color:rgba(255,190,88,.48) !important;
+  background:
+    radial-gradient(220px 100px at 18% 0%, rgba(255,255,255,.16), transparent 62%),
+    linear-gradient(135deg, #ffb347 0%, #ff8420 100%) !important;
+}
+
+body.is-home-route .centralQuickBtn span,
+body.is-home-route .toolGrid--catalog .toolIcon{
+  color:#ffdc8a !important;
+}
+
+body.is-home-route .centralQuickBtn--main span{
+  background:rgba(255,255,255,.14) !important;
+  color:#fff4cc !important;
+}
+
+body.is-home-route .centralQuickBtn:nth-child(2),
+body.is-home-route .toolGrid--catalog .toolCard--diario{
+  background:
+    radial-gradient(210px 100px at 18% 0%, rgba(255,214,107,.12), transparent 66%),
+    linear-gradient(135deg, rgba(4,30,74,.96), rgba(8,60,130,.90)) !important;
+}
+
+body.is-home-route .centralQuickBtn:nth-child(3){
+  background:
+    radial-gradient(200px 90px at 18% 0%, rgba(98,160,255,.14), transparent 66%),
+    linear-gradient(135deg, rgba(5,24,56,.96), rgba(6,46,97,.90)) !important;
+}
+
+body.is-home-route .toolCatalog{
+  background:
+    radial-gradient(260px 130px at 0% 0%, rgba(255,214,107,.08), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035)) !important;
+}
+
+body.is-home-route .toolCatalog[open]{
+  border-color:rgba(255,214,107,.22) !important;
+  background:
+    radial-gradient(280px 150px at 0% 0%, rgba(255,165,55,.14), transparent 68%),
+    radial-gradient(260px 140px at 100% 0%, rgba(81,143,231,.10), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04)) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard{
+  background:
+    radial-gradient(200px 96px at 20% 0%, rgba(255,255,255,.07), transparent 68%),
+    rgba(4,22,52,.58) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard:hover,
+body.is-home-route .toolGrid--catalog .toolCard:focus-visible{
+  border-color:rgba(255,165,55,.40) !important;
+  background:
+    radial-gradient(220px 100px at 20% 0%, rgba(255,165,55,.13), transparent 66%),
+    rgba(6,31,73,.68) !important;
+}
+
+.salesLandingPage--professional{
+  gap:16px !important;
+}
+
+.salesHeroCard--dekassegui,
+.salesValueCard,
+.salesSoftPremium,
+.salesFaqItem,
+.salesAnswerCard,
+.salesPremiumStory,
+.legalLinksBox{
+  border-color:rgba(255,214,107,.18) !important;
+}
+
+.salesHeroCard--dekassegui{
+  background:
+    radial-gradient(360px 220px at 0% 0%, rgba(255,173,66,.18), transparent 62%),
+    radial-gradient(340px 220px at 100% 0%, rgba(81,143,231,.14), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.035)) !important;
+}
+
+.salesValueCard,
+.salesSoftPremium,
+.legalLinksBox{
+  background:
+    radial-gradient(260px 140px at 0% 0%, rgba(255,214,107,.07), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035)) !important;
+}
+
+.salesFaqItem,
+.salesAnswerCard{
+  background:
+    radial-gradient(180px 100px at 12% 0%, rgba(255,214,107,.08), transparent 70%),
+    rgba(255,255,255,.04) !important;
+}
+
+.salesHeroTitle,
+.salesValueCard .h2,
+.salesPremiumStory .h2,
+.salesFaqItem summary span,
+.salesAnswerCard b{
+  color:#fffaf0 !important;
+}
+
+.salesHeroLead,
+.salesValueLead,
+.salesPremiumStory .p,
+.salesAnswerCard span,
+.salesFaqBody p,
+.salesFaqBody li{
+  color:rgba(227,236,255,.82) !important;
+}
+
+.salesTrustStrip span,
+.salesMethodLine span,
+.salesMethodLine b{
+  border-color:rgba(255,214,107,.16) !important;
+  color:#ffe39a !important;
+  background:rgba(255,255,255,.045) !important;
+}
+
+.salesHeroActions .bigBtn,
+.salesPremiumActions .primaryAction{
+  background:linear-gradient(135deg, #ffb347, #ff8420) !important;
+  color:#fff9f1 !important;
+  border-color:rgba(255,190,88,.44) !important;
+}
+
+.salesHeroActions .btn--muted,
+.salesPremiumActions .btn--muted,
+.salesHeroActions .btn--ghost{
+  background:rgba(255,255,255,.055) !important;
+  border-color:rgba(255,214,107,.16) !important;
+  color:#fff4d0 !important;
+}
+
+html[data-theme="light"] .salesHeroCard--dekassegui,
+html[data-theme="light"] .salesValueCard,
+html[data-theme="light"] .salesSoftPremium,
+html[data-theme="light"] .legalLinksBox,
+html[data-theme="light"] .salesFaqItem,
+html[data-theme="light"] .salesAnswerCard{
+  background:rgba(255,255,255,.86) !important;
+}
+
+html[data-theme="light"] .salesHeroTitle,
+html[data-theme="light"] .salesValueCard .h2,
+html[data-theme="light"] .salesPremiumStory .h2,
+html[data-theme="light"] .salesFaqItem summary span,
+html[data-theme="light"] .salesAnswerCard b{
+  color:#14213a !important;
+}
+
+html[data-theme="light"] .salesHeroLead,
+html[data-theme="light"] .salesValueLead,
+html[data-theme="light"] .salesPremiumStory .p,
+html[data-theme="light"] .salesAnswerCard span,
+html[data-theme="light"] .salesFaqBody p,
+html[data-theme="light"] .salesFaqBody li{
+  color:#42536f !important;
+}
+
+/* =========================================================
+   NIHONGO321 8.8.42-R — Azul profissional + CTA laranja refinado
+   - reforça a paleta da logo na Home e na Apresentação
+   - mantém azul como cor base de confiança
+   - usa laranja profundo apenas como chamada de ação
+   ========================================================= */
+
+body.is-home-route{
+  --brandDeep:#06152f;
+  --brandNavy:#082454;
+  --brandBlue:#0b4694;
+  --brandBlueSoft:#123f7a;
+  --brandOrange:#ff8a1f;
+  --brandOrangeDeep:#d95a08;
+  --brandGold:#ffd978;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+  border-color:rgba(255,217,120,.24) !important;
+  background:
+    radial-gradient(360px 210px at 96% 0%, rgba(36,111,214,.30), transparent 64%),
+    radial-gradient(300px 190px at 4% 0%, rgba(255,138,31,.12), transparent 68%),
+    linear-gradient(135deg, #06152f 0%, #0a3678 50%, #06152f 100%) !important;
+  box-shadow:0 22px 54px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.075) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::before{
+  content:none !important;
+  display:none !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::after{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.038), transparent 46%, rgba(0,0,0,.14)) !important;
+  opacity:.56 !important;
+}
+
+body.is-home-route .appCentralHeroTop .badge{
+  border-color:rgba(255,217,120,.20) !important;
+  background:rgba(255,255,255,.07) !important;
+  color:#fff0bd !important;
+}
+
+body.is-home-route .btn--presentationMini{
+  border-color:rgba(255,217,120,.18) !important;
+  background:rgba(5,31,73,.54) !important;
+  color:#fff3cf !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralTitle,
+body.is-home-route .appCentralLead--visible{
+  text-shadow:0 10px 26px rgba(0,0,0,.30) !important;
+}
+
+body.is-home-route .centralQuickBtn{
+  border-color:rgba(120,174,255,.18) !important;
+  background:
+    radial-gradient(210px 100px at 16% 0%, rgba(255,255,255,.07), transparent 70%),
+    linear-gradient(135deg, rgba(7,32,75,.96), rgba(9,55,119,.88)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055), 0 12px 26px rgba(0,0,0,.16) !important;
+}
+
+body.is-home-route .centralQuickBtn--main{
+  border-color:rgba(255,203,108,.44) !important;
+  background:
+    radial-gradient(240px 110px at 18% 0%, rgba(255,255,255,.18), transparent 64%),
+    linear-gradient(135deg, #d95707 0%, #f06b0b 48%, #ff8f24 100%) !important;
+  color:#fff !important;
+  box-shadow:0 16px 34px rgba(217,90,8,.24), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+
+body.is-home-route .centralQuickBtn--main b,
+body.is-home-route .centralQuickBtn--main small{
+  color:#fffdf8 !important;
+  text-shadow:0 2px 12px rgba(85,28,0,.26) !important;
+}
+
+body.is-home-route .centralQuickBtn--main span{
+  border-color:rgba(255,255,255,.34) !important;
+  background:rgba(93,31,0,.20) !important;
+  color:#fff3bf !important;
+  text-shadow:0 2px 10px rgba(80,26,0,.35) !important;
+}
+
+body.is-home-route .centralQuickBtn:nth-child(2),
+body.is-home-route .centralQuickBtn:nth-child(3){
+  border-color:rgba(120,174,255,.20) !important;
+  background:
+    radial-gradient(210px 96px at 18% 0%, rgba(120,174,255,.13), transparent 68%),
+    linear-gradient(135deg, rgba(6,31,74,.98), rgba(9,60,132,.88)) !important;
+}
+
+body.is-home-route .centralQuickBtn span,
+body.is-home-route .toolGrid--catalog .toolIcon,
+body.is-home-route .appCentralPage--seiton .toolCatalogIcon,
+body.is-home-route .toolCatalogSummary::after{
+  border-color:rgba(255,217,120,.22) !important;
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255,217,120,.16), transparent 62%),
+    rgba(255,217,120,.065) !important;
+  color:#ffe39b !important;
+}
+
+body.is-home-route .toolCatalog{
+  border-color:rgba(120,174,255,.16) !important;
+  background:
+    radial-gradient(280px 140px at 0% 0%, rgba(120,174,255,.11), transparent 68%),
+    linear-gradient(135deg, rgba(7,27,62,.90), rgba(9,43,93,.72)) !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+body.is-home-route .toolCatalog[open]{
+  border-color:rgba(255,217,120,.22) !important;
+  background:
+    radial-gradient(300px 150px at 0% 0%, rgba(255,138,31,.12), transparent 70%),
+    radial-gradient(280px 150px at 100% 0%, rgba(120,174,255,.12), transparent 70%),
+    linear-gradient(135deg, rgba(7,32,73,.94), rgba(9,52,114,.76)) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard{
+  border-color:rgba(120,174,255,.14) !important;
+  background:
+    radial-gradient(210px 100px at 18% 0%, rgba(120,174,255,.09), transparent 70%),
+    linear-gradient(135deg, rgba(5,24,56,.86), rgba(8,45,99,.64)) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard--main:first-child{
+  border-color:rgba(255,203,108,.34) !important;
+  background:
+    radial-gradient(220px 100px at 18% 0%, rgba(255,255,255,.13), transparent 64%),
+    linear-gradient(135deg, #c84f05 0%, #e85f08 50%, #ff8520 100%) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard--main:first-child b,
+body.is-home-route .toolGrid--catalog .toolCard--main:first-child small{
+  color:#fffaf3 !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard--diario,
+body.is-home-route .toolGrid--catalog .toolCard--main:not(:first-child){
+  border-color:rgba(120,174,255,.20) !important;
+}
+
+/* Apresentação: azul como base psicológica, laranja como ação */
+.salesLandingPage--professional{
+  --salesBlueDeep:#06152f;
+  --salesBlue:#0a377a;
+  --salesBlueBright:#0b4694;
+  --salesOrange:#ff8420;
+  --salesOrangeDeep:#d95707;
+  --salesGold:#ffd978;
+}
+
+.salesHeroCard--dekassegui{
+  border-color:rgba(255,217,120,.22) !important;
+  background:
+    radial-gradient(420px 240px at 100% 0%, rgba(75,142,236,.22), transparent 66%),
+    radial-gradient(320px 180px at 0% 0%, rgba(255,132,32,.12), transparent 70%),
+    linear-gradient(135deg, #06152f 0%, #0a3678 50%, #06152f 100%) !important;
+  box-shadow:0 22px 54px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.075) !important;
+}
+
+.salesHeroCard--dekassegui .salesHeroTitle,
+.salesValueCard .h2,
+.salesPremiumStory .h2,
+.salesFaqItem summary span,
+.salesAnswerCard b{
+  color:#fffdf7 !important;
+  text-shadow:0 8px 22px rgba(0,0,0,.22) !important;
+}
+
+.salesHeroCard--dekassegui .salesHeroLead,
+.salesValueLead,
+.salesPremiumStory .p,
+.salesAnswerCard span,
+.salesFaqBody p,
+.salesFaqBody li{
+  color:rgba(228,238,255,.86) !important;
+}
+
+.salesHeroBanner{
+  border-color:rgba(255,217,120,.22) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.24) !important;
+}
+
+.salesTrustStrip span,
+.salesMethodLine span,
+.salesMethodLine b{
+  border-color:rgba(120,174,255,.18) !important;
+  background:rgba(4,25,60,.58) !important;
+  color:#ffe39b !important;
+}
+
+.salesValueCard,
+.salesSoftPremium,
+.salesPremiumStory,
+.legalLinksBox{
+  border-color:rgba(120,174,255,.16) !important;
+  background:
+    radial-gradient(300px 160px at 0% 0%, rgba(120,174,255,.10), transparent 70%),
+    linear-gradient(135deg, rgba(7,27,62,.88), rgba(9,43,93,.66)) !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+
+.salesAnswerCard,
+.salesFaqItem{
+  border-color:rgba(120,174,255,.15) !important;
+  background:
+    radial-gradient(190px 96px at 18% 0%, rgba(120,174,255,.09), transparent 70%),
+    rgba(4,24,58,.56) !important;
+}
+
+.salesFaqItem[open],
+.salesAnswerCard:hover{
+  border-color:rgba(255,217,120,.24) !important;
+  background:
+    radial-gradient(220px 110px at 18% 0%, rgba(255,138,31,.10), transparent 70%),
+    rgba(6,35,80,.62) !important;
+}
+
+.salesHeroActions .bigBtn,
+.salesPremiumActions .primaryAction{
+  border-color:rgba(255,203,108,.42) !important;
+  background:linear-gradient(135deg, #d95707 0%, #f06b0b 48%, #ff8f24 100%) !important;
+  color:#fffdf8 !important;
+  text-shadow:0 2px 12px rgba(85,28,0,.28) !important;
+  box-shadow:0 16px 34px rgba(217,90,8,.24), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+
+.salesHeroActions .btn--muted,
+.salesHeroActions .btn--ghost,
+.salesPremiumActions .btn--muted{
+  border-color:rgba(120,174,255,.18) !important;
+  background:rgba(5,31,73,.56) !important;
+  color:#fff3cf !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional,
+html[data-theme="light"] .salesHeroCard--dekassegui{
+  background:
+    radial-gradient(360px 210px at 100% 0%, rgba(71,143,230,.24), transparent 66%),
+    radial-gradient(300px 190px at 0% 0%, rgba(255,138,31,.18), transparent 68%),
+    linear-gradient(135deg, #fff6d6 0%, #e8f4ff 52%, #f7fbff 100%) !important;
+}
+
+html[data-theme="light"] body.is-home-route .toolCatalog,
+html[data-theme="light"] body.is-home-route .centralQuickBtn:not(.centralQuickBtn--main),
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard,
+html[data-theme="light"] .salesValueCard,
+html[data-theme="light"] .salesSoftPremium,
+html[data-theme="light"] .salesPremiumStory,
+html[data-theme="light"] .legalLinksBox,
+html[data-theme="light"] .salesAnswerCard,
+html[data-theme="light"] .salesFaqItem{
+  background:rgba(255,255,255,.86) !important;
+  border-color:rgba(28,74,132,.14) !important;
+  box-shadow:0 14px 32px rgba(36,68,116,.12) !important;
+}
+
+html[data-theme="light"] .salesHeroCard--dekassegui .salesHeroTitle,
+html[data-theme="light"] .salesValueCard .h2,
+html[data-theme="light"] .salesPremiumStory .h2,
+html[data-theme="light"] .salesFaqItem summary span,
+html[data-theme="light"] .salesAnswerCard b{
+  color:#14213a !important;
+  text-shadow:none !important;
+}
+
+html[data-theme="light"] .salesHeroCard--dekassegui .salesHeroLead,
+html[data-theme="light"] .salesValueLead,
+html[data-theme="light"] .salesPremiumStory .p,
+html[data-theme="light"] .salesAnswerCard span,
+html[data-theme="light"] .salesFaqBody p,
+html[data-theme="light"] .salesFaqBody li{
+  color:#42536f !important;
+}
+
+@media (max-width:760px){
+  body.is-home-route .centralQuickBtn--main,
+  body.is-home-route .toolGrid--catalog .toolCard--main:first-child{
+    background:linear-gradient(135deg, #c84f05 0%, #e85f08 50%, #ff8520 100%) !important;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.43-R — Paleta Oficial do Produto
+   Padrão:
+   60% Azul Marinho #1A365D
+   CTA Laranja #FF6B00
+   Branco #FFFFFF
+   Blocos claros #F7FAFC
+   ========================================================= */
+
+:root{
+  --brand-navy:#1A365D;
+  --brand-navy-deep:#102A4C;
+  --brand-navy-soft:#244B78;
+  --brand-orange:#FF6B00;
+  --brand-orange-deep:#C94E00;
+  --brand-white:#FFFFFF;
+  --brand-light:#F7FAFC;
+  --brand-text:#102A4C;
+  --brand-muted:#5F6F86;
+  --brand-stroke:rgba(26,54,93,.16);
+  --brand-shadow:0 18px 44px rgba(16,42,76,.18);
+}
+
+/* base mais coesa */
+body{
+  background:
+    radial-gradient(620px 420px at 0% -8%, rgba(255,107,0,.10), transparent 62%),
+    radial-gradient(560px 380px at 100% 0%, rgba(255,255,255,.06), transparent 64%),
+    linear-gradient(180deg, #0F2748 0%, var(--brand-navy) 48%, #0C213C 100%) !important;
+}
+
+.topbar{
+  border-bottom:1px solid rgba(255,255,255,.08) !important;
+  background:
+    linear-gradient(180deg, rgba(16,42,76,.98), rgba(10,30,56,.96)) !important;
+}
+
+.brandTitle,
+.brandMini strong{
+  color:var(--brand-white) !important;
+}
+
+.hudBtn,
+.hudItem{
+  border-color:rgba(255,255,255,.13) !important;
+  background:rgba(255,255,255,.07) !important;
+  color:var(--brand-white) !important;
+}
+
+/* laranja fica reservado para ação */
+.bigBtn,
+.primaryAction,
+.btn--ok,
+.btn--primary,
+button[data-action="goCompare"],
+a.landingCompareBtn,
+.landingPremiumFixBtn,
+.salesHeroActions .bigBtn,
+.salesPremiumActions .primaryAction,
+.toolCard--cta,
+body.is-home-route .toolGrid--catalog .toolCard--cta{
+  border-color:rgba(255,107,0,.44) !important;
+  background:
+    radial-gradient(180px 90px at 18% 0%, rgba(255,255,255,.18), transparent 64%),
+    linear-gradient(135deg, var(--brand-orange-deep) 0%, var(--brand-orange) 100%) !important;
+  color:var(--brand-white) !important;
+  box-shadow:0 16px 34px rgba(255,107,0,.22), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+.bigBtn *,
+.primaryAction *,
+.btn--ok *,
+.btn--primary *,
+.toolCard--cta *,
+body.is-home-route .toolGrid--catalog .toolCard--cta *{
+  color:var(--brand-white) !important;
+}
+
+.btn--ghost,
+.btn--muted{
+  border-color:rgba(255,255,255,.13) !important;
+  background:rgba(255,255,255,.06) !important;
+  color:rgba(255,255,255,.88) !important;
+}
+
+/* Home sem duplicação: hero vira orientação, catálogos viram navegação oficial */
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+  padding:20px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  border-radius:28px !important;
+  background:
+    radial-gradient(420px 240px at 100% 0%, rgba(255,255,255,.10), transparent 68%),
+    radial-gradient(280px 170px at 0% 0%, rgba(255,107,0,.12), transparent 72%),
+    linear-gradient(135deg, var(--brand-navy-deep) 0%, var(--brand-navy) 55%, #0F2748 100%) !important;
+  box-shadow:var(--brand-shadow), inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::before{
+  content:none !important;
+  display:none !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::after{
+  opacity:.38 !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), transparent 45%, rgba(0,0,0,.10)) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralTitle{
+  color:var(--brand-white) !important;
+  max-width:11em !important;
+  text-shadow:0 8px 22px rgba(0,0,0,.20) !important;
+}
+
+body.is-home-route .appCentralLead--visible{
+  color:rgba(255,255,255,.86) !important;
+  font-weight:850 !important;
+}
+
+body.is-home-route .appCentralHeroTop .badge{
+  background:rgba(255,255,255,.10) !important;
+  border-color:rgba(255,255,255,.16) !important;
+  color:rgba(255,255,255,.92) !important;
+}
+
+body.is-home-route .btn--presentationMini{
+  background:rgba(255,255,255,.08) !important;
+  border-color:rgba(255,255,255,.14) !important;
+  color:rgba(255,255,255,.90) !important;
+}
+
+.appCentralHeroGuide{
+  margin-top:4px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:12px 14px;
+  background:rgba(255,255,255,.055);
+  color:rgba(255,255,255,.82);
+  font-size:13px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+body.is-home-route .toolCatalog{
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:26px !important;
+  background:
+    radial-gradient(280px 150px at 100% 0%, rgba(255,255,255,.08), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.035)) !important;
+  box-shadow:0 16px 34px rgba(0,0,0,.18) !important;
+}
+
+body.is-home-route .toolCatalog[open]{
+  border-color:rgba(255,255,255,.14) !important;
+  background:
+    radial-gradient(300px 160px at 100% 0%, rgba(255,255,255,.10), transparent 70%),
+    linear-gradient(180deg, rgba(36,75,120,.50), rgba(16,42,76,.42)) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText b{
+  color:var(--brand-white) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText small,
+body.is-home-route .toolCatalogPreview{
+  color:rgba(255,255,255,.72) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogIcon,
+body.is-home-route .toolCatalogSummary::after{
+  border-color:rgba(255,255,255,.15) !important;
+  background:rgba(255,255,255,.08) !important;
+  color:var(--brand-white) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard{
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:
+    radial-gradient(190px 90px at 18% 0%, rgba(255,255,255,.07), transparent 68%),
+    rgba(255,255,255,.045) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard:not(.toolCard--cta):hover,
+body.is-home-route .toolGrid--catalog .toolCard:not(.toolCard--cta):focus-visible{
+  border-color:rgba(255,255,255,.18) !important;
+  background:
+    radial-gradient(210px 100px at 18% 0%, rgba(255,255,255,.10), transparent 68%),
+    rgba(255,255,255,.070) !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolIcon{
+  border-color:rgba(255,255,255,.15) !important;
+  background:rgba(255,255,255,.08) !important;
+  color:var(--brand-white) !important;
+}
+
+/* Apresentação: azul como confiança, laranja só em CTA */
+.salesLandingPage--professional{
+  gap:16px !important;
+}
+
+.salesHeroCard--dekassegui,
+.salesValueCard,
+.salesSoftPremium,
+.salesPremiumStory,
+.legalLinksBox{
+  border-color:rgba(255,255,255,.11) !important;
+  background:
+    radial-gradient(420px 220px at 100% 0%, rgba(255,255,255,.08), transparent 70%),
+    radial-gradient(300px 170px at 0% 0%, rgba(255,107,0,.08), transparent 72%),
+    linear-gradient(180deg, rgba(26,54,93,.76), rgba(16,42,76,.72)) !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.18) !important;
+}
+
+.salesFaqItem,
+.salesAnswerCard,
+.salesTrustStrip span{
+  border-color:rgba(255,255,255,.12) !important;
+  background:rgba(255,255,255,.055) !important;
+}
+
+.salesHeroTitle,
+.salesValueCard .h2,
+.salesPremiumStory .h2,
+.salesFaqItem summary span,
+.salesAnswerCard b{
+  color:var(--brand-white) !important;
+}
+
+.salesHeroLead,
+.salesValueLead,
+.salesPremiumStory .p,
+.salesAnswerCard span,
+.salesFaqBody p,
+.salesFaqBody li,
+.salesTrustStrip span{
+  color:rgba(255,255,255,.78) !important;
+}
+
+.salesHeroTop .badge,
+.salesValueCard .badge,
+.salesPremiumIntro .badge{
+  background:rgba(255,255,255,.09) !important;
+  border-color:rgba(255,255,255,.14) !important;
+  color:rgba(255,255,255,.90) !important;
+}
+
+/* modo claro: blocos claros e leitura limpa */
+html[data-theme="light"] body{
+  background:
+    radial-gradient(520px 320px at 0% 0%, rgba(255,107,0,.08), transparent 64%),
+    linear-gradient(180deg, var(--brand-light), var(--brand-white)) !important;
+  color:var(--brand-text) !important;
+}
+
+html[data-theme="light"] .topbar{
+  background:var(--brand-white) !important;
+  border-bottom:1px solid var(--brand-stroke) !important;
+  box-shadow:0 10px 26px rgba(26,54,93,.08) !important;
+}
+
+html[data-theme="light"] .brandTitle,
+html[data-theme="light"] .brandMini strong{
+  color:var(--brand-navy) !important;
+}
+
+html[data-theme="light"] .hudBtn,
+html[data-theme="light"] .hudItem{
+  border-color:var(--brand-stroke) !important;
+  background:var(--brand-light) !important;
+  color:var(--brand-navy) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional,
+html[data-theme="light"] .salesHeroCard--dekassegui{
+  background:
+    radial-gradient(340px 190px at 100% 0%, rgba(26,54,93,.10), transparent 70%),
+    radial-gradient(300px 160px at 0% 0%, rgba(255,107,0,.10), transparent 72%),
+    linear-gradient(180deg, var(--brand-white), var(--brand-light)) !important;
+  border-color:var(--brand-stroke) !important;
+  box-shadow:0 18px 42px rgba(26,54,93,.12) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralTitle,
+html[data-theme="light"] .salesHeroTitle,
+html[data-theme="light"] .salesValueCard .h2,
+html[data-theme="light"] .salesPremiumStory .h2,
+html[data-theme="light"] .salesFaqItem summary span,
+html[data-theme="light"] .salesAnswerCard b{
+  color:var(--brand-navy) !important;
+  text-shadow:none !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralLead--visible,
+html[data-theme="light"] .salesHeroLead,
+html[data-theme="light"] .salesValueLead,
+html[data-theme="light"] .salesPremiumStory .p,
+html[data-theme="light"] .salesAnswerCard span,
+html[data-theme="light"] .salesFaqBody p,
+html[data-theme="light"] .salesFaqBody li,
+html[data-theme="light"] .salesTrustStrip span{
+  color:var(--brand-muted) !important;
+}
+
+html[data-theme="light"] .appCentralHeroGuide,
+html[data-theme="light"] body.is-home-route .toolCatalog,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard,
+html[data-theme="light"] .salesValueCard,
+html[data-theme="light"] .salesSoftPremium,
+html[data-theme="light"] .salesPremiumStory,
+html[data-theme="light"] .legalLinksBox,
+html[data-theme="light"] .salesFaqItem,
+html[data-theme="light"] .salesAnswerCard,
+html[data-theme="light"] .salesTrustStrip span{
+  background:var(--brand-light) !important;
+  border-color:var(--brand-stroke) !important;
+  color:var(--brand-text) !important;
+  box-shadow:0 14px 30px rgba(26,54,93,.08) !important;
+}
+
+html[data-theme="light"] body.is-home-route .toolCatalog[open]{
+  background:var(--brand-white) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .toolCatalogText b,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard b{
+  color:var(--brand-navy) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .toolCatalogText small,
+html[data-theme="light"] body.is-home-route .toolCatalogPreview,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard small{
+  color:var(--brand-muted) !important;
+}
+
+@media (max-width:760px){
+  body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+    padding:18px !important;
+  }
+
+  .appCentralHeroGuide{
+    font-size:12.5px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.44-R — Home limpa + tipografia controlada
+   - corrige fundo pesado da linha do método
+   - retorna título profissional da Home
+   - define teto visual de fonte para evitar gigantismo no mobile
+   ========================================================= */
+
+/* Linha do método na apresentação: texto limpo, sem "tarja" pesada */
+.salesMethodLine{
+  border-color:rgba(255,255,255,.16) !important;
+  background:rgba(255,255,255,.045) !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  color:rgba(255,255,255,.86) !important;
+  font-size:12px !important;
+  font-weight:850 !important;
+  letter-spacing:.01em !important;
+}
+
+.salesMethodLine span,
+.salesMethodLine b{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  color:rgba(255,255,255,.86) !important;
+  text-shadow:none !important;
+}
+
+.salesMethodLine b{
+  color:var(--brand-orange, #FF6B00) !important;
+  font-weight:950 !important;
+}
+
+html[data-theme="light"] .salesMethodLine{
+  background:rgba(26,54,93,.045) !important;
+  border-color:rgba(26,54,93,.12) !important;
+  color:rgba(26,54,93,.78) !important;
+}
+
+html[data-theme="light"] .salesMethodLine span{
+  color:rgba(26,54,93,.78) !important;
+}
+
+/* Home: visual mais direto, menos texto gigante */
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+  padding:20px !important;
+  border-radius:28px !important;
+  background:
+    radial-gradient(360px 190px at 96% 0%, rgba(255,255,255,.10), transparent 64%),
+    linear-gradient(135deg, #1A365D 0%, #244B78 52%, #102A4C 100%) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional::before{
+  content:none !important;
+  display:none !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralIntro{
+  margin-top:10px !important;
+  gap:8px !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralTitle{
+  max-width:100% !important;
+  font-size:clamp(26px, 6.2vw, 34px) !important;
+  line-height:1.04 !important;
+  letter-spacing:-.04em !important;
+  color:#FFFFFF !important;
+}
+
+body.is-home-route .appCentralLead--visible{
+  max-width:36em !important;
+  font-size:clamp(13px, 3.2vw, 15px) !important;
+  line-height:1.42 !important;
+  color:rgba(255,255,255,.84) !important;
+  font-weight:800 !important;
+}
+
+.appCentralHeroGuide{
+  margin-top:6px !important;
+  padding:10px 12px !important;
+  border-radius:16px !important;
+  background:rgba(255,255,255,.045) !important;
+  border-color:rgba(255,255,255,.12) !important;
+  color:rgba(255,255,255,.76) !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+}
+
+body.is-home-route .toolCatalogSummary{
+  min-height:74px !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText b{
+  font-size:clamp(20px, 5.4vw, 26px) !important;
+  line-height:1.02 !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText small{
+  font-size:13px !important;
+  line-height:1.22 !important;
+}
+
+/* O laranja continua forte, mas com leitura branca melhor */
+body.is-home-route .toolGrid--catalog .toolCard--cta,
+.toolCard--cta{
+  background:
+    radial-gradient(180px 90px at 16% 0%, rgba(255,255,255,.14), transparent 62%),
+    linear-gradient(135deg, #C94E00 0%, #E45B00 52%, #FF6B00 100%) !important;
+  color:#FFFFFF !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard--cta b,
+body.is-home-route .toolGrid--catalog .toolCard--cta small,
+body.is-home-route .toolGrid--catalog .toolCard--cta .toolIcon{
+  color:#FFFFFF !important;
+}
+
+@media (max-width:430px){
+  body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+    padding:18px !important;
+    border-radius:24px !important;
+  }
+
+  body.is-home-route .appCentralPage--seiton .appCentralTitle{
+    font-size:30px !important;
+    line-height:1.03 !important;
+  }
+
+  body.is-home-route .appCentralLead--visible{
+    font-size:13.5px !important;
+  }
+
+  .appCentralHeroGuide{
+    font-size:11.8px !important;
+  }
+}

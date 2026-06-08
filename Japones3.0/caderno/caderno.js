@@ -39490,6 +39490,63 @@
     toast(finished ? "frase dominada no Diário" : "repetição registrada");
   }
 
+
+
+  function diario321SegmentTextForKaraoke(text) {
+    return [...String(text || "")];
+  }
+
+  function diario321EstimateSpeechDurationMs(text, rate = 0.92) {
+    const clean = String(text || "").replace(/\s+/g, "");
+    const n = clean.length || 1;
+    return (110 * n) / Math.max(0.6, Math.min(1.2, Number(rate) || 0.92));
+  }
+
+  function renderDiario321KaraokePhrase(text) {
+    return diario321SegmentTextForKaraoke(text)
+      .map((seg, index) => `<span class="diario321Kseg" data-diario-kseg="${index}">${escapeHTML(seg)}</span>`)
+      .join("");
+  }
+
+  function stopDiario321Karaoke(panel) {
+    try {
+      if (window.__diario321KaraokeRaf) cancelAnimationFrame(window.__diario321KaraokeRaf);
+      window.__diario321KaraokeRaf = null;
+      panel?.querySelectorAll?.(".diario321Kseg.is-on")?.forEach(el => el.classList.remove("is-on"));
+    } catch {}
+  }
+
+  function playDiario321Karaoke(panel, rawText, rate = 0.92) {
+    if (!panel) return;
+    const segEls = panel.querySelectorAll(".diario321Kseg");
+    if (!segEls || !segEls.length) return;
+
+    segEls.forEach(el => el.classList.remove("is-on"));
+    if (window.__diario321KaraokeRaf) cancelAnimationFrame(window.__diario321KaraokeRaf);
+
+    const plain = String(rawText || "");
+    const total = segEls.length || 1;
+    const duration = diario321EstimateSpeechDurationMs(plain, rate);
+    const step = Math.max(22, duration / total);
+    const start = (performance && performance.now) ? performance.now() : Date.now();
+    let current = 0;
+
+    const tick = () => {
+      const nowTime = (performance && performance.now) ? performance.now() : Date.now();
+      const target = Math.min(total, Math.floor((nowTime - start) / step) + 1);
+      while (current < target) {
+        const el = panel.querySelector(`.diario321Kseg[data-diario-kseg="${current}"]`);
+        if (el) el.classList.add("is-on");
+        current += 1;
+      }
+      if (current < total) {
+        window.__diario321KaraokeRaf = requestAnimationFrame(tick);
+      }
+    };
+
+    window.__diario321KaraokeRaf = requestAnimationFrame(tick);
+  }
+
   function speakDiario321EntryTraining(entryId) {
     const entry = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).find(item => item.id === entryId);
     if (!entry) return;
@@ -39500,17 +39557,34 @@
     }
     try {
       const panel = document.querySelector(`[data-diario-training-panel="${CSS.escape(String(entryId || ""))}"]`);
+      stopDiario321Karaoke(panel);
       panel?.classList?.add?.("is-speaking");
       window.clearTimeout(window.__diario321SpeakingTimer);
       window.__diario321SpeakingTimer = window.setTimeout(() => {
-        try { panel?.classList?.remove?.("is-speaking"); } catch {}
-      }, 1800);
+        try {
+          panel?.classList?.remove?.("is-speaking");
+          stopDiario321Karaoke(panel);
+        } catch {}
+      }, diario321EstimateSpeechDurationMs(text, 0.92) + 620);
 
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "ja-JP";
       u.rate = 0.92;
-      u.onend = () => { try { panel?.classList?.remove?.("is-speaking"); } catch {} };
-      u.onerror = () => { try { panel?.classList?.remove?.("is-speaking"); } catch {} };
+      u.onstart = () => playDiario321Karaoke(panel, text, 0.92);
+      u.onend = () => {
+        window.setTimeout(() => {
+          try {
+            panel?.classList?.remove?.("is-speaking");
+            stopDiario321Karaoke(panel);
+          } catch {}
+        }, 420);
+      };
+      u.onerror = () => {
+        try {
+          panel?.classList?.remove?.("is-speaking");
+          stopDiario321Karaoke(panel);
+        } catch {}
+      };
       speechSynthesis.cancel();
       speechSynthesis.speak(u);
       toast("ouvindo frase");
@@ -39542,7 +39616,7 @@
             <span>${info.completed ? "dominada" : `ciclo ${info.cycleNumber}`}</span>
           </div>
           <div class="diario321TrainingPhrase">
-            <b>${escapeHTML(mainPhrase)}</b>
+            <b>${renderDiario321KaraokePhrase(mainPhrase)}</b>
             ${ptPhrase ? `<em>${escapeHTML(ptPhrase)}</em>` : ""}
             ${romajiPhrase ? `<small>${escapeHTML(romajiPhrase)}</small>` : ""}
           </div>
