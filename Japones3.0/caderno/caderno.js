@@ -34350,6 +34350,16 @@
   } catch { }
   // DIÁRIO321 4.10.21: ao abrir/recarregar, os menus começam fechados para uma tela mais organizada.
   let openMenu = "";
+  try {
+    const params = new URLSearchParams(window.location.search || "");
+    const requestedArea = params.get("area");
+    if (["hiragana", "katakana", "kanji"].includes(requestedArea)) {
+      category = requestedArea;
+      openMenu = requestedArea;
+      state.category = requestedArea;
+      currentIndex = state.currentIndexByCategory?.[category] || 0;
+    }
+  } catch { }
   let selectedFocus = state.selectedFocus || {};
   let selectedFamily = state.selectedFamily || { hiragana: "あ", katakana: "ア" };
   let selectedKanjiLevel = state.selectedKanjiLevel || "N5";
@@ -35923,18 +35933,7 @@
   }
 
   function renderBridgeSummary() {
-    const saved = savedBridgePhrases();
-    if (!saved.length) return "";
-
-    return `
-      <div class="bridgeSummary">
-        <div>
-          <b>${saved.length}</b>
-          <span>frase${saved.length === 1 ? "" : "s"} salva${saved.length === 1 ? "" : "s"} para o NIHONGO321</span>
-        </div>
-        <button type="button" data-export-bridge>exportar</button>
-      </div>
-    `;
+    return "";
   }
 
   function renderKanjiDetails(word) {
@@ -38111,16 +38110,18 @@
   }
 
   function renderGenialEntryCard() {
+    const embedded = isEmbeddedInNihongo321();
     return `
-      <section class="genialEntryCard genialEntryCard--compact">
-        <button type="button" data-open-genial onclick="window.DIARIO321_OPEN && window.DIARIO321_OPEN(event)">
-          <span>天才</span>
-          <div>
+      ${embedded ? `<div class="genialEntryTopbar"><a class="genialEntryTopbarBack" href="../index.html#/home" target="_parent" aria-label="voltar ao NIHONGO321">↩ voltar ao NIHONGO321</a></div>` : ""}
+      <section class="genialEntryCard genialEntryCard--premiumLean" aria-label="Diário321 páginas 360 graus de revisão">
+        <div class="genialEntryPremiumIcon" aria-hidden="true">日記</div>
+        <div class="genialEntryPremiumBody">
+          <div class="genialEntryPremiumCopy">
             <b>Diário321</b>
             <small>páginas 360° de revisão</small>
           </div>
-          <em>abrir</em>
-        </button>
+          <button class="genialEntryPremiumAction genialEntryPremiumAction--compact" type="button" data-open-genial onclick="window.DIARIO321_OPEN && window.DIARIO321_OPEN(event)">abrir diário</button>
+        </div>
       </section>
     `;
   }
@@ -40119,6 +40120,7 @@
                 ${renderDiario321EntryTrainingPanel(entry)}
                 <div class="diario321PhraseTools diario321LibraryTools" aria-label="ações da frase">
                   <button class="diario321EntryTrainBtn" type="button" data-entry-start-train="${escapeHTML(entry.id)}">🔁 Treinar 105x</button>
+                  <button class="diario321EntryShareBtn" type="button" data-entry-share="${escapeHTML(entry.id)}">↗ Compartilhar</button>
                   <label class="diario321MasteredCheck diario321MasteredCheck--clean" title="marcar como praticada">
                     <input type="checkbox" ${mastered ? "checked" : ""} data-entry-mastered="${escapeHTML(entry.id)}">
                     <span>praticada</span>
@@ -40357,6 +40359,44 @@
     } catch {
       return false;
     }
+  }
+
+
+  function diario321BuildEntryShareText(entry = {}) {
+    const jp = diario321StripFurigana(entry.jp || diario321JapaneseFromRomajiInput(entry.romaji || "", entry.speechStyle || "polite") || "").trim();
+    const pt = String(entry.pt || "").trim();
+    const romaji = String(entry.romaji || "").trim();
+    const word = [String(entry.wordRomaji || "").trim(), String(entry.wordPt || "").trim()].filter(Boolean).join(" = ");
+    const env = diario321EnvironmentLabel(entry.environment || "trabalho");
+    return [
+      "🇯🇵 Frase prática NIHONGO321",
+      word ? `Palavra: ${word}` : "",
+      env ? `Contexto: ${env}` : "",
+      "",
+      pt ? `Português: ${pt}` : "",
+      jp ? `Japonês: ${jp}` : "",
+      romaji ? `Romaji: ${romaji}` : "",
+      "",
+      "Treine japonês prático no Japão.",
+      "NIHONGO321 — frases reais + método 105x."
+    ].filter(line => line !== "").join("\n");
+  }
+
+  async function shareDiario321Entry(entryId) {
+    const id = String(entryId || "");
+    const entry = (Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : []).find(item => item.id === id);
+    if (!entry) return toast("frase não encontrada");
+    keepDiario321EntryOpen(id);
+    const text = diario321BuildEntryShareText(entry);
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Frase prática NIHONGO321", text });
+        toast("compartilhamento aberto");
+        return;
+      }
+    } catch {}
+    const ok = await diario321CopyText(text);
+    toast(ok ? "frase copiada para compartilhar" : "não consegui copiar automaticamente");
   }
 
   async function copyDiario321AIPrompt(ev) {
@@ -40792,27 +40832,33 @@
     `;
   }
 
-  function renderDiario321BottomNav() {
+  function renderDiario321WritingPracticeCard() {
+    const items = [
+      ["hiragana", "あ", "Hiragana", "base da leitura"],
+      ["katakana", "ア", "Katakana", "lojas, placas e objetos"],
+      ["kanji", "漢", "Kanji", "ideogramas por nível"]
+    ];
     return `
-      <nav class="diario321BottomNav" aria-label="navegação principal do Diário321">
-        <a href="../index.html#/home" target="_parent" class="diario321BottomNavItem">
-          <span>⌂</span><b>Início</b>
-        </a>
-        <a href="../index.html#/caderno" target="_parent" class="diario321BottomNavItem is-active">
-          <span>▣</span><b>Diário</b>
-        </a>
-        <a href="../index.html#/home" target="_parent" class="diario321BottomNavLogo" aria-label="NIHONGO321">
-          <img src="../img/logo_nihongo321.png" alt="" onerror="this.style.display='none'">
-        </a>
-        <a href="../index.html#/105x" target="_parent" class="diario321BottomNavItem">
-          <span>▥</span><b>Treino</b>
-        </a>
-        <a href="../index.html#/settings" target="_parent" class="diario321BottomNavItem">
-          <span>♙</span><b>Perfil</b>
-        </a>
-      </nav>
+      <section class="diario321ModernCard diario321ScriptShortcut" aria-label="treinos de escrita japonesa">
+        <div class="diario321ModernCardHead"><span>✍ Treinos de escrita</span><small>kana e kanji</small></div>
+        <p class="diario321ScriptShortcutLead">Escolha uma área para praticar leitura, escrita e memorização sem sair do DIÁRIO321.</p>
+        <div class="diario321ScriptShortcutGrid">
+          ${items.map(([area, icon, title, desc]) => `
+            <a href="./index.html?embedded=1&screen=dashboard&area=${area}" class="diario321ScriptShortcutBtn">
+              <em>${icon}</em>
+              <b>${title}</b>
+              <small>${desc}</small>
+            </a>
+          `).join("")}
+        </div>
+      </section>
     `;
   }
+
+  function renderDiario321BottomNav() {
+    return "";
+  }
+
 
   function scrollDiario321Library() {
     try {
@@ -40837,6 +40883,7 @@
           ${renderDiario321ModernActions()}
           ${renderDiario321PracticeEntries()}
           <section class="diario321ModernLearningShelf">
+            ${renderDiario321WritingPracticeCard()}
             ${renderDiario321QuickGuide()}
             ${renderDiario321MethodCard()}
             ${renderDiario321ScienceCard()}
@@ -40960,7 +41007,7 @@ applyAppTheme();
 
     $app.innerHTML = `
       <div class="stack">
-        ${renderAppHeader()}
+        ${isEmbeddedInNihongo321() ? "" : renderAppHeader()}
         ${body}
         <div id="toast" class="toast" role="status" aria-live="polite"></div>
       </div>
@@ -41054,6 +41101,7 @@ applyAppTheme();
       input.addEventListener("change", (ev) => { ev.stopPropagation(); toggleDiario321EntryMastered(input.dataset.entryMastered); });
     });
     document.querySelectorAll("[data-entry-start-train]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); startDiario321EntryTraining(btn.dataset.entryStartTrain); }));
+    document.querySelectorAll("[data-entry-share]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); shareDiario321Entry(btn.dataset.entryShare); }));
     document.querySelectorAll("[data-entry-train-repeat]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); repeatDiario321EntryTraining(btn.dataset.entryTrainRepeat); }));
     document.querySelectorAll("[data-entry-train-speak]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); speakDiario321EntryTraining(btn.dataset.entryTrainSpeak); }));
     document.querySelectorAll("[data-entry-train-reset]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); resetDiario321EntryTraining(btn.dataset.entryTrainReset); }));

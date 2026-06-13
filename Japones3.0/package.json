@@ -1,0 +1,17 @@
+{
+  "name": "nihongo321-store-ready",
+  "version": "8.8.50",
+  "private": true,
+  "description": "NIHONGO321 Store Ready Android wrapper configuration.",
+  "scripts": {
+    "cap:add:android": "npx cap add android",
+    "cap:copy": "npx cap copy android",
+    "cap:open:android": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "latest",
+    "@capacitor/cli": "latest",
+    "@capacitor/core": "latest"
+  },
+  "devDependencies": {}
+}

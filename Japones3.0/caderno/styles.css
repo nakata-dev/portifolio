@@ -19504,3 +19504,1304 @@ html[data-theme="light"] .diario321EntryTrainingPanel.is-speaking .diario321Trai
     animation:none !important;
   }
 }
+
+
+/* =========================================================
+   DIÁRIO321 8.8.47-R — alinhamento com blindagem profissional
+   ========================================================= */
+:root{
+  --brand-navy:#1A365D;
+  --brand-orange:#FF6B00;
+  --brand-white:#FFFFFF;
+  --brand-light:#F7FAFC;
+}
+
+.diario321ModernShell .primaryAction,
+.diario321ModernShell .diario321SaveBtn,
+.diario321ModernShell .diario321AiPaste,
+.diario321ModernShell .diario321RepeatBtn,
+.diario321ModernShell button[data-action*="save"],
+.diario321ModernShell button[data-action*="repeat"]{
+  background:linear-gradient(135deg, #C94E00 0%, #E45B00 52%, #FF6B00 100%) !important;
+  color:#FFFFFF !important;
+  border-color:rgba(255,107,0,.34) !important;
+}
+
+html[data-theme="light"] .diario321ModernShell,
+html[data-theme="light"] .diario321ModernSection,
+html[data-theme="light"] .diario321ModernCard{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] .diario321ModernSection,
+html[data-theme="light"] .diario321ModernCard{
+  background:#FFFFFF !important;
+  border-color:rgba(26,54,93,.13) !important;
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.18.0-R — Frase compartilhável
+   ========================================================= */
+
+.diario321EntryShareBtn{
+  min-height:38px;
+  border:1px solid rgba(26,54,93,.18);
+  border-radius:14px;
+  padding:9px 12px;
+  background:rgba(26,54,93,.08);
+  color:var(--diario321Text, #fffaf0);
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:-.01em;
+}
+
+.diario321EntryShareBtn:hover,
+.diario321EntryShareBtn:focus-visible{
+  border-color:rgba(255,107,0,.38);
+  background:rgba(255,107,0,.12);
+}
+
+html[data-theme="light"] .diario321EntryShareBtn,
+body.light .diario321EntryShareBtn{
+  background:#F7FAFC;
+  border-color:rgba(26,54,93,.18);
+  color:#1A365D;
+}
+
+html[data-theme="light"] .diario321EntryShareBtn:hover,
+html[data-theme="light"] .diario321EntryShareBtn:focus-visible,
+body.light .diario321EntryShareBtn:hover,
+body.light .diario321EntryShareBtn:focus-visible{
+  background:rgba(255,107,0,.10);
+  border-color:rgba(255,107,0,.34);
+  color:#1A365D;
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.18.1-R — Rodapé removido + treinos de escrita visíveis
+   ========================================================= */
+
+.appMain--diarioModern{
+  padding-bottom:24px !important;
+}
+
+.diario321BottomNav{
+  display:none !important;
+}
+
+.diario321ScriptShortcut{
+  padding:16px !important;
+}
+
+.diario321ScriptShortcutLead{
+  margin:2px 0 12px !important;
+  color:rgba(225,235,255,.78) !important;
+  font-size:12.5px !important;
+  line-height:1.45 !important;
+  font-weight:850 !important;
+}
+
+.diario321ScriptShortcutGrid{
+  display:grid !important;
+  grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  gap:9px !important;
+}
+
+.diario321ScriptShortcutBtn{
+  min-height:94px !important;
+  padding:12px 8px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.070), rgba(255,255,255,.035)) !important;
+  color:#fff !important;
+  text-decoration:none !important;
+  display:grid !important;
+  place-items:center !important;
+  align-content:center !important;
+  gap:5px !important;
+  text-align:center !important;
+}
+
+.diario321ScriptShortcutBtn em{
+  width:36px !important;
+  height:36px !important;
+  border-radius:14px !important;
+  display:grid !important;
+  place-items:center !important;
+  background:rgba(255,107,0,.14) !important;
+  border:1px solid rgba(255,107,0,.28) !important;
+  color:#ffd99a !important;
+  font-style:normal !important;
+  font-size:20px !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+}
+
+.diario321ScriptShortcutBtn b{
+  color:#fffaf0 !important;
+  font-size:13px !important;
+  line-height:1.05 !important;
+}
+
+.diario321ScriptShortcutBtn small{
+  color:rgba(225,235,255,.74) !important;
+  font-size:10.5px !important;
+  line-height:1.2 !important;
+  font-weight:850 !important;
+}
+
+.diario321ScriptShortcutBtn:active{
+  transform:translateY(1px) !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutLead,
+html[data-theme="light"] .diario321ScriptShortcutLead{
+  color:#42536f !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutBtn,
+html[data-theme="light"] .diario321ScriptShortcutBtn{
+  background:#ffffff !important;
+  border-color:rgba(26,54,93,.14) !important;
+  color:#1A365D !important;
+  box-shadow:0 10px 24px rgba(26,54,93,.08) !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutBtn b,
+html[data-theme="light"] .diario321ScriptShortcutBtn b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutBtn small,
+html[data-theme="light"] .diario321ScriptShortcutBtn small{
+  color:#53627a !important;
+}
+
+@media (max-width:380px){
+  .diario321ScriptShortcutGrid{
+    grid-template-columns:1fr !important;
+  }
+  .diario321ScriptShortcutBtn{
+    min-height:74px !important;
+    grid-template-columns:42px minmax(0,1fr) !important;
+    justify-items:start !important;
+    text-align:left !important;
+    padding:10px 12px !important;
+  }
+  .diario321ScriptShortcutBtn em{
+    grid-row:1 / span 2 !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.18.2-R — Treinos de escrita com contraste forte
+   ========================================================= */
+
+.diario321ScriptShortcut{
+  border:1px solid rgba(255,214,107,.16) !important;
+  background:
+    radial-gradient(280px 120px at 0% 0%, rgba(255,183,77,.08), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)) !important;
+}
+
+.diario321ScriptShortcut .diario321ModernCardHead{
+  padding-bottom:8px !important;
+}
+
+.diario321ScriptShortcut .diario321ModernCardHead span{
+  color:#fff6da !important;
+}
+
+.diario321ScriptShortcut .diario321ModernCardHead small{
+  color:#cfdaf0 !important;
+}
+
+.diario321ScriptShortcutLead{
+  color:#dbe7ff !important;
+  margin:0 0 14px !important;
+}
+
+.diario321ScriptShortcutGrid{
+  gap:10px !important;
+}
+
+.diario321ScriptShortcutBtn{
+  min-height:96px !important;
+  border:1px solid rgba(255,214,107,.18) !important;
+  background:
+    radial-gradient(180px 90px at 0% 0%, rgba(255,214,107,.11), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.045)) !important;
+  box-shadow:0 12px 26px rgba(5,18,42,.16) !important;
+}
+
+.diario321ScriptShortcutBtn em{
+  background:linear-gradient(180deg, rgba(255,107,0,.22), rgba(255,107,0,.10)) !important;
+  border-color:rgba(255,173,80,.36) !important;
+  color:#ffe5b5 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+
+.diario321ScriptShortcutBtn b{
+  color:#fff9ef !important;
+  font-size:13.5px !important;
+}
+
+.diario321ScriptShortcutBtn small{
+  color:#d8e4fb !important;
+  font-size:11px !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcut,
+html[data-theme="light"] .diario321ScriptShortcut,
+body.light .diario321ScriptShortcut,
+body[data-theme="light"] .diario321ScriptShortcut{
+  border-color:rgba(26,54,93,.12) !important;
+  background:
+    radial-gradient(260px 120px at 0% 0%, rgba(255,107,0,.07), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 16px 30px rgba(26,54,93,.10) !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcut .diario321ModernCardHead span,
+html[data-theme="light"] .diario321ScriptShortcut .diario321ModernCardHead span,
+body.light .diario321ScriptShortcut .diario321ModernCardHead span,
+body[data-theme="light"] .diario321ScriptShortcut .diario321ModernCardHead span{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcut .diario321ModernCardHead small,
+html[data-theme="light"] .diario321ScriptShortcut .diario321ModernCardHead small,
+body.light .diario321ScriptShortcut .diario321ModernCardHead small,
+body[data-theme="light"] .diario321ScriptShortcut .diario321ModernCardHead small{
+  color:#617086 !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutLead,
+html[data-theme="light"] .diario321ScriptShortcutLead,
+body.light .diario321ScriptShortcutLead,
+body[data-theme="light"] .diario321ScriptShortcutLead{
+  color:#5e6f87 !important;
+  font-weight:800 !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutBtn,
+html[data-theme="light"] .diario321ScriptShortcutBtn,
+body.light .diario321ScriptShortcutBtn,
+body[data-theme="light"] .diario321ScriptShortcutBtn{
+  border-color:rgba(26,54,93,.14) !important;
+  background:
+    radial-gradient(180px 88px at 0% 0%, rgba(255,107,0,.06), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  color:#1A365D !important;
+  box-shadow:0 12px 26px rgba(26,54,93,.08) !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutBtn em,
+html[data-theme="light"] .diario321ScriptShortcutBtn em,
+body.light .diario321ScriptShortcutBtn em,
+body[data-theme="light"] .diario321ScriptShortcutBtn em{
+  background:linear-gradient(180deg, rgba(255,107,0,.16), rgba(255,107,0,.08)) !important;
+  border-color:rgba(255,107,0,.30) !important;
+  color:#ff7b1f !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutBtn b,
+html[data-theme="light"] .diario321ScriptShortcutBtn b,
+body.light .diario321ScriptShortcutBtn b,
+body[data-theme="light"] .diario321ScriptShortcutBtn b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .diario321ScriptShortcutBtn small,
+html[data-theme="light"] .diario321ScriptShortcutBtn small,
+body.light .diario321ScriptShortcutBtn small,
+body[data-theme="light"] .diario321ScriptShortcutBtn small{
+  color:#6d7d93 !important;
+}
+
+/* =========================================================
+   DIÁRIO321 4.18.3-R — Voltar ao NIHONGO321 + resumo sem exportar
+   ========================================================= */
+
+.genialEntryCard--compact{
+  position:relative !important;
+}
+
+.genialEntryBack{
+  position:absolute !important;
+  top:14px !important;
+  right:14px !important;
+  width:40px !important;
+  height:40px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,214,107,.24) !important;
+  background:rgba(6,34,86,.88) !important;
+  color:#fff2bf !important;
+  display:grid !important;
+  place-items:center !important;
+  text-decoration:none !important;
+  font-size:17px !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+  box-shadow:0 8px 20px rgba(0,0,0,.18) !important;
+  z-index:3 !important;
+}
+
+.genialEntryBack:hover,
+.genialEntryBack:focus-visible{
+  background:#0d3f86 !important;
+  border-color:rgba(255,214,107,.34) !important;
+  color:#ffffff !important;
+}
+
+.genialEntryCard--compact > button{
+  padding-right:84px !important;
+}
+
+.bridgeSummary--minimal{
+  display:block !important;
+  padding:12px 14px !important;
+}
+
+.bridgeSummary--minimal > div{
+  width:100% !important;
+}
+
+.bridgeSummary--minimal b{
+  min-width:30px !important;
+  height:30px !important;
+  border-radius:11px !important;
+  background:rgba(255,179,71,.14) !important;
+  color:#fff1cd !important;
+  display:grid !important;
+  place-items:center !important;
+  padding:0 8px !important;
+}
+
+.bridgeSummary--minimal span{
+  color:#eef4ff !important;
+  font-weight:900 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryBack,
+html[data-theme="light"] .genialEntryBack,
+body.light .genialEntryBack,
+body[data-theme="light"] .genialEntryBack{
+  background:#ffffff !important;
+  color:#1A365D !important;
+  border-color:rgba(26,54,93,.14) !important;
+  box-shadow:0 8px 18px rgba(26,54,93,.10) !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryBack:hover,
+html[data-theme="light"] .genialEntryBack:hover,
+body.light .genialEntryBack:hover,
+body[data-theme="light"] .genialEntryBack:hover,
+html[data-caderno-theme="light"] .genialEntryBack:focus-visible,
+html[data-theme="light"] .genialEntryBack:focus-visible,
+body.light .genialEntryBack:focus-visible,
+body[data-theme="light"] .genialEntryBack:focus-visible{
+  background:#f7fafc !important;
+  color:#FF6B00 !important;
+  border-color:rgba(255,107,0,.28) !important;
+}
+
+html[data-caderno-theme="light"] .bridgeSummary--minimal span,
+html[data-theme="light"] .bridgeSummary--minimal span,
+body.light .bridgeSummary--minimal span,
+body[data-theme="light"] .bridgeSummary--minimal span{
+  color:#1A365D !important;
+}
+
+/* =========================================================
+   DIÁRIO321 4.18.4-R — Card do Diário mais harmônico
+   ========================================================= */
+
+.genialEntryCard--refined{
+  padding:14px !important;
+}
+
+.genialEntryCard--refined .genialEntryShell{
+  border:1px solid rgba(255,214,107,.16) !important;
+  border-radius:22px !important;
+  padding:16px !important;
+  background:
+    radial-gradient(280px 140px at 0% 0%, rgba(255,179,71,.10), transparent 68%),
+    linear-gradient(135deg, rgba(4,31,82,.98), rgba(7,53,121,.92)) !important;
+}
+
+.genialEntryCard--refined .genialEntryHead{
+  display:grid !important;
+  grid-template-columns:auto minmax(0,1fr) !important;
+  gap:14px !important;
+  align-items:center !important;
+}
+
+.genialEntryCard--refined .genialEntryBadge{
+  width:52px !important;
+  height:52px !important;
+  border-radius:999px !important;
+  display:grid !important;
+  place-items:center !important;
+  border:1px solid rgba(255,214,107,.26) !important;
+  background:radial-gradient(circle at 35% 30%, #ffcf73 0%, #ff7b4a 38%, #b94ae0 100%) !important;
+  color:#fff9ef !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.22) !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+}
+
+.genialEntryCard--refined .genialEntryInfo b{
+  display:block !important;
+  color:#ffffff !important;
+  font-size:20px !important;
+  line-height:1.05 !important;
+  letter-spacing:-.02em !important;
+}
+
+.genialEntryCard--refined .genialEntryInfo small{
+  display:block !important;
+  margin-top:4px !important;
+  color:#a9c7ff !important;
+  font-size:13px !important;
+  line-height:1.2 !important;
+  font-weight:900 !important;
+}
+
+.genialEntryCard--refined .genialEntryActions{
+  display:flex !important;
+  gap:10px !important;
+  align-items:center !important;
+  margin-top:14px !important;
+}
+
+.genialEntryOpen{
+  flex:1 1 auto !important;
+  min-height:38px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,179,71,.34) !important;
+  background:rgba(255,255,255,.04) !important;
+  color:#ffe39a !important;
+  font-size:13px !important;
+  font-weight:950 !important;
+  letter-spacing:.01em !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.genialEntryBack--inline{
+  position:static !important;
+  width:auto !important;
+  min-width:42px !important;
+  height:38px !important;
+  padding:0 12px !important;
+  border-radius:999px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  white-space:nowrap !important;
+  font-size:12px !important;
+  font-weight:950 !important;
+}
+
+.genialEntryCard--refined > button,
+.genialEntryCard--refined em,
+.genialEntryCard--refined .bridgeSummary,
+.genialEntryCard--refined .bridgeSummary--minimal{
+  all:unset;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--refined .genialEntryShell,
+html[data-theme="light"] .genialEntryCard--refined .genialEntryShell,
+body.light .genialEntryCard--refined .genialEntryShell,
+body[data-theme="light"] .genialEntryCard--refined .genialEntryShell{
+  border-color:rgba(26,54,93,.12) !important;
+  background:
+    radial-gradient(240px 120px at 0% 0%, rgba(255,107,0,.08), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 14px 28px rgba(26,54,93,.08) !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--refined .genialEntryInfo b,
+html[data-theme="light"] .genialEntryCard--refined .genialEntryInfo b,
+body.light .genialEntryCard--refined .genialEntryInfo b,
+body[data-theme="light"] .genialEntryCard--refined .genialEntryInfo b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--refined .genialEntryInfo small,
+html[data-theme="light"] .genialEntryCard--refined .genialEntryInfo small,
+body.light .genialEntryCard--refined .genialEntryInfo small,
+body[data-theme="light"] .genialEntryCard--refined .genialEntryInfo small{
+  color:#5e7495 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryOpen,
+html[data-theme="light"] .genialEntryOpen,
+body.light .genialEntryOpen,
+body[data-theme="light"] .genialEntryOpen{
+  background:#ffffff !important;
+  color:#b86612 !important;
+  border-color:rgba(255,107,0,.28) !important;
+}
+
+@media (max-width:420px){
+  .genialEntryCard--refined .genialEntryActions{
+    flex-wrap:wrap !important;
+  }
+
+  .genialEntryOpen,
+  .genialEntryBack--inline{
+    width:100% !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.18.5-R — Card limpo, minimalista e alinhado
+   Regra: um card, uma hierarquia, zero caixas internas inúteis.
+   ========================================================= */
+
+.genialEntryCard--clean{
+  margin:12px 0 !important;
+  padding:18px !important;
+  border:1px solid rgba(255,214,107,.14) !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(240px 120px at 0% 0%, rgba(255,179,71,.09), transparent 68%),
+    linear-gradient(135deg, rgba(4,28,72,.98), rgba(8,48,108,.92)) !important;
+  box-shadow:0 16px 34px rgba(0,0,0,.16) !important;
+  display:grid !important;
+  gap:14px !important;
+}
+
+.genialEntryCleanHeader{
+  display:grid !important;
+  grid-template-columns:54px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:14px !important;
+}
+
+.genialEntryCleanIcon{
+  width:54px !important;
+  height:54px !important;
+  border-radius:18px !important;
+  display:grid !important;
+  place-items:center !important;
+  border:1px solid rgba(255,214,107,.22) !important;
+  background:linear-gradient(135deg, #ffbf5f 0%, #ff6b00 48%, #8b5cf6 100%) !important;
+  color:#ffffff !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.20) !important;
+}
+
+.genialEntryCleanText{
+  min-width:0 !important;
+  display:grid !important;
+  align-content:center !important;
+  gap:3px !important;
+}
+
+.genialEntryCleanText b{
+  color:#ffffff !important;
+  font-size:clamp(22px, 5.6vw, 28px) !important;
+  line-height:1 !important;
+  letter-spacing:-.04em !important;
+  font-weight:950 !important;
+}
+
+.genialEntryCleanText small{
+  color:#a9c7ff !important;
+  font-size:clamp(13px, 3.6vw, 16px) !important;
+  line-height:1.15 !important;
+  font-weight:900 !important;
+}
+
+.genialEntryCleanActions{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+.genialEntryCleanOpen,
+.genialEntryCleanBack{
+  min-height:38px !important;
+  border-radius:999px !important;
+  font-size:13px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  text-align:center !important;
+  text-decoration:none !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-sizing:border-box !important;
+}
+
+.genialEntryCleanOpen{
+  width:100% !important;
+  border:1px solid rgba(255,179,71,.34) !important;
+  background:rgba(255,255,255,.04) !important;
+  color:#ffe39a !important;
+}
+
+.genialEntryCleanBack{
+  padding:0 12px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:rgba(255,255,255,.055) !important;
+  color:#eaf2ff !important;
+  white-space:nowrap !important;
+}
+
+.genialEntryCleanOpen:hover,
+.genialEntryCleanOpen:focus-visible,
+.genialEntryCleanBack:hover,
+.genialEntryCleanBack:focus-visible{
+  border-color:rgba(255,214,107,.38) !important;
+  background:rgba(255,255,255,.075) !important;
+  color:#ffffff !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--clean,
+html[data-theme="light"] .genialEntryCard--clean,
+body.light .genialEntryCard--clean,
+body[data-theme="light"] .genialEntryCard--clean{
+  border-color:rgba(26,54,93,.12) !important;
+  background:
+    radial-gradient(230px 110px at 0% 0%, rgba(255,107,0,.07), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 14px 28px rgba(26,54,93,.08) !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCleanText b,
+html[data-theme="light"] .genialEntryCleanText b,
+body.light .genialEntryCleanText b,
+body[data-theme="light"] .genialEntryCleanText b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCleanText small,
+html[data-theme="light"] .genialEntryCleanText small,
+body.light .genialEntryCleanText small,
+body[data-theme="light"] .genialEntryCleanText small{
+  color:#5e7495 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCleanOpen,
+html[data-theme="light"] .genialEntryCleanOpen,
+body.light .genialEntryCleanOpen,
+body[data-theme="light"] .genialEntryCleanOpen{
+  border-color:rgba(255,107,0,.28) !important;
+  background:#ffffff !important;
+  color:#b86612 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCleanBack,
+html[data-theme="light"] .genialEntryCleanBack,
+body.light .genialEntryCleanBack,
+body[data-theme="light"] .genialEntryCleanBack{
+  border-color:rgba(26,54,93,.12) !important;
+  background:#ffffff !important;
+  color:#1A365D !important;
+}
+
+@media (max-width:390px){
+  .genialEntryCard--clean{
+    padding:16px !important;
+  }
+
+  .genialEntryCleanHeader{
+    grid-template-columns:50px minmax(0,1fr) !important;
+    gap:12px !important;
+  }
+
+  .genialEntryCleanIcon{
+    width:50px !important;
+    height:50px !important;
+    border-radius:17px !important;
+  }
+
+  .genialEntryCleanActions{
+    grid-template-columns:1fr !important;
+  }
+
+  .genialEntryCleanBack{
+    width:100% !important;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.18.6-R — Título em japonês e header centralizado
+   ========================================================= */
+
+.genialEntryCard--clean{
+  gap:16px !important;
+}
+
+.genialEntryCleanHeader{
+  grid-template-columns:1fr !important;
+  justify-items:center !important;
+  text-align:center !important;
+  gap:10px !important;
+}
+
+.genialEntryCleanText{
+  justify-items:center !important;
+  text-align:center !important;
+  gap:4px !important;
+}
+
+.genialEntryCleanText b{
+  font-size:clamp(24px, 6vw, 29px) !important;
+  letter-spacing:-.03em !important;
+}
+
+.genialEntryCleanText small{
+  max-width:18ch !important;
+}
+
+.genialEntryCleanActions{
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+}
+
+@media (max-width:390px){
+  .genialEntryCleanHeader{
+    gap:9px !important;
+  }
+
+  .genialEntryCleanActions{
+    grid-template-columns:1fr !important;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.18.7-R — Card do Diário silencioso e harmônico
+   ========================================================= */
+
+.genialEntryCard--quiet{
+  margin:12px 0 !important;
+  padding:18px !important;
+  border:1px solid rgba(255,214,107,.12) !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(240px 110px at 0% 0%, rgba(255,179,71,.08), transparent 68%),
+    linear-gradient(135deg, rgba(4,28,72,.98), rgba(8,48,108,.92)) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.16) !important;
+  display:grid !important;
+  gap:14px !important;
+}
+
+.genialEntryQuietTop{
+  display:grid !important;
+  grid-template-columns:52px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:14px !important;
+}
+
+.genialEntryQuietIcon{
+  width:52px !important;
+  height:52px !important;
+  border-radius:16px !important;
+  display:grid !important;
+  place-items:center !important;
+  background:linear-gradient(135deg, #ffbf5f 0%, #ff6b00 50%, #8b5cf6 100%) !important;
+  border:1px solid rgba(255,214,107,.20) !important;
+  color:#ffffff !important;
+  font-size:23px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.18) !important;
+}
+
+.genialEntryQuietText{
+  min-width:0 !important;
+  display:grid !important;
+  gap:4px !important;
+  text-align:left !important;
+}
+
+.genialEntryQuietText b{
+  color:#ffffff !important;
+  font-size:clamp(23px, 5.8vw, 29px) !important;
+  line-height:1 !important;
+  letter-spacing:-.03em !important;
+  font-weight:950 !important;
+}
+
+.genialEntryQuietText small{
+  color:#a9c7ff !important;
+  font-size:clamp(13px, 3.6vw, 15px) !important;
+  line-height:1.16 !important;
+  font-weight:900 !important;
+}
+
+.genialEntryQuietOpen{
+  min-height:40px !important;
+  width:100% !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,179,71,.34) !important;
+  background:rgba(255,255,255,.04) !important;
+  color:#ffe39a !important;
+  font-size:13px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  text-align:center !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.genialEntryQuietBack{
+  justify-self:center !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  color:#d6e6ff !important;
+  text-decoration:none !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  font-weight:900 !important;
+  padding:2px 4px !important;
+  opacity:.92 !important;
+}
+
+.genialEntryQuietOpen:hover,
+.genialEntryQuietOpen:focus-visible{
+  border-color:rgba(255,214,107,.40) !important;
+  background:rgba(255,255,255,.075) !important;
+  color:#ffffff !important;
+}
+
+.genialEntryQuietBack:hover,
+.genialEntryQuietBack:focus-visible{
+  color:#ffffff !important;
+  opacity:1 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--quiet,
+html[data-theme="light"] .genialEntryCard--quiet,
+body.light .genialEntryCard--quiet,
+body[data-theme="light"] .genialEntryCard--quiet{
+  border-color:rgba(26,54,93,.12) !important;
+  background:
+    radial-gradient(220px 100px at 0% 0%, rgba(255,107,0,.07), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 14px 28px rgba(26,54,93,.08) !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryQuietText b,
+html[data-theme="light"] .genialEntryQuietText b,
+body.light .genialEntryQuietText b,
+body[data-theme="light"] .genialEntryQuietText b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryQuietText small,
+html[data-theme="light"] .genialEntryQuietText small,
+body.light .genialEntryQuietText small,
+body[data-theme="light"] .genialEntryQuietText small{
+  color:#5e7495 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryQuietOpen,
+html[data-theme="light"] .genialEntryQuietOpen,
+body.light .genialEntryQuietOpen,
+body[data-theme="light"] .genialEntryQuietOpen{
+  border-color:rgba(255,107,0,.28) !important;
+  background:#ffffff !important;
+  color:#b86612 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryQuietBack,
+html[data-theme="light"] .genialEntryQuietBack,
+body.light .genialEntryQuietBack,
+body[data-theme="light"] .genialEntryQuietBack{
+  color:#365071 !important;
+}
+
+@media (max-width:390px){
+  .genialEntryCard--quiet{
+    padding:16px !important;
+    gap:12px !important;
+  }
+
+  .genialEntryQuietTop{
+    grid-template-columns:48px minmax(0,1fr) !important;
+    gap:12px !important;
+  }
+
+  .genialEntryQuietIcon{
+    width:48px !important;
+    height:48px !important;
+    border-radius:15px !important;
+    font-size:21px !important;
+  }
+
+  .genialEntryQuietText b{
+    font-size:clamp(21px, 6.2vw, 26px) !important;
+  }
+
+  .genialEntryQuietText small{
+    font-size:12.5px !important;
+  }
+}
+
+
+/* =========================================================
+   DIÁRIO321 4.18.8-R — Card Premium Minimalista
+   Regra de produto: uma linha visual, uma ação, zero caixas internas.
+   ========================================================= */
+
+.genialEntryCard--premiumClean{
+  margin:12px 0 !important;
+  padding:16px !important;
+  border:1px solid rgba(255,214,107,.12) !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(240px 120px at 0% 0%, rgba(255,179,71,.08), transparent 68%),
+    linear-gradient(135deg, rgba(4,28,72,.98), rgba(8,48,108,.92)) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.16) !important;
+  display:grid !important;
+  grid-template-columns:54px minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:14px !important;
+}
+
+.genialEntryPremiumIcon{
+  width:54px !important;
+  height:54px !important;
+  border-radius:18px !important;
+  display:grid !important;
+  place-items:center !important;
+  background:linear-gradient(135deg, #ffbf5f 0%, #ff6b00 50%, #8b5cf6 100%) !important;
+  border:1px solid rgba(255,214,107,.20) !important;
+  color:#ffffff !important;
+  font-size:23px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.20) !important;
+}
+
+.genialEntryPremiumCopy{
+  min-width:0 !important;
+  display:grid !important;
+  align-content:center !important;
+  gap:4px !important;
+  text-align:left !important;
+}
+
+.genialEntryPremiumCopy b{
+  color:#ffffff !important;
+  font-size:clamp(22px, 5.5vw, 28px) !important;
+  line-height:1 !important;
+  letter-spacing:-.035em !important;
+  font-weight:950 !important;
+  white-space:nowrap !important;
+}
+
+.genialEntryPremiumCopy small{
+  color:#a9c7ff !important;
+  font-size:clamp(12.5px, 3.4vw, 14.5px) !important;
+  line-height:1.16 !important;
+  font-weight:900 !important;
+}
+
+.genialEntryPremiumAction{
+  min-width:104px !important;
+  min-height:40px !important;
+  padding:0 16px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,179,71,.34) !important;
+  background:rgba(255,255,255,.045) !important;
+  color:#ffe39a !important;
+  font-size:13px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  text-align:center !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.genialEntryPremiumAction:hover,
+.genialEntryPremiumAction:focus-visible{
+  border-color:rgba(255,214,107,.42) !important;
+  background:rgba(255,255,255,.08) !important;
+  color:#ffffff !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--premiumClean,
+html[data-theme="light"] .genialEntryCard--premiumClean,
+body.light .genialEntryCard--premiumClean,
+body[data-theme="light"] .genialEntryCard--premiumClean{
+  border-color:rgba(26,54,93,.12) !important;
+  background:
+    radial-gradient(220px 100px at 0% 0%, rgba(255,107,0,.07), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 14px 28px rgba(26,54,93,.08) !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryPremiumCopy b,
+html[data-theme="light"] .genialEntryPremiumCopy b,
+body.light .genialEntryPremiumCopy b,
+body[data-theme="light"] .genialEntryPremiumCopy b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryPremiumCopy small,
+html[data-theme="light"] .genialEntryPremiumCopy small,
+body.light .genialEntryPremiumCopy small,
+body[data-theme="light"] .genialEntryPremiumCopy small{
+  color:#5e7495 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryPremiumAction,
+html[data-theme="light"] .genialEntryPremiumAction,
+body.light .genialEntryPremiumAction,
+body[data-theme="light"] .genialEntryPremiumAction{
+  border-color:rgba(255,107,0,.28) !important;
+  background:#ffffff !important;
+  color:#b86612 !important;
+}
+
+@media (max-width:430px){
+  .genialEntryCard--premiumClean{
+    grid-template-columns:50px minmax(0,1fr) !important;
+    padding:16px !important;
+    gap:12px !important;
+  }
+
+  .genialEntryPremiumIcon{
+    width:50px !important;
+    height:50px !important;
+    border-radius:16px !important;
+    font-size:21px !important;
+  }
+
+  .genialEntryPremiumAction{
+    grid-column:1 / -1 !important;
+    width:100% !important;
+    min-height:40px !important;
+  }
+}
+
+@media (max-width:340px){
+  .genialEntryCard--premiumClean{
+    grid-template-columns:1fr !important;
+    justify-items:center !important;
+    text-align:center !important;
+  }
+
+  .genialEntryPremiumCopy{
+    justify-items:center !important;
+    text-align:center !important;
+  }
+}
+
+/* =========================================================
+   DIÁRIO321 4.18.9-R — Card premium enxuto e equilibrado
+   ========================================================= */
+
+.genialEntryTopbar{
+  display:flex !important;
+  justify-content:flex-end !important;
+  margin:4px 2px 8px !important;
+}
+
+.genialEntryTopbarBack{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  min-height:32px !important;
+  padding:0 12px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,214,107,.14) !important;
+  background:rgba(255,255,255,.035) !important;
+  color:#d7e5ff !important;
+  text-decoration:none !important;
+  font-size:11px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+}
+
+.genialEntryTopbarBack:hover,
+.genialEntryTopbarBack:focus-visible{
+  border-color:rgba(255,214,107,.28) !important;
+  background:rgba(255,255,255,.06) !important;
+  color:#ffffff !important;
+}
+
+.genialEntryCard--premiumLean{
+  margin:8px 0 12px !important;
+  padding:18px !important;
+  border:1px solid rgba(255,214,107,.12) !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(240px 120px at 0% 0%, rgba(255,179,71,.08), transparent 68%),
+    linear-gradient(135deg, rgba(4,28,72,.98), rgba(8,48,108,.92)) !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.16) !important;
+  display:grid !important;
+  grid-template-columns:54px minmax(0,1fr) !important;
+  gap:14px !important;
+  align-items:start !important;
+}
+
+.genialEntryCard--premiumLean .genialEntryPremiumIcon{
+  width:54px !important;
+  height:54px !important;
+  border-radius:18px !important;
+  display:grid !important;
+  place-items:center !important;
+  background:linear-gradient(135deg, #ffbf5f 0%, #ff6b00 50%, #8b5cf6 100%) !important;
+  border:1px solid rgba(255,214,107,.20) !important;
+  color:#ffffff !important;
+  font-size:23px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.20) !important;
+}
+
+.genialEntryPremiumBody{
+  min-width:0 !important;
+  display:grid !important;
+  gap:12px !important;
+}
+
+.genialEntryCard--premiumLean .genialEntryPremiumCopy{
+  min-width:0 !important;
+  display:grid !important;
+  gap:4px !important;
+  text-align:left !important;
+}
+
+.genialEntryCard--premiumLean .genialEntryPremiumCopy b{
+  color:#ffffff !important;
+  font-size:clamp(22px, 5.2vw, 28px) !important;
+  line-height:1 !important;
+  letter-spacing:-.03em !important;
+  font-weight:950 !important;
+  white-space:nowrap !important;
+}
+
+.genialEntryCard--premiumLean .genialEntryPremiumCopy small{
+  color:#a9c7ff !important;
+  font-size:clamp(12.5px, 3.2vw, 14.5px) !important;
+  line-height:1.16 !important;
+  font-weight:900 !important;
+}
+
+.genialEntryPremiumAction--compact{
+  justify-self:start !important;
+  min-width:154px !important;
+  min-height:42px !important;
+  padding:0 18px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,179,71,.34) !important;
+  background:rgba(255,255,255,.04) !important;
+  color:#ffe39a !important;
+  font-size:13px !important;
+  font-weight:950 !important;
+  line-height:1 !important;
+  text-align:center !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.genialEntryPremiumAction--compact:hover,
+.genialEntryPremiumAction--compact:focus-visible{
+  border-color:rgba(255,214,107,.42) !important;
+  background:rgba(255,255,255,.08) !important;
+  color:#ffffff !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryTopbarBack,
+html[data-theme="light"] .genialEntryTopbarBack,
+body.light .genialEntryTopbarBack,
+body[data-theme="light"] .genialEntryTopbarBack{
+  border-color:rgba(26,54,93,.12) !important;
+  background:#ffffff !important;
+  color:#4e6380 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryTopbarBack:hover,
+html[data-theme="light"] .genialEntryTopbarBack:hover,
+body.light .genialEntryTopbarBack:hover,
+body[data-theme="light"] .genialEntryTopbarBack:hover,
+html[data-caderno-theme="light"] .genialEntryTopbarBack:focus-visible,
+html[data-theme="light"] .genialEntryTopbarBack:focus-visible,
+body.light .genialEntryTopbarBack:focus-visible,
+body[data-theme="light"] .genialEntryTopbarBack:focus-visible{
+  border-color:rgba(255,107,0,.24) !important;
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--premiumLean,
+html[data-theme="light"] .genialEntryCard--premiumLean,
+body.light .genialEntryCard--premiumLean,
+body[data-theme="light"] .genialEntryCard--premiumLean{
+  border-color:rgba(26,54,93,.12) !important;
+  background:
+    radial-gradient(220px 100px at 0% 0%, rgba(255,107,0,.07), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 14px 28px rgba(26,54,93,.08) !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--premiumLean .genialEntryPremiumCopy b,
+html[data-theme="light"] .genialEntryCard--premiumLean .genialEntryPremiumCopy b,
+body.light .genialEntryCard--premiumLean .genialEntryPremiumCopy b,
+body[data-theme="light"] .genialEntryCard--premiumLean .genialEntryPremiumCopy b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryCard--premiumLean .genialEntryPremiumCopy small,
+html[data-theme="light"] .genialEntryCard--premiumLean .genialEntryPremiumCopy small,
+body.light .genialEntryCard--premiumLean .genialEntryPremiumCopy small,
+body[data-theme="light"] .genialEntryCard--premiumLean .genialEntryPremiumCopy small{
+  color:#5e7495 !important;
+}
+
+html[data-caderno-theme="light"] .genialEntryPremiumAction--compact,
+html[data-theme="light"] .genialEntryPremiumAction--compact,
+body.light .genialEntryPremiumAction--compact,
+body[data-theme="light"] .genialEntryPremiumAction--compact{
+  border-color:rgba(255,107,0,.28) !important;
+  background:#ffffff !important;
+  color:#b86612 !important;
+}
+
+@media (max-width:430px){
+  .genialEntryCard--premiumLean{
+    padding:16px !important;
+    grid-template-columns:50px minmax(0,1fr) !important;
+    gap:12px !important;
+  }
+
+  .genialEntryCard--premiumLean .genialEntryPremiumIcon{
+    width:50px !important;
+    height:50px !important;
+    border-radius:16px !important;
+    font-size:21px !important;
+  }
+
+  .genialEntryPremiumAction--compact{
+    min-width:142px !important;
+    min-height:40px !important;
+  }
+}
+
+@media (max-width:360px){
+  .genialEntryCard--premiumLean{
+    grid-template-columns:1fr !important;
+    justify-items:start !important;
+  }
+
+  .genialEntryPremiumAction--compact{
+    width:100% !important;
+    justify-self:stretch !important;
+  }
+}

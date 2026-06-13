@@ -22,27 +22,42 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.8.40-R",
-  updatedAt: "2026-06-08",
+  version: "8.8.50-R",
+  updatedAt: "2026-06-13",
   logoPath: "./img/logo_nihongo321.png"
 };
 
+/* ========= STORE READY =========
+   Primeira publicação recomendada: app grátis na Play Store.
+   Premium aparece como oferta preparada, mas pagamento fica em espera
+   até conectar Google Play Billing / App Store In-App Purchase.
+*/
+const STORE_READY = {
+  enabled: true,
+  target: "android",
+  packageName: "com.nakata.nihongo321",
+  appName: "NIHONGO321",
+  versionName: "8.8.50-R",
+  versionCode: 50,
+  paymentMode: "google_play_billing_pending",
+  privacyPolicyPath: "./privacy-policy.html",
+  termsPath: "./terms.html"
+};
+
 /* ========= CONFIG COMERCIAL =========
-   IMPORTANTE PARA PUBLICAÇÃO:
-   1. Cadastre seus dados bancários SOMENTE na plataforma de checkout externa.
-   2. Não coloque dados bancários, chave Pix, número de conta, documento ou endereço sensível neste arquivo.
-   3. Depois que a plataforma gerar o link de pagamento, cole esse link em checkoutUrl.
-   4. Atualize supportEmail para seu e-mail real de suporte.
-   5. Atualize monthlyPrice e semiannualPrice se mudar os preços.
-   6. Atualize playStoreUrl e appStoreUrl quando o app estiver publicado.
+   STORE READY:
+   - Não usar checkout externo dentro da Play Store para Premium digital.
+   - O pagamento Premium será ligado depois por Google Play Billing / App Store IAP.
+   - Por enquanto, os botões mostram “em preparação” sem abrir pagamento falso.
+   - Atualize supportEmail antes da publicação.
 */
 const SALES = {
   monthlyPrice: "¥980",
   semiannualPrice: "¥4,980 / 6 meses",
-  checkoutUrl: "https://SEU-CHECKOUT-AQUI",
-  appStoreUrl: "https://apps.apple.com/",
-  playStoreUrl: "https://play.google.com/store",
-  supportEmail: "seuemail@exemplo.com"
+  checkoutUrl: "",
+  appStoreUrl: "",
+  playStoreUrl: "",
+  supportEmail: "akionkt@gmail.com"
 };
 
 /* ========= ADMIN TESTE =========
@@ -591,9 +606,9 @@ function getCheckoutStatus() {
     return {
       ready: false,
       mode: "placeholder",
-      badge: "assinatura em preparação",
-      button: "assinatura pela loja em preparação",
-      message: "A assinatura final deve ser conectada pela loja oficial ou por um checkout externo. Enquanto o app não estiver publicado, esta tela explica o Premium sem abrir pagamento falso."
+      badge: "Premium em preparação",
+      button: "Premium pela Play Store em breve",
+      message: "Para a primeira publicação, o app fica grátis e o Premium aparece como preparação. O pagamento será ligado depois com Google Play Billing, sem abrir checkout externo dentro da loja."
     };
   }
 
@@ -610,18 +625,18 @@ function getCheckoutStatus() {
   return {
     ready: true,
     mode: "ready",
-    badge: "checkout seguro",
+    badge: "pagamento seguro",
     button: "ir para pagamento seguro",
-    message: "Você será direcionado para uma página externa segura para concluir o pagamento."
+    message: "Você será direcionado para a plataforma oficial de pagamento configurada."
   };
 }
 
 function checkoutDeveloperHint() {
   return [
-    "Dados bancários: cadastre somente na plataforma de pagamento externa.",
-    "No app.js, altere apenas SALES.checkoutUrl para o link real do checkout.",
-    "Atualize também SALES.supportEmail, SALES.monthlyPrice e SALES.semiannualPrice quando necessário.",
-    "Não coloque conta bancária, documento, Pix, endereço ou dados sensíveis dentro do app."
+    "Store Ready: não use checkout externo para Premium digital dentro da Play Store.",
+    "Primeira publicação recomendada: app grátis com Premium em preparação.",
+    "Depois da aprovação, conecte Google Play Billing / App Store In-App Purchase.",
+    "Nunca coloque dados bancários, documento, Pix, endereço ou dados sensíveis dentro do app."
   ].join(" ");
 }
 
@@ -2580,22 +2595,22 @@ function checkoutStatus() {
     configured,
     url,
     supportEmail,
-    label: configured ? "checkout externo pronto" : "assinatura em preparação",
-    badge: configured ? "pagamento seguro externo" : "loja oficial em preparação",
-    buttonLabel: configured ? "abrir pagamento seguro" : "assinatura pela loja em preparação",
-    primaryLabel: configured ? "assinar Premium agora" : "assinatura pela loja em preparação",
-    monthlyLabel: configured ? `assinar mensal ${SALES.monthlyPrice}` : "assinatura mensal em preparação",
-    semiannualLabel: configured ? `assinar semestral ${SALES.semiannualPrice}` : "assinatura semestral em preparação",
-    footerLabel: configured ? "ativar Premium" : "assinatura em preparação",
+    label: configured ? "pagamento configurado" : "Premium em preparação",
+    badge: configured ? "pagamento seguro" : "Play Store em preparação",
+    buttonLabel: configured ? "abrir pagamento seguro" : "Premium em breve",
+    primaryLabel: configured ? "assinar Premium agora" : "Premium em breve",
+    monthlyLabel: configured ? `assinar mensal ${SALES.monthlyPrice}` : "mensal em breve",
+    semiannualLabel: configured ? `assinar semestral ${SALES.semiannualPrice}` : "6 meses em breve",
+    footerLabel: configured ? "ativar Premium" : "Premium em breve",
     shortText: configured
-      ? "Pagamento em ambiente externo seguro. O app não coleta dados bancários."
-      : "A assinatura final será conectada pela Google Play, App Store ou checkout externo quando o app estiver pronto para publicação.",
+      ? "Pagamento em ambiente seguro. O app não coleta dados bancários."
+      : "Primeira publicação: app grátis. O Premium será conectado depois pela Google Play/App Store, sem checkout externo dentro da loja.",
     helpText: configured
-      ? "O pagamento será aberto em uma página externa segura. Depois da confirmação, libere o Premium pelo fluxo definido no seu checkout."
-      : "Antes da venda oficial, configure a assinatura nas lojas ou cole um link real em SALES.checkoutUrl. Não use link genérico nem botão morto.",
+      ? "O pagamento será aberto na plataforma oficial configurada."
+      : "Para evitar rejeição na primeira publicação, o Premium fica como preparação. Depois conectamos Google Play Billing / App Store IAP.",
     toast: configured
       ? "abrindo pagamento seguro"
-      : "assinatura em preparação pelas lojas oficiais"
+      : "Premium em preparação pela Play Store"
   };
 }
 
@@ -2603,7 +2618,7 @@ function checkoutButtonLabel(kind = "primary") {
   const status = checkoutStatus();
 
   if (!status.configured) {
-    return "assinatura pela loja em preparação";
+    return "Premium em breve";
   }
 
   if (kind === "monthly") return status.monthlyLabel;
@@ -2621,7 +2636,7 @@ function openCheckout() {
   saveState();
 
   if (!status.configured) {
-    toast("assinatura em preparação pelas lojas oficiais");
+    toast("Premium em preparação pela Play Store");
     return false;
   }
 
@@ -2644,10 +2659,12 @@ function markPremiumLocked() {
 
 function showPremiumLockedMessage(topicId) {
   const name = topicName(topicId);
-  toast(`${name} é premium 🔒`);
+  toast(`${name} é Premium`);
+  STATE.monetization ||= { premiumUnlocked: false, seenPaywall: false };
   STATE.monetization.seenPaywall = true;
+  STATE.monetization.lastLockedTopic = topicId || null;
   saveState();
-  nav("#/premium");
+  nav("#/premium-final");
 }
 
 /* ---------- habit ---------- */
@@ -3660,7 +3677,7 @@ function renderAppLogoBlock(extraClass = "") {
 const LAUNCH_CHECKLIST = [
   {
     id: "checkout",
-    label: "Configurar checkout real em SALES.checkoutUrl",
+    label: "Conectar Google Play Billing / App Store IAP",
     status: () => isRealCheckoutConfigured()
   },
   {
@@ -3742,7 +3759,7 @@ const LAUNCH_CHECKLIST = [
   },
   {
     id: "public-privacy",
-    label: "Criar política de privacidade pública hospedada em URL",
+    label: "Publicar política de privacidade pública em URL",
     status: () => false
   },
   {
@@ -4020,7 +4037,7 @@ function renderPremiumActivationBox() {
         </div>
         <div class="useCaseItem">
           <span class="useCaseIcon">2</span>
-          <span>O app abre uma página externa segura de checkout;</span>
+          <span>O app usará compra interna da loja oficial quando o Premium for ativado;</span>
         </div>
         <div class="useCaseItem">
           <span class="useCaseIcon">3</span>
@@ -4035,7 +4052,7 @@ function renderPremiumActivationBox() {
           <div class="badge">nota para o desenvolvedor</div>
           <div class="small">
             Não coloque dados bancários neste app. Cadastre sua conta bancária diretamente na plataforma de pagamento escolhida.
-            Depois, troque apenas o valor de SALES.checkoutUrl pelo link público do checkout.
+            Depois da aprovação, conecte Google Play Billing / App Store IAP para liberar o Premium.
           </div>
         </div>
       ` : ""}
@@ -4054,7 +4071,7 @@ function renderPaymentSafetyBox() {
       </div>
 
       <p class="small">
-        O NIHONGO321 não coleta dados bancários dentro do app. O pagamento deve acontecer em uma plataforma externa de checkout.
+        O NIHONGO321 não coleta dados bancários dentro do app. Quando ativado, o Premium deve usar a loja oficial do dispositivo.
       </p>
 
       <p class="small">
@@ -4543,8 +4560,7 @@ function renderAbout() {
             preferências e histórico de treino neste dispositivo.
           </p>
           <p class="small">
-            Dados bancários não ficam no app. Se houver assinatura Premium, o pagamento deve acontecer em uma
-            página externa segura de checkout.
+            Dados bancários não ficam no app. Quando houver assinatura Premium na versão de loja, o pagamento deve acontecer pela Google Play ou App Store.
           </p>
         </div>
 
@@ -4612,7 +4628,7 @@ function renderPrivacy() {
           <div class="badge">4. Pagamentos</div>
           <p class="small">
             Dados bancários, cartão, conta, konbini payment ou qualquer informação de pagamento não devem ser colocados
-            dentro do app. O pagamento Premium, quando configurado, deve acontecer em uma plataforma externa segura.
+            dentro do app. O pagamento Premium, quando configurado, deve acontecer pela Google Play, App Store ou plataforma oficial permitida para a versão publicada.
           </p>
         </div>
 
@@ -4672,7 +4688,7 @@ function renderTerms() {
         <div class="sheet stack" style="text-align:left">
           <div class="badge">4. Premium e checkout</div>
           <p class="small">
-            Quando houver Premium, o pagamento deve acontecer fora do app, em uma plataforma externa segura.
+            Quando houver Premium na versão de loja, o pagamento deve acontecer pela compra interna oficial da Google Play ou App Store.
             O NIHONGO321 não deve armazenar dados bancários no código, no localStorage, no HTML, no CSS ou no app.js.
           </p>
         </div>
@@ -4707,7 +4723,7 @@ function renderLaunchChecklist() {
     { label: "Testar app em celular Android + Chrome", done: true },
     { label: "Testar app em notebook/desktop", done: true },
     { label: "Testar backup por WhatsApp/LINE em celular real", done: true },
-    { label: "Configurar link real do checkout externo", done: checkoutOk },
+    { label: "Conectar compra interna da loja oficial", done: checkoutOk },
     { label: "Confirmar e-mail real de suporte", done: supportOk },
     { label: "Preparar ícone final do app", done: false },
     { label: "Preparar screenshots para loja", done: false },
@@ -4722,7 +4738,7 @@ function renderLaunchChecklist() {
     { label: "Página Premium clara e vendável", done: true },
     { label: "Preço mensal definido", done: !!SALES.monthlyPrice },
     { label: "Preço semestral definido", done: !!SALES.semiannualPrice },
-    { label: "Checkout externo real configurado", done: checkoutOk },
+    { label: "Compra interna da loja oficial configurada", done: checkoutOk },
     { label: "Mensagem de suporte definida", done: supportOk },
     { label: "Oferta grátis x Premium revisada", done: true }
   ];
@@ -4852,7 +4868,7 @@ function renderLaunchChecklist() {
           </div>
           <div class="launchSafetyItem launchSafetyItem--ok">
             <span>✓</span>
-            <b>Usar somente o link público externo em SALES.checkoutUrl.</b>
+            <b>Usar compra interna oficial quando vender Premium dentro da Play Store/App Store.</b>
           </div>
           <div class="launchSafetyItem launchSafetyItem--ok">
             <span>✓</span>
@@ -5231,9 +5247,9 @@ function renderLanding() {
         </div>
 
         <div class="salesHeroCopy">
-          <h1 class="salesHeroTitle">Japonês útil para viver melhor no Japão.</h1>
+          <h1 class="salesHeroTitle">Japonês prático para viver melhor no Japão.</h1>
           <p class="salesHeroLead">
-            Treine frases reais para fábrica, mercado, prefeitura, saúde, moradia e conversas do dia a dia. O app foi pensado para quem trabalha muito e precisa estudar sem complicar a rotina.
+            Frases reais para fábrica, mercado, prefeitura, saúde e rotina. Estude sem complicar, mesmo trabalhando muito.
           </p>
         </div>
 
@@ -5258,9 +5274,9 @@ function renderLanding() {
         <div class="salesMethodLine" aria-label="método principal do aplicativo">
           <span>frase real</span>
           <b>→</b>
-          <span>repetição guiada</span>
+          <span>treino 105x</span>
           <b>→</b>
-          <span>confiança no uso</span>
+          <span>uso com confiança</span>
         </div>
 
         <div class="salesHeroActions salesHeroActions--focused">
@@ -5423,65 +5439,100 @@ function renderPremiumFinal() {
   const monthly = SALES.monthlyPrice || "¥980";
   const semi = SALES.semiannualPrice || "¥4,980 / 6 meses";
   const checkoutReady = isCheckoutReady();
+  const lockedTopicId = STATE.monetization?.lastLockedTopic || null;
+  const lockedTopicName = lockedTopicId ? topicName(lockedTopicId) : "";
 
-  const shortGains = [
-    ["Destravar frases úteis", "Treine pedidos, problemas e confirmações que aparecem amanhã no trabalho ou na rua."],
-    ["Ativar memória pela rotina", "Português, romaji, japonês e 105x fazem a frase passar por olhos, ouvidos e boca."],
-    ["Menos medo de falar", "Você revisa antes da pressão real, sem depender só do susto da fábrica."]
+  const premiumUnlocks = [
+    ["🏭", "Ambientes que pesam", "Fábrica, mercado, prefeitura, hospital, moradia, contas e conversa real."],
+    ["📓", "DIÁRIO321 completo", "Crie frases da sua rotina, gere 10 variações e treine sem ficar preso no básico."],
+    ["🔁", "Treino 105x com direção", "Use repetição guiada para transformar frase útil em memória de verdade."],
+    ["🧭", "Trilhas e progresso", "Caminhos organizados para estudar sem abrir o app e se perder no cansaço."],
+    ["✨", "IA expansiva", "Pedidos prontos para ChatGPT/Gemini criarem material de estudo mais completo."],
+    ["🛟", "Sobrevivência no Japão", "Frases para pedir ajuda, confirmar, explicar problema e agir com mais segurança."]
   ];
 
-  const lifeGains = [
-    ["Trabalho", "avisar erro, confirmar tarefa, pedir ajuda e explicar quando algo está estranho."],
-    ["Konbini e mercado", "sacola, pagamento, produto, validade, recibo e perguntas rápidas."],
-    ["Prefeitura e saúde", "documentos, balcão, procedimento, dentista, hospital e explicações simples."],
-    ["Relacionamento", "falar com mais educação, menos travado e com mais respeito no tom certo."]
+  const buyerReasons = [
+    ["Para quem trabalha 10–12h", "Estudo curto, direto e útil depois de um turno pesado."],
+    ["Para quem trava na hora", "Você treina antes de precisar falar na pressão."],
+    ["Para quem quer autonomia", "Menos dependência de tradução em situações repetidas no Japão."]
   ];
 
   APP.innerHTML = `
-    <div class="stack premiumFinalPage">
-      <section class="card premiumFinalHero">
+    <div class="stack premiumFinalPage premiumFinalPage--commercial">
+      <section class="card premiumFinalHero premiumSalesHero">
         <div class="row row--between premiumFinalTop">
-          <div class="badge">Premium completo</div>
-          <button class="btn" type="button" data-nav="#/landing">voltar</button>
+          <div class="badge">Premium NIHONGO321</div>
+          <button class="btn btn--ghost" type="button" data-nav="#/home">continuar grátis</button>
         </div>
 
+        ${lockedTopicName ? `
+          <div class="premiumIntentCard" role="note">
+            <span>Você tentou abrir</span>
+            <b>${escapeHTML(lockedTopicName)}</b>
+            <small>O Premium libera esse ambiente e outros treinos da vida real no Japão.</small>
+          </div>
+        ` : ``}
+
         <div class="premiumFinalHeroCopy">
-          <h1 class="premiumFinalTitle">Seu japonês precisa trabalhar junto com você.</h1>
+          <h1 class="premiumFinalTitle">Destrave o japonês da vida real.</h1>
           <p class="premiumFinalLead">
-            O NIHONGO321 Premium foi pensado para brasileiros no Japão que trabalham muito, chegam cansados e precisam de frases úteis para viver melhor.
+            Frases práticas, DIÁRIO321 completo, 105x e trilhas para brasileiros no Japão que precisam estudar sem perder tempo.
           </p>
         </div>
 
-        <div class="premiumFinalPriceBox" aria-label="preço do Premium">
-          <span>Plano Premium</span>
-          <b>${escapeHTML(monthly)}</b>
-          <small>${escapeHTML(semi)} no plano econômico.</small>
+        <div class="premiumOfferGrid" aria-label="opções de assinatura Premium">
+          <article class="premiumOfferCard premiumOfferCard--monthly">
+            <span class="premiumOfferTag">mensal</span>
+            <b>${escapeHTML(monthly)}</b>
+            <small>comece com baixo compromisso</small>
+            <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("monthly"))}</button>
+          </article>
+
+          <article class="premiumOfferCard premiumOfferCard--best">
+            <span class="premiumOfferRibbon">mais recomendado</span>
+            <span class="premiumOfferTag">6 meses</span>
+            <b>${escapeHTML(semi)}</b>
+            <small>melhor para criar rotina e economizar</small>
+            <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("semiannual"))}</button>
+          </article>
         </div>
 
-        <div class="premiumFinalActions">
-          <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
-          <button class="btn btn--muted btn--full" type="button" data-action="goCompare">comparar planos</button>
-          <button class="btn btn--ghost btn--full" type="button" data-nav="#/home">continuar grátis</button>
+        <div class="premiumTrustLine" aria-label="segurança da assinatura">
+          <span>🔒 pagamento pela loja ou checkout oficial</span>
+          <span>📱 acesso no app</span>
+          <span>🧾 preço claro antes de assinar</span>
         </div>
 
         ${!checkoutReady ? `
-          <div class="premiumStoreNotice" role="note">
-            <b>Assinatura oficial em preparação</b>
-            <span>Para Google Play e App Store, esta tela funciona como explicação interna. O botão final deve ser conectado à assinatura oficial da loja quando o app for publicado.</span>
+          <div class="premiumStoreNotice premiumStoreNotice--seller" role="note">
+            <b>Premium preparado para a loja</b>
+            <span>Para a primeira publicação, o app fica grátis e seguro. Depois da aprovação, conectamos Google Play Billing / App Store para ativar as compras internas.</span>
           </div>
         ` : ``}
       </section>
 
-      <section class="card premiumFinalSection">
-        <div class="badge">benefício real</div>
-        <h2 class="h2">O Premium não entrega só frases. Ele entrega direção.</h2>
-        <p class="premiumFinalText">
-          A ideia é simples: transformar sua rotina em treino organizado, para você não estudar no escuro depois de um turno pesado.
-        </p>
+      <section class="card premiumFinalSection premiumUnlockSection">
+        <div class="badge">o que libera</div>
+        <h2 class="h2">O Premium transforma o app em um caminho completo.</h2>
+        <p class="premiumFinalText">O grátis mantém o contato. O Premium organiza a vida real em ambientes, frases, revisão e repetição.</p>
 
-        <div class="premiumGainGrid">
-          ${shortGains.map(([title, text]) => `
-            <article class="premiumGainCard">
+        <div class="premiumUnlockGrid">
+          ${premiumUnlocks.map(([icon, title, text]) => `
+            <article class="premiumUnlockCard">
+              <span>${escapeHTML(icon)}</span>
+              <b>${escapeHTML(title)}</b>
+              <small>${escapeHTML(text)}</small>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card premiumFinalSection premiumWhyPaySection">
+        <div class="badge">por que vale pagar</div>
+        <h2 class="h2">Feito para quem não tem tempo sobrando.</h2>
+        <div class="premiumReasonGrid">
+          ${buyerReasons.map(([title, text]) => `
+            <article class="premiumReasonCard">
               <b>${escapeHTML(title)}</b>
               <span>${escapeHTML(text)}</span>
             </article>
@@ -5489,76 +5540,34 @@ function renderPremiumFinal() {
         </div>
       </section>
 
-      <section class="card premiumFinalSection">
-        <div class="badge">onde isso ajuda</div>
-        <h2 class="h2">Mais autonomia em ambientes que pesam na vida real.</h2>
-
-        <div class="premiumLifeList">
-          ${lifeGains.map(([title, text]) => `
-            <article class="premiumLifeItem">
-              <b>${escapeHTML(title)}</b>
-              <span>${escapeHTML(text)}</span>
-            </article>
-          `).join("")}
+      <section class="card premiumFinalSection premiumCompareMini">
+        <div class="badge">grátis x premium</div>
+        <h2 class="h2">Comece grátis. Avance quando quiser mais segurança.</h2>
+        <div class="premiumMiniCompareGrid">
+          <article>
+            <b>Grátis</b>
+            <span>Pack essencial, contato inicial, treino básico e limite no Diário.</span>
+          </article>
+          <article class="premiumMiniCompareGrid--pro">
+            <b>Premium</b>
+            <span>Mais ambientes, Diário completo, IA expansiva, trilhas e material para rotina real.</span>
+          </article>
         </div>
       </section>
 
-      <section class="card premiumFinalSection premiumMemorySection">
-        <div class="badge">memória e confiança</div>
-        <h2 class="h2">Curto, médio e longo prazo.</h2>
-
-        <div class="salesFaqStack premiumFinalFaqStack">
-          <details class="salesFaqItem" open>
-            <summary><span>Curto prazo</span><b aria-hidden="true">＋</b></summary>
-            <div class="salesFaqBody">
-              <p><strong>Você para de só assistir japonês passar.</strong> Começa a repetir frases pequenas que cabem na rotina.</p>
-              <ul>
-                <li>mais contato com sons reais;</li>
-                <li>frases úteis para situações simples;</li>
-                <li>primeira sensação de direção no estudo.</li>
-              </ul>
-            </div>
-          </details>
-
-          <details class="salesFaqItem">
-            <summary><span>Médio prazo</span><b aria-hidden="true">＋</b></summary>
-            <div class="salesFaqBody">
-              <p><strong>Você começa a reconhecer padrões.</strong> O que antes parecia barulho começa a virar frase conhecida.</p>
-              <ul>
-                <li>melhor relacionamento com colegas e líderes;</li>
-                <li>mais coragem para perguntar e confirmar;</li>
-                <li>menos dependência em situações repetidas.</li>
-              </ul>
-            </div>
-          </details>
-
-          <details class="salesFaqItem">
-            <summary><span>Longo prazo</span><b aria-hidden="true">＋</b></summary>
-            <div class="salesFaqBody">
-              <p><strong>Você constrói repertório próprio.</strong> O japonês deixa de ser só curso e começa a virar ferramenta de vida.</p>
-              <ul>
-                <li>memória fortalecida por repetição e uso real;</li>
-                <li>mais autonomia no Japão;</li>
-                <li>mais tranquilidade para resolver problemas sem travar.</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <section class="card premiumFinalCta">
-        <h2 class="h2">Comece pelo essencial. Avance quando quiser ir mais longe.</h2>
+      <section class="card premiumFinalCta premiumFinalCta--commercial">
+        <div class="badge">comece agora</div>
+        <h2 class="h2">O próximo passo é transformar estudo em autonomia.</h2>
         <p>
-          O grátis mantém o contato. O Premium aprofunda o método, amplia os ambientes e transforma sua rotina em um caminho de estudo mais completo.
+          Assine quando quiser desbloquear os ambientes que mais aparecem na vida real do Japão.
         </p>
-        <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
+        <button class="primaryAction" type="button" data-action="checkout">${escapeHTML(checkoutButtonLabel("monthly"))}</button>
         <button class="btn btn--muted btn--full" type="button" data-action="goCompare">comparar planos</button>
-        <button class="btn btn--ghost btn--full" type="button" data-nav="#/landing">voltar à apresentação</button>
+        <button class="btn btn--ghost btn--full" type="button" data-nav="#/home">continuar grátis</button>
       </section>
     </div>
   `;
 }
-
 function renderPremiumThemes() {
   const themes = [
     {
@@ -5892,7 +5901,7 @@ function renderPlanCompare() {
         <div class="compareFinalActions">
           <button class="primaryAction" data-action="checkout">${escapeHTML(checkoutButtonLabel("primary"))}</button>
           <button class="btn btn--muted btn--full" data-nav="#/home">continuar grátis</button>
-          ${checkoutReady ? "" : `<div class="compareNotice">Checkout ainda não configurado. Antes da venda oficial, coloque o link real em SALES.checkoutUrl.</div>`}
+          ${checkoutReady ? "" : `<div class="compareNotice">Premium em preparação. A compra interna da loja oficial será conectada depois da primeira publicação.</div>`}
         </div>
       </section>
     </div>
@@ -5969,7 +5978,7 @@ function renderPremium() {
 
             ${checkoutReady ? "" : `
               <div class="premiumNotice">
-                Checkout ainda não configurado. Coloque seu link real em <strong>SALES.checkoutUrl</strong> antes de vender oficialmente.
+                Premium em preparação. Conecte a compra interna da loja oficial antes de vender dentro da Play Store/App Store.
               </div>
             `}
           </div>
@@ -6631,9 +6640,15 @@ function saveCaderno321PayloadNative(payload = {}) {
 }
 
 function renderCaderno321Integrated() {
+  const { params } = routeInfo();
+  const requestedScreen = params.screen === "dashboard" ? "dashboard" : "genial";
+  const requestedArea = ["hiragana", "katakana", "kanji"].includes(params.area) ? params.area : "";
+  const iframeParams = new URLSearchParams({ embedded: "1", screen: requestedScreen });
+  if (requestedArea) iframeParams.set("area", requestedArea);
+
   APP.innerHTML = `
     <div class="cadernoIntegratedPage">
-      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?embedded=1&screen=genial" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
+      <iframe class="cadernoIntegratedFrame" src="./caderno/index.html?${iframeParams.toString()}" title="DIÁRIO321 integrado ao NIHONGO321"></iframe>
     </div>
   `;
 }
@@ -6699,7 +6714,7 @@ function renderHome() {
         </div>
 
         <div class="appCentralHeroGuide" aria-label="orientação da central">
-          <span>Escolha um catálogo e continue de onde faz sentido para você.</span>
+          <span>Abra um catálogo abaixo e siga pelo caminho mais útil agora.</span>
         </div>
       </section>
 
@@ -6707,11 +6722,11 @@ function renderHome() {
       <section class="stack toolCatalogStack" aria-label="catálogos de ferramentas do NIHONGO321">
         <details class="card toolCatalog toolCatalog--main" open>
           <summary class="toolCatalogSummary">
-            <span class="toolCatalogIcon">⚡</span>
+            <span class="toolCatalogIcon">★</span>
             <span class="toolCatalogText">
               <b>Estudar agora</b>
               <small>treinos rápidos para manter constância</small>
-              <span class="toolCatalogPreview">Treino rápido • 105x • DIÁRIO321</span>
+              <span class="toolCatalogPreview">Treino rápido • 105x • DIÁRIO321 • Kana/Kanji</span>
             </span>
           </summary>
 
@@ -6732,6 +6747,24 @@ function renderHome() {
               <span class="toolIcon">日</span>
               <b>DIÁRIO321</b>
               <small>transforme sua rotina em frases treináveis</small>
+            </button>
+
+            <button class="toolCard toolCard--script" type="button" data-nav="#/caderno?screen=dashboard&area=hiragana">
+              <span class="toolIcon">あ</span>
+              <b>Hiragana</b>
+              <small>treine leitura e escrita básica</small>
+            </button>
+
+            <button class="toolCard toolCard--script" type="button" data-nav="#/caderno?screen=dashboard&area=katakana">
+              <span class="toolIcon">ア</span>
+              <b>Katakana</b>
+              <small>palavras de loja, placa e rotina</small>
+            </button>
+
+            <button class="toolCard toolCard--script" type="button" data-nav="#/caderno?screen=dashboard&area=kanji">
+              <span class="toolIcon">漢</span>
+              <b>Kanji</b>
+              <small>ideogramas úteis por nível</small>
             </button>
           </div>
         </details>
@@ -6804,6 +6837,37 @@ function renderHome() {
           </div>
         </details>
 
+        <details class="card toolCatalog toolCatalog--growth">
+          <summary class="toolCatalogSummary">
+            <span class="toolCatalogIcon">↗</span>
+            <span class="toolCatalogText">
+              <b>Crescer com a comunidade</b>
+              <small>compartilhe frases úteis e convide amigos</small>
+              <span class="toolCatalogPreview">Convite • Desafio 7 dias • Frases compartilháveis</span>
+            </span>
+          </summary>
+
+          <div class="toolGrid toolGrid--catalog toolGrid--compact">
+            <button class="toolCard toolCard--share" type="button" data-action="shareInvite">
+              <span class="toolIcon">↗</span>
+              <b>Convidar amigo</b>
+              <small>copiar ou enviar convite pelo WhatsApp / LINE</small>
+            </button>
+
+            <button class="toolCard" type="button" data-nav="#/growth">
+              <span class="toolIcon">7</span>
+              <b>Desafio 7 dias</b>
+              <small>um caminho simples para divulgar e engajar</small>
+            </button>
+
+            <button class="toolCard" type="button" data-nav="#/backup">
+              <span class="toolIcon">文</span>
+              <b>Pacote de frases</b>
+              <small>compartilhe frases prontas com brasileiros no Japão</small>
+            </button>
+          </div>
+        </details>
+
         <details class="card toolCatalog">
           <summary class="toolCatalogSummary">
             <span class="toolCatalogIcon">🛡</span>
@@ -6842,6 +6906,72 @@ function renderHome() {
     </div>
   `;
 }
+
+function renderGrowthChallenge() {
+  const days = [
+    ["Dia 1", "fábrica", "Compartilhe uma frase sobre máquina, erro ou tarefa."],
+    ["Dia 2", "mercado", "Compartilhe uma frase para comprar, perguntar ou pagar."],
+    ["Dia 3", "prefeitura", "Compartilhe uma frase de documento, endereço ou consulta."],
+    ["Dia 4", "hospital", "Compartilhe uma frase para dor, remédio ou consulta."],
+    ["Dia 5", "moradia", "Compartilhe uma frase sobre aluguel, água, luz ou problema."],
+    ["Dia 6", "trabalho", "Crie uma frase no DIÁRIO321 e treine 105x."],
+    ["Dia 7", "convite", "Convide 3 brasileiros para testar o NIHONGO321."]
+  ];
+
+  APP.innerHTML = `
+    <div class="stack growthPage">
+      <section class="card growthHero">
+        <div class="row row--between">
+          <div class="badge">motor de crescimento</div>
+          <button class="btn btn--ghost" type="button" data-nav="#/home">voltar</button>
+        </div>
+        <h1>Desafio 7 dias de japonês prático</h1>
+        <p>Um convite simples para brasileiros no Japão testarem frases reais, compartilharem com amigos e sentirem valor antes do Premium.</p>
+        <div class="growthHeroActions">
+          <button class="primaryAction" type="button" data-action="shareInvite">Convidar amigo</button>
+          <button class="btn btn--muted btn--full" type="button" data-nav="#/caderno">abrir DIÁRIO321</button>
+        </div>
+      </section>
+
+      <section class="card growthInviteBox">
+        <div>
+          <div class="badge">mensagem pronta</div>
+          <h2 class="h2">Compartilhe sem pensar demais.</h2>
+          <p class="p p--tight">O app copia ou abre o compartilhamento nativo. Depois é só enviar no WhatsApp, LINE ou grupo de brasileiros.</p>
+        </div>
+        <pre class="growthInvitePreview">${escapeHTML(buildNihongo321InviteText())}</pre>
+        <button class="primaryAction" type="button" data-action="shareInvite">Copiar / compartilhar convite</button>
+      </section>
+
+      <section class="card growthDaysCard">
+        <div class="badge">plano simples</div>
+        <h2 class="h2">7 dias para criar tração.</h2>
+        <div class="growthDayGrid">
+          ${days.map(([day, title, text]) => `
+            <article class="growthDayCard">
+              <small>${escapeHTML(day)}</small>
+              <b>${escapeHTML(title)}</b>
+              <span>${escapeHTML(text)}</span>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card growthConversionCard">
+        <div>
+          <div class="badge">conversão</div>
+          <h2 class="h2">A regra é simples.</h2>
+          <p class="p">O grátis dá gosto. O Premium libera profundidade: mais ambientes, Diário completo, IA expansiva e treino com direção.</p>
+        </div>
+        <div class="growthHeroActions">
+          <button class="primaryAction" type="button" data-nav="#/premium-final">ver Premium</button>
+          <button class="btn btn--muted btn--full" type="button" data-nav="#/home">voltar à central</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 function renderOnboarding() {
   const step = onboardingCurrentStep();
   const item = ONBOARDING_STEPS[step];
@@ -8900,6 +9030,36 @@ async function shareTextPackNative(text) {
   return copied ? "copied" : "manual";
 }
 
+
+function buildNihongo321InviteText() {
+  return [
+    "🇯🇵 NIHONGO321",
+    "Japonês prático para brasileiros no Japão.",
+    "",
+    "Frases reais para fábrica, mercado, prefeitura, hospital e rotina.",
+    "Treino rápido + método 105x + DIÁRIO321 para criar frases da vida real.",
+    "",
+    "Promessa simples: aprenda o japonês que você pode precisar amanhã.",
+    "",
+    "Quando abrir o app, toque em DIÁRIO321 ou Treino 105x."
+  ].join("\n");
+}
+
+async function shareNihongo321Invite() {
+  const text = buildNihongo321InviteText();
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "NIHONGO321", text });
+      toast("convite aberto");
+      beep("ding");
+      return;
+    }
+  } catch { }
+  const ok = await copyTextSafely(text);
+  toast(ok ? "convite copiado" : "não consegui copiar o convite");
+  beep(ok ? "ding" : "tuk");
+}
+
 function normalizeImportedTopic(topic, index = 0) {
   if (!topic || typeof topic !== "object") return null;
 
@@ -9759,6 +9919,52 @@ function openPremiumFinalDirect() {
 window.NIHONGO321_OPEN_PREMIUM_FINAL_DIRECT = openPremiumFinalDirect;
 
 
+function renderStoreReadyAndroid() {
+  const items = [
+    ["Identidade", `Nome: ${STORE_READY.appName} • Package: ${STORE_READY.packageName}`],
+    ["Versão", `Version name: ${STORE_READY.versionName} • Version code: ${STORE_READY.versionCode}`],
+    ["Pagamento", "Primeira publicação grátis. Premium preparado, compra interna será conectada depois."],
+    ["Privacidade", "Dados principais ficam no aparelho via localStorage. Política pública incluída no pacote."],
+    ["Conversão", "Capacitor configurado para gerar Android App Bundle (.aab)."]
+  ];
+
+  APP.innerHTML = `
+    <div class="stack storeReadyPage">
+      <section class="card storeHero">
+        <div class="row row--between">
+          <div class="badge">Store Ready Android</div>
+          <button class="btn" data-nav="#/launch-checklist">checklist</button>
+        </div>
+        <h1 class="storeTitle">NIHONGO321 pronto para iniciar a conversão Android.</h1>
+        <p class="storeLead">Esta tela reúne as decisões técnicas para transformar o app em um pacote publicável na Google Play.</p>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">decisões fechadas</div>
+        <div class="storeList">
+          ${items.map(([title, text]) => `
+            <div class="storeListItem">
+              <span>✓</span>
+              <b>${escapeHTML(title)}</b>
+              <small>${escapeHTML(text)}</small>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="card stack">
+        <div class="badge">próxima ação técnica</div>
+        <h2 class="h2 storeSectionTitle">Abrir o projeto com Capacitor e gerar o Android App Bundle.</h2>
+        <p class="p">O ZIP já inclui <strong>package.json</strong>, <strong>capacitor.config.json</strong>, <strong>manifest.webmanifest</strong> e assets iniciais de loja.</p>
+        <div class="grid2">
+          <button class="primaryAction" data-nav="#/home">testar app</button>
+          <button class="btn btn--muted btn--full" data-nav="#/privacy">ver privacidade</button>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 /* ---------- render principal ---------- */
 function render() {
   refreshHUD();
@@ -9779,6 +9985,7 @@ function render() {
   if (r === "#/sensei") return renderSensei();
   if (r === "#/paths") return renderFluencyPaths();
   if (r === "#/home") return renderHome();
+  if (r === "#/growth") return renderGrowthChallenge();
   if (r === "#/caderno") return renderCaderno321Integrated();
   if (r === "#/105x") return render105x();
   if (r === "#/edit") return renderEdit();
@@ -9791,6 +9998,7 @@ function render() {
   if (r === "#/terms") return renderTerms();
   if (r === "#/launch-checklist") return renderLaunchChecklist();
   if (r === "#/store-kit") return renderStoreKit();
+  if (r === "#/store-ready") return renderStoreReadyAndroid();
   if (r === "#/screenshot-guide") return renderScreenshotGuide();
 
   nav("#/landing");
@@ -10118,6 +10326,14 @@ document.addEventListener("click", (e) => {
 
   if (act === "goCompare") {
     openPremiumFinalDirect();
+    return;
+  }
+
+  if (act === "shareInvite") {
+    e.preventDefault();
+    e.stopPropagation();
+    unlockAudio();
+    shareNihongo321Invite();
     return;
   }
 

@@ -1,0 +1,20 @@
+{
+  "appId": "com.nakata.nihongo321",
+  "appName": "NIHONGO321",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "backgroundColor": "#1A365D",
+      "androidScaleType": "CENTER_CROP"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#1A365D"
+    }
+  }
+}

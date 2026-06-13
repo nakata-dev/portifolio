@@ -17138,3 +17138,842 @@ html[data-theme="light"] #view105x .primaryAction{
   border-color:rgba(255,107,0,.30) !important;
   text-shadow:0 1px 1px rgba(0,0,0,.16) !important;
 }
+
+
+/* =========================================================
+   NIHONGO321 8.8.47-R — Blindagem profissional do produto
+   Objetivo: versão candidata a venda, com hierarquia limpa,
+   paleta oficial consistente e CTA laranja somente onde converte.
+   ========================================================= */
+
+:root{
+  --brand-navy:#1A365D;
+  --brand-navy-deep:#102A4C;
+  --brand-navy-soft:#244B78;
+  --brand-orange:#FF6B00;
+  --brand-orange-deep:#C94E00;
+  --brand-white:#FFFFFF;
+  --brand-light:#F7FAFC;
+  --brand-ink:#102A4C;
+  --brand-muted:#64748B;
+  --brand-line:rgba(26,54,93,.14);
+}
+
+/* CTA: laranja é ação de conversão/execução, não botão secundário */
+button[data-action="goCompare"],
+.salesHeroActions .btn--muted,
+.salesPremiumActions .btn--muted,
+.salesHeroActions .btn--ghost,
+.landingCompareBtn:not(.primaryAction){
+  background:rgba(255,255,255,.070) !important;
+  border-color:rgba(255,255,255,.15) !important;
+  color:rgba(255,255,255,.90) !important;
+  box-shadow:none !important;
+}
+
+html[data-theme="light"] button[data-action="goCompare"],
+html[data-theme="light"] .salesHeroActions .btn--muted,
+html[data-theme="light"] .salesPremiumActions .btn--muted,
+html[data-theme="light"] .salesHeroActions .btn--ghost,
+html[data-theme="light"] .landingCompareBtn:not(.primaryAction){
+  background:#FFFFFF !important;
+  border-color:rgba(26,54,93,.16) !important;
+  color:#1A365D !important;
+  box-shadow:0 10px 24px rgba(26,54,93,.08) !important;
+}
+
+.bigBtn,
+.primaryAction,
+.btn--primary,
+.btn--ok,
+.toolCard--cta,
+body.is-home-route .toolGrid--catalog .toolCard--cta{
+  background:
+    radial-gradient(220px 110px at 18% 0%, rgba(255,255,255,.17), transparent 62%),
+    linear-gradient(135deg, #B94400 0%, #E45B00 55%, #FF6B00 100%) !important;
+  color:#FFFFFF !important;
+  border-color:rgba(255,107,0,.36) !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.16) !important;
+}
+
+/* Home: menos texto, mais painel de decisão */
+body.is-home-route .appCentralPage--seiton{
+  gap:12px !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional{
+  padding:18px !important;
+  border-radius:26px !important;
+  background:
+    radial-gradient(420px 220px at 100% 0%, rgba(255,255,255,.10), transparent 68%),
+    linear-gradient(135deg, #1A365D 0%, #244B78 52%, #102A4C 100%) !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  box-shadow:0 16px 34px rgba(10,30,56,.22), inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .appCentralTitle{
+  font-size:clamp(25px, 5.6vw, 32px) !important;
+  line-height:1.05 !important;
+  letter-spacing:-.035em !important;
+  color:#FFFFFF !important;
+}
+
+body.is-home-route .appCentralLead--visible{
+  max-width:34em !important;
+  font-size:clamp(12.8px, 3vw, 14.5px) !important;
+  line-height:1.42 !important;
+  color:rgba(255,255,255,.82) !important;
+  font-weight:780 !important;
+}
+
+.appCentralHeroGuide{
+  margin-top:2px !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:rgba(255,255,255,.66) !important;
+  font-size:11.8px !important;
+  font-weight:820 !important;
+}
+
+body.is-home-route .toolCatalog{
+  border-radius:24px !important;
+  border-color:rgba(255,255,255,.10) !important;
+  background:
+    radial-gradient(300px 150px at 100% 0%, rgba(255,255,255,.08), transparent 70%),
+    linear-gradient(180deg, rgba(36,75,120,.46), rgba(16,42,76,.36)) !important;
+  box-shadow:0 14px 30px rgba(10,30,56,.18) !important;
+}
+
+body.is-home-route .toolCatalog[open]{
+  background:
+    radial-gradient(320px 160px at 100% 0%, rgba(255,255,255,.11), transparent 70%),
+    linear-gradient(180deg, rgba(36,75,120,.58), rgba(16,42,76,.45)) !important;
+}
+
+body.is-home-route .toolCatalogSummary{
+  min-height:70px !important;
+  padding:14px 14px !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText b{
+  font-size:clamp(18px, 4.8vw, 24px) !important;
+  line-height:1.04 !important;
+  letter-spacing:-.025em !important;
+  color:#FFFFFF !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogText small{
+  font-size:12.2px !important;
+  line-height:1.24 !important;
+  color:rgba(255,255,255,.72) !important;
+}
+
+body.is-home-route .toolCatalogPreview{
+  font-size:12px !important;
+  line-height:1.25 !important;
+  color:rgba(255,229,194,.86) !important;
+}
+
+body.is-home-route .appCentralPage--seiton .toolCatalogIcon,
+body.is-home-route .toolCatalogSummary::after{
+  border-color:rgba(255,255,255,.18) !important;
+  background:rgba(255,255,255,.095) !important;
+  color:#FFFFFF !important;
+}
+
+body.is-home-route .toolGrid--catalog{
+  gap:10px !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard{
+  min-height:86px !important;
+  border-radius:20px !important;
+  padding:13px !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard b{
+  font-size:15px !important;
+  color:#FFFFFF !important;
+}
+
+body.is-home-route .toolGrid--catalog .toolCard small{
+  font-size:11.8px !important;
+  color:rgba(255,255,255,.70) !important;
+}
+
+/* Apresentação: comercial, limpa e azul dominante */
+.salesHeroCard--dekassegui,
+.salesValueCard,
+.salesSoftPremium,
+.salesPremiumStory,
+.legalLinksBox{
+  border-radius:26px !important;
+  background:
+    radial-gradient(420px 220px at 100% 0%, rgba(255,255,255,.08), transparent 70%),
+    linear-gradient(180deg, rgba(36,75,120,.48), rgba(16,42,76,.42)) !important;
+  border-color:rgba(255,255,255,.11) !important;
+}
+
+.salesHeroCard--dekassegui .salesHeroTitle{
+  font-size:clamp(31px, 6.2vw, 52px) !important;
+  line-height:1.04 !important;
+  letter-spacing:-.045em !important;
+  max-width:12.5em !important;
+}
+
+.salesHeroCard--dekassegui .salesHeroLead{
+  max-width:42em !important;
+  font-size:clamp(13.5px, 2.4vw, 16px) !important;
+  line-height:1.52 !important;
+  color:rgba(255,255,255,.80) !important;
+}
+
+.salesMethodLine{
+  width:100% !important;
+  border:0 !important;
+  background:transparent !important;
+  padding:2px 0 !important;
+  color:rgba(255,255,255,.72) !important;
+  gap:7px !important;
+}
+
+.salesMethodLine span{
+  color:rgba(255,255,255,.78) !important;
+  font-size:11.8px !important;
+  letter-spacing:.01em !important;
+}
+
+.salesMethodLine b{
+  color:#FF6B00 !important;
+  opacity:.95 !important;
+}
+
+.salesTrustStrip span{
+  border-color:rgba(255,255,255,.12) !important;
+  background:rgba(255,255,255,.055) !important;
+  color:rgba(255,255,255,.82) !important;
+}
+
+/* Modo claro: branco e cinza claro como respiro real */
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralHero--calm.appCentralHero--professional,
+html[data-theme="light"] .salesHeroCard--dekassegui,
+html[data-theme="light"] .salesValueCard,
+html[data-theme="light"] .salesSoftPremium,
+html[data-theme="light"] .salesPremiumStory,
+html[data-theme="light"] .legalLinksBox{
+  background:#FFFFFF !important;
+  border-color:rgba(26,54,93,.13) !important;
+  box-shadow:0 14px 32px rgba(26,54,93,.10) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .appCentralTitle,
+html[data-theme="light"] .salesHeroCard--dekassegui .salesHeroTitle,
+html[data-theme="light"] .salesValueCard .h2,
+html[data-theme="light"] .salesPremiumStory .h2{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralLead--visible,
+html[data-theme="light"] .appCentralHeroGuide,
+html[data-theme="light"] .salesHeroCard--dekassegui .salesHeroLead{
+  color:#64748B !important;
+}
+
+html[data-theme="light"] body.is-home-route .toolCatalog,
+html[data-theme="light"] body.is-home-route .toolCatalog[open],
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard,
+html[data-theme="light"] .salesFaqItem,
+html[data-theme="light"] .salesAnswerCard,
+html[data-theme="light"] .salesTrustStrip span{
+  background:#F7FAFC !important;
+  border-color:rgba(26,54,93,.13) !important;
+  box-shadow:0 10px 24px rgba(26,54,93,.08) !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .toolCatalogText b,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard b{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .toolCatalogText small,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolCard small,
+html[data-theme="light"] body.is-home-route .toolCatalogPreview{
+  color:#64748B !important;
+}
+
+html[data-theme="light"] body.is-home-route .appCentralPage--seiton .toolCatalogIcon,
+html[data-theme="light"] body.is-home-route .toolCatalogSummary::after,
+html[data-theme="light"] body.is-home-route .toolGrid--catalog .toolIcon{
+  border-color:rgba(26,54,93,.16) !important;
+  background:#FFFFFF !important;
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] .salesMethodLine,
+html[data-theme="light"] .salesMethodLine span{
+  color:#64748B !important;
+}
+
+@media (max-width:430px){
+  body.is-home-route .appCentralPage--seiton .appCentralTitle{
+    font-size:28px !important;
+  }
+
+  body.is-home-route .appCentralLead--visible{
+    font-size:13px !important;
+  }
+
+  .salesHeroCard--dekassegui .salesHeroTitle{
+    font-size:30px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.48-R — Motor Comercial Premium
+   Página Premium com foco em conversão, paywall contextual
+   e paleta oficial do produto.
+   ========================================================= */
+
+.premiumFinalPage--commercial{
+  --premiumBlue:#1A365D;
+  --premiumBlueDeep:#102944;
+  --premiumOrange:#FF6B00;
+  --premiumWhite:#FFFFFF;
+  --premiumPanel:#F7FAFC;
+  gap:14px !important;
+}
+
+.premiumSalesHero,
+.premiumUnlockSection,
+.premiumWhyPaySection,
+.premiumCompareMini,
+.premiumFinalCta--commercial{
+  border-color:rgba(255,255,255,.12) !important;
+  background:
+    radial-gradient(360px 220px at 100% 0%, rgba(255,107,0,.12), transparent 64%),
+    linear-gradient(180deg, rgba(26,54,93,.98), rgba(16,41,68,.96)) !important;
+  box-shadow:0 18px 44px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.premiumSalesHero .premiumFinalTop .badge,
+.premiumFinalPage--commercial .badge{
+  background:rgba(255,255,255,.10) !important;
+  border-color:rgba(255,255,255,.16) !important;
+  color:#FFFFFF !important;
+}
+
+.premiumSalesHero .btn--ghost,
+.premiumFinalCta--commercial .btn--ghost{
+  color:#FFFFFF !important;
+  border-color:rgba(255,255,255,.18) !important;
+  background:rgba(255,255,255,.07) !important;
+}
+
+.premiumIntentCard{
+  margin:12px 0 0;
+  border:1px solid rgba(255,107,0,.28);
+  border-radius:22px;
+  padding:12px 14px;
+  display:grid;
+  gap:3px;
+  text-align:left;
+  background:rgba(255,107,0,.10);
+}
+
+.premiumIntentCard span,
+.premiumIntentCard small{
+  color:rgba(255,255,255,.78);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:850;
+}
+
+.premiumIntentCard b{
+  color:#FFFFFF;
+  font-size:17px;
+  line-height:1.15;
+  font-weight:950;
+}
+
+.premiumFinalPage--commercial .premiumFinalTitle{
+  max-width:10.5em !important;
+  color:#FFFFFF !important;
+  font-size:clamp(31px, 7.4vw, 52px) !important;
+  letter-spacing:-.055em !important;
+}
+
+.premiumFinalPage--commercial .premiumFinalLead,
+.premiumFinalPage--commercial .premiumFinalText,
+.premiumFinalPage--commercial .premiumFinalCta p{
+  color:rgba(255,255,255,.84) !important;
+  font-size:clamp(14px, 3.45vw, 16px) !important;
+  font-weight:820 !important;
+}
+
+.premiumOfferGrid{
+  width:100%;
+  margin:16px auto 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.premiumOfferCard{
+  position:relative;
+  overflow:hidden;
+  min-height:210px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:26px;
+  padding:16px;
+  display:grid;
+  gap:8px;
+  align-content:start;
+  background:rgba(255,255,255,.07);
+}
+
+.premiumOfferCard--best{
+  border-color:rgba(255,107,0,.50);
+  background:
+    radial-gradient(220px 130px at 100% 0%, rgba(255,107,0,.18), transparent 64%),
+    rgba(255,255,255,.08);
+}
+
+.premiumOfferTag,
+.premiumOfferRibbon{
+  width:max-content;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;
+  padding:6px 9px;
+  color:rgba(255,255,255,.82);
+  background:rgba(255,255,255,.08);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.premiumOfferRibbon{
+  border-color:rgba(255,107,0,.42);
+  color:#FFFFFF;
+  background:rgba(255,107,0,.20);
+}
+
+.premiumOfferCard b{
+  color:#FFFFFF;
+  font-size:clamp(28px, 7vw, 43px);
+  line-height:1;
+  letter-spacing:-.04em;
+}
+
+.premiumOfferCard small{
+  min-height:34px;
+  color:rgba(255,255,255,.76);
+  font-size:13px;
+  line-height:1.32;
+  font-weight:850;
+}
+
+.premiumOfferCard .primaryAction,
+.premiumFinalCta--commercial .primaryAction{
+  margin-top:auto;
+  background:linear-gradient(180deg, #FF7A1A 0%, #FF6B00 45%, #D94E00 100%) !important;
+  color:#FFFFFF !important;
+  border-color:rgba(255,107,0,.62) !important;
+  box-shadow:0 12px 28px rgba(255,107,0,.22) !important;
+}
+
+.premiumTrustLine{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+}
+
+.premiumTrustLine span{
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  padding:8px 10px;
+  color:rgba(255,255,255,.76);
+  background:rgba(255,255,255,.06);
+  font-size:12px;
+  line-height:1;
+  font-weight:850;
+}
+
+.premiumStoreNotice--seller{
+  border-color:rgba(255,107,0,.34) !important;
+  background:rgba(255,107,0,.10) !important;
+}
+
+.premiumStoreNotice--seller b{
+  color:#FFFFFF !important;
+}
+
+.premiumStoreNotice--seller span{
+  color:rgba(255,255,255,.78) !important;
+}
+
+.premiumUnlockGrid{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+}
+
+.premiumUnlockCard,
+.premiumReasonCard,
+.premiumMiniCompareGrid article{
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:22px;
+  padding:14px;
+  display:grid;
+  gap:7px;
+  text-align:left;
+  background:rgba(255,255,255,.065);
+}
+
+.premiumUnlockCard span{
+  width:38px;
+  height:38px;
+  border-radius:15px;
+  display:inline-grid;
+  place-items:center;
+  background:rgba(255,255,255,.10);
+}
+
+.premiumUnlockCard b,
+.premiumReasonCard b,
+.premiumMiniCompareGrid article b,
+.premiumFinalPage--commercial .h2{
+  color:#FFFFFF !important;
+}
+
+.premiumUnlockCard small,
+.premiumReasonCard span,
+.premiumMiniCompareGrid article span{
+  color:rgba(255,255,255,.74);
+  font-size:13px;
+  line-height:1.38;
+  font-weight:790;
+}
+
+.premiumReasonGrid{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+}
+
+.premiumMiniCompareGrid{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.premiumMiniCompareGrid--pro{
+  border-color:rgba(255,107,0,.42) !important;
+  background:rgba(255,107,0,.11) !important;
+}
+
+.premiumFinalCta--commercial .btn--muted{
+  color:#1A365D !important;
+  background:#F7FAFC !important;
+  border-color:rgba(255,255,255,.24) !important;
+}
+
+@media (max-width:720px){
+  .premiumOfferGrid,
+  .premiumUnlockGrid,
+  .premiumReasonGrid,
+  .premiumMiniCompareGrid{
+    grid-template-columns:1fr !important;
+  }
+
+  .premiumOfferCard{
+    min-height:auto;
+  }
+}
+
+html[data-theme="light"] .premiumSalesHero,
+html[data-theme="light"] .premiumUnlockSection,
+html[data-theme="light"] .premiumWhyPaySection,
+html[data-theme="light"] .premiumCompareMini,
+html[data-theme="light"] .premiumFinalCta--commercial{
+  border-color:rgba(26,54,93,.12) !important;
+  background:
+    radial-gradient(320px 210px at 100% 0%, rgba(255,107,0,.10), transparent 64%),
+    linear-gradient(180deg, #FFFFFF 0%, #F7FAFC 100%) !important;
+  box-shadow:0 16px 36px rgba(26,54,93,.10) !important;
+}
+
+html[data-theme="light"] .premiumFinalPage--commercial .premiumFinalTitle,
+html[data-theme="light"] .premiumUnlockCard b,
+html[data-theme="light"] .premiumReasonCard b,
+html[data-theme="light"] .premiumMiniCompareGrid article b,
+html[data-theme="light"] .premiumFinalPage--commercial .h2{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] .premiumFinalPage--commercial .premiumFinalLead,
+html[data-theme="light"] .premiumFinalPage--commercial .premiumFinalText,
+html[data-theme="light"] .premiumFinalPage--commercial .premiumFinalCta p,
+html[data-theme="light"] .premiumUnlockCard small,
+html[data-theme="light"] .premiumReasonCard span,
+html[data-theme="light"] .premiumMiniCompareGrid article span{
+  color:#344767 !important;
+}
+
+html[data-theme="light"] .premiumOfferCard,
+html[data-theme="light"] .premiumUnlockCard,
+html[data-theme="light"] .premiumReasonCard,
+html[data-theme="light"] .premiumMiniCompareGrid article{
+  border-color:rgba(26,54,93,.12) !important;
+  background:#FFFFFF !important;
+  box-shadow:0 10px 26px rgba(26,54,93,.08) !important;
+}
+
+html[data-theme="light"] .premiumOfferCard b{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] .premiumOfferCard small,
+html[data-theme="light"] .premiumTrustLine span,
+html[data-theme="light"] .premiumIntentCard span,
+html[data-theme="light"] .premiumIntentCard small{
+  color:#344767 !important;
+}
+
+html[data-theme="light"] .premiumOfferTag{
+  color:#1A365D !important;
+  border-color:rgba(26,54,93,.12) !important;
+  background:#F7FAFC !important;
+}
+
+html[data-theme="light"] .premiumOfferRibbon{
+  color:#FFFFFF !important;
+  border-color:#FF6B00 !important;
+  background:#FF6B00 !important;
+}
+
+html[data-theme="light"] .premiumTrustLine span,
+html[data-theme="light"] .premiumIntentCard{
+  border-color:rgba(26,54,93,.12) !important;
+  background:#F7FAFC !important;
+}
+
+html[data-theme="light"] .premiumIntentCard b,
+html[data-theme="light"] .premiumStoreNotice--seller b{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] .premiumStoreNotice--seller span{
+  color:#344767 !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.49-R — Motor de crescimento
+   Compartilhamento, convite e desafio 7 dias.
+   ========================================================= */
+
+.toolCatalog--growth .toolCatalogIcon,
+.toolCard--share .toolIcon{
+  background:rgba(255,107,0,.12) !important;
+  border-color:rgba(255,107,0,.24) !important;
+  color:#ff6b00 !important;
+}
+
+.growthPage{
+  --growthBlue:#1A365D;
+  --growthOrange:#FF6B00;
+  gap:16px;
+}
+
+.growthHero,
+.growthInviteBox,
+.growthDaysCard,
+.growthConversionCard{
+  border-color:rgba(26,54,93,.18) !important;
+  background:
+    radial-gradient(380px 190px at 0% 0%, rgba(26,54,93,.16), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.035)) !important;
+}
+
+.growthHero h1{
+  margin:14px 0 8px;
+  color:var(--soft);
+  font-size:clamp(28px, 7vw, 46px);
+  line-height:1.02;
+  letter-spacing:-.045em;
+}
+
+.growthHero p,
+.growthInviteBox .p,
+.growthConversionCard .p{
+  color:var(--muted);
+  font-weight:850;
+  line-height:1.48;
+}
+
+.growthHeroActions{
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.growthInvitePreview{
+  width:100%;
+  white-space:pre-wrap;
+  border:1px solid rgba(26,54,93,.16);
+  border-radius:20px;
+  padding:14px;
+  background:rgba(247,250,252,.08);
+  color:var(--soft);
+  font:800 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  overflow:auto;
+}
+
+.growthDayGrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+
+.growthDayCard{
+  border:1px solid rgba(26,54,93,.16);
+  border-radius:20px;
+  padding:14px;
+  background:rgba(255,255,255,.045);
+  display:grid;
+  gap:5px;
+}
+
+.growthDayCard small{
+  color:#ffb27a;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.growthDayCard b{
+  color:var(--soft);
+  font-size:17px;
+}
+
+.growthDayCard span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+html[data-theme="light"] .growthHero,
+html[data-theme="light"] .growthInviteBox,
+html[data-theme="light"] .growthDaysCard,
+html[data-theme="light"] .growthConversionCard,
+html[data-theme="light"] .growthDayCard,
+html[data-theme="light"] .growthInvitePreview{
+  background:#FFFFFF !important;
+  border-color:rgba(26,54,93,.14) !important;
+  box-shadow:0 14px 30px rgba(26,54,93,.10) !important;
+}
+
+html[data-theme="light"] .growthHero h1,
+html[data-theme="light"] .growthDayCard b,
+html[data-theme="light"] .growthInvitePreview{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] .growthHero p,
+html[data-theme="light"] .growthDayCard span,
+html[data-theme="light"] .growthInviteBox .p,
+html[data-theme="light"] .growthConversionCard .p{
+  color:#42536f !important;
+}
+
+@media (max-width:620px){
+  .growthHeroActions,
+  .growthDayGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.50-R — Store Ready Android
+   Escopo: preparação para conversão Capacitor/Play Store.
+   Não altera treino 105x, DIÁRIO321, localStorage ou Sensei Bank.
+   ========================================================= */
+
+.storeReadyPage .storeHero,
+.storeReadyPage .card{
+  border-color:rgba(26,54,93,.18) !important;
+}
+
+.storeReadyPage .storeHero{
+  background:
+    radial-gradient(320px 180px at 100% 0%, rgba(255,107,0,.12), transparent 66%),
+    linear-gradient(135deg, #1A365D, #244E82) !important;
+  color:#FFFFFF !important;
+}
+
+.storeReadyPage .storeHero .badge{
+  background:rgba(255,255,255,.14) !important;
+  color:#FFFFFF !important;
+  border-color:rgba(255,255,255,.24) !important;
+}
+
+.storeReadyPage .storeTitle,
+.storeReadyPage .storeLead{
+  color:#FFFFFF !important;
+}
+
+.storeReadyPage .storeListItem{
+  align-items:start !important;
+}
+
+.storeReadyPage .storeListItem small{
+  grid-column:2;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+html[data-theme="light"] .storeReadyPage .card:not(.storeHero){
+  background:#FFFFFF !important;
+  border-color:rgba(26,54,93,.14) !important;
+  box-shadow:0 14px 34px rgba(26,54,93,.10) !important;
+}
+
+/* Store Ready: Premium preparado sem checkout externo na primeira publicação */
+.premiumStoreNotice--seller b,
+.compareNotice strong{
+  color:#1A365D !important;
+}
+
+html[data-theme="light"] .premiumStoreNotice--seller{
+  background:#F7FAFC !important;
+  border-color:rgba(26,54,93,.16) !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.51-R — Treinos Kana/Kanji restaurados na Home
+   ========================================================= */
+
+body.is-home-route .toolCard--script .toolIcon{
+  background:rgba(255,255,255,.075) !important;
+  color:#ffe39a !important;
+}
+
+html[data-theme="light"] body.is-home-route .toolCard--script .toolIcon{
+  background:#F7FAFC !important;
+  color:#1A365D !important;
+}
