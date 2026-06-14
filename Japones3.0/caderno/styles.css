@@ -20805,3 +20805,1437 @@ body[data-theme="light"] .genialEntryPremiumAction--compact{
     justify-self:stretch !important;
   }
 }
+
+
+/* =========================================================
+   NIHONGO321 8.8.62-R — blindagem premium do treino de escrita
+   ========================================================= */
+.diario321PremiumFlow{
+  overflow:hidden;
+}
+
+.diario321PremiumFlowChips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:0 16px 12px;
+}
+
+.diario321PremiumFlowChips span{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(7,29,69,.10);
+  background:linear-gradient(180deg, #ffffff, #f8fafc);
+  box-shadow:0 8px 18px rgba(12,37,79,.06);
+}
+
+.diario321PremiumFlowChips b{
+  color:#6e7f99;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+
+.diario321PremiumFlowChips em{
+  color:#0a2556;
+  font-size:13px;
+  font-style:normal;
+  font-weight:950;
+}
+
+.diario321PremiumFlowSteps{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:0 16px 12px;
+}
+
+.diario321PremiumFlowSteps article{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  min-height:66px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(7,29,69,.10);
+  background:linear-gradient(180deg, #ffffff, #f7fafc);
+  box-shadow:0 10px 20px rgba(12,37,79,.06);
+}
+
+.diario321PremiumFlowSteps article.is-done{
+  border-color:rgba(255,122,47,.22);
+  box-shadow:0 12px 24px rgba(255,107,0,.10);
+}
+
+.diario321PremiumFlowSteps i{
+  width:38px;
+  height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:linear-gradient(180deg, #eef5ff, #ddeafb);
+  color:#0f3b7c;
+  font-style:normal;
+  font-size:14px;
+  font-weight:1000;
+}
+
+.diario321PremiumFlowSteps article.is-done i{
+  background:linear-gradient(135deg, #ffab3b, #ff6b00);
+  color:#fff;
+}
+
+.diario321PremiumFlowSteps b{
+  display:block;
+  color:#071d45;
+  font-size:14px;
+  line-height:1.1;
+  font-weight:1000;
+}
+
+.diario321PremiumFlowSteps small{
+  display:block;
+  margin-top:3px;
+  color:#6a7b95;
+  font-size:11px;
+  line-height:1.25;
+  font-weight:850;
+}
+
+.diario321PremiumFlowNote{
+  margin:0;
+  padding:0 16px 16px;
+  color:#5a6f8f;
+  font-size:12px;
+  line-height:1.45;
+  font-weight:850;
+}
+
+.diario321AIContextHint{
+  color:#506481 !important;
+  line-height:1.45 !important;
+}
+
+.diario321AIButton b,
+.diario321ActionDock button{
+  letter-spacing:-.01em;
+}
+
+.diario321ActionTrain{
+  background:linear-gradient(135deg, #ff8d19, #ff6b00) !important;
+}
+
+.diario321LibraryEmptyHint{
+  margin:-2px 0 14px !important;
+  padding:0 18px !important;
+  color:#6a7b95 !important;
+  font-size:12px !important;
+  line-height:1.45 !important;
+  font-weight:850 !important;
+  text-align:center !important;
+}
+
+.diario321LibraryTools .diario321EntryTrainBtn,
+.diario321LibraryTools .diario321EntryShareBtn{
+  min-height:38px;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:1000;
+  letter-spacing:-.01em;
+}
+
+.diario321LibraryTools .diario321EntryTrainBtn{
+  background:linear-gradient(135deg, #fff6dc, #ffe8b3);
+  color:#704100;
+  border:1px solid rgba(255,122,47,.22);
+}
+
+.diario321LibraryTools .diario321EntryShareBtn{
+  background:linear-gradient(180deg, #f8fbff, #eef4fc);
+  color:#183b6f;
+  border:1px solid rgba(26,54,93,.12);
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowChips span,
+html[data-caderno-theme="dark"] .diario321PremiumFlowSteps article{
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  border-color:rgba(255,255,255,.10);
+  box-shadow:0 12px 24px rgba(0,0,0,.18);
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowChips b,
+html[data-caderno-theme="dark"] .diario321PremiumFlowSteps small,
+html[data-caderno-theme="dark"] .diario321PremiumFlowNote,
+html[data-caderno-theme="dark"] .diario321AIContextHint,
+html[data-caderno-theme="dark"] .diario321LibraryEmptyHint{
+  color:rgba(232,240,255,.72) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowChips em,
+html[data-caderno-theme="dark"] .diario321PremiumFlowSteps b{
+  color:#ffffff;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowSteps i{
+  background:linear-gradient(180deg, rgba(94,145,225,.24), rgba(74,118,193,.18));
+  color:#e9f1ff;
+}
+
+html[data-caderno-theme="dark"] .diario321LibraryTools .diario321EntryShareBtn{
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  color:#edf3ff;
+  border-color:rgba(255,255,255,.10);
+}
+
+@media (max-width: 640px){
+  .diario321PremiumFlowSteps{
+    grid-template-columns:1fr;
+  }
+
+  .diario321PremiumFlowChips span{
+    width:100%;
+    justify-content:flex-start;
+  }
+}
+
+/* =========================================================
+   NIHONGO321 8.8.63-R — Rota do treino sem efeito fantasma
+   Correção de contraste forte em todos os temas.
+   ========================================================= */
+
+.diario321PremiumFlow{
+  border-color:rgba(26,54,93,.14) !important;
+  background:
+    radial-gradient(260px 130px at 0% 0%, rgba(255,107,0,.06), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 16px 30px rgba(26,54,93,.10), inset 0 1px 0 rgba(255,255,255,.92) !important;
+}
+
+.diario321PremiumFlow .diario321ModernCardHead span{
+  color:#1A365D !important;
+  text-shadow:none !important;
+}
+
+.diario321PremiumFlow .diario321ModernCardHead small{
+  color:#4f617c !important;
+  text-shadow:none !important;
+}
+
+.diario321PremiumFlowChips span{
+  border-color:rgba(26,54,93,.12) !important;
+  background:linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  color:#1A365D !important;
+  box-shadow:0 10px 22px rgba(26,54,93,.08) !important;
+}
+
+.diario321PremiumFlowChips b{
+  color:#FF6B00 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.diario321PremiumFlowChips em{
+  color:#1A365D !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.diario321PremiumFlowSteps article{
+  border-color:rgba(26,54,93,.12) !important;
+  background:linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  box-shadow:0 10px 22px rgba(26,54,93,.08) !important;
+  color:#1A365D !important;
+}
+
+.diario321PremiumFlowSteps article.is-done{
+  border-color:rgba(255,107,0,.28) !important;
+  background:
+    radial-gradient(180px 90px at 0% 0%, rgba(255,107,0,.07), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #fff8ef 100%) !important;
+}
+
+.diario321PremiumFlowSteps i{
+  background:linear-gradient(180deg, #e9f1ff, #dce9fb) !important;
+  color:#1A365D !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.diario321PremiumFlowSteps article.is-done i{
+  background:linear-gradient(135deg, #ff9a2b, #FF6B00) !important;
+  color:#ffffff !important;
+}
+
+.diario321PremiumFlowSteps b{
+  color:#1A365D !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.diario321PremiumFlowSteps small{
+  color:#5d6f88 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.diario321PremiumFlowNote{
+  color:#4f617c !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlow,
+html[data-theme="dark"] .diario321PremiumFlow,
+body.dark .diario321PremiumFlow,
+body[data-theme="dark"] .diario321PremiumFlow{
+  border-color:rgba(255,214,107,.16) !important;
+  background:
+    radial-gradient(260px 130px at 0% 0%, rgba(255,107,0,.10), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.070), rgba(255,255,255,.035)) !important;
+  box-shadow:0 16px 30px rgba(0,0,0,.18) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlow .diario321ModernCardHead span,
+html[data-theme="dark"] .diario321PremiumFlow .diario321ModernCardHead span,
+body.dark .diario321PremiumFlow .diario321ModernCardHead span,
+body[data-theme="dark"] .diario321PremiumFlow .diario321ModernCardHead span{
+  color:#fff7df !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlow .diario321ModernCardHead small,
+html[data-theme="dark"] .diario321PremiumFlow .diario321ModernCardHead small,
+body.dark .diario321PremiumFlow .diario321ModernCardHead small,
+body[data-theme="dark"] .diario321PremiumFlow .diario321ModernCardHead small,
+html[data-caderno-theme="dark"] .diario321PremiumFlowNote,
+html[data-theme="dark"] .diario321PremiumFlowNote,
+body.dark .diario321PremiumFlowNote,
+body[data-theme="dark"] .diario321PremiumFlowNote{
+  color:rgba(232,240,255,.78) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowChips span,
+html[data-theme="dark"] .diario321PremiumFlowChips span,
+body.dark .diario321PremiumFlowChips span,
+body[data-theme="dark"] .diario321PremiumFlowChips span,
+html[data-caderno-theme="dark"] .diario321PremiumFlowSteps article,
+html[data-theme="dark"] .diario321PremiumFlowSteps article,
+body.dark .diario321PremiumFlowSteps article,
+body[data-theme="dark"] .diario321PremiumFlowSteps article{
+  border-color:rgba(255,255,255,.10) !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.040)) !important;
+  box-shadow:0 12px 24px rgba(0,0,0,.18) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowChips b,
+html[data-theme="dark"] .diario321PremiumFlowChips b,
+body.dark .diario321PremiumFlowChips b,
+body[data-theme="dark"] .diario321PremiumFlowChips b{
+  color:#ffb36f !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowChips em,
+html[data-theme="dark"] .diario321PremiumFlowChips em,
+body.dark .diario321PremiumFlowChips em,
+body[data-theme="dark"] .diario321PremiumFlowChips em,
+html[data-caderno-theme="dark"] .diario321PremiumFlowSteps b,
+html[data-theme="dark"] .diario321PremiumFlowSteps b,
+body.dark .diario321PremiumFlowSteps b,
+body[data-theme="dark"] .diario321PremiumFlowSteps b{
+  color:#ffffff !important;
+}
+
+html[data-caderno-theme="dark"] .diario321PremiumFlowSteps small,
+html[data-theme="dark"] .diario321PremiumFlowSteps small,
+body.dark .diario321PremiumFlowSteps small,
+body[data-theme="dark"] .diario321PremiumFlowSteps small{
+  color:rgba(232,240,255,.72) !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.64-R — Sua escrita de hoje sem texto fantasma
+   Correção explícita do cabeçalho recolhido no modo claro.
+   ========================================================= */
+
+.diario321WritingCard,
+.diario321WritingCard.diario321ModernCard{
+  border-color:rgba(26,54,93,.14) !important;
+}
+
+.diario321WritingSummary{
+  background:transparent !important;
+}
+
+.diario321WritingSummary b{
+  color:#1A365D !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.diario321WritingSummary small{
+  color:#5d6f88 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+.diario321WritingSummary em{
+  background:linear-gradient(180deg, #ffffff 0%, #fff7ef 100%) !important;
+  border-color:rgba(255,107,0,.30) !important;
+  color:#c26512 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+  box-shadow:0 8px 18px rgba(26,54,93,.08), inset 0 1px 0 rgba(255,255,255,.94) !important;
+}
+
+.diario321WritingCard[open] .diario321WritingSummary{
+  border-bottom:1px solid rgba(26,54,93,.10) !important;
+}
+
+html[data-caderno-theme="light"] .diario321WritingCard,
+html[data-theme="light"] .diario321WritingCard,
+body.light .diario321WritingCard,
+body[data-theme="light"] .diario321WritingCard{
+  background:linear-gradient(180deg, #fffaf3 0%, #fdf5ea 100%) !important;
+  box-shadow:0 14px 28px rgba(26,54,93,.08), inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+html[data-caderno-theme="light"] .diario321WritingSummary b,
+html[data-theme="light"] .diario321WritingSummary b,
+body.light .diario321WritingSummary b,
+body[data-theme="light"] .diario321WritingSummary b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .diario321WritingSummary small,
+html[data-theme="light"] .diario321WritingSummary small,
+body.light .diario321WritingSummary small,
+body[data-theme="light"] .diario321WritingSummary small{
+  color:#5d6f88 !important;
+}
+
+html[data-caderno-theme="light"] .diario321WritingSummary em,
+html[data-theme="light"] .diario321WritingSummary em,
+body.light .diario321WritingSummary em,
+body[data-theme="light"] .diario321WritingSummary em{
+  color:#c26512 !important;
+  border-color:rgba(255,107,0,.30) !important;
+  background:linear-gradient(180deg, #ffffff 0%, #fff7ef 100%) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingCard,
+html[data-theme="dark"] .diario321WritingCard,
+body.dark .diario321WritingCard,
+body[data-theme="dark"] .diario321WritingCard{
+  background:
+    radial-gradient(220px 120px at 0% 0%, rgba(255,107,0,.08), transparent 68%),
+    linear-gradient(180deg, rgba(255,255,255,.070), rgba(255,255,255,.035)) !important;
+  box-shadow:0 16px 30px rgba(0,0,0,.18) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingSummary b,
+html[data-theme="dark"] .diario321WritingSummary b,
+body.dark .diario321WritingSummary b,
+body[data-theme="dark"] .diario321WritingSummary b{
+  color:#fff7df !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingSummary small,
+html[data-theme="dark"] .diario321WritingSummary small,
+body.dark .diario321WritingSummary small,
+body[data-theme="dark"] .diario321WritingSummary small{
+  color:rgba(232,240,255,.74) !important;
+}
+
+html[data-caderno-theme="dark"] .diario321WritingSummary em,
+html[data-theme="dark"] .diario321WritingSummary em,
+body.dark .diario321WritingSummary em,
+body[data-theme="dark"] .diario321WritingSummary em{
+  color:#ffd86f !important;
+  border-color:rgba(255,214,107,.28) !important;
+  background:rgba(255,122,47,.12) !important;
+  box-shadow:none !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.65-R — escrita diferenciada sem peso
+   Botões rápidos: Suavizar, Haneru, Tomeru
+   ========================================================= */
+
+.writingAssistBar{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:0 0 10px;
+}
+
+.writingAssistBar button{
+  min-height:38px;
+  border-radius:999px;
+  border:1px solid rgba(255,179,71,.22);
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.030));
+  color:#dbe7ff;
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-.01em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.writingAssistBar button.is-active{
+  border-color:rgba(255,107,0,.38);
+  background:linear-gradient(135deg, #C94E00, #FF6B00);
+  color:#fffaf2;
+  box-shadow:0 10px 20px rgba(255,107,0,.16);
+}
+
+.writingAssistBar button:active{
+  transform:translateY(1px);
+}
+
+html[data-caderno-theme="light"] .writingAssistBar button,
+html[data-theme="light"] .writingAssistBar button,
+body.light .writingAssistBar button,
+body[data-theme="light"] .writingAssistBar button{
+  border-color:rgba(26,54,93,.14);
+  background:linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+  color:#1A365D;
+  box-shadow:0 8px 16px rgba(26,54,93,.07), inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+html[data-caderno-theme="light"] .writingAssistBar button.is-active,
+html[data-theme="light"] .writingAssistBar button.is-active,
+body.light .writingAssistBar button.is-active,
+body[data-theme="light"] .writingAssistBar button.is-active{
+  border-color:rgba(255,107,0,.34);
+  background:linear-gradient(135deg, #FF8A1F, #FF6B00);
+  color:#ffffff;
+}
+
+@media (max-width:360px){
+  .writingAssistBar{
+    gap:6px;
+  }
+
+  .writingAssistBar button{
+    min-height:36px;
+    font-size:11px;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.66-R — pincel de escrita melhorado
+   Suave em níveis + Haneru/Tomeru só para o próximo traço.
+   ========================================================= */
+
+.writingAssistBar--brush{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+
+.writingAssistBar--brush button{
+  min-height:40px !important;
+  border-radius:999px !important;
+  font-size:12px !important;
+  position:relative !important;
+}
+
+.writingAssistBar--brush button:not(.is-active){
+  opacity:.92 !important;
+}
+
+.writingAssistBar--brush button.is-active::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:6px;
+  width:18px;
+  height:2px;
+  border-radius:999px;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,.72);
+}
+
+html[data-caderno-theme="light"] .writingAssistBar--brush button.is-active::after,
+html[data-theme="light"] .writingAssistBar--brush button.is-active::after,
+body.light .writingAssistBar--brush button.is-active::after,
+body[data-theme="light"] .writingAssistBar--brush button.is-active::after{
+  background:rgba(255,255,255,.78);
+}
+
+@media (max-width:360px){
+  .writingAssistBar--brush button{
+    font-size:11px !important;
+    min-height:38px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.67-R — pincel inteligente
+   Autoforma + estado claro de Haneru/Tomeru.
+   ========================================================= */
+.writingAssistBar--brush button{
+  transition:background .18s ease, border-color .18s ease, transform .12s ease, color .18s ease;
+}
+
+.writingAssistBar--brush button[data-writing-assist="haneru"].is-active,
+.writingAssistBar--brush button[data-writing-assist="tomeru"].is-active{
+  background:linear-gradient(135deg, #FF8A1F, #FF6B00) !important;
+  border-color:rgba(255,214,107,.38) !important;
+  color:#fffaf2 !important;
+  box-shadow:0 10px 22px rgba(255,107,0,.18), inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+.writingAssistBar--brush button[data-writing-assist="haneru"].is-active::before,
+.writingAssistBar--brush button[data-writing-assist="tomeru"].is-active::before{
+  content:"";
+  display:inline-block;
+  width:7px;
+  height:7px;
+  margin-right:6px;
+  border-radius:999px;
+  background:#fff7d6;
+  vertical-align:1px;
+}
+
+.writingAssistBar--brush button[data-writing-assist="smooth"].is-active{
+  background:linear-gradient(135deg, #0f3f86, #1A365D) !important;
+  border-color:rgba(169,199,255,.28) !important;
+}
+
+html[data-caderno-theme="light"] .writingAssistBar--brush button[data-writing-assist="smooth"].is-active,
+html[data-theme="light"] .writingAssistBar--brush button[data-writing-assist="smooth"].is-active,
+body.light .writingAssistBar--brush button[data-writing-assist="smooth"].is-active,
+body[data-theme="light"] .writingAssistBar--brush button[data-writing-assist="smooth"].is-active{
+  background:linear-gradient(135deg, #1A365D, #0f4f9a) !important;
+  color:#ffffff !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.68-R — suavização 0–4 + Auto
+   Pincel pensado para treino com dedo no celular.
+   ========================================================= */
+.writingAssistBar--brush button[data-writing-assist="smooth"]{
+  min-width:0 !important;
+}
+
+.writingAssistBar--brush button[data-writing-assist="smooth"].is-active::before{
+  content:"";
+  display:inline-block;
+  width:7px;
+  height:7px;
+  margin-right:6px;
+  border-radius:999px;
+  background:#9fc7ff;
+  vertical-align:1px;
+}
+
+.writingAssistBar--brush button[data-writing-assist="smooth"].is-active{
+  letter-spacing:-.025em !important;
+}
+
+.writingAssistBar--brush button[data-writing-assist="haneru"].is-active,
+.writingAssistBar--brush button[data-writing-assist="tomeru"].is-active{
+  transform:translateY(-1px);
+}
+
+html[data-caderno-theme="light"] .writingAssistBar--brush button[data-writing-assist="smooth"].is-active::before,
+html[data-theme="light"] .writingAssistBar--brush button[data-writing-assist="smooth"].is-active::before,
+body.light .writingAssistBar--brush button[data-writing-assist="smooth"].is-active::before,
+body[data-theme="light"] .writingAssistBar--brush button[data-writing-assist="smooth"].is-active::before{
+  background:#dcecff;
+}
+
+@media (max-width:380px){
+  .writingAssistBar--brush{
+    gap:6px !important;
+  }
+  .writingAssistBar--brush button{
+    font-size:10.7px !important;
+    padding-inline:6px !important;
+  }
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.75-R — Biblioteca de Frases Premium Compacta
+   ========================================================= */
+
+.diario321PhraseLibrary--premium{
+  border:1px solid rgba(255,214,107,.14) !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(260px 120px at 0% 0%, rgba(255,107,0,.08), transparent 68%),
+    linear-gradient(180deg, rgba(9,34,76,.96), rgba(7,27,61,.98)) !important;
+  box-shadow:0 18px 36px rgba(0,0,0,.22) !important;
+  padding:16px !important;
+}
+
+.diario321LibraryHead--premium{
+  padding:0 2px 12px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+}
+
+.diario321LibraryHead--premium b{
+  color:#fff7df !important;
+  font-size:20px !important;
+  letter-spacing:-.03em !important;
+}
+
+.diario321LibraryHead--premium span{
+  min-width:34px !important;
+  height:28px !important;
+  border-radius:999px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:0 10px !important;
+  background:rgba(255,107,0,.14) !important;
+  border:1px solid rgba(255,214,107,.22) !important;
+  color:#ffe6a6 !important;
+  font-size:12px !important;
+  font-weight:1000 !important;
+}
+
+.diario321LibraryStats--compact{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+  margin:0 0 12px !important;
+}
+
+.diario321LibraryStats--compact span{
+  min-height:44px !important;
+  border-radius:16px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  padding:8px 10px !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:none !important;
+}
+
+.diario321LibraryStats--compact b{
+  color:#fff7df !important;
+  font-size:17px !important;
+  line-height:1 !important;
+}
+
+.diario321LibraryStats--compact small{
+  color:rgba(232,240,255,.78) !important;
+  font-size:10.5px !important;
+  font-weight:900 !important;
+  text-transform:none !important;
+}
+
+.diario321EntryTabs{
+  display:flex !important;
+  gap:8px !important;
+  overflow-x:auto !important;
+  scrollbar-width:none !important;
+  padding:0 0 12px !important;
+  margin:0 !important;
+}
+
+.diario321EntryTabs::-webkit-scrollbar{
+  display:none !important;
+}
+
+.diario321EntryTab{
+  flex:0 0 auto !important;
+  min-height:34px !important;
+  border-radius:999px !important;
+  padding:8px 13px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:rgba(255,255,255,.045) !important;
+  color:rgba(232,240,255,.86) !important;
+  font-size:12px !important;
+  font-weight:950 !important;
+}
+
+.diario321EntryTab.is-active{
+  background:linear-gradient(135deg, #ff9a2b, #ff6b00) !important;
+  border-color:rgba(255,214,107,.32) !important;
+  color:#ffffff !important;
+  box-shadow:0 10px 22px rgba(255,107,0,.20) !important;
+}
+
+.diario321LibraryList{
+  display:grid !important;
+  gap:10px !important;
+}
+
+.diario321PhraseLibrary--premium .diario321LibraryItem{
+  border-radius:18px !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.09) !important;
+  box-shadow:0 12px 24px rgba(0,0,0,.15) !important;
+  overflow:hidden !important;
+}
+
+.diario321PhraseLibrary--premium .diario321LibraryItem.is-mastered{
+  border-color:rgba(43,214,142,.18) !important;
+  background:rgba(43,214,142,.055) !important;
+}
+
+.diario321LibraryDetails{
+  display:block !important;
+}
+
+.diario321LibrarySummary{
+  min-height:88px !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  grid-template-areas:
+    "text open"
+    "badges open" !important;
+  gap:8px 12px !important;
+  align-items:center !important;
+  padding:14px !important;
+  cursor:pointer !important;
+  list-style:none !important;
+}
+
+.diario321LibrarySummary::-webkit-details-marker{
+  display:none !important;
+}
+
+.diario321LibrarySummary::after{
+  content:"abrir" !important;
+  grid-area:open !important;
+  min-width:58px !important;
+  height:34px !important;
+  border-radius:999px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border:1px solid rgba(255,214,107,.20) !important;
+  background:rgba(255,255,255,.055) !important;
+  color:#ffe6a6 !important;
+  font-size:11px !important;
+  font-weight:1000 !important;
+}
+
+.diario321LibraryDetails[open] .diario321LibrarySummary::after{
+  content:"fechar" !important;
+}
+
+.diario321LibrarySummaryMeta{
+  display:none !important;
+}
+
+.diario321LibrarySummaryText{
+  grid-area:text !important;
+  min-width:0 !important;
+  display:grid !important;
+  gap:5px !important;
+}
+
+.diario321LibrarySummaryText strong{
+  color:#ffffff !important;
+  font-size:clamp(19px, 5vw, 27px) !important;
+  line-height:1.12 !important;
+  letter-spacing:-.035em !important;
+  font-weight:1000 !important;
+  display:-webkit-box !important;
+  -webkit-line-clamp:2 !important;
+  -webkit-box-orient:vertical !important;
+  overflow:hidden !important;
+}
+
+.diario321LibrarySummaryText strong.is-japanese{
+  font-size:clamp(24px, 7vw, 34px) !important;
+  line-height:1.12 !important;
+}
+
+.diario321LibrarySummaryText em{
+  color:rgba(232,240,255,.76) !important;
+  font-size:12.5px !important;
+  line-height:1.25 !important;
+  font-style:normal !important;
+  font-weight:850 !important;
+  display:-webkit-box !important;
+  -webkit-line-clamp:1 !important;
+  -webkit-box-orient:vertical !important;
+  overflow:hidden !important;
+}
+
+.diario321LibrarySummaryBadges{
+  grid-area:badges !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:6px !important;
+  flex-wrap:wrap !important;
+}
+
+.diario321LibrarySummaryBadges i{
+  margin:0 !important;
+}
+
+.diario321ToneChip--tools,
+.diario321LibraryState,
+.diario321LibraryTrainState{
+  min-height:24px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:999px !important;
+  padding:5px 9px !important;
+  font-size:10px !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+  letter-spacing:.02em !important;
+}
+
+.diario321LibraryState{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.09) !important;
+  color:rgba(232,240,255,.82) !important;
+}
+
+.diario321LibraryState.is-done{
+  background:rgba(43,214,142,.13) !important;
+  border-color:rgba(43,214,142,.20) !important;
+  color:#baf7d8 !important;
+}
+
+.diario321LibraryTrainState{
+  background:rgba(71,126,255,.12) !important;
+  border-color:rgba(125,166,255,.22) !important;
+  color:#cfe0ff !important;
+}
+
+.diario321LibraryStar{
+  color:#ffd76a !important;
+  background:rgba(255,215,106,.12) !important;
+  border-color:rgba(255,215,106,.22) !important;
+}
+
+.diario321LibraryExpanded{
+  margin:0 14px 12px !important;
+  padding:14px !important;
+  border-radius:16px !important;
+  background:rgba(255,255,255,.05) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+}
+
+.diario321LibraryExpanded .diario321EntryTop--line{
+  margin:0 0 10px !important;
+}
+
+.diario321LibraryExpanded .diario321EntryTop--line small{
+  color:rgba(232,240,255,.70) !important;
+  font-size:11px !important;
+  font-weight:900 !important;
+}
+
+.diario321EntryMain{
+  color:#ffffff !important;
+  font-size:clamp(24px, 7vw, 34px) !important;
+  line-height:1.18 !important;
+  letter-spacing:-.035em !important;
+}
+
+.diario321EntryPt{
+  color:rgba(232,240,255,.82) !important;
+  margin-top:8px !important;
+  font-size:13px !important;
+  line-height:1.35 !important;
+}
+
+.diario321EntryRomaji{
+  color:#a9c7ff !important;
+  margin-top:5px !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+}
+
+.diario321LibraryTools{
+  display:grid !important;
+  grid-template-columns:1fr 1fr auto auto auto !important;
+  gap:8px !important;
+  align-items:center !important;
+  padding:0 14px 14px !important;
+}
+
+.diario321LibraryTools .diario321EntryTrainBtn,
+.diario321LibraryTools .diario321EntryShareBtn{
+  min-height:38px !important;
+  border-radius:13px !important;
+  font-size:12px !important;
+}
+
+.diario321LibraryTools .diario321MasteredCheck--clean{
+  min-height:38px !important;
+  border-radius:13px !important;
+  padding:0 10px !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  color:rgba(232,240,255,.84) !important;
+}
+
+.diario321LibraryTools .diario321IconBtn,
+.diario321LibraryTools .diario321MovePair button{
+  width:38px !important;
+  height:38px !important;
+  min-width:38px !important;
+  border-radius:13px !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  color:#ffe6a6 !important;
+}
+
+.diario321LibraryTools .diario321MovePair{
+  display:flex !important;
+  gap:6px !important;
+}
+
+.diario321LibraryTools .diario321DragHint{
+  display:none !important;
+}
+
+html[data-caderno-theme="light"] .diario321PhraseLibrary--premium,
+html[data-theme="light"] .diario321PhraseLibrary--premium,
+body.light .diario321PhraseLibrary--premium,
+body[data-theme="light"] .diario321PhraseLibrary--premium{
+  background:
+    radial-gradient(260px 120px at 0% 0%, rgba(255,107,0,.06), transparent 68%),
+    linear-gradient(180deg, #ffffff, #f7fafc) !important;
+  border-color:rgba(26,54,93,.12) !important;
+  box-shadow:0 16px 30px rgba(26,54,93,.09) !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryHead--premium b,
+html[data-theme="light"] .diario321LibraryHead--premium b,
+body.light .diario321LibraryHead--premium b,
+body[data-theme="light"] .diario321LibraryHead--premium b{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryStats--compact span,
+html[data-theme="light"] .diario321LibraryStats--compact span,
+body.light .diario321LibraryStats--compact span,
+body[data-theme="light"] .diario321LibraryStats--compact span,
+html[data-caderno-theme="light"] .diario321PhraseLibrary--premium .diario321LibraryItem,
+html[data-theme="light"] .diario321PhraseLibrary--premium .diario321LibraryItem,
+body.light .diario321PhraseLibrary--premium .diario321LibraryItem,
+body[data-theme="light"] .diario321PhraseLibrary--premium .diario321LibraryItem{
+  background:#ffffff !important;
+  border-color:rgba(26,54,93,.12) !important;
+  box-shadow:0 10px 22px rgba(26,54,93,.07) !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryStats--compact b,
+html[data-theme="light"] .diario321LibraryStats--compact b,
+body.light .diario321LibraryStats--compact b,
+body[data-theme="light"] .diario321LibraryStats--compact b,
+html[data-caderno-theme="light"] .diario321LibrarySummaryText strong,
+html[data-theme="light"] .diario321LibrarySummaryText strong,
+body.light .diario321LibrarySummaryText strong,
+body[data-theme="light"] .diario321LibrarySummaryText strong,
+html[data-caderno-theme="light"] .diario321EntryMain,
+html[data-theme="light"] .diario321EntryMain,
+body.light .diario321EntryMain,
+body[data-theme="light"] .diario321EntryMain{
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryStats--compact small,
+html[data-theme="light"] .diario321LibraryStats--compact small,
+body.light .diario321LibraryStats--compact small,
+body[data-theme="light"] .diario321LibraryStats--compact small,
+html[data-caderno-theme="light"] .diario321LibrarySummaryText em,
+html[data-theme="light"] .diario321LibrarySummaryText em,
+body.light .diario321LibrarySummaryText em,
+body[data-theme="light"] .diario321LibrarySummaryText em,
+html[data-caderno-theme="light"] .diario321EntryPt,
+html[data-theme="light"] .diario321EntryPt,
+body.light .diario321EntryPt,
+body[data-theme="light"] .diario321EntryPt{
+  color:#5d6f88 !important;
+}
+
+html[data-caderno-theme="light"] .diario321EntryTab,
+html[data-theme="light"] .diario321EntryTab,
+body.light .diario321EntryTab,
+body[data-theme="light"] .diario321EntryTab,
+html[data-caderno-theme="light"] .diario321LibrarySummary::after,
+html[data-theme="light"] .diario321LibrarySummary::after,
+body.light .diario321LibrarySummary::after,
+body[data-theme="light"] .diario321LibrarySummary::after{
+  background:#f7fafc !important;
+  border-color:rgba(26,54,93,.12) !important;
+  color:#1A365D !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryExpanded,
+html[data-theme="light"] .diario321LibraryExpanded,
+body.light .diario321LibraryExpanded,
+body[data-theme="light"] .diario321LibraryExpanded{
+  background:#f7fafc !important;
+  border-color:rgba(26,54,93,.10) !important;
+}
+
+@media (max-width:460px){
+  .diario321PhraseLibrary--premium{
+    padding:14px !important;
+  }
+
+  .diario321LibrarySummary{
+    grid-template-columns:minmax(0,1fr) auto !important;
+    min-height:82px !important;
+    padding:12px !important;
+  }
+
+  .diario321LibrarySummary::after{
+    min-width:54px !important;
+    height:32px !important;
+  }
+
+  .diario321LibraryTools{
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  .diario321LibraryTools .diario321MasteredCheck--clean,
+  .diario321LibraryTools .diario321IconBtn,
+  .diario321LibraryTools .diario321MovePair{
+    grid-column:auto !important;
+  }
+
+  .diario321LibraryTools .diario321MovePair{
+    justify-content:end !important;
+  }
+}
+
+
+
+/* =========================================================
+   DIÁRIO321 8.8.76-R — ouro do ouvir fica até clicar em repeti
+   ========================================================= */
+
+.diario321EntryTrainingPanel.is-heard .diario321TrainingPhrase b{
+  color:#fffaf2 !important;
+  -webkit-text-fill-color:currentColor !important;
+  text-shadow:0 1px 0 rgba(0,0,0,.62) !important;
+}
+
+.diario321TrainingPhrase .diario321Kseg.is-on,
+.diario321EntryTrainingPanel.is-heard .diario321TrainingPhrase .diario321Kseg.is-on{
+  color:#ffd15a !important;
+  background-image:linear-gradient(180deg, #fff0a6 0%, #ffd25c 30%, #f4a62b 66%, #e2741d 100%) !important;
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.72),
+    0 0 3px rgba(255,220,115,.58),
+    0 0 7px rgba(255,171,49,.34) !important;
+  filter:contrast(1.12) saturate(1.12) brightness(1.04) !important;
+}
+
+html[data-theme="light"] .diario321TrainingPhrase .diario321Kseg.is-on,
+html[data-caderno-theme="light"] .diario321TrainingPhrase .diario321Kseg.is-on,
+html[data-theme="light"] .diario321EntryTrainingPanel.is-heard .diario321TrainingPhrase .diario321Kseg.is-on,
+html[data-caderno-theme="light"] .diario321EntryTrainingPanel.is-heard .diario321TrainingPhrase .diario321Kseg.is-on{
+  color:#d96f13 !important;
+  background-image:linear-gradient(180deg, #ffcf58 0%, #ffad32 35%, #eb741d 70%, #c94f13 100%) !important;
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:
+    0 1px 0 rgba(80,32,0,.48),
+    0 2px 3px rgba(90,42,0,.24),
+    0 0 5px rgba(255,166,38,.22) !important;
+}
+
+
+/* =========================================================
+   NIHONGO321 8.8.77-R — Biblioteca: polimento final das ações
+   - ações não fecham o card
+   - cards mais limpos e legíveis
+   - botões compactos, alinhados e com contraste consistente
+   ========================================================= */
+
+.diario321PhraseLibrary--premium{
+  gap:12px !important;
+}
+
+.diario321LibraryList{
+  display:grid !important;
+  gap:12px !important;
+}
+
+.diario321PhraseLibrary--premium .diario321LibraryItem{
+  border-radius:22px !important;
+  overflow:hidden !important;
+}
+
+.diario321LibrarySummary{
+  min-height:108px !important;
+  padding:14px 48px 14px 14px !important;
+  align-items:center !important;
+}
+
+.diario321LibrarySummaryMeta small{
+  color:rgba(244,248,255,.70) !important;
+  font-size:10.5px !important;
+  letter-spacing:.02em !important;
+  text-transform:uppercase !important;
+}
+
+.diario321LibrarySummaryMeta b{
+  color:#ffe39a !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+}
+
+.diario321LibrarySummaryText strong{
+  font-size:clamp(22px, 6.2vw, 31px) !important;
+  line-height:1.12 !important;
+  letter-spacing:-.035em !important;
+}
+
+.diario321LibrarySummaryText em{
+  max-width:100% !important;
+  overflow:hidden !important;
+  display:-webkit-box !important;
+  -webkit-line-clamp:2 !important;
+  -webkit-box-orient:vertical !important;
+}
+
+.diario321LibrarySummaryBadges{
+  gap:6px !important;
+}
+
+.diario321LibrarySummaryBadges i{
+  min-height:24px !important;
+  border-radius:999px !important;
+  padding:5px 8px !important;
+  font-size:10px !important;
+  line-height:1 !important;
+  font-weight:1000 !important;
+}
+
+.diario321LibraryDetails[open] .diario321LibrarySummary{
+  border-bottom:1px solid rgba(255,255,255,.08) !important;
+}
+
+.diario321LibraryExpanded{
+  margin:12px 14px 0 !important;
+  padding:14px !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+}
+
+.diario321LibraryTools{
+  margin:12px 14px 14px !important;
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+  gap:9px !important;
+  align-items:center !important;
+}
+
+.diario321LibraryTools .diario321EntryTrainBtn,
+.diario321LibraryTools .diario321EntryShareBtn,
+.diario321LibraryTools .diario321MasteredCheck--clean,
+.diario321LibraryTools .diario321IconBtn,
+.diario321LibraryTools .diario321MovePair{
+  min-height:44px !important;
+  border-radius:15px !important;
+}
+
+.diario321LibraryTools .diario321EntryTrainBtn,
+.diario321LibraryTools .diario321EntryShareBtn{
+  justify-content:center !important;
+  text-align:center !important;
+  font-size:12px !important;
+  line-height:1.1 !important;
+  padding:10px 12px !important;
+}
+
+.diario321LibraryTools .diario321MasteredCheck--clean{
+  display:flex !important;
+  justify-content:center !important;
+  gap:8px !important;
+  padding:8px 10px !important;
+  color:#dbe8ff !important;
+  background:rgba(255,255,255,.055) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+}
+
+.diario321LibraryTools .diario321MasteredCheck--clean input{
+  width:22px !important;
+  height:22px !important;
+  flex:0 0 auto !important;
+}
+
+.diario321LibraryTools .diario321IconBtn,
+.diario321LibraryTools .diario321MovePair button{
+  display:inline-grid !important;
+  place-items:center !important;
+  width:44px !important;
+  min-width:44px !important;
+  padding:0 !important;
+  font-size:15px !important;
+}
+
+.diario321LibraryTools .diario321MovePair{
+  display:flex !important;
+  gap:8px !important;
+  justify-content:flex-start !important;
+  background:transparent !important;
+  border:0 !important;
+  min-height:44px !important;
+}
+
+.diario321LibraryTools .diario321DragHint{
+  display:none !important;
+}
+
+.diario321DeleteConfirm{
+  margin:0 14px 14px !important;
+  padding:14px !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg, rgba(255,69,107,.10), rgba(255,255,255,.035)) !important;
+  border:1px solid rgba(255,92,122,.20) !important;
+}
+
+.diario321DeleteConfirm b{
+  color:#ffe3ea !important;
+  font-size:14px !important;
+}
+
+.diario321DeleteConfirm span{
+  color:rgba(255,235,240,.76) !important;
+  font-size:12px !important;
+  font-weight:850 !important;
+}
+
+.diario321DeleteConfirm div{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:8px !important;
+  margin-top:10px !important;
+}
+
+.diario321DeleteConfirm button{
+  min-height:40px !important;
+  border-radius:13px !important;
+  font-weight:1000 !important;
+}
+
+.diario321LibraryItem--edit{
+  border-radius:22px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.035)) !important;
+  border:1px solid rgba(255,214,107,.14) !important;
+  padding:14px !important;
+}
+
+.diario321LibraryItem--edit .diario321EntryActions--clean{
+  margin-top:12px !important;
+}
+
+.diario321LibraryItem--edit .diario321EntrySaveEdit{
+  width:100% !important;
+  min-height:46px !important;
+  border-radius:15px !important;
+  background:linear-gradient(135deg, #ff8d19, #ff6b00) !important;
+  color:#fff !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibrarySummaryMeta small,
+html[data-theme="light"] .diario321LibrarySummaryMeta small,
+body.light .diario321LibrarySummaryMeta small,
+body[data-theme="light"] .diario321LibrarySummaryMeta small{
+  color:#6a7b95 !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibrarySummaryMeta b,
+html[data-theme="light"] .diario321LibrarySummaryMeta b,
+body.light .diario321LibrarySummaryMeta b,
+body[data-theme="light"] .diario321LibrarySummaryMeta b{
+  color:#b86612 !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryDetails[open] .diario321LibrarySummary,
+html[data-theme="light"] .diario321LibraryDetails[open] .diario321LibrarySummary,
+body.light .diario321LibraryDetails[open] .diario321LibrarySummary,
+body[data-theme="light"] .diario321LibraryDetails[open] .diario321LibrarySummary{
+  border-bottom-color:rgba(26,54,93,.10) !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryExpanded,
+html[data-theme="light"] .diario321LibraryExpanded,
+body.light .diario321LibraryExpanded,
+body[data-theme="light"] .diario321LibraryExpanded{
+  background:#ffffff !important;
+  border-color:rgba(26,54,93,.10) !important;
+  box-shadow:0 10px 24px rgba(26,54,93,.07) !important;
+}
+
+html[data-caderno-theme="light"] .diario321LibraryTools .diario321MasteredCheck--clean,
+html[data-theme="light"] .diario321LibraryTools .diario321MasteredCheck--clean,
+body.light .diario321LibraryTools .diario321MasteredCheck--clean,
+body[data-theme="light"] .diario321LibraryTools .diario321MasteredCheck--clean{
+  color:#1A365D !important;
+  background:#ffffff !important;
+  border-color:rgba(26,54,93,.12) !important;
+}
+
+html[data-caderno-theme="light"] .diario321DeleteConfirm,
+html[data-theme="light"] .diario321DeleteConfirm,
+body.light .diario321DeleteConfirm,
+body[data-theme="light"] .diario321DeleteConfirm{
+  background:linear-gradient(180deg, #fff6f7, #ffffff) !important;
+  border-color:rgba(218,55,84,.20) !important;
+}
+
+html[data-caderno-theme="light"] .diario321DeleteConfirm b,
+html[data-theme="light"] .diario321DeleteConfirm b,
+body.light .diario321DeleteConfirm b,
+body[data-theme="light"] .diario321DeleteConfirm b{
+  color:#9d2339 !important;
+}
+
+html[data-caderno-theme="light"] .diario321DeleteConfirm span,
+html[data-theme="light"] .diario321DeleteConfirm span,
+body.light .diario321DeleteConfirm span,
+body[data-theme="light"] .diario321DeleteConfirm span{
+  color:#6f3c47 !important;
+}
+
+@media (max-width:430px){
+  .diario321LibrarySummary{
+    grid-template-columns:1fr !important;
+    padding:14px 44px 14px 14px !important;
+    min-height:104px !important;
+  }
+
+  .diario321LibrarySummaryBadges{
+    justify-content:flex-start !important;
+  }
+
+  .diario321LibraryTools{
+    grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+  }
+
+  .diario321LibraryTools .diario321MovePair{
+    grid-column:auto !important;
+  }
+}

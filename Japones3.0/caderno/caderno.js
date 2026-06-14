@@ -34369,6 +34369,7 @@
   let drawingSnapshot = null;
   let activeHintChar = null;
   let paperTone = state.paperTone || "paper";
+  let writingAssist = state.writingAssist || { smoothLevel: 1, ending: "normal" };
   let appTheme = state.appTheme || localStorage.getItem("nihongo321_theme") || "dark";
 
   function loadState() {
@@ -34379,6 +34380,7 @@
         screen: "dashboard",
         progress: {},
         paperTone: "paper",
+        writingAssist: { smoothLevel: 1, ending: "normal" },
         openMenu: "",
         selectedFocus: {},
         selectedFamily: { hiragana: "あ", katakana: "ア" },
@@ -34393,6 +34395,7 @@
         screen: "dashboard",
         progress: {},
         paperTone: "paper",
+        writingAssist: { smoothLevel: 1, ending: "normal" },
         openMenu: "",
         selectedFocus: {}
       };
@@ -34405,6 +34408,7 @@
     state.currentIndexByCategory[category] = currentIndex;
     state.screen = screen;
     state.paperTone = paperTone;
+    state.writingAssist = writingAssist;
     state.openMenu = openMenu;
     state.selectedFocus = selectedFocus;
     state.selectedFamily = selectedFamily;
@@ -34741,6 +34745,77 @@
     toast(appTheme === "dark" ? "modo escuro" : "modo claro");
   }
 
+
+  function normalizeWritingAssist() {
+    const legacySmooth = writingAssist?.smooth !== false;
+    const rawLevel = Number.isFinite(Number(writingAssist?.smoothLevel))
+      ? Number(writingAssist.smoothLevel)
+      : legacySmooth ? 1 : 0;
+    const smoothLevel = Math.max(0, Math.min(5, Math.round(rawLevel)));
+    const ending = ["normal", "haneru", "tomeru"].includes(writingAssist?.ending)
+      ? writingAssist.ending
+      : writingAssist?.haneru ? "haneru" : writingAssist?.tomeru ? "tomeru" : "normal";
+    writingAssist = { smoothLevel, ending };
+  }
+
+  function toggleWritingAssist(tool) {
+    normalizeWritingAssist();
+
+    if (tool === "smooth") {
+      writingAssist.smoothLevel = (Number(writingAssist.smoothLevel || 0) + 1) % 6;
+      saveState();
+      drawCanvas();
+      const labels = ["sem suavizar", "suave 1", "suave 2", "suave 3", "suave 4", "autoforma ligada"];
+      updateWritingAssistToolbar();
+      toast(labels[writingAssist.smoothLevel] || "suavização ajustada");
+      return;
+    }
+
+    if (tool === "haneru" || tool === "tomeru") {
+      writingAssist.ending = writingAssist.ending === tool ? "normal" : tool;
+      saveState();
+      updateWritingAssistToolbar();
+      drawCanvas();
+      const labels = { normal: "final normal", haneru: "haneru ligado para o próximo traço", tomeru: "tomeru ligado para o próximo traço" };
+      toast(labels[writingAssist.ending] || "final normal");
+      return;
+    }
+  }
+
+  function renderWritingAssistTools() {
+    normalizeWritingAssist();
+    const smoothLabels = ["Suave 0", "Suave 1", "Suave 2", "Suave 3", "Suave 4", "Auto"];
+    const tools = [
+      ["smooth", smoothLabels[writingAssist.smoothLevel] || "Suave 1"],
+      ["haneru", writingAssist.ending === "haneru" ? "Haneru ON" : "Haneru"],
+      ["tomeru", writingAssist.ending === "tomeru" ? "Tomeru ON" : "Tomeru"]
+    ];
+    return `
+      <div class="writingAssistBar writingAssistBar--brush" aria-label="ajustes rápidos da escrita">
+        ${tools.map(([key, label]) => {
+          const active = key === "smooth" ? writingAssist.smoothLevel > 0 : writingAssist.ending === key;
+          return `
+            <button class="${active ? "is-active" : ""}" type="button" data-writing-assist="${key}" aria-pressed="${active ? "true" : "false"}">${label}</button>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  function updateWritingAssistToolbar() {
+    normalizeWritingAssist();
+    const smoothLabels = ["Suave 0", "Suave 1", "Suave 2", "Suave 3", "Suave 4", "Auto"];
+    document.querySelectorAll("[data-writing-assist]").forEach(btn => {
+      const key = btn.dataset.writingAssist || "";
+      const active = key === "smooth" ? writingAssist.smoothLevel > 0 : writingAssist.ending === key;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+      if (key === "smooth") btn.textContent = smoothLabels[writingAssist.smoothLevel] || "Suave 1";
+      if (key === "haneru") btn.textContent = writingAssist.ending === "haneru" ? "Haneru ON" : "Haneru";
+      if (key === "tomeru") btn.textContent = writingAssist.ending === "tomeru" ? "Tomeru ON" : "Tomeru";
+    });
+  }
+
   function setupCanvas() {
     const canvas = document.getElementById("writeCanvas");
     if (!canvas) return;
@@ -34753,6 +34828,24 @@
     drawCanvas();
 
     let drawing = false;
+    let holdTimer = null;
+    const cancelHoldTimer = () => {
+      if (holdTimer) clearTimeout(holdTimer);
+      holdTimer = null;
+    };
+    const scheduleAutoShape = () => {
+      cancelHoldTimer();
+      normalizeWritingAssist();
+      if (writingAssist.smoothLevel < 5) return;
+      if (!currentStroke || currentStroke.length < 8 || currentStroke._autoRefined) return;
+      holdTimer = setTimeout(() => {
+        if (!drawing || !currentStroke || currentStroke.length < 8 || currentStroke._autoRefined) return;
+        currentStroke = smartHoldRefineStroke(currentStroke);
+        try { currentStroke._autoRefined = true; } catch {}
+        drawCanvas();
+        toast("curva corrigida");
+      }, 2000);
+    };
     const getPoint = (event) => {
       const e = event.touches ? event.touches[0] : event;
       const r = canvas.getBoundingClientRect();
@@ -34763,21 +34856,40 @@
       event.preventDefault();
       drawing = true;
       currentStroke = [getPoint(event)];
+      scheduleAutoShape();
       drawCanvas();
     }
 
     function move(event) {
       if (!drawing) return;
       event.preventDefault();
-      currentStroke.push(getPoint(event));
+      const next = getPoint(event);
+      const last = currentStroke[currentStroke.length - 1];
+      if (!last || Math.hypot(next.x - last.x, next.y - last.y) >= 1.2) {
+        currentStroke.push(next);
+      }
+      scheduleAutoShape();
       drawCanvas();
     }
 
     function end(event) {
       if (!drawing) return;
       event.preventDefault();
+      cancelHoldTimer();
       drawing = false;
-      if (currentStroke.length > 1) drawingStrokes.push(currentStroke);
+      normalizeWritingAssist();
+      if (currentStroke.length > 1) {
+        drawingStrokes.push({
+          points: currentStroke.slice(),
+          smoothLevel: writingAssist.smoothLevel,
+          ending: writingAssist.ending || "normal"
+        });
+      }
+      if (writingAssist.ending !== "normal") {
+        writingAssist.ending = "normal";
+        saveState();
+        updateWritingAssistToolbar();
+      }
       currentStroke = [];
       drawCanvas();
     }
@@ -34790,12 +34902,457 @@
     canvas.addEventListener("touchend", end, { passive:false });
   }
 
-  function drawPath(ctx, points) {
-    if (!points || points.length < 2) return;
+  function drawingStrokePoints(stroke) {
+    if (Array.isArray(stroke)) return stroke;
+    if (Array.isArray(stroke?.points)) return stroke.points;
+    return [];
+  }
+
+  function pathLength(points = []) {
+    let total = 0;
+    for (let i = 1; i < points.length; i++) total += Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y);
+    return total;
+  }
+
+  function boundsForPoints(points = []) {
+    const xs = points.map(p => p.x);
+    const ys = points.map(p => p.y);
+    return {
+      minX: Math.min(...xs), maxX: Math.max(...xs),
+      minY: Math.min(...ys), maxY: Math.max(...ys),
+      width: Math.max(1, Math.max(...xs) - Math.min(...xs)),
+      height: Math.max(1, Math.max(...ys) - Math.min(...ys))
+    };
+  }
+
+  function smoothStrokePoints(points, level = 1, options = {}) {
+    const mode = Math.max(0, Math.min(5, Math.round(Number(level) || 0)));
+    if (!Array.isArray(points) || points.length < 3 || mode <= 0) return points;
+    const clean = points.map(p => ({ x: Number(p.x) || 0, y: Number(p.y) || 0 }));
+
+    if (mode >= 5 || options.forceSmart) {
+      const smart = smartShapeAssist(clean);
+      if (smart && smart.length >= 2) return smart;
+      return smoothOpenStroke(clean, 4);
+    }
+
+    return smoothOpenStroke(clean, mode);
+  }
+
+  function smoothOpenStroke(points = [], level = 1) {
+    if (!Array.isArray(points) || points.length < 3) return points;
+    const mode = Math.max(1, Math.min(4, Math.round(Number(level) || 1)));
+    let out = points.map(p => ({ x: p.x, y: p.y }));
+
+    // Níveis realmente progressivos:
+    // 1 = quase cru, 4 = o melhor traço manual para dedo.
+    const jitterByMode = { 1: 1.35, 2: 1.95, 3: 2.65, 4: 3.35 };
+    const spacingByMode = { 1: 0, 2: 2.8, 3: 4.2, 4: 6.0 };
+    out = removeJitterPoints(out, jitterByMode[mode] || 1.5);
+    if (mode >= 2) out = resampleStrokePoints(out, spacingByMode[mode] || 3.0);
+
+    const config = {
+      1: { passes: 1, keep: 0.88 },
+      2: { passes: 2, keep: 0.66 },
+      3: { passes: 4, keep: 0.40 },
+      4: { passes: 7, keep: 0.16 }
+    }[mode];
+
+    for (let pass = 0; pass < config.passes; pass++) {
+      const next = [out[0]];
+      for (let i = 1; i < out.length - 1; i++) {
+        const prev = out[i - 1];
+        const p = out[i];
+        const nxt = out[i + 1];
+        next.push({
+          x: p.x * config.keep + (prev.x + nxt.x) * ((1 - config.keep) / 2),
+          y: p.y * config.keep + (prev.y + nxt.y) * ((1 - config.keep) / 2)
+        });
+      }
+      next.push(out[out.length - 1]);
+      out = next;
+    }
+
+    if (mode >= 3 && out.length < 260) {
+      out = chaikinStroke(out, mode === 3 ? 2 : 3);
+    }
+
+    if (mode === 3 && out.length >= 5) {
+      out = roundSoftCorners(out, 0.16);
+    }
+
+    // Suave 4 recebe a melhor limpeza contínua do traço.
+    if (mode === 4 && out.length >= 5) {
+      out = roundSoftCorners(out, 0.30);
+      out = resampleStrokePoints(out, 4.2);
+      out = chaikinStroke(out, 1);
+      out = roundSoftCorners(out, 0.22);
+    }
+    return out;
+  }
+
+  function removeJitterPoints(points = [], minDistance = 1.5) {
+    if (!Array.isArray(points) || points.length < 3) return points;
+    const out = [points[0]];
+    for (let i = 1; i < points.length - 1; i++) {
+      const prev = out[out.length - 1];
+      const p = points[i];
+      if (Math.hypot(p.x - prev.x, p.y - prev.y) >= minDistance) out.push(p);
+    }
+    out.push(points[points.length - 1]);
+    return out;
+  }
+
+  function roundSoftCorners(points = [], amount = 0.18) {
+    if (!Array.isArray(points) || points.length < 5) return points;
+    const out = [points[0]];
+    const a = Math.max(0.08, Math.min(0.28, amount));
+    for (let i = 1; i < points.length - 1; i++) {
+      const prev = points[i - 1];
+      const p = points[i];
+      const next = points[i + 1];
+      out.push({
+        x: p.x * (1 - a) + (prev.x + next.x) * (a / 2),
+        y: p.y * (1 - a) + (prev.y + next.y) * (a / 2)
+      });
+    }
+    out.push(points[points.length - 1]);
+    return out;
+  }
+
+  function resampleStrokePoints(points = [], spacing = 3) {
+    if (!Array.isArray(points) || points.length < 2) return points;
+    const out = [points[0]];
+    let carry = 0;
+    for (let i = 1; i < points.length; i++) {
+      let a = out[out.length - 1];
+      const b = points[i];
+      let dx = b.x - a.x;
+      let dy = b.y - a.y;
+      let dist = Math.hypot(dx, dy);
+      while (dist + carry >= spacing && dist > 0.001) {
+        const t = (spacing - carry) / dist;
+        const np = { x: a.x + dx * t, y: a.y + dy * t };
+        out.push(np);
+        a = np;
+        dx = b.x - a.x;
+        dy = b.y - a.y;
+        dist = Math.hypot(dx, dy);
+        carry = 0;
+      }
+      carry += dist;
+    }
+    const last = points[points.length - 1];
+    const tail = out[out.length - 1];
+    if (!tail || Math.hypot(last.x - tail.x, last.y - tail.y) > 0.5) out.push(last);
+    return out;
+  }
+
+  function chaikinStroke(points = [], iterations = 1) {
+    let out = points.map(p => ({ x: p.x, y: p.y }));
+    for (let k = 0; k < iterations; k++) {
+      if (out.length < 3) break;
+      const next = [out[0]];
+      for (let i = 0; i < out.length - 1; i++) {
+        const p = out[i];
+        const q = out[i + 1];
+        next.push({ x: p.x * 0.75 + q.x * 0.25, y: p.y * 0.75 + q.y * 0.25 });
+        next.push({ x: p.x * 0.25 + q.x * 0.75, y: p.y * 0.25 + q.y * 0.75 });
+      }
+      next.push(out[out.length - 1]);
+      out = next;
+    }
+    return out;
+  }
+
+  function smartHoldRefineStroke(points = []) {
+    if (!Array.isArray(points) || points.length < 8) return points;
+    const clean = points.map(p => ({ x: Number(p.x) || 0, y: Number(p.y) || 0 }));
+    const first = clean[0];
+    const last = clean[clean.length - 1];
+    const bounds = boundsForPoints(clean);
+    const diag = Math.hypot(bounds.width, bounds.height);
+    const len = pathLength(clean);
+    const endDistance = Math.hypot(last.x - first.x, last.y - first.y);
+    if (diag < 12 || len < 18) return smoothOpenStroke(clean, 4);
+
+    const straightness = endDistance / Math.max(1, len);
+    if (straightness > 0.91) {
+      return [
+        first,
+        { x: first.x * 0.66 + last.x * 0.34, y: first.y * 0.66 + last.y * 0.34 },
+        { x: first.x * 0.34 + last.x * 0.66, y: first.y * 0.34 + last.y * 0.66 },
+        last
+      ];
+    }
+
+    const isClosed = endDistance < Math.max(14, diag * 0.24) && len > diag * 2.0;
+    if (isClosed) return ellipseFromPoints(clean, bounds);
+
+    return curveAssistOpenStroke(clean, bounds, true);
+  }
+
+  function curveAssistOpenStroke(points = [], bounds = boundsForPoints(points), aggressive = false) {
+    if (!Array.isArray(points) || points.length < 4) return points;
+    let softened = smoothOpenStroke(points, aggressive ? 4 : 3);
+    const diag = Math.hypot(bounds.width, bounds.height);
+    if (aggressive) {
+      softened = resampleStrokePoints(softened, 3.0);
+      softened = roundSoftCorners(softened, 0.24);
+    }
+    const tolerance = aggressive
+      ? Math.max(4.8, Math.min(10.5, diag * 0.058))
+      : Math.max(3.6, Math.min(8.5, diag * 0.045));
+    let simplified = simplifyStrokeRDP(softened, tolerance);
+    if (!simplified || simplified.length < 3) return smoothOpenStroke(points, 4);
+
+    // Evita transformar traços simples em curvas artificiais demais.
+    if (simplified.length <= 3) {
+      let simpleCurve = catmullRomStroke(simplified, aggressive ? 22 : 16);
+      if (aggressive) simpleCurve = roundSoftCorners(simpleCurve, 0.28);
+      return aggressive ? smoothOpenStroke(simpleCurve, 4) : simpleCurve;
+    }
+
+    // Reduz micro-quebras do dedo e arredonda apenas a geometria principal.
+    simplified = removeTinySegments(simplified, aggressive ? Math.max(4, diag * 0.022) : Math.max(3, diag * 0.018));
+    if (simplified.length < 3) return smoothOpenStroke(points, 4);
+    let curved = catmullRomStroke(simplified, aggressive ? 18 : 12);
+    if (aggressive) {
+      curved = roundSoftCorners(curved, 0.26);
+      curved = smoothOpenStroke(curved, 4);
+    }
+    return curved;
+  }
+
+  function removeTinySegments(points = [], minDistance = 3) {
+    if (!Array.isArray(points) || points.length < 3) return points;
+    const out = [points[0]];
+    for (let i = 1; i < points.length - 1; i++) {
+      const prev = out[out.length - 1];
+      const p = points[i];
+      if (Math.hypot(p.x - prev.x, p.y - prev.y) >= minDistance) out.push(p);
+    }
+    out.push(points[points.length - 1]);
+    return out;
+  }
+
+  function simplifyStrokeRDP(points = [], epsilon = 4) {
+    if (!Array.isArray(points) || points.length < 3) return points;
+    let maxDistance = 0;
+    let index = 0;
+    const start = points[0];
+    const end = points[points.length - 1];
+    for (let i = 1; i < points.length - 1; i++) {
+      const d = perpendicularDistance(points[i], start, end);
+      if (d > maxDistance) {
+        index = i;
+        maxDistance = d;
+      }
+    }
+    if (maxDistance > epsilon) {
+      const left = simplifyStrokeRDP(points.slice(0, index + 1), epsilon);
+      const right = simplifyStrokeRDP(points.slice(index), epsilon);
+      return left.slice(0, -1).concat(right);
+    }
+    return [start, end];
+  }
+
+  function perpendicularDistance(p, a, b) {
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy);
+    if (len < 0.001) return Math.hypot(p.x - a.x, p.y - a.y);
+    return Math.abs(dy * p.x - dx * p.y + b.x * a.y - b.y * a.x) / len;
+  }
+
+  function catmullRomStroke(points = [], samplesPerSegment = 10) {
+    if (!Array.isArray(points) || points.length < 3) return points;
+    const out = [points[0]];
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[Math.max(0, i - 1)];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[Math.min(points.length - 1, i + 2)];
+      const samples = Math.max(4, Math.round(samplesPerSegment));
+      for (let j = 1; j <= samples; j++) {
+        const t = j / samples;
+        const t2 = t * t;
+        const t3 = t2 * t;
+        out.push({
+          x: 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2*p0.x - 5*p1.x + 4*p2.x - p3.x) * t2 + (-p0.x + 3*p1.x - 3*p2.x + p3.x) * t3),
+          y: 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2*p0.y - 5*p1.y + 4*p2.y - p3.y) * t2 + (-p0.y + 3*p1.y - 3*p2.y + p3.y) * t3)
+        });
+      }
+    }
+    return smoothOpenStroke(out, 2);
+  }
+
+  function smartShapeAssist(points = []) {
+    if (!Array.isArray(points) || points.length < 8) return null;
+    const first = points[0];
+    const last = points[points.length - 1];
+    const bounds = boundsForPoints(points);
+    const diag = Math.hypot(bounds.width, bounds.height);
+    const len = pathLength(points);
+    const endDistance = Math.hypot(last.x - first.x, last.y - first.y);
+    if (diag < 12 || len < 18) return null;
+
+    const straightness = endDistance / Math.max(1, len);
+    if (straightness > 0.90 && points.length >= 4) {
+      return [
+        first,
+        { x: first.x * 0.67 + last.x * 0.33, y: first.y * 0.67 + last.y * 0.33 },
+        { x: first.x * 0.33 + last.x * 0.67, y: first.y * 0.33 + last.y * 0.67 },
+        last
+      ];
+    }
+
+    const isClosed = endDistance < Math.max(14, diag * 0.24) && len > diag * 2.0;
+    if (isClosed) return ellipseFromPoints(points, bounds);
+
+    const curved = curveAssistOpenStroke(points, bounds, true);
+    return curved && curved.length >= 2 ? curved : null;
+  }
+
+  function ellipseFromPoints(points = [], bounds = boundsForPoints(points)) {
+    const cx = points.reduce((sum, p) => sum + p.x, 0) / points.length;
+    const cy = points.reduce((sum, p) => sum + p.y, 0) / points.length;
+    let xx = 0, yy = 0, xy = 0;
+    points.forEach(p => {
+      const dx = p.x - cx;
+      const dy = p.y - cy;
+      xx += dx * dx; yy += dy * dy; xy += dx * dy;
+    });
+    const theta = 0.5 * Math.atan2(2 * xy, xx - yy || 0.0001);
+    const cos = Math.cos(theta), sin = Math.sin(theta);
+    let minA = Infinity, maxA = -Infinity, minB = Infinity, maxB = -Infinity;
+    points.forEach(p => {
+      const dx = p.x - cx;
+      const dy = p.y - cy;
+      const a = dx * cos + dy * sin;
+      const b = -dx * sin + dy * cos;
+      minA = Math.min(minA, a); maxA = Math.max(maxA, a);
+      minB = Math.min(minB, b); maxB = Math.max(maxB, b);
+    });
+    const rx = Math.max(8, (maxA - minA) / 2);
+    const ry = Math.max(8, (maxB - minB) / 2);
+    const area = points.reduce((sum, p, i) => {
+      const q = points[(i + 1) % points.length];
+      return sum + (p.x * q.y - q.x * p.y);
+    }, 0);
+    const dir = area >= 0 ? 1 : -1;
+    const startAngle = Math.atan2((points[0].y - cy) / ry, (points[0].x - cx) / rx);
+    const count = 46;
+    return Array.from({ length: count + 1 }, (_, i) => {
+      const t = startAngle + dir * Math.PI * 2 * (i / count);
+      const a = Math.cos(t) * rx;
+      const b = Math.sin(t) * ry;
+      return {
+        x: cx + a * cos - b * sin,
+        y: cy + a * sin + b * cos
+      };
+    });
+  }
+
+  function drawTaperedQuadratic(ctx, start, control, end, startWidth, endWidth) {
+    const steps = 20;
+    const center = [];
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const mt = 1 - t;
+      const ease = t * t * (3 - 2 * t);
+      center.push({
+        x: mt * mt * start.x + 2 * mt * t * control.x + t * t * end.x,
+        y: mt * mt * start.y + 2 * mt * t * control.y + t * t * end.y,
+        w: startWidth + (endWidth - startWidth) * ease
+      });
+    }
+    const left = [];
+    const right = [];
+    for (let i = 0; i < center.length; i++) {
+      const prev = center[Math.max(0, i - 1)];
+      const next = center[Math.min(center.length - 1, i + 1)];
+      const dx = next.x - prev.x;
+      const dy = next.y - prev.y;
+      const len = Math.max(0.001, Math.hypot(dx, dy));
+      const nx = -dy / len;
+      const ny = dx / len;
+      const half = Math.max(0.08, center[i].w * 0.5);
+      left.push({ x: center[i].x + nx * half, y: center[i].y + ny * half });
+      right.push({ x: center[i].x - nx * half, y: center[i].y - ny * half });
+    }
+    ctx.save();
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.beginPath();
+    ctx.moveTo(left[0].x, left[0].y);
+    for (let i = 1; i < left.length; i++) ctx.lineTo(left[i].x, left[i].y);
+    for (let i = right.length - 1; i >= 0; i--) ctx.lineTo(right[i].x, right[i].y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawPath(ctx, stroke, options = {}) {
+    const rawPoints = drawingStrokePoints(stroke);
+    if (!rawPoints || rawPoints.length < 2) return;
+    normalizeWritingAssist();
+
+    const smoothLevel = Number.isFinite(Number(options.smoothLevel))
+      ? Number(options.smoothLevel)
+      : Number.isFinite(Number(stroke?.smoothLevel))
+        ? Number(stroke.smoothLevel)
+        : Number(writingAssist.smoothLevel || 0);
+    const ending = options.ending || stroke?.ending || "normal";
+    const points = smoothStrokePoints(rawPoints, smoothLevel);
+
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
-    for (let i=1; i<points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+    if (smoothLevel >= 2 && points.length > 2) {
+      for (let i = 1; i < points.length - 1; i++) {
+        const midX = (points[i].x + points[i + 1].x) / 2;
+        const midY = (points[i].y + points[i + 1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, midX, midY);
+      }
+      const last = points[points.length - 1];
+      ctx.lineTo(last.x, last.y);
+    } else {
+      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+    }
     ctx.stroke();
+
+    const last = points[points.length - 1];
+    const prev = points[Math.max(0, points.length - 4)] || points[0];
+    const dx = last.x - prev.x;
+    const dy = last.y - prev.y;
+    const len = Math.max(1, Math.hypot(dx, dy));
+    const ux = dx / len;
+    const uy = dy / len;
+
+    if (ending === "haneru") {
+      const baseWidth = Math.max(2.0, Math.min(3.4, ctx.lineWidth * 0.42));
+      const flick = Math.max(6.0, Math.min(9.2, ctx.lineWidth * 1.08));
+      const nx = uy;
+      const ny = -ux;
+      const start = { x: last.x - ux * 0.25, y: last.y - uy * 0.25 };
+      const control = {
+        x: last.x + ux * flick * 0.42 + nx * flick * 0.08,
+        y: last.y + uy * flick * 0.42 + ny * flick * 0.08
+      };
+      const end = {
+        x: last.x + ux * flick * 0.98 + nx * flick * 0.16,
+        y: last.y + uy * flick * 0.98 + ny * flick * 0.16
+      };
+      drawTaperedQuadratic(ctx, start, control, end, baseWidth, 0.12);
+    }
+
+    if (ending === "tomeru") {
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(last.x, last.y, Math.max(3.6, ctx.lineWidth * 0.52), Math.max(2.8, ctx.lineWidth * 0.42), Math.atan2(uy, ux), 0, Math.PI * 2);
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.fill();
+      ctx.restore();
+    }
   }
 
   function drawCanvas() {
@@ -34830,8 +35387,8 @@
     ctx.lineWidth = 6;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    drawingStrokes.forEach(points => drawPath(ctx, points));
-    drawPath(ctx, currentStroke);
+    drawingStrokes.forEach(stroke => drawPath(ctx, stroke));
+    drawPath(ctx, currentStroke, { smoothLevel: writingAssist.smoothLevel, ending: writingAssist.ending });
     ctx.restore();
   }
 
@@ -39185,14 +39742,17 @@
 
   function startDiario321EntryEdit(entryId) {
     diario321EditingEntryId = String(entryId || "");
+    keepDiario321EntryOpen(diario321EditingEntryId);
     render();
     setTimeout(() => {
       try { document.querySelector(`[data-entry-edit-main="${CSS.escape(diario321EditingEntryId)}"]`)?.focus(); } catch {}
     }, 60);
   }
 
-  function cancelDiario321EntryEdit() {
+  function cancelDiario321EntryEdit(entryId = "") {
+    const keepId = String(entryId || diario321EditingEntryId || "");
     diario321EditingEntryId = "";
+    keepDiario321EntryOpen(keepId);
     render();
   }
 
@@ -39243,6 +39803,7 @@
       };
     });
     diario321EditingEntryId = "";
+    keepDiario321EntryOpen(id);
     saveDiario321AltruistaState();
     toast("frase editada");
     render();
@@ -39270,8 +39831,25 @@
     return found?.hint || (id === "natural" ? "colega / conversa simples" : "líder / loja / hospital");
   }
 
+  function diario321IsToday(value) {
+    if (!value) return false;
+    try {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return false;
+      const now = new Date();
+      return date.getFullYear() === now.getFullYear()
+        && date.getMonth() === now.getMonth()
+        && date.getDate() === now.getDate();
+    } catch {
+      return false;
+    }
+  }
+
   function diario321FilterEntries(entries) {
     const filter = diario321EntriesFilter || "all";
+    if (filter === "today") return entries.filter(entry => diario321IsToday(entry.createdAt || entry.updatedAt || entry.masteredAt));
+    if (filter === "review") return entries.filter(entry => !entry.mastered);
+    if (filter === "mastered") return entries.filter(entry => !!entry.mastered);
     if (filter === "favorite") return entries.filter(entry => !!entry.favorite);
     if (filter !== "all") return entries.filter(entry => String(entry.environment || "") === filter);
     return entries;
@@ -39288,10 +39866,14 @@
       }
     }
     const hasFavorites = entries.some(entry => !!entry.favorite);
+    const hasToday = entries.some(entry => diario321IsToday(entry.createdAt || entry.updatedAt || entry.masteredAt));
     const tabs = [
       { id: "all", label: "Todas" },
-      ...environments.slice(0, 5).map(env => ({ id: env, label: diario321EnvironmentLabel(env) })),
-      ...(hasFavorites ? [{ id: "favorite", label: "Favoritas" }] : [])
+      ...(hasToday ? [{ id: "today", label: "Hoje" }] : []),
+      { id: "review", label: "Revisar" },
+      { id: "mastered", label: "Praticadas" },
+      ...environments.slice(0, 3).map(env => ({ id: env, label: diario321EnvironmentLabel(env) })),
+      ...(hasFavorites ? [{ id: "favorite", label: "★" }] : [])
     ];
     if (!tabs.some(tab => tab.id === diario321EntriesFilter)) diario321EntriesFilter = "all";
     return `
@@ -39450,6 +40032,7 @@
 
   function repeatDiario321EntryTraining(entryId) {
     const id = String(entryId || "");
+    try { stopDiario321Karaoke(document.querySelector(`[data-diario-training-panel="${CSS.escape(id)}"]`)); } catch {}
     diario321ActiveTrainingEntryId = id;
     keepDiario321EntryOpen(id);
     let finished = false;
@@ -39513,7 +40096,18 @@
     try {
       if (window.__diario321KaraokeRaf) cancelAnimationFrame(window.__diario321KaraokeRaf);
       window.__diario321KaraokeRaf = null;
+      panel?.classList?.remove?.("is-speaking", "is-heard");
       panel?.querySelectorAll?.(".diario321Kseg.is-on")?.forEach(el => el.classList.remove("is-on"));
+    } catch {}
+  }
+
+  function finishDiario321Karaoke(panel) {
+    try {
+      if (window.__diario321KaraokeRaf) cancelAnimationFrame(window.__diario321KaraokeRaf);
+      window.__diario321KaraokeRaf = null;
+      panel?.classList?.remove?.("is-speaking");
+      panel?.classList?.add?.("is-heard");
+      panel?.querySelectorAll?.(".diario321Kseg")?.forEach(el => el.classList.add("is-on"));
     } catch {}
   }
 
@@ -39562,10 +40156,7 @@
       panel?.classList?.add?.("is-speaking");
       window.clearTimeout(window.__diario321SpeakingTimer);
       window.__diario321SpeakingTimer = window.setTimeout(() => {
-        try {
-          panel?.classList?.remove?.("is-speaking");
-          stopDiario321Karaoke(panel);
-        } catch {}
+        finishDiario321Karaoke(panel);
       }, diario321EstimateSpeechDurationMs(text, 0.92) + 620);
 
       const u = new SpeechSynthesisUtterance(text);
@@ -39574,11 +40165,8 @@
       u.onstart = () => playDiario321Karaoke(panel, text, 0.92);
       u.onend = () => {
         window.setTimeout(() => {
-          try {
-            panel?.classList?.remove?.("is-speaking");
-            stopDiario321Karaoke(panel);
-          } catch {}
-        }, 420);
+          finishDiario321Karaoke(panel);
+        }, 180);
       };
       u.onerror = () => {
         try {
@@ -39602,7 +40190,7 @@
     const ptPhrase = String(entry.pt || "").trim();
     const mainPhrase = jpPhrase || diario321JapaneseFromRomajiInput(romajiPhrase, entry.speechStyle || "polite") || romajiPhrase || ptPhrase || "frase";
     return `
-      <section class="diario321EntryTrainingPanel" data-diario-training-panel="${escapeHTML(entry.id)}" aria-label="treino 105x do Diário">
+      <section class="diario321EntryTrainingPanel" data-diario-training-panel="${escapeHTML(entry.id)}" data-stop-entry-toggle aria-label="treino 105x do Diário">
         <div class="diario321EntryTrainingHead">
           <div>
             <small>Treino 105x do Diário</small>
@@ -39918,6 +40506,42 @@
     `;
   }
 
+  function renderDiario321PremiumWritingFlow() {
+    const seed = diario321SeedInfo();
+    const hasSeed = diario321HasPolivalencia();
+    const hasDraft = !!String(diario321AltruistaState.ptIdea || diario321AltruistaState.romajiIdea || diario321AltruistaState.jpIdea || "").trim();
+    const entries = Array.isArray(diario321AltruistaState.entries) ? diario321AltruistaState.entries : [];
+    const tone = diario321ToneLabel(diario321AltruistaState.speechStyle || "polite");
+    const flowSteps = [
+      { done: hasSeed, title: "Semente", meta: hasSeed ? `${seed.romaji} = ${seed.meaning}` : "escolha a palavra" },
+      { done: hasDraft, title: "Escrever", meta: hasDraft ? "rascunho em andamento" : "crie uma frase base" },
+      { done: entries.length >= 2, title: "Expandir", meta: entries.length >= 2 ? `${entries.length} frases no diário` : "gere 10 variações" },
+      { done: entries.some(entry => !!entry?.training?.repsDone), title: "Treinar 105x", meta: entries.some(entry => !!entry?.training?.repsDone) ? "repetição em andamento" : "abra no card da frase" }
+    ];
+    return `
+      <section class="diario321ModernCard diario321PremiumFlow" aria-label="rota do treino de escrita">
+        <div class="diario321ModernCardHead"><span>◆ Rota do treino</span><small>simples, clara e vendável</small></div>
+        <div class="diario321PremiumFlowChips">
+          <span><b>ambiente</b><em>${escapeHTML(seed.env?.label || "Trabalho")}</em></span>
+          <span><b>palavra</b><em>${escapeHTML(seed.jp)} · ${escapeHTML(seed.romaji)}</em></span>
+          <span><b>tom</b><em>${escapeHTML(tone)}</em></span>
+        </div>
+        <div class="diario321PremiumFlowSteps">
+          ${flowSteps.map((step, index) => `
+            <article class="${step.done ? "is-done" : ""}">
+              <i>${step.done ? "✓" : index + 1}</i>
+              <div>
+                <b>${escapeHTML(step.title)}</b>
+                <small>${escapeHTML(step.meta)}</small>
+              </div>
+            </article>
+          `).join("")}
+        </div>
+        <p class="diario321PremiumFlowNote">Fluxo recomendado: escolha a palavra, escreva uma frase simples, gere 10 variações e faça o 105x dentro do card salvo.</p>
+      </section>
+    `;
+  }
+
   function renderDiario321PracticeEditor() {
     const hasEntries = Array.isArray(diario321AltruistaState.entries) && diario321AltruistaState.entries.length > 0;
     const hasDraft = !!String(diario321AltruistaState.ptIdea || diario321AltruistaState.romajiIdea || diario321AltruistaState.jpIdea || "").trim();
@@ -40004,7 +40628,7 @@
       return `
         <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder">
           <div class="diario321SavedHead"><b>Minhas frases</b><span>vazio</span></div>
-          <p class="diario321Empty">Salve sua primeira anotação.</p>
+          <p class="diario321Empty">Salve sua primeira anotação.</p><p class="diario321LibraryEmptyHint">Depois abra o card da frase e toque em Treinar 105x.</p>
           ${renderDiario321AddPhraseButton()}
         </section>
       `;
@@ -40015,13 +40639,12 @@
     const readyCount = allEntries.filter(entry => String(entry?.jp || "").trim() && String(entry?.pt || "").trim()).length;
 
     return `
-      <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder diario321PhraseLibrary" id="diario321PhraseLibrary">
-        <div class="diario321SavedHead diario321LibraryHead"><b>Minhas frases</b><span>${allEntries.length}</span></div>
-        <div class="diario321LibraryStats" aria-label="resumo das frases criadas">
+      <section class="diario321PracticeEntries diario321DiaryEntries diario321PhraseBinder diario321PhraseLibrary diario321PhraseLibrary--premium" id="diario321PhraseLibrary">
+        <div class="diario321SavedHead diario321LibraryHead diario321LibraryHead--premium"><b>Minhas frases</b><span>${allEntries.length}</span></div>
+        <div class="diario321LibraryStats diario321LibraryStats--compact" aria-label="resumo das frases criadas">
           <span><b>${allEntries.length}</b><small>criadas</small></span>
-          <span><b>${practicedCount}</b><small>praticadas</small></span>
-          <span><b>${favoriteCount}</b><small>favoritas</small></span>
-          <span><b>${readyCount}</b><small>prontas</small></span>
+          <span><b>${allEntries.length - practicedCount}</b><small>revisar</small></span>
+          <span><b>${practicedCount}</b><small>ok</small></span>
         </div>
         ${renderDiario321EntryTabs(allEntries)}
         <div class="diario321LibraryList">
@@ -40046,7 +40669,7 @@
 
           if (isEditing) {
             return `
-              <article class="diario321PracticeEntry diario321DiaryEntry diario321DiaryEntry--edit" data-entry-drag-id="${escapeHTML(entry.id)}">
+              <article class="diario321PracticeEntry diario321DiaryEntry diario321DiaryEntry--edit diario321LibraryItem--edit" data-entry-drag-id="${escapeHTML(entry.id)}">
                 <div class="diario321EntryTop diario321EntryTop--line">
                   <small><span>${escapeHTML(envIcon)}</span> ${escapeHTML(envLabel)} · editar frase</small>
                   <button class="diario321EntryMiniBtn" type="button" data-entry-cancel-edit>cancelar</button>
@@ -40077,7 +40700,7 @@
                   <span>Romaji</span>
                   <textarea data-entry-edit-romaji="${escapeHTML(entry.id)}">${escapeHTML(romajiPhrase)}</textarea>
                 </label>
-                <div class="diario321EntryActions diario321EntryActions--clean">
+                <div class="diario321EntryActions diario321EntryActions--clean" data-stop-entry-toggle>
                   <button class="diario321EntrySaveEdit" type="button" data-entry-save-edit="${escapeHTML(entry.id)}">salvar edição</button>
                 </div>
               </article>
@@ -40093,7 +40716,7 @@
               <details class="diario321LibraryDetails" ${isEntryOpen ? "open" : ""}>
                 <summary class="diario321LibrarySummary">
                   <span class="diario321LibrarySummaryMeta">
-                    <small>${escapeHTML(envIcon)} Página ${pageNumber} · ${escapeHTML(envLabel)}</small>
+                    <small>${escapeHTML(envIcon)} ${escapeHTML(envLabel)}</small>
                     <b>${escapeHTML(entry.wordRomaji || "palavra")} ${entry.wordPt ? `= ${escapeHTML(entry.wordPt)}` : ""}</b>
                   </span>
                   <span class="diario321LibrarySummaryText">
@@ -40108,7 +40731,7 @@
                   </span>
                 </summary>
 
-                <div class="diario321PhraseTextBlock diario321LibraryExpanded">
+                <div class="diario321PhraseTextBlock diario321LibraryExpanded" data-stop-entry-toggle>
                   <div class="diario321EntryTop diario321EntryTop--line">
                     <small><span>${escapeHTML(envIcon)}</span> Frase ${index + 1} · ${escapeHTML(envLabel)} · ${escapeHTML(entry.wordRomaji || "palavra")} ${entry.wordPt ? `= ${escapeHTML(entry.wordPt)}` : ""}</small>
                     <button class="diario321FavoriteBtn ${favorite ? "is-active" : ""}" type="button" data-entry-favorite="${escapeHTML(entry.id)}" aria-label="favoritar frase">${favorite ? "★" : "☆"}</button>
@@ -40118,9 +40741,9 @@
                   ${romajiSupport ? `<div class="diario321EntryRomaji">${escapeHTML(romajiSupport)}</div>` : ""}
                 </div>
                 ${renderDiario321EntryTrainingPanel(entry)}
-                <div class="diario321PhraseTools diario321LibraryTools" aria-label="ações da frase">
-                  <button class="diario321EntryTrainBtn" type="button" data-entry-start-train="${escapeHTML(entry.id)}">🔁 Treinar 105x</button>
-                  <button class="diario321EntryShareBtn" type="button" data-entry-share="${escapeHTML(entry.id)}">↗ Compartilhar</button>
+                <div class="diario321PhraseTools diario321LibraryTools" aria-label="ações da frase" data-stop-entry-toggle>
+                  <button class="diario321EntryTrainBtn" type="button" data-entry-start-train="${escapeHTML(entry.id)}">Treinar 105x</button>
+                  <button class="diario321EntryShareBtn" type="button" data-entry-share="${escapeHTML(entry.id)}">Compartilhar</button>
                   <label class="diario321MasteredCheck diario321MasteredCheck--clean" title="marcar como praticada">
                     <input type="checkbox" ${mastered ? "checked" : ""} data-entry-mastered="${escapeHTML(entry.id)}">
                     <span>praticada</span>
@@ -40142,9 +40765,9 @@
                   <span class="diario321DragHint" title="arraste para ordenar">☷</span>
                 </div>
                 ${diario321DeleteConfirmId === entry.id ? `
-                  <div class="diario321DeleteConfirm" role="alert">
-                    <b>Apagar esta frase?</b>
-                    <span>Essa ação remove a anotação do Diário321.</span>
+                  <div class="diario321DeleteConfirm" role="alert" data-stop-entry-toggle>
+                    <b>Apagar frase?</b>
+                    <span>não dá para desfazer</span>
                     <div>
                       <button type="button" class="diario321DeleteCancel" data-entry-delete-cancel>cancelar</button>
                       <button type="button" class="diario321DeleteConfirmBtn" data-entry-delete-confirm="${escapeHTML(entry.id)}">apagar</button>
@@ -40733,18 +41356,18 @@
   function renderDiario321AIBox() {
     return `
       <section class="diario321ModernCard diario321AIBox diario321AIBox--contextual" aria-label="assistente de criação com inteligência artificial">
-        <div class="diario321ModernCardHead"><span>✦ Assistente da frase</span><small>usa os campos acima</small></div>
-        <p class="diario321AIHelp diario321AIContextHint">Gere 10 variações para o ChatGPT/Gemini com presente, passado, futuro, negativas e perguntas essenciais.</p>
+        <div class="diario321ModernCardHead"><span>✦ Assistente da frase</span><small>baseado nos campos acima</small></div>
+        <p class="diario321AIHelp diario321AIContextHint">Crie um pedido pronto para ChatGPT/Gemini e receba 10 variações úteis, curtas e fáceis de importar para o Diário321.</p>
         <div class="diario321AIButtons diario321AIButtons--refined">
           <button class="diario321AIButton diario321AIButton--copy" type="button" data-copy-ai-prompt>
             <span aria-hidden="true">⧉</span>
-            <b>Gerar variações</b>
-            <small>10 frases 360°</small>
+            <b>Criar pedido</b>
+            <small>10 variações 360°</small>
           </button>
           <button class="diario321AIButton diario321AIButton--paste" type="button" data-paste-ai-response>
             <span aria-hidden="true">▣</span>
-            <b>Colar resposta</b>
-            <small>preencher campos</small>
+            <b>Importar resposta</b>
+            <small>jogar no Diário</small>
           </button>
         </div>
       </section>
@@ -40795,7 +41418,7 @@
     return `
       <section class="diario321ActionDock diario321ActionDock--preview" aria-label="ações principais">
         <button class="diario321ActionSave" type="button" data-save-practice-entry><span>▣</span>Salvar no Diário</button>
-        <button class="diario321ActionTrain" type="button" data-scroll-diario321-library><span>➤</span>Treinar 105x</button>
+        <button class="diario321ActionTrain" type="button" data-scroll-diario321-library><span>➤</span>Ver frases salvas</button>
       </section>
     `;
   }
@@ -40937,6 +41560,7 @@
       <section class="card realModeCard">
         <div class="stageLabel stageLabel--write"><span>2. escrever no celular</span><button class="toneToggleBtn" type="button" data-action="toggleTone">${paperToneLabel()}</button></div>
         <div class="hiddenPrompt"><b>${escapeHTML(word.romaji)}</b><span>${escapeHTML(word.pt)}</span><small>${categoryLabel()} · escreva a palavra inteira na linha abaixo.</small></div>
+        ${renderWritingAssistTools()}
         <div class="paperWrap"><canvas id="writeCanvas" class="writeCanvas sheetCanvas ${paperTone === "blackboard" ? "is-blackboard" : paperTone === "greenboard" ? "is-greenboard" : "is-paper"}" aria-label="área para escrever no celular"></canvas></div>
         <div class="actionGrid">
           <button class="actionBtn" data-action="clear">limpar</button>
@@ -41021,7 +41645,7 @@ applyAppTheme();
     const payload = {
       app: "DIÁRIO321",
       target: "NIHONGO321",
-      version: "4.10.18",
+      version: "4.10.22",
       exportedAt: new Date().toISOString(),
       total: saved.length,
       phrases: saved
@@ -41042,6 +41666,7 @@ applyAppTheme();
 
   function bindEvents() {
 
+    document.querySelectorAll("[data-writing-assist]").forEach(btn => btn.addEventListener("click", () => toggleWritingAssist(btn.dataset.writingAssist)));
     document.querySelectorAll("[data-save-new-genial-word]").forEach(btn => btn.addEventListener("click", saveNewGenialWord));
     document.querySelectorAll("[data-remove-genial-word]").forEach(btn => btn.addEventListener("click", () => removeGenialWord(btn.dataset.removeGenialWord)));
 
@@ -41094,8 +41719,9 @@ applyAppTheme();
         diario321OpenEntryId = "";
       }
     }));
-    document.querySelectorAll("[data-entry-check]").forEach(btn => btn.addEventListener("click", () => toggleDiario321EntryCheck(btn.dataset.entryId, btn.dataset.entryCheck)));
-    document.querySelectorAll("[data-entry-write]").forEach(btn => btn.addEventListener("click", () => adjustDiario321EntryWriteCount(btn.dataset.entryId, btn.dataset.entryWrite)));
+    document.querySelectorAll("[data-stop-entry-toggle]").forEach(area => area.addEventListener("click", ev => ev.stopPropagation()));
+    document.querySelectorAll("[data-entry-check]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); toggleDiario321EntryCheck(btn.dataset.entryId, btn.dataset.entryCheck); }));
+    document.querySelectorAll("[data-entry-write]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); adjustDiario321EntryWriteCount(btn.dataset.entryId, btn.dataset.entryWrite); }));
     document.querySelectorAll("[data-entry-mastered]").forEach(input => {
       input.addEventListener("click", (ev) => ev.stopPropagation());
       input.addEventListener("change", (ev) => { ev.stopPropagation(); toggleDiario321EntryMastered(input.dataset.entryMastered); });
@@ -41110,9 +41736,12 @@ applyAppTheme();
     document.querySelectorAll("[data-entry-filter]").forEach(btn => btn.addEventListener("click", () => setDiario321EntriesFilter(btn.dataset.entryFilter)));
     document.querySelectorAll("[data-entry-edit]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); keepDiario321EntryOpen(btn.dataset.entryEdit); startDiario321EntryEdit(btn.dataset.entryEdit); }));
     document.querySelectorAll("[data-entry-edit-romaji]").forEach(input => input.addEventListener("input", () => updateDiario321EntryEditJapanese(input.dataset.entryEditRomaji)));
-    document.querySelectorAll('input[type="radio"][name^="entry-tone-"]').forEach(input => input.addEventListener("change", () => updateDiario321EntryEditJapanese(input.name.replace(/^entry-tone-/, ""))));
-    document.querySelectorAll("[data-entry-save-edit]").forEach(btn => btn.addEventListener("click", () => saveDiario321EntryEdit(btn.dataset.entrySaveEdit)));
-    document.querySelectorAll("[data-entry-cancel-edit]").forEach(btn => btn.addEventListener("click", cancelDiario321EntryEdit));
+    document.querySelectorAll('input[type="radio"][name^="entry-tone-"]').forEach(input => {
+      input.addEventListener("click", ev => ev.stopPropagation());
+      input.addEventListener("change", (ev) => { ev.stopPropagation(); updateDiario321EntryEditJapanese(input.name.replace(/^entry-tone-/, "")); });
+    });
+    document.querySelectorAll("[data-entry-save-edit]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); saveDiario321EntryEdit(btn.dataset.entrySaveEdit); }));
+    document.querySelectorAll("[data-entry-cancel-edit]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); cancelDiario321EntryEdit(btn.closest("[data-entry-drag-id]")?.dataset.entryDragId || ""); }));
     document.querySelectorAll("[data-entry-delete]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); requestDeleteDiario321Entry(btn.dataset.entryDelete); }));
     document.querySelectorAll("[data-entry-delete-confirm]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); deleteDiario321Entry(btn.dataset.entryDeleteConfirm); }));
     document.querySelectorAll("[data-entry-delete-cancel]").forEach(btn => btn.addEventListener("click", (ev) => { ev.preventDefault(); ev.stopPropagation(); cancelDeleteDiario321Entry(); }));

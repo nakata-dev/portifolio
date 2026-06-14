@@ -17977,3 +17977,84 @@ html[data-theme="light"] body.is-home-route .toolCard--script .toolIcon{
   background:#F7FAFC !important;
   color:#1A365D !important;
 }
+
+
+/* =========================================================
+   NIHONGO321 8.8.61-R — prioridade 1
+   modo claro: eliminar botões fantasmas na apresentação
+   ========================================================= */
+html[data-theme="light"] .sheet .small,
+html[data-theme="light"] .card .small,
+html[data-theme="light"] .launchChecklistNote,
+html[data-theme="light"] .launchChecklistHelp,
+html[data-theme="light"] .premiumFinalNote,
+html[data-theme="light"] .premiumFinalText,
+html[data-theme="light"] .salesFaqBody,
+html[data-theme="light"] .salesFaqBody p,
+html[data-theme="light"] .salesFaqBody li{
+  color:#5a6f8f !important;
+}
+
+html[data-theme="light"] .sheet .btn--ghost,
+html[data-theme="light"] .card .btn--ghost,
+html[data-theme="light"] .settingsDetailsBody .btn--ghost,
+html[data-theme="light"] .settingsMiniGrid .btn--ghost,
+html[data-theme="light"] .grid2 .btn--ghost,
+html[data-theme="light"] .grid2 .btn--muted,
+html[data-theme="light"] .sheet .btn--muted,
+html[data-theme="light"] .card .btn--muted,
+html[data-theme="light"] .settingsDetailsBody .btn--muted,
+html[data-theme="light"] .legalLinksBox .btn,
+html[data-theme="light"] .launchChecklistBox .btn{
+  color:#173a70 !important;
+  border-color:rgba(26,54,93,.14) !important;
+  box-shadow:0 10px 22px rgba(26,54,93,.08), inset 0 1px 0 rgba(255,255,255,.92) !important;
+}
+
+html[data-theme="light"] .sheet .btn--ghost,
+html[data-theme="light"] .card .btn--ghost,
+html[data-theme="light"] .settingsDetailsBody .btn--ghost,
+html[data-theme="light"] .settingsMiniGrid .btn--ghost,
+html[data-theme="light"] .legalLinksBox .btn--ghost,
+html[data-theme="light"] .launchChecklistBox .btn--ghost{
+  background:linear-gradient(180deg, #ffffff 0%, #f2f7ff 100%) !important;
+}
+
+html[data-theme="light"] .sheet .btn--muted,
+html[data-theme="light"] .card .btn--muted,
+html[data-theme="light"] .settingsDetailsBody .btn--muted,
+html[data-theme="light"] .grid2 .btn--muted,
+html[data-theme="light"] .legalLinksBox .btn--muted,
+html[data-theme="light"] .launchChecklistBox .btn--muted{
+  background:linear-gradient(180deg, #ffffff 0%, #f7fafc 100%) !important;
+  color:#26456f !important;
+}
+
+html[data-theme="light"] .sheet .btn--ghost:hover,
+html[data-theme="light"] .sheet .btn--ghost:focus-visible,
+html[data-theme="light"] .card .btn--ghost:hover,
+html[data-theme="light"] .card .btn--ghost:focus-visible,
+html[data-theme="light"] .sheet .btn--muted:hover,
+html[data-theme="light"] .sheet .btn--muted:focus-visible,
+html[data-theme="light"] .card .btn--muted:hover,
+html[data-theme="light"] .card .btn--muted:focus-visible{
+  color:#102f5a !important;
+  border-color:rgba(255,107,0,.24) !important;
+  transform:translateY(-1px);
+}
+
+html[data-theme="light"] .sheet,
+html[data-theme="light"] .card,
+html[data-theme="light"] .settingsDetails,
+html[data-theme="light"] .launchChecklistBox,
+html[data-theme="light"] .legalLinksBox{
+  box-shadow:0 14px 28px rgba(26,54,93,.08), inset 0 1px 0 rgba(255,255,255,.90) !important;
+}
+
+html[data-theme="light"] .sheet .badge,
+html[data-theme="light"] .card .badge,
+html[data-theme="light"] .settingsDetails .badge{
+  color:#35527b !important;
+  border-color:rgba(26,54,93,.12) !important;
+  background:linear-gradient(180deg, #ffffff 0%, #f5f8fd 100%) !important;
+}
