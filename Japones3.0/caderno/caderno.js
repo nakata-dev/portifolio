@@ -1,5 +1,5 @@
 /* =========================================================
-   DIÁRIO321 — Protótipo 4.17.9-R — IA expansiva 10 variações
+   DIÁRIO321 — Protótipo 4.17.10-R — IA expansiva 10 variações
    Visual de diário de treino com mapa de cenários e frequência.
    ========================================================= */
 
@@ -38475,7 +38475,7 @@
         targetTopicName: safeSaveTopicName(topicId),
         details,
         detailsText,
-        sourceVersion: "4.17.9-R"
+        sourceVersion: "4.17.10-R"
       },
       note: detailsText,
       createdAt: new Date().toISOString(),
@@ -41244,7 +41244,7 @@
         targetTopicId: topicId,
         targetTopicName: safeSaveTopicName ? safeSaveTopicName(topicId) : "Diário321",
         details: { words: `${seed.jp}=${seed.meaning}`, particles: "", explanation: "Frase criada na Oficina Viva do DIÁRIO321.", situation: seed.env?.label || "vida real" },
-        sourceVersion: "4.17.9-R"
+        sourceVersion: "4.17.10-R"
       },
       note: `Palavra de estudo: ${seed.jp} = ${seed.meaning}`,
       createdAt: new Date().toISOString(),
@@ -41645,7 +41645,7 @@ applyAppTheme();
     const payload = {
       app: "DIÁRIO321",
       target: "NIHONGO321",
-      version: "4.10.22",
+      version: "4.10.23",
       exportedAt: new Date().toISOString(),
       total: saved.length,
       phrases: saved

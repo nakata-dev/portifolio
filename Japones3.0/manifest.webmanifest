@@ -1,7 +1,7 @@
 {
   "name": "NIHONGO321 - Japonês prático no Japão",
   "short_name": "NIHONGO321",
-  "description": "Japonês prático para brasileiros no Japão, com DIÁRIO321, frases úteis e treino 105x.",
+  "description": "Japonês prático para brasileiros no Japão, com DIÁRIO321, treino 105x e frases úteis da vida real.",
   "start_url": "./index.html#/landing",
   "scope": "./",
   "display": "standalone",

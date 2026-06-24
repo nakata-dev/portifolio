@@ -1,0 +1,17 @@
+{
+  "appName": "NIHONGO321",
+  "packageName": "com.nakata.nihongo321",
+  "category": "Educação",
+  "language": "pt-BR",
+  "shortDescription": "Japonês prático para brasileiros no Japão.",
+  "fullDescription": "NIHONGO321 é um app de japonês prático feito para brasileiros que vivem no Japão. Treine frases úteis para trabalho, mercado, prefeitura, moradia, saúde e conversas do dia a dia. O método combina repetição guiada 105x, DIÁRIO321 para criar frases reais e organização simples para estudar mesmo com pouco tempo.",
+  "releaseNotes": [
+    "Versão candidata para auditoria Android.",
+    "Treino 105x, DIÁRIO321, biblioteca de frases e treino de escrita preservados.",
+    "Premium preparado para ativação futura por compra interna oficial."
+  ],
+  "privacyPolicyPath": "./privacy-policy.html",
+  "termsPath": "./terms.html",
+  "supportEmail": "akionkt@gmail.com",
+  "paymentStatus": "Primeira publicação grátis. Premium sem checkout externo."
+}

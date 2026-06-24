@@ -1,11 +1,13 @@
 {
   "name": "nihongo321-store-ready",
-  "version": "8.8.50",
+  "version": "8.8.78",
   "private": true,
-  "description": "NIHONGO321 Store Ready Android wrapper configuration.",
+  "description": "NIHONGO321 Store Audit Android wrapper configuration.",
   "scripts": {
+    "validate:js": "node --check app.js && node --check caderno/caderno.js && node --check sensei-bank.js",
     "cap:add:android": "npx cap add android",
     "cap:copy": "npx cap copy android",
+    "cap:sync:android": "npx cap sync android",
     "cap:open:android": "npx cap open android"
   },
   "dependencies": {

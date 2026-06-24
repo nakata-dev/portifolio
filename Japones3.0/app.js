@@ -22,8 +22,8 @@ const BRAND = {
   name: "NIHONGO321",
   tagline: "Japonês prático no Japão",
   promise: "Treine frases úteis para viver melhor no Japão.",
-  version: "8.8.50-R",
-  updatedAt: "2026-06-13",
+  version: "8.8.78-R",
+  updatedAt: "2026-06-20",
   logoPath: "./img/logo_nihongo321.png"
 };
 
@@ -37,8 +37,8 @@ const STORE_READY = {
   target: "android",
   packageName: "com.nakata.nihongo321",
   appName: "NIHONGO321",
-  versionName: "8.8.50-R",
-  versionCode: 50,
+  versionName: "8.8.78-R",
+  versionCode: 78,
   paymentMode: "google_play_billing_pending",
   privacyPolicyPath: "./privacy-policy.html",
   termsPath: "./terms.html"
@@ -587,6 +587,7 @@ function formatWordExplanation(word) {
 
 /* ---------- checkout ---------- */
 function isRealCheckoutConfigured() {
+  if (STORE_READY?.enabled && STORE_READY?.paymentMode === "google_play_billing_pending") return false;
   return !!SALES.checkoutUrl &&
     SALES.checkoutUrl.startsWith("http") &&
     !/SEU-CHECKOUT-AQUI/i.test(SALES.checkoutUrl);
@@ -4715,6 +4716,7 @@ function renderLaunchChecklist() {
     "Backup/compartilhamento aprovado na 8.5.38",
     "Responsividade celular/tablet/desktop trabalhada até 8.5.35",
     "Tela Premium aprimorada na 8.5.39",
+    "Diário321, pincel Suave 4 e Biblioteca compacta aprovados até 8.8.77-R",
     "Caracteres especiais liberados no cadastro",
     "Hero mobile em duas linhas aprovado"
   ];
@@ -4725,13 +4727,13 @@ function renderLaunchChecklist() {
     { label: "Testar backup por WhatsApp/LINE em celular real", done: true },
     { label: "Conectar compra interna da loja oficial", done: checkoutOk },
     { label: "Confirmar e-mail real de suporte", done: supportOk },
-    { label: "Preparar ícone final do app", done: false },
+    { label: "Preparar ícone final do app", done: true },
     { label: "Preparar screenshots para loja", done: false },
-    { label: "Preparar descrição curta e longa", done: false },
+    { label: "Preparar descrição curta e longa", done: true },
     { label: "Preparar política de privacidade pública", done: true },
     { label: "Preparar termos de uso públicos", done: true },
     { label: "Fazer teste final com usuários reais", done: false },
-    { label: "Congelar versão candidata de publicação", done: false }
+    { label: "Congelar versão candidata de publicação", done: true }
   ];
 
   const salesTasks = [
@@ -4777,7 +4779,7 @@ function renderLaunchChecklist() {
           <div>
             <h1 class="launchTitle">Rumo à primeira versão vendável do NIHONGO321.</h1>
             <p class="launchLead">
-              Este painel é interno. Ele serve para guiar os últimos passos antes de testar com usuários reais, vender e publicar.
+              Painel interno para guiar a conversão Android, teste fechado e publicação sem distrações.
             </p>
           </div>
 
@@ -9923,9 +9925,11 @@ function renderStoreReadyAndroid() {
   const items = [
     ["Identidade", `Nome: ${STORE_READY.appName} • Package: ${STORE_READY.packageName}`],
     ["Versão", `Version name: ${STORE_READY.versionName} • Version code: ${STORE_READY.versionCode}`],
+    ["Rotas", "Home, apresentação, 105x, Diário, Premium, configurações, privacidade e termos revisados."],
     ["Pagamento", "Primeira publicação grátis. Premium preparado, compra interna será conectada depois."],
     ["Privacidade", "Dados principais ficam no aparelho via localStorage. Política pública incluída no pacote."],
-    ["Conversão", "Capacitor configurado para gerar Android App Bundle (.aab)."]
+    ["Conversão", "Capacitor configurado para gerar Android App Bundle (.aab)."],
+    ["Risco de loja", "Checkout externo desativado enquanto o Premium não usar compra interna oficial."]
   ];
 
   APP.innerHTML = `
@@ -9935,8 +9939,8 @@ function renderStoreReadyAndroid() {
           <div class="badge">Store Ready Android</div>
           <button class="btn" data-nav="#/launch-checklist">checklist</button>
         </div>
-        <h1 class="storeTitle">NIHONGO321 pronto para iniciar a conversão Android.</h1>
-        <p class="storeLead">Esta tela reúne as decisões técnicas para transformar o app em um pacote publicável na Google Play.</p>
+        <h1 class="storeTitle">NIHONGO321 pronto para auditoria Android.</h1>
+        <p class="storeLead">Esta tela reúne as decisões técnicas mínimas para gerar uma versão candidata de teste na Google Play.</p>
       </section>
 
       <section class="card stack">

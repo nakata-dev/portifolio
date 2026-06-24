@@ -1,0 +1,21 @@
+{
+  "versionName": "8.8.78-R",
+  "versionCode": 78,
+  "packageName": "com.nakata.nihongo321",
+  "date": "2026-06-20",
+  "audit": {
+    "javascriptSyntax": "validated by node --check",
+    "zipIntegrity": "validated by unzip -tq",
+    "checkoutExternal": "disabled in Store Ready mode",
+    "privacyPolicy": "included",
+    "termsOfUse": "included",
+    "storeAssets": [
+      "icon-512.png",
+      "icon-maskable-512.png",
+      "feature-graphic-1024x500.png",
+      "splash-2732.png"
+    ],
+    "capacitor": "configuration included"
+  },
+  "nextStep": "Generate Android project with Capacitor and build signed AAB in Android Studio."
+}
