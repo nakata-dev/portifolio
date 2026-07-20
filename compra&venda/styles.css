@@ -592,3 +592,77 @@ textarea{min-height:90px; resize:vertical}
   body.print-receipt #receiptOverlay .panel-body{padding:0 !important; overflow:visible !important}
   body.print-receipt #receiptOverlay .receipt{border:none !important; border-radius:0 !important}
 }
+
+/* v1.1.0 — Demonstrativo financeiro */
+.finance-rule{
+  border:1px solid rgba(125,211,252,.42);
+  background:linear-gradient(135deg, rgba(125,211,252,.12), rgba(52,211,153,.08));
+  border-radius:16px;
+  padding:12px;
+  margin:4px 0 12px;
+}
+.finance-rule-title{font-weight:850; color:var(--soft)}
+.finance-rule p{margin:6px 0 0; color:var(--muted); font-size:.92rem}
+.finance-section{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  border-radius:18px;
+  padding:12px;
+  margin-top:12px;
+}
+.finance-section > h3{margin:0 0 10px}
+.finance-grid{display:grid; grid-template-columns:1fr; gap:8px}
+@media(min-width:720px){.finance-grid{grid-template-columns:repeat(3,1fr)}}
+.finance-card{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.035);
+}
+.finance-card .label{color:var(--muted); font-size:.86rem}
+.finance-card .amount{font-weight:880; font-size:1.08rem; margin-top:5px}
+.finance-card .caption{color:var(--muted); font-size:.82rem; margin-top:5px}
+.finance-card.emphasis{border-color:rgba(125,211,252,.48); background:rgba(125,211,252,.10)}
+.finance-card.alert{border-color:rgba(251,113,133,.48); background:rgba(251,113,133,.08)}
+.finance-card.good{border-color:rgba(52,211,153,.48); background:rgba(52,211,153,.08)}
+.finance-table{border:1px solid var(--line); border-radius:16px; overflow:hidden}
+.finance-table .finance-row{
+  display:grid;
+  grid-template-columns:1.15fr .9fr .9fr .8fr;
+  gap:8px;
+  padding:10px 12px;
+  border-top:1px solid var(--line);
+  align-items:center;
+}
+.finance-table .finance-row:first-child{border-top:none}
+.finance-table .finance-head{background:rgba(255,255,255,.055); font-weight:780; color:var(--soft)}
+.finance-table .right{text-align:right}
+.movement-list{display:grid; gap:8px}
+.movement{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  background:rgba(255,255,255,.025);
+}
+.movement-title{font-weight:780}
+.movement-meta{color:var(--muted); font-size:.86rem; margin-top:4px}
+.movement-value{font-weight:850; white-space:nowrap}
+.movement-value.negative{color:var(--bad)}
+.movement-value.positive{color:var(--good)}
+.receipt .finance-summary{display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px}
+@media(min-width:720px){.receipt .finance-summary{grid-template-columns:repeat(3,1fr)}}
+.receipt .finance-summary .box.strong{border-width:2px}
+.receipt .statement-table{width:100%; border-collapse:collapse; margin-top:8px; font-size:.92rem}
+.receipt .statement-table th,.receipt .statement-table td{border:1px solid rgba(11,18,32,.14); padding:7px 8px; text-align:left; vertical-align:top}
+.receipt .statement-table th{background:rgba(11,18,32,.06)}
+.receipt .statement-table .num{text-align:right; white-space:nowrap}
+@media(max-width:560px){
+  .finance-table .finance-row{grid-template-columns:1fr 1fr;}
+  .finance-table .finance-head{display:none}
+  .finance-table .right{text-align:left}
+  .movement{flex-direction:column}
+}

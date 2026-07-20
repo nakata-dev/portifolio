@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b1220" />
-  <title>Comprar &amp; Venda - PRO</title>
+  <title>Comprar &amp; Venda PRO — Demonstrativo Financeiro</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -94,7 +94,7 @@
       <div class="card">
         <div class="card-head">
           <h2 class="card-title">Configurações</h2>
-          <p class="card-desc">Moeda de exibição e câmbio.</p>
+          <p class="card-desc">Moeda, câmbio e taxa padrão da poupança.</p>
         </div>
 
         <form class="form" id="settingsForm">
@@ -106,6 +106,12 @@
               <option value="JPY">JPY (¥)</option>
             </select>
             <div class="hint">A conversão usa BRL como ponte quando necessário.</div>
+          </div>
+
+          <div class="field">
+            <label for="defaultSavingsRate">Taxa mensal padrão da poupança (%)</label>
+            <input id="defaultSavingsRate" name="defaultSavingsRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
+            <div class="hint">Usada como referência nos novos empréstimos. Pode ser ajustada em cada acordo.</div>
           </div>
 
           <div class="field">
@@ -278,25 +284,18 @@
               <div class="error" id="err-agreementDate" role="alert"></div>
             </div>
 
-            <div class="field" id="loanRateField" hidden>
-              <div class="row row-2 loan-row">
-                <div class="field loan-field">
-                  <label for="loanInterestType">Tipo de juros</label>
-                  <select id="loanInterestType" name="loanInterestType">
-                    <option value="poupanca">Juros de Poupança</option>
-                    <option value="simples">Juros Simples</option>
-                    <option value="compostos">Juros Compostos</option>
-                  </select>
-                  <div class="hint" id="loanTypeHint">Usa a taxa mensal informada como referência do cálculo.</div>
-                </div>
-
-                <div class="field loan-field">
-                  <label for="loanRate">Rendimento mensal estimado (opcional)</label>
-                  <input id="loanRate" name="loanRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
-                  <div class="hint">Informe a taxa ao mês em porcentagem. Ex.: 0,67 ou 2,00.</div>
-                </div>
-              </div>
+          <div class="field" id="loanRateField" hidden>
+            <div class="finance-rule" role="note" aria-label="Regra de correção do empréstimo">
+              <div class="finance-rule-title">🏦 Correção pela Poupança</div>
+              <p>O cálculo é feito parcela por parcela, somente após cada vencimento e por meses completos.</p>
             </div>
+            <div class="field loan-field">
+              <label for="loanRate">Taxa mensal de referência da poupança (%)</label>
+              <input id="loanRate" name="loanRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
+              <div class="hint">Ex.: 0,67. A taxa fica registrada no acordo para o demonstrativo permanecer auditável.</div>
+              <div class="error" id="err-loanRate" role="alert"></div>
+            </div>
+          </div>
           </div>
 
           <fieldset class="fieldset">
@@ -385,9 +384,9 @@
             <select id="receiptMode">
               <option value="total">Recibo do total</option>
               <option value="installment">Recibo de parcela</option>
-              <option value="report">Relatório (mensal e transparente)</option>
+              <option value="report">Demonstrativo financeiro completo</option>
             </select>
-            <div class="hint">Relatório é ótimo para WhatsApp e PDF mensal.</div>
+            <div class="hint">O demonstrativo separa principal, pagamentos, saldo, atraso e correção pela poupança.</div>
           </div>
 
           <div class="field" id="receiptInstallmentField" hidden>
@@ -420,7 +419,7 @@
   <input type="file" id="importFile" accept="application/json" hidden />
 
   <footer class="app-footer" role="contentinfo">
-    <small>Copyright @ 2026 - Ailton A. Nakata</small>
+    <small>Copyright @ 2026 - Ailton A. Nakata • v1.1.0</small>
   </footer>
 
   <script src="app.js"></script>
