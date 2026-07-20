@@ -1,17 +1,35 @@
 (() => {
   "use strict";
 
-  const APP_VERSION = "1.1.0";
-  const SCHEMA_VERSION = 4;
-  const STORAGE_KEY = "cvpro:data:v4";
+  const APP_VERSION = "1.4.1";
+  const SCHEMA_VERSION = 8;
+  const STORAGE_KEY = "cvpro:data:v8";
   const RATES_TTL_MS = 12 * 60 * 60 * 1000;
 
   const CURRENCIES = ["BRL", "USD", "JPY"];
   const SIGNS = { BRL: "R$", USD: "US$", JPY: "¥" };
 
   const DEFAULT_LOAN_RATE = 0.0067; // 0,67% ao mês (0,5% + TR estimada)
-  const DEFAULT_INTEREST_TYPE = "poupanca";
-  const INTEREST_TYPES = ["poupanca"];
+  const DEFAULT_INTEREST_TYPE = "poupanca_composta";
+  const DEFAULT_INTEREST_BASIS = "saldo_geral_em_aberto";
+  const INTEREST_TYPES = ["poupanca_composta"];
+  const INTEREST_BEARING_TYPES = ["venda", "emprestimo"];
+  const isInterestBearingType = (type) => INTEREST_BEARING_TYPES.includes(type);
+  const normalizedPositiveRate = (value, fallback = DEFAULT_LOAN_RATE) => {
+    const n = Number(value);
+    const f = Number(fallback);
+    if (value !== null && value !== "" && Number.isFinite(n) && n > 0) return n;
+    return Number.isFinite(f) && f > 0 ? f : DEFAULT_LOAN_RATE;
+  };
+  const PAYMENT_METHODS = ["pix", "transferencia", "dinheiro", "boleto", "cartao", "outro"];
+  const PAYMENT_METHOD_LABELS = {
+    pix: "Pix",
+    transferencia: "Transferência bancária",
+    dinheiro: "Dinheiro",
+    boleto: "Boleto",
+    cartao: "Cartão",
+    outro: "Outro",
+  };
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -144,13 +162,13 @@
 
   const normalizeInterestType = () => DEFAULT_INTEREST_TYPE;
 
-  const getInterestTypeLabel = () => "Correção pela Poupança";
+  const getInterestTypeLabel = () => "Juros Compostos por Atraso";
 
-  const getInterestTypeHint = () => "Calculada parcela por parcela, por meses completos após cada vencimento.";
+  const getInterestTypeHint = () => "Calculados sobre o saldo geral em aberto, desde o primeiro vencimento não pago, por meses completos.";
 
   const getInterestTypeLongLabel = (tx) => {
-    const rate = Number.isFinite(tx?.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE;
-    return `Correção pela Poupança (${(rate * 100).toFixed(2).replace(".", ",")}% ao mês)`;
+    const rate = normalizedPositiveRate(tx?.loanRate);
+    return `Juros Compostos por Atraso (${(rate * 100).toFixed(2).replace(".", ",")}% ao mês)`;
   };
 
   /* ---------------- Storage ---------------- */
@@ -203,7 +221,7 @@
       }));
     };
 
-    const normalizeTransaction = (tx) => {
+    const normalizeTransaction = (tx, defaultInterestRate = DEFAULT_LOAN_RATE) => {
       const t = safeClone(tx || {});
       t.installments = Array.isArray(t.installments)
         ? t.installments.map(normalizeInstallmentForStorage)
@@ -213,20 +231,34 @@
       t.originalValue = finiteMoney(t.originalValue, finiteMoney(t.totalValue, scheduleTotal));
       t.totalValue = t.originalValue;
 
-      if (t.type === "emprestimo") {
-        if (!Number.isFinite(Number(t.loanRate)) || Number(t.loanRate) < 0) t.loanRate = DEFAULT_LOAN_RATE;
-        else t.loanRate = Number(t.loanRate);
+      if (isInterestBearingType(t.type)) {
+        // Hotfix v1.4.1: versões antigas gravavam vendas com loanRate null.
+        // Number(null) vira 0 em JavaScript, o que zerava os juros após a migração.
+        // Com juros ativos, taxa ausente, vazia, inválida ou zero recebe a taxa-padrão.
+        t.loanRate = normalizedPositiveRate(t.loanRate, defaultInterestRate);
         const previousType = t.interestType;
         if (previousType && previousType !== DEFAULT_INTEREST_TYPE && !t.legacyInterestType) {
           t.legacyInterestType = previousType;
         }
+        t.interestEnabled = t.interestEnabled !== false;
         t.interestType = DEFAULT_INTEREST_TYPE;
+        t.interestCalculationBasis = DEFAULT_INTEREST_BASIS;
       } else {
         t.loanRate = null;
+        t.interestEnabled = false;
         t.interestType = null;
+        t.interestCalculationBasis = null;
       }
 
       t.movements = Array.isArray(t.movements) ? t.movements : inferredMovements(t);
+      const ia = t.interestAccount && typeof t.interestAccount === "object" ? t.interestAccount : null;
+      t.interestAccount = ia && ia.anchorDate && Number.isFinite(Number(ia.baseDebt)) && Number(ia.baseDebt) >= 0
+        ? {
+            anchorDate: String(ia.anchorDate).slice(0, 10),
+            baseDebt: finiteMoney(ia.baseDebt, 0),
+            principalAtAnchor: finiteMoney(ia.principalAtAnchor, 0),
+          }
+        : null;
       t.createdAt = t.createdAt || nowISO();
       t.updatedAt = t.updatedAt || t.createdAt;
       return t;
@@ -237,10 +269,10 @@
       const d = safeClone(data);
       d.settings = { ...defaultSettings(), ...(d.settings || {}) };
       const savingsRate = Number(d.settings.defaultSavingsRate);
-      d.settings.defaultSavingsRate = Number.isFinite(savingsRate) && savingsRate >= 0
+      d.settings.defaultSavingsRate = Number.isFinite(savingsRate) && savingsRate > 0
         ? savingsRate
         : DEFAULT_LOAN_RATE;
-      d.transactions = Array.isArray(d.transactions) ? d.transactions.map(normalizeTransaction) : [];
+      d.transactions = Array.isArray(d.transactions) ? d.transactions.map(tx => normalizeTransaction(tx, d.settings.defaultSavingsRate)) : [];
       d.schemaVersion = SCHEMA_VERSION;
       d.appVersion = APP_VERSION;
       return d;
@@ -248,7 +280,7 @@
 
     const load = () => {
       try {
-        const keys = [STORAGE_KEY, "cvpro:data:v3", "cvpro:data:v2", "cvpro:data:v1"];
+        const keys = [STORAGE_KEY, "cvpro:data:v7", "cvpro:data:v6", "cvpro:data:v5", "cvpro:data:v4", "cvpro:data:v3", "cvpro:data:v2", "cvpro:data:v1"];
         for (const key of keys) {
           const raw = localStorage.getItem(key);
           if (!raw) continue;
@@ -263,7 +295,7 @@
     };
 
     const save = (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(migrate(data)));
-    const clear = () => ["cvpro:data:v4", "cvpro:data:v3", "cvpro:data:v2", "cvpro:data:v1"].forEach(k => localStorage.removeItem(k));
+    const clear = () => ["cvpro:data:v8", "cvpro:data:v7", "cvpro:data:v6", "cvpro:data:v5", "cvpro:data:v4", "cvpro:data:v3", "cvpro:data:v2", "cvpro:data:v1"].forEach(k => localStorage.removeItem(k));
 
     return { load, save, clear, migrate, defaultData };
   })();
@@ -364,7 +396,7 @@
   /* ---------------- UI ---------------- */
   const UI = (() => {
     const wrap = $("#toastWrap");
-    const overlayMap = () => ({ menu: $("#menuOverlay"), receipt: $("#receiptOverlay") });
+    const overlayMap = () => ({ menu: $("#menuOverlay"), payment: $("#paymentOverlay"), receipt: $("#receiptOverlay") });
     let lastFocus = null;
 
     const lockScroll = () => {
@@ -477,6 +509,7 @@
       if (e.key !== "Escape") return;
       const map = overlayMap();
       if (map.receipt && !map.receipt.hidden) closeOverlay("receipt");
+      else if (map.payment && !map.payment.hidden) closeOverlay("payment");
       else if (map.menu && !map.menu.hidden) closeOverlay("menu");
     });
 
@@ -484,7 +517,7 @@
       const closeEl = e.target.closest("[data-close]");
       if (closeEl) {
         const kind = closeEl.getAttribute("data-close");
-        if (kind === "menu" || kind === "receipt") closeOverlay(kind);
+        if (kind === "menu" || kind === "payment" || kind === "receipt") closeOverlay(kind);
         return;
       }
 
@@ -492,6 +525,7 @@
       if (scrim) {
         const ov = scrim.closest(".overlay");
         if (ov?.id === "menuOverlay") closeOverlay("menu");
+        if (ov?.id === "paymentOverlay") closeOverlay("payment");
         if (ov?.id === "receiptOverlay") closeOverlay("receipt");
       }
     });
@@ -512,7 +546,7 @@
 
     const setDefaultSavingsRate = (rate) => {
       const n = Number(rate);
-      if (!Number.isFinite(n) || n < 0 || n > 1) return false;
+      if (!Number.isFinite(n) || n <= 0 || n > 1) return false;
       state.settings.defaultSavingsRate = n;
       Storage.save(state);
       return true;
@@ -645,8 +679,8 @@
         }
       }
 
-      if (draft.type === "emprestimo") {
-        if (!Number.isFinite(draft.loanRate) || draft.loanRate < 0) errors.loanRate = "Informe uma taxa mensal válida.";
+      if (isInterestBearingType(draft.type) && draft.interestEnabled !== false) {
+        if (!Number.isFinite(draft.loanRate) || draft.loanRate <= 0) errors.loanRate = "Informe uma taxa mensal maior que zero.";
         if (draft.loanRate > 1) errors.loanRate = "A taxa mensal parece alta demais. Revise o valor.";
       }
       return errors;
@@ -711,108 +745,142 @@
         amount: Number(movement.amount || 0),
         date: movement.date || nowISO(),
         installmentNumber: movement.installmentNumber ?? null,
-        allocations: Array.isArray(movement.allocations) ? movement.allocations : null,
+        allocations: Array.isArray(movement.allocations) ? safeClone(movement.allocations) : null,
         referenceId: movement.referenceId || null,
+        paymentMethod: PAYMENT_METHODS.includes(movement.paymentMethod) ? movement.paymentMethod : null,
+        paymentReference: movement.paymentReference || null,
+        interestAmount: Number(movement.interestAmount || 0),
+        principalAmount: Number(movement.principalAmount || 0),
+        principalBefore: Number(movement.principalBefore || 0),
+        interestBefore: Number(movement.interestBefore || 0),
+        balanceBefore: Number(movement.balanceBefore || 0),
+        balanceAfter: Number(movement.balanceAfter || 0),
+        snapshotBefore: movement.snapshotBefore ? safeClone(movement.snapshotBefore) : null,
+        reversedAt: movement.reversedAt || null,
+        reversalMovementId: movement.reversalMovementId || null,
         note: movement.note || null,
       };
       tx.movements.push(item);
       return item;
     };
 
-    const payNext = (tx) => {
-      const next = nextPendingInstallment(tx);
-      if (!next) return { ok: false, tx, paidNumber: null };
-      const previousPaidAmount = installmentPaidValue(next);
-      const amount = installmentOpenValue(next);
-      next.paidAmount = installmentContractValue(next);
-      next.status = "pago";
-      next.paidAt = todayISODate();
-      const movement = addMovement(tx, {
-        type: "payment",
-        amount,
-        date: next.paidAt,
-        installmentNumber: next.number,
-        note: `Quitação da parcela ${next.number}.`,
-      });
-      tx.updatedAt = nowISO();
-      return { ok: true, tx, paidNumber: next.number, previousPaidAmount, movementId: movement.id, amount };
-    };
-
-    const undoPay = (tx, installmentNumber, previousPaidAmount = 0, referenceId = null) => {
-      const inst = ensureInstallments(tx).find(i => i.number === installmentNumber);
-      if (!inst) return tx;
-      const currentPaid = installmentPaidValue(inst);
-      const restored = Math.max(0, Math.min(installmentContractValue(inst), Number(previousPaidAmount || 0)));
-      inst.paidAmount = restored;
-      inst.status = restored >= installmentContractValue(inst) && installmentContractValue(inst) > 0 ? "pago" : "pendente";
-      inst.paidAt = inst.status === "pago" ? inst.paidAt : null;
-      addMovement(tx, {
-        type: "payment_reversal",
-        amount: -(currentPaid - restored),
-        date: todayISODate(),
-        installmentNumber,
-        referenceId,
-        note: `Pagamento da parcela ${installmentNumber} desfeito.`,
-      });
-      tx.updatedAt = nowISO();
-      return tx;
-    };
-
     const typeLabel = (t) => t === "compra" ? "Compra" : t === "venda" ? "Venda" : "Empréstimo";
+    const paymentMethodLabel = (method) => PAYMENT_METHOD_LABELS[method] || "Não informado";
 
     const loanMonthlyYield = (tx) => {
-      if (tx.type !== "emprestimo") return 0;
+      if (!isInterestBearingType(tx.type) || tx.interestEnabled === false) return 0;
       const pending = sumByStatus(tx, "pendente");
-      const rate = Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE;
+      const rate = normalizedPositiveRate(tx.loanRate);
       return roundByCurrency(pending * rate, tx.currency || "BRL");
     };
 
-    const loanInterestAccrued = (tx, asOfISO = todayISODate()) => {
+    const validInterestAccount = (tx, asOfISO) => {
+      const account = tx?.interestAccount;
+      if (!account || typeof account !== "object") return null;
+      const anchorDate = String(account.anchorDate || "").slice(0, 10);
+      const baseDebt = Number(account.baseDebt);
+      const principalAtAnchor = Number(account.principalAtAnchor);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(anchorDate)) return null;
+      if (anchorDate > asOfISO) return null;
+      if (!Number.isFinite(baseDebt) || baseDebt < 0) return null;
+      return {
+        anchorDate,
+        baseDebt,
+        principalAtAnchor: Number.isFinite(principalAtAnchor) && principalAtAnchor >= 0 ? principalAtAnchor : 0,
+      };
+    };
+
+    const overdueInterestAccrued = (tx, asOfISO = todayISODate()) => {
       const currency = tx.currency || "BRL";
-      const rate = Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE;
-      if (tx.type !== "emprestimo") {
-        return { months: 0, rate: 0, interest: 0, base: 0, since: null, details: [], interestType: DEFAULT_INTEREST_TYPE };
+      const enabled = isInterestBearingType(tx.type) && tx.interestEnabled !== false;
+      const rate = enabled ? normalizedPositiveRate(tx.loanRate) : 0;
+      const annualEquivalent = Math.pow(1 + rate, 12) - 1;
+      const principal = roundByCurrency(sumByStatus(tx, "pendente"), currency);
+      const overdue = overdueInstallments(tx, asOfISO)
+        .slice()
+        .sort((a, b) => String(a.dueDate || "").localeCompare(String(b.dueDate || "")) || a.number - b.number);
+
+      if (!enabled || !overdue.length || principal <= 0) {
+        return {
+          months: 0,
+          rate: enabled ? rate : 0,
+          annualEquivalent: enabled ? annualEquivalent : 0,
+          interest: 0,
+          base: principal,
+          since: null,
+          factor: 1,
+          updatedValue: principal,
+          details: [],
+          interestType: DEFAULT_INTEREST_TYPE,
+          calculationBasis: DEFAULT_INTEREST_BASIS,
+          enabled,
+          carriedInterest: 0,
+        };
       }
 
-      const details = overdueInstallments(tx, asOfISO).map(inst => {
-        const principal = installmentOpenValue(inst);
-        const months = monthsBetween(inst.dueDate, asOfISO);
-        const interest = months > 0
-          ? roundByCurrency(principal * (Math.pow(1 + rate, months) - 1), currency)
-          : 0;
-        return {
-          installmentId: inst.id,
-          number: inst.number,
-          dueDate: inst.dueDate,
-          principal,
-          months,
-          interest,
-          updatedValue: roundByCurrency(principal + interest, currency),
-        };
-      });
+      const account = validInterestAccount(tx, asOfISO);
+      const since = account?.anchorDate || overdue[0].dueDate;
+      const baseDebt = roundByCurrency(account?.baseDebt ?? principal, currency);
+      const months = monthsBetween(since, asOfISO);
+      const factor = months > 0 ? Math.pow(1 + rate, months) : 1;
+      const calculatedDebt = roundByCurrency(baseDebt * factor, currency);
+      const updatedValue = roundByCurrency(Math.max(principal, calculatedDebt), currency);
+      const interest = roundByCurrency(Math.max(0, updatedValue - principal), currency);
+      const carriedInterest = roundByCurrency(Math.max(0, baseDebt - Number(account?.principalAtAnchor ?? principal)), currency);
+      const details = [{
+        scope: DEFAULT_INTEREST_BASIS,
+        since,
+        principal,
+        baseDebt,
+        months,
+        factor,
+        interest,
+        carriedInterest,
+        updatedValue,
+      }];
 
-      const interest = roundByCurrency(details.reduce((sum, d) => sum + d.interest, 0), currency);
-      const base = roundByCurrency(details.reduce((sum, d) => sum + d.principal, 0), currency);
-      const months = details.reduce((max, d) => Math.max(max, d.months), 0);
-      const since = details.length ? details.map(d => d.dueDate).sort()[0] : null;
-      return { months, rate, interest, base, since, details, interestType: DEFAULT_INTEREST_TYPE };
+      return {
+        months,
+        rate,
+        annualEquivalent,
+        interest,
+        base: baseDebt,
+        since,
+        factor,
+        updatedValue,
+        details,
+        interestType: DEFAULT_INTEREST_TYPE,
+        calculationBasis: DEFAULT_INTEREST_BASIS,
+        enabled: true,
+        carriedInterest,
+      };
     };
 
     const financialStatement = (tx, asOfISO = todayISODate()) => {
       const currency = tx.currency || "BRL";
       const prog = progressSummary(tx);
       const overdue = overdueInstallments(tx, asOfISO);
-      const interestInfo = loanInterestAccrued(tx, asOfISO);
+      const interestInfo = overdueInterestAccrued(tx, asOfISO);
       const overduePrincipal = roundByCurrency(overdue.reduce((sum, i) => sum + installmentOpenValue(i), 0), currency);
       const originalValue = roundByCurrency(Number(tx.originalValue ?? tx.totalValue ?? (prog.paidSum + prog.pendingSum)), currency);
+      const overdueUpdated = roundByCurrency(overduePrincipal + interestInfo.interest, currency);
+      const futurePrincipal = roundByCurrency(Math.max(0, prog.pendingSum - overduePrincipal), currency);
       const openWithInterest = roundByCurrency(prog.pendingSum + interestInfo.interest, currency);
+      const interestReceived = roundByCurrency((tx.movements || [])
+        .filter(m => m?.type === "receipt" && !m.reversedAt)
+        .reduce((sum, m) => sum + Math.max(0, Number(m.interestAmount || 0)), 0), currency);
+      const cashReceived = roundByCurrency(prog.paidSum + interestReceived, currency);
       const paidPct = originalValue > 0 ? Math.min(100, Math.round((prog.paidSum / originalValue) * 100)) : 0;
       return {
         ...prog,
         originalValue,
         paidPrincipal: prog.paidSum,
+        interestReceived,
+        cashReceived,
         openPrincipal: prog.pendingSum,
         overduePrincipal,
+        overdueUpdated,
+        futurePrincipal,
         interest: interestInfo.interest,
         openWithInterest,
         interestInfo,
@@ -822,25 +890,98 @@
       };
     };
 
-    const applyAbatement = (tx, amountRaw, paidAtISO = todayISODate()) => {
-      const amount = Number(amountRaw);
-      if (!Number.isFinite(amount) || amount <= 0) return { ok: false, reason: "Valor inválido." };
-      const currency = tx.currency || "BRL";
-      const pendingTotal = sumByStatus(tx, "pendente");
-      if (pendingTotal <= 0) return { ok: false, reason: "Nada em aberto." };
+    const latestActiveReceipt = (tx) => (Array.isArray(tx.movements) ? tx.movements : [])
+      .slice()
+      .reverse()
+      .find(m => m?.type === "receipt" && !m.reversedAt) || null;
 
-      let remaining = roundByCurrency(Math.min(amount, pendingTotal), currency);
-      const applied = remaining;
+    const minimumReceiptDate = (tx) => {
+      const latest = latestActiveReceipt(tx);
+      const latestDate = latest ? String(latest.date || "").slice(0, 10) : "";
+      const agreementDate = String(tx.agreementDate || "").slice(0, 10);
+      return latestDate > agreementDate ? latestDate : agreementDate;
+    };
+
+    const previewReceipt = (tx, amountRaw, paidAtISO = todayISODate()) => {
+      const amount = Number(amountRaw);
+      const currency = tx.currency || "BRL";
+      const minDate = minimumReceiptDate(tx);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(paidAtISO)) return { ok: false, reason: "Informe uma data válida." };
+      if (paidAtISO > todayISODate()) return { ok: false, reason: "A data do recebimento não pode estar no futuro." };
+      if (minDate && paidAtISO < minDate) return { ok: false, reason: `A data não pode ser anterior a ${formatDateBR(minDate)}.` };
+      if (!Number.isFinite(amount) || amount <= 0) return { ok: false, reason: "Informe um valor maior que zero." };
+
+      const statement = financialStatement(tx, paidAtISO);
+      const maximum = roundByCurrency(statement.openWithInterest, currency);
+      if (maximum <= 0) return { ok: false, reason: "Nada em aberto para receber." };
+      if (amount > maximum) return { ok: false, reason: `O valor supera o saldo atualizado de ${formatCurrency(maximum, currency)}.` };
+
+      const applied = roundByCurrency(amount, currency);
+      const interestAmount = roundByCurrency(Math.min(applied, statement.interest), currency);
+      let principalRemaining = roundByCurrency(applied - interestAmount, currency);
       const allocations = [];
+      let overduePrincipalAmount = 0;
+      let futurePrincipalAmount = 0;
+
       const pending = ensureInstallments(tx)
         .filter(i => installmentOpenValue(i) > 0)
         .sort((a, b) => (a.dueDate || "").localeCompare(b.dueDate || "") || a.number - b.number);
 
       for (const inst of pending) {
-        if (remaining <= 0) break;
+        if (principalRemaining <= 0) break;
         const open = installmentOpenValue(inst);
-        const part = roundByCurrency(Math.min(open, remaining), currency);
-        inst.paidAmount = roundByCurrency(installmentPaidValue(inst) + part, currency);
+        const part = roundByCurrency(Math.min(open, principalRemaining), currency);
+        const overdue = Boolean(inst.dueDate && inst.dueDate < paidAtISO);
+        allocations.push({ installmentId: inst.id, installmentNumber: inst.number, amount: part, overdue });
+        if (overdue) overduePrincipalAmount = roundByCurrency(overduePrincipalAmount + part, currency);
+        else futurePrincipalAmount = roundByCurrency(futurePrincipalAmount + part, currency);
+        principalRemaining = roundByCurrency(principalRemaining - part, currency);
+      }
+
+      const principalAmount = roundByCurrency(applied - interestAmount - principalRemaining, currency);
+      const afterPrincipal = roundByCurrency(Math.max(0, statement.openPrincipal - principalAmount), currency);
+      const afterInterest = roundByCurrency(Math.max(0, statement.interest - interestAmount), currency);
+      const afterBalance = roundByCurrency(afterPrincipal + afterInterest, currency);
+      const nextOpen = statement.next ? installmentOpenValue(statement.next) : 0;
+      const suggestedNext = roundByCurrency(Math.min(maximum, statement.interest + nextOpen), currency);
+      const suggestedOverdue = roundByCurrency(Math.min(maximum, statement.overdueUpdated), currency);
+
+      return {
+        ok: true,
+        applied,
+        statement,
+        maximum,
+        interestAmount,
+        principalAmount,
+        overduePrincipalAmount,
+        futurePrincipalAmount,
+        allocations,
+        afterPrincipal,
+        afterInterest,
+        afterBalance,
+        suggestedNext,
+        suggestedOverdue,
+        suggestedTotal: maximum,
+        minimumDate: minDate,
+      };
+    };
+
+    const applyReceipt = (tx, payload = {}) => {
+      const currency = tx.currency || "BRL";
+      const paidAtISO = String(payload.paidAtISO || todayISODate()).slice(0, 10);
+      const method = PAYMENT_METHODS.includes(payload.paymentMethod) ? payload.paymentMethod : "outro";
+      const preview = previewReceipt(tx, Number(payload.amount), paidAtISO);
+      if (!preview.ok) return preview;
+
+      const snapshotBefore = {
+        installments: safeClone(ensureInstallments(tx)),
+        interestAccount: tx.interestAccount ? safeClone(tx.interestAccount) : null,
+      };
+
+      for (const allocation of preview.allocations) {
+        const inst = ensureInstallments(tx).find(i => i.id === allocation.installmentId || i.number === allocation.installmentNumber);
+        if (!inst) continue;
+        inst.paidAmount = roundByCurrency(installmentPaidValue(inst) + allocation.amount, currency);
         if (installmentOpenValue(inst) <= 0) {
           inst.status = "pago";
           inst.paidAt = paidAtISO;
@@ -848,22 +989,75 @@
           inst.status = "pendente";
           inst.paidAt = null;
         }
-        allocations.push({ installmentNumber: inst.number, amount: part });
-        remaining = roundByCurrency(remaining - part, currency);
       }
 
-      addMovement(tx, {
-        type: "partial_payment",
-        amount: applied,
+      const overdueAfter = overdueInstallments(tx, paidAtISO);
+      if (isInterestBearingType(tx.type) && tx.interestEnabled !== false && overdueAfter.length && preview.afterBalance > 0) {
+        tx.interestAccount = {
+          anchorDate: paidAtISO,
+          baseDebt: preview.afterBalance,
+          principalAtAnchor: preview.afterPrincipal,
+        };
+      } else {
+        tx.interestAccount = null;
+      }
+
+      const movement = addMovement(tx, {
+        type: "receipt",
+        amount: preview.applied,
         date: paidAtISO,
-        allocations,
-        note: allocations.length > 1
-          ? `Pagamento distribuído em ${allocations.length} parcelas, começando pela mais antiga.`
-          : `Pagamento aplicado à parcela ${allocations[0]?.installmentNumber || "—"}.`,
+        allocations: preview.allocations,
+        paymentMethod: method,
+        paymentReference: String(payload.paymentReference || "").trim() || null,
+        interestAmount: preview.interestAmount,
+        principalAmount: preview.principalAmount,
+        principalBefore: preview.statement.openPrincipal,
+        interestBefore: preview.statement.interest,
+        balanceBefore: preview.statement.openWithInterest,
+        balanceAfter: preview.afterBalance,
+        snapshotBefore,
+        note: String(payload.note || "").trim() || "Recebimento registrado pela Central de Recebimentos.",
       });
+
       tx.updatedAt = nowISO();
-      return { ok: true, applied, allocations };
+      return { ...preview, movement };
     };
+
+    const reverseReceipt = (tx, movementId) => {
+      const movements = Array.isArray(tx.movements) ? tx.movements : [];
+      const movement = movements.find(m => m.id === movementId);
+      if (!movement || movement.type !== "receipt") return { ok: false, reason: "Recebimento não encontrado." };
+      if (movement.reversedAt) return { ok: false, reason: "Este recebimento já foi estornado." };
+      if (!movement.snapshotBefore?.installments) return { ok: false, reason: "Este registro antigo não possui restauração automática." };
+      const latest = latestActiveReceipt(tx);
+      if (!latest || latest.id !== movement.id) return { ok: false, reason: "Somente o recebimento mais recente pode ser estornado." };
+
+      tx.installments = safeClone(movement.snapshotBefore.installments);
+      tx.interestAccount = movement.snapshotBefore.interestAccount ? safeClone(movement.snapshotBefore.interestAccount) : null;
+      movement.reversedAt = nowISO();
+      const reversal = addMovement(tx, {
+        type: "receipt_reversal",
+        amount: -Math.abs(Number(movement.amount || 0)),
+        date: todayISODate(),
+        referenceId: movement.id,
+        paymentMethod: movement.paymentMethod,
+        interestAmount: -Math.abs(Number(movement.interestAmount || 0)),
+        principalAmount: -Math.abs(Number(movement.principalAmount || 0)),
+        balanceBefore: Number(movement.balanceAfter || 0),
+        balanceAfter: Number(movement.balanceBefore || 0),
+        note: `Estorno do recebimento de ${formatDateBR(String(movement.date || "").slice(0, 10))}.`,
+      });
+      movement.reversalMovementId = reversal.id;
+      tx.updatedAt = nowISO();
+      return { ok: true, amount: Math.abs(Number(movement.amount || 0)), reversal };
+    };
+
+    const applyAbatement = (tx, amountRaw, paidAtISO = todayISODate()) => applyReceipt(tx, {
+      amount: Number(amountRaw),
+      paidAtISO,
+      paymentMethod: "outro",
+      note: "Pagamento importado pelo método de abatimento anterior.",
+    });
 
     const movementLabel = (movement) => {
       const labels = {
@@ -871,6 +1065,8 @@
         payment_imported: "Pagamento anterior",
         partial_payment: "Pagamento parcial",
         payment_reversal: "Pagamento desfeito",
+        receipt: "Recebimento confirmado",
+        receipt_reversal: "Recebimento estornado",
         agreement_created: "Acordo criado",
         agreement_updated: "Acordo atualizado",
         migration: "Dados organizados",
@@ -896,12 +1092,15 @@
       validateTx,
       generateInstallments,
       addMovement,
-      payNext,
-      undoPay,
       typeLabel,
+      paymentMethodLabel,
       loanMonthlyYield,
-      loanInterestAccrued,
+      overdueInterestAccrued,
       financialStatement,
+      minimumReceiptDate,
+      previewReceipt,
+      applyReceipt,
+      reverseReceipt,
       applyAbatement,
       movementLabel,
       sortedMovements,
@@ -962,7 +1161,7 @@
               <span class="manual-pill">Vendas</span>
               <span class="manual-pill">Empréstimos</span>
               <span class="manual-pill">Recibos + PDF</span>
-              <span class="manual-pill">Abatimento</span>
+              <span class="manual-pill">Central de Recebimentos</span>
             </div>
             <div class="manual-actions">
               <button class="btn" type="button" data-action="manualScroll" data-target="m-start">Começar</button>
@@ -975,8 +1174,8 @@
             <div class="manual-nav" aria-label="Atalhos do manual">
               <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-start">🚀 Básico</button>
               <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-create">🧱 Criar</button>
-              <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-pay">✅ Pagar</button>
-              <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-abate">🪙 Abater</button>
+              <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-pay">✅ Receber</button>
+              <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-abate">🧾 Dar baixa</button>
               <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-loan">🏦 Juros</button>
               <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-pdf">📄 PDF</button>
               <button class="manual-chip" type="button" data-action="manualScroll" data-target="m-backup">🧯 Backup</button>
@@ -990,7 +1189,7 @@
                   <p><strong>Regra de ouro:</strong> cada transação vira um conjunto de parcelas. Você só faz 3 coisas:</p>
                   <ol class="manual-steps">
                     <li><strong>Cria</strong> a transação (compra, venda ou empréstimo).</li>
-                    <li><strong>Marca pagamentos</strong> (pagar próxima parcela ou abater).</li>
+                    <li><strong>Registra recebimentos</strong> com data, forma, comprovante e distribuição automática.</li>
                     <li><strong>Gera relatório</strong> para cobrar ou comprovar (copiar, compartilhar ou salvar PDF).</li>
                   </ol>
                   <div class="manual-tip"><strong>Mapa mental:</strong> <span class="manual-kbd">Pendente</span> é o que está em aberto. <span class="manual-kbd">Pago</span> é histórico (prova). <span class="manual-kbd">Relatório</span> é o “espelho” para o cliente/devedor.</div>
@@ -1013,41 +1212,45 @@
               </details>
 
               <details class="manual-card">
-                <summary id="m-pay"><span class="manual-ico">✅</span> Pagamentos: pagar próxima parcela (rápido)</summary>
+                <summary id="m-pay"><span class="manual-ico">✅</span> Receber próxima: rápido, mas com conferência</summary>
                 <div class="content">
-                  <p>No card da transação, clique em <strong>Pagar próxima parcela</strong>.</p>
+                  <p>No card da transação, clique em <strong>Receber próxima</strong>. A Central de Recebimentos abre com uma sugestão pronta, sem dar baixa automaticamente.</p>
                   <ol class="manual-steps">
-                    <li>Ele marca a <strong>primeira parcela pendente</strong> como paga.</li>
-                    <li>Você pode <strong>desfazer</strong> pelo toast (caso tenha clicado errado).</li>
-                    <li>O detalhe da transação mostra o progresso: pago, pendente, atrasos.</li>
+                    <li>Confira o <strong>valor</strong> e a <strong>data real</strong> do recebimento.</li>
+                    <li>Escolha Pix, transferência, dinheiro, boleto, cartão ou outro.</li>
+                    <li>Veja quanto será aplicado em <strong>juros</strong>, <strong>principal vencido</strong> e parcelas seguintes.</li>
+                    <li>Confirme somente depois da prévia. O recibo pode abrir em seguida.</li>
                   </ol>
-                  <div class="manual-tip"><strong>Quando usar:</strong> pagamentos “certinhos” (parcela por parcela). Para pagamentos parciais ou adiantamentos, use <strong>Abater/Receber</strong>.</div>
+                  <div class="manual-tip"><strong>Segurança:</strong> clicar em “Receber próxima” não quita nada sozinho. A baixa só acontece após a confirmação final.</div>
                 </div>
               </details>
 
               <details class="manual-card">
-                <summary id="m-abate"><span class="manual-ico">🪙</span> Abater/Receber: quitação parcial inteligente</summary>
+                <summary id="m-abate"><span class="manual-ico">🧾</span> Central de Recebimentos: parcial, atraso ou quitação</summary>
                 <div class="content">
-                  <p>No detalhe da transação, clique em <strong>Abater/Receber valor</strong> e informe quanto entrou.</p>
+                  <p>No detalhe da transação, clique em <strong>Registrar recebimento</strong>. Você verá uma tela completa, em vez da antiga caixinha do navegador.</p>
                   <ol class="manual-steps">
-                    <li>O sistema consome parcelas pendentes em ordem de vencimento.</li>
-                    <li>O valor recebido é distribuído começando pela parcela mais antiga.</li>
-                    <li>O valor original do acordo não é apagado: o sistema registra quanto foi pago e qual saldo restou.</li>
+                    <li>Use os atalhos: <strong>parcela mais antiga + juros</strong>, <strong>regularizar atraso</strong> ou <strong>quitar saldo atualizado</strong>.</li>
+                    <li>A ordem profissional é automática: juros acumulados → principal vencido → demais parcelas.</li>
+                    <li>Informe forma de pagamento, referência do comprovante e uma observação quando necessário.</li>
+                    <li>O histórico guarda valor recebido, juros, principal, saldo anterior e saldo posterior.</li>
+                    <li>O recebimento mais recente pode ser <strong>estornado</strong>, restaurando parcelas e cálculo anterior.</li>
                   </ol>
-                  <div class="manual-tip"><strong>Para virar especialista:</strong> sempre abata no dia que recebeu. Isso deixa o relatório e o histórico redondinhos.</div>
+                  <div class="manual-tip"><strong>Boa prática:</strong> registre a data em que o dinheiro realmente entrou. O extrato fica auditável e o próximo cálculo parte do saldo correto.</div>
                 </div>
               </details>
 
               <details class="manual-card">
-                <summary id="m-loan"><span class="manual-ico">🏦</span> Empréstimos e juros transparentes</summary>
+                <summary id="m-loan"><span class="manual-ico">📈</span> Vendas, empréstimos e juros compostos</summary>
                 <div class="content">
-                  <p>Todos os novos empréstimos usam uma regra única: <strong>Correção pela Poupança</strong>.</p>
+                  <p>Vendas e empréstimos usam uma regra única quando os juros estão ativados: <strong>juros compostos mensais com a taxa da poupança registrada no acordo</strong>.</p>
                   <ol class="manual-steps">
-                    <li><strong>Poupança:</strong> é a regra única dos empréstimos.</li>
-                    <li><strong>Por parcela:</strong> somente parcelas vencidas entram no cálculo.</li>
-                    <li><strong>Meses completos:</strong> a correção ocorre nos aniversários mensais do vencimento.</li>
+                    <li><strong>Taxa registrada:</strong> cada acordo guarda a taxa mensal usada no cálculo.</li>
+                    <li><strong>Base geral:</strong> quando existe atraso, o cálculo usa todo o saldo principal ainda em aberto, inclusive parcelas futuras.</li>
+                    <li><strong>Início:</strong> a capitalização começa no vencimento da primeira parcela que permanece não paga.</li>
+                    <li><strong>Meses completos:</strong> os juros são capitalizados mensalmente sobre saldo geral + juros anteriores.</li>
                   </ol>
-                  <div class="manual-tip"><strong>Taxa padrão sugerida:</strong> ${ratePct}% ao mês. Você pode revisar a taxa mensal de referência em cada empréstimo.</div>
+                  <div class="manual-tip"><strong>Importante:</strong> pagamentos já registrados saem da base. A taxa padrão é ${ratePct}% ao mês e pode ser revisada em cada venda ou empréstimo.</div>
                 </div>
               </details>
 
@@ -1083,7 +1286,7 @@
                   <ol class="manual-steps">
                     <li><strong>Nomes claros</strong> no item: “Geladeira Consul”, “Moto CG”, “Empréstimo João”.</li>
                     <li><strong>Documento sempre</strong> quando possível. Relatório vira prova.</li>
-                    <li><strong>Use Abater</strong> para adiantamentos. Use “Pagar próxima” para rotina mensal.</li>
+                    <li><strong>Use a Central de Recebimentos</strong> tanto para parcelas normais quanto para pagamentos parciais, adiantamentos e quitações.</li>
                     <li><strong>Atraso</strong>: gere relatório com juros bem explicado e envie o PDF.</li>
                     <li><strong>Moeda</strong>: defina sua moeda de exibição e atualize câmbio quando estiver online.</li>
                   </ol>
@@ -1216,7 +1419,7 @@
       };
 
       metricCard("Principal a receber", principalReceber, "Saldo das vendas e empréstimos");
-      metricCard("Correção da poupança", jurosReceber, "Somente sobre parcelas vencidas");
+      metricCard("Juros compostos", jurosReceber, "Taxa da poupança • sobre o saldo geral em aberto");
       metricCard("Principal vencido", vencidoReceber, "Valores que já passaram do vencimento");
       metricCard("Total a pagar", totalPagar, `Compras em aberto • ${monthCount} parcela(s) no mês (${formatCurrency(monthTotal, display)})`);
 
@@ -1249,8 +1452,9 @@
       for (const tx of recent) {
         const next = Domain.nextPendingInstallment(tx);
         const done = Domain.isComplete(tx);
-        const pending = Domain.sumByStatus(tx, "pendente");
-        const conv = Rates.convert(pending, tx.currency, display, rates);
+        const statement = Domain.financialStatement(tx);
+        const balance = isInterestBearingType(tx.type) ? statement.openWithInterest : statement.openPrincipal;
+        const conv = Rates.convert(balance, tx.currency, display, rates);
         const badge = done ? "good" : "warn";
 
         const el = document.createElement("div");
@@ -1296,7 +1500,7 @@
       badge.hidden = online;
       const rateInput = $("#defaultSavingsRate");
       if (rateInput && document.activeElement !== rateInput) {
-        const pct = (Number(state.settings.defaultSavingsRate ?? DEFAULT_LOAN_RATE) * 100).toFixed(2).replace(".", ",");
+        const pct = (normalizedPositiveRate(state.settings.defaultSavingsRate) * 100).toFixed(2).replace(".", ",");
         rateInput.value = pct;
       }
     };
@@ -1308,11 +1512,10 @@
       const noRes = $("#txNoResults");
       const detailCard = $("#detailCard");
 
-      const form = $("#filterForm");
-      const q = (form.q.value || "").trim().toLowerCase();
-      const fType = form.fType.value || "all";
-      const fStatus = form.fStatus.value || "all";
-      const fComp = form.fCompetencia.value || "";
+      const q = ($("#q")?.value || "").trim().toLowerCase();
+      const fType = $("#fType")?.value || "all";
+      const fStatus = $("#fStatus")?.value || "all";
+      const fComp = $("#fCompetencia")?.value || "";
 
       const all = state.transactions.slice();
 
@@ -1359,7 +1562,7 @@
         const done = Domain.isComplete(tx);
         const next = Domain.nextPendingInstallment(tx);
         const statement = Domain.financialStatement(tx);
-        const balance = tx.type === "emprestimo" ? statement.openWithInterest : statement.openPrincipal;
+        const balance = isInterestBearingType(tx.type) ? statement.openWithInterest : statement.openPrincipal;
         const conv = Rates.convert(balance, tx.currency, display, rates);
 
         const el = document.createElement("div");
@@ -1382,7 +1585,7 @@
 
           <div class="item-actions">
             <button class="btn" type="button" data-action="openDetail" data-id="${tx.id}">Abrir</button>
-            <button class="btn" type="button" data-action="payNext" data-id="${tx.id}" ${done ? "disabled" : ""}>Pagar próxima parcela</button>
+            <button class="btn" type="button" data-action="openPayment" data-id="${tx.id}" ${done ? "disabled" : ""}>Receber próxima</button>
             <a class="btn" href="#form" data-action="edit" data-id="${tx.id}">Editar</a>
             <button class="btn danger" type="button" data-action="delete" data-id="${tx.id}">Excluir</button>
           </div>
@@ -1428,38 +1631,48 @@
           </div>`;
       }).join("");
 
-      const interestRows = st.interestInfo.details.length
-        ? st.interestInfo.details.map(d => `
+      const interestRows = st.interestInfo.since
+        ? `
           <div class="finance-row">
-            <div><strong>Parcela ${d.number}</strong><div class="hint">venceu ${formatDateBR(d.dueDate)}</div></div>
-            <div class="right">${money(d.principal)}<div class="hint">principal</div></div>
-            <div class="right">${d.months} mês(es)<div class="hint">completos</div></div>
-            <div class="right">${money(d.interest)}<div class="hint">correção</div></div>
-          </div>`).join("")
-        : `<div class="note">Nenhuma parcela completou um mês de atraso. A correção está zerada.</div>`;
+            <div><strong>Saldo geral em aberto</strong><div class="hint">capitalização iniciada em ${formatDateBR(st.interestInfo.since)}</div></div>
+            <div class="right">${money(st.interestInfo.base)}<div class="hint">base geral</div></div>
+            <div class="right">${st.interestInfo.months} mês(es)<div class="hint">completos</div></div>
+            <div class="right">${money(st.interest)}<div class="hint">juros • atualizado ${money(st.openWithInterest)}</div></div>
+          </div>`
+        : `<div class="note">Não existe parcela vencida em aberto. Os juros estão zerados.</div>`;
 
       const movements = Domain.sortedMovements(tx);
+      const reversibleReceiptId = (tx.movements || []).slice().reverse().find(m => m?.type === "receipt" && !m.reversedAt)?.id || null;
       const movementRows = movements.length
         ? movements.map(m => {
           const amount = Number(m.amount || 0);
           const date = String(m.date || "").slice(0, 10);
+          const method = m.paymentMethod ? ` • ${escapeHTML(Domain.paymentMethodLabel(m.paymentMethod))}` : "";
+          const reference = m.paymentReference ? ` • ref. ${escapeHTML(m.paymentReference)}` : "";
+          const breakdown = m.type === "receipt"
+            ? `<div class="movement-breakdown">Juros: ${money(Number(m.interestAmount || 0))} • Principal: ${money(Number(m.principalAmount || 0))} • Saldo após: ${money(Number(m.balanceAfter || 0))}</div>`
+            : "";
+          const reversed = m.reversedAt ? `<div class="movement-breakdown">Estornado em ${formatDateBR(String(m.reversedAt).slice(0, 10))}</div>` : "";
+          const reverseButton = m.id === reversibleReceiptId && m.snapshotBefore && !m.reversedAt
+            ? `<button class="btn mini danger-soft" type="button" data-action="reverseReceipt" data-id="${m.id}" data-tx-id="${tx.id}">Estornar</button>`
+            : "";
           return `<div class="movement">
-            <div><div class="movement-title">${escapeHTML(Domain.movementLabel(m))}</div><div class="movement-meta">${formatDateBR(date)}${m.installmentNumber ? ` • parcela ${m.installmentNumber}` : ""}${m.note ? ` • ${escapeHTML(m.note)}` : ""}</div></div>
-            <div class="movement-value ${amount < 0 ? "negative" : "positive"}">${amount < 0 ? "−" : "+"} ${money(Math.abs(amount))}</div>
+            <div><div class="movement-title">${escapeHTML(Domain.movementLabel(m))}</div><div class="movement-meta">${formatDateBR(date)}${m.installmentNumber ? ` • parcela ${m.installmentNumber}` : ""}${method}${reference}${m.note ? ` • ${escapeHTML(m.note)}` : ""}</div>${breakdown}${reversed}</div>
+            <div class="movement-actions"><div class="movement-value ${amount < 0 ? "negative" : "positive"}">${amount < 0 ? "−" : "+"} ${money(Math.abs(amount))}</div>${reverseButton}</div>
           </div>`;
         }).join("")
-        : `<div class="note">Ainda não há pagamentos registrados nesta transação.</div>`;
+        : `<div class="note">Ainda não há recebimentos registrados nesta transação.</div>`;
 
-      const ratePct = ((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2).replace(".", ",");
-      const loanSection = tx.type === "emprestimo" ? `
+      const ratePct = (normalizedPositiveRate(tx.loanRate) * 100).toFixed(2).replace(".", ",");
+      const interestSection = isInterestBearingType(tx.type) && tx.interestEnabled !== false ? `
         <section class="finance-section">
-          <h3>Correção pela Poupança</h3>
+          <h3>Juros Compostos sobre o Saldo Geral</h3>
           <div class="finance-rule">
-            <div class="finance-rule-title">Taxa registrada: ${ratePct}% ao mês</div>
-            <p>Cada parcela vencida é atualizada separadamente. Só contam meses completos após o vencimento, evitando cobrar juros sobre parcelas futuras.</p>
+            <div class="finance-rule-title">Taxa registrada: ${ratePct}% ao mês • capitalização mensal</div>
+            <p>Após o primeiro vencimento não pago, os juros compostos passam a incidir sobre todo o saldo principal ainda em aberto. Valores já recebidos não entram na base.</p>
           </div>
           <div class="finance-table">
-            <div class="finance-row finance-head"><div>Parcela</div><div class="right">Principal</div><div class="right">Período</div><div class="right">Correção</div></div>
+            <div class="finance-row finance-head"><div>Base do cálculo</div><div class="right">Saldo geral</div><div class="right">Período</div><div class="right">Juros</div></div>
             ${interestRows}
           </div>
         </section>` : "";
@@ -1478,16 +1691,17 @@
           <h3>Demonstrativo financeiro</h3>
           <div class="finance-grid">
             <div class="finance-card"><div class="label">Valor original</div><div class="amount">${money(st.originalValue)}</div><div class="caption">Principal registrado no acordo</div></div>
-            <div class="finance-card good"><div class="label">Total recebido</div><div class="amount">${money(st.paidPrincipal)}</div><div class="caption">Inclui pagamentos parciais</div></div>
-            <div class="finance-card"><div class="label">Principal em aberto</div><div class="amount">${money(st.openPrincipal)}</div><div class="caption">Sem adicionar correção</div></div>
+            <div class="finance-card good"><div class="label">Total recebido em caixa</div><div class="amount">${money(st.cashReceived)}</div><div class="caption">Principal ${money(st.paidPrincipal)} • juros ${money(st.interestReceived)}</div></div>
+            <div class="finance-card"><div class="label">Principal em aberto</div><div class="amount">${money(st.openPrincipal)}</div><div class="caption">Antes dos juros de atraso</div></div>
             <div class="finance-card alert"><div class="label">Principal vencido</div><div class="amount">${money(st.overduePrincipal)}</div><div class="caption">${st.overdue.length} parcela(s) atrasada(s)</div></div>
-            <div class="finance-card"><div class="label">Correção acumulada</div><div class="amount">${money(st.interest)}</div><div class="caption">Regra da poupança</div></div>
-            <div class="finance-card emphasis"><div class="label">Saldo atualizado</div><div class="amount">${money(st.openWithInterest)}</div><div class="caption">Principal aberto + correção</div></div>
+            <div class="finance-card interest-highlight"><div class="label">JUROS SOBRE O SALDO GERAL</div><div class="amount">${money(st.interest)}</div><div class="caption">Base: ${money(st.interestInfo.base)} • taxa ${(st.interestInfo.rate * 100).toFixed(2).replace(".", ",")}% • ${st.interestInfo.months} mês(es)</div></div>
+            <div class="finance-card alert-strong"><div class="label">PARCELAS VENCIDAS + JUROS</div><div class="amount">${money(st.overdueUpdated)}</div><div class="caption">Referência para regularizar o atraso</div></div>
+            <div class="finance-card emphasis"><div class="label">SALDO GERAL ATUALIZADO</div><div class="amount">${money(st.openWithInterest)}</div><div class="caption">Todo o principal em aberto + juros compostos</div></div>
           </div>
           <div class="note"><strong>Próximo vencimento:</strong> ${next ? `${formatDateBR(next.dueDate)} • saldo da parcela ${money(Domain.installmentOpenValue(next))}` : "acordo concluído"}</div>
         </section>
 
-        ${loanSection}
+        ${interestSection}
 
         <section class="finance-section">
           <h3>Parcelas e saldos</h3>
@@ -1504,7 +1718,7 @@
           <button class="btn primary" type="button" data-action="receipt" data-id="${tx.id}">Gerar demonstrativo</button>
           <button class="btn" type="button" data-action="copyReportQuick" data-id="${tx.id}">Copiar demonstrativo</button>
           <button class="btn" type="button" data-action="shareReportQuick" data-id="${tx.id}">Compartilhar</button>
-          <button class="btn" type="button" data-action="abat" data-id="${tx.id}">Registrar pagamento</button>
+          <button class="btn" type="button" data-action="openPayment" data-id="${tx.id}">Registrar recebimento</button>
           <a class="btn" href="#form" data-action="edit" data-id="${tx.id}">Editar</a>
           <button class="btn danger" type="button" data-action="delete" data-id="${tx.id}">Excluir</button>
         </div>`;
@@ -1529,7 +1743,8 @@
       $("#installmentsBox").hidden = pm !== "parcelado";
 
       const t = $("#type").value || "";
-      $("#loanRateField").hidden = t !== "emprestimo";
+      $("#loanRateField").hidden = !isInterestBearingType(t);
+      syncInterestControls();
 
       updateInterestTypeHelp();
       updateInstallmentPreview();
@@ -1604,6 +1819,193 @@
     };
   })();
 
+  /* ---------------- Central de Recebimentos ---------------- */
+  const PaymentCenter = (() => {
+    let currentTxId = null;
+    let lastPreview = null;
+
+    const rawMoney = (value, currency) => {
+      const decimals = currency === "JPY" ? 0 : 2;
+      return Number(value || 0).toFixed(decimals).replace(".", ",");
+    };
+
+    const currentTx = () => App.getTransaction(currentTxId);
+
+    const statementForDate = (tx) => {
+      const date = $("#paymentDate").value || todayISODate();
+      return Domain.financialStatement(tx, date);
+    };
+
+    const quickAmounts = (tx) => {
+      const st = statementForDate(tx);
+      const nextOpen = st.next ? Domain.installmentOpenValue(st.next) : 0;
+      return {
+        next: roundByCurrency(Math.min(st.openWithInterest, st.interest + nextOpen), tx.currency),
+        overdue: roundByCurrency(Math.min(st.openWithInterest, st.overdueUpdated), tx.currency),
+        total: roundByCurrency(st.openWithInterest, tx.currency),
+      };
+    };
+
+    const renderContext = (tx) => {
+      const st = statementForDate(tx);
+      $("#paymentContext").innerHTML = `
+        <div>
+          <div class="name">${escapeHTML(tx.counterpartyName || "—")}</div>
+          <div class="meta">${escapeHTML(Domain.typeLabel(tx.type))} • ${escapeHTML(tx.item || "—")}</div>
+          <div class="meta">Moeda do acordo: ${escapeHTML(tx.currency || "BRL")} • ${tx.installments?.length || 0} parcela(s)</div>
+        </div>
+        <div class="context-values">
+          <div class="context-value"><div class="k">Principal em aberto</div><div class="v">${formatCurrency(st.openPrincipal, tx.currency)}</div></div>
+          <div class="context-value"><div class="k">Saldo atualizado</div><div class="v">${formatCurrency(st.openWithInterest, tx.currency)}</div></div>
+        </div>`;
+    };
+
+    const renderEmptyPreview = (tx, message = "Informe o valor recebido para visualizar a distribuição.") => {
+      const st = statementForDate(tx);
+      $("#paymentSummary").innerHTML = `
+        <div class="payment-summary-card"><div class="k">Principal atual</div><div class="v">${formatCurrency(st.openPrincipal, tx.currency)}</div></div>
+        <div class="payment-summary-card interest"><div class="k">Juros acumulados</div><div class="v">${formatCurrency(st.interest, tx.currency)}</div></div>
+        <div class="payment-summary-card"><div class="k">Total atualizado</div><div class="v">${formatCurrency(st.openWithInterest, tx.currency)}</div></div>
+        <div class="payment-summary-card balance"><div class="k">Saldo após receber</div><div class="v">—</div></div>`;
+      $("#paymentAllocationPreview").innerHTML = `<div class="payment-ledger-line muted"><span>Prévia</span><strong>${escapeHTML(message)}</strong></div>`;
+      $("#paymentStatusBadge").className = "badge";
+      $("#paymentStatusBadge").textContent = "Aguardando valor";
+      $("#confirmPaymentBtn").disabled = true;
+      lastPreview = null;
+    };
+
+    const updatePreview = () => {
+      const tx = currentTx();
+      if (!tx) return;
+      renderContext(tx);
+      $("#err-paymentAmount").textContent = "";
+      $("#err-paymentDate").textContent = "";
+
+      const amount = parseMoneyInput($("#paymentAmount").value);
+      const date = $("#paymentDate").value || todayISODate();
+      if (!$("#paymentAmount").value.trim()) {
+        renderEmptyPreview(tx);
+        return;
+      }
+
+      const preview = Domain.previewReceipt(tx, amount, date);
+      if (!preview.ok) {
+        const target = /data|anterior|futuro/i.test(preview.reason || "") ? "#err-paymentDate" : "#err-paymentAmount";
+        $(target).textContent = preview.reason || "Não foi possível calcular.";
+        renderEmptyPreview(tx, preview.reason || "Revise os dados informados.");
+        return;
+      }
+
+      lastPreview = preview;
+      $("#paymentStatusBadge").className = "badge good";
+      $("#paymentStatusBadge").textContent = "Conferência pronta";
+      $("#confirmPaymentBtn").disabled = false;
+      $("#paymentSummary").innerHTML = `
+        <div class="payment-summary-card"><div class="k">Valor recebido</div><div class="v">${formatCurrency(preview.applied, tx.currency)}</div></div>
+        <div class="payment-summary-card interest"><div class="k">Abate juros</div><div class="v">${formatCurrency(preview.interestAmount, tx.currency)}</div></div>
+        <div class="payment-summary-card principal"><div class="k">Abate principal</div><div class="v">${formatCurrency(preview.principalAmount, tx.currency)}</div></div>
+        <div class="payment-summary-card balance"><div class="k">Saldo após receber</div><div class="v">${formatCurrency(preview.afterBalance, tx.currency)}</div></div>`;
+
+      const rows = [];
+      if (preview.interestAmount > 0) rows.push(`<div class="payment-ledger-line"><span>1. Juros compostos acumulados</span><strong>${formatCurrency(preview.interestAmount, tx.currency)}</strong></div>`);
+      if (preview.overduePrincipalAmount > 0) rows.push(`<div class="payment-ledger-line"><span>2. Principal de parcelas vencidas</span><strong>${formatCurrency(preview.overduePrincipalAmount, tx.currency)}</strong></div>`);
+      if (preview.futurePrincipalAmount > 0) rows.push(`<div class="payment-ledger-line"><span>3. Principal de parcelas ainda não vencidas</span><strong>${formatCurrency(preview.futurePrincipalAmount, tx.currency)}</strong></div>`);
+      const allocationText = preview.allocations.length
+        ? preview.allocations.map(a => `Parcela ${a.installmentNumber}: ${formatCurrency(a.amount, tx.currency)}`).join(" • ")
+        : "Nenhuma parcela terá o principal alterado.";
+      rows.push(`<div class="payment-ledger-line muted"><span>Distribuição nas parcelas</span><strong>${escapeHTML(allocationText)}</strong></div>`);
+      $("#paymentAllocationPreview").innerHTML = rows.join("");
+    };
+
+    const open = (txId, preset = "next") => {
+      const tx = App.getTransaction(txId);
+      if (!tx) return;
+      const st = Domain.financialStatement(tx);
+      if (st.openWithInterest <= 0) {
+        UI.toast("Nada em aberto para receber.", "warn");
+        return;
+      }
+
+      currentTxId = txId;
+      $("#paymentTxId").value = txId;
+      $("#paymentDate").value = todayISODate();
+      $("#paymentDate").max = todayISODate();
+      $("#paymentDate").min = Domain.minimumReceiptDate(tx) || tx.agreementDate || "";
+      $("#paymentMethod").value = "pix";
+      $("#paymentReference").value = "";
+      $("#paymentNote").value = "";
+      $("#paymentOpenReceipt").checked = true;
+      $("#err-paymentAmount").textContent = "";
+      $("#err-paymentDate").textContent = "";
+
+      renderContext(tx);
+      const quick = quickAmounts(tx);
+      const suggested = quick[preset] > 0 ? quick[preset] : quick.total;
+      $("#paymentAmount").value = rawMoney(suggested, tx.currency);
+      updatePreview();
+      UI.openOverlay("payment");
+      window.setTimeout(() => $("#paymentAmount")?.select(), 50);
+    };
+
+    const close = () => {
+      UI.closeOverlay("payment");
+      currentTxId = null;
+      lastPreview = null;
+      $("#paymentForm")?.reset();
+    };
+
+    $("#paymentAmount").addEventListener("input", updatePreview);
+    $("#paymentDate").addEventListener("change", updatePreview);
+
+    document.addEventListener("click", (e) => {
+      const quickBtn = e.target.closest("[data-payment-quick]");
+      if (!quickBtn || !currentTxId) return;
+      const tx = currentTx();
+      if (!tx) return;
+      const amounts = quickAmounts(tx);
+      const amount = amounts[quickBtn.dataset.paymentQuick] || 0;
+      if (amount <= 0) {
+        UI.toast("Não há valor disponível para esta opção.", "warn");
+        return;
+      }
+      $("#paymentAmount").value = rawMoney(amount, tx.currency);
+      updatePreview();
+    });
+
+    $("#paymentForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const tx = currentTx();
+      if (!tx) return;
+      updatePreview();
+      if (!lastPreview?.ok) return;
+
+      const result = Domain.applyReceipt(tx, {
+        amount: parseMoneyInput($("#paymentAmount").value),
+        paidAtISO: $("#paymentDate").value,
+        paymentMethod: $("#paymentMethod").value,
+        paymentReference: $("#paymentReference").value,
+        note: $("#paymentNote").value,
+      });
+      if (!result.ok) {
+        UI.toast(result.reason || "Não foi possível registrar o recebimento.", "bad");
+        updatePreview();
+        return;
+      }
+
+      const openReceipt = $("#paymentOpenReceipt").checked;
+      const txId = currentTxId;
+      App.upsertTransaction(tx);
+      Views.renderDashboard();
+      Views.renderTransactions();
+      Views.renderDetail(txId);
+      close();
+      UI.toast(`Recebimento confirmado: ${formatCurrency(result.applied, tx.currency)}.`, "good", { ttl: 7000 });
+      if (openReceipt) window.setTimeout(() => Receipt.open(txId, "payment"), 120);
+    });
+
+    return { open, close, updatePreview };
+  })();
+
   /* ---------------- Receipt / Report ---------------- */
   const Receipt = (() => {
     let currentTxId = null;
@@ -1644,72 +2046,165 @@
     };
 
     const reportDocument = (tx, sig) => {
-      const st = Domain.financialStatement(tx);
+      const reportDateISO = todayISODate();
+      const st = Domain.financialStatement(tx, reportDateISO);
       const generated = new Date().toLocaleString("pt-BR");
-      const rate = ((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2).replace(".", ",");
+      const rateNumber = normalizedPositiveRate(tx.loanRate);
+      const rate = (rateNumber * 100).toFixed(2).replace(".", ",");
+      const annualRate = ((Math.pow(1 + rateNumber, 12) - 1) * 100).toFixed(2).replace(".", ",");
+      const interestActive = isInterestBearingType(tx.type) && tx.interestEnabled !== false;
+      const interestTriggered = interestActive && Boolean(st.interestInfo.since);
+      const monthYM = ymOf(reportDateISO);
+
       const installments = (tx.installments || []).map(i => {
         const contract = Domain.installmentContractValue(i);
         const paid = Domain.installmentPaidValue(i);
         const open = Domain.installmentOpenValue(i);
-        const status = open <= 0 ? "Pago" : (i.dueDate < todayISODate() ? "Atrasado" : paid > 0 ? "Parcial" : "Pendente");
-        return { i, contract, paid, open, status };
+        const overdue = open > 0 && i.dueDate && i.dueDate < reportDateISO;
+        const status = open <= 0 ? "PAGA" : overdue ? "ATRASADA" : paid > 0 ? "PARCIAL" : "PENDENTE";
+        return { i, contract, paid, open, overdue, status };
       });
 
-      const htmlRows = installments.map(x => `<tr><td>${x.i.number}/${tx.installments.length}<br><span class="muted">${formatDateBR(x.i.dueDate)}</span></td><td class="num">${moneyFor(tx, x.contract)}</td><td class="num">${moneyFor(tx, x.paid)}</td><td class="num">${moneyFor(tx, x.open)}</td><td>${x.status}</td></tr>`).join("");
-      const movementRows = Domain.sortedMovements(tx).map(m => `<tr><td>${formatDateBR(dateOnly(m.date))}</td><td>${escapeHTML(Domain.movementLabel(m))}${m.installmentNumber ? ` • parcela ${m.installmentNumber}` : ""}</td><td class="num">${Number(m.amount || 0) < 0 ? "−" : "+"} ${moneyFor(tx, Math.abs(Number(m.amount || 0)))}</td></tr>`).join("");
-      const correctionRows = st.interestInfo.details.map(d => `<tr><td>${d.number}</td><td>${formatDateBR(d.dueDate)}</td><td class="num">${moneyFor(tx, d.principal)}</td><td class="num">${d.months}</td><td class="num">${moneyFor(tx, d.interest)}</td></tr>`).join("");
+      const paidCount = installments.filter(x => x.open <= 0).length;
+      const paidCountPct = installments.length ? Math.round((paidCount / installments.length) * 100) : 0;
+      const overdueCount = installments.filter(x => x.overdue).length;
+      const currentMonth = installments.filter(x => x.open > 0 && ymOf(x.i.dueDate) === monthYM);
+      const nextThree = installments
+        .filter(x => x.open > 0)
+        .sort((a, b) => String(a.i.dueDate || "").localeCompare(String(b.i.dueDate || "")) || a.i.number - b.i.number)
+        .slice(0, 3);
+
+      const htmlRows = installments.map(x => `<tr><td>${x.i.number}/${tx.installments.length}<br><span class="muted">${formatDateBR(x.i.dueDate)}</span></td><td class="num">${moneyFor(tx, x.contract)}</td><td class="num">${moneyFor(tx, x.paid)}</td><td class="num">${moneyFor(tx, x.open)}</td><td><strong>${x.status}</strong></td></tr>`).join("");
+      const movementRows = Domain.sortedMovements(tx).map(m => {
+        const method = m.paymentMethod ? ` • ${escapeHTML(Domain.paymentMethodLabel(m.paymentMethod))}` : "";
+        const split = m.type === "receipt" ? `<br><span class="muted">Juros: ${moneyFor(tx, Number(m.interestAmount || 0))} • Principal: ${moneyFor(tx, Number(m.principalAmount || 0))} • Saldo após: ${moneyFor(tx, Number(m.balanceAfter || 0))}</span>` : "";
+        const reversed = m.reversedAt ? `<br><span class="muted">ESTORNADO</span>` : "";
+        return `<tr><td>${formatDateBR(dateOnly(m.date))}</td><td>${escapeHTML(Domain.movementLabel(m))}${m.installmentNumber ? ` • parcela ${m.installmentNumber}` : ""}${method}${split}${reversed}</td><td class="num">${Number(m.amount || 0) < 0 ? "−" : "+"} ${moneyFor(tx, Math.abs(Number(m.amount || 0)))}</td></tr>`;
+      }).join("");
+      const interestRows = st.interestInfo.since
+        ? `<tr><td>Saldo geral em aberto</td><td>${formatDateBR(st.interestInfo.since)}</td><td class="num">${moneyFor(tx, st.interestInfo.base)}</td><td class="num">${st.interestInfo.months}</td><td class="num">${moneyFor(tx, st.interest)}</td><td class="num"><strong>${moneyFor(tx, st.openWithInterest)}</strong></td></tr>`
+        : "";
+      const monthRows = currentMonth.map(x => `<tr><td>${x.i.number}/${tx.installments.length}</td><td>${formatDateBR(x.i.dueDate)}</td><td class="num">${moneyFor(tx, x.open)}</td><td>${x.status}</td></tr>`).join("");
+      const nextRows = nextThree.map(x => `<tr><td>${x.i.number}/${tx.installments.length}</td><td>${formatDateBR(x.i.dueDate)}</td><td class="num">${moneyFor(tx, x.open)}</td><td>${x.status}</td></tr>`).join("");
+
+      const payer = tx.type === "compra" ? "Você" : tx.counterpartyName;
+      const receiver = tx.type === "compra" ? tx.counterpartyName : "Você";
+      const nextLabel = st.next ? `${formatDateBR(st.next.dueDate)} • ${moneyFor(tx, Domain.installmentOpenValue(st.next))}` : "acordo concluído";
+      const cordialMessage = interestTriggered
+        ? `Olá ${tx.counterpartyName}! Tudo bem? 🙂
+Estou enviando o demonstrativo atualizado referente a \"${tx.item}\".
+Existem ${overdueCount} parcela(s) atrasada(s), com ${moneyFor(tx, st.overduePrincipal)} de principal vencido. Conforme a regra registrada no acordo, os juros compostos são calculados sobre o saldo geral em aberto de ${moneyFor(tx, st.interestInfo.base)}, desde ${formatDateBR(st.interestInfo.since)}.
+Juros acumulados até ${formatDateBR(reportDateISO)}: ${moneyFor(tx, st.interest)}.
+Saldo geral atualizado do acordo: ${moneyFor(tx, st.openWithInterest)}.
+Para evitar nova capitalização no próximo período, por favor me informe uma previsão de pagamento. Obrigado!`
+        : `Olá ${tx.counterpartyName}! Tudo bem? 🙂\nEstou enviando o demonstrativo atualizado referente a \"${tx.item}\".\nSaldo principal em aberto: ${moneyFor(tx, st.openPrincipal)}.\nPróximo vencimento: ${nextLabel}.\nPor favor me informe uma previsão de pagamento. Obrigado!`;
 
       const html = `
-        <h3>DEMONSTRATIVO FINANCEIRO</h3>
-        <div class="muted">Documento gerado em ${escapeHTML(generated)} • Comprar &amp; Venda PRO v${APP_VERSION}</div>
+        <h3>RELATÓRIO DA TRANSAÇÃO</h3>
+        <div class="muted">Gerado em ${escapeHTML(generated)} • Comprar &amp; Venda PRO v${APP_VERSION}</div>
         <div class="grid">
-          <div class="box"><div class="k">Cliente / outra parte</div><div class="v">${escapeHTML(tx.counterpartyName)}</div><div class="muted">${escapeHTML(tx.counterpartyDoc || "Documento não informado")}</div></div>
-          <div class="box"><div class="k">Acordo</div><div class="v">${escapeHTML(Domain.typeLabel(tx.type))} • ${escapeHTML(tx.item)}</div><div class="muted">Data: ${formatDateBR(tx.agreementDate)}</div></div>
+          <div class="box"><div class="k">Parte</div><div class="v">${escapeHTML(tx.counterpartyName)}</div><div class="muted">Documento: ${escapeHTML(tx.counterpartyDoc || "não informado")}</div></div>
+          <div class="box"><div class="k">Acordo</div><div class="v">${escapeHTML(Domain.typeLabel(tx.type))} • ${escapeHTML(tx.item)}</div><div class="muted">Data: ${formatDateBR(tx.agreementDate)} • ${tx.paymentMode === "parcelado" ? `Parcelado (${escapeHTML(tx.frequency || "mensal")})` : "À vista"}</div></div>
         </div>
+
+        ${interestActive ? (interestTriggered
+          ? `<div class="interest-banner"><div class="interest-banner-title">⚠ JUROS COMPOSTOS SOBRE O SALDO GERAL EM ABERTO</div><div>Taxa mensal da poupança registrada: <strong>${rate}% ao mês</strong> • equivalente a <strong>${annualRate}% ao ano</strong> pela capitalização mensal.</div><div>Base geral: <strong>${moneyFor(tx, st.interestInfo.base)}</strong> • início: <strong>${formatDateBR(st.interestInfo.since)}</strong> • ${st.interestInfo.months} mês(es) completo(s).</div><div class="interest-banner-total">Juros acumulados: ${moneyFor(tx, st.interest)} • Saldo geral atualizado: ${moneyFor(tx, st.openWithInterest)}</div></div>`
+          : `<div class="interest-banner"><div class="interest-banner-title">JUROS COMPOSTOS CONFIGURADOS</div><div>Taxa mensal da poupança registrada: <strong>${rate}% ao mês</strong>. A capitalização sobre o saldo geral começará somente quando houver uma parcela vencida e não paga.</div></div>`)
+          : ""}
+
         <h4>Resumo financeiro</h4>
         <div class="finance-summary">
           <div class="box"><div class="k">Valor original</div><div class="v">${moneyFor(tx, st.originalValue)}</div></div>
-          <div class="box"><div class="k">Total recebido</div><div class="v">${moneyFor(tx, st.paidPrincipal)}</div></div>
+          <div class="box"><div class="k">Recebido em caixa</div><div class="v">${moneyFor(tx, st.cashReceived)}</div><div class="muted">Principal ${moneyFor(tx, st.paidPrincipal)} • juros ${moneyFor(tx, st.interestReceived)}</div></div>
           <div class="box"><div class="k">Principal em aberto</div><div class="v">${moneyFor(tx, st.openPrincipal)}</div></div>
           <div class="box"><div class="k">Principal vencido</div><div class="v">${moneyFor(tx, st.overduePrincipal)}</div></div>
-          <div class="box"><div class="k">Correção pela poupança</div><div class="v">${moneyFor(tx, st.interest)}</div></div>
-          <div class="box strong"><div class="k">Saldo atualizado</div><div class="v">${moneyFor(tx, st.openWithInterest)}</div></div>
+          <div class="box interest-box"><div class="k">JUROS SOBRE O SALDO GERAL</div><div class="v">${moneyFor(tx, st.interest)}</div></div>
+          <div class="box overdue-box"><div class="k">PARCELAS VENCIDAS + JUROS</div><div class="v">${moneyFor(tx, st.overdueUpdated)}</div></div>
+          <div class="box strong"><div class="k">SALDO GERAL ATUALIZADO</div><div class="v">${moneyFor(tx, st.openWithInterest)}</div></div>
         </div>
-        ${tx.type === "emprestimo" ? `<h4>Metodologia da correção</h4><div class="listline">Taxa registrada: <strong>${rate}% ao mês</strong>. A correção é calculada separadamente sobre o saldo de cada parcela vencida, somente por meses completos depois do vencimento. Parcelas futuras não recebem juros.</div>${correctionRows ? `<table class="statement-table"><thead><tr><th>Parcela</th><th>Vencimento</th><th class="num">Principal</th><th class="num">Meses</th><th class="num">Correção</th></tr></thead><tbody>${correctionRows}</tbody></table>` : `<div class="listline">Nenhuma correção acumulada até esta data.</div>`}` : ""}
-        <h4>Parcelas</h4>
+        <div class="listline"><strong>Parcelas pagas:</strong> ${paidCount}/${installments.length} (${paidCountPct}%) • <strong>Atrasadas:</strong> ${overdueCount} • <strong>Próxima pendente:</strong> ${nextLabel}</div>
+
+        ${interestActive ? `<h4>Memória de cálculo dos juros compostos da poupança</h4><div class="listline">A partir do primeiro vencimento não pago, o cálculo usa <strong>todo o saldo principal em aberto</strong>, pela fórmula <strong>saldo geral × (1 + taxa da poupança)<sup>meses completos</sup></strong>. Pagamentos já registrados são retirados da base; os juros anteriores entram na capitalização seguinte.</div>${interestRows ? `<table class="statement-table interest-table"><thead><tr><th>Base do cálculo</th><th>Início</th><th class="num">Saldo geral</th><th class="num">Meses</th><th class="num">Juros</th><th class="num">Atualizado</th></tr></thead><tbody>${interestRows}</tbody></table>` : `<div class="listline">Não existe parcela vencida em aberto até a data deste relatório.</div>`}` : ""}
+
+        <h4>Mensagem cordial sugerida</h4>
+        <div class="message-preview">${escapeHTML(cordialMessage).replace(/\n/g, "<br>")}</div>
+
+        <h4>Parcelas deste mês</h4>
+        ${monthRows ? `<table class="statement-table"><thead><tr><th>Parcela</th><th>Vencimento</th><th class="num">Saldo</th><th>Situação</th></tr></thead><tbody>${monthRows}</tbody></table>` : `<div class="listline">Nenhuma parcela pendente neste mês.</div>`}
+
+        <h4>Próximas 3 pendentes</h4>
+        ${nextRows ? `<table class="statement-table"><thead><tr><th>Parcela</th><th>Vencimento</th><th class="num">Saldo</th><th>Situação</th></tr></thead><tbody>${nextRows}</tbody></table>` : `<div class="listline">Não há parcelas pendentes.</div>`}
+
+        <h4>Todas as parcelas</h4>
         <table class="statement-table"><thead><tr><th>Parcela</th><th class="num">Valor</th><th class="num">Recebido</th><th class="num">Saldo</th><th>Situação</th></tr></thead><tbody>${htmlRows}</tbody></table>
         <h4>Histórico financeiro</h4>
-        ${movementRows ? `<table class="statement-table"><thead><tr><th>Data</th><th>Movimento</th><th class="num">Valor</th></tr></thead><tbody>${movementRows}</tbody></table>` : `<div class="listline">Nenhum pagamento registrado.</div>`}
+        ${movementRows ? `<table class="statement-table"><thead><tr><th>Data</th><th>Movimento</th><th class="num">Valor</th></tr></thead><tbody>${movementRows}</tbody></table>` : `<div class="listline">Nenhum recebimento registrado.</div>`}
         ${tx.notes ? `<h4>Observações</h4><div class="listline">${escapeHTML(tx.notes)}</div>` : ""}
-        <div class="sign"><div><div class="k">Assinatura</div><div class="v">${escapeHTML(sig || "—")}</div></div><div class="muted">Demonstrativo de controle particular. Confira os valores antes do envio.</div></div>`;
+        <div class="sign"><div><div class="k">Pagador</div><div class="v">${escapeHTML(payer)}</div><div class="k sign-space">Recebedor</div><div class="v">${escapeHTML(receiver)}</div>${sig ? `<div class="k sign-space">Assinatura</div><div class="v">${escapeHTML(sig)}</div>` : ""}</div><div class="muted">A cobrança de juros pressupõe que a taxa e a capitalização façam parte do acordo entre as partes. Confira os valores antes do envio.</div></div>`;
 
       const lines = [
-        "DEMONSTRATIVO FINANCEIRO",
-        `Cliente / outra parte: ${tx.counterpartyName}`,
-        `Documento: ${tx.counterpartyDoc || "não informado"}`,
-        `Acordo: ${Domain.typeLabel(tx.type)} • ${tx.item}`,
+        "RELATÓRIO DA TRANSAÇÃO",
+        `Parte: ${tx.counterpartyName} (Documento: ${tx.counterpartyDoc || "—"})`,
+        `Tipo: ${Domain.typeLabel(tx.type)}`,
+        `Item/Bem: ${tx.item}`,
         `Data do acordo: ${formatDateBR(tx.agreementDate)}`,
+        `Forma: ${tx.paymentMode === "parcelado" ? `Parcelado (${tx.frequency || "mensal"})` : "À vista"}`,
         "",
-        "RESUMO FINANCEIRO",
+        "RESUMO",
         `Valor original: ${moneyFor(tx, st.originalValue)}`,
-        `Total recebido: ${moneyFor(tx, st.paidPrincipal)}`,
+        `Recebido em caixa: ${moneyFor(tx, st.cashReceived)}`,
+        `Principal recebido: ${moneyFor(tx, st.paidPrincipal)}`,
+        `Juros recebidos: ${moneyFor(tx, st.interestReceived)}`,
         `Principal em aberto: ${moneyFor(tx, st.openPrincipal)}`,
-        `Principal vencido: ${moneyFor(tx, st.overduePrincipal)}`,
-        `Correção pela poupança: ${moneyFor(tx, st.interest)}`,
-        `SALDO ATUALIZADO: ${moneyFor(tx, st.openWithInterest)}`,
+        `Parcelas pagas: ${paidCount}/${installments.length} (${paidCountPct}%)`,
+        `Atrasadas: ${overdueCount}`,
       ];
-      if (tx.type === "emprestimo") {
-        lines.push("", "METODOLOGIA", `Taxa registrada: ${rate}% ao mês. Cálculo por parcela vencida e por meses completos.`);
-        st.interestInfo.details.forEach(d => lines.push(`Parcela ${d.number}: principal ${moneyFor(tx, d.principal)} • ${d.months} mês(es) • correção ${moneyFor(tx, d.interest)}`));
+
+      if (interestTriggered) {
+        lines.push(
+          "",
+          "⚠️ JUROS COMPOSTOS SOBRE O SALDO GERAL",
+          `Taxa mensal da poupança: ${rate}% ao mês`,
+          `Taxa efetiva anual equivalente: ${annualRate}% ao ano`,
+          `Principal vencido pelas parcelas: ${moneyFor(tx, st.overduePrincipal)}`,
+          `Base geral usada nos juros: ${moneyFor(tx, st.interestInfo.base)}`,
+          `Início da capitalização: ${formatDateBR(st.interestInfo.since)}`,
+          `Períodos completos: ${st.interestInfo.months} mês(es)`,
+          `Juros compostos acumulados: ${moneyFor(tx, st.interest)}`,
+          `PARCELAS VENCIDAS + JUROS: ${moneyFor(tx, st.overdueUpdated)}`,
+          `SALDO GERAL ATUALIZADO: ${moneyFor(tx, st.openWithInterest)}`,
+          "Regra: desde o primeiro vencimento não pago, os juros compostos mensais incidem sobre todo o saldo principal ainda em aberto. Pagamentos registrados saem da base.",
+          "",
+          "MEMÓRIA DE CÁLCULO DOS JUROS"
+        );
+        if (!st.interestInfo.since) lines.push("Não existe parcela vencida em aberto até esta data.");
+        else lines.push(`Saldo geral ${moneyFor(tx, st.interestInfo.base)} - início ${formatDateBR(st.interestInfo.since)} - ${st.interestInfo.months} mês(es) - juros ${moneyFor(tx, st.interest)} - atualizado ${moneyFor(tx, st.openWithInterest)}`);
+      } else if (interestActive) {
+        lines.push(
+          "",
+          "JUROS COMPOSTOS CONFIGURADOS",
+          `Taxa mensal da poupança: ${rate}% ao mês`,
+          "A capitalização sobre o saldo geral ainda não começou porque não existe parcela vencida em aberto."
+        );
       }
-      lines.push("", "PARCELAS");
-      installments.forEach(x => lines.push(`${x.i.number}/${tx.installments.length} • ${formatDateBR(x.i.dueDate)} • valor ${moneyFor(tx, x.contract)} • recebido ${moneyFor(tx, x.paid)} • saldo ${moneyFor(tx, x.open)} • ${x.status}`));
-      lines.push("", "HISTÓRICO FINANCEIRO");
-      const movements = Domain.sortedMovements(tx);
-      if (!movements.length) lines.push("Nenhum pagamento registrado.");
-      movements.forEach(m => lines.push(`${formatDateBR(dateOnly(m.date))} • ${Domain.movementLabel(m)}${m.installmentNumber ? ` • parcela ${m.installmentNumber}` : ""} • ${Number(m.amount || 0) < 0 ? "−" : "+"} ${moneyFor(tx, Math.abs(Number(m.amount || 0)))}`));
+
+      lines.push("", "MENSAGEM CORDIAL SUGERIDA", cordialMessage, "", "PARCELAS DESTE MÊS");
+      if (!currentMonth.length) lines.push("Nenhuma parcela pendente neste mês.");
+      currentMonth.forEach(x => lines.push(`${x.i.number}/${installments.length} - ${formatDateBR(x.i.dueDate)} - ${moneyFor(tx, x.open)} - ${x.status}`));
+
+      lines.push("", "PRÓXIMAS 3 PENDENTES");
+      if (!nextThree.length) lines.push("Não há parcelas pendentes.");
+      nextThree.forEach(x => lines.push(`${x.i.number}/${installments.length} - ${formatDateBR(x.i.dueDate)} - ${moneyFor(tx, x.open)} - ${x.status}`));
+
+      const recentReceipts = (tx.movements || []).filter(m => m?.type === "receipt" && !m.reversedAt).slice().reverse().slice(0, 5);
+      lines.push("", "ÚLTIMOS RECEBIMENTOS");
+      if (!recentReceipts.length) lines.push("Nenhum recebimento confirmado.");
+      recentReceipts.forEach(m => lines.push(`${formatDateBR(String(m.date || "").slice(0, 10))} - ${moneyFor(tx, Number(m.amount || 0))} - ${Domain.paymentMethodLabel(m.paymentMethod)} - juros ${moneyFor(tx, Number(m.interestAmount || 0))} - principal ${moneyFor(tx, Number(m.principalAmount || 0))} - saldo após ${moneyFor(tx, Number(m.balanceAfter || 0))}`));
+
+      lines.push("", `Pagador: ${payer}`, `Recebedor: ${receiver}`, `Gerado em: ${generated}`);
       if (tx.notes) lines.push("", `Observações: ${tx.notes}`);
-      if (sig) lines.push("", `Assinatura: ${sig}`);
+      if (sig) lines.push(`Assinatura: ${sig}`);
+      lines.push("", "Observação: a cobrança de juros pressupõe que a taxa e a capitalização façam parte do acordo entre as partes.");
       return { html, text: lines.join("\n") };
     };
 
@@ -1717,15 +2212,43 @@
       let value = Domain.financialStatement(tx).originalValue;
       let title = "RECIBO DO ACORDO";
       let detail = `Referente a ${Domain.typeLabel(tx.type).toLowerCase()}: ${tx.item}.`;
-      if (mode === "installment") {
+      let extraHtml = "";
+      let extraText = "";
+
+      if (mode === "payment") {
+        const movement = (tx.movements || []).slice().reverse().find(m => m?.type === "receipt" && !m.reversedAt);
+        if (movement) {
+          value = Number(movement.amount || 0);
+          title = "RECIBO DE RECEBIMENTO";
+          const receiptDate = String(movement.date || "").slice(0, 10);
+          const method = Domain.paymentMethodLabel(movement.paymentMethod);
+          detail = `Recebimento referente a ${Domain.typeLabel(tx.type).toLowerCase()}: ${tx.item}. Data: ${formatDateBR(receiptDate)}. Forma: ${method}.`;
+          extraHtml = `<div class="finance-summary"><div class="box"><div class="k">Aplicado em juros</div><div class="v">${moneyFor(tx, Number(movement.interestAmount || 0))}</div></div><div class="box"><div class="k">Aplicado no principal</div><div class="v">${moneyFor(tx, Number(movement.principalAmount || 0))}</div></div><div class="box strong"><div class="k">Saldo após o recebimento</div><div class="v">${moneyFor(tx, Number(movement.balanceAfter || 0))}</div></div></div>${movement.paymentReference ? `<div class="listline"><strong>Referência:</strong> ${escapeHTML(movement.paymentReference)}</div>` : ""}${movement.note ? `<div class="listline"><strong>Observação:</strong> ${escapeHTML(movement.note)}</div>` : ""}`;
+          extraText = `
+Aplicado em juros: ${moneyFor(tx, Number(movement.interestAmount || 0))}
+Aplicado no principal: ${moneyFor(tx, Number(movement.principalAmount || 0))}
+Saldo após o recebimento: ${moneyFor(tx, Number(movement.balanceAfter || 0))}${movement.paymentReference ? `
+Referência: ${movement.paymentReference}` : ""}${movement.note ? `
+Observação: ${movement.note}` : ""}`;
+        } else {
+          title = "RECIBO DE RECEBIMENTO";
+          value = 0;
+          detail = "Nenhum recebimento confirmado foi encontrado.";
+        }
+      } else if (mode === "installment") {
         const n = parseInt($("#receiptInstallment").value || "1", 10);
         const inst = (tx.installments || []).find(i => i.number === n) || tx.installments?.[0];
         value = inst ? Domain.installmentPaidValue(inst) || Domain.installmentContractValue(inst) : value;
         title = "RECIBO DE PARCELA";
         detail = inst ? `Parcela ${inst.number}/${tx.installments.length}, vencimento em ${formatDateBR(inst.dueDate)}.` : detail;
       }
-      const html = `<h3>${title}</h3><div class="listline">Recebi de <strong>${escapeHTML(tx.counterpartyName)}</strong> o valor de <strong>${moneyFor(tx, value)}</strong>.<br>${escapeHTML(detail)}</div><div class="grid"><div class="box"><div class="k">Data do acordo</div><div class="v">${formatDateBR(tx.agreementDate)}</div></div><div class="box"><div class="k">Documento</div><div class="v">${escapeHTML(tx.counterpartyDoc || "não informado")}</div></div></div><div class="sign"><div><div class="k">Assinatura</div><div class="v">${escapeHTML(sig || "—")}</div></div><div class="muted">Gerado em ${new Date().toLocaleString("pt-BR")}</div></div>`;
-      const text = `${title}\nRecebi de ${tx.counterpartyName} o valor de ${moneyFor(tx, value)}.\n${detail}\nData do acordo: ${formatDateBR(tx.agreementDate)}${sig ? `\nAssinatura: ${sig}` : ""}`;
+
+      const html = `<h3>${title}</h3><div class="listline">Recebi de <strong>${escapeHTML(tx.counterpartyName)}</strong> o valor de <strong>${moneyFor(tx, value)}</strong>.<br>${escapeHTML(detail)}</div>${extraHtml}<div class="grid"><div class="box"><div class="k">Data do acordo</div><div class="v">${formatDateBR(tx.agreementDate)}</div></div><div class="box"><div class="k">Documento</div><div class="v">${escapeHTML(tx.counterpartyDoc || "não informado")}</div></div></div><div class="sign"><div><div class="k">Assinatura</div><div class="v">${escapeHTML(sig || "—")}</div></div><div class="muted">Gerado em ${new Date().toLocaleString("pt-BR")}</div></div>`;
+      const text = `${title}
+Recebi de ${tx.counterpartyName} o valor de ${moneyFor(tx, value)}.
+${detail}${extraText}
+Data do acordo: ${formatDateBR(tx.agreementDate)}${sig ? `
+Assinatura: ${sig}` : ""}`;
       return { html, text };
     };
 
@@ -1838,6 +2361,14 @@
   })();
 
   /* ---------------- Form helpers ---------------- */
+  function syncInterestControls() {
+    const enabled = $("#interestEnabled")?.checked !== false;
+    const box = $("#interestRateInputBox");
+    const input = $("#loanRate");
+    if (box) box.hidden = !enabled;
+    if (input) input.disabled = !enabled;
+  }
+
   function clearErrors() {
     $$("[id^='err-']").forEach(el => el.textContent = "");
   }
@@ -1852,8 +2383,10 @@
     $("#currency").value = "BRL";
     $("#counterpartyDoc").value = "";
     $("#installmentValue").value = "";
-    const defaultRate = Number(App.getState().settings.defaultSavingsRate ?? DEFAULT_LOAN_RATE);
+    const defaultRate = normalizedPositiveRate(App.getState().settings.defaultSavingsRate);
     $("#loanRate").value = String((defaultRate * 100).toFixed(2)).replace(".", ",");
+    $("#interestEnabled").checked = true;
+    syncInterestControls();
     clearErrors();
     const fm = $("#formMeta");
     if (fm) fm.textContent = "";
@@ -1871,15 +2404,17 @@
     $("#totalValue").value = String(tx.originalValue ?? tx.totalValue).replace(".", ",");
     $("#agreementDate").value = tx.agreementDate;
     $("#notes").value = tx.notes || "";
-    $("#loanRate").value = tx.type === "emprestimo"
-      ? String(((Number.isFinite(tx.loanRate) ? tx.loanRate : DEFAULT_LOAN_RATE) * 100).toFixed(2)).replace(".", ",")
+    $("#loanRate").value = isInterestBearingType(tx.type)
+      ? String((normalizedPositiveRate(tx.loanRate) * 100).toFixed(2)).replace(".", ",")
       : "0,67";
+    $("#interestEnabled").checked = isInterestBearingType(tx.type) ? tx.interestEnabled !== false : false;
 
 
     const pm = tx.paymentMode || "avista";
     $$("input[name='paymentMode']").forEach(r => r.checked = (r.value === pm));
     $("#installmentsBox").hidden = pm !== "parcelado";
-    $("#loanRateField").hidden = tx.type !== "emprestimo";
+    $("#loanRateField").hidden = !isInterestBearingType(tx.type);
+    syncInterestControls();
 
     if (pm === "parcelado") {
       $("#frequency").value = tx.frequency || "mensal";
@@ -1905,6 +2440,7 @@
     setFormDefaults();
     $("#installmentsBox").hidden = true;
     $("#loanRateField").hidden = true;
+    $("#interestEnabled").checked = true;
     Views.updateInstallmentPreview();
   }
 
@@ -1929,12 +2465,13 @@
     const installmentValue = parseMoneyInput($("#installmentValue").value);
     const hasInstallmentValue = Number.isFinite(installmentValue) && installmentValue > 0;
 
+    const interestEnabled = isInterestBearingType(type) ? $("#interestEnabled").checked : false;
     const loanRatePct = parseMoneyInput($("#loanRate").value);
-    const loanRate = (type === "emprestimo")
+    const loanRate = (isInterestBearingType(type) && interestEnabled)
       ? (Number.isFinite(loanRatePct) && loanRatePct > 0 ? (loanRatePct / 100) : DEFAULT_LOAN_RATE)
       : null;
 
-    const interestType = type === "emprestimo" ? DEFAULT_INTEREST_TYPE : null;
+    const interestType = (isInterestBearingType(type) && interestEnabled) ? DEFAULT_INTEREST_TYPE : null;
 
     return {
       id: existing?.id || safeUUID(),
@@ -1944,6 +2481,7 @@
       frequency: paymentMode === "parcelado" ? frequency : null,
       notes,
       loanRate,
+      interestEnabled,
       interestType,
       createdAt: existing?.createdAt || nowISO(),
       updatedAt: nowISO(),
@@ -2002,13 +2540,13 @@
 
     $("#defaultSavingsRate")?.addEventListener("change", (e) => {
       const pct = parseMoneyInput(e.target.value);
-      if (!Number.isFinite(pct) || pct < 0 || pct > 100) {
+      if (!Number.isFinite(pct) || pct <= 0 || pct > 100) {
         UI.toast("Informe uma taxa mensal válida.", "bad");
         Views.renderSettingsMeta();
         return;
       }
       App.setDefaultSavingsRate(pct / 100);
-      UI.toast("Taxa padrão da poupança atualizada.", "good");
+      UI.toast("Taxa da poupança para juros compostos atualizada.", "good");
       Views.renderSettingsMeta();
     });
 
@@ -2070,12 +2608,16 @@
 
     $("#type").addEventListener("change", () => {
       const t = $("#type").value;
-      $("#loanRateField").hidden = t !== "emprestimo";
-      if (t === "emprestimo" && !$("#loanRate").value.trim()) {
-        const rate = Number(App.getState().settings.defaultSavingsRate ?? DEFAULT_LOAN_RATE);
+      $("#loanRateField").hidden = !isInterestBearingType(t);
+      if (isInterestBearingType(t) && !$("#loanRate").value.trim()) {
+        const rate = normalizedPositiveRate(App.getState().settings.defaultSavingsRate);
         $("#loanRate").value = String((rate * 100).toFixed(2)).replace(".", ",");
       }
+      if (isInterestBearingType(t)) $("#interestEnabled").checked = true;
+      syncInterestControls();
     });
+
+    $("#interestEnabled").addEventListener("change", syncInterestControls);
 
     $("#txForm").addEventListener("submit", (e) => {
       e.preventDefault();
@@ -2099,7 +2641,9 @@
         dueDay: draft._dueDay || 0,
         installmentValue: draft._installmentValue,
         loanRate: draft.loanRate,
+        interestEnabled: draft.interestEnabled,
         interestType: draft.interestType,
+        interestCalculationBasis: isInterestBearingType(draft.type) && draft.interestEnabled !== false ? DEFAULT_INTEREST_BASIS : null,
       };
 
       if (draft.paymentMode === "parcelado" && draft._numInstallments != null && Number.isNaN(draft._numInstallments)) {
@@ -2166,8 +2710,11 @@
           paidAt: Domain.installmentOpenValue(i) <= 0 ? (i.paidAt || todayISODate()) : null,
         })),
         notes: draft.notes,
-        loanRate: draft.type === "emprestimo" ? (Number.isFinite(draft.loanRate) ? draft.loanRate : DEFAULT_LOAN_RATE) : null,
-        interestType: draft.type === "emprestimo" ? DEFAULT_INTEREST_TYPE : null,
+        loanRate: isInterestBearingType(draft.type) && draft.interestEnabled !== false ? normalizedPositiveRate(draft.loanRate) : null,
+        interestEnabled: isInterestBearingType(draft.type) ? draft.interestEnabled !== false : false,
+        interestType: isInterestBearingType(draft.type) && draft.interestEnabled !== false ? DEFAULT_INTEREST_TYPE : null,
+        interestCalculationBasis: isInterestBearingType(draft.type) && draft.interestEnabled !== false ? DEFAULT_INTEREST_BASIS : null,
+        interestAccount: existing?.interestAccount ? safeClone(existing.interestAccount) : null,
         movements: Array.isArray(existing?.movements) ? safeClone(existing.movements) : [],
         createdAt: draft.createdAt,
         updatedAt: draft.updatedAt,
@@ -2233,74 +2780,36 @@
         return;
       }
 
-      if (action === "payNext" && id) {
-        const tx = App.getTransaction(id);
-        if (!tx) return;
-
-        const res = Domain.payNext(tx);
-        if (!res.ok) { UI.toast("Nada a pagar. Já está concluído.", "warn"); return; }
-
-        App.upsertTransaction(tx);
-        Views.renderDashboard();
-        Views.renderTransactions();
-        Views.renderDetail(id);
-
-        UI.toast("Parcela marcada como paga.", "good", {
-          ttl: 7000,
-          action: {
-            label: "Desfazer",
-            onClick: () => {
-              const current = App.getTransaction(id);
-              if (!current) return;
-              Domain.undoPay(current, res.paidNumber, res.previousPaidAmount, res.movementId);
-              App.upsertTransaction(current);
-              Views.renderDashboard();
-              Views.renderTransactions();
-              Views.renderDetail(id);
-              UI.toast("Pagamento desfeito.", "warn");
-            }
-          }
-        });
+      if (action === "openPayment" && id) {
+        PaymentCenter.open(id, "next");
         return;
       }
 
-      if (action === "abat" && id) {
-        const tx = App.getTransaction(id);
-        if (!tx) return;
-
-        const pending = Domain.sumByStatus(tx, "pendente");
-        if (pending <= 0) {
-          UI.toast("Nada em aberto para receber.", "warn");
-          return;
-        }
-
-        const raw = window.prompt(
-          `Digite o valor recebido agora.\n` +
-          `Saldo em aberto (sem juros): ${formatCurrency(pending, tx.currency)}\n` +
-          `Use vírgula se quiser (ex.: 250,50).`
-        );
-
-        if (raw == null) return;
-        const val = parseMoneyInput(raw);
-        if (!Number.isFinite(val) || val <= 0) {
-          UI.toast("Valor inválido.", "bad");
-          return;
-        }
-
-        const ok = window.confirm(`Confirmar recebimento de ${formatCurrency(val, tx.currency)}?`);
-        if (!ok) return;
-
-        const res = Domain.applyAbatement(tx, val, todayISODate());
-        if (!res.ok) {
-          UI.toast(res.reason || "Não foi possível aplicar.", "bad");
-          return;
-        }
-
-        App.upsertTransaction(tx);
-        Views.renderDashboard();
-        Views.renderTransactions();
-        Views.renderDetail(id);
-        UI.toast(`Pagamento registrado: ${formatCurrency(res.applied, tx.currency)}.`, "good");
+      if (action === "reverseReceipt" && id) {
+        const txId = el.dataset.txId;
+        const tx = App.getTransaction(txId);
+        const movement = tx?.movements?.find(m => m.id === id);
+        if (!tx || !movement) return;
+        UI.toast(`Confirmar estorno de ${formatCurrency(Math.abs(Number(movement.amount || 0)), tx.currency)}? O saldo e as parcelas voltarão ao estado anterior.`, "warn", {
+          ttl: 12000,
+          action: {
+            label: "Confirmar estorno",
+            onClick: () => {
+              const current = App.getTransaction(txId);
+              if (!current) return;
+              const result = Domain.reverseReceipt(current, id);
+              if (!result.ok) {
+                UI.toast(result.reason || "Não foi possível estornar.", "bad");
+                return;
+              }
+              App.upsertTransaction(current);
+              Views.renderDashboard();
+              Views.renderTransactions();
+              Views.renderDetail(txId);
+              UI.toast(`Recebimento estornado: ${formatCurrency(result.amount, current.currency)}.`, "warn");
+            }
+          }
+        });
         return;
       }
 
@@ -2355,7 +2864,9 @@
         }),
         notes: "Você pode editar ou excluir este exemplo.",
         loanRate: DEFAULT_LOAN_RATE,
+        interestEnabled: true,
         interestType: DEFAULT_INTEREST_TYPE,
+        interestCalculationBasis: DEFAULT_INTEREST_BASIS,
         movements: [{ id: safeUUID(), type: "agreement_created", amount: 0, date: nowISO(), installmentNumber: null, note: "Acordo de exemplo criado." }],
         createdAt: nowISO(),
         updatedAt: nowISO(),

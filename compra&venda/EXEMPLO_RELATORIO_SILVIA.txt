@@ -1,0 +1,42 @@
+EXEMPLO APÓS RECEBIMENTO PELA CENTRAL PROFISSIONAL
+
+RELATÓRIO DA TRANSAÇÃO
+Parte: Silvia C. N. Fukudome (Documento: —)
+Tipo: Venda
+Item/Bem: Geladeira + Fogão + Máquina de Lavar
+Data do acordo: 07/02/2026
+Forma: Parcelado (mensal)
+
+RESUMO
+Valor original: R$ 5.200,00
+Recebido em caixa: R$ 1.600,00
+Principal recebido: R$ 1.543,53
+Juros recebidos: R$ 56,47
+Principal em aberto: R$ 3.656,47
+Parcelas pagas: 3/11 (27%)
+Atrasadas: 2
+
+JUROS COMPOSTOS SOBRE O SALDO GERAL
+Taxa mensal da poupança: 0,67% ao mês
+Nova base após o recebimento: R$ 3.656,47
+Novo marco financeiro: 20/07/2026
+Juros acumulados imediatamente após a baixa: R$ 0,00
+SALDO GERAL ATUALIZADO: R$ 3.656,47
+
+ÚLTIMO RECEBIMENTO
+Data: 20/07/2026
+Valor recebido: R$ 600,00
+Forma: Transferência bancária
+Referência: PIX-TESTE-001
+Aplicado em juros: R$ 56,47
+Aplicado no principal: R$ 543,53
+Distribuição: parcela 3 = R$ 500,00; parcela 4 = R$ 43,53
+Saldo após o recebimento: R$ 3.656,47
+
+SITUAÇÃO DAS PARCELAS MAIS ANTIGAS
+3/11 - 28/04/2026 - R$ 0,00 - PAGA
+4/11 - 28/05/2026 - R$ 456,47 - PARCIAL / ATRASADA
+5/11 - 28/06/2026 - R$ 500,00 - ATRASADA
+6/11 - 28/07/2026 - R$ 500,00 - PENDENTE
+
+O recibo do recebimento mostra separadamente juros, principal, forma de pagamento, referência e saldo posterior.

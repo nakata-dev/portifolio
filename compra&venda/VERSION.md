@@ -1,20 +1,25 @@
-# COMPRAR & VENDA PRO v1.1.0 — Demonstrativo Financeiro
+# COMPRAR & VENDA PRO v1.4.1 — Hotfix Juros sobre Saldo Geral
 
 ## Base
-- Evolução direta da v1.0.0 Base Oficial.
-- Schema de dados atualizado de 3 para 4, com migração automática.
+- Correção direta da v1.4.0 — Central Profissional de Recebimentos.
+- Schema atualizado de 7 para 8 para forçar a reparação segura dos acordos já salvos.
 
-## Principais mudanças
-- Demonstrativo financeiro reorganizado por cliente e acordo.
-- Separação entre valor original, total recebido, principal em aberto, principal vencido, correção e saldo atualizado.
-- Regra única de correção pela poupança nos empréstimos.
-- Cálculo parcela por parcela, somente sobre parcelas vencidas e por meses completos.
-- Taxa mensal padrão configurável e taxa registrada individualmente em cada acordo.
-- Pagamentos parciais sem apagar ou reduzir o valor original do contrato.
-- Histórico auditável de pagamentos, estornos e atualizações.
-- Parcelas agora guardam valor contratado, valor pago e saldo restante.
-- Proteção contra alteração do plano financeiro depois que existem pagamentos.
-- Relatório para copiar, compartilhar, imprimir ou salvar em PDF.
+## Causa corrigida
+- Vendas antigas podiam ter `loanRate: null`.
+- Em JavaScript, `Number(null)` resulta em `0`.
+- A migração da v1.4.0 aceitava esse zero como taxa válida, deixando os juros compostos em R$ 0,00 mesmo com parcelas atrasadas.
 
-## Observação importante
-A taxa de 0,67% ao mês continua como referência inicial configurável. O aplicativo não consulta automaticamente a TR ou séries oficiais; o usuário deve revisar a taxa usada em cada acordo.
+## Correções
+- Taxa nula, vazia, inválida ou zero passa a receber a taxa-padrão da poupança quando os juros estão ativos.
+- Acordos salvos no storage v7 são migrados automaticamente para v8.
+- Taxa ativa deve ser maior que zero; para não cobrar juros, deve-se desativar a cobrança no acordo.
+- O cálculo e as telas usam uma função única de normalização da taxa.
+- O cartão de juros agora mostra base, taxa mensal aplicada e quantidade de meses completos.
+- Mantida a regra: juros compostos sobre todo o saldo principal em aberto desde o primeiro vencimento não pago.
+
+## Arquivos
+- `index.html`
+- `styles.css`
+- `app.js`
+- `VERSION.md`
+- `VALIDACAO.md`

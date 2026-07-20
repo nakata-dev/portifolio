@@ -666,3 +666,132 @@ textarea{min-height:90px; resize:vertical}
   .finance-table .right{text-align:left}
   .movement{flex-direction:column}
 }
+
+/* v1.3.0 — Juros compostos sobre o saldo geral em aberto */
+.interest-toggle{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:11px 12px;
+  margin:10px 0;
+  border:1px solid rgba(251,191,36,.48);
+  border-radius:14px;
+  background:rgba(251,191,36,.08);
+  cursor:pointer;
+}
+.interest-toggle input{width:20px; min-height:20px; margin:2px 0 0; flex:0 0 auto}
+.interest-toggle span{display:grid; gap:4px}
+.interest-toggle small{color:var(--muted); line-height:1.35}
+.interest-rule{border-color:rgba(251,191,36,.48); background:rgba(251,191,36,.08)}
+.finance-card.interest-highlight{border-color:rgba(251,191,36,.62); background:rgba(251,191,36,.13)}
+.finance-card.alert-strong{border:2px solid rgba(251,113,133,.72); background:rgba(251,113,133,.14)}
+.receipt{overflow-x:auto}
+.receipt .interest-banner{
+  margin-top:12px;
+  border:2px solid #b45309;
+  border-radius:14px;
+  padding:11px 12px;
+  background:#fffbeb;
+  color:#78350f;
+}
+.receipt .interest-banner-title{font-weight:900; letter-spacing:.02em; margin-bottom:5px}
+.receipt .interest-banner-total{font-weight:850; margin-top:6px}
+.receipt .finance-summary .interest-box{border:2px solid #d97706; background:#fffbeb}
+.receipt .finance-summary .overdue-box{border:2px solid #be123c; background:#fff1f2}
+.receipt .message-preview{padding:11px 12px; border:1px solid #93c5fd; border-radius:12px; background:#eff6ff; line-height:1.5}
+.receipt .interest-table th{background:#fffbeb}
+.receipt .sign-space{margin-top:10px}
+@media(max-width:720px){
+  .receipt .statement-table{min-width:620px}
+  .receipt .finance-summary{grid-template-columns:1fr 1fr}
+}
+
+/* v1.4.0 — Central profissional de recebimentos */
+.panel-sub{margin:4px 0 0;color:var(--muted);font-size:.86rem}
+.payment-panel{max-width:780px}
+.payment-context{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  padding:12px;
+  border:1px solid rgba(125,211,252,.42);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(125,211,252,.11),rgba(52,211,153,.07));
+}
+.payment-context .name{font-weight:850;font-size:1.05rem}
+.payment-context .meta{color:var(--muted);font-size:.9rem}
+.payment-context .context-values{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4px}
+.payment-context .context-value{border:1px solid var(--line);border-radius:12px;padding:9px 10px;background:rgba(0,0,0,.12)}
+.payment-context .context-value .k{color:var(--muted);font-size:.78rem}
+.payment-context .context-value .v{font-weight:850;margin-top:4px}
+.payment-quick{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 2px}
+.payment-quick .btn{min-height:38px}
+.payment-allocation{
+  border:1px solid var(--line2);
+  border-radius:18px;
+  padding:12px;
+  margin-top:14px;
+  background:rgba(255,255,255,.025);
+}
+.payment-allocation-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.payment-allocation-head h3{margin:0;font-size:1rem}
+.payment-allocation-head p{margin:5px 0 0;color:var(--muted);font-size:.84rem}
+.payment-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.payment-summary-card{border:1px solid var(--line);border-radius:13px;padding:9px 10px;background:rgba(255,255,255,.03)}
+.payment-summary-card .k{color:var(--muted);font-size:.78rem}
+.payment-summary-card .v{font-weight:880;margin-top:4px}
+.payment-summary-card.interest{border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.08)}
+.payment-summary-card.principal{border-color:rgba(125,211,252,.5);background:rgba(125,211,252,.08)}
+.payment-summary-card.balance{border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.08)}
+.payment-ledger-preview{margin-top:10px;display:grid;gap:6px}
+.payment-ledger-line{display:flex;justify-content:space-between;gap:12px;padding:8px 10px;border-radius:11px;background:rgba(0,0,0,.13);font-size:.88rem}
+.payment-ledger-line strong{text-align:right}
+.payment-ledger-line.muted{color:var(--muted)}
+.receipt-check{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:11px 12px;
+  margin-top:12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  cursor:pointer;
+}
+.receipt-check input{width:20px;min-height:20px;margin:2px 0 0;flex:0 0 auto}
+.receipt-check span{display:grid;gap:3px}
+.receipt-check small{color:var(--muted);line-height:1.35}
+.payment-footer{display:flex;justify-content:flex-end;gap:8px}
+.movement-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.movement-breakdown{margin-top:5px;color:var(--muted);font-size:.82rem;line-height:1.4}
+.btn.mini.danger-soft{border-color:rgba(251,113,133,.48);color:#fecdd3;background:rgba(251,113,133,.08)}
+@media(min-width:720px){
+  .payment-context{grid-template-columns:1.2fr 1fr;align-items:center}
+  .payment-context .context-values{margin-top:0}
+  .payment-summary-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:560px){
+  .payment-footer{display:grid;grid-template-columns:1fr 1fr}
+  .payment-footer .btn{width:100%}
+  .payment-context .context-values{grid-template-columns:1fr 1fr}
+  .payment-allocation-head{flex-direction:column}
+  .payment-summary-grid{grid-template-columns:1fr 1fr}
+}
+
+/* Estrutura rolável da Central de Recebimentos */
+.payment-panel{background:#0f1a2e}
+.payment-panel > form{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+.payment-panel > form > .panel-body{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:auto;
+}
+.payment-panel > form > .panel-footer{flex:0 0 auto}
+.payment-panel .error:empty{min-height:0;margin-top:0}
+
+/* v1.4.1 — Hotfix da migração da taxa de juros sobre o saldo geral */

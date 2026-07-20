@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b1220" />
-  <title>Comprar &amp; Venda PRO — Demonstrativo Financeiro</title>
+  <title>Comprar &amp; Venda PRO — Juros Compostos e Relatório WhatsApp</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -94,7 +94,7 @@
       <div class="card">
         <div class="card-head">
           <h2 class="card-title">Configurações</h2>
-          <p class="card-desc">Moeda, câmbio e taxa padrão da poupança.</p>
+          <p class="card-desc">Moeda, câmbio e taxa padrão dos juros por atraso.</p>
         </div>
 
         <form class="form" id="settingsForm">
@@ -109,9 +109,9 @@
           </div>
 
           <div class="field">
-            <label for="defaultSavingsRate">Taxa mensal padrão da poupança (%)</label>
+            <label for="defaultSavingsRate">Taxa mensal da poupança usada nos juros compostos (%)</label>
             <input id="defaultSavingsRate" name="defaultSavingsRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
-            <div class="hint">Usada como referência nos novos empréstimos. Pode ser ajustada em cada acordo.</div>
+            <div class="hint">Usada nas novas vendas e empréstimos. O atraso é capitalizado mês a mês, e a taxa fica registrada em cada acordo.</div>
           </div>
 
           <div class="field">
@@ -135,7 +135,7 @@
     <section class="view" id="view-transactions" data-view="transactions" hidden>
       <header class="view-header">
         <h1 class="view-title">Transações</h1>
-        <p class="view-sub">Buscar, filtrar, pagar parcela e gerar relatório.</p>
+        <p class="view-sub">Buscar, filtrar, registrar recebimentos e gerar relatórios.</p>
       </header>
 
       <div class="card">
@@ -285,14 +285,18 @@
             </div>
 
           <div class="field" id="loanRateField" hidden>
-            <div class="finance-rule" role="note" aria-label="Regra de correção do empréstimo">
-              <div class="finance-rule-title">🏦 Correção pela Poupança</div>
-              <p>O cálculo é feito parcela por parcela, somente após cada vencimento e por meses completos.</p>
+            <div class="finance-rule interest-rule" role="note" aria-label="Regra de juros compostos por atraso">
+              <div class="finance-rule-title">📈 Juros compostos com a taxa da poupança</div>
+              <p>Quando há atraso, os juros compostos incidem sobre todo o saldo principal ainda em aberto, desde o primeiro vencimento não pago.</p>
             </div>
-            <div class="field loan-field">
-              <label for="loanRate">Taxa mensal de referência da poupança (%)</label>
+            <label class="interest-toggle" for="interestEnabled">
+              <input id="interestEnabled" name="interestEnabled" type="checkbox" checked />
+              <span><strong>Cobrar juros compostos com taxa da poupança sobre o saldo geral em aberto</strong><small>Use quando esta condição fizer parte do acordo com o cliente.</small></span>
+            </label>
+            <div class="field loan-field" id="interestRateInputBox">
+              <label for="loanRate">Taxa mensal da poupança para capitalização composta (%)</label>
               <input id="loanRate" name="loanRate" inputmode="decimal" autocomplete="off" placeholder="0,67" />
-              <div class="hint">Ex.: 0,67. A taxa fica registrada no acordo para o demonstrativo permanecer auditável.</div>
+              <div class="hint">Ex.: 0,67. Fórmula: saldo geral em aberto × (1 + taxa)<sup>meses completos</sup>, a partir do primeiro vencimento não pago. Valores já recebidos não entram na base.</div>
               <div class="error" id="err-loanRate" role="alert"></div>
             </div>
           </div>
@@ -366,6 +370,95 @@
     </section>
   </main>
 
+
+  <div class="overlay" id="paymentOverlay" hidden>
+    <div class="overlay-scrim" data-close="payment" tabindex="-1" aria-hidden="true"></div>
+
+    <div class="panel panel-wide payment-panel" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
+      <div class="panel-header">
+        <div>
+          <h2 class="panel-title" id="paymentTitle">Registrar recebimento</h2>
+          <p class="panel-sub" id="paymentSubtitle">Baixa financeira com memória de cálculo.</p>
+        </div>
+        <button class="icon-btn" type="button" data-close="payment" aria-label="Fechar">
+          <span class="x" aria-hidden="true">✕</span>
+        </button>
+      </div>
+
+      <form id="paymentForm" novalidate>
+        <div class="panel-body panel-body-scroll">
+          <input type="hidden" id="paymentTxId" />
+
+          <section class="payment-context" id="paymentContext" aria-live="polite"></section>
+
+          <div class="payment-quick" aria-label="Preenchimento rápido">
+            <button class="btn mini" type="button" data-payment-quick="next">Parcela mais antiga + juros</button>
+            <button class="btn mini" type="button" data-payment-quick="overdue">Regularizar atraso</button>
+            <button class="btn mini" type="button" data-payment-quick="total">Quitar saldo atualizado</button>
+          </div>
+
+          <div class="row row-2">
+            <div class="field">
+              <label for="paymentAmount">Valor recebido</label>
+              <input id="paymentAmount" inputmode="decimal" autocomplete="off" placeholder="Ex.: 500,00" required />
+              <div class="error" id="err-paymentAmount" role="alert"></div>
+            </div>
+            <div class="field">
+              <label for="paymentDate">Data do recebimento</label>
+              <input id="paymentDate" type="date" required />
+              <div class="error" id="err-paymentDate" role="alert"></div>
+            </div>
+          </div>
+
+          <div class="row row-2">
+            <div class="field">
+              <label for="paymentMethod">Forma de recebimento</label>
+              <select id="paymentMethod" required>
+                <option value="pix">Pix</option>
+                <option value="transferencia">Transferência bancária</option>
+                <option value="dinheiro">Dinheiro</option>
+                <option value="boleto">Boleto</option>
+                <option value="cartao">Cartão</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="paymentReference">Comprovante / referência (opcional)</label>
+              <input id="paymentReference" maxlength="100" autocomplete="off" placeholder="Ex.: Pix 8F42, recibo 021..." />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="paymentNote">Observação do recebimento (opcional)</label>
+            <textarea id="paymentNote" rows="2" maxlength="300" placeholder="Ex.: Cliente prometeu complementar o valor no dia 30."></textarea>
+          </div>
+
+          <section class="payment-allocation" aria-live="polite">
+            <div class="payment-allocation-head">
+              <div>
+                <h3>Prévia da baixa</h3>
+                <p>Ordem automática: juros acumulados → principal vencido → demais parcelas.</p>
+              </div>
+              <span class="badge" id="paymentStatusBadge">Aguardando valor</span>
+            </div>
+            <div class="payment-summary-grid" id="paymentSummary"></div>
+            <div class="payment-ledger-preview" id="paymentAllocationPreview"></div>
+          </section>
+
+          <label class="receipt-check">
+            <input id="paymentOpenReceipt" type="checkbox" checked />
+            <span><strong>Abrir recibo após registrar</strong><small>Permite copiar, compartilhar ou salvar em PDF imediatamente.</small></span>
+          </label>
+        </div>
+
+        <div class="panel-footer payment-footer">
+          <button class="btn" type="button" data-close="payment">Cancelar</button>
+          <button class="btn primary" type="submit" id="confirmPaymentBtn">Confirmar recebimento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="overlay" id="receiptOverlay" hidden>
     <div class="overlay-scrim" data-close="receipt" tabindex="-1" aria-hidden="true"></div>
 
@@ -382,11 +475,12 @@
           <div class="field">
             <label for="receiptMode">Tipo</label>
             <select id="receiptMode">
+              <option value="payment">Recibo do último recebimento</option>
               <option value="total">Recibo do total</option>
               <option value="installment">Recibo de parcela</option>
               <option value="report">Demonstrativo financeiro completo</option>
             </select>
-            <div class="hint">O demonstrativo separa principal, pagamentos, saldo, atraso e correção pela poupança.</div>
+            <div class="hint">O demonstrativo destaca principal, parcelas vencidas, juros compostos, total vencido atualizado e saldo total.</div>
           </div>
 
           <div class="field" id="receiptInstallmentField" hidden>
@@ -419,7 +513,7 @@
   <input type="file" id="importFile" accept="application/json" hidden />
 
   <footer class="app-footer" role="contentinfo">
-    <small>Copyright @ 2026 - Ailton A. Nakata • v1.1.0</small>
+    <small>Copyright @ 2026 - Ailton A. Nakata • v1.4.1</small>
   </footer>
 
   <script src="app.js"></script>
