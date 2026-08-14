@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="color-scheme" content="light dark" />
-  <title>Takara • Gerador de Loterias do Japão</title>
+  <title>TAKARA321 • Previsão Estatística das Loterias do Japão</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="shortcut icon" href="../img/favicon/takarajp.svg" type="image/x-icon">
 </head>
@@ -41,8 +41,8 @@
         </svg>
 
         <div class="brand__text">
-          <div class="brand__name">Takara</div>
-          <div class="brand__tag">Simulação visual • entretenimento & apoio estatístico</div>
+          <div class="brand__name">TAKARA321</div>
+          <div class="brand__tag">Previsão estatística experimental • EPN + cobertura combinatória</div>
         </div>
       </div>
 
@@ -91,6 +91,11 @@
         <span class="nav-item__text">Probabilidade: últimos 7</span>
       </button>
 
+      <button class="nav-item nav-item--forecast" type="button" data-view="view-forecast">
+        <span class="nav-item__icon" aria-hidden="true">🧠</span>
+        <span class="nav-item__text">Previsão EPN • Meta 5/6</span>
+      </button>
+
       <button class="nav-item" type="button" data-view="view-how">
         <span class="nav-item__icon" aria-hidden="true">🧭</span>
         <span class="nav-item__text">Como funciona</span>
@@ -110,8 +115,8 @@
   <main id="appMain" class="app" role="main" tabindex="-1">
     <section class="hero" aria-label="Aviso principal">
       <div class="hero__card">
-        <div class="hero__title">Ferramenta de entretenimento e apoio estatístico.</div>
-        <div class="hero__subtitle">Loteria é aleatória; não há garantia de ganhos.</div>
+        <div class="hero__title">TAKARA321 Forecast • Equação de Previsão Numérica (EPN)</div>
+        <div class="hero__subtitle">O app mede sinais, faz backtest temporal e otimiza a carteira. Não há garantia de prêmio.</div>
       </div>
     </section>
 
@@ -142,6 +147,7 @@
                   <option value="prob_last">Modo B • Probabilidade (último concurso)</option>
                   <option value="prob_7">Modo C • Probabilidade (últimos 7 concursos)</option>
                   <option value="online_trends">Online (experimental) • Tendências (histórico)</option>
+                  <option value="epn_forecast">Modo EPN • Previsão + carteira</option>
                 </select>
                 <div class="micro">
                   Online pode falhar por bloqueio do navegador (CORS). Se falhar, use os modos “colar resultados”.
@@ -394,19 +400,154 @@
         </div>
       </section>
 
+      <!-- VIEW: PREVISÃO EPN -->
+      <section id="view-forecast" class="view" aria-label="Previsão EPN">
+        <div class="card forecast-hero">
+          <div class="card__header card__header--row">
+            <div>
+              <h2 class="card__title">Previsão EPN • Meta 5/6</h2>
+              <p class="card__desc">Equação de Previsão Numérica experimental + validação temporal + cobertura combinatória.</p>
+            </div>
+            <div class="epn-badge">EPN v1.1.0</div>
+          </div>
+          <div class="forecast-note">
+            <strong>Regra científica:</strong> score EPN não é porcentagem real de sorteio. A vantagem só é reconhecida se sobreviver ao backtest sem enxergar o futuro.
+          </div>
+        </div>
+
+        <div class="grid forecast-grid">
+          <div class="card">
+            <div class="card__header">
+              <h3 class="card__title">1. Histórico completo</h3>
+              <p class="card__desc">Cole somente os números sorteados: 1 resultado por linha, do mais antigo para o mais recente.</p>
+            </div>
+            <textarea id="epnHistory" rows="12" placeholder="03 22 25 28 30 43&#10;18 20 22 35 37 42&#10;13 20 22 27 35 38"></textarea>
+            <div class="micro">Formato: <strong>6 números por linha</strong> • antigo ↑ • recente ↓ • sem número do concurso.</div>
+            <div class="forecast-controls">
+              <div class="field">
+                <label for="epnWindow">Janela principal</label>
+                <select id="epnWindow">
+                  <option value="20">20 concursos</option>
+                  <option value="50" selected>50 concursos</option>
+                  <option value="100">100 concursos</option>
+                  <option value="200">200 concursos</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="epnPool">Núcleo de candidatos</label>
+                <select id="epnPool">
+                  <option value="9">Top 9</option>
+                  <option value="12" selected>Top 12</option>
+                  <option value="15">Top 15</option>
+                  <option value="18">Top 18</option>
+                </select>
+              </div>
+            </div>
+            <div class="epn-quick-help">
+              <strong>Como usar</strong>
+              <div><b>1.</b> Cole os resultados antigos → recentes.</div>
+              <div><b>2.</b> Clique em <strong>ANALISAR E PREVER</strong>. O app calcula a EPN e cria automaticamente os 3 jogos.</div>
+              <div><b>3.</b> Use <strong>TESTAR PRECISÃO DA EPN</strong> quando quiser verificar se o método teria superado o acaso no histórico.</div>
+            </div>
+            <div class="actions epn-main-actions">
+              <button id="btnEpnAnalyze" class="btn btn--primary epn-main-btn" type="button">🎯 ANALISAR E PREVER</button>
+              <button id="btnEpnBacktest" class="btn" type="button">🔬 TESTAR PRECISÃO DA EPN</button>
+            </div>
+            <div class="epn-action-explain">
+              <p><strong>ANALISAR E PREVER:</strong> lê o histórico, calcula o ranking EPN e gera os 3 jogos. Não apaga o histórico.</p>
+              <p><strong>TESTAR PRECISÃO DA EPN:</strong> simula previsões antigas sem deixar o modelo enxergar o resultado seguinte. Não muda sua previsão atual.</p>
+            </div>
+            <div id="epnStatus" class="status" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="card">
+            <div class="card__header card__header--row">
+              <div>
+                <h3 class="card__title">2. Números de maior sinal</h3>
+                <p class="card__desc">Ranking interno da EPN. Todos continuam equiprováveis num sorteio perfeitamente justo.</p>
+              </div>
+              <div id="epnConfidence" class="epn-confidence">—</div>
+            </div>
+            <div id="epnRanking" class="epn-ranking">
+              <div class="micro">Faça a análise para calcular o ranking 1–43.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid forecast-grid grid--bottom">
+          <div class="card">
+            <div class="card__header">
+              <h3 class="card__title">3. Melhor carteira • 3 jogos</h3>
+              <p class="card__desc">As linhas são escolhidas em conjunto para equilibrar sinal EPN, estrutura e baixa redundância.</p>
+            </div>
+            <div id="epnGames" class="epn-games"><div class="micro">Nenhuma carteira gerada.</div></div>
+            <div id="epnCost" class="status"></div>
+          </div>
+
+          <div class="card">
+            <div class="card__header">
+              <h3 class="card__title">4. Prova de vantagem</h3>
+              <p class="card__desc">Walk-forward: cada concurso é previsto usando somente os anteriores.</p>
+            </div>
+            <div id="epnProof" class="epn-proof">
+              <div class="proof-state proof-state--neutral">Aguardando backtest.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card epn-explain-card">
+          <details class="acc" open>
+            <summary class="acc__sum">🧠 O que significa EPN e qual equação o aplicativo usa?</summary>
+            <div class="acc__body epn-doc">
+              <p><strong>EPN = Equação de Previsão Numérica.</strong> É um score experimental para ordenar os números pelos sinais encontrados no histórico. Score alto não significa garantia nem porcentagem física maior num sorteio justo.</p>
+              <div class="epn-equation" aria-label="Equação EPN">
+                EPN(n) = 0,38R(n) + 0,22H(n) + 0,12A(n) + 0,16T(n) + 0,12E(n)
+              </div>
+              <div class="epn-legend">
+                <div><strong>R • Recência</strong><span>Comportamento do número em várias janelas recentes: 5, 10, 20, janela principal e até 100 sorteios.</span></div>
+                <div><strong>H • Histórico</strong><span>Frequência de longo prazo, suavizada em direção à probabilidade-base para evitar exageros.</span></div>
+                <div><strong>A • Atraso controlado</strong><span>Mede o intervalo desde a última aparição, mas penaliza atrasos extremos para não cair na falácia do “está devendo”.</span></div>
+                <div><strong>T • Transição</strong><span>Testa a persistência: quando o número apareceu, com que frequência reapareceu no sorteio seguinte.</span></div>
+                <div><strong>E • Estabilidade</strong><span>Favorece sinais que aparecem em mais de uma janela temporal e penaliza oscilações frágeis.</span></div>
+              </div>
+              <p class="micro"><strong>Pesos atuais:</strong> 38% Recência + 22% Histórico + 12% Atraso + 16% Transição + 12% Estabilidade. Eles são hipóteses da EPN v1.1.0 e só ganham credibilidade se o backtest e futuras validações mostrarem desempenho acima do acaso.</p>
+            </div>
+          </details>
+
+          <details class="acc">
+            <summary class="acc__sum">🎯 O que significa cada resultado mostrado?</summary>
+            <div class="acc__body epn-doc">
+              <p><strong>Score EPN (0–100):</strong> posição relativa do sinal dentro do modelo. Não é “chance de sair”.</p>
+              <p><strong>Taxa modelada:</strong> frequência recente suavizada matematicamente. É uma estimativa descritiva do modelo, não a probabilidade física oficial.</p>
+              <p><strong>Qualidade do sinal:</strong> indicador interno baseado em quantidade de histórico e separação dos scores. Não é probabilidade de ganhar.</p>
+              <p><strong>Baseline:</strong> referência de um sorteio justo. Na Loto 6, cada número individual tem probabilidade-base de 6/43 por sorteio.</p>
+              <p><strong>Prova de vantagem:</strong> comparação temporal entre a EPN e o desempenho esperado pelo acaso. É aqui que uma possível vantagem precisa se provar.</p>
+            </div>
+          </details>
+
+          <details class="acc">
+            <summary class="acc__sum">⚙️ O que fazem “Janela principal” e “Núcleo de candidatos”?</summary>
+            <div class="acc__body epn-doc">
+              <p><strong>Janela principal:</strong> define quantos sorteios recentes recebem atenção especial na estimativa. Uma janela curta reage mais rápido; uma longa é mais estável.</p>
+              <p><strong>Núcleo de candidatos:</strong> determina quantos números mais bem ranqueados entram no conjunto principal usado para montar a carteira. Um núcleo menor concentra; um maior diversifica.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
       <!-- VIEW: COMO FUNCIONA -->
       <section id="view-how" class="view" aria-label="Como funciona">
         <div class="card">
           <div class="card__header">
             <h2 class="card__title">Como funciona</h2>
-            <p class="card__desc">O Takara organiza combinações e usa frequências. Não prevê resultados.</p>
+            <p class="card__desc">O TAKARA321 combina estatística, EPN, backtest temporal e cobertura. Não promete resultados.</p>
           </div>
 
           <div class="accordion" role="region" aria-label="Conteúdo explicativo">
             <details class="acc" open>
               <summary class="acc__sum">O que este app faz?</summary>
               <div class="acc__body">
-                <p>Gera combinações válidas e permite ponderar por frequências. Sem promessas.</p>
+                <p>Gera combinações válidas, mede sinais históricos, testa a EPN sem olhar o futuro e monta uma carteira com baixa redundância. Sem promessa de prêmio.</p>
               </div>
             </details>
           </div>

@@ -696,3 +696,80 @@ textarea{ resize:none; line-height: 1.25; }
 }
 
 .print-root{ display:none; }
+
+/* ===========================
+   TAKARA321 v1.0.0 • EPN Forecast
+=========================== */
+.nav-item--forecast{
+  border-color: rgba(255,204,51,.48);
+  background: linear-gradient(135deg, rgba(255,204,51,.18), rgba(16,48,100,.22));
+}
+.forecast-hero{ margin-bottom:12px; }
+.epn-badge{
+  padding:8px 12px; border-radius:999px; font-weight:950; font-size:12px;
+  color:#07142e; background:linear-gradient(135deg,var(--gold-400),var(--gold-600));
+  box-shadow:0 8px 22px rgba(242,183,5,.18); white-space:nowrap;
+}
+.forecast-note{
+  padding:12px 14px; border-radius:14px; font-size:12px; line-height:1.45;
+  background:linear-gradient(135deg,rgba(255,204,51,.12),rgba(16,48,100,.13));
+  border:1px solid rgba(255,204,51,.25); color:var(--muted);
+}
+.forecast-note strong{ color:var(--text); }
+.forecast-controls{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+.epn-confidence{
+  min-width:94px; text-align:center; padding:8px 10px; border-radius:14px;
+  background:rgba(255,204,51,.10); border:1px solid rgba(255,204,51,.25);
+  font-size:12px; font-weight:950;
+}
+.epn-ranking{ display:grid; gap:8px; }
+.epn-rank-row{
+  display:grid; grid-template-columns:42px 1fr 72px; gap:10px; align-items:center;
+  padding:9px 10px; border-radius:14px; background:var(--panel2); border:1px solid var(--stroke);
+}
+.epn-rank-num{
+  width:38px; height:38px; border-radius:50%; display:grid; place-items:center;
+  background:linear-gradient(135deg,rgba(255,204,51,.22),rgba(16,48,100,.26));
+  border:1px solid rgba(255,204,51,.35); font-weight:950;
+}
+.epn-bar{ height:8px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.09); margin-top:5px; }
+[data-theme="light"] .epn-bar{ background:rgba(7,20,46,.08); }
+.epn-bar > span{ display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--blue-700),var(--gold-500)); }
+.epn-score{ text-align:right; font-weight:950; font-size:12px; }
+.epn-score small{ display:block; color:var(--muted); font-weight:700; margin-top:2px; }
+.epn-games{ display:grid; gap:10px; }
+.epn-game{
+  display:grid; grid-template-columns:72px 1fr; gap:10px; align-items:center;
+  padding:12px; border-radius:16px; border:1px solid var(--stroke); background:var(--panel2);
+}
+.epn-game__label{ font-size:12px; font-weight:950; color:var(--muted); }
+.epn-game__balls{ display:flex; flex-wrap:wrap; gap:7px; }
+.epn-game__ball{
+  width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:950;
+  border:1px solid rgba(255,204,51,.32);background:linear-gradient(135deg,rgba(255,204,51,.18),rgba(16,48,100,.22));
+}
+.epn-proof{ display:grid; gap:10px; }
+.proof-state{ padding:12px 14px; border-radius:14px; border:1px solid var(--stroke); font-size:13px; font-weight:900; }
+.proof-state--neutral{ background:var(--panel2); }
+.proof-state--good{ background:rgba(46,229,157,.10); border-color:rgba(46,229,157,.30); }
+.proof-state--bad{ background:rgba(255,91,120,.09); border-color:rgba(255,91,120,.28); }
+.proof-metrics{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.proof-metric{ padding:11px; border-radius:14px; background:var(--panel2); border:1px solid var(--stroke); }
+.proof-metric span{ display:block; color:var(--muted); font-size:11px; }
+.proof-metric strong{ display:block; margin-top:4px; font-size:18px; }
+@media(max-width:680px){
+  .forecast-controls{ grid-template-columns:1fr; }
+  .epn-rank-row{ grid-template-columns:40px 1fr 62px; }
+  .epn-game{ grid-template-columns:1fr; }
+}
+
+/* TAKARA321 v1.1.0 • UX guiada EPN */
+.epn-quick-help{margin-top:12px;padding:13px 14px;border-radius:14px;background:var(--panel2);border:1px solid var(--stroke);font-size:12px;line-height:1.55;display:grid;gap:5px}
+.epn-quick-help>strong{font-size:13px}
+.epn-main-actions{margin-top:12px}
+.epn-main-btn{font-size:14px;padding:13px 18px}
+.epn-action-explain{margin-top:10px;padding:10px 12px;border-left:3px solid var(--gold-500);font-size:11px;color:var(--muted);line-height:1.45}
+.epn-action-explain p{margin:4px 0}.epn-action-explain strong{color:var(--text)}
+.epn-explain-card{margin-top:12px}.epn-doc{line-height:1.58}.epn-equation{margin:14px 0;padding:16px;border-radius:14px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(13px,2.5vw,18px);font-weight:900;letter-spacing:.1px;background:linear-gradient(135deg,rgba(16,48,100,.20),rgba(255,204,51,.12));border:1px solid rgba(255,204,51,.30);overflow-wrap:anywhere}
+.epn-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}.epn-legend>div{padding:11px;border-radius:13px;background:var(--panel2);border:1px solid var(--stroke)}.epn-legend strong,.epn-legend span{display:block}.epn-legend span{margin-top:4px;color:var(--muted);font-size:12px;line-height:1.45}
+@media(max-width:680px){.epn-legend{grid-template-columns:1fr}.epn-main-actions .btn{width:100%}}

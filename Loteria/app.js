@@ -7,7 +7,9 @@
     prefs: "takara:prefs:v3",
     probLast: "takara:prob:last:v2",
     prob7: "takara:prob:7:v2",
-    online: "takara:prob:online:v1"
+    online: "takara:prob:online:v1",
+    epnHistory: "takara:epn:history:v1",
+    epnModel: "takara:epn:model:v1"
   };
 
   const SAVED_PAGE_SIZE = 10;
@@ -46,7 +48,8 @@
       last: null,   // { lotteryId, weights, hot, cold, ts }
       seven: null,  // { lotteryId, weights, hot, cold, ts }
       online: null
-    }
+    },
+    epn: { history: [], model: null, games: [] }
   };
 
   // DOM
@@ -108,6 +111,20 @@
 
   const printRoot = $("#printRoot");
 
+  // EPN Forecast
+  const epnHistory = $("#epnHistory");
+  const epnWindow = $("#epnWindow");
+  const epnPool = $("#epnPool");
+  const btnEpnAnalyze = $("#btnEpnAnalyze");
+  const btnEpnGenerate = $("#btnEpnGenerate");
+  const btnEpnBacktest = $("#btnEpnBacktest");
+  const epnStatus = $("#epnStatus");
+  const epnRanking = $("#epnRanking");
+  const epnConfidence = $("#epnConfidence");
+  const epnGames = $("#epnGames");
+  const epnCost = $("#epnCost");
+  const epnProof = $("#epnProof");
+
   /* ==========
      STORAGE
   ========== */
@@ -143,6 +160,7 @@
     if (mode === "prob_last") return "Modo B • Prob. (último concurso)";
     if (mode === "prob_7") return "Modo C • Prob. (últimos 7)";
     if (mode === "online_trends") return "Online (exp.) • Tendências (histórico)";
+    if (mode === "epn_forecast") return "Modo EPN • Previsão + carteira";
     return mode;
   }
 
@@ -497,6 +515,7 @@
   function openAnalyzeForCurrentMode() {
     if (state.prefs.mode === "prob_last") setView("view-prob-last");
     else if (state.prefs.mode === "prob_7") setView("view-prob-7");
+    else if (state.prefs.mode === "epn_forecast") setView("view-forecast");
     else if (state.prefs.mode === "online_trends") {
       // Online é no gerar mesmo, mas deixamos o botão apontar para o topo e reforçar a ação
       toast("Para Online: clique em “Buscar histórico agora” e depois em “Gerar”.");
@@ -578,6 +597,275 @@
     }
   }
 
+
+  /* ================================
+     EPN • EQUAÇÃO DE PREVISÃO NUMÉRICA
+     Score experimental. Não altera a probabilidade física de um sorteio justo.
+  ================================= */
+  function parseEpnHistory(text, lottery) {
+    // Formato simples: exatamente os números sorteados, uma linha por concurso.
+    // A ordem das linhas é a ordem do tempo: mais antigo em cima, mais recente embaixo.
+    const lines = String(text || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    const rows = [];
+    for (const line of lines) {
+      const raw = extractNumbers(line).map(n => Math.trunc(n));
+      if (raw.length !== lottery.pick) continue;
+      if (!raw.every(n => n >= 1 && n <= lottery.max)) continue;
+      const unique = Array.from(new Set(raw));
+      if (unique.length !== lottery.pick) continue;
+      rows.push(unique.sort((a,b)=>a-b));
+    }
+    return rows;
+  }
+
+  function mean(arr) { return arr.length ? arr.reduce((a,b)=>a+b,0) / arr.length : 0; }
+  function std(arr) {
+    if (!arr.length) return 1;
+    const m = mean(arr);
+    return Math.sqrt(mean(arr.map(x => (x-m)*(x-m)))) || 1;
+  }
+  function normalizeVector(values, max) {
+    const xs=[]; for(let n=1;n<=max;n++) xs.push(values[n] || 0);
+    const m=mean(xs), s=std(xs);
+    const out=new Array(max+1).fill(0);
+    for(let n=1;n<=max;n++) out[n]=((values[n]||0)-m)/s;
+    return out;
+  }
+
+  function buildEpnModel(lines, lottery, mainWindow=50) {
+    const N=lines.length, max=lottery.max, pick=lottery.pick;
+    if (!N) return null;
+    const baseline=pick/max;
+    const windows=[5,10,20,Math.max(20,Number(mainWindow)||50),100].map(w=>Math.min(w,N));
+    const uniqueWindows=Array.from(new Set(windows.filter(w=>w>0)));
+    const recencyRaw=new Array(max+1).fill(0);
+    const longRaw=new Array(max+1).fill(0);
+    const gapRaw=new Array(max+1).fill(0);
+    const transitionRaw=new Array(max+1).fill(0);
+    const stabilityRaw=new Array(max+1).fill(0);
+    const counts=new Array(max+1).fill(0);
+
+    for (const draw of lines) for (const n of draw) counts[n]++;
+
+    // Multi-scale recency: shrink empirical rate toward fair baseline.
+    const scaleWeights=[1.35,1.15,1.0,.85,.65];
+    for(let n=1;n<=max;n++){
+      let acc=0, den=0;
+      uniqueWindows.forEach((w,idx)=>{
+        let hit=0; for(let i=N-w;i<N;i++) if(lines[i].includes(n)) hit++;
+        const priorStrength=24;
+        const smoothed=(hit + baseline*priorStrength)/(w+priorStrength);
+        const sw=scaleWeights[Math.min(idx,scaleWeights.length-1)];
+        acc += sw*(smoothed-baseline); den += sw;
+      });
+      recencyRaw[n]=den?acc/den:0;
+      const priorStrength=80;
+      const lifetime=(counts[n]+baseline*priorStrength)/(N+priorStrength);
+      longRaw[n]=lifetime-baseline;
+
+      let gap=N;
+      for(let i=N-1;i>=0;i--){ if(lines[i].includes(n)){gap=N-1-i;break;} }
+      // Moderate gaps get a small signal, extreme gaps are penalized to avoid gambler's fallacy.
+      const expectedGap=(1-baseline)/baseline;
+      const ratio=(gap-expectedGap)/(expectedGap+1);
+      gapRaw[n]=Math.exp(-Math.abs(ratio))*0.5 - Math.min(Math.abs(ratio),2)*0.08;
+
+      // Empirical next-draw persistence for each number with shrinkage.
+      let prevCount=0,nextHit=0;
+      for(let i=0;i<N-1;i++) if(lines[i].includes(n)){prevCount++; if(lines[i+1].includes(n)) nextHit++;}
+      const ps=35;
+      const trans=(nextHit+baseline*ps)/(prevCount+ps);
+      const lastPresent=lines[N-1].includes(n) ? 1 : 0;
+      transitionRaw[n]=lastPresent ? (trans-baseline) : 0;
+
+      // Stability rewards numbers whose rates do not wildly depend on one tiny window.
+      const rates=[];
+      for(const w of uniqueWindows){ let h=0;for(let i=N-w;i<N;i++)if(lines[i].includes(n))h++;rates.push(h/w); }
+      stabilityRaw[n]= -std(rates);
+    }
+
+    const zr=normalizeVector(recencyRaw,max), zl=normalizeVector(longRaw,max), zg=normalizeVector(gapRaw,max),
+          zt=normalizeVector(transitionRaw,max), zs=normalizeVector(stabilityRaw,max);
+
+    const raw=new Array(max+1).fill(0);
+    for(let n=1;n<=max;n++){
+      // EPN v1 weights: intentionally conservative. Backtest decides whether they deserve trust.
+      raw[n]=0.38*zr[n] + 0.22*zl[n] + 0.12*zg[n] + 0.16*zt[n] + 0.12*zs[n];
+    }
+    const vals=raw.slice(1), lo=Math.min(...vals), hi=Math.max(...vals);
+    const score=new Array(max+1).fill(0);
+    for(let n=1;n<=max;n++) score[n]=hi===lo?50:100*(raw[n]-lo)/(hi-lo);
+
+    // Bayesian-smoothed empirical rate used as model estimate, not physical probability.
+    const estimatedRate=new Array(max+1).fill(baseline);
+    const w=Math.min(Number(mainWindow)||50,N), prior=50;
+    for(let n=1;n<=max;n++){
+      let h=0;for(let i=N-w;i<N;i++)if(lines[i].includes(n))h++;
+      estimatedRate[n]=(h+baseline*prior)/(w+prior);
+    }
+
+    const ranking=Array.from({length:max},(_,i)=>i+1).sort((a,b)=>score[b]-score[a] || a-b);
+    const spread=std(raw.slice(1));
+    const confidence=Math.max(0,Math.min(100, Math.round(35 + Math.min(N,500)/500*30 + Math.min(spread,1.5)/1.5*20)));
+    return { lotteryId:lottery.id, score, raw, estimatedRate, ranking, baseline, linesCount:N, confidence, mainWindow:Number(mainWindow)||50, ts:Date.now() };
+  }
+
+  function comboShapeScore(nums, model, lottery) {
+    const sum=nums.reduce((a,b)=>a+b,0);
+    const odd=nums.filter(n=>n%2).length;
+    const idealOdd=lottery.pick/2;
+    const expectedSum=lottery.pick*(lottery.max+1)/2;
+    const spread=nums[nums.length-1]-nums[0];
+    const buckets=new Set(nums.map(n=>Math.floor((n-1)/10))).size;
+    const consecutive=nums.slice(1).filter((n,i)=>n===nums[i]+1).length;
+    const epn=mean(nums.map(n=>model.score[n]));
+    let shape=epn;
+    shape -= Math.abs(sum-expectedSum)*0.18;
+    shape -= Math.abs(odd-idealOdd)*2.6;
+    shape += Math.min(spread,lottery.max*.72)*0.12;
+    shape += buckets*1.6;
+    if(consecutive<=1) shape += .8; else shape -= consecutive*1.3;
+    return shape;
+  }
+
+  function epnWeightedSample(model, lottery, poolSize) {
+    const pool=model.ranking.slice(0,Math.max(lottery.pick,Math.min(poolSize,lottery.max)));
+    const chosen=[];
+    while(chosen.length<lottery.pick){
+      let total=0; for(const n of pool) if(!chosen.includes(n)) total += 1 + Math.pow(model.score[n]/100,1.7)*8;
+      let r=Math.random()*total, picked=null;
+      for(const n of pool){ if(chosen.includes(n)) continue; r -= 1 + Math.pow(model.score[n]/100,1.7)*8; if(r<=0){picked=n;break;} }
+      if(picked==null) picked=pool.find(n=>!chosen.includes(n));
+      chosen.push(picked);
+    }
+    return chosen.sort((a,b)=>a-b);
+  }
+
+  function buildEpnPortfolio(model, lottery, qty=3, poolSize=12) {
+    const candidates=[], seen=new Set();
+    for(let i=0;i<7000;i++){
+      const nums=epnWeightedSample(model,lottery,poolSize), key=nums.join('-');
+      if(seen.has(key)) continue; seen.add(key);
+      candidates.push({nums, base:comboShapeScore(nums,model,lottery)});
+    }
+    candidates.sort((a,b)=>b.base-a.base);
+    const selected=[];
+    while(selected.length<qty && candidates.length){
+      let best=null,bestV=-Infinity;
+      for(const c of candidates){
+        if(selected.includes(c)) continue;
+        let penalty=0;
+        for(const s of selected){
+          const ov=c.nums.filter(n=>s.nums.includes(n)).length;
+          penalty += ov*ov*3.4;
+        }
+        // Reward new high-ranked coverage across the portfolio.
+        const used=new Set(selected.flatMap(s=>s.nums));
+        const fresh=c.nums.filter(n=>!used.has(n));
+        const coverageBonus=mean(fresh.map(n=>model.score[n]))*(fresh.length/lottery.pick)*0.16;
+        const v=c.base-penalty+coverageBonus;
+        if(v>bestV){bestV=v;best=c;}
+      }
+      if(!best)break; selected.push(best);
+    }
+    return selected.map(x=>x.nums);
+  }
+
+  function renderEpnModel(model) {
+    if(!model || !epnRanking) return;
+    const top=model.ranking.slice(0,12);
+    epnRanking.innerHTML=top.map((n,i)=>{
+      const rate=(model.estimatedRate[n]*100).toFixed(2);
+      return `<div class="epn-rank-row">
+        <div class="epn-rank-num">${String(n).padStart(2,'0')}</div>
+        <div><strong>#${i+1} • sinal EPN</strong><div class="epn-bar"><span style="width:${model.score[n].toFixed(1)}%"></span></div></div>
+        <div class="epn-score">${model.score[n].toFixed(1)}<small>taxa mod. ${rate}%</small></div>
+      </div>`;
+    }).join('');
+    if(epnConfidence) epnConfidence.textContent=`Qualidade do sinal ${model.confidence}/100`;
+  }
+
+  function analyzeEpn() {
+    const lot=LOTTERIES[state.prefs.lotteryId];
+    const lines=parseEpnHistory(epnHistory?.value || '',lot);
+    if(lines.length<10){
+      epnStatus.innerHTML=`<strong style="color:var(--bad)">⚠ Cole pelo menos 10 linhas válidas, com exatamente ${lot.pick} números por linha.</strong>`;
+      return;
+    }
+    const model=buildEpnModel(lines,lot,Number(epnWindow?.value)||50);
+    state.epn.history=lines; state.epn.model=model; state.epn.games=[];
+    safeSet(LS_KEYS.epnHistory, epnHistory.value);
+    safeSet(LS_KEYS.epnModel, {lotteryId:lot.id, linesCount:lines.length, mainWindow:model.mainWindow, ts:model.ts});
+    renderEpnModel(model);
+    if(btnEpnGenerate) btnEpnGenerate.disabled=false;
+    const games=buildEpnPortfolio(model,lot,3,Number(epnPool?.value)||12);
+    state.epn.games=games; renderEpnGames(games);
+    state.generated=games.map(g=>g.slice());
+    renderGenerated();
+    if(epnStatus) epnStatus.innerHTML=`<strong>Previsão pronta:</strong> ${lines.length} concursos analisados • baseline por número ${(model.baseline*100).toFixed(2)}% • 3 jogos gerados automaticamente.`;
+    toast('Análise concluída. Ranking EPN e 3 jogos prontos.');
+    updateProbSummaryUI();
+  }
+
+  function renderEpnGames(games) {
+    if(!epnGames)return;
+    if(!games.length){epnGames.innerHTML='<div class="micro">Nenhuma carteira gerada.</div>';return;}
+    epnGames.innerHTML=games.map((g,i)=>`<div class="epn-game"><div class="epn-game__label">Jogo ${i+1}</div><div class="epn-game__balls">${g.map(n=>`<span class="epn-game__ball">${String(n).padStart(2,'0')}</span>`).join('')}</div></div>`).join('');
+    if(epnCost) epnCost.textContent=`${games.length} jogos • custo: ¥${games.length*200} • objetivo: cobertura, não garantia.`;
+  }
+
+  function generateEpnGames() {
+    const lot=LOTTERIES[state.prefs.lotteryId];
+    if(!state.epn.model || state.epn.model.lotteryId!==lot.id){ toast('Faça a análise EPN para a loteria selecionada.'); return []; }
+    const games=buildEpnPortfolio(state.epn.model,lot,3,Number(epnPool?.value)||12);
+    state.epn.games=games; renderEpnGames(games);
+    state.generated=games.map(g=>g.slice());
+    renderGenerated();
+    toast('Carteira EPN de 3 jogos pronta.');
+    return games;
+  }
+
+  function hypergeomVariance(N,K,n){
+    const p=K/N; return n*p*(1-p)*((N-n)/(N-1));
+  }
+
+  function runEpnBacktest() {
+    const lot=LOTTERIES[state.prefs.lotteryId];
+    const lines=parseEpnHistory(epnHistory?.value || '',lot);
+    const minTrain=Math.max(25,Math.min(60,Math.floor(lines.length*.25)));
+    if(lines.length<minTrain+10){
+      epnProof.innerHTML='<div class="proof-state proof-state--neutral">Carregue pelo menos 35–70 concursos para um backtest útil. Ideal: centenas.</div>';
+      return;
+    }
+    let trials=0,totalHits=0,hit4=0,hit5=0,hit6=0;
+    for(let i=minTrain;i<lines.length;i++){
+      const train=lines.slice(0,i), target=new Set(lines[i]);
+      const model=buildEpnModel(train,lot,Math.min(Number(epnWindow?.value)||50,train.length));
+      const pick=model.ranking.slice(0,lot.pick);
+      const h=pick.filter(n=>target.has(n)).length;
+      totalHits+=h; trials++; if(h>=4)hit4++; if(h>=5)hit5++; if(h>=6)hit6++;
+    }
+    const observed=totalHits/trials;
+    const expected=lot.pick*lot.pick/lot.max;
+    const variance=hypergeomVariance(lot.max,lot.pick,lot.pick);
+    const se=Math.sqrt(variance/trials)||1;
+    const z=(observed-expected)/se;
+    const advantage=(observed/expected-1)*100;
+    const strong=(z>=2 && advantage>0);
+    const stateClass=strong?'proof-state--good':(advantage>0?'proof-state--neutral':'proof-state--bad');
+    const verdict=strong?'Sinal estatístico acima do baseline detectado. Ainda exige validação fora da amostra.':(advantage>0?'Há vantagem observada, mas ainda sem força estatística suficiente.':'A EPN não superou o baseline neste histórico.');
+    epnProof.innerHTML=`<div class="proof-state ${stateClass}">${verdict}</div>
+      <div class="proof-metrics">
+        <div class="proof-metric"><span>Backtests</span><strong>${trials}</strong></div>
+        <div class="proof-metric"><span>Acertos médios</span><strong>${observed.toFixed(3)}</strong></div>
+        <div class="proof-metric"><span>Baseline</span><strong>${expected.toFixed(3)}</strong></div>
+        <div class="proof-metric"><span>Diferença</span><strong>${advantage>=0?'+':''}${advantage.toFixed(1)}%</strong></div>
+        <div class="proof-metric"><span>z-score</span><strong>${z.toFixed(2)}</strong></div>
+        <div class="proof-metric"><span>4+ / 5+ / 6</span><strong>${hit4} / ${hit5} / ${hit6}</strong></div>
+      </div>`;
+    if(epnStatus) epnStatus.innerHTML=`Backtest concluído: ${trials} previsões sem olhar o futuro.`;
+  }
+
   /* ==========
      GENERATION
   ========== */
@@ -586,6 +874,13 @@
     if (state.prefs.mode === "prob_last") return state.prob.last && state.prob.last.lotteryId === lotId ? state.prob.last.weights : null;
     if (state.prefs.mode === "prob_7") return state.prob.seven && state.prob.seven.lotteryId === lotId ? state.prob.seven.weights : null;
     if (state.prefs.mode === "online_trends") return state.prob.online && state.prob.online.lotteryId === lotId ? state.prob.online.weights : null;
+    if (state.prefs.mode === "epn_forecast") {
+      const m=state.epn.model;
+      if(!m || m.lotteryId!==lotId) return null;
+      const weights=new Array(LOTTERIES[lotId].max+1).fill(1);
+      for(let n=1;n<weights.length;n++) weights[n]=1+Math.pow(m.score[n]/100,1.7)*7;
+      return weights;
+    }
     return null;
   }
 
@@ -1045,6 +1340,13 @@
         .filter(n => n >= 1 && n <= lot.max)
         .slice(0, lot.pick - 1);
 
+      // A model trained for outra loteria não pode ser reaproveitado silenciosamente.
+      if (state.epn.model && state.epn.model.lotteryId !== lot.id) {
+        state.epn.model = null; state.epn.games = [];
+        if (btnEpnGenerate) btnEpnGenerate.disabled = true;
+        if (epnRanking) epnRanking.innerHTML = '<div class="micro">Faça uma nova análise EPN para esta loteria.</div>';
+        renderEpnGames([]);
+      }
       persistPrefs();
       renderFixedChips();
       updateProbSummaryUI();
@@ -1059,6 +1361,7 @@
 
       if (state.prefs.mode === "prob_last") setView("view-prob-last");
       if (state.prefs.mode === "prob_7") setView("view-prob-7");
+      if (state.prefs.mode === "epn_forecast") setView("view-forecast");
 
       toast(`Modo: ${modeLabel(state.prefs.mode)}`);
     });
@@ -1095,9 +1398,15 @@
     btnFetchOnline?.addEventListener("click", fetchOnlineHistory);
 
     btnGenerate.addEventListener("click", () => {
-      state.generated = generateMany(state.qty);
+      if(state.prefs.mode === "epn_forecast") {
+        if(!state.epn.model){ setView("view-forecast"); toast("Faça a análise EPN antes de gerar."); return; }
+        const lot=LOTTERIES[state.prefs.lotteryId];
+        state.generated=buildEpnPortfolio(state.epn.model,lot,state.qty,Number(epnPool?.value)||12);
+      } else {
+        state.generated = generateMany(state.qty);
+      }
       renderGenerated();
-      toast(`Gerado: ${state.qty} jogo(s).`);
+      toast(`Gerado: ${state.generated.length} jogo(s).`);
     });
 
     btnCopy.addEventListener("click", copyGenerated);
@@ -1118,6 +1427,10 @@
 
     btnAnalyzeLast.addEventListener("click", analyzeLast);
     btnAnalyze7.addEventListener("click", analyze7);
+
+    btnEpnAnalyze?.addEventListener("click", analyzeEpn);
+    btnEpnGenerate?.addEventListener("click", generateEpnGames);
+    btnEpnBacktest?.addEventListener("click", runEpnBacktest);
   }
 
   function syncControlsFromState() {
@@ -1147,7 +1460,7 @@
     const p = loadPrefs();
     if (p) {
       if (p.lotteryId && LOTTERIES[p.lotteryId]) state.prefs.lotteryId = p.lotteryId;
-      if (p.mode && ["rng", "prob_last", "prob_7", "online_trends"].includes(p.mode)) state.prefs.mode = p.mode;
+      if (p.mode && ["rng", "prob_last", "prob_7", "online_trends", "epn_forecast"].includes(p.mode)) state.prefs.mode = p.mode;
       if (typeof p.copyTwoDigits === "boolean") state.prefs.copyTwoDigits = p.copyTwoDigits;
       if (Array.isArray(p.fixedNumbers)) state.prefs.fixedNumbers = p.fixedNumbers.map(n => Number(n)).filter(Number.isFinite);
       if (Number.isFinite(Number(p.onlineLimit))) state.prefs.onlineLimit = Number(p.onlineLimit);
@@ -1156,6 +1469,11 @@
 
     state.saved = loadSaved();
     loadProbCaches();
+
+    if (epnHistory) {
+      const savedEpnHistory=safeGet(LS_KEYS.epnHistory);
+      if(savedEpnHistory) epnHistory.value=savedEpnHistory;
+    }
 
     state.qty = 1;
 
@@ -1167,7 +1485,7 @@
 
     renderSaved();
 
-    toast("Pronto. Faça a análise (Modo B/C) e depois gere usando a ponderação.");
+    toast("Pronto. Use a Previsão EPN para análise, carteira e backtest temporal.");
   }
 
   init();
